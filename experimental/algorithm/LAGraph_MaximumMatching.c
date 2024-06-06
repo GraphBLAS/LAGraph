@@ -38,35 +38,32 @@
 
 typedef struct
 {
-    uint64_t parentC;
-    uint64_t rootC;
+    GrB_Index parentC;
+    GrB_Index rootC;
 } vertex;
 
 // repeat the typedef as a string, to give to GraphBLAS
-#define VERTEX_DEFN      \
-    "typedef struct "    \
-    "{ "                 \
-    "uint64_t parentC; " \
-    "uint64_t rootC; "   \
-    "} "                 \
+#define VERTEX_DEFN       \
+    "typedef struct "     \
+    "{ "                  \
+    "GrB_Index parentC; " \
+    "GrB_Index rootC; "   \
+    "} "                  \
     "vertex; "
 
-void *initFrontier(vertex *z, vertex *x, GrB_Index i, GrB_Index j, const void *y)
+int a = 0;
+void *initFrontier(vertex *z, void *x, GrB_Index i, GrB_Index j, const void *y)
 {
-
-    x->parentC = i;
-    x->rootC = i;
-    z = x;
+    z->parentC = i;
+    z->rootC = i;
 }
 
-#define INIT_FRONTIER_DEFN                                                      \
-    "vertex *initFrontier(vertex *x, GrB_Index i, GrB_Index j, const void *y) " \
-    "{ "                                                                        \
-    "x->parentC = i; "                                                          \
-    "x->rootC = i; "                                                            \
-    "return x; "                                                                \
-    "} "                                                                        \
-    "vertex;"
+#define INIT_FRONTIER_DEFN                                                             \
+    "void *initFrontier(vertex *z, void *x, GrB_Index i, GrB_Index j, const void *y) " \
+    "{ "                                                                               \
+    "z->parentC = i; "                                                                 \
+    "z->rootC = i; "                                                                   \
+    "} "
 
 int LAGraph_MaximumMatching(
     // output/input:
@@ -106,15 +103,35 @@ int LAGraph_MaximumMatching(
     GRB_TRY(GrB_Vector_new(&frontierR, Vertex, nrows));
 
     GrB_IndexUnaryOp initFrontierOp = NULL;
-    GRB_TRY(GxB_IndexUnaryOp_new(&initFrontierOp, (GxB_index_unary_function)initFrontier, Vertex, Vertex, NULL, "initFrontier", INIT_FRONTIER_DEFN));
+    GRB_TRY(GxB_IndexUnaryOp_new(&initFrontierOp, (void *)initFrontier, Vertex, GrB_BOOL, GrB_BOOL, "initFrontier", INIT_FRONTIER_DEFN));
+
+    uint64_t nvals = 0;
+    bool y = 0; // see if I can get rid of this
+
+    GrB_Vector I = NULL; // dense matrix of 1's
+    GRB_TRY(GrB_Vector_new(&I, GrB_BOOL, ncols));
+    GRB_TRY(GrB_Vector_assign_INT32(I, NULL, NULL, 1, GrB_ALL, ncols, NULL));
 
     do
     {
         GRB_TRY(GrB_Vector_clear(pathC));
         GRB_TRY(GrB_Vector_clear(parentsR));
-
         // for every col j not matched, assign f(j) = VERTEX(j,j)
-        GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, mateC, NULL, initFrontierOp, frontierC, NULL, GrB_DESC_RSC));
+        GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, *mateC, NULL, initFrontierOp, I, &y, GrB_DESC_RSC)); // for each non-matched col j, f(j) = (j,j)
+        GrB_Index R[ncols];
+        vertex *X = malloc(ncols * sizeof(vertex));
+        GrB_Vector_extractTuples_UDT(R, X, &ncols, frontierC);
+        for (int k = 0; k < ncols; k++)
+        {
+            printf("\nfc (%d) = (%ld, %ld)", (int)R[k], X[k].parentC, X[k].rootC);
+        }
+        GxB_Vector_fprint(*mateC, "mateC", GxB_COMPLETE, stdout);
 
-    } while (pathC != NULL); // only in the first and last iteration should this condition be false
+        // LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
+
+        GRB_TRY(GrB_Vector_nvals(&nvals, pathC));
+
+    } while (nvals); // only in the first and last iteration should this condition be false
+
+    return (GrB_SUCCESS);
 }
