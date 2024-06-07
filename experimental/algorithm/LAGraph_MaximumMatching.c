@@ -38,31 +38,31 @@
 
 typedef struct
 {
-    GrB_Index parentC;
-    GrB_Index rootC;
+    uint64_t parentC;
+    uint64_t rootC;
 } vertex;
 
 // repeat the typedef as a string, to give to GraphBLAS
-#define VERTEX_DEFN       \
-    "typedef struct "     \
-    "{ "                  \
-    "GrB_Index parentC; " \
-    "GrB_Index rootC; "   \
-    "} "                  \
+#define VERTEX_DEFN      \
+    "typedef struct "    \
+    "{ "                 \
+    "uint64_t parentC; " \
+    "uint64_t rootC; "   \
+    "} "                 \
     "vertex; "
 
 int a = 0;
-void *initFrontier(vertex *z, void *x, GrB_Index i, GrB_Index j, const void *y)
+void *initFrontier(vertex *z, void *x, uint64_t i, uint64_t j, const void *y)
 {
     z->parentC = i;
     z->rootC = i;
 }
 
-#define INIT_FRONTIER_DEFN                                                             \
-    "void *initFrontier(vertex *z, void *x, GrB_Index i, GrB_Index j, const void *y) " \
-    "{ "                                                                               \
-    "z->parentC = i; "                                                                 \
-    "z->rootC = i; "                                                                   \
+#define INIT_FRONTIER_DEFN                                                           \
+    "void *initFrontier(vertex *z, void *x, uint64_t i, uint64_t j, const void *y) " \
+    "{ "                                                                             \
+    "z->parentC = i; "                                                               \
+    "z->rootC = i; "                                                                 \
     "} "
 
 void *minparent(vertex *z, vertex *x, vertex *y)
@@ -87,6 +87,17 @@ void *select2nd(vertex *z, bool *x, vertex *y)
     "{ "                                              \
     "z->parentC = y->parentC; "                       \
     "z->rootC = y->rootC;"                            \
+    "} "
+
+void *keepParents(uint64_t *z, vertex *x)
+{
+    *z = x->parentC;
+}
+
+#define KEEP_PARENTS_DEFN                        \
+    "void *keepParents(uint64_t *z, vertex *x) " \
+    "{ "                                         \
+    "*z = x->parentC; "                          \
     "} "
 
 int LAGraph_MaximumMatching(
@@ -148,6 +159,9 @@ int LAGraph_MaximumMatching(
     GrB_Semiring semiring = NULL;
     GRB_TRY(GrB_Semiring_new(&semiring, AddMonoid, MultMonoid));
 
+    GrB_UnaryOp parentsOp = NULL;
+    GRB_TRY(GxB_UnaryOp_new(&parentsOp, (void *)keepParents, GrB_UINT64, Vertex, "keepParents", KEEP_PARENTS_DEFN));
+
     do
     {
         GRB_TRY(GrB_Vector_clear(pathC));
@@ -165,17 +179,27 @@ int LAGraph_MaximumMatching(
 
         // do
         // {
-        GRB_TRY(GrB_mxv(frontierR, NULL, NULL, semiring, A, frontierC, NULL));
+        GRB_TRY(GrB_mxv(frontierR, parentsR, NULL, semiring, A, frontierC, GrB_DESC_RSC)); // perform one step of BFS from C nodes and keep only unvisited rows
+        GRB_TRY(GrB_Vector_apply(parentsR, NULL, NULL, parentsOp, frontierR, NULL));       // set parents of row frontier
 
         GRB_TRY(GrB_Vector_nvals(&nvals, frontierC));
 
         // } while (nvals);
 
         GrB_Index R[nrows];
-        GrB_Vector_extractTuples_UDT(R, X, &nrows, frontierR);
+        vertex *Y = malloc(nrows * sizeof(vertex));
+        GrB_Vector_extractTuples_UDT(R, Y, &nrows, frontierR);
         for (int k = 0; k < nrows; k++)
         {
-            printf("\nfr (%d) = (%ld, %ld)", (int)R[k], X[k].parentC, X[k].rootC);
+            printf("\nfr (%d) = (%ld, %ld)", (int)R[k], Y[k].parentC, Y[k].rootC);
+        }
+
+        uint64_t P[nrows];
+        GrB_Index N[nrows];
+        GrB_Vector_extractTuples_UINT64(N, P, &nrows, parentsR);
+        for (int k = 0; k < nrows; k++)
+        {
+            printf("\npr (%d) = %ld", (int)N[k], P[k]);
         }
 
         LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
