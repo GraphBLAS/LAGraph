@@ -65,6 +65,30 @@ void *initFrontier(vertex *z, void *x, GrB_Index i, GrB_Index j, const void *y)
     "z->rootC = i; "                                                                   \
     "} "
 
+void *minparent(vertex *z, vertex *x, vertex *y)
+{
+    z = x->parentC < y->parentC ? x : y;
+}
+
+#define MIN_PARENT_DEFN                                 \
+    "void *minparent(vertex *z, vertex *x, vertex *y) " \
+    "{ "                                                \
+    "z = x->parentC < y->parentC ? x : y; "             \
+    "} "
+
+void *select2nd(vertex *z, bool *x, vertex *y)
+{
+    z->parentC = y->parentC;
+    z->rootC = y->rootC;
+}
+
+#define SELECT_2ND_DEFN                               \
+    "void *select2nd(vertex *z, bool *x, vertex *y) " \
+    "{ "                                              \
+    "z->parentC = y->parentC; "                       \
+    "z->rootC = y->rootC;"                            \
+    "} "
+
 int LAGraph_MaximumMatching(
     // output/input:
     GrB_Vector *mateC, // mateC(j) = i : Column j of C subset is matched to row i of R subset
@@ -112,22 +136,49 @@ int LAGraph_MaximumMatching(
     GRB_TRY(GrB_Vector_new(&I, GrB_BOOL, ncols));
     GRB_TRY(GrB_Vector_assign_INT32(I, NULL, NULL, 1, GrB_ALL, ncols, NULL));
 
+    GrB_BinaryOp MinParent = NULL;
+    GRB_TRY(GxB_BinaryOp_new(&MinParent, (void *)minparent, Vertex, Vertex, Vertex, "minparent", MIN_PARENT_DEFN));
+    vertex infinityParent = {GrB_INDEX_MAX + 1, 0};
+    GrB_Monoid AddMonoid;
+    GRB_TRY(GrB_Monoid_new_UDT(&AddMonoid, MinParent, &infinityParent));
+
+    GrB_BinaryOp MultMonoid;
+    GRB_TRY(GxB_BinaryOp_new(&MultMonoid, (void *)select2nd,
+                             Vertex, GrB_BOOL, Vertex, "select2nd", SELECT_2ND_DEFN));
+    GrB_Semiring semiring = NULL;
+    GRB_TRY(GrB_Semiring_new(&semiring, AddMonoid, MultMonoid));
+
     do
     {
         GRB_TRY(GrB_Vector_clear(pathC));
         GRB_TRY(GrB_Vector_clear(parentsR));
         // for every col j not matched, assign f(j) = VERTEX(j,j)
-        GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, *mateC, NULL, initFrontierOp, I, &y, GrB_DESC_RSC)); // for each non-matched col j, f(j) = (j,j)
-        GrB_Index R[ncols];
+        GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, *mateC, NULL, initFrontierOp, I, &y, GrB_DESC_RSC));
+        GrB_Index C[ncols];
         vertex *X = malloc(ncols * sizeof(vertex));
-        GrB_Vector_extractTuples_UDT(R, X, &ncols, frontierC);
+        GrB_Vector_extractTuples_UDT(C, X, &ncols, frontierC);
         for (int k = 0; k < ncols; k++)
         {
-            printf("\nfc (%d) = (%ld, %ld)", (int)R[k], X[k].parentC, X[k].rootC);
+            printf("\nfc (%d) = (%ld, %ld)", (int)C[k], X[k].parentC, X[k].rootC);
         }
         GxB_Vector_fprint(*mateC, "mateC", GxB_COMPLETE, stdout);
 
-        // LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
+        // do
+        // {
+        GRB_TRY(GrB_mxv(frontierR, NULL, NULL, semiring, A, frontierC, NULL));
+
+        GRB_TRY(GrB_Vector_nvals(&nvals, frontierC));
+
+        // } while (nvals);
+
+        GrB_Index R[nrows];
+        GrB_Vector_extractTuples_UDT(R, X, &nrows, frontierR);
+        for (int k = 0; k < nrows; k++)
+        {
+            printf("\nfr (%d) = (%ld, %ld)", (int)R[k], X[k].parentC, X[k].rootC);
+        }
+
+        LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
 
         GRB_TRY(GrB_Vector_nvals(&nvals, pathC));
 
