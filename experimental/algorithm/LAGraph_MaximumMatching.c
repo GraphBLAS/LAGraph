@@ -102,7 +102,7 @@ void *keepParents(uint64_t *z, vertex *x)
 
 int LAGraph_MaximumMatching(
     // output/input:
-    GrB_Vector *mateC, // mateC(j) = i : Column j of C subset is matched to row i of R subset
+    GrB_Vector *mateC, // mateC(j) = i : Column j of the C subset is matched to row i of the R subset
     // input:
     LAGraph_Graph G, // input graph
     char *msg)
@@ -143,7 +143,7 @@ int LAGraph_MaximumMatching(
     uint64_t nvals = 0;
     bool y = 0; // see if I can get rid of this
 
-    GrB_Vector I = NULL; // dense matrix of 1's
+    GrB_Vector I = NULL; // dense vector of 1's
     GRB_TRY(GrB_Vector_new(&I, GrB_BOOL, ncols));
     GRB_TRY(GrB_Vector_assign_INT32(I, NULL, NULL, 1, GrB_ALL, ncols, NULL));
 
@@ -162,45 +162,65 @@ int LAGraph_MaximumMatching(
     GrB_UnaryOp parentsOp = NULL;
     GRB_TRY(GxB_UnaryOp_new(&parentsOp, (void *)keepParents, GrB_UINT64, Vertex, "keepParents", KEEP_PARENTS_DEFN));
 
+    GrB_Vector ufrontierR = NULL; // unmatched rows of R frontier
+    GRB_TRY(GrB_Vector_new(&ufrontierR, Vertex, nrows));
+
+    GrB_Vector mateR = NULL; // mateR(i) = j : Row i of the R subset is matched to column j of the C subset
+    GRB_TRY(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
+
     do
     {
         GRB_TRY(GrB_Vector_clear(pathC));
         GRB_TRY(GrB_Vector_clear(parentsR));
         // for every col j not matched, assign f(j) = VERTEX(j,j)
         GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, *mateC, NULL, initFrontierOp, I, &y, GrB_DESC_RSC));
-        GrB_Index C[ncols];
-        vertex *X = malloc(ncols * sizeof(vertex));
-        GrB_Vector_extractTuples_UDT(C, X, &ncols, frontierC);
-        for (int k = 0; k < ncols; k++)
-        {
-            printf("\nfc (%d) = (%ld, %ld)", (int)C[k], X[k].parentC, X[k].rootC);
-        }
+
+        /* debug
+         GrB_Index C[ncols];
+         vertex *V = malloc(ncols * sizeof(vertex));
+         GrB_Vector_extractTuples_UDT(C, V, &ncols, frontierC);
+         for (int k = 0; k < ncols; k++)
+         {
+             printf("\nfc (%d) = (%ld, %ld)", (int)C[k], V[k].parentC, V[k].rootC);
+         }
         GxB_Vector_fprint(*mateC, "mateC", GxB_COMPLETE, stdout);
+        */
+
+        uint64_t nmatched = 0;
+        GRB_TRY(GrB_Vector_nvals(&nmatched, *mateC));
+        GrB_Index J[nmatched];
+        uint64_t X[nmatched];
+        GRB_TRY(GrB_Vector_extractTuples_UINT64(J, X, &nmatched, *mateC));
+        GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64));
+
+        /* debug
+        GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
+        */
 
         // do
         // {
         GRB_TRY(GrB_mxv(frontierR, parentsR, NULL, semiring, A, frontierC, GrB_DESC_RSC)); // perform one step of BFS from C nodes and keep only unvisited rows
         GRB_TRY(GrB_Vector_apply(parentsR, NULL, NULL, parentsOp, frontierR, NULL));       // set parents of row frontier
 
+        GRB_TRY(GrB_Vector_assign(ufrontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RSC)); // select unmatched rows of the R frontier
+        GRB_TRY(GrB_Vector_assign(frontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RS))    // select matched rows of the R frontier
+
+        /* debug
+        GrB_Index R[nrows];
+        vertex *VR = malloc(nrows * sizeof(vertex));
+        GrB_Vector_extractTuples_UDT(R, VR, &nrows, frontierR);
+        for (int k = 0; k < nrows; k++)
+        {
+            printf("\nfr (%d) = (%ld, %ld)", (int)R[k], VR[k].parentC, VR[k].rootC);
+        }
+        GxB_Vector_fprint(parentsR, "pr", GxB_COMPLETE, stdout);
+        */
+
         GRB_TRY(GrB_Vector_nvals(&nvals, frontierC));
 
         // } while (nvals);
 
-        GrB_Index R[nrows];
-        vertex *Y = malloc(nrows * sizeof(vertex));
-        GrB_Vector_extractTuples_UDT(R, Y, &nrows, frontierR);
-        for (int k = 0; k < nrows; k++)
-        {
-            printf("\nfr (%d) = (%ld, %ld)", (int)R[k], Y[k].parentC, Y[k].rootC);
-        }
-
-        uint64_t P[nrows];
-        GrB_Index N[nrows];
-        GrB_Vector_extractTuples_UINT64(N, P, &nrows, parentsR);
-        for (int k = 0; k < nrows; k++)
-        {
-            printf("\npr (%d) = %ld", (int)N[k], P[k]);
-        }
+        // GRB_TRY(GrB_Vector_assign())
 
         LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
 
