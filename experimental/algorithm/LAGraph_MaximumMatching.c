@@ -100,6 +100,17 @@ void *keepParents(uint64_t *z, vertex *x)
     "*z = x->parentC; "                          \
     "} "
 
+void *keepRoots(uint64_t *z, vertex *x)
+{
+    *z = x->rootC;
+}
+
+#define KEEP_ROOTS_DEFN                        \
+    "void *keepRoots(uint64_t *z, vertex *x) " \
+    "{ "                                       \
+    "*z = x->rootC; "                          \
+    "} "
+
 int LAGraph_MaximumMatching(
     // output/input:
     GrB_Vector *mateC, // mateC(j) = i : Column j of the C subset is matched to row i of the R subset
@@ -159,14 +170,20 @@ int LAGraph_MaximumMatching(
     GrB_Semiring semiring = NULL;
     GRB_TRY(GrB_Semiring_new(&semiring, AddMonoid, MultMonoid));
 
-    GrB_UnaryOp parentsOp = NULL;
-    GRB_TRY(GxB_UnaryOp_new(&parentsOp, (void *)keepParents, GrB_UINT64, Vertex, "keepParents", KEEP_PARENTS_DEFN));
+    GrB_UnaryOp getParentsOp = NULL;
+    GRB_TRY(GxB_UnaryOp_new(&getParentsOp, (void *)keepParents, GrB_UINT64, Vertex, "keepParents", KEEP_PARENTS_DEFN));
+
+    GrB_UnaryOp getRootsOp = NULL;
+    GRB_TRY(GxB_UnaryOp_new(&getRootsOp, (void *)keepRoots, GrB_UINT64, Vertex, "keepRoots", KEEP_ROOTS_DEFN));
 
     GrB_Vector ufrontierR = NULL; // unmatched rows of R frontier
     GRB_TRY(GrB_Vector_new(&ufrontierR, Vertex, nrows));
 
     GrB_Vector mateR = NULL; // mateR(i) = j : Row i of the R subset is matched to column j of the C subset
     GRB_TRY(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
+
+    GrB_Vector rootsR = NULL;
+    GRB_TRY(GrB_Vector_new(&rootsR, GrB_UINT64, nrows));
 
     do
     {
@@ -191,7 +208,7 @@ int LAGraph_MaximumMatching(
         GrB_Index J[nmatched];
         uint64_t X[nmatched];
         GRB_TRY(GrB_Vector_extractTuples_UINT64(J, X, &nmatched, *mateC));
-        GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64));
+        GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64)); // clear mateR first? cause I use first
 
         /* debug
         GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
@@ -200,7 +217,7 @@ int LAGraph_MaximumMatching(
         // do
         // {
         GRB_TRY(GrB_mxv(frontierR, parentsR, NULL, semiring, A, frontierC, GrB_DESC_RSC)); // perform one step of BFS from C nodes and keep only unvisited rows
-        GRB_TRY(GrB_Vector_apply(parentsR, NULL, NULL, parentsOp, frontierR, NULL));       // set parents of row frontier
+        GRB_TRY(GrB_Vector_apply(parentsR, NULL, NULL, getParentsOp, frontierR, NULL));    // set parents of row frontier // does it erase the previous values
 
         GRB_TRY(GrB_Vector_assign(ufrontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RSC)); // select unmatched rows of the R frontier
         GRB_TRY(GrB_Vector_assign(frontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RS))    // select matched rows of the R frontier
@@ -215,6 +232,23 @@ int LAGraph_MaximumMatching(
         }
         GxB_Vector_fprint(parentsR, "pr", GxB_COMPLETE, stdout);
         */
+        uint64_t nUfR = 0;
+        GRB_TRY(GrB_Vector_nvals(&nUfR, ufrontierR));
+
+        if (nUfR)
+        {
+            GRB_TRY(GrB_Vector_apply(rootsR, NULL, NULL, getRootsOp, ufrontierR, NULL)); // get roots of row unmatched nodes of the R frontier
+
+            GrB_Index i[nUfR];
+            uint64_t values[nUfR];
+            GRB_TRY(GrB_Vector_extractTuples_UINT64(i, values, &nUfR, rootsR));
+            GRB_TRY(GrB_Vector_build_UINT64(pathC, values, i, nUfR, GrB_FIRST_UINT64)); // does it erase the previous values
+
+            // GrB_Index
+            // GRB_TRY()
+        }
+
+        // GRB_TRY();
 
         GRB_TRY(GrB_Vector_nvals(&nvals, frontierC));
 
