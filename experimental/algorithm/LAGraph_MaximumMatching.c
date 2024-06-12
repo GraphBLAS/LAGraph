@@ -185,6 +185,9 @@ int LAGraph_MaximumMatching(
     GrB_Vector rootsR = NULL;
     GRB_TRY(GrB_Vector_new(&rootsR, GrB_UINT64, nrows));
 
+    GrB_Vector pathUpdate = NULL;
+    GRB_TRY(GrB_Vector_new(&pathUpdate, GrB_UINT64, ncols));
+
     do
     {
         GRB_TRY(GrB_Vector_clear(pathC));
@@ -208,7 +211,8 @@ int LAGraph_MaximumMatching(
         GrB_Index J[nmatched];
         uint64_t X[nmatched];
         GRB_TRY(GrB_Vector_extractTuples_UINT64(J, X, &nmatched, *mateC));
-        GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64)); // clear mateR first? cause I use first
+        GRB_TRY(GrB_Vector_clear(mateR)); // clear mateR first as a prerequisite of the build method
+        GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64));
 
         /* debug
         GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
@@ -242,7 +246,9 @@ int LAGraph_MaximumMatching(
             GrB_Index i[nUfR];
             uint64_t values[nUfR];
             GRB_TRY(GrB_Vector_extractTuples_UINT64(i, values, &nUfR, rootsR));
-            GRB_TRY(GrB_Vector_build_UINT64(pathC, values, i, nUfR, GrB_FIRST_UINT64)); // does it erase the previous values
+            GRB_TRY(GrB_Vector_clear(pathUpdate));
+            GRB_TRY(GrB_Vector_build_UINT64(pathUpdate, values, i, nUfR, GrB_FIRST_UINT64)); // useful to handle duplicates
+            GRB_TRY(GrB_Vector_assign(pathC, NULL, NULL, pathUpdate, GrB_ALL, NULL));
 
             // GrB_Index
             // GRB_TRY()
