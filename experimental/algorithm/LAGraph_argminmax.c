@@ -101,6 +101,11 @@ int argminmax
     // for dim=2: find the position of the min/max entry in each row:
     // p = G*y, so that p(i) = j if x(i) = A(i,j) = min/max (A (i,:)).
 
+    // FIXME:  1-based indexing is used in MATLAB, where this function
+    // derives from (See SuiteSparse/GraphBLAS/GraphBLAS/@GrB/private/
+    // mexfunctions/gbargminmax.c).  In LAGraph, we should use 0-based
+    // indexing.
+
     // For both cases, use the SECONDI1 operator since built-in indexing is
     // 1-based.  The ANY monoid would be faster, but this uses MIN so that the
     // result for the user is repeatable.
