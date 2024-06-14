@@ -124,6 +124,17 @@ void *buildfCTuples(vertex *z, uint64_t *x, uint64_t i, uint64_t j, const void *
     "z->rootC = *x; "                                                                     \
     "} "
 
+void *setParentsMates(vertex *z, uint64_t *x)
+{
+    z->parentC = *x;
+};
+
+#define SET_PARENTS_MATES_DEFN                       \
+    "void *setParentsMates(vertex *z, uint64_t *x) " \
+    "{ "                                             \
+    "z->parentC = *x; "                              \
+    "} "
+
 int LAGraph_MaximumMatching(
     // output/input:
     GrB_Vector *mateC, // mateC(j) = i : Column j of the C subset is matched to row i of the R subset
@@ -213,6 +224,9 @@ int LAGraph_MaximumMatching(
     GrB_IndexUnaryOp buildfCTuplesOp = NULL;
     GRB_TRY(GxB_IndexUnaryOp_new(&buildfCTuplesOp, (void *)buildfCTuples, Vertex, GrB_UINT64, GrB_BOOL, "buildfCTuples", BUILT_FC_TUPLES_DEFN));
 
+    GrB_UnaryOp setParentsMatesOp = NULL;
+    GRB_TRY(GxB_UnaryOp_new(&setParentsMatesOp, (void *)setParentsMates, Vertex, GrB_UINT64, "setParentsMates", SET_PARENTS_MATES_DEFN));
+
     do
     {
         GRB_TRY(GrB_Vector_clear(pathC));
@@ -243,82 +257,111 @@ int LAGraph_MaximumMatching(
         GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
         */
 
-        // do
-        // {
-        GRB_TRY(GrB_mxv(frontierR, parentsR, NULL, semiring, A, frontierC, GrB_DESC_RSC)); // perform one step of BFS from C nodes and keep only unvisited rows
-        GRB_TRY(GrB_Vector_apply(parentsR, NULL, NULL, getParentsOp, frontierR, NULL));    // set parents of row frontier // does it erase the previous values
-
-        GRB_TRY(GrB_Vector_assign(ufrontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RSC)); // select unmatched rows of the R frontier
-        GRB_TRY(GrB_Vector_assign(frontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RS))    // select matched rows of the R frontier
-
-        /* debug
-        GrB_Index R[nrows];
-        vertex *VR = malloc(nrows * sizeof(vertex));
-        GrB_Vector_extractTuples_UDT(R, VR, &nrows, frontierR);
-        for (int k = 0; k < nrows; k++)
+        do
         {
-            printf("\nfr (%d) = (%ld, %ld)", (int)R[k], VR[k].parentC, VR[k].rootC);
-        }
-        GxB_Vector_fprint(parentsR, "pr", GxB_COMPLETE, stdout);
-        */
-        uint64_t nUfR = 0;
-        GRB_TRY(GrB_Vector_nvals(&nUfR, ufrontierR));
+            // perform one step of BFS from C nodes and keep only unvisited rows
+            GRB_TRY(GrB_mxv(frontierR, parentsR, NULL, semiring, A, frontierC, GrB_DESC_RSC));
+            // set parents of row frontier // does it erase the previous values
+            GRB_TRY(GrB_Vector_apply(parentsR, NULL, NULL, getParentsOp, frontierR, NULL));
 
-        if (nUfR)
-        {
-            GRB_TRY(GrB_Vector_apply(rootsufR, NULL, NULL, getRootsOp, ufrontierR, NULL)); // get roots of row unmatched nodes in the R frontier
+            // select unmatched rows of the R frontier
+            GRB_TRY(GrB_Vector_assign(ufrontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RSC));
+            // select matched rows of the R frontier
+            GRB_TRY(GrB_Vector_assign(frontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RS));
+            // keep only mates of rows in frontierR
+            GRB_TRY(GrB_Vector_assign(mateR, frontierR, NULL, mateR, GrB_ALL, nrows, GrB_DESC_RS));
 
-            GrB_Index *IrootsufR = (GrB_Index *)malloc(nUfR * sizeof(GrB_Index));
-            GrB_Index *VrootsufR = (GrB_Index *)malloc(nUfR * sizeof(GrB_Index));
-            GRB_TRY(GrB_Vector_extractTuples_UINT64(IrootsufR, VrootsufR, &nUfR, rootsufR));
-            GRB_TRY(GrB_Vector_clear(pathUpdate));
-            GRB_TRY(GrB_Vector_build_UINT64(pathUpdate, VrootsufR, IrootsufR, nUfR, GrB_FIRST_UINT64)); // useful to handle duplicates
-            GRB_TRY(GrB_Vector_assign(pathC, NULL, NULL, pathUpdate, GrB_ALL, nUfR, NULL));
-            free(IrootsufR);
-            free(VrootsufR);
-
-            GRB_TRY(GrB_Vector_apply(rootsfR, NULL, NULL, getRootsOp, frontierR, NULL)); // get roots of row nodes in the current R frontier
-
-            GrB_Index *VmatesfR = (GrB_Index *)malloc(nrows * sizeof(GrB_Index));
-            GrB_Index *VrootsfR = (GrB_Index *)malloc(nrows * sizeof(GrB_Index));
-            GrB_Index nfR, nRootsfR, Ibytes = 0, Valbytes = 0;
-            GrB_Index *dummy;
-            GrB_Index n_dummy = 1, bytes_dummy;
-            GRB_TRY(GrB_Vector_assign(mateR, frontierR, NULL, mateR, GrB_ALL, nrows, GrB_DESC_RS));                                                // keep only mates of rows in frontierR
-            GRB_TRY(GxB_Vector_unpack_CSC(mateR, (GrB_Index **)&dummy, (void **)&VmatesfR, &bytes_dummy, &Valbytes, NULL, &nfR, NULL, NULL));      // keep mates of the R frontier (ordered indices)
-            GRB_TRY(GxB_Vector_unpack_CSC(rootsfR, (GrB_Index **)&dummy, (void **)&VrootsfR, &bytes_dummy, &Ibytes, NULL, &nRootsfR, NULL, NULL)); // keep roots of the R frontier (ordered indices)
-            GRB_TRY(GrB_Vector_clear(rootfRIndexes));
-            GRB_TRY(GrB_Vector_build_UINT64(rootfRIndexes, VrootsfR, VmatesfR, nRootsfR, GrB_FIRST_UINT64)); // rootfRIndexes(j) = i, where i is the col mate of the row included in the current R frontier and the col root is j
-            GRB_TRY(GxB_Vector_unpack_CSC(rootfRIndexes, (GrB_Index **)&VrootsfR, (void **)&dummy, &Ibytes, &n_dummy, NULL, &nRootsfR, NULL, NULL));
-            GRB_TRY(GxB_Vector_pack_CSC(rootfRIndexes, (GrB_Index **)&VrootsfR, (void **)&VmatesfR, Ibytes, Valbytes, NULL, nRootsfR, NULL, NULL));
-            GRB_TRY(GrB_Vector_assign(rootfRIndexes, pathUpdate, NULL, rootfRIndexes, GrB_ALL, ncols, GrB_DESC_RSC)); // keep only col roots that are not included in ufR
-            free(VmatesfR);
-            free(VrootsfR);
-
-            GrB_Index *IrootfRIndexes = (GrB_Index *)malloc(ncols * sizeof(GrB_Index));
-            GrB_Index *VrootfRIndexes = (GrB_Index *)malloc(ncols * sizeof(GrB_Index));
-            GrB_Index nRootfRIndexes = 0;
-            GRB_TRY(GxB_Vector_unpack_CSC(rootfRIndexes, (GrB_Index **)&IrootfRIndexes, (void **)&VrootfRIndexes, &Ibytes, &Valbytes, NULL, &nRootfRIndexes, NULL, NULL));
-            GRB_TRY(GxB_Vector_pack_CSC(rootfRIndexes, (GrB_Index **)&VrootfRIndexes, (void **)&IrootfRIndexes, Valbytes, Ibytes, NULL, nRootfRIndexes, NULL, NULL)); // rootfRIndexes(i) = j, where (i,j) = (parentC, rootC) of the new frontier C
-            free(IrootfRIndexes);
-            free(VrootfRIndexes);
-
-            GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, NULL, NULL, buildfCTuplesOp, rootfRIndexes, &y, NULL));
-
-            // /* debug
-            GrB_Index C[ncols];
-            vertex *V = malloc(ncols * sizeof(vertex));
-            GrB_Vector_extractTuples_UDT(C, V, &ncols, frontierC);
-            for (int k = 0; k < ncols; k++)
+            /* debug
+            GrB_Index R[nrows];
+            vertex *VR = malloc(nrows * sizeof(vertex));
+            GrB_Vector_extractTuples_UDT(R, VR, &nrows, frontierR);
+            for (int k = 0; k < nrows; k++)
             {
-                printf("\nfc (%d) = (%ld, %ld)", (int)C[k], V[k].parentC, V[k].rootC);
+                printf("\nfr (%d) = (%ld, %ld)", (int)R[k], VR[k].parentC, VR[k].rootC);
             }
-            // */
-        }
+            GxB_Vector_fprint(parentsR, "pr", GxB_COMPLETE, stdout);
+            */
+            uint64_t nUfR = 0;
+            GRB_TRY(GrB_Vector_nvals(&nUfR, ufrontierR));
 
-        GRB_TRY(GrB_Vector_nvals(&nvals, frontierC));
+            if (nUfR)
+            {
+                // get roots of unmatched row nodes in the R frontier
+                GRB_TRY(GrB_Vector_apply(rootsufR, NULL, NULL, getRootsOp, ufrontierR, NULL));
 
-        // } while (nvals);
+                GrB_Index *IrootsufR = (GrB_Index *)malloc(nUfR * sizeof(GrB_Index));
+                GrB_Index *VrootsufR = (GrB_Index *)malloc(nUfR * sizeof(GrB_Index));
+                GrB_Index Ibytes = 0, Valbytes = 0;
+                GRB_TRY(GxB_Vector_unpack_CSC(rootsufR, (GrB_Index **)&IrootsufR, (void **)&VrootsufR, &Ibytes, &Valbytes, NULL, &nUfR, NULL, NULL)); // does it have space afterwards or should I pack again?
+                GRB_TRY(GrB_Vector_clear(pathUpdate));
+                GRB_TRY(GrB_Vector_build_UINT64(pathUpdate, VrootsufR, IrootsufR, nUfR, GrB_FIRST_UINT64)); // useful to handle duplicates
+                GRB_TRY(GrB_Vector_assign(pathC, NULL, NULL, pathUpdate, GrB_ALL, nUfR, NULL));
+                free(IrootsufR);
+                free(VrootsufR);
+
+                // get roots of row nodes in the current R frontier
+                GRB_TRY(GrB_Vector_apply(rootsfR, NULL, NULL, getRootsOp, frontierR, NULL));
+
+                GrB_Index *VmatesfR = (GrB_Index *)malloc(nrows * sizeof(GrB_Index));
+                GrB_Index *VrootsfR = (GrB_Index *)malloc(nrows * sizeof(GrB_Index));
+                GrB_Index nfR = 0, nRootsfR = 0;
+                GrB_Index *dummy; // should allocate space for this erither way?
+                GrB_Index n_dummy = 1, bytes_dummy = 0;
+                // keep mates of the R frontier (ordered indices)
+                GRB_TRY(GxB_Vector_unpack_CSC(mateR, (GrB_Index **)&dummy, (void **)&VmatesfR, &bytes_dummy, &Valbytes, NULL, &nfR, NULL, NULL));
+                // keep roots of the R frontier (ordered indices)
+                GRB_TRY(GxB_Vector_unpack_CSC(rootsfR, (GrB_Index **)&dummy, (void **)&VrootsfR, &bytes_dummy, &Ibytes, NULL, &nRootsfR, NULL, NULL));
+                GRB_TRY(GrB_Vector_clear(rootfRIndexes));
+                GRB_TRY(GrB_Vector_build_UINT64(rootfRIndexes, VrootsfR, VmatesfR, nRootsfR, GrB_FIRST_UINT64)); // rootfRIndexes(j) = i, where i is the col mate of the first row
+                                                                                                                 // included in the current R frontier with a col root of j
+                // keep only col roots that are not included in ufR
+                GRB_TRY(GrB_Vector_assign(rootfRIndexes, pathUpdate, NULL, rootfRIndexes, GrB_ALL, ncols, GrB_DESC_RSC));
+                free(VmatesfR);
+                free(VrootsfR);
+
+                GrB_Index *IrootfRIndexes = (GrB_Index *)malloc(ncols * sizeof(GrB_Index));
+                GrB_Index *VrootfRIndexes = (GrB_Index *)malloc(ncols * sizeof(GrB_Index));
+                GrB_Index nRootfRIndexes = 0;
+                GRB_TRY(GxB_Vector_unpack_CSC(rootfRIndexes, (GrB_Index **)&IrootfRIndexes, (void **)&VrootfRIndexes, &Ibytes, &Valbytes, NULL, &nRootfRIndexes, NULL, NULL));
+                GRB_TRY(GxB_Vector_pack_CSC(rootfRIndexes, (GrB_Index **)&VrootfRIndexes, (void **)&IrootfRIndexes, Valbytes, Ibytes, NULL, nRootfRIndexes, NULL, NULL)); // rootfRIndexes(i) = j,
+                                                                                                                                                                          // where (i,j) = (parentC, rootC) of the new frontier C
+                free(IrootfRIndexes);
+                free(VrootfRIndexes);
+
+                // build tuple of (parentC, rootC)
+                GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, NULL, NULL, buildfCTuplesOp, rootfRIndexes, &y, NULL));
+
+                // /* debug
+                GrB_Index C[ncols];
+                vertex *V = malloc(ncols * sizeof(vertex));
+                GrB_Vector_extractTuples_UDT(C, V, &ncols, frontierC);
+                for (int k = 0; k < ncols; k++)
+                {
+                    printf("\nfc (%d) = (%ld, %ld)", (int)C[k], V[k].parentC, V[k].rootC);
+                }
+                // */
+            }
+            else
+            {
+                // apply op on frontier to set parents to mates
+                GRB_TRY(GrB_Vector_apply(frontierR, NULL, NULL, setParentsMatesOp, mateR, NULL)); // fR(i) = (column mate of i, rootC)
+                // invert fr
+                GrB_Index *VmatesfR = (GrB_Index *)malloc(nrows * sizeof(GrB_Index));
+                GrB_Index *VfR = (GrB_Index *)malloc(nrows * sizeof(GrB_Index));
+                GrB_Index *dummy;
+                GrB_Index bytes_dummy = 0, Vmatesbytes = 0, VfRBytes = 0, nfR = 0;
+                GRB_TRY(GxB_Vector_unpack_CSC(mateR, (GrB_Index **)&dummy, (void **)&VmatesfR, &bytes_dummy, &Vmatesbytes, NULL, &nfR, NULL, NULL)); // mateR already only contains the rows of fR
+                GRB_TRY(GxB_Vector_unpack_CSC(frontierR, (GrB_Index **)&dummy, (void **)&VfR, &bytes_dummy, &VfRBytes, NULL, &nfR, NULL, NULL));
+                GRB_TRY(GxB_Vector_pack_CSC(frontierR, (GrB_Index **)&VmatesfR, (void **)&VfR, Vmatesbytes, VfRBytes, NULL, nfR, NULL, NULL));
+                free(VmatesfR);
+                free(VfR);
+                // assign to fC
+                GRB_TRY(GrB_Vector_assign(frontierC, NULL, NULL, frontierR, GrB_ALL, ncols, NULL));
+            }
+
+            GRB_TRY(GrB_Vector_nvals(&nvals, frontierC));
+
+        } while (nvals);
 
         LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
 
