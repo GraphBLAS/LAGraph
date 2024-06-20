@@ -51,7 +51,6 @@ typedef struct
     "} "                 \
     "vertex; "
 
-int a = 0;
 void *initFrontier(vertex *z, void *x, uint64_t i, uint64_t j, const void *y)
 {
     z->parentC = i;
@@ -67,13 +66,13 @@ void *initFrontier(vertex *z, void *x, uint64_t i, uint64_t j, const void *y)
 
 void *minparent(vertex *z, vertex *x, vertex *y)
 {
-    z = x->parentC < y->parentC ? x : y;
+    *z = x->parentC < y->parentC ? *x : *y;
 }
 
 #define MIN_PARENT_DEFN                                 \
     "void *minparent(vertex *z, vertex *x, vertex *y) " \
     "{ "                                                \
-    "z = x->parentC < y->parentC ? x : y; "             \
+    "*z = x->parentC < y->parentC ? *x : *y; "          \
     "} "
 
 void *select2nd(vertex *z, bool *x, vertex *y)
@@ -247,11 +246,15 @@ int LAGraph_MaximumMatching(
 
         uint64_t nmatched = 0;
         GRB_TRY(GrB_Vector_nvals(&nmatched, *mateC));
-        GrB_Index J[nmatched];
-        uint64_t X[nmatched];
-        GRB_TRY(GrB_Vector_extractTuples_UINT64(J, X, &nmatched, *mateC));
-        GRB_TRY(GrB_Vector_clear(mateR)); // clear mateR first as a prerequisite of the build method
-        GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64));
+        GrB_Index *J = (GrB_Index *)malloc(nmatched * sizeof(GrB_Index));
+        GrB_Index *X = (GrB_Index *)malloc(nmatched * sizeof(GrB_Index));
+        GrB_Index Jbytes = 0, Xbytes = 0;
+        GRB_TRY(GxB_Vector_unpack_CSC(*mateC, (GrB_Index **)&J, (void **)&X, &Jbytes, &Xbytes, NULL, &nmatched, NULL, NULL));
+        GRB_TRY(GrB_Vector_clear(mateR));                                          // clear mateR first as a prerequisite of the build method
+        GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64)); // build does not take ownership of the lists J and X, but only copies them
+        GRB_TRY(GxB_Vector_pack_CSC(*mateC, (GrB_Index **)&J, (void **)&X, Jbytes, Xbytes, NULL, nmatched, NULL, NULL));
+        free(J);
+        free(X);
 
         /* debug
         GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
