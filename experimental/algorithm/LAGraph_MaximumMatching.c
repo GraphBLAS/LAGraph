@@ -199,6 +199,9 @@ int LAGraph_MaximumMatching(
     GrB_UnaryOp getRootsOp = NULL;
     GRB_TRY(GxB_UnaryOp_new(&getRootsOp, (void *)keepRoots, GrB_UINT64, Vertex, "keepRoots", KEEP_ROOTS_DEFN));
 
+    GrB_Vector parentsUpdate = NULL; // unmatched rows of R frontier
+    GRB_TRY(GrB_Vector_new(&parentsUpdate, GrB_UINT64, nrows));
+
     GrB_Vector ufrontierR = NULL; // unmatched rows of R frontier
     GRB_TRY(GrB_Vector_new(&ufrontierR, Vertex, nrows));
 
@@ -226,23 +229,30 @@ int LAGraph_MaximumMatching(
     GrB_UnaryOp setParentsMatesOp = NULL;
     GRB_TRY(GxB_UnaryOp_new(&setParentsMatesOp, (void *)setParentsMates, Vertex, GrB_UINT64, "setParentsMates", SET_PARENTS_MATES_DEFN));
 
+    GrB_Vector ur = NULL;
+    GRB_TRY(GrB_Vector_new(&ur, GrB_UINT64, nrows));
+
+    GrB_Vector pathCopy = NULL;
+    GRB_TRY(GrB_Vector_new(&pathCopy, GrB_UINT64, ncols));
+
     do
     {
         GRB_TRY(GrB_Vector_clear(pathC));
         GRB_TRY(GrB_Vector_clear(parentsR));
+        GrB_Vector_wait(parentsR, GrB_MATERIALIZE);
         // for every col j not matched, assign f(j) = VERTEX(j,j)
         GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, *mateC, NULL, initFrontierOp, I, &y, GrB_DESC_RSC));
 
-        /* debug
-         GrB_Index C[ncols];
-         vertex *V = malloc(ncols * sizeof(vertex));
-         GrB_Vector_extractTuples_UDT(C, V, &ncols, frontierC);
-         for (int k = 0; k < ncols; k++)
-         {
-             printf("\nfc (%d) = (%ld, %ld)", (int)C[k], V[k].parentC, V[k].rootC);
-         }
+        // /* debug
+        GrB_Index C[ncols];
+        vertex *V = malloc(ncols * sizeof(vertex));
+        GrB_Vector_extractTuples_UDT(C, V, &ncols, frontierC);
+        for (int k = 0; k < ncols; k++)
+        {
+            printf("\nfc (%d) = (%ld, %ld)", (int)C[k], V[k].parentC, V[k].rootC);
+        }
         GxB_Vector_fprint(*mateC, "mateC", GxB_COMPLETE, stdout);
-        */
+        // */
 
         uint64_t nmatched = 0;
         GRB_TRY(GrB_Vector_nvals(&nmatched, *mateC));
@@ -264,8 +274,10 @@ int LAGraph_MaximumMatching(
         {
             // perform one step of BFS from C nodes and keep only unvisited rows
             GRB_TRY(GrB_mxv(frontierR, parentsR, NULL, semiring, A, frontierC, GrB_DESC_RSC));
-            // set parents of row frontier // does it erase the previous values
-            GRB_TRY(GrB_Vector_apply(parentsR, NULL, NULL, getParentsOp, frontierR, NULL));
+            GrB_Vector_wait(frontierR, GrB_MATERIALIZE);
+            // set parents of row frontier
+            GRB_TRY(GrB_Vector_apply(parentsUpdate, NULL, NULL, getParentsOp, frontierR, NULL)); // previous values are erased
+            GRB_TRY(GrB_Vector_assign(parentsR, NULL, GrB_SECOND_UINT64, parentsUpdate, GrB_ALL, nrows, NULL));
 
             // select unmatched rows of the R frontier
             GRB_TRY(GrB_Vector_assign(ufrontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RSC));
@@ -274,7 +286,7 @@ int LAGraph_MaximumMatching(
             // keep only mates of rows in frontierR
             GRB_TRY(GrB_Vector_assign(mateR, frontierR, NULL, mateR, GrB_ALL, nrows, GrB_DESC_RS));
 
-            /* debug
+            // /* debug
             GrB_Index R[nrows];
             vertex *VR = malloc(nrows * sizeof(vertex));
             GrB_Vector_extractTuples_UDT(R, VR, &nrows, frontierR);
@@ -283,7 +295,7 @@ int LAGraph_MaximumMatching(
                 printf("\nfr (%d) = (%ld, %ld)", (int)R[k], VR[k].parentC, VR[k].rootC);
             }
             GxB_Vector_fprint(parentsR, "pr", GxB_COMPLETE, stdout);
-            */
+            // */
             uint64_t nUfR = 0;
             GRB_TRY(GrB_Vector_nvals(&nUfR, ufrontierR));
 
@@ -366,10 +378,60 @@ int LAGraph_MaximumMatching(
 
         } while (nvals);
 
-        LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
-
         GRB_TRY(GrB_Vector_nvals(&nvals, pathC));
+        uint64_t npathCopy = nvals;
+        GrB_Index *Ipath = (GrB_Index *)malloc(nvals * sizeof(GrB_Index)); // max space for Ipath (nvals will either reduce by iteration or remain the same)
+        GrB_Index *Xpath = (GrB_Index *)malloc(nvals * sizeof(GrB_Index));
+        GrB_Index IpathBytes = 0, XpathBytes = 0;
+
+        while (nvals)
+        {
+            GxB_Vector_fprint(pathC, "pathC", GxB_COMPLETE, stdout);
+
+            // invert pathC
+            GRB_TRY(GxB_Vector_unpack_CSC(pathC, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &nvals, NULL, NULL));
+            GRB_TRY(GrB_Vector_clear(ur));                                               // do I need this if I have unpacked before?
+            GRB_TRY(GrB_Vector_build_UINT64(ur, Xpath, Ipath, nvals, GrB_FIRST_UINT64)); // can I unpack ur and pack with different size of Ilist etc.?
+
+            GxB_Vector_fprint(ur, "ur", GxB_COMPLETE, stdout);
+            GxB_Vector_fprint(parentsR, "parentsR", GxB_COMPLETE, stdout);
+
+            // assign parents of rows to rows
+            GRB_TRY(GrB_Vector_nvals(&nvals, ur));
+            GRB_TRY(GrB_Vector_assign(ur, ur, NULL, parentsR, GrB_ALL, nrows, NULL));
+            GxB_Vector_fprint(ur, "ur with updated parents", GxB_COMPLETE, stdout);
+
+            // invert ur
+            GRB_TRY(GxB_Vector_unpack_CSC(ur, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &nvals, NULL, NULL));
+            GRB_TRY(GxB_Vector_pack_CSC(pathC, (GrB_Index **)&Xpath, (void **)&Ipath, XpathBytes, IpathBytes, NULL, nvals, NULL, NULL));
+
+            GxB_Vector_fprint(pathC, "pathC", GxB_COMPLETE, stdout);
+
+            // keep a copy of the previous row matches of the matched cols that will alter mates
+            GRB_TRY(GrB_Vector_assign(pathCopy, pathC, NULL, *mateC, GrB_ALL, ncols, NULL)); // what does ni refer to?
+
+            GxB_Vector_fprint(pathCopy, "pathCopy", GxB_COMPLETE, stdout);
+
+            // update mateC
+            GRB_TRY(GrB_Vector_assign(*mateC, NULL, GrB_SECOND_UINT64, pathC, GrB_ALL, ncols, NULL));
+            // swap path and pathCopy
+            GrB_Vector temp = pathC;
+            pathC = pathCopy;
+            pathCopy = temp;
+
+            GRB_TRY(GrB_Vector_nvals(&nvals, pathC));
+
+            // /* debug
+            GxB_Vector_fprint(*mateC, "mateC", GxB_COMPLETE, stdout);
+            // */
+        }
+        free(Ipath);
+        free(Xpath);
+
+        nvals = npathCopy;
     } while (nvals); // only in the first and last iteration should this condition be false
+
+    LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
 
     return (GrB_SUCCESS);
 }
