@@ -266,6 +266,9 @@ int LG_CC_Boruvka
         // large matrices.
         GRB_TRY (GrB_Matrix_select_UDT (S, NULL, NULL, select_op, S,
             (void *) (&Parent), NULL)) ;
+        // Ensure S is finished, since it depends on Parent, which contains
+        // the Px array.  S must be computed before Px changes.
+        GRB_TRY (GrB_wait (S, GrB_MATERIALIZE)) ;
         GRB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
     }
 
