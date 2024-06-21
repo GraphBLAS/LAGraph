@@ -413,7 +413,7 @@ int LAGraph_MaximumMatching(
 
             // assign parents of rows to rows
             GRB_TRY(GrB_Vector_nvals(&nvals, ur));
-            GRB_TRY(GrB_Vector_assign(ur, ur, NULL, parentsR, GrB_ALL, nrows, GrB_DESC_RS)); // why is GrB_DESC_RS needed?
+            GRB_TRY(GrB_Vector_assign(ur, ur, NULL, parentsR, GrB_ALL, nrows, GrB_DESC_S)); // update the values of ur (descriptor needed to use mask's structure and not values)
 
             /* debug
             GxB_Vector_fprint(ur, "ur with updated parents", GxB_COMPLETE, stdout);
