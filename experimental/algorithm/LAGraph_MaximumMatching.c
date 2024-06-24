@@ -338,8 +338,8 @@ int LAGraph_MaximumMatching(
                 GRB_TRY(GrB_Vector_clear(pathUpdate));
                 GRB_TRY(GrB_Vector_build_UINT64(pathUpdate, VrootsufR, IrootsufR, nUfR, GrB_FIRST_UINT64));   // useful to handle duplicates
                 GRB_TRY(GrB_Vector_assign(pathC, NULL, GrB_SECOND_UINT64, pathUpdate, GrB_ALL, ncols, NULL)); // update path without deleting the values not updated
-                LAGraph_Free(IrootsufR);                                                                      // build copies the lists so they need to be freed
-                LAGraph_Free(VrootsufR);
+                LG_TRY(LAGraph_Free((void **)&IrootsufR, msg));                                               // build copies the lists so they need to be freed
+                LG_TRY(LAGraph_Free((void **)&VrootsufR, msg));
 
                 // get roots of row nodes in the current R frontier
                 GRB_TRY(GrB_Vector_apply(rootsfR, NULL, NULL, getRootsOp, frontierR, NULL));
@@ -362,8 +362,8 @@ int LAGraph_MaximumMatching(
                                                                                                                      // included in the current R frontier with a col root of j
                     // keep only col roots that are not included in ufR
                     GRB_TRY(GrB_Vector_assign(rootfRIndexes, pathUpdate, NULL, rootfRIndexes, GrB_ALL, ncols, GrB_DESC_RSC));
-                    LAGraph_Free(VmatesfR);
-                    LAGraph_Free(VrootsfR);
+                    LG_TRY(LAGraph_Free((void **)&VmatesfR, msg));
+                    LG_TRY(LAGraph_Free((void **)&VrootsfR, msg));
 
                     GrB_Index *IrootfRIndexes, *VrootfRIndexes;
                     GrB_Index nRootfRIndexes = 0;
