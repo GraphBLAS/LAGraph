@@ -123,15 +123,30 @@ void *buildfCTuples(vertex *z, uint64_t *x, uint64_t i, uint64_t j, const void *
     "z->rootC = *x; "                                                                     \
     "} "
 
-void *setParentsMates(vertex *z, uint64_t *x)
+void *vertexTypecast(vertex *z, uint64_t *x)
 {
     z->parentC = *x;
+    z->rootC = *x;
+}
+
+#define VERTEX_TYPECAST_DEFN                        \
+    "void *vertexTypecast(vertex *z, uint64_t *x) " \
+    "{ "                                            \
+    "z->parentC = *x; "                             \
+    "z->rootC = *x; "                               \
+    "} "
+
+void *setParentsMates(vertex *z, vertex *x, vertex *y)
+{
+    z->parentC = y->parentC;
+    z->rootC = x->rootC;
 };
 
-#define SET_PARENTS_MATES_DEFN                       \
-    "void *setParentsMates(vertex *z, uint64_t *x) " \
-    "{ "                                             \
-    "z->parentC = *x; "                              \
+#define SET_PARENTS_MATES_DEFN                                \
+    "void *setParentsMates(vertex *z, vertex *x, vertex *y) " \
+    "{ "                                                      \
+    "z->parentC = y->parentC; "                               \
+    "z->rootC = x->rootC; "                                   \
     "} "
 
 int LAGraph_MaximumMatching(
@@ -226,8 +241,11 @@ int LAGraph_MaximumMatching(
     GrB_IndexUnaryOp buildfCTuplesOp = NULL;
     GRB_TRY(GxB_IndexUnaryOp_new(&buildfCTuplesOp, (void *)buildfCTuples, Vertex, GrB_UINT64, GrB_BOOL, "buildfCTuples", BUILT_FC_TUPLES_DEFN));
 
-    GrB_UnaryOp setParentsMatesOp = NULL;
-    GRB_TRY(GxB_UnaryOp_new(&setParentsMatesOp, (void *)setParentsMates, Vertex, GrB_UINT64, "setParentsMates", SET_PARENTS_MATES_DEFN));
+    GrB_UnaryOp vertexTypecastOp = NULL;
+    GRB_TRY(GxB_UnaryOp_new(&vertexTypecastOp, (void *)vertexTypecast, Vertex, GrB_UINT64, "vertexTypecast", VERTEX_TYPECAST_DEFN));
+
+    GrB_BinaryOp setParentsMatesOp = NULL;
+    GRB_TRY(GxB_BinaryOp_new(&setParentsMatesOp, (void *)setParentsMates, Vertex, Vertex, Vertex, "setParentsMates", SET_PARENTS_MATES_DEFN));
 
     GrB_Vector ur = NULL;
     GRB_TRY(GrB_Vector_new(&ur, GrB_UINT64, nrows));
@@ -265,9 +283,10 @@ int LAGraph_MaximumMatching(
             GrB_Index Jbytes = 0, Xbytes = 0;
             GRB_TRY(GxB_Vector_unpack_CSC(*mateC, (GrB_Index **)&J, (void **)&X, &Jbytes, &Xbytes, NULL, &nmatched, NULL, NULL));
             GRB_TRY(GrB_Vector_clear(mateR));                                          // clear mateR first as a prerequisite of the build method
-            GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64)); // build does not take ownership of the lists J and X, but only copies them
+            GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64)); // build does not take ownership of the lists J and X, but only copies them,
+                                                                                       // these lists will be given again to mateC
             GRB_TRY(GxB_Vector_pack_CSC(*mateC, (GrB_Index **)&J, (void **)&X, Jbytes, Xbytes, NULL, nmatched, NULL, NULL));
-            free(J);
+            free(J); // do they belong to mateC now?
             free(X);
         }
 
@@ -373,8 +392,8 @@ int LAGraph_MaximumMatching(
             }
             else
             {
-                // apply op on frontier to set parents to mates
-                GRB_TRY(GrB_Vector_apply(frontierR, NULL, NULL, setParentsMatesOp, currentMatesR, NULL)); // fR(i) = (column mate of i, rootC)
+                // typecast mateR to ensure domain match with frontier R and apply op on frontier to set parents to mates
+                GRB_TRY(GrB_Vector_apply(frontierR, NULL, setParentsMatesOp, vertexTypecastOp, currentMatesR, NULL)); // fR(i) = (column mate of i, rootC)  // add the structural mask
                 // invert fr
                 GrB_Index *VmatesfR = (GrB_Index *)malloc(nrows * sizeof(GrB_Index));
                 GrB_Index *VfR = (GrB_Index *)malloc(nrows * sizeof(GrB_Index));
