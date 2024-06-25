@@ -189,7 +189,7 @@ int LAGraph_MaximumMatching(
     // check inputs
     //--------------------------------------------------------------------------
 
-    GrB_Vector pathC = NULL; // make this bitmap, if dense I would have to give all the entries and make the matrix 1-based
+    GrB_Vector pathC = NULL;    // make this bitmap, if dense I would have to give all the entries and make the matrix 1-based
     GrB_Vector parentsR = NULL; // parents of row nodes that are reachable from paths of the initial column frontier
     GrB_Type Vertex = NULL;
     GrB_Vector frontierC = NULL;
@@ -203,8 +203,8 @@ int LAGraph_MaximumMatching(
     GrB_UnaryOp getParentsOp = NULL;
     GrB_UnaryOp getRootsOp = NULL;
     GrB_Vector parentsUpdate = NULL; // unmatched rows of R frontier
-    GrB_Vector ufrontierR = NULL; // unmatched rows of R frontier
-    GrB_Vector mateR = NULL; // mateR(i) = j : Row i of the R subset is matched to column j of the C subset
+    GrB_Vector ufrontierR = NULL;    // unmatched rows of R frontier
+    GrB_Vector mateR = NULL;         // mateR(i) = j : Row i of the R subset is matched to column j of the C subset
     GrB_Vector rootsufR = NULL;
     GrB_Vector pathUpdate = NULL;
     GrB_Vector rootufRIndexes = NULL;
@@ -218,7 +218,6 @@ int LAGraph_MaximumMatching(
     GrB_Vector currentMatesR = NULL;
 
     GrB_Vector mateCcopy = *mateC;
-
 
     LG_CLEAR_MSG;
 
@@ -247,7 +246,7 @@ int LAGraph_MaximumMatching(
     bool y = 0; // see if I can get rid of this
 
     GRB_TRY(GrB_Vector_new(&I, GrB_BOOL, ncols));
-    GRB_TRY(GrB_Vector_assign_BOOL(I, NULL, NULL, 1, GrB_ALL, ncols, NULL));
+    GRB_TRY(GrB_Vector_assign_BOOL(I, NULL, NULL, 1, GrB_ALL, ncols, NULL)); // pack with GrB_ALL as indexes?
 
     GRB_TRY(GxB_BinaryOp_new(&MinParent, (void *)minparent, Vertex, Vertex, Vertex, "minparent", MIN_PARENT_DEFN));
     vertex infinityParent = {GrB_INDEX_MAX + 1, 0};
@@ -500,7 +499,7 @@ int LAGraph_MaximumMatching(
     (*mateC) = mateCcopy;
     LG_FREE_WORK;
 
-    LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
+    // LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
 
     return (GrB_SUCCESS);
 }
