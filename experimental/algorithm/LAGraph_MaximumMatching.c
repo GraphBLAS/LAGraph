@@ -20,17 +20,45 @@
 
 // add explanation of paper
 
-// #define LG_FREE_WORK \
-//     {
-// }
+#define LG_FREE_WORK                  \
+    {                                 \
+        GrB_free(&pathC);             \
+        GrB_free(&parentsR);          \
+        GrB_free(&Vertex);            \
+        GrB_free(&frontierC);         \
+        GrB_free(&frontierR);         \
+        GrB_free(&initFrontierOp);    \
+        GrB_free(&I);                 \
+        GrB_free(&MinParent);         \
+        GrB_free(&AddMonoid);         \
+        GrB_free(&MultOp);            \
+        GrB_free(&semiring);          \
+        GrB_free(&getParentsOp);      \
+        GrB_free(&getRootsOp);        \
+        GrB_free(&parentsUpdate);     \
+        GrB_free(&ufrontierR);        \
+        GrB_free(&mateR);             \
+        GrB_free(&rootsufR);          \
+        GrB_free(&pathUpdate);        \
+        GrB_free(&rootufRIndexes);    \
+        GrB_free(&rootsfR);           \
+        GrB_free(&rootfRIndexes);     \
+        GrB_free(&buildfCTuplesOp);   \
+        GrB_free(&vertexTypecastOp);  \
+        GrB_free(&setParentsMatesOp); \
+        GrB_free(&ur);                \
+        GrB_free(&pathCopy);          \
+        GrB_free(&currentMatesR);     \
+    }
 
-// #define LG_FREE_ALL \
-//     {               \
-//         // LG_FREE_WORK ;                  \
-//     // GrB_free (centrality) ;
-// }
+#define LG_FREE_ALL           \
+    {                         \
+        LG_FREE_WORK;         \
+        GrB_free(&mateCcopy); \
+    }
 
 #include "LG_internal.h"
+#include "LAGraphX.h"
 
 //------------------------------------------------------------------------------
 // the Vertex tuple: (parentC, rootC)
@@ -161,6 +189,37 @@ int LAGraph_MaximumMatching(
     // check inputs
     //--------------------------------------------------------------------------
 
+    GrB_Vector pathC = NULL; // make this bitmap, if dense I would have to give all the entries and make the matrix 1-based
+    GrB_Vector parentsR = NULL; // parents of row nodes that are reachable from paths of the initial column frontier
+    GrB_Type Vertex = NULL;
+    GrB_Vector frontierC = NULL;
+    GrB_Vector frontierR = NULL;
+    GrB_IndexUnaryOp initFrontierOp = NULL;
+    GrB_Vector I = NULL; // dense vector of 1's
+    GrB_BinaryOp MinParent = NULL;
+    GrB_Monoid AddMonoid = NULL;
+    GrB_BinaryOp MultOp = NULL;
+    GrB_Semiring semiring = NULL;
+    GrB_UnaryOp getParentsOp = NULL;
+    GrB_UnaryOp getRootsOp = NULL;
+    GrB_Vector parentsUpdate = NULL; // unmatched rows of R frontier
+    GrB_Vector ufrontierR = NULL; // unmatched rows of R frontier
+    GrB_Vector mateR = NULL; // mateR(i) = j : Row i of the R subset is matched to column j of the C subset
+    GrB_Vector rootsufR = NULL;
+    GrB_Vector pathUpdate = NULL;
+    GrB_Vector rootufRIndexes = NULL;
+    GrB_Vector rootsfR = NULL;
+    GrB_Vector rootfRIndexes = NULL;
+    GrB_IndexUnaryOp buildfCTuplesOp = NULL;
+    GrB_UnaryOp vertexTypecastOp = NULL;
+    GrB_BinaryOp setParentsMatesOp = NULL;
+    GrB_Vector ur = NULL;
+    GrB_Vector pathCopy = NULL;
+    GrB_Vector currentMatesR = NULL;
+
+    GrB_Vector mateCcopy = *mateC;
+
+
     LG_CLEAR_MSG;
 
     LG_TRY(LAGraph_CheckGraph(G, msg));
@@ -172,88 +231,63 @@ int LAGraph_MaximumMatching(
     uint64_t nrows = 0;
     GRB_TRY(GrB_Matrix_nrows(&nrows, A));
 
-    GrB_Vector pathC = NULL; // make this bitmap, if dense I would have to give all the entries and make the matrix 1-based
     GRB_TRY(GrB_Vector_new(&pathC, GrB_UINT64, ncols));
 
-    GrB_Vector parentsR = NULL; // parents of row nodes that are reachable from paths of the initial column frontier
     GRB_TRY(GrB_Vector_new(&parentsR, GrB_UINT64, nrows));
 
-    GrB_Type Vertex = NULL;
     GRB_TRY(GxB_Type_new(&Vertex, sizeof(vertex), "vertex", VERTEX_DEFN));
 
-    GrB_Vector frontierC = NULL;
     GRB_TRY(GrB_Vector_new(&frontierC, Vertex, ncols));
-    GrB_Vector frontierR = NULL;
+
     GRB_TRY(GrB_Vector_new(&frontierR, Vertex, nrows));
 
-    GrB_IndexUnaryOp initFrontierOp = NULL;
     GRB_TRY(GxB_IndexUnaryOp_new(&initFrontierOp, (void *)initFrontier, Vertex, GrB_BOOL, GrB_BOOL, "initFrontier", INIT_FRONTIER_DEFN));
 
     uint64_t nvals = 0;
     bool y = 0; // see if I can get rid of this
 
-    GrB_Vector I = NULL; // dense vector of 1's
     GRB_TRY(GrB_Vector_new(&I, GrB_BOOL, ncols));
-    GRB_TRY(GrB_Vector_assign_INT32(I, NULL, NULL, 1, GrB_ALL, ncols, NULL));
+    GRB_TRY(GrB_Vector_assign_BOOL(I, NULL, NULL, 1, GrB_ALL, ncols, NULL));
 
-    GrB_BinaryOp MinParent = NULL;
     GRB_TRY(GxB_BinaryOp_new(&MinParent, (void *)minparent, Vertex, Vertex, Vertex, "minparent", MIN_PARENT_DEFN));
     vertex infinityParent = {GrB_INDEX_MAX + 1, 0};
-    GrB_Monoid AddMonoid;
     GRB_TRY(GrB_Monoid_new_UDT(&AddMonoid, MinParent, &infinityParent));
 
-    GrB_BinaryOp MultMonoid;
-    GRB_TRY(GxB_BinaryOp_new(&MultMonoid, (void *)select2nd,
+    GRB_TRY(GxB_BinaryOp_new(&MultOp, (void *)select2nd,
                              Vertex, GrB_BOOL, Vertex, "select2nd", SELECT_2ND_DEFN));
-    GrB_Semiring semiring = NULL;
-    GRB_TRY(GrB_Semiring_new(&semiring, AddMonoid, MultMonoid));
 
-    GrB_UnaryOp getParentsOp = NULL;
+    GRB_TRY(GrB_Semiring_new(&semiring, AddMonoid, MultOp));
+
     GRB_TRY(GxB_UnaryOp_new(&getParentsOp, (void *)keepParents, GrB_UINT64, Vertex, "keepParents", KEEP_PARENTS_DEFN));
 
-    GrB_UnaryOp getRootsOp = NULL;
     GRB_TRY(GxB_UnaryOp_new(&getRootsOp, (void *)keepRoots, GrB_UINT64, Vertex, "keepRoots", KEEP_ROOTS_DEFN));
 
-    GrB_Vector parentsUpdate = NULL; // unmatched rows of R frontier
     GRB_TRY(GrB_Vector_new(&parentsUpdate, GrB_UINT64, nrows));
 
-    GrB_Vector ufrontierR = NULL; // unmatched rows of R frontier
     GRB_TRY(GrB_Vector_new(&ufrontierR, Vertex, nrows));
 
-    GrB_Vector mateR = NULL; // mateR(i) = j : Row i of the R subset is matched to column j of the C subset
     GRB_TRY(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
 
-    GrB_Vector rootsufR = NULL;
     GRB_TRY(GrB_Vector_new(&rootsufR, GrB_UINT64, nrows));
 
-    GrB_Vector pathUpdate = NULL;
     GRB_TRY(GrB_Vector_new(&pathUpdate, GrB_UINT64, ncols));
 
-    GrB_Vector rootufRIndexes = NULL;
     GRB_TRY(GrB_Vector_new(&rootufRIndexes, GrB_UINT64, ncols));
 
-    GrB_Vector rootsfR = NULL;
     GRB_TRY(GrB_Vector_new(&rootsfR, GrB_UINT64, nrows));
 
-    GrB_Vector rootfRIndexes = NULL;
     GRB_TRY(GrB_Vector_new(&rootfRIndexes, GrB_UINT64, ncols));
 
-    GrB_IndexUnaryOp buildfCTuplesOp = NULL;
     GRB_TRY(GxB_IndexUnaryOp_new(&buildfCTuplesOp, (void *)buildfCTuples, Vertex, GrB_UINT64, GrB_BOOL, "buildfCTuples", BUILT_FC_TUPLES_DEFN));
 
-    GrB_UnaryOp vertexTypecastOp = NULL;
     GRB_TRY(GxB_UnaryOp_new(&vertexTypecastOp, (void *)vertexTypecast, Vertex, GrB_UINT64, "vertexTypecast", VERTEX_TYPECAST_DEFN));
 
-    GrB_BinaryOp setParentsMatesOp = NULL;
     GRB_TRY(GxB_BinaryOp_new(&setParentsMatesOp, (void *)setParentsMates, Vertex, Vertex, Vertex, "setParentsMates", SET_PARENTS_MATES_DEFN));
 
-    GrB_Vector ur = NULL;
     GRB_TRY(GrB_Vector_new(&ur, GrB_UINT64, nrows));
 
-    GrB_Vector pathCopy = NULL;
     GRB_TRY(GrB_Vector_new(&pathCopy, GrB_UINT64, ncols));
 
-    GrB_Vector currentMatesR = NULL;
     GRB_TRY(GrB_Vector_new(&currentMatesR, GrB_UINT64, nrows));
 
     bool jumbled = 1;
@@ -263,7 +297,7 @@ int LAGraph_MaximumMatching(
         GRB_TRY(GrB_Vector_clear(pathC));
         GRB_TRY(GrB_Vector_clear(parentsR));
         // for every col j not matched, assign f(j) = VERTEX(j,j)
-        GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, *mateC, NULL, initFrontierOp, I, &y, GrB_DESC_RSC));
+        GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, mateCcopy, NULL, initFrontierOp, I, &y, GrB_DESC_RSC));
 
         /* debug
         GrB_Index C[ncols];
@@ -273,21 +307,21 @@ int LAGraph_MaximumMatching(
         {
             printf("\nfc (%d) = (%ld, %ld)", (int)C[k], V[k].parentC, V[k].rootC);
         }
-        GxB_Vector_fprint(*mateC, "mateC", GxB_COMPLETE, stdout);
+        GxB_Vector_fprint(mateCcopy, "mateC", GxB_COMPLETE, stdout);
         */
 
         uint64_t nmatched = 0;
-        GRB_TRY(GrB_Vector_nvals(&nmatched, *mateC));
+        GRB_TRY(GrB_Vector_nvals(&nmatched, mateCcopy));
         if (nmatched)
         {
             GrB_Index *J, *X; // unpack allocates space for these lists
             GrB_Index Jbytes = 0, Xbytes = 0;
-            GRB_TRY(GxB_Vector_unpack_CSC(*mateC, (GrB_Index **)&J, (void **)&X, &Jbytes, &Xbytes, NULL, &nmatched, &jumbled, NULL)); // mateC and mateR do not have duplicates, so the order doesn't matter
-            GRB_TRY(GrB_Vector_clear(mateR));                                                                                         // clear mateR first as a prerequisite of the build method
-            GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, NULL));                                                            // build does not take ownership of the lists J and X, but only copies them,
-                                                                                                                                      // these lists will be given again to mateC
-                                                                                                                                      // mateC has no duplicates in the values list, so mateR doesn't need to handle dups
-            GRB_TRY(GxB_Vector_pack_CSC(*mateC, (GrB_Index **)&J, (void **)&X, Jbytes, Xbytes, NULL, nmatched, jumbled, NULL));
+            GRB_TRY(GxB_Vector_unpack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, &Jbytes, &Xbytes, NULL, &nmatched, &jumbled, NULL)); // mateC and mateR do not have duplicates, so the order doesn't matter
+            GRB_TRY(GrB_Vector_clear(mateR));                                                                                            // clear mateR first as a prerequisite of the build method
+            GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, NULL));                                                               // build does not take ownership of the lists J and X, but only copies them,
+                                                                                                                                         // these lists will be given again to mateC
+                                                                                                                                         // mateC has no duplicates in the values list, so mateR doesn't need to handle dups
+            GRB_TRY(GxB_Vector_pack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, Jbytes, Xbytes, NULL, nmatched, jumbled, NULL));
         }
 
         /* debug
@@ -436,14 +470,14 @@ int LAGraph_MaximumMatching(
             */
 
             // keep a copy of the previous row matches of the matched cols that will alter mates
-            GRB_TRY(GrB_Vector_assign(pathCopy, pathC, NULL, *mateC, GrB_ALL, ncols, GrB_DESC_RS));
+            GRB_TRY(GrB_Vector_assign(pathCopy, pathC, NULL, mateCcopy, GrB_ALL, ncols, GrB_DESC_RS));
 
             /* debug
             GxB_Vector_fprint(pathCopy, "pathCopy", GxB_COMPLETE, stdout);
             */
 
             // update mateC
-            GRB_TRY(GrB_Vector_assign(*mateC, NULL, GrB_SECOND_UINT64, pathC, GrB_ALL, ncols, NULL));
+            GRB_TRY(GrB_Vector_assign(mateCcopy, NULL, GrB_SECOND_UINT64, pathC, GrB_ALL, ncols, NULL));
             // swap path and pathCopy
             GrB_Vector temp = pathC;
             pathC = pathCopy;
@@ -452,7 +486,7 @@ int LAGraph_MaximumMatching(
             GRB_TRY(GrB_Vector_nvals(&nvals, pathC));
 
             /* debug
-            GxB_Vector_fprint(*mateC, "mateC", GxB_COMPLETE, stdout);
+            GxB_Vector_fprint(mateCcopy, "mateC", GxB_COMPLETE, stdout);
             */
         }
 
@@ -460,8 +494,11 @@ int LAGraph_MaximumMatching(
     } while (nvals); // only in the first and last iteration should this condition be false
 
     // /* debug
-    GxB_Vector_fprint(*mateC, "mateC", GxB_COMPLETE, stdout);
+    GxB_Vector_fprint(mateCcopy, "mateC", GxB_COMPLETE, stdout);
     // */
+
+    (*mateC) = mateCcopy;
+    LG_FREE_WORK;
 
     LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
 
