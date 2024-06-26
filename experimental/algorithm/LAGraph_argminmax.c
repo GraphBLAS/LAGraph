@@ -35,7 +35,7 @@ int argminmax
     GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Type type ;
     GRB_TRY (GxB_Matrix_type (&type, A)) ;
-    //------    --------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // create outputs x and p, and the iso full vector y
     //--------------------------------------------------------------------------
 
@@ -60,6 +60,7 @@ int argminmax
     // for dim=2: x = min/max (A) where x(i) = min/max (A (i,:))
 
     GRB_TRY (GrB_mxm (*x, NULL, NULL, minmax_first, A, y, desc)) ;
+
     //--------------------------------------------------------------------------
     // D = diag (x)
     //--------------------------------------------------------------------------
@@ -88,8 +89,8 @@ int argminmax
     }
 
     // drop explicit zeros from G
-//  GRB_TRY (GxB_Matrix_select (G, NULL, NULL, GxB_NONZERO, G, NULL, NULL)) ;
-    GRB_TRY (GrB_Matrix_select_BOOL (G, NULL, NULL, GrB_VALUENE_BOOL, G, 0, NULL)) ;
+    GRB_TRY (GrB_Matrix_select_BOOL (G, NULL, NULL, GrB_VALUENE_BOOL, G, 0,
+        NULL)) ;
 
     //--------------------------------------------------------------------------
     // extract the positions of the entries in G
@@ -101,15 +102,10 @@ int argminmax
     // for dim=2: find the position of the min/max entry in each row:
     // p = G*y, so that p(i) = j if x(i) = A(i,j) = min/max (A (i,:)).
 
-    // FIXME:  1-based indexing is used in MATLAB, where this function
-    // derives from (See SuiteSparse/GraphBLAS/GraphBLAS/@GrB/private/
-    // mexfunctions/gbargminmax.c).  In LAGraph, we should use 0-based
-    // indexing.
-
-    // For both cases, use the SECONDI1 operator since built-in indexing is
-    // 1-based.  The ANY monoid would be faster, but this uses MIN so that the
-    // result for the user is repeatable.
-    GRB_TRY (GrB_mxm (*p, NULL, NULL, GxB_MIN_SECONDI1_INT64, G, y, desc)) ;
+    // Use the SECONDI operator since built-in indexing is 0-based.  The ANY
+    // monoid would be faster, but this uses MIN monoid so that the result for
+    // the user is repeatable.
+    GRB_TRY (GrB_mxm (*p, NULL, NULL, GxB_MIN_SECONDI_INT64, G, y, desc)) ;
 
     //--------------------------------------------------------------------------
     // free workspace
@@ -136,15 +132,14 @@ int LAGraph_argminmax
 )
 {
 
-    // //--------------------------------------------------------------------------
-    // // check inputs
-    // //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
 
-    // LAGraph_usage (nargin == 3 && nargout == 2, USAGE) ;
-    // GrB_Matrix A = LAGraph_get_shallow (pargin [0]) ;
-    // bool is_min = (bool) (mxGetScalar (pargin [1]) == 0) ;
-    // int dim = (int) mxGetScalar (pargin [2]) ;
-    // CHECK_ERROR (dim < 0 || dim > 2, "invalid dim") ;
+    // FIXME: need LAGraph error checks here
+
+    (*x) = NULL ;
+    (*p) = NULL ;
 
     //--------------------------------------------------------------------------
     // select the semirings
@@ -175,17 +170,17 @@ int LAGraph_argminmax
             minmax_first = GrB_MIN_FIRST_SEMIRING_INT16 ;
             any_equal = GxB_ANY_EQ_INT16 ;
         }
-        else if (type == GrB_INT32) 
+        else if (type == GrB_INT32)
         {
             minmax_first = GrB_MIN_FIRST_SEMIRING_INT32 ;
             any_equal = GxB_ANY_EQ_INT32 ;
         }
-        else if (type == GrB_INT64) 
+        else if (type == GrB_INT64)
         {
             minmax_first = GrB_MIN_FIRST_SEMIRING_INT64 ;
             any_equal = GxB_ANY_EQ_INT64 ;
         }
-        else if (type == GrB_UINT8) 
+        else if (type == GrB_UINT8)
         {
             minmax_first = GrB_MIN_FIRST_SEMIRING_UINT8 ;
             any_equal = GxB_ANY_EQ_UINT8 ;
@@ -243,17 +238,17 @@ int LAGraph_argminmax
             minmax_first = GrB_MAX_FIRST_SEMIRING_INT16 ;
             any_equal = GxB_ANY_EQ_INT16 ;
         }
-        else if (type == GrB_INT32) 
+        else if (type == GrB_INT32)
         {
             minmax_first = GrB_MAX_FIRST_SEMIRING_INT32 ;
             any_equal = GxB_ANY_EQ_INT32 ;
         }
-        else if (type == GrB_INT64) 
+        else if (type == GrB_INT64)
         {
             minmax_first = GrB_MAX_FIRST_SEMIRING_INT64 ;
             any_equal = GxB_ANY_EQ_INT64 ;
         }
-        else if (type == GrB_UINT8) 
+        else if (type == GrB_UINT8)
         {
             minmax_first = GrB_MAX_FIRST_SEMIRING_UINT8 ;
             any_equal = GxB_ANY_EQ_UINT8 ;
@@ -294,8 +289,6 @@ int LAGraph_argminmax
     // compute the argmin/max
     //--------------------------------------------------------------------------
 
-    // GrB_Matrix x = NULL, p = NULL ; //PUT BACK
-
     if (dim == 0)
     {
 
@@ -305,11 +298,9 @@ int LAGraph_argminmax
 
         // [x1,p1] = argmin/max of each column of A
         GrB_Matrix x1, p1 ;
-        argminmax (&x1, &p1, A, 1, minmax_first, any_equal,msg) ;
-        // GxB_print(x1,3);
+        argminmax (&x1, &p1, A, 1, minmax_first, any_equal, msg) ;
         // [x,p] = argmin/max of each entry in x
-        argminmax (x, p, x1, 1, minmax_first, any_equal,msg) ;
-        // GxB_print(x,3);
+        argminmax (x, p, x1, 1, minmax_first, any_equal, msg) ;
         // get the row and column index of the overall argmin/max of A
         int64_t I [2] = { 0, 0 } ;
         GrB_Index nvals0, nvals1 ;
@@ -324,7 +315,7 @@ int LAGraph_argminmax
             GRB_TRY (GrB_Matrix_extractElement_INT64 (&(I [1]), p1, I [0] - 1, 0)) ;
         }
 
-        // free workspace and create p = [row, col] 
+        // free workspace and create p = [row, col]
         GRB_TRY (GrB_Matrix_free (&x1)) ;
         GRB_TRY (GrB_Matrix_free (&p1)) ;
         GRB_TRY (GrB_Matrix_free (p)) ;
@@ -343,7 +334,7 @@ int LAGraph_argminmax
         // argmin/max of each column of A
         //----------------------------------------------------------------------
 
-        argminmax (x, p, A, 1, minmax_first, any_equal,msg) ;
+        argminmax (x, p, A, 1, minmax_first, any_equal, msg) ;
     }
     else
     {
@@ -353,14 +344,14 @@ int LAGraph_argminmax
         // argmin/max of each row of A
         //----------------------------------------------------------------------
 
-        argminmax (x, p, A, 2, minmax_first, any_equal,msg);
-
+        argminmax (x, p, A, 2, minmax_first, any_equal, msg) ;
     }
 
     //--------------------------------------------------------------------------
     // return result
     //--------------------------------------------------------------------------
+
     GRB_TRY (GrB_Matrix_free (&A)) ;
-    return(GrB_SUCCESS);
+    return (GrB_SUCCESS) ;
 }
 
