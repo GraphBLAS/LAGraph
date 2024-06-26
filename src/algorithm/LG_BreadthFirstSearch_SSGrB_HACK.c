@@ -48,6 +48,7 @@
 
 #include "LG_internal.h"
 
+#ifdef HACKIT
 int LG_BreadthFirstSearch_SSGrB
 (
     GrB_Vector *level,
@@ -93,6 +94,8 @@ int LG_BreadthFirstSearch_SSGrB
 
     GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
 
+#if 0
+// HACK for HPEC'24: push/pull disabled to compare with vanilla
     GrB_Matrix AT = NULL ;
     GrB_Vector Degree = G->out_degree ;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
@@ -112,6 +115,7 @@ int LG_BreadthFirstSearch_SSGrB
     // direction-optimization requires G->AT (if G is directed) and
     // G->out_degree (for both undirected and directed cases)
     bool push_pull = (Degree != NULL && AT != NULL) ;
+#endif
 
     // determine the semiring type
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
@@ -119,14 +123,23 @@ int LG_BreadthFirstSearch_SSGrB
 
     if (compute_parent)
     {
+#if 0
         // use the ANY_SECONDI_INT* semiring: either 32 or 64-bit depending on
         // the # of nodes in the graph.
         semiring = (n > INT32_MAX) ?
             GxB_ANY_SECONDI_INT64 : GxB_ANY_SECONDI_INT32 ;
+#else
+// HACK for HPEC'24: use the MIN_SECONDI semiring to compare with vanilla
+        semiring = (n > INT32_MAX) ?
+            GxB_MIN_SECONDI_INT64 : GxB_MIN_SECONDI_INT32 ;
+#endif
 
         // create the parent vector.  pi(i) is the parent id of node i
         GRB_TRY (GrB_Vector_new (&pi, int_type, n)) ;
+#if 0
+// HACK for HPEC'24: do not use LG_SET_FORMAT_HINT
         GRB_TRY (LG_SET_FORMAT_HINT (pi, LG_BITMAP + LG_FULL)) ;
+#endif
         // pi (src) = src denotes the root of the BFS tree
         GRB_TRY (GrB_Vector_setElement (pi, src, src)) ;
 
@@ -149,7 +162,10 @@ int LG_BreadthFirstSearch_SSGrB
         // create the level vector. v(i) is the level of node i
         // v (src) = 0 denotes the source node
         GRB_TRY (GrB_Vector_new (&v, int_type, n)) ;
+#if 0
+// HACK for HPEC'24: do not use LG_SET_FORMAT_HINT
         GRB_TRY (LG_SET_FORMAT_HINT (v, LG_BITMAP + LG_FULL)) ;
+#endif
         GRB_TRY (GrB_Vector_setElement (v, 0, src)) ;
     }
 
@@ -157,30 +173,42 @@ int LG_BreadthFirstSearch_SSGrB
     GRB_TRY (GrB_Vector_new (&w, GrB_INT64, n)) ;
 
     GrB_Index nq = 1 ;          // number of nodes in the current level
+#if 0
+// HACK for HPEC'24: push/pull disabled to compare with vanilla
     double alpha = 8.0 ;
     double beta1 = 8.0 ;
     double beta2 = 512.0 ;
     int64_t n_over_beta1 = (int64_t) (((double) n) / beta1) ;
     int64_t n_over_beta2 = (int64_t) (((double) n) / beta2) ;
+#endif
 
     //--------------------------------------------------------------------------
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
+#if 0
+// HACK for HPEC'24: push/pull disabled to compare with vanilla
     bool do_push = true ;       // start with push
     GrB_Index last_nq = 0 ;
     int64_t edges_unexplored = nvals ;
     bool any_pull = false ;     // true if any pull phase has been done
+#endif
 
     // {!mask} is the set of unvisited nodes
     GrB_Vector mask = (compute_parent) ? pi : v ;
 
+#if 0
     for (int64_t nvisited = 1, k = 1 ; nvisited < n ; nvisited += nq, k++)
+#endif
+    for (int64_t k = 1 ; ; k++) // HACK for HPEC'24: no push/pull
     {
 
         //----------------------------------------------------------------------
         // select push vs pull
         //----------------------------------------------------------------------
+
+#if 0
+// HACK for HPEC'24: push/pull disabled to compare with vanilla
 
         if (push_pull)
         {
@@ -238,30 +266,43 @@ int LG_BreadthFirstSearch_SSGrB
             }
             any_pull = any_pull || (!do_push) ;
         }
+#endif
 
         //----------------------------------------------------------------------
         // q = kth level of the BFS
         //----------------------------------------------------------------------
 
         // mask is pi if computing parent, v if computing just level
+#if 0
+// HACK for HPEC'24: do push-only to compare with vanilla
         if (do_push)
+#endif
         {
             // push (saxpy-based vxm):  q'{!mask} = q'*A
+#if 0
+// HACK for HPEC'24: do not use LG_SET_FORMAT_HINT
             GRB_TRY (LG_SET_FORMAT_HINT (q, LG_SPARSE)) ;
+#endif
             GRB_TRY (GrB_vxm (q, mask, NULL, semiring, q, A, GrB_DESC_RSC)) ;
         }
+#if 0
+// HACK for HPEC'24: push/pull disabled to compare with vanilla
+
         else
         {
             // pull (dot-product-based mxv):  q{!mask} = AT*q
             GRB_TRY (LG_SET_FORMAT_HINT (q, LG_BITMAP)) ;
             GRB_TRY (GrB_mxv (q, mask, NULL, semiring, AT, q, GrB_DESC_RSC)) ;
         }
+#endif
 
         //----------------------------------------------------------------------
         // done if q is empty
         //----------------------------------------------------------------------
 
+#if 0
         last_nq = nq ;
+#endif
         GRB_TRY (GrB_Vector_nvals (&nq, q)) ;
         if (nq == 0)
         {
@@ -285,6 +326,7 @@ int LG_BreadthFirstSearch_SSGrB
         }
     }
 
+
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
@@ -295,3 +337,38 @@ int LG_BreadthFirstSearch_SSGrB
     return (GrB_SUCCESS) ;
 #endif
 }
+
+//==============================================================================
+
+#ifdef for_comments_only
+
+    // simplified algorithms:
+
+    // using the MIN_SECONDI semiring: "BFS:3"
+    do
+    {
+        // q(i) currently contains the parent id of node i in tree.
+        // pi{q} = q 
+        GrB_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
+        // q'{!pi} = q'*A to compute the next frontier q
+        GrB_vxm (q, pi, NULL, GxB_MIN_SECONDI_INT32, q, A, GrB_DESC_RSC) ;
+        GrB_Vector_nvals (&nq, q) ;
+    }
+    while (nq > 0) ;
+
+    // using the vanilla GrB: "BFS:4"
+    do
+    {
+        // q(i) currently contains the parent id of node i in tree.
+        // pi{q} = q
+        GrB_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
+        // convert all stored values in q to their indices
+        GrB_apply (q, NULL, NULL, GrB_ROWINDEX_INT32, q, 0, NULL) ;
+        // q'{!pi} = q'*A to compute the next frontier q
+        GrB_vxm (q, pi, NULL, GrB_MIN_FIRST_SEMIRING_INT32, q, A, GrB_DESC_RSC);
+        GrB_Vector_nvals (&nq, q) ;
+    }
+    while (nq > 0) ;
+
+#endif
+#endif

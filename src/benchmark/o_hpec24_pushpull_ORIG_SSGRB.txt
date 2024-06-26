@@ -1,0 +1,434 @@
+Script started on 2024-06-26 13:34:41-05:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="218" LINES="54"]
+ 
+:: WARNING: setvars.sh has already been run. Skipping re-execution.
+   To force a re-execution of setvars.sh, use the '--force' option.
+   Using '--force' can result in excessive use of your environment variables.
+  
+usage: source setvars.sh [--force] [--config=file] [--help] [...]
+  --force        Force setvars.sh to re-run, doing so may overload environment.
+  --config=file  Customize env vars using a setvars.sh configuration file.
+  --help         Display this help message and exit.
+  ...            Additional args are passed to individual env/vars.sh scripts
+                 and should follow this script's arguments.
+  
+  Some POSIX shells do not accept command-line options. In that case, you can pass
+  command-line options via the SETVARS_ARGS environment variable. For example:
+  
+  $ SETVARS_ARGS="ia32 --config=config.txt" ; export SETVARS_ARGS
+  $ . path/to/setvars.sh
+  
+  The SETVARS_ARGS environment variable is cleared on exiting setvars.sh.
+  
+-- [0;35mlinux-ubuntu20.04-broadwell[0m / [0;32mgcc@9.4.0[0m ----------------------
+arpack-ng[0;36m@3.9.0[0m              ca-certificates-mozilla[0;36m@2023-05-30[0m  flex[0;36m@2.6.3[0m      gmake[0;36m@4.4.1[0m           libbsd[0;36m@0.11.7[0m         libsigsegv[0;36m@2.14[0m   mpfr[0;36m@4.2.0[0m       pcre[0;36m@8.45[0m       sqlite[0;36m@3.42.0[0m           zstd[0;36m@1.5.5[0m
+autoconf[0;36m@2.69[0m                cmake[0;36m@3.20.0[0m                        gawk[0;36m@5.2.1[0m      gmp[0;36m@6.2.1[0m             libedit[0;36m@3.1-20210216[0m  libtool[0;36m@2.4.7[0m     ncurses[0;36m@6.4[0m      pcre2[0;36m@10.42[0m     tar[0;36m@1.34[0m
+autoconf-archive[0;36m@2023.02.20[0m  cmake[0;36m@3.26.3[0m                        gcc[0;36m@11.4.0[0m      go[0;36m@1.20.6[0m             libevent[0;36m@2.1.12[0m       libunistring[0;36m@1.1[0m  nghttp2[0;36m@1.52.0[0m   perl[0;36m@5.38.0[0m     texinfo[0;36m@7.0.3[0m
+automake[0;36m@1.16.5[0m              curl[0;36m@8.1.2[0m                          gcc[0;36m@13.2.0[0m      go-bootstrap[0;36m@1.17.13[0m  libffi[0;36m@3.4.4[0m          libxcrypt[0;36m@4.4.35[0m  numactl[0;36m@2.0.14[0m   pigz[0;36m@2.7[0m        util-linux-uuid[0;36m@2.38.1[0m
+berkeley-db[0;36m@18.1.40[0m          diffutils[0;36m@3.9[0m                       gdbm[0;36m@1.23[0m       htop[0;36m@3.2.2[0m            libiconv[0;36m@1.17[0m         libxml2[0;36m@2.10.3[0m    openblas[0;36m@0.3.23[0m  pkgconf[0;36m@1.9.5[0m   util-macros[0;36m@1.19.3[0m
+bison[0;36m@3.8.2[0m                  doxygen[0;36m@1.9.6[0m                       gettext[0;36m@0.21.1[0m  hwloc[0;36m@2.9.1[0m           libidn2[0;36m@2.3.4[0m         m4[0;36m@1.4.19[0m         openmpi[0;36m@4.1.5[0m    pmix[0;36m@4.2.4[0m      valgrind[0;36m@3.20.0[0m
+boost[0;36m@1.83.0[0m                 expat[0;36m@2.5.0[0m                         gh[0;36m@2.32.1[0m       krb5[0;36m@1.20.1[0m           libmd[0;36m@1.0.4[0m           mpc[0;36m@1.3.1[0m         openssh[0;36m@9.3p1[0m    python[0;36m@3.10.12[0m  xz[0;36m@5.4.1[0m
+bzip2[0;36m@1.0.8[0m                  findutils[0;36m@4.9.0[0m                     git[0;36m@2.41.0[0m      lcov[0;36m@1.16[0m             libpciaccess[0;36m@0.17[0m     mpfr[0;36m@4.1.0[0m        openssl[0;36m@3.1.2[0m    readline[0;36m@8.2[0m    zlib-ng[0;36m@2.1.3[0m
+[1;34m==>[0m 73 installed packages
+[0;36mhypersparse $[0m pwd
+/home/faculty/d/davis/dev2/LAGraph/src/benchmark
+[0;36mhypersparse $[0m ./do_gap_bfs grb
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Breadth First Search
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+library: SuiteSparse:GraphBLAS v9.3.0 [June 20, 2024]
+nthreads_max: 40
+threads to test:  40
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+sources: ../../../GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 45.2486
+warmup: parent only, pushpull: 0.588006 sec
+
+------------------------------- threads: 40
+parent only  pushpull trial:  0 threads: 40 src:      2338012     0.5781 sec
+parent only  pushpull trial:  1 threads: 40 src:     31997659     0.5646 sec
+parent only  pushpull trial:  2 threads: 40 src:     23590940     0.5210 sec
+parent only  pushpull trial:  3 threads: 40 src:     43400604     0.6439 sec
+parent only  pushpull trial:  4 threads: 40 src:     75337937     0.6646 sec
+parent only  pushpull trial:  5 threads: 40 src:       169867     0.6405 sec
+parent only  pushpull trial:  6 threads: 40 src:    104041220     0.7067 sec
+parent only  pushpull trial:  7 threads: 40 src:     94177942     0.5393 sec
+parent only  pushpull trial:  8 threads: 40 src:     32871357     0.6358 sec
+parent only  pushpull trial:  9 threads: 40 src:     56230002     0.6791 sec
+parent only  pushpull trial: 10 threads: 40 src:     69883037     0.4829 sec
+parent only  pushpull trial: 11 threads: 40 src:      9346345     0.5477 sec
+parent only  pushpull trial: 12 threads: 40 src:     48915358     0.5625 sec
+parent only  pushpull trial: 13 threads: 40 src:    122571173     0.4753 sec
+parent only  pushpull trial: 14 threads: 40 src:      6183279     0.8057 sec
+parent only  pushpull trial: 15 threads: 40 src:     86323663     0.5495 sec
+parent only  pushpull trial: 16 threads: 40 src:    106725780     0.5060 sec
+parent only  pushpull trial: 17 threads: 40 src:     92389938     0.4981 sec
+parent only  pushpull trial: 18 threads: 40 src:     16210738     0.4890 sec
+parent only  pushpull trial: 19 threads: 40 src:     59816700     0.7319 sec
+parent only  pushpull trial: 20 threads: 40 src:    111669929     0.5077 sec
+parent only  pushpull trial: 21 threads: 40 src:    102831411     0.4815 sec
+parent only  pushpull trial: 22 threads: 40 src:    113384800     0.6249 sec
+parent only  pushpull trial: 23 threads: 40 src:     43872564     0.4878 sec
+parent only  pushpull trial: 24 threads: 40 src:     80508827     0.5097 sec
+parent only  pushpull trial: 25 threads: 40 src:     26105648     0.8221 sec
+parent only  pushpull trial: 26 threads: 40 src:      8807516     0.5211 sec
+parent only  pushpull trial: 27 threads: 40 src:    118452455     0.4827 sec
+parent only  pushpull trial: 28 threads: 40 src:    121818859     0.5099 sec
+parent only  pushpull trial: 29 threads: 40 src:     42361928     0.4769 sec
+parent only  pushpull trial: 30 threads: 40 src:     29493053     0.5451 sec
+parent only  pushpull trial: 31 threads: 40 src:     98461503     0.5718 sec
+parent only  pushpull trial: 32 threads: 40 src:     71931337     0.7746 sec
+parent only  pushpull trial: 33 threads: 40 src:    103808468     0.5545 sec
+parent only  pushpull trial: 34 threads: 40 src:      4092345     0.5523 sec
+parent only  pushpull trial: 35 threads: 40 src:    115276241     0.6679 sec
+parent only  pushpull trial: 36 threads: 40 src:      4649343     0.4944 sec
+parent only  pushpull trial: 37 threads: 40 src:     76656189     0.5488 sec
+parent only  pushpull trial: 38 threads: 40 src:     31312001     0.4843 sec
+parent only  pushpull trial: 39 threads: 40 src:    111334127     0.4759 sec
+parent only  pushpull trial: 40 threads: 40 src:    100962918     0.6270 sec
+parent only  pushpull trial: 41 threads: 40 src:     41823215     0.5093 sec
+parent only  pushpull trial: 42 threads: 40 src:     22631240     0.4999 sec
+parent only  pushpull trial: 43 threads: 40 src:     42848461     0.6844 sec
+parent only  pushpull trial: 44 threads: 40 src:     79485148     0.5335 sec
+parent only  pushpull trial: 45 threads: 40 src:    106818742     0.6094 sec
+parent only  pushpull trial: 46 threads: 40 src:     73347974     0.6839 sec
+parent only  pushpull trial: 47 threads: 40 src:     78848445     0.5514 sec
+parent only  pushpull trial: 48 threads: 40 src:    109920510     0.5040 sec
+parent only  pushpull trial: 49 threads: 40 src:    121492133     0.7315 sec
+parent only  pushpull trial: 50 threads: 40 src:    101037296     0.5650 sec
+parent only  pushpull trial: 51 threads: 40 src:     15438600     0.5042 sec
+parent only  pushpull trial: 52 threads: 40 src:      4584784     0.5758 sec
+parent only  pushpull trial: 53 threads: 40 src:    124503845     0.5429 sec
+parent only  pushpull trial: 54 threads: 40 src:     87241743     0.4918 sec
+parent only  pushpull trial: 55 threads: 40 src:    108297008     0.5447 sec
+parent only  pushpull trial: 56 threads: 40 src:     33955082     0.5273 sec
+parent only  pushpull trial: 57 threads: 40 src:     79934823     0.5162 sec
+parent only  pushpull trial: 58 threads: 40 src:      8608481     0.7199 sec
+parent only  pushpull trial: 59 threads: 40 src:     82435063     0.4800 sec
+parent only  pushpull trial: 60 threads: 40 src:     46579271     0.5402 sec
+parent only  pushpull trial: 61 threads: 40 src:       515421     0.4895 sec
+parent only  pushpull trial: 62 threads: 40 src:    121530467     0.4971 sec
+parent only  pushpull trial: 63 threads: 40 src:    127978736     0.5139 sec
+Avg: BFS pushpull parent only  threads  40:      0.568 sec: ../../../GAP/GAP-kron/GAP-kron.grb
+Avg: BFS pushpull parent only  threads  40:      0.568 sec: ../../../GAP/GAP-kron/GAP-kron.grb
+
+library: SuiteSparse:GraphBLAS v9.3.0 [June 20, 2024]
+nthreads_max: 40
+threads to test:  40
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+sources: ../../../GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 42.567
+warmup: parent only, pushpull: 1.33859 sec
+
+------------------------------- threads: 40
+parent only  pushpull trial:  0 threads: 40 src:     27691419     1.3370 sec
+parent only  pushpull trial:  1 threads: 40 src:    121280314     1.2279 sec
+parent only  pushpull trial:  2 threads: 40 src:      2413431     1.3263 sec
+parent only  pushpull trial:  3 threads: 40 src:     37512113     1.1984 sec
+parent only  pushpull trial:  4 threads: 40 src:     38390877     1.2211 sec
+parent only  pushpull trial:  5 threads: 40 src:     56651037     1.2633 sec
+parent only  pushpull trial:  6 threads: 40 src:    128461248     1.2171 sec
+parent only  pushpull trial:  7 threads: 40 src:     33029842     1.4843 sec
+parent only  pushpull trial:  8 threads: 40 src:     71406328     1.5765 sec
+parent only  pushpull trial:  9 threads: 40 src:    117872827     1.3575 sec
+parent only  pushpull trial: 10 threads: 40 src:     24351938     1.5464 sec
+parent only  pushpull trial: 11 threads: 40 src:     15444519     1.5032 sec
+parent only  pushpull trial: 12 threads: 40 src:    127526281     1.5403 sec
+parent only  pushpull trial: 13 threads: 40 src:    112279428     1.6097 sec
+parent only  pushpull trial: 14 threads: 40 src:     13631649     1.3654 sec
+parent only  pushpull trial: 15 threads: 40 src:    110379302     1.6160 sec
+parent only  pushpull trial: 16 threads: 40 src:     44800623     1.5478 sec
+parent only  pushpull trial: 17 threads: 40 src:     77768193     1.5333 sec
+parent only  pushpull trial: 18 threads: 40 src:       175347     1.4021 sec
+parent only  pushpull trial: 19 threads: 40 src:    107397389     1.6089 sec
+parent only  pushpull trial: 20 threads: 40 src:     43457209     1.4557 sec
+parent only  pushpull trial: 21 threads: 40 src:     97215940     1.4506 sec
+parent only  pushpull trial: 22 threads: 40 src:     73575165     1.4533 sec
+parent only  pushpull trial: 23 threads: 40 src:     44449715     1.4027 sec
+parent only  pushpull trial: 24 threads: 40 src:     33931724     1.5393 sec
+parent only  pushpull trial: 25 threads: 40 src:     55526610     1.4810 sec
+parent only  pushpull trial: 26 threads: 40 src:     14422051     1.6191 sec
+parent only  pushpull trial: 27 threads: 40 src:     58043873     1.4933 sec
+parent only  pushpull trial: 28 threads: 40 src:     72137329     1.4606 sec
+parent only  pushpull trial: 29 threads: 40 src:      9647840     1.5072 sec
+parent only  pushpull trial: 30 threads: 40 src:     15940695     1.3922 sec
+parent only  pushpull trial: 31 threads: 40 src:     14209952     1.3156 sec
+parent only  pushpull trial: 32 threads: 40 src:     49020883     1.2412 sec
+parent only  pushpull trial: 33 threads: 40 src:     28901138     1.2391 sec
+parent only  pushpull trial: 34 threads: 40 src:     50493273     1.2200 sec
+parent only  pushpull trial: 35 threads: 40 src:     49150069     1.2489 sec
+parent only  pushpull trial: 36 threads: 40 src:    126525082     1.2009 sec
+parent only  pushpull trial: 37 threads: 40 src:      6382740     1.2888 sec
+parent only  pushpull trial: 38 threads: 40 src:     89108297     1.1302 sec
+parent only  pushpull trial: 39 threads: 40 src:      9239735     1.2193 sec
+parent only  pushpull trial: 40 threads: 40 src:    110168548     1.3347 sec
+parent only  pushpull trial: 41 threads: 40 src:     95370259     1.1682 sec
+parent only  pushpull trial: 42 threads: 40 src:    116653530     1.1970 sec
+parent only  pushpull trial: 43 threads: 40 src:    123410703     1.2925 sec
+parent only  pushpull trial: 44 threads: 40 src:     16733665     1.1643 sec
+parent only  pushpull trial: 45 threads: 40 src:     49030282     1.1774 sec
+parent only  pushpull trial: 46 threads: 40 src:    108545121     1.2708 sec
+parent only  pushpull trial: 47 threads: 40 src:     99095665     1.2275 sec
+parent only  pushpull trial: 48 threads: 40 src:    133850077     1.1507 sec
+parent only  pushpull trial: 49 threads: 40 src:     63499301     1.1350 sec
+parent only  pushpull trial: 50 threads: 40 src:     21541382     1.1860 sec
+parent only  pushpull trial: 51 threads: 40 src:      6230751     1.2268 sec
+parent only  pushpull trial: 52 threads: 40 src:     89077456     1.2047 sec
+parent only  pushpull trial: 53 threads: 40 src:     70392765     1.2556 sec
+parent only  pushpull trial: 54 threads: 40 src:      6670455     1.3139 sec
+parent only  pushpull trial: 55 threads: 40 src:     61746271     1.1786 sec
+parent only  pushpull trial: 56 threads: 40 src:     83349535     1.2537 sec
+parent only  pushpull trial: 57 threads: 40 src:    115272184     1.2614 sec
+parent only  pushpull trial: 58 threads: 40 src:     20129908     1.3409 sec
+parent only  pushpull trial: 59 threads: 40 src:    106148553     1.2460 sec
+parent only  pushpull trial: 60 threads: 40 src:    117042375     1.2702 sec
+parent only  pushpull trial: 61 threads: 40 src:     71431187     1.2506 sec
+parent only  pushpull trial: 62 threads: 40 src:     45287808     1.3507 sec
+parent only  pushpull trial: 63 threads: 40 src:    107702120     1.2398 sec
+Avg: BFS pushpull parent only  threads  40:      1.337 sec: ../../../GAP/GAP-urand/GAP-urand.grb
+Avg: BFS pushpull parent only  threads  40:      1.337 sec: ../../../GAP/GAP-urand/GAP-urand.grb
+
+library: SuiteSparse:GraphBLAS v9.3.0 [June 20, 2024]
+nthreads_max: 40
+threads to test:  40
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+sources: ../../../GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 31.1979
+warmup: parent only, pushpull: 0.327313 sec
+
+------------------------------- threads: 40
+parent only  pushpull trial:  0 threads: 40 src:     12441072     0.3237 sec
+parent only  pushpull trial:  1 threads: 40 src:     54488257     0.3312 sec
+parent only  pushpull trial:  2 threads: 40 src:     25451915     0.3724 sec
+parent only  pushpull trial:  3 threads: 40 src:     57714473     0.3493 sec
+parent only  pushpull trial:  4 threads: 40 src:     14839494     0.4286 sec
+parent only  pushpull trial:  5 threads: 40 src:     32081104     0.4260 sec
+parent only  pushpull trial:  6 threads: 40 src:     52957357     0.3613 sec
+parent only  pushpull trial:  7 threads: 40 src:     50444380     0.3790 sec
+parent only  pushpull trial:  8 threads: 40 src:     49590701     0.3460 sec
+parent only  pushpull trial:  9 threads: 40 src:     20127816     0.3345 sec
+parent only  pushpull trial: 10 threads: 40 src:     34939333     0.3416 sec
+parent only  pushpull trial: 11 threads: 40 src:     48251001     0.3797 sec
+parent only  pushpull trial: 12 threads: 40 src:     19524253     0.3342 sec
+parent only  pushpull trial: 13 threads: 40 src:     43676726     0.3392 sec
+parent only  pushpull trial: 14 threads: 40 src:     33055508     0.3263 sec
+parent only  pushpull trial: 15 threads: 40 src:     15244687     0.3397 sec
+parent only  pushpull trial: 16 threads: 40 src:     24946738     0.4945 sec
+parent only  pushpull trial: 17 threads: 40 src:      6479472     0.4045 sec
+parent only  pushpull trial: 18 threads: 40 src:     26077682     0.3301 sec
+parent only  pushpull trial: 19 threads: 40 src:     22023875     0.3758 sec
+parent only  pushpull trial: 20 threads: 40 src:     22081915     0.3548 sec
+parent only  pushpull trial: 21 threads: 40 src:     40034162     0.3599 sec
+parent only  pushpull trial: 22 threads: 40 src:     49496014     0.3911 sec
+parent only  pushpull trial: 23 threads: 40 src:     42847507     0.3354 sec
+parent only  pushpull trial: 24 threads: 40 src:     52409557     0.3655 sec
+parent only  pushpull trial: 25 threads: 40 src:     55445388     0.3589 sec
+parent only  pushpull trial: 26 threads: 40 src:     22028097     0.4299 sec
+parent only  pushpull trial: 27 threads: 40 src:     48766648     0.4081 sec
+parent only  pushpull trial: 28 threads: 40 src:     44521241     0.4002 sec
+parent only  pushpull trial: 29 threads: 40 src:     60135542     0.3732 sec
+parent only  pushpull trial: 30 threads: 40 src:     28528671     0.3502 sec
+parent only  pushpull trial: 31 threads: 40 src:      9678012     0.3259 sec
+parent only  pushpull trial: 32 threads: 40 src:     40020306     0.3506 sec
+parent only  pushpull trial: 33 threads: 40 src:     31625735     0.3608 sec
+parent only  pushpull trial: 34 threads: 40 src:     37446892     0.3522 sec
+parent only  pushpull trial: 35 threads: 40 src:     51788952     0.3471 sec
+parent only  pushpull trial: 36 threads: 40 src:     52584255     0.3464 sec
+parent only  pushpull trial: 37 threads: 40 src:     20346696     0.3977 sec
+parent only  pushpull trial: 38 threads: 40 src:     48387909     0.3927 sec
+parent only  pushpull trial: 39 threads: 40 src:     37337427     0.3774 sec
+parent only  pushpull trial: 40 threads: 40 src:     50501084     0.3484 sec
+parent only  pushpull trial: 41 threads: 40 src:     30130061     0.3405 sec
+parent only  pushpull trial: 42 threads: 40 src:     41185893     0.3493 sec
+parent only  pushpull trial: 43 threads: 40 src:     56495703     0.3278 sec
+parent only  pushpull trial: 44 threads: 40 src:     45663305     0.3835 sec
+parent only  pushpull trial: 45 threads: 40 src:     33359460     0.3413 sec
+parent only  pushpull trial: 46 threads: 40 src:     48143058     0.3738 sec
+parent only  pushpull trial: 47 threads: 40 src:     33291513     0.4546 sec
+parent only  pushpull trial: 48 threads: 40 src:     53461445     0.3583 sec
+parent only  pushpull trial: 49 threads: 40 src:     29340610     0.3318 sec
+parent only  pushpull trial: 50 threads: 40 src:     34148498     0.3547 sec
+parent only  pushpull trial: 51 threads: 40 src:     49171806     0.3824 sec
+parent only  pushpull trial: 52 threads: 40 src:     35550696     0.3369 sec
+parent only  pushpull trial: 53 threads: 40 src:     14521507     0.3260 sec
+parent only  pushpull trial: 54 threads: 40 src:     51633218     0.3716 sec
+parent only  pushpull trial: 55 threads: 40 src:     46823382     0.3462 sec
+parent only  pushpull trial: 56 threads: 40 src:     19396273     0.3544 sec
+parent only  pushpull trial: 57 threads: 40 src:     19871750     0.4295 sec
+parent only  pushpull trial: 58 threads: 40 src:     36862677     0.3406 sec
+parent only  pushpull trial: 59 threads: 40 src:     49539126     0.3980 sec
+parent only  pushpull trial: 60 threads: 40 src:     34016452     0.4069 sec
+parent only  pushpull trial: 61 threads: 40 src:     36567395     0.4301 sec
+parent only  pushpull trial: 62 threads: 40 src:     55487793     0.3412 sec
+parent only  pushpull trial: 63 threads: 40 src:     14391370     0.4323 sec
+Avg: BFS pushpull parent only  threads  40:      0.368 sec: ../../../GAP/GAP-twitter/GAP-twitter.grb
+Avg: BFS pushpull parent only  threads  40:      0.368 sec: ../../../GAP/GAP-twitter/GAP-twitter.grb
+
+library: SuiteSparse:GraphBLAS v9.3.0 [June 20, 2024]
+nthreads_max: 40
+threads to test:  40
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+sources: ../../../GAP/GAP-web/GAP-web_sources.mtx
+read time: 35.0326
+warmup: parent only, pushpull: 0.946768 sec
+
+------------------------------- threads: 40
+parent only  pushpull trial:  0 threads: 40 src:     10219452     0.9498 sec
+parent only  pushpull trial:  1 threads: 40 src:     44758211     1.0502 sec
+parent only  pushpull trial:  2 threads: 40 src:       890671     0.9667 sec
+parent only  pushpull trial:  3 threads: 40 src:     13843756     0.0221 sec
+parent only  pushpull trial:  4 threads: 40 src:     14168062     0.9483 sec
+parent only  pushpull trial:  5 threads: 40 src:     20906930     0.9521 sec
+parent only  pushpull trial:  6 threads: 40 src:     12189584     0.9271 sec
+parent only  pushpull trial:  7 threads: 40 src:     26352335     0.0193 sec
+parent only  pushpull trial:  8 threads: 40 src:     43500686     1.0004 sec
+parent only  pushpull trial:  9 threads: 40 src:      8987024     0.9523 sec
+parent only  pushpull trial: 10 threads: 40 src:      5699762     0.0169 sec
+parent only  pushpull trial: 11 threads: 40 src:     41436455     1.0010 sec
+parent only  pushpull trial: 12 threads: 40 src:      5030727     0.9572 sec
+parent only  pushpull trial: 13 threads: 40 src:     40735218     1.0090 sec
+parent only  pushpull trial: 14 threads: 40 src:     16533563     0.9173 sec
+parent only  pushpull trial: 15 threads: 40 src:     28700166     0.9973 sec
+parent only  pushpull trial: 16 threads: 40 src:        64711     1.1018 sec
+parent only  pushpull trial: 17 threads: 40 src:     39634750     1.0310 sec
+parent only  pushpull trial: 18 threads: 40 src:     16037779     0.9573 sec
+parent only  pushpull trial: 19 threads: 40 src:     27152739     1.0165 sec
+parent only  pushpull trial: 20 threads: 40 src:     16404061     1.0671 sec
+parent only  pushpull trial: 21 threads: 40 src:     20491963     0.9562 sec
+parent only  pushpull trial: 22 threads: 40 src:      5322423     0.9758 sec
+parent only  pushpull trial: 23 threads: 40 src:     21420953     1.0951 sec
+parent only  pushpull trial: 24 threads: 40 src:     26622109     0.9585 sec
+parent only  pushpull trial: 25 threads: 40 src:      5882875     0.9765 sec
+parent only  pushpull trial: 26 threads: 40 src:     18091040     1.0462 sec
+parent only  pushpull trial: 27 threads: 40 src:     10665896     0.0360 sec
+parent only  pushpull trial: 28 threads: 40 src:     18634422     0.9202 sec
+parent only  pushpull trial: 29 threads: 40 src:     18138715     0.9690 sec
+parent only  pushpull trial: 30 threads: 40 src:      2355535     1.0253 sec
+parent only  pushpull trial: 31 threads: 40 src:     32885205     0.0276 sec
+parent only  pushpull trial: 32 threads: 40 src:     40657440     0.9221 sec
+parent only  pushpull trial: 33 threads: 40 src:     35196167     0.9722 sec
+parent only  pushpull trial: 34 threads: 40 src:     45544426     0.9974 sec
+parent only  pushpull trial: 35 threads: 40 src:      6175519     0.0143 sec
+parent only  pushpull trial: 36 threads: 40 src:     40058318     1.0356 sec
+parent only  pushpull trial: 37 threads: 40 src:     50626230     1.0068 sec
+parent only  pushpull trial: 38 threads: 40 src:     36571019     0.9529 sec
+parent only  pushpull trial: 39 threads: 40 src:     49397052     0.9459 sec
+parent only  pushpull trial: 40 threads: 40 src:     23434265     0.9349 sec
+parent only  pushpull trial: 41 threads: 40 src:      2299444     0.9578 sec
+parent only  pushpull trial: 42 threads: 40 src:     32873823     0.0256 sec
+parent only  pushpull trial: 43 threads: 40 src:     25978282     1.0133 sec
+parent only  pushpull trial: 44 threads: 40 src:      2461715     0.0371 sec
+parent only  pushpull trial: 45 threads: 40 src:     22787314     0.9332 sec
+parent only  pushpull trial: 46 threads: 40 src:     30759947     0.9791 sec
+parent only  pushpull trial: 47 threads: 40 src:      7428894     0.0136 sec
+parent only  pushpull trial: 48 threads: 40 src:     39173870     0.0085 sec
+parent only  pushpull trial: 49 threads: 40 src:     43194209     0.0165 sec
+parent only  pushpull trial: 50 threads: 40 src:     26361509     0.0188 sec
+parent only  pushpull trial: 51 threads: 40 src:     39747211     0.0081 sec
+parent only  pushpull trial: 52 threads: 40 src:     30670029     0.9846 sec
+parent only  pushpull trial: 53 threads: 40 src:     41483033     1.0299 sec
+parent only  pushpull trial: 54 threads: 40 src:      9358666     0.9634 sec
+parent only  pushpull trial: 55 threads: 40 src:      9945008     0.9454 sec
+parent only  pushpull trial: 56 threads: 40 src:      3355244     1.0175 sec
+parent only  pushpull trial: 57 threads: 40 src:     33831269     0.9902 sec
+parent only  pushpull trial: 58 threads: 40 src:     45124744     1.0006 sec
+parent only  pushpull trial: 59 threads: 40 src:     16137877     0.0231 sec
+parent only  pushpull trial: 60 threads: 40 src:     11235448     0.9573 sec
+parent only  pushpull trial: 61 threads: 40 src:     37509144     0.9509 sec
+parent only  pushpull trial: 62 threads: 40 src:     27402414     0.9399 sec
+parent only  pushpull trial: 63 threads: 40 src:     39546083     1.0258 sec
+Avg: BFS pushpull parent only  threads  40:      0.773 sec: ../../../GAP/GAP-web/GAP-web.grb
+Avg: BFS pushpull parent only  threads  40:      0.773 sec: ../../../GAP/GAP-web/GAP-web.grb
+
+library: SuiteSparse:GraphBLAS v9.3.0 [June 20, 2024]
+nthreads_max: 40
+threads to test:  40
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+sources: ../../../GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.903853
+warmup: parent only, pushpull: 3.12041 sec
+
+------------------------------- threads: 40
+parent only  pushpull trial:  0 threads: 40 src:      4795720     3.2056 sec
+parent only  pushpull trial:  1 threads: 40 src:     21003853     3.2332 sec
+parent only  pushpull trial:  2 threads: 40 src:       417968     3.2884 sec
+parent only  pushpull trial:  3 threads: 40 src:      6496511     3.1750 sec
+parent only  pushpull trial:  4 threads: 40 src:      6648699     3.3623 sec
+parent only  pushpull trial:  5 threads: 40 src:      9811073     3.1482 sec
+parent only  pushpull trial:  6 threads: 40 src:     22247478     3.2084 sec
+parent only  pushpull trial:  7 threads: 40 src:      5720252     3.1920 sec
+parent only  pushpull trial:  8 threads: 40 src:     12366459     3.2415 sec
+parent only  pushpull trial:  9 threads: 40 src:     20413729     3.2036 sec
+parent only  pushpull trial: 10 threads: 40 src:      4217374     3.1882 sec
+parent only  pushpull trial: 11 threads: 40 src:      2674749     3.1605 sec
+parent only  pushpull trial: 12 threads: 40 src:     22085557     3.2687 sec
+parent only  pushpull trial: 13 threads: 40 src:     19445040     3.2461 sec
+parent only  pushpull trial: 14 threads: 40 src:      2360788     3.0839 sec
+parent only  pushpull trial: 15 threads: 40 src:     19115968     3.1605 sec
+parent only  pushpull trial: 16 threads: 40 src:      7758767     3.2587 sec
+parent only  pushpull trial: 17 threads: 40 src:     13468234     3.1570 sec
+parent only  pushpull trial: 18 threads: 40 src:        30367     3.2228 sec
+parent only  pushpull trial: 19 threads: 40 src:     18599547     3.2070 sec
+parent only  pushpull trial: 20 threads: 40 src:      7526108     3.3156 sec
+parent only  pushpull trial: 21 threads: 40 src:     16836280     3.1396 sec
+parent only  pushpull trial: 22 threads: 40 src:     12742067     3.1377 sec
+parent only  pushpull trial: 23 threads: 40 src:      7697995     3.3458 sec
+parent only  pushpull trial: 24 threads: 40 src:      5876443     3.2423 sec
+parent only  pushpull trial: 25 threads: 40 src:      9616340     3.2715 sec
+parent only  pushpull trial: 26 threads: 40 src:      2497673     3.1338 sec
+parent only  pushpull trial: 27 threads: 40 src:     10052290     3.2386 sec
+parent only  pushpull trial: 28 threads: 40 src:     12493057     3.1255 sec
+parent only  pushpull trial: 29 threads: 40 src:      1670855     3.1666 sec
+parent only  pushpull trial: 30 threads: 40 src:      2760679     3.1724 sec
+parent only  pushpull trial: 31 threads: 40 src:      2460941     3.0488 sec
+parent only  pushpull trial: 32 threads: 40 src:      8489650     3.1833 sec
+parent only  pushpull trial: 33 threads: 40 src:      5005225     3.1252 sec
+parent only  pushpull trial: 34 threads: 40 src:      8744645     3.3155 sec
+parent only  pushpull trial: 35 threads: 40 src:      8512023     3.2882 sec
+parent only  pushpull trial: 36 threads: 40 src:     21912165     3.1112 sec
+parent only  pushpull trial: 37 threads: 40 src:      1105390     3.2622 sec
+parent only  pushpull trial: 38 threads: 40 src:     15432163     3.2792 sec
+parent only  pushpull trial: 39 threads: 40 src:      1600177     3.1112 sec
+parent only  pushpull trial: 40 threads: 40 src:     19079469     3.1052 sec
+parent only  pushpull trial: 41 threads: 40 src:     16516637     3.0380 sec
+parent only  pushpull trial: 42 threads: 40 src:     20202566     3.1385 sec
+parent only  pushpull trial: 43 threads: 40 src:     21372803     3.1764 sec
+parent only  pushpull trial: 44 threads: 40 src:      2898009     3.1328 sec
+parent only  pushpull trial: 45 threads: 40 src:      8491277     3.1902 sec
+parent only  pushpull trial: 46 threads: 40 src:     18798317     3.1437 sec
+parent only  pushpull trial: 47 threads: 40 src:     23757560     3.1571 sec
+parent only  pushpull trial: 48 threads: 40 src:     17161819     3.2720 sec
+parent only  pushpull trial: 49 threads: 40 src:     23180739     3.1461 sec
+parent only  pushpull trial: 50 threads: 40 src:     10997085     3.3066 sec
+parent only  pushpull trial: 51 threads: 40 src:      3730630     3.1521 sec
+parent only  pushpull trial: 52 threads: 40 src:      1079068     3.2275 sec
+parent only  pushpull trial: 53 threads: 40 src:     15426822     3.2808 sec
+parent only  pushpull trial: 54 threads: 40 src:     12190925     3.2099 sec
+parent only  pushpull trial: 55 threads: 40 src:      1155218     3.1477 sec
+parent only  pushpull trial: 56 threads: 40 src:     10693488     3.2267 sec
+parent only  pushpull trial: 57 threads: 40 src:     14434835     3.0715 sec
+parent only  pushpull trial: 58 threads: 40 src:     19963339     3.0852 sec
+parent only  pushpull trial: 59 threads: 40 src:      3486185     3.2411 sec
+parent only  pushpull trial: 60 threads: 40 src:     18383269     3.2385 sec
+parent only  pushpull trial: 61 threads: 40 src:     20269908     3.2719 sec
+parent only  pushpull trial: 62 threads: 40 src:     12370764     3.1951 sec
+parent only  pushpull trial: 63 threads: 40 src:      7843140     3.2450 sec
+Avg: BFS pushpull parent only  threads  40:      3.197 sec: ../../../GAP/GAP-road/GAP-road.grb
+Avg: BFS pushpull parent only  threads  40:      3.197 sec: ../../../GAP/GAP-road/GAP-road.grb
+
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on 2024-06-26 13:45:58-05:00 [COMMAND_EXIT_CODE="0"]

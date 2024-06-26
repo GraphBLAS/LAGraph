@@ -239,7 +239,7 @@ int LAGraph_Random_Init (char *msg)
             GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f2,
                 GrB_UINT64, GrB_UINT64)) ;
             GRB_TRY (GrB_IndexUnaryOp_new (&LG_rand_init_op, LG_rand_init_func,
-                GrB_UINT64, GrB_UINT64, GrB_UINT64) ;
+                GrB_UINT64, GrB_UINT64, GrB_UINT64)) ;
         }
         #endif
     }
