@@ -6,38 +6,56 @@
 #include <LG_Xtest.h>
 #include "LG_internal.h"
 
-
 char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
+
+#define LEN 512
+char filename[LEN + 1];
 
 void test_MCM()
 {
     LAGraph_Init(msg);
 
-    // OK(LG_SET_BURBLE(1));
+    OK(LG_SET_BURBLE(1));
 
-    GrB_Index R[9] = {0, 0, 1, 2, 2, 3, 3, 4, 4};
-    GrB_Index C[9] = {0, 1, 0, 1, 2, 2, 4, 3, 4};
-    bool values[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     GrB_Matrix A = NULL;
-    GrB_Index nrows = 5, ncols = 5;
+    snprintf(filename, LEN, LG_DATA_DIR "%s", "west0067.mtx");
+    FILE *f = fopen(filename, "r");
+    TEST_CHECK(f != NULL);
+    OK(LAGraph_MMRead(&A, f, msg));
+    OK(fclose(f));
+    GrB_Index nrows = 0, ncols = 0, nvals = 0;
+    OK(GrB_Matrix_nrows(&nrows, A));
+    OK(GrB_Matrix_ncols(&ncols, A));
+    OK(GrB_Matrix_nvals(&nvals, A));
+
+    // make A a bool matrix and iso-valued
+    GrB_Index *I, *J, *X;
+    double *dummy;
+    OK(LAGraph_Malloc((void **)&I, nvals, sizeof(GrB_Index), msg));
+    OK(LAGraph_Malloc((void **)&J, nvals, sizeof(GrB_Index), msg));
+    OK(LAGraph_Malloc((void **)&dummy, nvals, sizeof(double), msg));
+
+    GrB_Index Ibytes = 0, Jbytes = 0, Xbytes = 0;
+    bool jumbled = 1;
+    bool iso_value[nvals];
+    for (uint64_t i = 0; i < nvals; i++)
+        iso_value[i] = 1;
+    OK(GrB_Matrix_extractTuples_FP64(I, J, dummy, &nvals, A));
+    TEST_CHECK(I != NULL);
     OK(GrB_Matrix_new(&A, GrB_BOOL, nrows, ncols));
-    OK(GrB_Matrix_build_BOOL(A, R, C, values, 9, GrB_FIRST_BOOL)); // change to pack
-    // GxB_Matrix_fprint(A, "A", GxB_COMPLETE, stdout);
-    OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)); // A is set to NULL afterwards
+    OK(GrB_Matrix_build_BOOL(A, I, J, iso_value, nvals, GrB_FIRST_BOOL));
+
+    OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
+    TEST_CHECK(A == NULL); // A has been moved into G->A
 
     GrB_Vector mateC = NULL;
     OK(GrB_Vector_new(&mateC, GrB_UINT64, ncols));
-    GrB_Index Ilist[2] = {2, 3};
-    uint64_t Vlist[2] = {2, 4};
-    OK(GrB_Vector_build_UINT64(mateC, Ilist, Vlist, 2, NULL));
 
     OK(LAGraph_MaximumMatching(&mateC, G, msg));
     printf("msg: %s\n", msg);
 
-    GrB_Index *J = NULL, *X = NULL;
-    GrB_Index Jbytes = 0, Xbytes = 0, nmatched = 0;
-    bool jumbled = 1;
+    GrB_Index nmatched = 0;
 
     GrB_Vector mateR = NULL;
     OK(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
@@ -54,7 +72,6 @@ void test_MCM()
     // pack matched values in a matrix
     GrB_Matrix M = NULL;
     A = G->A;
-    bool x[1] = {1};
     bool val[nmatched];
     for (uint64_t i = 0; i < nmatched; i++)
         val[i] = 1;
@@ -74,5 +91,5 @@ void test_MCM()
 
 TEST_LIST =
     {
-        {"Dummy", test_MCM}, // just one test in this example
+        {"MaximumMatching", test_MCM}, // just one test in this example
         {NULL, NULL}};
