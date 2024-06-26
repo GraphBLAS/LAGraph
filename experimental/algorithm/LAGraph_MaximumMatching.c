@@ -289,8 +289,6 @@ int LAGraph_MaximumMatching(
 
     GRB_TRY(GrB_Vector_new(&currentMatesR, GrB_UINT64, nrows));
 
-    bool jumbled = 1;
-
     do
     {
         GRB_TRY(GrB_Vector_clear(pathC));
@@ -315,12 +313,13 @@ int LAGraph_MaximumMatching(
         {
             GrB_Index *J, *X; // unpack allocates space for these lists
             GrB_Index Jbytes = 0, Xbytes = 0;
-            GRB_TRY(GxB_Vector_unpack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, &Jbytes, &Xbytes, NULL, &nmatched, &jumbled, NULL)); // mateC and mateR do not have duplicates, so the order doesn't matter
-            GRB_TRY(GrB_Vector_clear(mateR));                                                                                            // clear mateR first as a prerequisite of the build method
-            GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, NULL));                                                               // build does not take ownership of the lists J and X, but only copies them,
-                                                                                                                                         // these lists will be given again to mateC
-                                                                                                                                         // mateC has no duplicates in the values list, so mateR doesn't need to handle dups
-            GRB_TRY(GxB_Vector_pack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, Jbytes, Xbytes, NULL, nmatched, jumbled, NULL));
+            bool jumbledMateC = 0;
+            GRB_TRY(GxB_Vector_unpack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, &Jbytes, &Xbytes, NULL, &nmatched, &jumbledMateC, NULL)); // mateC and mateR do not have duplicates, so the order doesn't matter
+            GRB_TRY(GrB_Vector_clear(mateR));                                                                                                 // clear mateR first as a prerequisite of the build method
+            GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, NULL));                                                                    // build does not take ownership of the lists J and X, but only copies them,
+                                                                                                                                              // these lists will be given again to mateC
+                                                                                                                                              // mateC has no duplicates in the values list, so mateR doesn't need to handle dups
+            GRB_TRY(GxB_Vector_pack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, Jbytes, Xbytes, NULL, nmatched, true, NULL));
         }
 
         /* debug
@@ -400,9 +399,10 @@ int LAGraph_MaximumMatching(
 
                     GrB_Index *IrootfRIndexes, *VrootfRIndexes;
                     GrB_Index nRootfRIndexes = 0;
-                    GRB_TRY(GxB_Vector_unpack_CSC(rootfRIndexes, (GrB_Index **)&IrootfRIndexes, (void **)&VrootfRIndexes, &Ibytes, &Valbytes, NULL, &nRootfRIndexes, &jumbled, NULL)); // no need to sort them
-                    GRB_TRY(GxB_Vector_pack_CSC(rootfRIndexes, (GrB_Index **)&VrootfRIndexes, (void **)&IrootfRIndexes, Valbytes, Ibytes, NULL, nRootfRIndexes, jumbled, NULL));       // rootfRIndexes(i) = j,
-                                                                                                                                                                                       // where (i,j) = (parentC, rootC) of the new frontier C
+                    bool jumbledRoots = 1;
+                    GRB_TRY(GxB_Vector_unpack_CSC(rootfRIndexes, (GrB_Index **)&IrootfRIndexes, (void **)&VrootfRIndexes, &Ibytes, &Valbytes, NULL, &nRootfRIndexes, &jumbledRoots, NULL)); // no need to sort them
+                    GRB_TRY(GxB_Vector_pack_CSC(rootfRIndexes, (GrB_Index **)&VrootfRIndexes, (void **)&IrootfRIndexes, Valbytes, Ibytes, NULL, nRootfRIndexes, true, NULL));               // rootfRIndexes(i) = j,
+                                                                                                                                                                                            // where (i,j) = (parentC, rootC) of the new frontier C
                 }
 
                 // build tuple of (parentC, rootC)
@@ -427,8 +427,8 @@ int LAGraph_MaximumMatching(
                 GrB_Index bytes_dummy = 0, Vmatesbytes = 0, VfRBytes = 0, nfR = 0;
                 GRB_TRY(GxB_Vector_unpack_CSC(currentMatesR, (GrB_Index **)&dummy, (void **)&VmatesfR, &bytes_dummy, &Vmatesbytes, NULL, &nfR, NULL, NULL)); // currentMatesR already contains only the rows of fR
                 GRB_TRY(GxB_Vector_unpack_CSC(frontierR, (GrB_Index **)&dummy, (void **)&VfR, &bytes_dummy, &VfRBytes, NULL, &nfR, NULL, NULL));
-                GRB_TRY(GxB_Vector_pack_CSC(frontierR, (GrB_Index **)&VmatesfR, (void **)&VfR, Vmatesbytes, VfRBytes, NULL, nfR, jumbled, NULL)); // the values are not ordered,
-                                                                                                                                                  // so the indices of the inverted fR are jumbled
+                GRB_TRY(GxB_Vector_pack_CSC(frontierR, (GrB_Index **)&VmatesfR, (void **)&VfR, Vmatesbytes, VfRBytes, NULL, nfR, true, NULL)); // the values are not ordered,
+                                                                                                                                               // so the indices of the inverted fR are jumbled
                 // assign to fC
                 GRB_TRY(GrB_Vector_assign(frontierC, NULL, NULL, frontierR, GrB_ALL, ncols, GrB_DESC_RS));
             }
@@ -441,17 +441,19 @@ int LAGraph_MaximumMatching(
         uint64_t npathCopy = nvals;
         GrB_Index *Ipath, *Xpath;
         GrB_Index IpathBytes = 0, XpathBytes = 0;
-
         while (nvals)
         {
-            // invert pathC
-            GRB_TRY(GxB_Vector_unpack_CSC(pathC, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &nvals, &jumbled, NULL)); // pathC doesn't have dup values as it stems from an invertion
-            GRB_TRY(GxB_Vector_pack_CSC(ur, (GrB_Index **)&Xpath, (void **)&Ipath, XpathBytes, IpathBytes, NULL, nvals, jumbled, NULL));          // ur is already empty because in the previous iteration it was unpacked
+            GxB_Vector_fprint(pathC, "pathC", GxB_COMPLETE, stdout);
 
-            /* debug
+            // invert pathC
+            bool jumbledPathC = 1;
+            GRB_TRY(GxB_Vector_unpack_CSC(pathC, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &nvals, &jumbledPathC, NULL)); // pathC doesn't have dup values as it stems from an invertion
+            GRB_TRY(GxB_Vector_pack_CSC(ur, (GrB_Index **)&Xpath, (void **)&Ipath, XpathBytes, IpathBytes, NULL, nvals, true, NULL));                  // ur is already empty because in the previous iteration it was unpacked
+
+            // /* debug
             GxB_Vector_fprint(ur, "ur", GxB_COMPLETE, stdout);
-            GxB_Vector_fprint(parentsR, "parentsR", GxB_COMPLETE, stdout);
-            */
+            // GxB_Vector_fprint(parentsR, "parentsR", GxB_COMPLETE, stdout);
+            // */
 
             // assign parents of rows to rows
             GRB_TRY(GrB_Vector_assign(ur, ur, NULL, parentsR, GrB_ALL, nrows, GrB_DESC_S)); // update the values of ur (descriptor needed to use mask's structure and not values)
@@ -461,8 +463,9 @@ int LAGraph_MaximumMatching(
             */
 
             // invert ur
-            GRB_TRY(GxB_Vector_unpack_CSC(ur, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &nvals, &jumbled, NULL));
-            GRB_TRY(GxB_Vector_pack_CSC(pathC, (GrB_Index **)&Xpath, (void **)&Ipath, XpathBytes, IpathBytes, NULL, nvals, jumbled, NULL));
+            bool jumbledUR = 1;
+            GRB_TRY(GxB_Vector_unpack_CSC(ur, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &nvals, &jumbledUR, NULL));
+            GRB_TRY(GxB_Vector_pack_CSC(pathC, (GrB_Index **)&Xpath, (void **)&Ipath, XpathBytes, IpathBytes, NULL, nvals, true, NULL));
 
             /* debug
             GxB_Vector_fprint(pathC, "pathC", GxB_COMPLETE, stdout);
