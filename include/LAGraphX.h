@@ -1236,8 +1236,9 @@ int LAGraph_MaximumMatching(
     // output/input:
     GrB_Vector *mateC, // mateC(j) = i : Column j of C subset is matched to row i of R subset
     // input:
-    LAGraph_Graph G, // input graph
-    char *msg);
+    GrB_Matrix A, // input adjacency matrix
+    char *msg
+);
 
 #if defined ( __cplusplus )
 }
