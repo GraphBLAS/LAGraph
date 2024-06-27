@@ -242,9 +242,6 @@ int LAGraph_MaximumMatching(
 
     GRB_TRY(GxB_IndexUnaryOp_new(&initFrontierOp, (void *)initFrontier, Vertex, GrB_BOOL, GrB_BOOL, "initFrontier", INIT_FRONTIER_DEFN));
 
-    uint64_t nvals = 0;
-    bool y = 0; // see if I can get rid of this
-
     GRB_TRY(GrB_Vector_new(&I, GrB_BOOL, ncols));
     GRB_TRY(GrB_Vector_assign_BOOL(I, NULL, NULL, 1, GrB_ALL, ncols, NULL)); // pack with GrB_ALL as indexes?
 
@@ -289,6 +286,9 @@ int LAGraph_MaximumMatching(
 
     GRB_TRY(GrB_Vector_new(&currentMatesR, GrB_UINT64, nrows));
 
+    uint64_t npath = 0;
+    bool y = 0; // see if I can get rid of this
+
     do
     {
         GRB_TRY(GrB_Vector_clear(pathC));
@@ -326,6 +326,8 @@ int LAGraph_MaximumMatching(
         GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
         */
 
+        uint64_t nfC = 0;
+
         do
         {
             // perform one step of BFS from C nodes and keep only unvisited rows
@@ -343,6 +345,7 @@ int LAGraph_MaximumMatching(
             GRB_TRY(GrB_Vector_assign(currentMatesR, frontierR, NULL, mateR, GrB_ALL, nrows, GrB_DESC_RS));
 
             /* debug
+            uint64_t nvals = 0;
             GxB_Vector_fprint(currentMatesR, "currentMatesR", GxB_COMPLETE, stdout);
             GrB_Index *R = (GrB_Index *)malloc(nrows * sizeof(GrB_Index));
             vertex *VR = (vertex *)malloc(nrows * sizeof(vertex));
@@ -433,20 +436,20 @@ int LAGraph_MaximumMatching(
                 GRB_TRY(GrB_Vector_assign(frontierC, NULL, NULL, frontierR, GrB_ALL, ncols, GrB_DESC_RS));
             }
 
-            GRB_TRY(GrB_Vector_nvals(&nvals, frontierC));
+            GRB_TRY(GrB_Vector_nvals(&nfC, frontierC));
 
-        } while (nvals);
+        } while (nfC);
 
-        GRB_TRY(GrB_Vector_nvals(&nvals, pathC));
-        uint64_t npathCopy = nvals;
+        GRB_TRY(GrB_Vector_nvals(&npath, pathC));
+        uint64_t npathCopy = npath;
         GrB_Index *Ipath, *Xpath;
         GrB_Index IpathBytes = 0, XpathBytes = 0;
-        while (nvals)
+        while (npath)
         {
             // invert pathC
             bool jumbledPathC = 1;
-            GRB_TRY(GxB_Vector_unpack_CSC(pathC, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &nvals, &jumbledPathC, NULL)); // pathC doesn't have dup values as it stems from an invertion
-            GRB_TRY(GxB_Vector_pack_CSC(ur, (GrB_Index **)&Xpath, (void **)&Ipath, XpathBytes, IpathBytes, NULL, nvals, true, NULL));                  // ur is already empty because in the previous iteration it was unpacked
+            GRB_TRY(GxB_Vector_unpack_CSC(pathC, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &npath, &jumbledPathC, NULL)); // pathC doesn't have dup values as it stems from an invertion
+            GRB_TRY(GxB_Vector_pack_CSC(ur, (GrB_Index **)&Xpath, (void **)&Ipath, XpathBytes, IpathBytes, NULL, npath, true, NULL));                  // ur is already empty because in the previous iteration it was unpacked
 
             /* debug
             GxB_Vector_fprint(ur, "ur", GxB_COMPLETE, stdout);
@@ -462,8 +465,8 @@ int LAGraph_MaximumMatching(
 
             // invert ur
             bool jumbledUR = 1;
-            GRB_TRY(GxB_Vector_unpack_CSC(ur, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &nvals, &jumbledUR, NULL));
-            GRB_TRY(GxB_Vector_pack_CSC(pathC, (GrB_Index **)&Xpath, (void **)&Ipath, XpathBytes, IpathBytes, NULL, nvals, true, NULL));
+            GRB_TRY(GxB_Vector_unpack_CSC(ur, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &npath, &jumbledUR, NULL));
+            GRB_TRY(GxB_Vector_pack_CSC(pathC, (GrB_Index **)&Xpath, (void **)&Ipath, XpathBytes, IpathBytes, NULL, npath, true, NULL));
 
             /* debug
             GxB_Vector_fprint(pathC, "pathC", GxB_COMPLETE, stdout);
@@ -483,15 +486,15 @@ int LAGraph_MaximumMatching(
             pathC = pathCopy;
             pathCopy = temp;
 
-            GRB_TRY(GrB_Vector_nvals(&nvals, pathC));
+            GRB_TRY(GrB_Vector_nvals(&npath, pathC));
 
             /* debug
             GxB_Vector_fprint(mateCcopy, "mateC", GxB_COMPLETE, stdout);
             */
         }
 
-        nvals = npathCopy;
-    } while (nvals); // only in the first and last iteration should this condition be false
+        npath = npathCopy;
+    } while (npath); // only in the first and last iteration should this condition be false
 
     /* debug
     GxB_Vector_fprint(mateCcopy, "mateC", GxB_COMPLETE, stdout);
