@@ -181,7 +181,7 @@ int LAGraph_MaximumMatching(
     // output/input:
     GrB_Vector *mateC, // mateC(j) = i : Column j of the C subset is matched to row i of the R subset
     // input:
-    LAGraph_Graph G, // input graph
+    GrB_Matrix A, // input adjacency matrix, TODO: this should be a LAGraph of a BIPARTITE kind
     char *msg)
 {
 
@@ -221,9 +221,6 @@ int LAGraph_MaximumMatching(
 
     LG_CLEAR_MSG;
 
-    LG_TRY(LAGraph_CheckGraph(G, msg));
-
-    GrB_Matrix A = G->A;
     uint64_t ncols = 0;
     GRB_TRY(GrB_Matrix_ncols(&ncols, A));
 
@@ -433,7 +430,9 @@ int LAGraph_MaximumMatching(
                 GRB_TRY(GxB_Vector_pack_CSC(frontierR, (GrB_Index **)&VmatesfR, (void **)&VfR, Vmatesbytes, VfRBytes, NULL, nfR, true, NULL)); // the values are not ordered,
                                                                                                                                                // so the indices of the inverted fR are jumbled
                 // assign to fC
+                GRB_TRY(GrB_Vector_resize(frontierR, ncols)); // if ncols == nrows, a re-allocation will not happen
                 GRB_TRY(GrB_Vector_assign(frontierC, NULL, NULL, frontierR, GrB_ALL, ncols, GrB_DESC_RS));
+                GRB_TRY(GrB_Vector_resize(frontierR, nrows));
             }
 
             GRB_TRY(GrB_Vector_nvals(&nfC, frontierC));

@@ -12,10 +12,10 @@ LAGraph_Graph G = NULL;
 #define LEN 512
 char filename[LEN + 1];
 
-#define NTESTS 2
+#define NTESTS 5
 
-const char *filenames[NTESTS] = {"random_weighted_bipartite2.mtx", "test_FW_2500.mtx"};
-const uint64_t spranks[NTESTS] = {298, 2009};
+const char *filenames[NTESTS] = {"random_weighted_bipartite2.mtx", "test_FW_2500.mtx", "LFAT5_hypersparse.mtx", "lp_afiro_structure.mtx", "sources_7.mtx"};
+const uint64_t spranks[NTESTS] = {298, 2009, 14, 27, 1};
 
 void test_MCM(void)
 {
@@ -59,13 +59,10 @@ void test_MCM(void)
         OK(LAGraph_Free((void **)&dummy, msg));
         OK(LAGraph_Free((void **)&iso_value, msg));
 
-        OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
-        TEST_CHECK(A == NULL); // A has been moved into G->A
-
         GrB_Vector mateC = NULL;
         OK(GrB_Vector_new(&mateC, GrB_UINT64, ncols));
 
-        OK(LAGraph_MaximumMatching(&mateC, G, msg));
+        OK(LAGraph_MaximumMatching(&mateC, A, msg));
         printf("\nmsg: %s\n", msg);
 
         GrB_Index nmatched = 0;
@@ -85,7 +82,6 @@ void test_MCM(void)
 
         // pack matched values in a matrix
         GrB_Matrix M = NULL;
-        A = G->A;
         bool *val;
         OK(LAGraph_Malloc((void **)&val, nmatched, sizeof(bool), msg));
         for (uint64_t i = 0; i < nmatched; i++)
@@ -103,10 +99,10 @@ void test_MCM(void)
         // sprank must be equal to nvals of mateC (nmatched)
         TEST_CHECK(nmatched == spranks[test]);
 
-        OK(LAGraph_Delete(&G, msg));
         OK(GrB_Vector_free(&mateC));
         OK(GrB_Vector_free(&mateR));
         OK(GrB_Matrix_free(&M));
+        OK(GrB_Matrix_free(&A));
     }
 
     LAGraph_Finalize(msg);
