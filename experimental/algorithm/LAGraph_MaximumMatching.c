@@ -443,17 +443,15 @@ int LAGraph_MaximumMatching(
         GrB_Index IpathBytes = 0, XpathBytes = 0;
         while (nvals)
         {
-            GxB_Vector_fprint(pathC, "pathC", GxB_COMPLETE, stdout);
-
             // invert pathC
             bool jumbledPathC = 1;
             GRB_TRY(GxB_Vector_unpack_CSC(pathC, (GrB_Index **)&Ipath, (void **)&Xpath, &IpathBytes, &XpathBytes, NULL, &nvals, &jumbledPathC, NULL)); // pathC doesn't have dup values as it stems from an invertion
             GRB_TRY(GxB_Vector_pack_CSC(ur, (GrB_Index **)&Xpath, (void **)&Ipath, XpathBytes, IpathBytes, NULL, nvals, true, NULL));                  // ur is already empty because in the previous iteration it was unpacked
 
-            // /* debug
+            /* debug
             GxB_Vector_fprint(ur, "ur", GxB_COMPLETE, stdout);
-            // GxB_Vector_fprint(parentsR, "parentsR", GxB_COMPLETE, stdout);
-            // */
+            GxB_Vector_fprint(parentsR, "parentsR", GxB_COMPLETE, stdout);
+            */
 
             // assign parents of rows to rows
             GRB_TRY(GrB_Vector_assign(ur, ur, NULL, parentsR, GrB_ALL, nrows, GrB_DESC_S)); // update the values of ur (descriptor needed to use mask's structure and not values)
@@ -495,14 +493,12 @@ int LAGraph_MaximumMatching(
         nvals = npathCopy;
     } while (nvals); // only in the first and last iteration should this condition be false
 
-    // /* debug
+    /* debug
     GxB_Vector_fprint(mateCcopy, "mateC", GxB_COMPLETE, stdout);
-    // */
+    */
 
     (*mateC) = mateCcopy;
     LG_FREE_WORK;
-
-    // LG_ASSERT_MSG(1 == 0, GrB_INVALID_VALUE, "dummy");
 
     return (GrB_SUCCESS);
 }

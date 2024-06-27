@@ -16,7 +16,7 @@ void test_MCM()
 {
     LAGraph_Init(msg);
 
-    OK(LG_SET_BURBLE(1));
+    // OK(LG_SET_BURBLE(1));
 
     GrB_Matrix A = NULL;
     snprintf(filename, LEN, LG_DATA_DIR "%s", "west0067.mtx");
@@ -32,19 +32,24 @@ void test_MCM()
     // make A a bool matrix and iso-valued
     GrB_Index *I, *J, *X;
     double *dummy;
+    bool *iso_value;
+
     OK(LAGraph_Malloc((void **)&I, nvals, sizeof(GrB_Index), msg));
     OK(LAGraph_Malloc((void **)&J, nvals, sizeof(GrB_Index), msg));
     OK(LAGraph_Malloc((void **)&dummy, nvals, sizeof(double), msg));
+    OK(LAGraph_Malloc((void **)&iso_value, nvals, sizeof(bool), msg));
 
-    GrB_Index Ibytes = 0, Jbytes = 0, Xbytes = 0;
-    bool jumbled = 1;
-    bool iso_value[nvals];
     for (uint64_t i = 0; i < nvals; i++)
         iso_value[i] = 1;
     OK(GrB_Matrix_extractTuples_FP64(I, J, dummy, &nvals, A));
     TEST_CHECK(I != NULL);
     OK(GrB_Matrix_new(&A, GrB_BOOL, nrows, ncols));
     OK(GrB_Matrix_build_BOOL(A, I, J, iso_value, nvals, GrB_FIRST_BOOL));
+
+    OK(LAGraph_Free((void **)&I, msg));
+    OK(LAGraph_Free((void **)&J, msg));
+    OK(LAGraph_Free((void **)&dummy, msg));
+    OK(LAGraph_Free((void **)&iso_value, msg));
 
     OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
     TEST_CHECK(A == NULL); // A has been moved into G->A
@@ -53,7 +58,7 @@ void test_MCM()
     OK(GrB_Vector_new(&mateC, GrB_UINT64, ncols));
 
     OK(LAGraph_MaximumMatching(&mateC, G, msg));
-    printf("msg: %s\n", msg);
+    printf("\nmsg: %s\n", msg);
 
     GrB_Index nmatched = 0;
 
@@ -61,22 +66,25 @@ void test_MCM()
     OK(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
 
     // invert to check for dups
+    GrB_Index Ibytes = 0, Jbytes = 0, Xbytes = 0;
+    bool jumbled = 1;
     OK(GxB_Vector_unpack_CSC(mateC, (GrB_Index **)&J, (void **)&X, &Jbytes, &Xbytes, NULL, &nmatched, &jumbled, NULL));
     OK(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64));
     GrB_Index nmateR = 0;
     OK(GrB_Vector_nvals(&nmateR, mateR));
     // if nvals of mateC and mateR don't match, then there's at least one row that is used in at least one matching
     TEST_CHECK(nmatched == nmateR);
-    OK(LAGraph_Free((void **)&mateR, msg));
 
     // pack matched values in a matrix
     GrB_Matrix M = NULL;
     A = G->A;
-    bool val[nmatched];
+    bool *val;
+    OK(LAGraph_Malloc((void **)&val, nmatched, sizeof(bool), msg));
     for (uint64_t i = 0; i < nmatched; i++)
         val[i] = 1;
     OK(GrB_Matrix_new(&M, GrB_BOOL, nrows, ncols));
     OK(GrB_Matrix_build_BOOL(M, X, J, val, nmatched, NULL));
+    OK(LAGraph_Free((void **)&val, msg));
     // mask with matrix A to check if all edges are present in A
     OK(GrB_Matrix_assign(M, M, NULL, A, GrB_ALL, nrows, GrB_ALL, ncols, GrB_DESC_S));
     GrB_Index nvalsM = 0;
@@ -85,6 +93,91 @@ void test_MCM()
     TEST_CHECK(nvalsM == nmatched);
 
     // sprank must be equal to nvals of mateC (nmatched)
+    const uint64_t matlab_res = 67;
+    TEST_CHECK(nmatched == matlab_res);
+
+    OK(LAGraph_Delete(&G, msg));
+    OK(GrB_Vector_free(&mateC));
+    OK(GrB_Vector_free(&mateR));
+    OK(GrB_Matrix_free(&M));
+
+    // ---------------- second test -----------------
+
+    snprintf(filename, LEN, LG_DATA_DIR "%s", "zenios.mtx");
+    f = fopen(filename, "r");
+    TEST_CHECK(f != NULL);
+    OK(LAGraph_MMRead(&A, f, msg));
+    OK(fclose(f));
+    nrows = 0, ncols = 0, nvals = 0;
+    OK(GrB_Matrix_nrows(&nrows, A));
+    OK(GrB_Matrix_ncols(&ncols, A));
+    OK(GrB_Matrix_nvals(&nvals, A));
+
+    OK(LAGraph_Malloc((void **)&I, nvals, sizeof(GrB_Index), msg));
+    OK(LAGraph_Malloc((void **)&J, nvals, sizeof(GrB_Index), msg));
+    OK(LAGraph_Malloc((void **)&dummy, nvals, sizeof(double), msg));
+    OK(LAGraph_Malloc((void **)&iso_value, nvals, sizeof(bool), msg));
+
+    for (uint64_t i = 0; i < nvals; i++)
+        iso_value[i] = 1;
+    OK(GrB_Matrix_extractTuples_FP64(I, J, dummy, &nvals, A));
+    TEST_CHECK(I != NULL);
+    OK(GrB_Matrix_new(&A, GrB_BOOL, nrows, ncols));
+    OK(GrB_Matrix_build_BOOL(A, I, J, iso_value, nvals, GrB_FIRST_BOOL));
+
+    OK(LAGraph_Free((void **)&I, msg));
+    OK(LAGraph_Free((void **)&J, msg));
+    OK(LAGraph_Free((void **)&dummy, msg));
+    OK(LAGraph_Free((void **)&iso_value, msg));
+
+    OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
+    TEST_CHECK(A == NULL); // A has been moved into G->A
+
+    mateC = NULL;
+    OK(GrB_Vector_new(&mateC, GrB_UINT64, ncols));
+
+    OK(LAGraph_MaximumMatching(&mateC, G, msg));
+    printf("msg: %s\n", msg);
+
+    nmatched = 0;
+
+    mateR = NULL;
+    OK(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
+
+    // invert to check for dups
+    Ibytes = 0, Jbytes = 0, Xbytes = 0;
+    jumbled = 1;
+    OK(GxB_Vector_unpack_CSC(mateC, (GrB_Index **)&J, (void **)&X, &Jbytes, &Xbytes, NULL, &nmatched, &jumbled, NULL));
+    OK(GrB_Vector_build_UINT64(mateR, X, J, nmatched, GrB_FIRST_UINT64));
+    nmateR = 0;
+    OK(GrB_Vector_nvals(&nmateR, mateR));
+    // if nvals of mateC and mateR don't match, then there's at least one row that is used in at least one matching
+    TEST_CHECK(nmatched == nmateR);
+
+    // pack matched values in a matrix
+    M = NULL;
+    A = G->A;
+    OK(LAGraph_Malloc((void **)&val, nmatched, sizeof(bool), msg));
+    for (uint64_t i = 0; i < nmatched; i++)
+        val[i] = 1;
+    OK(GrB_Matrix_new(&M, GrB_BOOL, nrows, ncols));
+    OK(GrB_Matrix_build_BOOL(M, X, J, val, nmatched, NULL));
+    OK(LAGraph_Free((void **)&val, msg));
+    // mask with matrix A to check if all edges are present in A
+    OK(GrB_Matrix_assign(M, M, NULL, A, GrB_ALL, nrows, GrB_ALL, ncols, GrB_DESC_S));
+    nvalsM = 0;
+    OK(GrB_Matrix_nvals(&nvalsM, M));
+    // if values have been eliminated then edges do not exist in A
+    TEST_CHECK(nvalsM == nmatched);
+
+    // sprank must be equal to nvals of mateC (nmatched)
+    const uint64_t matlab_res_2 = 2873;
+    TEST_CHECK(nmatched == matlab_res_2);
+
+    OK(LAGraph_Delete(&G, msg));
+    OK(GrB_Vector_free(&mateC));
+    OK(GrB_Vector_free(&mateR));
+    OK(GrB_Matrix_free(&M));
 
     LAGraph_Finalize(msg);
 }
