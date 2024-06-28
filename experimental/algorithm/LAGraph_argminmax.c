@@ -312,7 +312,7 @@ int LAGraph_argminmax
             GRB_TRY (GrB_Matrix_extractElement_INT64 (&(I [0]), *p, 0, 0)) ;
             // I [1] = p [I [0]-1] (use -1 since I[0] is 1-based),
             // which is the column index of the global argmin/max of A
-            GRB_TRY (GrB_Matrix_extractElement_INT64 (&(I [1]), p1, I [0] - 1, 0)) ;
+            GRB_TRY (GrB_Matrix_extractElement_INT64 (&(I [1]), p1, I [0], 0)) ;
         }
 
         // free workspace and create p = [row, col]
