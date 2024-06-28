@@ -286,6 +286,24 @@ int LAGraph_MaximumMatching(
     uint64_t npath = 0;
     bool y = 0; // see if I can get rid of this
 
+    uint64_t nmatched = 0;
+    GRB_TRY(GrB_Vector_nvals(&nmatched, mateCcopy));
+    if (nmatched)
+    {
+        GrB_Index *J, *X; // unpack allocates space for these lists
+        GrB_Index Jbytes = 0, Xbytes = 0;
+        bool jumbledMateC = 0;
+        GRB_TRY(GxB_Vector_unpack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, &Jbytes, &Xbytes, NULL, &nmatched, &jumbledMateC, NULL)); // mateC and mateR do not have duplicates, so the order doesn't matter
+        GRB_TRY(GrB_Vector_clear(mateR));                                                                                                 // clear mateR first as a prerequisite of the build method
+        GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, NULL));                                                                    // build does not take ownership of the lists J and X, but only copies them,
+                                                                                                                                          // these lists will be given again to mateC
+                                                                                                                                          // mateC has no duplicates in the values list, so mateR doesn't need to handle dups
+        GRB_TRY(GxB_Vector_pack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, Jbytes, Xbytes, NULL, nmatched, true, NULL));
+    }
+    /* debug
+    GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
+    */
+
     do
     {
         GRB_TRY(GrB_Vector_clear(pathC));
@@ -302,25 +320,6 @@ int LAGraph_MaximumMatching(
             printf("\nfc (%d) = (%ld, %ld)", (int)C[k], V[k].parentC, V[k].rootC);
         }
         GxB_Vector_fprint(mateCcopy, "mateC", GxB_COMPLETE, stdout);
-        */
-
-        uint64_t nmatched = 0;
-        GRB_TRY(GrB_Vector_nvals(&nmatched, mateCcopy));
-        if (nmatched)
-        {
-            GrB_Index *J, *X; // unpack allocates space for these lists
-            GrB_Index Jbytes = 0, Xbytes = 0;
-            bool jumbledMateC = 0;
-            GRB_TRY(GxB_Vector_unpack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, &Jbytes, &Xbytes, NULL, &nmatched, &jumbledMateC, NULL)); // mateC and mateR do not have duplicates, so the order doesn't matter
-            GRB_TRY(GrB_Vector_clear(mateR));                                                                                                 // clear mateR first as a prerequisite of the build method
-            GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, NULL));                                                                    // build does not take ownership of the lists J and X, but only copies them,
-                                                                                                                                              // these lists will be given again to mateC
-                                                                                                                                              // mateC has no duplicates in the values list, so mateR doesn't need to handle dups
-            GRB_TRY(GxB_Vector_pack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, Jbytes, Xbytes, NULL, nmatched, true, NULL));
-        }
-
-        /* debug
-        GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
         */
 
         uint64_t nfC = 0;
@@ -461,6 +460,9 @@ int LAGraph_MaximumMatching(
             /* debug
             GxB_Vector_fprint(ur, "ur with updated parents", GxB_COMPLETE, stdout);
             */
+
+            // update mateR
+            GRB_TRY(GrB_Vector_assign(mateR, NULL, GrB_SECOND_UINT64, ur, GrB_ALL, nrows, NULL));
 
             // invert ur
             bool jumbledUR = 1;
