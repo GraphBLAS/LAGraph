@@ -372,15 +372,17 @@ int LAGraph_MaximumMatching(
                 LG_TRY(LAGraph_Free((void **)&IrootsufR, msg));                                               // build copies the lists so they need to be freed
                 LG_TRY(LAGraph_Free((void **)&VrootsufR, msg));
 
-                // get roots of row nodes in the current R frontier
-                GRB_TRY(GrB_Vector_apply(rootsfR, NULL, NULL, getRootsOp, frontierR, NULL));
-
-                /* debug
-                GxB_Vector_fprint(rootsfR, "rootsfR", GxB_COMPLETE, stdout);
-                */
+                GRB_TRY(GrB_Vector_clear(rootfRIndexes));
 
                 if (nfR)
                 {
+                    // get roots of row nodes in the current R frontier
+                    GRB_TRY(GrB_Vector_apply(rootsfR, NULL, NULL, getRootsOp, frontierR, NULL));
+
+                    /* debug
+                    GxB_Vector_fprint(rootsfR, "rootsfR", GxB_COMPLETE, stdout);
+                    */
+
                     GrB_Index *VmatesfR, *VrootsfR, *dummy;
                     GrB_Index nRootsfR = 0;
                     GrB_Index n_dummy = 1, bytes_dummy = 0;
@@ -388,7 +390,6 @@ int LAGraph_MaximumMatching(
                     GRB_TRY(GxB_Vector_unpack_CSC(currentMatesR, (GrB_Index **)&dummy, (void **)&VmatesfR, &bytes_dummy, &Valbytes, NULL, &nfR, NULL, NULL));
                     // keep roots of the R frontier (ordered indices)
                     GRB_TRY(GxB_Vector_unpack_CSC(rootsfR, (GrB_Index **)&dummy, (void **)&VrootsfR, &bytes_dummy, &Ibytes, NULL, &nRootsfR, NULL, NULL));
-                    GRB_TRY(GrB_Vector_clear(rootfRIndexes));
                     GRB_TRY(GrB_Vector_build_UINT64(rootfRIndexes, VrootsfR, VmatesfR, nRootsfR, GrB_FIRST_UINT64)); // rootfRIndexes(j) = i, where i is the col mate of the first row
                                                                                                                      // included in the current R frontier with a col root of j
                     // keep only col roots that are not included in ufR
@@ -426,12 +427,9 @@ int LAGraph_MaximumMatching(
                 GrB_Index bytes_dummy = 0, Vmatesbytes = 0, VfRBytes = 0, nfR = 0;
                 GRB_TRY(GxB_Vector_unpack_CSC(currentMatesR, (GrB_Index **)&dummy, (void **)&VmatesfR, &bytes_dummy, &Vmatesbytes, NULL, &nfR, NULL, NULL)); // currentMatesR already contains only the rows of fR
                 GRB_TRY(GxB_Vector_unpack_CSC(frontierR, (GrB_Index **)&dummy, (void **)&VfR, &bytes_dummy, &VfRBytes, NULL, &nfR, NULL, NULL));
-                GRB_TRY(GxB_Vector_pack_CSC(frontierR, (GrB_Index **)&VmatesfR, (void **)&VfR, Vmatesbytes, VfRBytes, NULL, nfR, true, NULL)); // the values are not ordered,
-                                                                                                                                               // so the indices of the inverted fR are jumbled
                 // assign to fC
-                GRB_TRY(GrB_Vector_resize(frontierR, ncols)); // if ncols == nrows, a re-allocation will not happen
-                GRB_TRY(GrB_Vector_assign(frontierC, NULL, NULL, frontierR, GrB_ALL, ncols, GrB_DESC_RS));
-                GRB_TRY(GrB_Vector_resize(frontierR, nrows));
+                GRB_TRY(GxB_Vector_pack_CSC(frontierC, (GrB_Index **)&VmatesfR, (void **)&VfR, Vmatesbytes, VfRBytes, NULL, nfR, true, NULL)); // the values are not ordered,
+                                                                                                                                               // so the indices of the inverted fR are jumbled
             }
 
             GRB_TRY(GrB_Vector_nvals(&nfC, frontierC));
