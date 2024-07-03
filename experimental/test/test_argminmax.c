@@ -40,8 +40,9 @@ void test_argminmax (void)
     printf ("\nInput of Matrix:\n") ;
     GxB_print(A, 2);
     // test the algorithm
-    OK (LAGraph_argminmax (&x,&p, A,dim,is_min, msg));
-    printf("\n") ;
+    int info = LAGraph_argminmax (&x,&p, A,dim,is_min, msg);
+    printf("%s\n", msg) ;
+    OK (info) ;
     GxB_print(x,3);
     GxB_print(p,3);
     // print the result

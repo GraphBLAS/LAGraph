@@ -102,10 +102,26 @@ int argminmax
     // for dim=2: find the position of the min/max entry in each row:
     // p = G*y, so that p(i) = j if x(i) = A(i,j) = min/max (A (i,:)).
 
-    // Use the SECONDI operator since built-in indexing is 0-based.  The ANY
-    // monoid would be faster, but this uses MIN monoid so that the result for
-    // the user is repeatable.
-    GRB_TRY (GrB_mxm (*p, NULL, NULL, GxB_MIN_SECONDI_INT64, G, y, desc)) ;
+    #if 0
+        printf ("argmin/max with 2ndi\n") ;
+        // Use the SECONDI operator since built-in indexing is 0-based.  The
+        // ANY monoid would be faster, but this uses MIN monoid so that the
+        // result for the user is repeatable.
+        // p = G*y or G'*y using the MIN_SECONDI semiring
+        GRB_TRY (GrB_mxm (*p, NULL, NULL, GxB_MIN_SECONDI_INT64, G, y, desc)) ;
+    #else
+        printf ("argmin/max without 2ndi\n") ;
+        // H = rowindex (G) if dim is 1, or colindex (G) if dim is 2.
+        GrB_Matrix H = NULL ;
+        GRB_TRY (GrB_Matrix_new (&H, GrB_INT64, nrows, ncols)) ;
+        GRB_TRY (GrB_apply (H, NULL, NULL,
+            (dim == 1) ? GrB_ROWINDEX_INT64 : GrB_COLINDEX_INT64, G,
+            (int64_t) 0, NULL)) ;
+        // p = H*y or H'*y using the MIN_FIRST semiring
+        GRB_TRY (GrB_mxm (*p, NULL, NULL, GrB_MIN_FIRST_SEMIRING_INT64, H, y,
+            desc)) ;
+        GRB_TRY (GrB_Matrix_free (&H)) ;
+    #endif
 
     //--------------------------------------------------------------------------
     // free workspace
@@ -312,7 +328,7 @@ int LAGraph_argminmax
             GRB_TRY (GrB_Matrix_extractElement_INT64 (&(I [0]), *p, 0, 0)) ;
             // I [1] = p [I [0]-1] (use -1 since I[0] is 1-based),
             // which is the column index of the global argmin/max of A
-            GRB_TRY (GrB_Matrix_extractElement_INT64 (&(I [1]), p1, I [0] - 1, 0)) ;
+            GRB_TRY (GrB_Matrix_extractElement_INT64 (&(I [1]), p1, I [0], 0)) ;
         }
 
         // free workspace and create p = [row, col]
