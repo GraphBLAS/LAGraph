@@ -329,9 +329,7 @@ int LAGraph_MaximumMatching(
             // perform one step of BFS from C nodes and keep only unvisited rows
             GRB_TRY(GrB_mxv(frontierR, parentsR, NULL, semiring, A, frontierC, GrB_DESC_RSC));
             // set parents of row frontier
-            GRB_TRY(GrB_Vector_apply(parentsUpdate, NULL, NULL, getParentsOp, frontierR, NULL));                // previous values are erased
-            GRB_TRY(GrB_Vector_assign(parentsR, NULL, GrB_SECOND_UINT64, parentsUpdate, GrB_ALL, nrows, NULL)); // update parents without deleting the ones not updated
-                                                                                                                // when GrB_ALL is used, ni is the number of rows of the vector
+            GRB_TRY(GrB_Vector_apply(parentsR, NULL, GrB_SECOND_UINT64, getParentsOp, frontierR, NULL)); // update parents without deleting the ones not updated
 
             // select unmatched rows of the R frontier
             GRB_TRY(GrB_Vector_assign(ufrontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RSC));
@@ -369,6 +367,7 @@ int LAGraph_MaximumMatching(
                 GRB_TRY(GrB_Vector_clear(pathUpdate));
                 GRB_TRY(GrB_Vector_build_UINT64(pathUpdate, VrootsufR, IrootsufR, nUfR, GrB_FIRST_UINT64));   // useful to handle duplicates
                 GRB_TRY(GrB_Vector_assign(pathC, NULL, GrB_SECOND_UINT64, pathUpdate, GrB_ALL, ncols, NULL)); // update path without deleting the values not updated
+                                                                                                              // when GrB_ALL is used, ni is the number of rows of the vector
                 LG_TRY(LAGraph_Free((void **)&IrootsufR, msg));                                               // build copies the lists so they need to be freed
                 LG_TRY(LAGraph_Free((void **)&VrootsufR, msg));
 
