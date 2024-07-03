@@ -298,7 +298,7 @@ int LAGraph_MaximumMatching(
         GRB_TRY(GrB_Vector_build_UINT64(mateR, X, J, nmatched, NULL));                                                                    // build does not take ownership of the lists J and X, but only copies them,
                                                                                                                                           // these lists will be given again to mateC
                                                                                                                                           // mateC has no duplicates in the values list, so mateR doesn't need to handle dups
-        GRB_TRY(GxB_Vector_pack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, Jbytes, Xbytes, NULL, nmatched, true, NULL));
+        GRB_TRY(GxB_Vector_pack_CSC(mateCcopy, (GrB_Index **)&J, (void **)&X, Jbytes, Xbytes, NULL, nmatched, jumbledMateC, NULL));
     }
     /* debug
     GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
