@@ -1,6 +1,5 @@
 {
     "files.associations": {
-        "lg_internal.h": "c",
-        "compare": "c"
+        "lg_internal.h": "c"
     }
 }
