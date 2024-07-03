@@ -329,7 +329,7 @@ int LAGraph_MaximumMatching(
             // perform one step of BFS from C nodes and keep only unvisited rows
             GRB_TRY(GrB_mxv(frontierR, parentsR, NULL, semiring, A, frontierC, GrB_DESC_RSC));
             // set parents of row frontier
-            GRB_TRY(GrB_Vector_apply(parentsR, NULL, GrB_SECOND_UINT64, getParentsOp, frontierR, NULL)); // update parents without deleting the ones not updated
+            GRB_TRY(GrB_Vector_apply(parentsR, frontierR, NULL, getParentsOp, frontierR, GrB_DESC_S)); // use input as mask to only update or insert parents without deleting the ones not updated
 
             // select unmatched rows of the R frontier
             GRB_TRY(GrB_Vector_assign(ufrontierR, mateR, NULL, frontierR, GrB_ALL, nrows, GrB_DESC_RSC));
@@ -365,10 +365,10 @@ int LAGraph_MaximumMatching(
                 GrB_Index Ibytes = 0, Valbytes = 0;
                 GRB_TRY(GxB_Vector_unpack_CSC(rootsufR, (GrB_Index **)&IrootsufR, (void **)&VrootsufR, &Ibytes, &Valbytes, NULL, &nUfR, NULL, NULL)); // sorted indices so we keep the min child
                 GRB_TRY(GrB_Vector_clear(pathUpdate));
-                GRB_TRY(GrB_Vector_build_UINT64(pathUpdate, VrootsufR, IrootsufR, nUfR, GrB_FIRST_UINT64));   // useful to handle duplicates
-                GRB_TRY(GrB_Vector_assign(pathC, NULL, GrB_SECOND_UINT64, pathUpdate, GrB_ALL, ncols, NULL)); // update path without deleting the values not updated
-                                                                                                              // when GrB_ALL is used, ni is the number of rows of the vector
-                LG_TRY(LAGraph_Free((void **)&IrootsufR, msg));                                               // build copies the lists so they need to be freed
+                GRB_TRY(GrB_Vector_build_UINT64(pathUpdate, VrootsufR, IrootsufR, nUfR, GrB_FIRST_UINT64));  // useful to handle duplicates
+                GRB_TRY(GrB_Vector_assign(pathC, pathUpdate, NULL, pathUpdate, GrB_ALL, ncols, GrB_DESC_S)); // update path without deleting the values not updated
+                                                                                                             // when GrB_ALL is used, ni is the number of rows of the vector
+                LG_TRY(LAGraph_Free((void **)&IrootsufR, msg));                                              // build copies the lists so they need to be freed
                 LG_TRY(LAGraph_Free((void **)&VrootsufR, msg));
 
                 GRB_TRY(GrB_Vector_clear(rootfRIndexes));
@@ -459,7 +459,7 @@ int LAGraph_MaximumMatching(
             */
 
             // update mateR
-            GRB_TRY(GrB_Vector_assign(mateR, NULL, GrB_SECOND_UINT64, ur, GrB_ALL, nrows, NULL));
+            GRB_TRY(GrB_Vector_assign(mateR, ur, NULL, ur, GrB_ALL, nrows, GrB_DESC_S));
 
             // invert ur
             bool jumbledUR = 1;
@@ -478,7 +478,7 @@ int LAGraph_MaximumMatching(
             */
 
             // update mateC
-            GRB_TRY(GrB_Vector_assign(mateCcopy, NULL, GrB_SECOND_UINT64, pathC, GrB_ALL, ncols, NULL));
+            GRB_TRY(GrB_Vector_assign(mateCcopy, pathC, NULL, pathC, GrB_ALL, ncols, GrB_DESC_S));
             // swap path and pathCopy
             GrB_Vector temp = pathC;
             pathC = pathCopy;
