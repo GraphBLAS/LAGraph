@@ -185,6 +185,8 @@ int LAGraph_MaximumMatching(
     char *msg)
 {
 
+    GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -420,7 +422,9 @@ int LAGraph_MaximumMatching(
             else
             {
                 // typecast mateR to ensure domain match with frontier R and apply op on frontier to set parents to mates
+                printf ("Hi, calling apply with setParentsMatesOp as the accum\n") ;
                 GRB_TRY(GrB_Vector_apply(frontierR, NULL, setParentsMatesOp, vertexTypecastOp, currentMatesR, NULL)); // fR(i) = (column mate of i, rootC)  // add the structural mask
+                printf ("OK did that\n") ;
                 // invert fr
                 GrB_Index *VmatesfR, *VfR, *dummy;
                 GrB_Index bytes_dummy = 0, Vmatesbytes = 0, VfRBytes = 0, nfR = 0;
@@ -501,5 +505,6 @@ int LAGraph_MaximumMatching(
     (*mateC) = mateCcopy;
     LG_FREE_WORK;
 
+    GrB_set (GrB_GLOBAL, false, GxB_BURBLE) ;
     return (GrB_SUCCESS);
 }
