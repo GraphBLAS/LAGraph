@@ -506,13 +506,16 @@ int LAGraph_MaximumMatching(
 
         do
         {
+            //----------------------------------------------------------------------
             // STEPS 1,2: Explore neighbors of column frontier (one step of
             // BFS), keeping only unvisited rows in the frontierR
+            //----------------------------------------------------------------------
             GRB_TRY(GrB_mxv(frontierR, parentsR, NULL, MinParent_2nd_Semiring,
                             A, frontierC, GrB_DESC_RSC));
 
-            // STEPS 3,4: Select matched and unmatched row vertices
-
+            //----------------------------------------------------------------------
+            // STEPS 3,4: Select univisited, matched and unmatched row vertices
+            //----------------------------------------------------------------------
             // set parents of row frontier
             GRB_TRY(GrB_Vector_apply(
                 parentsR, frontierR, NULL, getParentsOp, frontierR,
@@ -526,6 +529,7 @@ int LAGraph_MaximumMatching(
             // select matched rows of the R frontier
             GRB_TRY(GrB_Vector_assign(frontierR, mateR, NULL, frontierR,
                                       GrB_ALL, nrows, GrB_DESC_RS));
+
             // keep only mates of rows in frontierR
             GRB_TRY(GrB_Vector_assign(currentMatesR, frontierR, NULL, mateR,
                                       GrB_ALL, nrows, GrB_DESC_RS));
@@ -551,8 +555,9 @@ int LAGraph_MaximumMatching(
 
             if (nUfR)
             {
-                // STEP 5:
-
+                //----------------------------------------------------------------------
+                // STEP 5: Store endpoints of newly discovered augmenting paths
+                //----------------------------------------------------------------------
                 // get roots of unmatched row nodes in the R frontier
                 GRB_TRY(GrB_Vector_apply(rootsufR, NULL, NULL, getRootsOp,
                                          ufrontierR, NULL));
@@ -567,7 +572,9 @@ int LAGraph_MaximumMatching(
                                   // not updated when GrB_ALL is used, ni is
                                   // the number of rows of the vector
 
-                // STEP 6:
+                //----------------------------------------------------------------------
+                // STEP 6: Prune vertices in trees yielding augmenting paths
+                //----------------------------------------------------------------------
                 GRB_TRY(GrB_Vector_clear(rootfRIndexes));
 
                 if (nfR)
@@ -594,15 +601,21 @@ int LAGraph_MaximumMatching(
                                               rootfRIndexes, GrB_ALL, ncols,
                                               GrB_DESC_RSC));
 
+                    //----------------------------------------------------------------------
+                    // STEP 7a (ufrontierR not empty): Move values in the
+                    // correct positions for the C frontier
+                    //----------------------------------------------------------------------
                     // rootfRIndexes = invert (rootfRIndexes), so that
-                    // rootfRIndexes(i) = j, where (i,j) = (parentC, rootC)
-                    // of the new frontier C
+                    // rootfRIndexes(i) = j, where (i,j) = (parentC, rootC) of
+                    // the new frontier C
                     LAGRAPH_TRY(
                         invert(rootfRIndexes, rootfRIndexes, false, msg));
                 }
 
-                // STEP 7b: when ufrontierR is not empty
-                // build tuple of (parentC, rootC)
+                //----------------------------------------------------------------------
+                // STEP 7b (ufrontierR not empty): Build tuple of (parentC,
+                // rootC)
+                //----------------------------------------------------------------------
                 GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, NULL, NULL,
                                                      buildfCTuplesOp,
                                                      rootfRIndexes, &y, NULL));
@@ -620,15 +633,22 @@ int LAGraph_MaximumMatching(
             }
             else
             {
-                // STEP 7: when ufrontierR is empty
-
+                //----------------------------------------------------------------------
+                // STEP 7a (ufrontierR is empty): Set parents of the R frontier
+                // to their mates
+                //----------------------------------------------------------------------
                 // typecast mateR to ensure domain match with frontier R and
                 // apply op on frontier to set parents to mates
-                GRB_TRY(GrB_Vector_apply(
-                    frontierR, NULL, setParentsMatesOp, vertexTypecastOp,
-                    currentMatesR,
-                    NULL)); // fR(i) = (column mate of i, rootC) //
-                            // add the structural mask
+                GRB_TRY(
+                    GrB_Vector_apply(frontierR, NULL, setParentsMatesOp,
+                                     vertexTypecastOp, currentMatesR,
+                                     NULL)); // fR(i) = (column mate of i,
+                                             // rootC) add the structural mask
+
+                //----------------------------------------------------------------------
+                // STEP 7b (ufrontierR is empty): Move values in the correct
+                // positions for the C frontier
+                //----------------------------------------------------------------------
                 // invert fr and assign to fC
                 // (currentMatesR already contains only the rows of fR)
                 LAGRAPH_TRY(
