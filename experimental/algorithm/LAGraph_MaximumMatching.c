@@ -212,6 +212,7 @@ static inline GrB_Info invert_nondestructive(
     uint64_t nvals = 0;
 
     // the input and output vectors cannot be the same vector
+//  GRB_TRY(GxB_print (in,0)) ; GRB_TRY(GxB_print (out,0)) ;
     ASSERT (in != out) ;
 
     // All input/output vectors must be of type GrB_UINT64.
@@ -232,6 +233,7 @@ static inline GrB_Info invert_nondestructive(
                 // values list, so dups are not handled
     GRB_TRY(GxB_Vector_pack_CSC(in, (GrB_Index **)&I, (void **)&X1, IBytes,
                                 XBytes, NULL, nvals, jumbled, NULL));
+//  GRB_TRY(GxB_print (in,0)) ; GRB_TRY(GxB_print (out,0)) ;
 }
 
 static inline GrB_Info invert(
@@ -253,6 +255,10 @@ static inline GrB_Info invert(
     GrB_Index *X2 = NULL; // not used
     GrB_Index IBytes = 0, XBytes = 0;
     uint64_t nvals = 0;
+    printf ("invert, dups %d\n", dups) ;
+//  GRB_TRY(GxB_print (in,2)) ;
+//  GRB_TRY(GxB_print (out,2)) ;
+
     // #if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_Vector_unpack_CSC(in, (GrB_Index **)&I, (void **)&X1, &IBytes,
                                   &XBytes, NULL, &nvals, &jumbled,
@@ -272,7 +278,9 @@ static inline GrB_Info invert(
         GRB_TRY(GrB_Vector_build_UINT64(out, X1, I, nvals, GrB_FIRST_UINT64));
         // build copies the lists so they need to be freed in LG_FREE_ALL
         LG_FREE_ALL;
-    }
+    } 
+//  GRB_TRY(GxB_print (in,2)) ;
+//  GRB_TRY(GxB_print (out,2)) ;
 }
 
 static inline GrB_Info invert_2(
@@ -293,6 +301,11 @@ static inline GrB_Info invert_2(
     GrB_Index *X2 = NULL;
     GrB_Index IBytes = 0, X1Bytes = 0, X2Bytes = 0;
     uint64_t nvals1 = 0, nvals2 = 0;
+
+//  GRB_TRY(GxB_print (in1,0)) ;
+//  GRB_TRY(GxB_print (in2,0)) ;
+//  GRB_TRY(GxB_print (out,0)) ;
+
     GRB_TRY(GxB_Vector_unpack_CSC(in1, (GrB_Index **)&I, (void **)&X1, &IBytes,
                                   &X1Bytes, NULL, &nvals1, NULL, NULL));
     LAGraph_Free((void *)&I, NULL);
@@ -313,6 +326,10 @@ static inline GrB_Info invert_2(
         GRB_TRY(GrB_Vector_build_UINT64(out, X2, X1, nvals2, GrB_FIRST_UINT64));
         LG_FREE_ALL;
     }
+
+//  GRB_TRY(GxB_print (in1,0)) ;
+//  GRB_TRY(GxB_print (in2,0)) ;
+//  GRB_TRY(GxB_print (out,0)) ;
 }
 
 //------------------------------------------------------------------------------
@@ -665,6 +682,7 @@ int LAGraph_MaximumMatching(
 
                 // pathUpdate = invert (rootsufR), but need to handle
                 // duplicates
+                printf ("pathUpdate = invert (rootsufR)\n") ;
                 LAGRAPH_TRY(invert(pathUpdate, rootsufR, true, msg));
 
                 GRB_TRY(GrB_Vector_assign(
@@ -709,6 +727,7 @@ int LAGraph_MaximumMatching(
                     // rootfRIndexes = invert (rootfRIndexes), so that
                     // rootfRIndexes(i) = j, where (i,j) = (parentC, rootC) of
                     // the new frontier C
+                    printf ("rootfRIndexes = invert (rootfRIndexes)\n") ;
                     LAGRAPH_TRY(
                         invert(rootfRIndexes, rootfRIndexes, false, msg));
                 }
@@ -771,6 +790,7 @@ int LAGraph_MaximumMatching(
         {
             // vr = invert (pathC), leaving pathC empty
             // pathC doesn't have dup values as it stems from an invertion
+            printf ("vr = invert (pathC)\n") ;
             LAGRAPH_TRY(invert(vr, pathC, false, msg));
 
             /* debug
@@ -794,7 +814,10 @@ int LAGraph_MaximumMatching(
                                       GrB_DESC_S));
 
             // pathC = invert (vr), leaving vr empty (vr has no duplicates)
+            printf ("pathC = invert (vr)\n") ;
+            GRB_TRY (GxB_print (vr, 2)) ;
             LAGRAPH_TRY(invert(pathC, vr, false, msg));
+            GRB_TRY (GxB_print (pathC, 2)) ;
 
             /* debug
             GxB_Vector_fprint(pathC, "pathC", GxB_COMPLETE, stdout);
