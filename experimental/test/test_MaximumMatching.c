@@ -76,7 +76,7 @@ void test_MCM(void)
             {
                 OK(GrB_Vector_new(&mateC_init, GrB_UINT64, ncols));
                 OK(GrB_Vector_setElement_UINT64(
-                    mateC, 0, 19)); // col 20 matched with row 1 (1-based)
+                    mateC_init, 0, 19)); // col 20 matched with row 1 (1-based)
                 OK(GrB_Matrix_new(&AT, GrB_BOOL, ncols,
                                   nrows)); // transpose matrix has the reverse
                                            // dimensions from the original
