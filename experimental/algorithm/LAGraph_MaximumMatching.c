@@ -197,8 +197,11 @@ void *setParentsMates(vertex *z, vertex *x, vertex *y)
     }
 
 static inline GrB_Info invert_nondestructive(
-    GrB_Vector out, // output, contents (except type and size) cleared on input
-    GrB_Vector in,  // input vector, empty on output (unless in1 == out)
+    GrB_Vector out, // input/output.  On input, only the size and type are
+                    // kept; any entries in the 'out' vector cleared.  It is
+                    // then replaced with the inversion of the input vector.
+    GrB_Vector in,  // input vector, not modified.  There must be no duplicate
+                    // values in the input vector.
     char *msg)
 {
     bool jumbled = 1;
@@ -207,6 +210,11 @@ static inline GrB_Info invert_nondestructive(
     GrB_Index *X2 = NULL; // not used
     GrB_Index IBytes = 0, XBytes = 0;
     uint64_t nvals = 0;
+
+    // the input and output vectors cannot be the same vector
+    ASSERT (in != out) ;
+
+    // All input/output vectors must be of type GrB_UINT64.
 
     GRB_TRY(
         GxB_Vector_unpack_CSC(in, (GrB_Index **)&I, (void **)&X1, &IBytes,
@@ -226,13 +234,17 @@ static inline GrB_Info invert_nondestructive(
                                 XBytes, NULL, nvals, jumbled, NULL));
 }
 
-static GrB_Info invert(
-    GrB_Vector out, // output, contents (except type and size) cleared on input
+static inline GrB_Info invert(
+    GrB_Vector out, // input/output.  Same as invert_nondescructive above.
     GrB_Vector in,  // input vector, empty on output (unless in == out)
     bool dups, // flag that indicates if duplicates exist in the input vector's
                // values
     char *msg)
 {
+    // The input and output vectors can be the same vector
+    // that is, in == out is OK.
+    // All input/output vectors must be of type GrB_UINT64.
+
     // the output vector will normally be returned in a jumbled state
     bool jumbled = dups ? 0 : 1; // if there are duplicates, we want the indices
                                  // to be ordered so we can keep the min child
@@ -264,13 +276,18 @@ static GrB_Info invert(
 }
 
 static inline GrB_Info invert_2(
-    GrB_Vector out, // output, contents (except type and size) cleared on input
+    GrB_Vector out, // input/output
     GrB_Vector in1, // input vector, empty on output (unless in1 == out)
     GrB_Vector in2, // input vector, empty on output (unless in2 == out)
     bool dups, // flag that indicates if duplicates exist in the input vector's
                // values
     char *msg)
 {
+    // The input vectors cannot be aliased.  However in1==out or in2==out is
+    // OK.  The two input vectors must have the same # of entries.
+    // All input/output vectors must be of type GrB_UINT64.
+    ASSERT (in1 != in2) ;
+
     GrB_Index *I = NULL;
     GrB_Index *X1 = NULL;
     GrB_Index *X2 = NULL;
@@ -281,6 +298,7 @@ static inline GrB_Info invert_2(
     LAGraph_Free((void *)&I, NULL);
     GRB_TRY(GxB_Vector_unpack_CSC(in2, (GrB_Index **)&I, (void **)&X2, &IBytes,
                                   &X2Bytes, NULL, &nvals2, NULL, NULL));
+    ASSERT (nvals1 == nvals2) ;
     if (!dups)
     {
         LAGraph_Free((void *)&I, NULL);
@@ -356,6 +374,7 @@ int LAGraph_MaximumMatching(
     GrB_Vector mateC_init, // input only, not modified, ignored if NULL
     char *msg)
 {
+    double tot = LAGraph_WallClockTime ( ) ;
 
     // GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
 
@@ -397,7 +416,6 @@ int LAGraph_MaximumMatching(
     GrB_Vector pathCopy = NULL;
     GrB_Vector currentMatesR = NULL;
 
-    // FIXME: no need for mateCcopy, just use mateC
     GrB_Vector mateC = NULL;
 
     LG_CLEAR_MSG;
@@ -407,7 +425,7 @@ int LAGraph_MaximumMatching(
     LG_ASSERT_MSG(A != NULL, GrB_NULL_POINTER, "A matrix is NULL");
     (*mateC_handle) = NULL;
 
-    bool do_pushpull = AT == NULL ? false : true;
+    bool do_pushpull = (AT == NULL) ? false : true;
 
     uint64_t ncols = 0;
     GRB_TRY(GrB_Matrix_ncols(&ncols, A));
@@ -499,6 +517,7 @@ int LAGraph_MaximumMatching(
 
     uint64_t npath = 0;
     bool y = 0;
+    double mxm_time = 0 ;
 
     uint64_t nmatched = 0;
     GRB_TRY(GrB_Vector_nvals(&nmatched, mateC));
@@ -538,20 +557,24 @@ int LAGraph_MaximumMatching(
             // STEPS 1,2: Explore neighbors of column frontier (one step of
             // BFS), keeping only unvisited rows in the frontierR
             //----------------------------------------------------------------------
+
+            double t = LAGraph_WallClockTime ( ) ;
             if (do_pushpull)
             {
                 int32_t kind;
                 LAGRAPH_TRY(LG_GET_FORMAT_HINT(frontierC, &kind));
-                // pull (vector's values are pulled into A)
                 if (kind == LG_BITMAP || kind == LG_FULL)
                 {
+                    // the frontierC vector is bitmap or full
+                    // pull (vector's values are pulled into A)
                     GRB_TRY(GrB_mxv(frontierR, parentsR, NULL,
                                     MinParent_2nd_Semiring, A, frontierC,
                                     GrB_DESC_RSC));
                 }
-                // push (vector's values are pushed to A)
-                else // vector is sparse or hypersparse
+                else
                 {
+                    // the frontierC vector is sparse or hypersparse
+                    // push (vector's values are pushed to A)
                     GRB_TRY(GrB_vxm(frontierR, parentsR, NULL,
                                     MinParent_1st_Semiring, frontierC, AT,
                                     GrB_DESC_RSC));
@@ -559,10 +582,13 @@ int LAGraph_MaximumMatching(
             }
             else
             {
+                // Only the pull method can be used if AT is not given
                 GRB_TRY(GrB_mxv(frontierR, parentsR, NULL,
                                 MinParent_2nd_Semiring, A, frontierC,
                                 GrB_DESC_RSC));
             }
+            t = LAGraph_WallClockTime ( ) - t ;
+            mxm_time += t ;
 
             //----------------------------------------------------------------------
             // STEPS 3,4: Select univisited, matched and unmatched row vertices
@@ -786,5 +812,7 @@ int LAGraph_MaximumMatching(
     LG_FREE_WORK;
 
     // GrB_set (GrB_GLOBAL, false, GxB_BURBLE) ;
+    tot = LAGraph_WallClockTime ( ) - tot ;
+    printf ("total time %g, mxm time: %g (%g)\n", tot, mxm_time, mxm_time / tot) ;
     return (GrB_SUCCESS);
 }
