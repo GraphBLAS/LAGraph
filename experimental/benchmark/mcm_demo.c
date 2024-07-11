@@ -26,7 +26,7 @@ Usage:
 #include "LG_internal.h"
 #include <omp.h>
 
-// #define VERBOSE
+#define VERBOSE
 
 #define NTHREAD_LIST 1
 #define THREAD_LIST 0

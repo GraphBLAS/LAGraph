@@ -374,6 +374,7 @@ int LAGraph_MaximumMatching(
     GrB_Vector mateC_init, // input only, not modified, ignored if NULL
     char *msg)
 {
+    printf ("starting LAGraph_MaximumMatching\n") ; fflush (stdout) ;
     double tot = LAGraph_WallClockTime ( ) ;
 
     // GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
