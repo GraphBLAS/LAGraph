@@ -1237,6 +1237,7 @@ int LAGraph_MaximumMatching(
     GrB_Vector *mateC_handle, // mateC(j) = i : Column j of the C subset is matched to row i of the R subset (ignored on input)
     // input
     GrB_Matrix A,          // input adjacency matrix, TODO: this should be a LAGraph of a BIPARTITE kind
+    GrB_Matrix AT,         // trasnpose of the input adjacency matrix, NULL if not provided
     GrB_Vector mateC_init, // input only, not modified, ignored if NULL
     char *msg);
 

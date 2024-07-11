@@ -36,6 +36,7 @@ Usage:
     {                                                                          \
         LAGraph_Delete(&G, NULL);                                              \
         GrB_free(&A);                                                          \
+        GrB_free(&AT);                                                         \
         GrB_free(&mateC_init);                                                 \
         GrB_free(&mateC);                                                      \
     }
@@ -50,6 +51,7 @@ int main(int argc, char **argv)
 
     LAGraph_Graph G = NULL;
     GrB_Matrix A = NULL;
+    GrB_Matrix AT = NULL;
     GrB_Vector mateC_init = NULL;
     GrB_Vector mateC = NULL;
 
@@ -57,19 +59,19 @@ int main(int argc, char **argv)
     // startup LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
-    bool burble = true;
+    bool burble = false;
     demo_init(burble);
 
     //--------------------------------------------------------------------------
     // read in the graph
     //--------------------------------------------------------------------------
 
-    if (argc < 2)
-    {
-        printf("Invalid usage, please read comments\n");
-        return 0;
-    }
-    char *matrix_name = argv[1];
+    // if (argc < 2)
+    // {
+    //     printf("Invalid usage, please read comments\n");
+    //     return 0;
+    // }
+    char *matrix_name = (argc > 1) ? argv[1] : "stdin";
 
     LAGRAPH_TRY(LAGraph_Random_Init(msg));
     bool make_symmetric = false, remove_self_edges = false, structural = true,
@@ -78,6 +80,14 @@ int main(int argc, char **argv)
                             structural, NULL, ensure_positive, argc, argv));
 
     A = G->A;
+    // compute AT to be able to use push-pull optimization
+    if (G->is_symmetric_structure)
+        AT = A;
+    else
+    {
+        LAGRAPH_TRY(LAGraph_Cached_AT(G, msg));
+        AT = G->AT;
+    }
 
     //--------------------------------------------------------------------------
     // determine the number of threads to run the algorithm with
@@ -120,7 +130,7 @@ int main(int argc, char **argv)
     //--------------------------------------------------------------------------
 
     double t = LAGraph_WallClockTime();
-    LAGRAPH_TRY(LAGraph_MaximumMatching(&mateC, A, mateC_init, msg));
+    LAGRAPH_TRY(LAGraph_MaximumMatching(&mateC, A, AT, mateC_init, msg));
     t = LAGraph_WallClockTime() - t;
     GRB_TRY(GrB_free(&mateC));
 #ifdef VERBOSE
@@ -154,11 +164,12 @@ int main(int argc, char **argv)
         for (int trial = 0; trial < ntrials; trial++)
         {
             t = LAGraph_WallClockTime();
-            LAGRAPH_TRY(LAGraph_MaximumMatching(&mateC, A, mateC_init, msg));
+            LAGRAPH_TRY(
+                LAGraph_MaximumMatching(&mateC, A, AT, mateC_init, msg));
             t = LAGraph_WallClockTime() - t;
             GRB_TRY(GrB_free(&mateC));
 #ifdef VERBOSE
-            printf("trial: %2d time: %10.7f sec\n", trial, tt);
+            printf("trial: %2d time: %10.7f sec\n", trial, t);
 #endif
             total_time += t;
         }

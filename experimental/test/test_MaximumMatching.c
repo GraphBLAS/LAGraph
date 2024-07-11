@@ -33,6 +33,7 @@ void test_MCM(void)
         {
 
             GrB_Matrix A = NULL;
+            GrB_Matrix AT = NULL;
             snprintf(filename, LEN, LG_DATA_DIR "%s", filenames[test]);
             FILE *f = fopen(filename, "r");
             TEST_CHECK(f != NULL);
@@ -76,9 +77,13 @@ void test_MCM(void)
                 OK(GrB_Vector_new(&mateC_init, GrB_UINT64, ncols));
                 OK(GrB_Vector_setElement_UINT64(
                     mateC, 0, 19)); // col 20 matched with row 1 (1-based)
+                OK(GrB_Matrix_new(&AT, GrB_BOOL, ncols,
+                                  nrows)); // transpose matrix has the reverse
+                                           // dimensions from the original
+                OK(GrB_transpose(AT, NULL, NULL, A, NULL));
             }
 
-            OK(LAGraph_MaximumMatching(&mateC, A, mateC_init, msg));
+            OK(LAGraph_MaximumMatching(&mateC, A, AT, mateC_init, msg));
             printf("\nmsg: %s\n", msg);
 
             GrB_Index nmatched = 0;
@@ -124,6 +129,7 @@ void test_MCM(void)
             OK(GrB_Vector_free(&mateR));
             OK(GrB_Matrix_free(&M));
             OK(GrB_Matrix_free(&A));
+            OK(GrB_Matrix_free(&AT));
         }
     }
     LAGraph_Finalize(msg);

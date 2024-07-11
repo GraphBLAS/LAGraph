@@ -83,6 +83,19 @@ void *select2nd(vertex *z, bool *x, vertex *y)
     "z->rootC = y->rootC;"                                                     \
     "} "
 
+void *select1st(vertex *z, vertex *x, bool *y)
+{
+    z->parentC = x->parentC;
+    z->rootC = x->rootC;
+}
+
+#define SELECT_1ST_DEFN                                                        \
+    "void *select2nd(vertex *z, vertex *x, bool *y) "                          \
+    "{ "                                                                       \
+    "z->parentC = x->parentC; "                                                \
+    "z->rootC = x->rootC;"                                                     \
+    "} "
+
 void *keepParents(uint64_t *z, vertex *x) { *z = x->parentC; }
 
 #define KEEP_PARENTS_DEFN                                                      \
@@ -301,7 +314,9 @@ static inline GrB_Info invert_2(
         GrB_free(&MinParent);                                                  \
         GrB_free(&MinParent_Monoid);                                           \
         GrB_free(&Select2ndOp);                                                \
+        GrB_free(&Select1stOp);                                                \
         GrB_free(&MinParent_2nd_Semiring);                                     \
+        GrB_free(&MinParent_1st_Semiring);                                     \
         GrB_free(&getParentsOp);                                               \
         GrB_free(&getRootsOp);                                                 \
         GrB_free(&parentsUpdate);                                              \
@@ -333,8 +348,11 @@ int LAGraph_MaximumMatching(
         *mateC_handle, // mateC(j) = i : Column j of the C subset is matched
                        // to row i of the R subset (ignored on input)
     // input:
-    GrB_Matrix A, // input adjacency matrix, TODO: this should be a LAGraph
-                  // of a BIPARTITE kind
+    GrB_Matrix A,  // input adjacency matrix, TODO: this should be a LAGraph
+                   // of a BIPARTITE kind
+    GrB_Matrix AT, // transpose of the input adjacency matrix, necessary to
+                   // perform push-pull optimization
+                   // if NULL, the push-pull optimization is not performed
     GrB_Vector mateC_init, // input only, not modified, ignored if NULL
     char *msg)
 {
@@ -358,7 +376,9 @@ int LAGraph_MaximumMatching(
     GrB_BinaryOp MinParent = NULL;
     GrB_Monoid MinParent_Monoid = NULL;
     GrB_BinaryOp Select2ndOp = NULL;
+    GrB_BinaryOp Select1stOp = NULL;
     GrB_Semiring MinParent_2nd_Semiring = NULL;
+    GrB_Semiring MinParent_1st_Semiring = NULL;
     GrB_UnaryOp getParentsOp = NULL;
     GrB_UnaryOp getRootsOp = NULL;
     GrB_Vector parentsUpdate = NULL; // unmatched rows of R frontier
@@ -386,6 +406,8 @@ int LAGraph_MaximumMatching(
                   "mateC handle is NULL");
     LG_ASSERT_MSG(A != NULL, GrB_NULL_POINTER, "A matrix is NULL");
     (*mateC_handle) = NULL;
+
+    bool do_pushpull = AT == NULL ? false : true;
 
     uint64_t ncols = 0;
     GRB_TRY(GrB_Matrix_ncols(&ncols, A));
@@ -428,6 +450,12 @@ int LAGraph_MaximumMatching(
 
     GRB_TRY(GrB_Semiring_new(&MinParent_2nd_Semiring, MinParent_Monoid,
                              Select2ndOp));
+
+    GRB_TRY(GxB_BinaryOp_new(&Select1stOp, (void *)select1st, Vertex, Vertex,
+                             GrB_BOOL, "select1st", SELECT_1ST_DEFN));
+
+    GRB_TRY(GrB_Semiring_new(&MinParent_1st_Semiring, MinParent_Monoid,
+                             Select1stOp));
 
     GRB_TRY(GxB_UnaryOp_new(&getParentsOp, (void *)keepParents, GrB_UINT64,
                             Vertex, "keepParents", KEEP_PARENTS_DEFN));
@@ -510,8 +538,31 @@ int LAGraph_MaximumMatching(
             // STEPS 1,2: Explore neighbors of column frontier (one step of
             // BFS), keeping only unvisited rows in the frontierR
             //----------------------------------------------------------------------
-            GRB_TRY(GrB_mxv(frontierR, parentsR, NULL, MinParent_2nd_Semiring,
-                            A, frontierC, GrB_DESC_RSC));
+            if (do_pushpull)
+            {
+                int32_t kind;
+                LAGRAPH_TRY(LG_GET_FORMAT_HINT(frontierC, &kind));
+                // pull (vector's values are pulled into A)
+                if (kind == LG_BITMAP || kind == LG_FULL)
+                {
+                    GRB_TRY(GrB_mxv(frontierR, parentsR, NULL,
+                                    MinParent_2nd_Semiring, A, frontierC,
+                                    GrB_DESC_RSC));
+                }
+                // push (vector's values are pushed to A)
+                else // vector is sparse or hypersparse
+                {
+                    GRB_TRY(GrB_vxm(frontierR, parentsR, NULL,
+                                    MinParent_1st_Semiring, frontierC, AT,
+                                    GrB_DESC_RSC));
+                }
+            }
+            else
+            {
+                GRB_TRY(GrB_mxv(frontierR, parentsR, NULL,
+                                MinParent_2nd_Semiring, A, frontierC,
+                                GrB_DESC_RSC));
+            }
 
             //----------------------------------------------------------------------
             // STEPS 3,4: Select univisited, matched and unmatched row vertices
