@@ -422,23 +422,25 @@ int LAGraph_MaximumMatching(
 
     LG_ASSERT_MSG(mateC_handle != NULL, GrB_NULL_POINTER,
                   "mateC handle is NULL");
-    LG_ASSERT_MSG(A != NULL, GrB_NULL_POINTER, "A matrix is NULL");
+
+    LG_ASSERT_MSG(A != NULL || AT != NULL, GrB_NULL_POINTER, "A matrix is NULL");
+
     (*mateC_handle) = NULL;
 
-    bool do_pushpull = (AT == NULL) ? false : true;
+    bool do_pushpull = (AT != NULL) && (A != NULL) ;
 
     uint64_t ncols = 0;
-    GRB_TRY(GrB_Matrix_ncols(&ncols, A));
-
     uint64_t nrows = 0;
-    GRB_TRY(GrB_Matrix_nrows(&nrows, A));
 
-    GRB_TRY(GrB_Vector_new(&mateC, GrB_UINT64, ncols));
-    if (mateC_init != NULL)
+    if (A != NULL)
     {
-        // mateC = (uint64_t) mateC_init
-        GRB_TRY(
-            GrB_assign(mateC, NULL, NULL, mateC_init, GrB_ALL, ncols, NULL));
+        GRB_TRY(GrB_Matrix_ncols(&ncols, A));
+        GRB_TRY(GrB_Matrix_nrows(&nrows, A));
+    }
+    else
+    {
+        GRB_TRY(GrB_Matrix_nrows(&ncols, AT));
+        GRB_TRY(GrB_Matrix_ncols(&nrows, AT));
     }
 
     GRB_TRY(GrB_Vector_new(&pathC, GrB_UINT64, ncols));
@@ -485,7 +487,6 @@ int LAGraph_MaximumMatching(
 
     GRB_TRY(GrB_Vector_new(&ufrontierR, Vertex, nrows));
 
-    GRB_TRY(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
 
     GRB_TRY(GrB_Vector_new(&rootsufR, GrB_UINT64, nrows));
 
@@ -519,13 +520,25 @@ int LAGraph_MaximumMatching(
     bool y = 0;
     double mxm_time = 0 ;
 
-    uint64_t nmatched = 0;
-    GRB_TRY(GrB_Vector_nvals(&nmatched, mateC));
-    if (nmatched)
+    GRB_TRY(GrB_Vector_new(&mateC, GrB_UINT64, ncols));
+    GRB_TRY(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
+
+    if (mateC_init != NULL)
     {
-        // mateR = invert (mateC), but do not clear the input
-        LAGRAPH_TRY(invert_nondestructive(mateR, mateC, msg));
+        uint64_t nmatched = 0;
+
+        // mateC = (uint64_t) mateC_init
+        GRB_TRY(
+            GrB_assign(mateC, NULL, NULL, mateC_init, GrB_ALL, ncols, NULL));
+        GRB_TRY(GrB_Vector_nvals(&nmatched, mateC));
+        if (nmatched)
+        {
+            // mateR = invert (mateC), but do not clear the input
+            LAGRAPH_TRY(invert_nondestructive(mateR, mateC, msg));
+        }
+
     }
+
     /* debug
     GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
     */
@@ -582,10 +595,20 @@ int LAGraph_MaximumMatching(
             }
             else
             {
-                // Only the pull method can be used if AT is not given
-                GRB_TRY(GrB_mxv(frontierR, parentsR, NULL,
+                if (A != NULL)
+                {
+                    // Only the pull method can be used if AT is not given
+                    GRB_TRY(GrB_mxv(frontierR, parentsR, NULL,
                                 MinParent_2nd_Semiring, A, frontierC,
                                 GrB_DESC_RSC));
+                }
+                else
+                {
+                    // Only the push method can be used if A is not given
+                    GRB_TRY(GrB_vxm(frontierR, parentsR, NULL,
+                                    MinParent_1st_Semiring, frontierC, AT,
+                                    GrB_DESC_RSC));
+                }
             }
             t = LAGraph_WallClockTime ( ) - t ;
             mxm_time += t ;
@@ -788,6 +811,11 @@ int LAGraph_MaximumMatching(
             // update mateC
             GRB_TRY(GrB_Vector_assign(mateC, pathC, NULL, pathC, GrB_ALL, ncols,
                                       GrB_DESC_S));
+
+            // At this point, mateR and mateC are in sync.  That is, they
+            // are inversions of each other (mateR == invert(mateC) and
+            // mateC == invert (mateR) both hold).
+
             // swap path and pathCopy
             GrB_Vector temp = pathC;
             pathC = pathCopy;
