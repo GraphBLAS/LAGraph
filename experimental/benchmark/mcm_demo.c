@@ -132,6 +132,9 @@ int main(int argc, char **argv)
     double t = LAGraph_WallClockTime();
     LAGRAPH_TRY(LAGraph_MaximumMatching(&mateC, A, AT, mateC_init, msg));
     t = LAGraph_WallClockTime() - t;
+    uint64_t sprank = 0;
+    GRB_TRY(GrB_Vector_nvals(&sprank, mateC));
+    printf("number of matches: %ld\n", sprank);
     GRB_TRY(GrB_free(&mateC));
 #ifdef VERBOSE
     printf("warmup time %g sec\n", t);
