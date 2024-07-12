@@ -332,6 +332,60 @@ invert_2(GrB_Vector out, // input/output
     //  GRB_TRY(GxB_print (out,0)) ;
 }
 
+
+GrB_Info check_matching (GrB_Matrix A, GrB_Vector mateC, char *msg) ;
+GrB_Info check_matching (GrB_Matrix A, GrB_Vector mateC, char *msg)
+{
+    uint64_t nrows, ncols ;
+
+    GrB_Matrix_ncols(&ncols, A);
+    GrB_Matrix_nrows(&nrows, A);
+    GrB_Index nmatched = 0;
+    GrB_Vector mateC_dup ;
+    GrB_Vector_dup (&mateC_dup, mateC) ;
+
+    // invert to check for dups
+    GrB_Index Ibytes = 0, Jbytes = 0, Xbytes = 0;
+    bool jumbled = 1;
+    GrB_Index *J = NULL, *X = NULL ;
+    GxB_Vector_unpack_CSC(mateC_dup, (GrB_Index **)&J, (void **)&X,
+                             &Jbytes, &Xbytes, NULL, &nmatched,
+                             &jumbled, NULL);
+
+    // pack matched values in a matrix
+    GrB_Matrix M = NULL;
+    bool *val;
+    LAGraph_Malloc((void **)&val, nmatched, sizeof(bool), msg);
+    for (uint64_t i = 0; i < nmatched; i++)
+    {
+        val[i] = 1;
+    }
+    GrB_Matrix_new(&M, GrB_BOOL, nrows, ncols);
+
+    GrB_Matrix_build_BOOL(M, X, J, val, nmatched, NULL);
+    LAGraph_Free((void **)&val, msg);
+    LAGraph_Free((void **)&X, msg);
+    LAGraph_Free((void **)&J, msg);
+
+    // mask with matrix A to check if all edges are present in A
+    GrB_Matrix_assign(M, M, NULL, A, GrB_ALL, nrows, GrB_ALL, ncols,
+                         GrB_DESC_S);
+    GrB_Index nvalsM = 0;
+    GrB_Matrix_nvals(&nvalsM, M);
+    // if values have been eliminated then edges do not exist in A
+    if (nvalsM != nmatched)
+    {
+        printf ("mateC invalid!\n") ;
+        fflush (stdout) ;
+        abort ( ) ;
+    }
+    printf ("mateC OK!\n") ;
+    fflush (stdout) ;
+
+    GrB_Matrix_free(&M);
+    GrB_free (&mateC_dup) ;
+}
+
 //------------------------------------------------------------------------------
 // LAGraph_MaximumMatching
 //------------------------------------------------------------------------------
@@ -555,14 +609,22 @@ int LAGraph_MaximumMatching(
             // mateR = invert (mateC), but do not clear the input
             LAGRAPH_TRY(invert_nondestructive(mateR, mateC, msg));
         }
+        check_matching (A, mateC, msg) ;
     }
 
     /* debug
     GxB_Vector_fprint(mateR, "mateR", GxB_COMPLETE, stdout);
     */
 
+    double ttt = LAGraph_WallClockTime();
+    int64_t counter = 0 ;
     do
     {
+        uint64_t nmatched = 0;
+        GRB_TRY(GrB_Vector_nvals(&nmatched, mateC));
+        printf ("\niteration %ld, matched %ld time so far %g\n",
+            counter++, nmatched, LAGraph_WallClockTime()-ttt) ;
+
         GRB_TRY(GrB_Vector_clear(parentsR));
         // for every col j not matched, assign f(j) = VERTEX(j,j)
         GRB_TRY(GrB_Vector_apply_IndexOp_UDT(
@@ -588,6 +650,8 @@ int LAGraph_MaximumMatching(
             // STEPS 1,2: Explore neighbors of column frontier (one step of
             // BFS), keeping only unvisited rows in the frontierR
             //----------------------------------------------------------------------
+
+            printf (".") ; fflush (stdout) ;
 
             double t = LAGraph_WallClockTime();
             if (do_pushpull)
@@ -788,6 +852,9 @@ int LAGraph_MaximumMatching(
         uint64_t npathCopy = npath;
         while (npath)
         {
+            GRB_TRY(GrB_Vector_nvals(&nmatched, mateC));
+            printf (" (%ld,%ld)", npath, nmatched) ; fflush (stdout) ;
+            GxB_print (pathC, 2) ;
             // vr = invert (pathC), leaving pathC empty
             // pathC doesn't have dup values as it stems from an invertion
             // printf("vr = invert (pathC)\n");
@@ -851,6 +918,12 @@ int LAGraph_MaximumMatching(
             /* debug
             GxB_Vector_fprint(mateC, "mateC", GxB_COMPLETE, stdout);
             */
+            GrB_Vector gunk = NULL ;
+            GrB_Vector_new (&gunk, GrB_UINT64, ncols) ;
+            GrB_assign (gunk, pathC, NULL, mateC, GrB_ALL, ncols, GrB_DESC_S) ;
+            GxB_print (gunk,2) ;
+            GrB_free (&gunk) ;
+            check_matching (A, mateC, msg) ;
         }
 
         // compute mateR
