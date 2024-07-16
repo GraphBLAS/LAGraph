@@ -213,7 +213,7 @@ int main(int argc, char **argv)
 
     // the GAP benchmark requires 16 trials
     int ntrials = 16;
-    // ntrials = 1 ;    // HACK to run just one trial
+    ntrials = 1 ;    // HACK to run just one trial
 #ifdef VERBOSE
     printf("# of trials: %d\n", ntrials);
 #endif
