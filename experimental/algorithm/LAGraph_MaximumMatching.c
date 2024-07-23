@@ -363,17 +363,22 @@ invert_2(GrB_Vector out, // input/output
     }
 
 int LAGraph_MaximumMatching(
-    // output:
+    // outputs:
     GrB_Vector
         *mateC_handle, // mateC(j) = i : Column j of the C subset is matched
                        // to row i of the R subset (ignored on input)
-    // input:
+    GrB_Vector *mateR_handle, // mateR(i) = j : Row i of the R subset is matched
+                              // to column j of the C subset (ignored on input)
+    // inputs:
     GrB_Matrix A,  // input adjacency matrix, TODO: this should be a LAGraph
                    // of a BIPARTITE kind
     GrB_Matrix AT, // transpose of the input adjacency matrix, necessary to
                    // perform push-pull optimization
                    // if NULL, the push-pull optimization is not performed
-    GrB_Vector mateC_init, // input only, not modified, ignored if NULL
+    GrB_Vector mate_init, // input only, not modified, ignored if NULL
+    bool col_init, // flag to indicate if the initial matching is provided from
+                   // the columns' or from the rows' perspective, ignored if
+                   // mate_init is NULL
     char *msg)
 {
 
@@ -419,13 +424,19 @@ int LAGraph_MaximumMatching(
 
     LG_CLEAR_MSG;
 
-    LG_ASSERT_MSG(mateC_handle != NULL, GrB_NULL_POINTER,
-                  "mateC handle is NULL");
-
+    LG_ASSERT_MSG(mateC_handle != NULL || mateR_handle != NULL,
+                  GrB_NULL_POINTER, "At least one output must be provided\n");
     LG_ASSERT_MSG(A != NULL || AT != NULL, GrB_NULL_POINTER,
-                  "A matrix is NULL");
+                  "A matrix is NULL\n");
 
-    (*mateC_handle) = NULL;
+    if (mateC_handle != NULL)
+    {
+        (*mateC_handle) = NULL;
+    }
+    if (mateR_handle != NULL)
+    {
+        (*mateR_handle) = NULL;
+    }
 
     bool do_pushpull = (AT != NULL) && (A != NULL);
 
@@ -522,18 +533,28 @@ int LAGraph_MaximumMatching(
     GRB_TRY(GrB_Vector_new(&mateC, GrB_UINT64, ncols));
     GRB_TRY(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
 
-    if (mateC_init != NULL)
+    if (mate_init != NULL)
     {
         uint64_t nmatched = 0;
-
-        // mateC = (uint64_t) mateC_init
-        GRB_TRY(
-            GrB_assign(mateC, NULL, NULL, mateC_init, GrB_ALL, ncols, NULL));
-        GRB_TRY(GrB_Vector_nvals(&nmatched, mateC));
+        GRB_TRY(GrB_Vector_nvals(&nmatched, mate_init));
         if (nmatched)
         {
-            // mateR = invert (mateC), but do not clear the input
-            LAGRAPH_TRY(invert_nondestructive(mateR, mateC, msg));
+            if (col_init)
+            {
+                // mateC = (uint64_t) mate_init
+                GRB_TRY(GrB_assign(mateC, NULL, NULL, mate_init, GrB_ALL, ncols,
+                                   NULL));
+                // mateR = invert (mateC), but do not clear the input
+                LAGRAPH_TRY(invert_nondestructive(mateR, mateC, msg));
+            }
+            else
+            {
+                // mateR = (uint64_t) mate_init
+                GRB_TRY(GrB_assign(mateR, NULL, NULL, mate_init, GrB_ALL, nrows,
+                                   NULL));
+                // mateC = invert (mateR), but do not clear the input
+                LAGRAPH_TRY(invert_nondestructive(mateC, mateR, msg));
+            }
         }
     }
 
@@ -837,7 +858,14 @@ int LAGraph_MaximumMatching(
     GxB_Vector_fprint(mateC, "mateC", GxB_COMPLETE, stdout);
     */
 
-    (*mateC_handle) = mateC;
+    if (mateC_handle != NULL)
+    {
+        (*mateC_handle) = mateC;
+    }
+    if (mateR_handle != NULL)
+    {
+        (*mateR_handle) = mateR;
+    }
     LG_FREE_WORK;
 
     return (GrB_SUCCESS);

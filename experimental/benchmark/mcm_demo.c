@@ -196,7 +196,8 @@ int main(int argc, char **argv)
     //--------------------------------------------------------------------------
 
     double t = LAGraph_WallClockTime();
-    LAGRAPH_TRY(LAGraph_MaximumMatching(&mateC, A, AT, mateC_init, msg));
+    LAGRAPH_TRY(
+        LAGraph_MaximumMatching(&mateC, NULL, A, AT, mateC_init, true, msg));
     t = LAGraph_WallClockTime() - t;
     LAGRAPH_TRY(check_matching(A, mateC, msg));
     uint64_t sprank = 0;
@@ -234,8 +235,8 @@ int main(int argc, char **argv)
         for (int trial = 0; trial < ntrials; trial++)
         {
             t = LAGraph_WallClockTime();
-            LAGRAPH_TRY(
-                LAGraph_MaximumMatching(&mateC, A, AT, mateC_init, msg));
+            LAGRAPH_TRY(LAGraph_MaximumMatching(&mateC, NULL, A, AT, mateC_init,
+                                                true, msg));
             t = LAGraph_WallClockTime() - t;
             GRB_TRY(GrB_free(&mateC));
 #ifdef VERBOSE
