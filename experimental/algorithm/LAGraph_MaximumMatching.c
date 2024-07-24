@@ -215,12 +215,21 @@ static inline GrB_Info invert_nondestructive(
     ASSERT(in != out);
 
     // All input/output vectors must be of type GrB_UINT64.
-
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(
         GxB_Vector_unpack_CSC(in, (GrB_Index **)&I, (void **)&X1, &IBytes,
                               &XBytes, NULL, &nvals, &jumbled,
                               NULL)); // the output and input should have no
                                       // duplicates, so the order doesn't matter
+#else
+    GRB_TRY(GrB_Vector_nvals(&nvals, in));
+    LG_TRY(LAGraph_Malloc((void **)&I, nvals, sizeof(GrB_Index), msg));
+    LG_TRY(LAGraph_Malloc((void **)&X1, nvals, sizeof(GrB_Index), msg));
+    GRB_TRY(GrB_Vector_extractTuples_UINT64(
+        I, X1, &nvals, in)); // the output and input should have no
+                             // duplicates, so the order doesn't matter
+#endif
+
     GRB_TRY(GrB_Vector_clear(out)); // clear the output first as a prerequisite
                                     // of the build method
     GRB_TRY(GrB_Vector_build_UINT64(
@@ -230,8 +239,10 @@ static inline GrB_Info invert_nondestructive(
                 // again to the input
                 // the input should have no duplicates in the
                 // values list, so dups are not handled
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_Vector_pack_CSC(in, (GrB_Index **)&I, (void **)&X1, IBytes,
                                 XBytes, NULL, nvals, jumbled, NULL));
+#endif
 }
 
 static inline GrB_Info
@@ -254,18 +265,32 @@ invert(GrB_Vector out, // input/output.  Same as invert_nondescructive above.
     GrB_Index IBytes = 0, XBytes = 0;
     uint64_t nvals = 0;
 
-    // #if LAGRAPH_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_Vector_unpack_CSC(in, (GrB_Index **)&I, (void **)&X1, &IBytes,
-                                  &XBytes, NULL, &nvals, &jumbled,
-                                  NULL)); // #else
+                                  &XBytes, NULL, &nvals, &jumbled, NULL));
+#else
     // vanilla case using extractTuples and build:
-    // allocate I and X GrB_extractTuples(I, X, in, ...) GrB_build(out, X, I,
-    // ...) free I and X: LG_FREE_ALL;
-    // #endif
+    // allocate I and X for GrB_extractTuples
+    GRB_TRY(GrB_Vector_nvals(&nvals, in));
+    LG_TRY(LAGraph_Malloc((void **)&I, nvals, sizeof(GrB_Index), msg));
+    LG_TRY(LAGraph_Malloc((void **)&X1, nvals, sizeof(GrB_Index), msg));
+    GRB_TRY(GrB_Vector_extractTuples_UINT64(
+        I, X1, &nvals, in)); // the output and input should have no
+                             // duplicates, so the order doesn't matter
+    GRB_TRY(GrB_Vector_clear(in));
+#endif
     if (!dups)
     {
+#if LAGRAPH_SUITESPARSE
         GRB_TRY(GxB_Vector_pack_CSC(out, (GrB_Index **)&X1, (void **)&I, XBytes,
                                     IBytes, NULL, nvals, true, NULL));
+#else
+        GRB_TRY(GrB_Vector_clear(out));
+        // GrB_MIN_UINT64 is used instead of first because first is an extension
+        GRB_TRY(GrB_Vector_build_UINT64(out, X1, I, nvals, GrB_MIN_UINT64));
+        // build copies the lists so they need to be freed in LG_FREE_ALL
+        LG_FREE_ALL;
+#endif
     }
     else
     {
@@ -458,41 +483,75 @@ int LAGraph_MaximumMatching(
 
     GRB_TRY(GrB_Vector_new(&parentsR, GrB_UINT64, nrows));
 
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_Type_new(&Vertex, sizeof(vertex), "vertex", VERTEX_DEFN));
+#else
+    GRB_TRY(GrB_Type_new(&Vertex, sizeof(vertex)));
+#endif
 
     GRB_TRY(GrB_Vector_new(&frontierC, Vertex, ncols));
 
     GRB_TRY(GrB_Vector_new(&frontierR, Vertex, nrows));
 
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_IndexUnaryOp_new(&initFrontierOp, (void *)initFrontier, Vertex,
                                  GrB_BOOL, GrB_BOOL, "initFrontier",
                                  INIT_FRONTIER_DEFN));
+#else
+    GRB_TRY(GrB_IndexUnaryOp_new(&initFrontierOp, (void *)initFrontier, Vertex,
+                                 GrB_BOOL, GrB_BOOL));
+#endif
 
     GRB_TRY(GrB_Vector_new(&I, GrB_BOOL, ncols));
     GRB_TRY(GrB_Vector_assign_BOOL(I, NULL, NULL, 1, GrB_ALL, ncols, NULL));
 
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_BinaryOp_new(&MinParent, (void *)minparent, Vertex, Vertex,
                              Vertex, "minparent", MIN_PARENT_DEFN));
+#else
+    GRB_TRY(GrB_BinaryOp_new(&MinParent, (void *)minparent, Vertex, Vertex,
+                             Vertex));
+#endif
     vertex infinityParent = {GrB_INDEX_MAX + 1, 0};
     GRB_TRY(GrB_Monoid_new_UDT(&MinParent_Monoid, MinParent, &infinityParent));
 
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_BinaryOp_new(&Select2ndOp, (void *)select2nd, Vertex, GrB_BOOL,
                              Vertex, "select2nd", SELECT_2ND_DEFN));
+#else
+    GRB_TRY(GrB_BinaryOp_new(&Select2ndOp, (void *)select2nd, Vertex, GrB_BOOL,
+                             Vertex));
+#endif
 
     GRB_TRY(GrB_Semiring_new(&MinParent_2nd_Semiring, MinParent_Monoid,
                              Select2ndOp));
 
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_BinaryOp_new(&Select1stOp, (void *)select1st, Vertex, Vertex,
                              GrB_BOOL, "select1st", SELECT_1ST_DEFN));
+#else
+    GRB_TRY(GrB_BinaryOp_new(&Select1stOp, (void *)select1st, Vertex, Vertex,
+                             GrB_BOOL));
+#endif
 
     GRB_TRY(GrB_Semiring_new(&MinParent_1st_Semiring, MinParent_Monoid,
                              Select1stOp));
 
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_UnaryOp_new(&getParentsOp, (void *)keepParents, GrB_UINT64,
                             Vertex, "keepParents", KEEP_PARENTS_DEFN));
+#else
+    GRB_TRY(GrB_UnaryOp_new(&getParentsOp, (void *)keepParents, GrB_UINT64,
+                            Vertex));
+#endif
 
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_UnaryOp_new(&getRootsOp, (void *)keepRoots, GrB_UINT64, Vertex,
                             "keepRoots", KEEP_ROOTS_DEFN));
+#else
+    GRB_TRY(
+        GrB_UnaryOp_new(&getRootsOp, (void *)keepRoots, GrB_UINT64, Vertex));
+#endif
 
     GRB_TRY(GrB_Vector_new(&parentsUpdate, GrB_UINT64, nrows));
 
@@ -508,17 +567,32 @@ int LAGraph_MaximumMatching(
 
     GRB_TRY(GrB_Vector_new(&rootfRIndexes, GrB_UINT64, ncols));
 
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_IndexUnaryOp_new(&buildfCTuplesOp, (void *)buildfCTuples,
                                  Vertex, GrB_UINT64, GrB_BOOL, "buildfCTuples",
                                  BUILT_FC_TUPLES_DEFN));
+#else
+    GRB_TRY(GrB_IndexUnaryOp_new(&buildfCTuplesOp, (void *)buildfCTuples,
+                                 Vertex, GrB_UINT64, GrB_BOOL));
+#endif
 
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_UnaryOp_new(&vertexTypecastOp, (void *)vertexTypecast, Vertex,
                             GrB_UINT64, "vertexTypecast",
                             VERTEX_TYPECAST_DEFN));
+#else
+    GRB_TRY(GrB_UnaryOp_new(&vertexTypecastOp, (void *)vertexTypecast, Vertex,
+                            GrB_UINT64));
+#endif
 
+#if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_BinaryOp_new(&setParentsMatesOp, (void *)setParentsMates,
                              Vertex, Vertex, Vertex, "setParentsMates",
                              SET_PARENTS_MATES_DEFN));
+#else
+    GRB_TRY(GrB_BinaryOp_new(&setParentsMatesOp, (void *)setParentsMates,
+                             Vertex, Vertex, Vertex));
+#endif
 
     GRB_TRY(GrB_Vector_new(&vr, GrB_UINT64, nrows));
 
@@ -709,13 +783,17 @@ int LAGraph_MaximumMatching(
                     stdout);
                     */
 
+#if LAGRAPH_SUITESPARSE
                     // keep mates and roots of the R frontier (ordered indices)
                     LAGRAPH_TRY(
                         invert_2(rootfRIndexes, currentMatesR, rootsfR, true,
                                  msg)); // rootsfRIndexes(j) = i, where i
-                    // is the col mate of the first
-                    // row included in the current R
-                    // frontier with a col root of j
+                                        // is the col mate of the first
+                                        // row included in the current R
+                                        // frontier with a col root of j
+#else
+                    LAGRAPH_TRY(invert(rootfRIndexes, rootsfR, true, msg));
+#endif
 
                     // keep only col roots that are not included in ufR
                     GRB_TRY(GrB_Vector_assign(rootfRIndexes, pathUpdate, NULL,
@@ -726,9 +804,11 @@ int LAGraph_MaximumMatching(
                     // STEP 7a (ufrontierR not empty): Move values in the
                     // correct positions for the C frontier
                     //----------------------------------------------------------------------
-                    // rootfRIndexes = invert (rootfRIndexes), so that
-                    // rootfRIndexes(i) = j, where (i,j) = (parentC, rootC) of
-                    // the new frontier C
+                    // rootfRIndexes = invert (rootfRIndexes), so that:
+                    // if LAGRAPH_SUITESPARSE: rootfRIndexes(i) = j,
+                    // where (i,j) = (parentC, rootC) of the new frontier C
+                    // else: rootfRIndexes(i) = j, where i is the matched child
+                    // of the current R frontier that stems from root path
                     LAGRAPH_TRY(
                         invert(rootfRIndexes, rootfRIndexes, false, msg));
                 }
@@ -738,9 +818,11 @@ int LAGraph_MaximumMatching(
                 // rootC)
                 //----------------------------------------------------------------------
                 GRB_TRY(GrB_Vector_clear(frontierC));
+#if LAGRAPH_SUITESPARSE
                 GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, NULL, NULL,
                                                      buildfCTuplesOp,
                                                      rootfRIndexes, &y, NULL));
+#endif
 
                 /* debug
                 GrB_Index C[ncols];
