@@ -361,24 +361,36 @@ int LAGr_TriangleCount_GPU
 
             t = LAGraph_WallClockTime ( ) ;
             GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
-            GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             t = LAGraph_WallClockTime ( ) - t ;
-            printf ("Sandia_LUT (dot) time: %g\n", t) ;
-/*
-            GRB_TRY (GrB_Matrix_clear (C)) ;
+            printf ("Sandia_LUT (dot) time: %g (mxm)\n", t) ;
+
             t = LAGraph_WallClockTime ( ) ;
-            GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             t = LAGraph_WallClockTime ( ) - t ;
-            printf ("Sandia_LUT (dot) time: %g SECOND TIME\n", t) ;
+            printf ("Sandia_LUT (dot) time: %g (reduce)\n", t) ;
 
             GRB_TRY (GrB_Matrix_clear (C)) ;
             t = LAGraph_WallClockTime ( ) ;
             GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
+            t = LAGraph_WallClockTime ( ) - t ;
+            printf ("Sandia_LUT (dot) time: %g SECOND TIME (mxm)\n", t) ;
+
+            t = LAGraph_WallClockTime ( ) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             t = LAGraph_WallClockTime ( ) - t ;
-            printf ("Sandia_LUT (dot) time: %g THIRD  TIME\n", t) ;
- */
+            printf ("Sandia_LUT (dot) time: %g SECOND TIME (reduce)\n", t) ;
+
+            GRB_TRY (GrB_Matrix_clear (C)) ;
+            t = LAGraph_WallClockTime ( ) ;
+            GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
+            t = LAGraph_WallClockTime ( ) - t ;
+            printf ("Sandia_LUT (dot) time: %g THIRD  TIME (mxm)\n", t) ;
+
+            t = LAGraph_WallClockTime ( ) ;
+            GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+            t = LAGraph_WallClockTime ( ) - t ;
+            printf ("Sandia_LUT (dot) time: %g THIRD  TIME (reduce)\n", t) ;
+
 
             break ;
 
