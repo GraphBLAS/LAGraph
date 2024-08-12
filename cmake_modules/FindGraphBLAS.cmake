@@ -218,6 +218,7 @@ find_path ( GRAPHBLAS_INCLUDE_DIR
   HINTS ${PROJECT_SOURCE_DIR}/..
   HINTS ${PROJECT_SOURCE_DIR}/../GraphBLAS
   HINTS ${PROJECT_SOURCE_DIR}/../SuiteSparse/GraphBLAS
+  HINTS ${PROJECT_SOURCE_DIR}/../include/suitesparse
   PATH_SUFFIXES include Include
   NO_DEFAULT_PATH )
 
