@@ -16,6 +16,7 @@ jobs:
          - {grb_version: 7.1.0, conda_grb_package_hash: h27087fc, conda_extension: tar.bz2}
          - {grb_version: 7.3.0, conda_grb_package_hash: h27087fc, conda_extension: tar.bz2}
          - {grb_version: 7.4.1, conda_grb_package_hash: hcb278e6, conda_extension: conda}
+         - {grb_version: 9.1.0, conda_grb_package_hash: hd29ac08, conda_extension: conda}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -44,7 +45,7 @@ jobs:
         make test_coverage
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@4.1.1
-      if: matrix.config.grb_version == '7.4.1' && github.event_name == 'push' && github.ref == 'refs/heads/stable'
+      if: matrix.config.grb_version == '9.1.0' && github.event_name == 'push' && github.ref == 'refs/heads/stable'
       with:
         branch: gh-pages
         folder: build/test_coverage/
@@ -62,6 +63,7 @@ jobs:
          - {grb_version: 7.1.0, conda_grb_package_hash: h7881ed4, conda_extension: tar.bz2}
          - {grb_version: 7.3.0, conda_grb_package_hash: ha894c9a, conda_extension: tar.bz2}
          - {grb_version: 7.4.1, conda_grb_package_hash: ha894c9a, conda_extension: conda}
+         - {grb_version: 9.1.0, conda_grb_package_hash: heb48c95, conda_extension: conda}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
