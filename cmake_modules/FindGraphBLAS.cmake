@@ -69,7 +69,7 @@ CMake looks.
 
 #]=======================================================================]
 
-option ( LAGRAPH_DUMP "ON: display list of places to search. OFF (default): no debug output" OFF )
+option ( LAGRAPH_DUMP "ON: display list of places to search. OFF (default): no debug output" ON )
 
 # NB: this is built around assumptions about one particular GraphBLAS
 # installation (SuiteSparse:GraphBLAS). As other installations become available
@@ -218,8 +218,7 @@ find_path ( GRAPHBLAS_INCLUDE_DIR
   HINTS ${PROJECT_SOURCE_DIR}/..
   HINTS ${PROJECT_SOURCE_DIR}/../GraphBLAS
   HINTS ${PROJECT_SOURCE_DIR}/../SuiteSparse/GraphBLAS
-  HINTS ${PROJECT_SOURCE_DIR}/../include
-  PATH_SUFFIXES include Include suitesparse
+  PATH_SUFFIXES include Include include/suitesparse
   NO_DEFAULT_PATH )
 
 # dynamic SuiteSparse:GraphBLAS library
