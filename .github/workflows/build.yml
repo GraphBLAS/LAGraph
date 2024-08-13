@@ -80,7 +80,7 @@ jobs:
         cd ..
     - name: Build project
       run: |
-        export GRAPHBLAS_INCLUDE_DIR=`pwd`/graphblas-binaries/include
+        export GRAPHBLAS_INCLUDE_DIR=`pwd`/graphblas-binaries/include/suitesparse
         export GRAPHBLAS_LIBRARY=`pwd`/graphblas-binaries/lib/libgraphblas.dylib
         # adding an extra line to the CMakeLists.txt file to locate the libomp instance installed by brew
         echo 'include_directories("/usr/local/opt/libomp/include")' | cat - CMakeLists.txt
