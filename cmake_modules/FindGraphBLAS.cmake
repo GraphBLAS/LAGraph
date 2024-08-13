@@ -218,10 +218,8 @@ find_path ( GRAPHBLAS_INCLUDE_DIR
   HINTS ${PROJECT_SOURCE_DIR}/..
   HINTS ${PROJECT_SOURCE_DIR}/../GraphBLAS
   HINTS ${PROJECT_SOURCE_DIR}/../SuiteSparse/GraphBLAS
-  PATH_SUFFIXES include Include include/suitesparse suitesparse
+  PATH_SUFFIXES include Include
   NO_DEFAULT_PATH )
-
-message ( status "GraphBLAS Include dir: ${GRAPHBLAS_INCLUDE_DIR}" )
 
 # dynamic SuiteSparse:GraphBLAS library
 find_library ( GRAPHBLAS_LIBRARY
