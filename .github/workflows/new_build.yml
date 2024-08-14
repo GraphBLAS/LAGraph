@@ -25,7 +25,8 @@ jobs:
         git clone https://github.com/DrTimothyAldenDavis/GraphBLAS.git
         cd GraphBLAS
         git checkout tags/v${{ matrix.config.grb_version }}
-        make && make install
+        make compact
+        sudo make install
         cd ..
     - name: Build project
       run: |
