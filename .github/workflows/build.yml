@@ -13,7 +13,9 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 9.3.1}
+        # if there are multiple items in this list, only use should
+        # deployit=true for just one of them.
+         - {grb_version: 9.3.1, deployit: true}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -38,7 +40,7 @@ jobs:
         make test_coverage
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@4.1.1
-      if: matrix.config.grb_version == '9.1.0' && github.event_name == 'push' && github.ref == 'refs/heads/stable'
+      if: matrix.config.deployit && github.event_name == 'push' && github.ref == 'refs/heads/stable'
       with:
         branch: gh-pages
         folder: build/test_coverage/
