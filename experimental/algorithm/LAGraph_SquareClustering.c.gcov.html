@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - LAGraph code coverage report. Commit id: cc56ed4. Current time (UTC): 2024-08-30T17:14:30Z - experimental/algorithm/LAGraph_SquareClustering.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">experimental/algorithm</a> - LAGraph_SquareClustering.c<span style="font-size: 80%;"> (source / <a href="LAGraph_SquareClustering.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">LAGraph code coverage report. Commit id: cc56ed4. Current time (UTC): 2024-08-30T17:14:30Z</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2024-08-30 17:16:41</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //------------------------------------------------------------------------------</a>
+<a name="2"><span class="lineNum">       2 </span>            : // LAGraph_SquareClustering: vertex square-clustering</a>
+<a name="3"><span class="lineNum">       3 </span>            : //------------------------------------------------------------------------------</a>
+<a name="4"><span class="lineNum">       4 </span>            : </a>
+<a name="5"><span class="lineNum">       5 </span>            : // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.</a>
+<a name="6"><span class="lineNum">       6 </span>            : // SPDX-License-Identifier: BSD-2-Clause</a>
+<a name="7"><span class="lineNum">       7 </span>            : //</a>
+<a name="8"><span class="lineNum">       8 </span>            : // For additional details (including references to third party source code and</a>
+<a name="9"><span class="lineNum">       9 </span>            : // other files) see the LICENSE file or contact permission@sei.cmu.edu. See</a>
+<a name="10"><span class="lineNum">      10 </span>            : // Contributors.txt for a full list of contributors. Created, in part, with</a>
+<a name="11"><span class="lineNum">      11 </span>            : // funding and support from the U.S. Government (see Acknowledgments.txt file).</a>
+<a name="12"><span class="lineNum">      12 </span>            : // DM22-0790</a>
+<a name="13"><span class="lineNum">      13 </span>            : </a>
+<a name="14"><span class="lineNum">      14 </span>            : // Contributed by Erik Welch, NVIDIA.</a>
+<a name="15"><span class="lineNum">      15 </span>            : </a>
+<a name="16"><span class="lineNum">      16 </span>            : //------------------------------------------------------------------------------</a>
+<a name="17"><span class="lineNum">      17 </span>            : </a>
+<a name="18"><span class="lineNum">      18 </span>            : // Compute the square clustering coefficient for each node of an undirected</a>
+<a name="19"><span class="lineNum">      19 </span>            : // graph, which is the fraction of possible squares that exist at each node.</a>
+<a name="20"><span class="lineNum">      20 </span>            : // It is a clustering coefficient suitable for bipartite graphs and is fully</a>
+<a name="21"><span class="lineNum">      21 </span>            : // described here:</a>
+<a name="22"><span class="lineNum">      22 </span>            : //      https://arxiv.org/pdf/0710.0117v1.pdf</a>
+<a name="23"><span class="lineNum">      23 </span>            : // which uses a different denominator than the original definition:</a>
+<a name="24"><span class="lineNum">      24 </span>            : //      https://arxiv.org/pdf/cond-mat/0504241.pdf</a>
+<a name="25"><span class="lineNum">      25 </span>            : // Furthermore, we count squares based on</a>
+<a name="26"><span class="lineNum">      26 </span>            : //      https://arxiv.org/pdf/2007.11111.pdf (sigma_12, c_4)</a>
+<a name="27"><span class="lineNum">      27 </span>            : // which is implemented in LAGraph_FastGraphletTransform.c (thanks Tim Davis</a>
+<a name="28"><span class="lineNum">      28 </span>            : // for mentioning this to me!).</a>
+<a name="29"><span class="lineNum">      29 </span>            : </a>
+<a name="30"><span class="lineNum">      30 </span>            : // The NetworkX implementation of square clustering was used heavily during</a>
+<a name="31"><span class="lineNum">      31 </span>            : // development.  I used it to determine the contributions to the denominator</a>
+<a name="32"><span class="lineNum">      32 </span>            : // and to verify correctness (including on larger graphs).</a>
+<a name="33"><span class="lineNum">      33 </span>            : //      https://networkx.org/documentation/stable/reference/algorithms/\</a>
+<a name="34"><span class="lineNum">      34 </span>            : //      generated/networkx.algorithms.cluster.square_clustering.html</a>
+<a name="35"><span class="lineNum">      35 </span>            : </a>
+<a name="36"><span class="lineNum">      36 </span>            : // Pseudocode (doesn't show dropping 0s in the final result):</a>
+<a name="37"><span class="lineNum">      37 </span>            : //</a>
+<a name="38"><span class="lineNum">      38 </span>            : //    P2(~degrees.diag().S) = plus_pair(A @ A.T)</a>
+<a name="39"><span class="lineNum">      39 </span>            : //    tri = first(P2 &amp; A).reduce_rowwise()</a>
+<a name="40"><span class="lineNum">      40 </span>            : //    squares = (P2 * (P2 - 1)).reduce_rowwise() / 2</a>
+<a name="41"><span class="lineNum">      41 </span>            : //    uw_count = degrees * (degrees - 1)</a>
+<a name="42"><span class="lineNum">      42 </span>            : //    uw_degrees = plus_times(A @ degrees) * (degrees - 1)</a>
+<a name="43"><span class="lineNum">      43 </span>            : //    square_clustering = squares / (uw_degrees - uw_count - tri - squares)</a>
+<a name="44"><span class="lineNum">      44 </span>            : </a>
+<a name="45"><span class="lineNum">      45 </span>            : // The coefficient as described in https://arxiv.org/pdf/0710.0117v1.pdf</a>
+<a name="46"><span class="lineNum">      46 </span>            : // where m and n are different neighbors of node i.</a>
+<a name="47"><span class="lineNum">      47 </span>            : // Note that summations over mn are implied in the numerator and denominator:</a>
+<a name="48"><span class="lineNum">      48 </span>            : //</a>
+<a name="49"><span class="lineNum">      49 </span>            : //    C_{4,mn}(i) = q_imn / ((k_m - eta_imn) + (k_n - eta_imn) + q_imn)</a>
+<a name="50"><span class="lineNum">      50 </span>            : //    q_imn = # of common neighbors between m and n (i.e., squares)</a>
+<a name="51"><span class="lineNum">      51 </span>            : //    k_m = number of neighbors of m (i.e., degrees[m])</a>
+<a name="52"><span class="lineNum">      52 </span>            : //    eta_imn = 1 + q_imn + theta_mn</a>
+<a name="53"><span class="lineNum">      53 </span>            : //    theta_mn = 1 if m and n are connected, otherwise 0 (i.e., triangles)</a>
+<a name="54"><span class="lineNum">      54 </span>            : </a>
+<a name="55"><span class="lineNum">      55 </span>            : // Here are the corresponding terms between the equation and pseudocode:</a>
+<a name="56"><span class="lineNum">      56 </span>            : //    theta_mn          &lt;--&gt; tri</a>
+<a name="57"><span class="lineNum">      57 </span>            : //    q_imn             &lt;--&gt; squares</a>
+<a name="58"><span class="lineNum">      58 </span>            : //    eta_imn = 1 + ... &lt;--&gt; uw_count</a>
+<a name="59"><span class="lineNum">      59 </span>            : //    k_m               &lt;--&gt; uw_degrees</a>
+<a name="60"><span class="lineNum">      60 </span>            : </a>
+<a name="61"><span class="lineNum">      61 </span>            : // I first implemented this in the Python library graphblas-algorithms</a>
+<a name="62"><span class="lineNum">      62 </span>            : //      https://github.com/python-graphblas/graphblas-algorithms/\</a>
+<a name="63"><span class="lineNum">      63 </span>            : //      blob/main/graphblas_algorithms/algorithms/cluster.py</a>
+<a name="64"><span class="lineNum">      64 </span>            : // and I copy/pasted C code generated from the Recorder in Python-graphblas</a>
+<a name="65"><span class="lineNum">      65 </span>            : //      https://github.com/python-graphblas/python-graphblas</a>
+<a name="66"><span class="lineNum">      66 </span>            : </a>
+<a name="67"><span class="lineNum">      67 </span>            : // This implementation requires that `out_degree` property is already cached.</a>
+<a name="68"><span class="lineNum">      68 </span>            : // 0 values are omitted from the result (i.e., missing values &lt;--&gt; zero).</a>
+<a name="69"><span class="lineNum">      69 </span>            : // Also, it computes `P2 = A @ A.T`, which may be very large.  We could modify</a>
+<a name="70"><span class="lineNum">      70 </span>            : // the algorithm to compute coefficients for a subset of nodes, which would</a>
+<a name="71"><span class="lineNum">      71 </span>            : // allow expert users to compute in batches.  Also, since this algorithm only</a>
+<a name="72"><span class="lineNum">      72 </span>            : // operates on undirected or symmetric graphs, we only need to compute the</a>
+<a name="73"><span class="lineNum">      73 </span>            : // upper (or lower) triangle of P2, which should reduce memory by about half.</a>
+<a name="74"><span class="lineNum">      74 </span>            : // However, this is not easy to do, and would complicate the implementation.</a>
+<a name="75"><span class="lineNum">      75 </span>            : </a>
+<a name="76"><span class="lineNum">      76 </span>            : //------------------------------------------------------------------------------</a>
+<a name="77"><span class="lineNum">      77 </span>            : </a>
+<a name="78"><span class="lineNum">      78 </span>            : #define LG_FREE_WORK                \</a>
+<a name="79"><span class="lineNum">      79 </span>            : {                                   \</a>
+<a name="80"><span class="lineNum">      80 </span>            :     GrB_free (&amp;squares) ;           \</a>
+<a name="81"><span class="lineNum">      81 </span>            :     GrB_free (&amp;denom) ;             \</a>
+<a name="82"><span class="lineNum">      82 </span>            :     GrB_free (&amp;neg_denom) ;         \</a>
+<a name="83"><span class="lineNum">      83 </span>            :     GrB_free (&amp;P2) ;                \</a>
+<a name="84"><span class="lineNum">      84 </span>            :     GrB_free (&amp;D) ;                 \</a>
+<a name="85"><span class="lineNum">      85 </span>            : }</a>
+<a name="86"><span class="lineNum">      86 </span>            : </a>
+<a name="87"><span class="lineNum">      87 </span>            : #define LG_FREE_ALL                 \</a>
+<a name="88"><span class="lineNum">      88 </span>            : {                                   \</a>
+<a name="89"><span class="lineNum">      89 </span>            :     LG_FREE_WORK ;                  \</a>
+<a name="90"><span class="lineNum">      90 </span>            :     GrB_free (&amp;r) ;                 \</a>
+<a name="91"><span class="lineNum">      91 </span>            : }</a>
+<a name="92"><span class="lineNum">      92 </span>            : </a>
+<a name="93"><span class="lineNum">      93 </span>            : #include &lt;LAGraph.h&gt;</a>
+<a name="94"><span class="lineNum">      94 </span>            : #include &lt;LAGraphX.h&gt;</a>
+<a name="95"><span class="lineNum">      95 </span>            : #include &lt;LG_internal.h&gt;  // from src/utility</a>
+<a name="96"><span class="lineNum">      96 </span>            : </a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">          1 : int LAGraph_SquareClustering</span></a>
+<a name="98"><span class="lineNum">      98 </span>            : (</a>
+<a name="99"><span class="lineNum">      99 </span>            :     // outputs:</a>
+<a name="100"><span class="lineNum">     100 </span>            :     GrB_Vector *square_clustering,</a>
+<a name="101"><span class="lineNum">     101 </span>            :     // inputs:</a>
+<a name="102"><span class="lineNum">     102 </span>            :     LAGraph_Graph G,</a>
+<a name="103"><span class="lineNum">     103 </span>            :     char *msg</a>
+<a name="104"><span class="lineNum">     104 </span>            : )</a>
+<a name="105"><span class="lineNum">     105 </span>            : {</a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">          1 :     LG_CLEAR_MSG ;</span></a>
+<a name="107"><span class="lineNum">     107 </span>            : </a>
+<a name="108"><span class="lineNum">     108 </span>            :     // The number of squares each node is part of</a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">          1 :     GrB_Vector squares = NULL ;</span></a>
+<a name="110"><span class="lineNum">     110 </span>            : </a>
+<a name="111"><span class="lineNum">     111 </span>            :     // Thought of as the total number of possible squares for each node</a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">          1 :     GrB_Vector denom = NULL ;</span></a>
+<a name="113"><span class="lineNum">     113 </span>            : </a>
+<a name="114"><span class="lineNum">     114 </span>            :     // Negative contributions to the denominator</a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">          1 :     GrB_Vector neg_denom = NULL ;</span></a>
+<a name="116"><span class="lineNum">     116 </span>            : </a>
+<a name="117"><span class="lineNum">     117 </span>            :     // Final result: the square coefficients for each node (squares / denom)</a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">          1 :     GrB_Vector r = NULL ;</span></a>
+<a name="119"><span class="lineNum">     119 </span>            : </a>
+<a name="120"><span class="lineNum">     120 </span>            :     // out_degrees assigned to diagonal matrix</a>
+<a name="121"><span class="lineNum">     121 </span>            :     // Then used as triangles: first(P2 &amp; A)</a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">          1 :     GrB_Matrix D = NULL ;</span></a>
+<a name="123"><span class="lineNum">     123 </span>            : </a>
+<a name="124"><span class="lineNum">     124 </span>            :     // P2 = plus_pair(A @ A.T).new(mask=~D.S)</a>
+<a name="125"><span class="lineNum">     125 </span>            :     // Then used as a temporary workspace matrix (int64)</a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">          1 :     GrB_Matrix P2 = NULL ;</span></a>
+<a name="127"><span class="lineNum">     127 </span>            : </a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">          1 :     GrB_Vector deg = G-&gt;out_degree ;</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">          1 :     GrB_Matrix A = G-&gt;A ;</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">          1 :     GrB_Index n = 0 ;</span></a>
+<a name="131"><span class="lineNum">     131 </span>            : </a>
+<a name="132"><span class="lineNum">     132 </span>            :     //--------------------------------------------------------------------------</a>
+<a name="133"><span class="lineNum">     133 </span>            :     // check inputs</a>
+<a name="134"><span class="lineNum">     134 </span>            :     //--------------------------------------------------------------------------</a>
+<a name="135"><span class="lineNum">     135 </span>            : </a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">          1 :     LG_ASSERT (square_clustering != NULL, GrB_NULL_POINTER) ;</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">          1 :     (*square_clustering) = NULL ;</span></a>
+<a name="138"><span class="lineNum">     138 </span>            : </a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">          1 :     LG_ASSERT_MSG (deg != NULL,</span></a>
+<a name="140"><span class="lineNum">     140 </span>            :         LAGRAPH_NOT_CACHED, &quot;G-&gt;out_degree is required&quot;) ;</a>
+<a name="141"><span class="lineNum">     141 </span>            : </a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">          1 :     LG_TRY (LAGraph_CheckGraph (G, msg)) ;</span></a>
+<a name="143"><span class="lineNum">     143 </span>            : </a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">          1 :     LG_ASSERT_MSG ((G-&gt;kind == LAGraph_ADJACENCY_UNDIRECTED ||</span></a>
+<a name="145"><span class="lineNum">     145 </span>            :        (G-&gt;kind == LAGraph_ADJACENCY_DIRECTED &amp;&amp;</a>
+<a name="146"><span class="lineNum">     146 </span>            :         G-&gt;is_symmetric_structure == LAGraph_TRUE)),</a>
+<a name="147"><span class="lineNum">     147 </span>            :         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,</a>
+<a name="148"><span class="lineNum">     148 </span>            :         &quot;G-&gt;A must be known to be symmetric&quot;) ;</a>
+<a name="149"><span class="lineNum">     149 </span>            : </a>
+<a name="150"><span class="lineNum">     150 </span>            :     // # of nodes</a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Matrix_nrows (&amp;n, A)) ;</span></a>
+<a name="152"><span class="lineNum">     152 </span>            : </a>
+<a name="153"><span class="lineNum">     153 </span>            :     // out_degrees as a diagonal matrix.</a>
+<a name="154"><span class="lineNum">     154 </span>            :     #if LAGRAPH_SUITESPARSE</a>
+<a name="155"><span class="lineNum">     155 </span>            :         #if GxB_IMPLEMENTATION &gt;= GxB_VERSION (7,0,0)</a>
+<a name="156"><span class="lineNum">     156 </span>            :         // SuiteSparse 7.x and later:</a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">          1 :         GRB_TRY (GrB_Matrix_diag(&amp;D, deg, 0)) ;</span></a>
+<a name="158"><span class="lineNum">     158 </span>            :         #else</a>
+<a name="159"><span class="lineNum">     159 </span>            :         // SuiteSparse 6.x and earlier, which had the incorrect signature:</a>
+<a name="160"><span class="lineNum">     160 </span>            :         GRB_TRY (GrB_Matrix_new(&amp;D, GrB_INT64, n, n)) ;</a>
+<a name="161"><span class="lineNum">     161 </span>            :         GRB_TRY (GrB_Matrix_diag(D, deg, 0)) ;</a>
+<a name="162"><span class="lineNum">     162 </span>            :         #endif</a>
+<a name="163"><span class="lineNum">     163 </span>            :     #else</a>
+<a name="164"><span class="lineNum">     164 </span>            :     // standard GrB:</a>
+<a name="165"><span class="lineNum">     165 </span>            :     GRB_TRY (GrB_Matrix_diag(&amp;D, deg, 0)) ;</a>
+<a name="166"><span class="lineNum">     166 </span>            :     #endif</a>
+<a name="167"><span class="lineNum">     167 </span>            : </a>
+<a name="168"><span class="lineNum">     168 </span>            :     // We use ~D.S as a mask so P2 won't have values along the diagonal.</a>
+<a name="169"><span class="lineNum">     169 </span>            :     //    P2(~D.S) = plus_pair(A @ A.T)</a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Matrix_new (&amp;P2, GrB_INT64, n, n)) ;</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">          1 :     GRB_TRY (GrB_mxm (P2, D, NULL, LAGraph_plus_one_int64, A, A, GrB_DESC_SCT1)) ;</span></a>
+<a name="172"><span class="lineNum">     172 </span>            : </a>
+<a name="173"><span class="lineNum">     173 </span>            :     // Denominator is thought of as total number of squares that could exist.</a>
+<a name="174"><span class="lineNum">     174 </span>            :     // It has four terms (indicated below), and we use the definition from:</a>
+<a name="175"><span class="lineNum">     175 </span>            :     //      https://arxiv.org/pdf/0710.0117v1.pdf.</a>
+<a name="176"><span class="lineNum">     176 </span>            :     //</a>
+<a name="177"><span class="lineNum">     177 </span>            :     // (1) tri = first(P2 &amp; A).reduce_rowwise()</a>
+<a name="178"><span class="lineNum">     178 </span>            :     // Subtract 1 for each edge where u-w or w-u are connected.</a>
+<a name="179"><span class="lineNum">     179 </span>            :     // In other words, triangles.  Use P2, since we already have it.</a>
+<a name="180"><span class="lineNum">     180 </span>            :     //     D = first(P2 &amp; A)</a>
+<a name="181"><span class="lineNum">     181 </span>            :     //     neg_denom = D.reduce_rowwise()</a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Matrix_eWiseMult_BinaryOp (D, NULL, NULL, GrB_FIRST_INT64, P2,</span></a>
+<a name="183"><span class="lineNum">     183 </span>            :         A, NULL)) ;</a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Vector_new (&amp;neg_denom, GrB_INT64, n)) ;</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Matrix_reduce_Monoid (neg_denom, NULL, NULL,</span></a>
+<a name="186"><span class="lineNum">     186 </span>            :         GrB_PLUS_MONOID_INT64, D, NULL)) ;</a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">          1 :     GrB_free (&amp;D) ;</span></a>
+<a name="188"><span class="lineNum">     188 </span>            : </a>
+<a name="189"><span class="lineNum">     189 </span>            :     // squares = (P2 * (P2 - 1)).reduce_rowwise() / 2</a>
+<a name="190"><span class="lineNum">     190 </span>            :     // Now compute the number of squares (the numerator).  We count squares</a>
+<a name="191"><span class="lineNum">     191 </span>            :     // based on https://arxiv.org/pdf/2007.11111.pdf (sigma_12, c_4).</a>
+<a name="192"><span class="lineNum">     192 </span>            :     //     P2 *= P2 - 1</a>
+<a name="193"><span class="lineNum">     193 </span>            :     //     squares = P2.reduce_rowwise() / 2  (and drop zeros)</a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Matrix_apply_BinaryOp2nd_INT64 (P2, NULL, GrB_TIMES_INT64,</span></a>
+<a name="195"><span class="lineNum">     195 </span>            :         GrB_MINUS_INT64, P2, 1, NULL)) ;</a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Vector_new (&amp;squares, GrB_INT64, n)) ;</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Matrix_reduce_Monoid (squares, NULL, NULL,</span></a>
+<a name="198"><span class="lineNum">     198 </span>            :         GrB_PLUS_MONOID_INT64, P2, NULL)) ;</a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">          1 :     GrB_free (&amp;P2) ;</span></a>
+<a name="200"><span class="lineNum">     200 </span>            :     // Divide by 2, and use squares as value mask to drop zeros</a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64 (squares, squares, NULL,</span></a>
+<a name="202"><span class="lineNum">     202 </span>            :         GrB_DIV_INT64, squares, 2, GrB_DESC_R)) ;</a>
+<a name="203"><span class="lineNum">     203 </span>            : </a>
+<a name="204"><span class="lineNum">     204 </span>            :     // (2) uw_count = degrees * (degrees - 1).</a>
+<a name="205"><span class="lineNum">     205 </span>            :     // Subtract 1 for each u and 1 for each w for all combos.</a>
+<a name="206"><span class="lineNum">     206 </span>            :     //    denom(squares.S) = degrees - 1</a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Vector_new (&amp;denom, GrB_INT64, n)) ;</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(denom, squares, NULL,</span></a>
+<a name="209"><span class="lineNum">     209 </span>            :         GrB_MINUS_INT64, deg, 1, GrB_DESC_S)) ;</a>
+<a name="210"><span class="lineNum">     210 </span>            :     // neg_denom += degrees * (degrees - 1)</a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Vector_eWiseMult_BinaryOp(neg_denom, NULL, GrB_PLUS_INT64,</span></a>
+<a name="212"><span class="lineNum">     212 </span>            :         GrB_TIMES_INT64, deg, denom, NULL)) ;</a>
+<a name="213"><span class="lineNum">     213 </span>            : </a>
+<a name="214"><span class="lineNum">     214 </span>            :     // (3) uw_degrees = plus_times(A @ degrees) * (degrees - 1).</a>
+<a name="215"><span class="lineNum">     215 </span>            :     // The main contribution to (and only positive term of) the denominator:</a>
+<a name="216"><span class="lineNum">     216 </span>            :     // degrees[u] + degrees[w] for each u-w combo.</a>
+<a name="217"><span class="lineNum">     217 </span>            :     // Recall that `denom = degrees - 1` from above.</a>
+<a name="218"><span class="lineNum">     218 </span>            :     //    denom(denom.S) *= plus_times(A @ deg)</a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">          1 :     GRB_TRY (GrB_mxv(denom, denom, GrB_TIMES_INT64,</span></a>
+<a name="220"><span class="lineNum">     220 </span>            :         GrB_PLUS_TIMES_SEMIRING_INT64, A, deg, GrB_DESC_S)) ;</a>
+<a name="221"><span class="lineNum">     221 </span>            : </a>
+<a name="222"><span class="lineNum">     222 </span>            :     // (4) squares.  Subtract the number of squares</a>
+<a name="223"><span class="lineNum">     223 </span>            :     //    denom -= neg_denom + squares</a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Vector_eWiseMult_BinaryOp(denom, NULL, GrB_MINUS_INT64,</span></a>
+<a name="225"><span class="lineNum">     225 </span>            :         GrB_PLUS_INT64, neg_denom, squares, NULL)) ;</a>
+<a name="226"><span class="lineNum">     226 </span>            : </a>
+<a name="227"><span class="lineNum">     227 </span>            :     // square_clustering = squares / (uw_degrees - uw_count - tri - squares)</a>
+<a name="228"><span class="lineNum">     228 </span>            :     // Almost done!  Now compute the final result:</a>
+<a name="229"><span class="lineNum">     229 </span>            :     //    square_clustering = r = squares / denom</a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Vector_new (&amp;r, GrB_FP64, n)) ;</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">          1 :     GRB_TRY (GrB_Vector_eWiseMult_BinaryOp (r, NULL, NULL, GrB_DIV_FP64,</span></a>
+<a name="232"><span class="lineNum">     232 </span>            :         squares, denom, NULL)) ;</a>
+<a name="233"><span class="lineNum">     233 </span>            : </a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">          1 :     (*square_clustering) = r ;</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">          1 :     LG_FREE_WORK ;</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">          1 :     return (GrB_SUCCESS) ;</span></a>
+<a name="237"><span class="lineNum">     237 </span>            : }</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
