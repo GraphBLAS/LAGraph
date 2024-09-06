@@ -1,3 +1,5 @@
+// FIXME: not ready for src, but close
+
 #include "LG_internal.h"
 #include "LAGraphX.h"
 #include <omp.h>
@@ -146,7 +148,7 @@ int LAGraph_argminmax
     //--------------------------------------------------------------------------
 
     GrB_Type type ;
-    GRB_TRY (GxB_Matrix_type (&type, A)) ;
+    GRB_TRY (GxB_Matrix_type (&type, A)) ;      // FIXME: use GrB_get
     GrB_Semiring minmax_first, any_equal ;
     if (is_min)
     {
@@ -154,6 +156,8 @@ int LAGraph_argminmax
         //----------------------------------------------------------------------
         // semirings for argmin
         //----------------------------------------------------------------------
+
+        // FIXME: use GrB or LAGraph_* semirings when possible
 
         if (type == GrB_BOOL)
         {

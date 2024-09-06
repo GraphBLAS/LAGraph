@@ -10,6 +10,10 @@
 
 // Contributed by Vidith Madhu, Texas A&M University
 
+// FIXME: not ready for src; should handle all builtin types, with option to
+// typecast to INT64, UINT64, or FP64 as is currently done.
+// FIXME: this method is required for MaximalMatching and CoarsenMatching
+
 // Given an undirected graph G, construct the incidence matrix E.
 /*
 The incidence matrix E has size n-by-e where the

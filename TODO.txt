@@ -1,5 +1,18 @@
 LAGraph TODO:
 
+Aug 21, 2024:
+
+    (1) LAGraph 1.1.4 release, with latest GraphBLAS compiled in CI, not
+        from conda.  But see comment in PR first.
+
+    LAGraph v1.2:
+    (3) doesn't compile for vanilla GraphBLAS; add vanilla case to CI
+    (4) new algorithms, many ready for src, many need a little work.
+    (5) FIXMEs in src: use GrB_get instead of GxB*
+    (6) MaximalMatching and CoarsenMatching tests pass with the new
+        random number generator, but they require LAGraph_Incidence_Matrix,
+        which needs work to be ready for src
+
 May 29, 2024:
 
     since last meeting:  added better random number generator, and argmin/argmax

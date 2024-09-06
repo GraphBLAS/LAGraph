@@ -40,20 +40,7 @@ int LAGraph_SizeOfType
     // determine the size of the type
     //--------------------------------------------------------------------------
 
-#if 1
-    // Using the v2.1 C API, a late addition:
-    GrB_Type_get_SIZE (type, size, GrB_SIZE) ;
-#else
-    // the following was written before GrB_SIZE was allowed as input to
-    // GrB_Type_get_SIZE:
-    uint64_t siz ;
-    GrB_Scalar s ;
-    GRB_TRY (GrB_Scalar_new (&s, GrB_UINT64)) ;
-    GRB_TRY (GrB_Type_get_Scalar (type, s, GrB_SIZE)) ;
-    GRB_TRY (GrB_Scalar_extractElement_UINT64 (&siz, s)) ;
-    (*size) = (size_t) siz ;
-#endif
-
+    GRB_TRY (GrB_Type_get_SIZE (type, size, GrB_SIZE)) ;
     return (GrB_SUCCESS) ;
 }
 

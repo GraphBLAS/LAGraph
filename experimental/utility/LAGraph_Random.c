@@ -17,8 +17,12 @@
 
 // A very simple thread-safe parallel pseudo-random nuumber generator.
 
-// FUTURE: add LAGraph_Random_Init to LAGraph_Init,
+// FIXME: ready for src?
+
+// FIXME: add LAGraph_Random_Init to LAGraph_Init,
 // and added LAGraph_Random_Finalize to LAGraph_Finalize.
+
+// FIXME: is the new init function more complicated than it needs to be?
 
 // LAGRAPH_V11_GENERATOR: if 1, use the simple generator in LAGraph v1.1.
 // Otherwise, use xorshift64, initialized with splitmix64.
