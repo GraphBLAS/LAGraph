@@ -117,6 +117,26 @@ static int tricount_prep
     LAGraph_Free ((void **) &P, NULL) ;     \
 }
 
+void dump_matrix (GrB_Matrix C, char *filename) ;
+void dump_matrix (GrB_Matrix C, char *filename)
+{
+    GrB_Index cnvals ;
+    GrB_Matrix_nvals (&cnvals, C) ;
+    int64_t *I = malloc ((cnvals+1) * sizeof (int64_t)) ;
+    int64_t *J = malloc ((cnvals+1) * sizeof (int64_t)) ;
+    int64_t *X = malloc ((cnvals+1) * sizeof (int64_t)) ;
+    GrB_Matrix_extractTuples_INT64 (I,J,X,&cnvals,C) ;
+    FILE *f = fopen (filename, "w") ;
+    for (int64_t k = 0 ; k < cnvals ; k++)
+    {
+        fprintf (f, "%ld %ld %ld\n", I [k], J [k], X [k]) ;
+    }
+    free (I) ;
+    free (J) ;
+    free (X) ;
+    fclose (f) ;
+}
+
 int LAGr_TriangleCount_GPU
 (
     // output:
@@ -400,7 +420,12 @@ int LAGr_TriangleCount_GPU
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
 
             t = LAGraph_WallClockTime ( ) ;
+
+            dump_matrix (L, "L") ;
+            dump_matrix (U, "U") ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
+            dump_matrix (C, "C") ;
+
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             t = LAGraph_WallClockTime ( ) - t ;
             printf ("Sandia_ULT (dot) time: %g\n", t) ;

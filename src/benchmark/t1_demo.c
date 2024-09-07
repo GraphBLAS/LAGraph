@@ -28,6 +28,7 @@
 
 
 #include "LAGraphX.h"
+#include <time.h>
 
 #if defined ( GRAPHBLAS_HAS_CUDA )
 
@@ -101,6 +102,7 @@ int main (int argc, char **argv)
     int ntrials = 5 ;
     // ntrials = 1 ;        // HACK
     printf ("# of trials: %d\n", ntrials) ;
+    printf ("sizeof (clock_t): %d\n", sizeof (clock_t)) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
