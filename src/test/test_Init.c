@@ -58,11 +58,11 @@ void test_Init (void)
     #endif
 
     #if LAGRAPH_SUITESPARSE
-    // FIXME use GrB_get instead
-    char *compiler ;
+    char compiler [1024] ;
     int compiler_version [3] ;
-    OK (GxB_Global_Option_get (GxB_COMPILER_NAME, &compiler)) ;
-    OK (GxB_Global_Option_get (GxB_COMPILER_VERSION, compiler_version)) ;
+    OK (GrB_Global_get_String (GrB_GLOBAL, compiler, GxB_COMPILER_NAME)) ;
+    OK (GrB_Global_get_VOID   (GrB_GLOBAL, (void *) compiler_version,
+        GxB_COMPILER_VERSION)) ;
     printf ("GraphBLAS compiled with: %s v%d.%d.%d\n", compiler,
         compiler_version [0], compiler_version [1], compiler_version [2]) ;
     #endif
