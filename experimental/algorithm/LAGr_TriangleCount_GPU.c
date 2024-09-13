@@ -421,10 +421,10 @@ int LAGr_TriangleCount_GPU
 
             t = LAGraph_WallClockTime ( ) ;
 
-            dump_matrix (L, "L") ;
-            dump_matrix (U, "U") ;
+//          dump_matrix (L, "L") ;
+//          dump_matrix (U, "U") ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
-            dump_matrix (C, "C") ;
+//          dump_matrix (C, "C") ;
 
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             t = LAGraph_WallClockTime ( ) - t ;
