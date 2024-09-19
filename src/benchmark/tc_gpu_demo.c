@@ -163,7 +163,7 @@ int main (int argc, char **argv)
     printf ("\nwarmup method: ") ;
 //  int presort = LAGr_TriangleCount_AutoSort ; // = 0 (auto selection)
     int presort = LAGr_TriangleCount_NoSort ; // HACK
-    print_method (stdout, 6, presort) ;
+    print_method (stdout, LAGr_TriangleCount_Sandia_ULT, presort) ;
 
     // warmup method:
     // LAGr_TriangleCount_Sandia_ULT: sum (sum ((U * L') .* U))
@@ -228,7 +228,7 @@ int main (int argc, char **argv)
 
     // try all methods 3 to 5
 //  for (int method = 3 ; method <= 5 ; method++)
-    for (int method = 0 ; method <= 6 ; method++)   // HACK
+    for (int method = 6 ; method <= 6 ; method++)   // just ULT method
     {
         // for (int sorting = -1 ; sorting <= 2 ; sorting++)
 
