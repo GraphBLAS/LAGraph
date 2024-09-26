@@ -60,9 +60,10 @@ void test_Init (void)
     #if LAGRAPH_SUITESPARSE
     char compiler [1024] ;
     int compiler_version [3] ;
-    OK (GrB_Global_get_String (GrB_GLOBAL, compiler, GxB_COMPILER_NAME)) ;
+    OK (GrB_Global_get_String (GrB_GLOBAL, compiler,
+        (GrB_Field) GxB_COMPILER_NAME)) ;
     OK (GrB_Global_get_VOID   (GrB_GLOBAL, (void *) compiler_version,
-        GxB_COMPILER_VERSION)) ;
+        (GrB_Field) GxB_COMPILER_VERSION)) ;
     printf ("GraphBLAS compiled with: %s v%d.%d.%d\n", compiler,
         compiler_version [0], compiler_version [1], compiler_version [2]) ;
     #endif

@@ -386,7 +386,7 @@ int main(int argc, char **argv)
     }
 
     printf("\n=============================Testing karate lambda:\n");
-    err = abs(lambda_result - 1.3297);
+    err = fabs(lambda_result - 1.3297);
     if (err < 1e-4)
     {
         printf("Test passed.\n");
@@ -412,7 +412,7 @@ int main(int argc, char **argv)
     }
 
     printf("\n=============================Testing bucky lambda:\n");
-    err = abs(lambda_result - 0.2434);
+    err = fabs(lambda_result - 0.2434);
     if (err < 1e-4)
     {
         printf("Test passed.\n");
@@ -438,7 +438,7 @@ int main(int argc, char **argv)
     }
 
     printf("\n=============================Testing west0067 lambda:\n");
-    err = abs(lambda_result - 6.5586);
+    err = fabs(lambda_result - 6.5586);
     if (err < 1e-4)
     {
         printf("Test passed.\n");

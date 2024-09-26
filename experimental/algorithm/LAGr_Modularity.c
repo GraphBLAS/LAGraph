@@ -126,7 +126,7 @@ int LAGr_Modularity(
     GrB_Index *cI, *cX;
     LAGRAPH_TRY(LAGraph_Malloc((void **)&cI, n, sizeof(GrB_Index), msg));
     LAGRAPH_TRY(LAGraph_Malloc((void **)&cX, n, sizeof(GrB_Index), msg));
-    GRB_TRY(GrB_Vector_extractTuples_INT64(cI, cX, &n, c));
+    GRB_TRY(GrB_Vector_extractTuples_INT64(cI, (int64_t *) cX, &n, c));
     GRB_TRY(GxB_Matrix_build_Scalar(C, cX, cI, ONE_INT64, n));
     GrB_Matrix_wait(C, GrB_MATERIALIZE);
     LAGraph_Free((void **)&cI, NULL);
@@ -183,9 +183,9 @@ int LAGr_Modularity(
         LAGraph_Malloc((void **)&k_outX, nclusters, sizeof(GrB_Index), msg));
     LAGRAPH_TRY(
         LAGraph_Malloc((void **)&k_inX, nclusters, sizeof(GrB_Index), msg));
-    GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, lX, &nclusters, l));
-    GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, k_outX, &nclusters, k_out));
-    GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, k_inX, &nclusters, k_in));
+    GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, (int64_t *) lX, &nclusters, l));
+    GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, (int64_t *) k_outX, &nclusters, k_out));
+    GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, (int64_t *) k_inX, &nclusters, k_in));
 
     GrB_Index m, out_degree_sum, in_degree_sum, L_c;
     GRB_TRY(GrB_reduce(&out_degree_sum, NULL, GrB_PLUS_MONOID_INT64, out_degree,

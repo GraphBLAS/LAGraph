@@ -125,11 +125,12 @@ void dump_matrix (GrB_Matrix C, char *filename)
     int64_t *I = malloc ((cnvals+1) * sizeof (int64_t)) ;
     int64_t *J = malloc ((cnvals+1) * sizeof (int64_t)) ;
     int64_t *X = malloc ((cnvals+1) * sizeof (int64_t)) ;
-    GrB_Matrix_extractTuples_INT64 (I,J,X,&cnvals,C) ;
+    GrB_Matrix_extractTuples_INT64 ((GrB_Index *) I,(GrB_Index *) J,
+        X, &cnvals, C) ;
     FILE *f = fopen (filename, "w") ;
     for (int64_t k = 0 ; k < cnvals ; k++)
     {
-        fprintf (f, "%ld %ld %ld\n", I [k], J [k], X [k]) ;
+        fprintf (f, "%ld %ld %ld\n", (long) I [k], (long) J [k], (long) X [k]) ;
     }
     free (I) ;
     free (J) ;

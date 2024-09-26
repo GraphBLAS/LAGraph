@@ -631,19 +631,19 @@ int LG_KindName
     #define LG_BITMAP      GxB_BITMAP
     #define LG_FULL        GxB_FULL
     #define LG_SET_FORMAT_HINT(object,sparsity) \
-        GrB_set (object, (int32_t) (sparsity), GxB_SPARSITY_CONTROL)
+        GrB_set (object, (int32_t) (sparsity), (GrB_Field) GxB_SPARSITY_CONTROL)
     #define LG_GET_FORMAT_HINT(A,status) \
-        GrB_get (A, (int32_t *) status, GxB_SPARSITY_STATUS)
+        GrB_get (A, (int32_t *) status, (GrB_Field) GxB_SPARSITY_STATUS)
     #define LG_SET_NTHREADS(nthreads) \
-        GrB_set (GrB_GLOBAL, (int32_t) (nthreads), GxB_NTHREADS)
+        GrB_set (GrB_GLOBAL, (int32_t) (nthreads), (GrB_Field) GxB_NTHREADS)
     #define LG_SET_HYPER_SWITCH(A,hyper) \
-        GrB_set (A, hyper, GxB_HYPER_SWITCH)
+        GrB_set (A, hyper, (GrB_Field) GxB_HYPER_SWITCH)
     #define LG_GET_HYPER_SWITCH(A,hyper) \
-        GrB_get (A, hyper, GxB_HYPER_SWITCH)
+        GrB_get (A, hyper, (GrB_Field) GxB_HYPER_SWITCH)
     #define LG_SET_BURBLE(burble) \
-        GrB_set (GrB_GLOBAL, (int32_t) (burble), GxB_BURBLE)
+        GrB_set (GrB_GLOBAL, (int32_t) (burble), (GrB_Field) GxB_BURBLE)
     #define LG_GET_LIBRARY_DATE(date) \
-        GrB_get (GrB_GLOBAL, (char *) date, GxB_LIBRARY_DATE)
+        GrB_get (GrB_GLOBAL, (char *) date, (GrB_Field) GxB_LIBRARY_DATE)
 
 #else
 

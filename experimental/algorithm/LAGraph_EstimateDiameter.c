@@ -201,7 +201,7 @@ int LAGraph_EstimateDiameter
 
         // set up source list for next round
         // get the number of peripheral nodes 
-        int64_t nperi = 0;
+        GrB_Index nperi = 0;
         GRB_TRY (GrB_Vector_new (&candidateSrcs, int_type, n)) ;
         GRB_TRY (GrB_select(candidateSrcs, NULL, NULL, eqOp, ecc, d, NULL)) ;
         GRB_TRY (GrB_Vector_nvals(&nperi, candidateSrcs)) ;

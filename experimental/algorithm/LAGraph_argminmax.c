@@ -116,7 +116,9 @@ int argminmax
     GrB_Matrix_free (&D) ;
     GrB_Matrix_free (&G) ;
     GrB_Matrix_free (&y) ;
+    return (GrB_SUCCESS) ;
 }
+
 //------------------------------------------------------------------------------
 // gbargminmax: mexFunction to compute the argmin/max of each row/column of A
 //------------------------------------------------------------------------------

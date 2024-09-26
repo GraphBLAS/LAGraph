@@ -205,7 +205,7 @@ int LAGr_MarkovClustering(
     GRB_TRY(GrB_Vector_nvals(&p_nvals, argmax_p));
     LG_TRY(LAGraph_Malloc((void **)&pi, p_nvals, sizeof(GrB_Index), msg));
     LG_TRY(LAGraph_Malloc((void **)&px, p_nvals, sizeof(GrB_Index), msg));
-    GRB_TRY(GrB_Vector_extractTuples_INT64(pi, px, &p_nvals, argmax_p));
+    GRB_TRY(GrB_Vector_extractTuples_INT64(pi, (int64_t *) px, &p_nvals, argmax_p));
 
     // Sometimes (particularly, when the pruning threshold is high), some
     // columns in the steady-state T have no values, i.e., they are not
@@ -259,7 +259,7 @@ int LAGr_MarkovClustering(
 
     GrB_Vector c = NULL;
     GRB_TRY(GrB_Vector_new(&c, GrB_INT64, n));
-    GRB_TRY(GrB_Vector_build_INT64(c, pi, px, n, NULL));
+    GRB_TRY(GrB_Vector_build_INT64(c, pi, (int64_t *) px, n, NULL));
     GrB_Vector_wait(c, GrB_MATERIALIZE);
 
     LAGraph_Free((void *)&pi, NULL);
