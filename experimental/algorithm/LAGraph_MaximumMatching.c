@@ -42,14 +42,14 @@ typedef struct
     "} "                                                                       \
     "vertex; "
 
-void *initFrontier(vertex *z, void *x, uint64_t i, uint64_t j, const void *y)
+void initFrontier(vertex *z, void *x, uint64_t i, uint64_t j, const void *y)
 {
     z->parentC = i;
     z->rootC = i;
 }
 
 #define INIT_FRONTIER_DEFN                                                     \
-    "void *initFrontier(vertex *z, void *x, uint64_t i, uint64_t j, const "    \
+    "void initFrontier(vertex *z, void *x, uint64_t i, uint64_t j, const "    \
     "void "                                                                    \
     "*y) "                                                                     \
     "{ "                                                                       \
@@ -57,62 +57,62 @@ void *initFrontier(vertex *z, void *x, uint64_t i, uint64_t j, const void *y)
     "z->rootC = i; "                                                           \
     "} "
 
-void *minparent(vertex *z, vertex *x, vertex *y)
+void minparent(vertex *z, vertex *x, vertex *y)
 {
     *z = x->parentC < y->parentC ? *x : *y;
 }
 
 #define MIN_PARENT_DEFN                                                        \
-    "void *minparent(vertex *z, vertex *x, vertex *y) "                        \
+    "void minparent(vertex *z, vertex *x, vertex *y) "                        \
     "{ "                                                                       \
     "*z = x->parentC < y->parentC ? *x : *y; "                                 \
     "} "
 
 // FIXME: revise GraphBLAS so we can tell it that the select2nd operator
 // does not use the 'x' input.
-void *select2nd(vertex *z, bool *x, vertex *y)
+void select2nd(vertex *z, bool *x, vertex *y)
 {
     z->parentC = y->parentC;
     z->rootC = y->rootC;
 }
 
 #define SELECT_2ND_DEFN                                                        \
-    "void *select2nd(vertex *z, bool *x, vertex *y) "                          \
+    "void select2nd(vertex *z, bool *x, vertex *y) "                          \
     "{ "                                                                       \
     "z->parentC = y->parentC; "                                                \
     "z->rootC = y->rootC;"                                                     \
     "} "
 
-void *select1st(vertex *z, vertex *x, bool *y)
+void select1st(vertex *z, vertex *x, bool *y)
 {
     z->parentC = x->parentC;
     z->rootC = x->rootC;
 }
 
 #define SELECT_1ST_DEFN                                                        \
-    "void *select2nd(vertex *z, vertex *x, bool *y) "                          \
+    "void select1st(vertex *z, vertex *x, bool *y) "                          \
     "{ "                                                                       \
     "z->parentC = x->parentC; "                                                \
     "z->rootC = x->rootC;"                                                     \
     "} "
 
-void *keepParents(uint64_t *z, vertex *x) { *z = x->parentC; }
+void keepParents(uint64_t *z, vertex *x) { *z = x->parentC; }
 
 #define KEEP_PARENTS_DEFN                                                      \
-    "void *keepParents(uint64_t *z, vertex *x) "                               \
+    "void keepParents(uint64_t *z, vertex *x) "                               \
     "{ "                                                                       \
     "*z = x->parentC; "                                                        \
     "} "
 
-void *keepRoots(uint64_t *z, vertex *x) { *z = x->rootC; }
+void keepRoots(uint64_t *z, vertex *x) { *z = x->rootC; }
 
 #define KEEP_ROOTS_DEFN                                                        \
-    "void *keepRoots(uint64_t *z, vertex *x) "                                 \
+    "void keepRoots(uint64_t *z, vertex *x) "                                 \
     "{ "                                                                       \
     "*z = x->rootC; "                                                          \
     "} "
 
-void *buildfCTuples(vertex *z, uint64_t *x, uint64_t i, uint64_t j,
+void buildfCTuples(vertex *z, uint64_t *x, uint64_t i, uint64_t j,
                     const void *y)
 {
     z->parentC = i;
@@ -120,34 +120,34 @@ void *buildfCTuples(vertex *z, uint64_t *x, uint64_t i, uint64_t j,
 }
 
 #define BUILT_FC_TUPLES_DEFN                                                   \
-    "void *buildfCTuples(vertex *z, uint64_t *x, uint64_t i, uint64_t j, "     \
+    "void buildfCTuples(vertex *z, uint64_t *x, uint64_t i, uint64_t j, "     \
     "const void *y) "                                                          \
     "{ "                                                                       \
     "z->parentC = i; "                                                         \
     "z->rootC = *x; "                                                          \
     "} "
 
-void *vertexTypecast(vertex *z, uint64_t *x)
+void vertexTypecast(vertex *z, uint64_t *x)
 {
     z->parentC = *x;
     z->rootC = *x;
 }
 
 #define VERTEX_TYPECAST_DEFN                                                   \
-    "void *vertexTypecast(vertex *z, uint64_t *x) "                            \
+    "void vertexTypecast(vertex *z, uint64_t *x) "                            \
     "{ "                                                                       \
     "z->parentC = *x; "                                                        \
     "z->rootC = *x; "                                                          \
     "} "
 
-void *setParentsMates(vertex *z, vertex *x, vertex *y)
+void setParentsMates(vertex *z, vertex *x, vertex *y)
 {
     z->parentC = y->parentC;
     z->rootC = x->rootC;
 };
 
 #define SET_PARENTS_MATES_DEFN                                                 \
-    "void *setParentsMates(vertex *z, vertex *x, vertex *y) "                  \
+    "void setParentsMates(vertex *z, vertex *x, vertex *y) "                  \
     "{ "                                                                       \
     "z->parentC = y->parentC; "                                                \
     "z->rootC = x->rootC; "                                                    \
