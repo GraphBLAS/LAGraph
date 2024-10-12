@@ -25,8 +25,8 @@
 //
 // Then run this demo with an input matrix.  For example:
 //
-//      ./experimental/benchmark/hellworld2_demo < ../data/west0067.mtx
-//      ./experimental/benchmark/hellworld2_demo < ../data/karate.mtx
+//      ./experimental/benchmark/helloworld2_demo < ../data/west0067.mtx
+//      ./experimental/benchmark/helloworld2_demo < ../data/karate.mtx
 //
 // If you create your own algorithm and want to mimic this main program, call
 // it write in experimental/benchmark/whatever_demo.c (with "_demo.c" as the
