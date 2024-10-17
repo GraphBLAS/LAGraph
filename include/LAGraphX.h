@@ -1229,8 +1229,26 @@ int LAGraph_argminmax
     int dim,                    // dim=1: cols of A, dim=2: rows of A
     bool is_min,
     char *msg
-); 
+);
 
+LAGRAPHX_PUBLIC
+int LAGraph_MaximumMatching(
+    // outputs
+    GrB_Vector
+        *mateC_handle, // mateC(j) = i : Column j of the C subset is matched to
+                       // row i of the R subset (ignored on input)
+    GrB_Vector *mateR_handle, // mateR(i) = j : Row i of the R subset is matched
+                              // to column j of the C subset (ignored on input)
+    // inputs
+    GrB_Matrix A, // input adjacency matrix, TODO: this should be a LAGraph of a
+                  // BIPARTITE kind
+    GrB_Matrix
+        AT, // trasnpose of the input adjacency matrix, NULL if not provided
+    GrB_Vector mate_init, // input only, not modified, ignored if NULL
+    bool col_init, // flag to indicate if the initial matching is provided from
+                   // the columns' or from the rows' perspective, ignored if
+                   // mate_init is NULL
+    char *msg);
 
 #if defined ( __cplusplus )
 }
