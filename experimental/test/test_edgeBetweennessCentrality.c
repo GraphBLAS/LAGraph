@@ -138,10 +138,13 @@ int test_edgeBetweenessCentrality
     LG_TRY(LAGraph_Malloc((void **) &S, n, sizeof(GrB_Index), msg)) ;
     LG_TRY(LAGraph_Malloc((void **) &P, n * n, sizeof(GrB_Index), msg)) ;
 
-    GrB_Index queue[n];
+    #if !LAGRAPH_SUITESPARSE
+    GRB_TRY (GrB_Vector_new (&Row, GrB_BOOL, n)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &neighbors, n, sizeof (GrB_Index), msg)) ;
+    #endif
 
     // 2. for ∀s ∈ V
-    for (GrB_Index s = 0; s < n; s++) {
+    for (int64_t s = 0; s < n; s++) {
         // 4. S ← empty stack
         size_t sp = 0;
 
@@ -157,7 +160,7 @@ int test_edgeBetweenessCentrality
 
         // Initialize queue and enqueue starting node s
         // 8. Q ← empty queue
-        size_t qp = 0, qlen = 1;
+        int64_t qp = 0, qlen = 1;
         // 9. enqueue(Q, s)
         queue[0] = s;
 
@@ -165,26 +168,30 @@ int test_edgeBetweenessCentrality
         while (qlen > 0) {
             // Dequeue v from Q and push onto S
             // 12. v ← dequeue(Q)
-            GrB_Index v = queue[qp++];
+            int64_t v = queue [qp++] ;
             qlen--;
 
             // 13. push(S, v)
             S[sp++] = v;
 
-            // Iterate over neighbors of v
-            GrB_Vector v_neighbors = NULL;
-            GRB_TRY (GrB_Vector_new(&v_neighbors, GrB_BOOL, n));
-            GrB_Col_extract(v_neighbors, NULL, NULL, A, GrB_ALL, n, v, GrB_DESC_T0);
+            #if LAGRAPH_SUITESPARSE
+            // directly access the indices of entries in A(v,:)
+            GrB_Index degree = Ap [v+1] - Ap [v] ;
+            GrB_Index *node_u_adjacency_list = Aj + Ap [v] ;
+            #else
+            // extract the indices of entries in A(v,:)
+            GrB_Index degree = n ;
+            GRB_TRY (GrB_Col_extract (Row, NULL, NULL, G->A, GrB_ALL, n, v,
+                GrB_DESC_T0)) ;
+            GRB_TRY (GrB_Vector_extractTuples_BOOL (neighbors, NULL, &degree, Row));
+            GrB_Index *node_v_adjacency_list = neighbors ;
+            #endif
 
-            GrB_Index w;
-            GrB_Index nvals;
-            GrB_Vector_nvals(&nvals, v_neighbors);
-            GrB_Index *neighbors = malloc(nvals * sizeof(GrB_Index));
-            GrB_Vector_extractTuples_BOOL(neighbors, NULL, &nvals, v_neighbors);
-
-            // 14. for ∀w ∈ neighbors(v)
-            for (GrB_Index i = 0; i < nvals; i++) {
-                w = neighbors[i];
+            // traverse all entries in A(v,:)
+            for (int64_t k = 0 ; k < degree ; k++)
+            {
+                // consider edge (v,w)
+                int64_t w = node_v_adjacency_list [k] ;
                 int64_t d_w;
                 bool d_w_exists = GrB_Vector_extractElement_INT64(&d_w, d, w) == GrB_SUCCESS;
 
@@ -194,61 +201,48 @@ int test_edgeBetweenessCentrality
                     // 18. enqueue(Q, w)
                     queue[qp + qlen++] = w;
                     // 19. d[w] ← d[v] + 1
-                    GrB_Vector_setElement(d, d[v] + 1, w);
+                    GRB_TRY (GrB_Vector_setElement(d, d[v] + 1, w)) ;
                 }
 
                 // 20. if d[w] = d[v] + 1
                 if (d_w == d[v] + 1) {
                     // Update shortest path count and add predecessor
                     // 22. σ[w] ← σ[w] + σ[v]
-                    GrB_Vector_setElement(sigma, sigma[v] + sigma[w], w);
+                    GRB_TRY (GrB_Vector_setElement(sigma, sigma[v] + sigma[w], w)) ;
                     // 23. append(P [w], v)
                     P[w * n + v] = 1;
                 }
             }
-
-
-            GrB_Vector_free(&v_neighbors);
-            free(neighbors);
         }
 
         // Set dependency score δ[v] ← 0
         // 24. δ[v] ← 0, ∀v ∈ V
-        GrB_Vector_clear(delta);
+        GRB_TRY (GrB_Vector_clear(delta));
 
         // Process stack S
         // 25. while ¬empty(S)
         while (sp > 0) {
             // 27. w ← pop(S)
-            GrB_Index w = S[--sp];
+            int64_t w = S[--sp];
 
             // 28. for v ∈ P [w]
-            for (GrB_Index v = 0; v < n; v++) {
+            for (int64_t v = 0; v < n; v++) {
                 if (P[w * n + v]) {
                     // Update dependency and centrality values
                     double sigma_v, sigma_w, delta_w;
-                    GrB_Vector_extractElement(&sigma_v, sigma, v);
-                    GrB_Vector_extractElement(&sigma_w, sigma, w);
-                    GrB_Vector_extractElement(&delta_w, delta, w);
+                    GRB_TRY (GrB_Vector_extractElement(&sigma_v, sigma, v));
+                    GRB_TRY (GrB_Vector_extractElement(&sigma_w, sigma, w));
+                    GRB_TRY (GrB_Vector_extractElement(&delta_w, delta, w));
 
-                    double contribution = sigma_v * ((delta_w / sigma_w) + 1);
+                    double centrality = sigma_v * ((delta_w / sigma_w) + 1);
                     // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
-                    delta[v] += contribution;
+                    delta[v] += centrality;
                     // 31. CB [(v, w)] ← CB [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
-                    CB[v * n + w] += contribution;
+                    CB[v * n + w] += centrality;
                 }
             }
         }
     }
-
-    //--------------------------------------------------------------------------
-    // TODO: get rid of this?
-    // for (x = P_head(i); x != 1; x = P_next(x))
-    // {
-    //     for (p = Ap[i]; p < Ap[i + 1]; p++)
-    // }
-    //--------------------------------------------------------------------------
-
 
     if (print_timings)
     {
