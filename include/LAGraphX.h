@@ -1381,6 +1381,39 @@ int LAGraph_argminmax
     int dim,                    // dim=1: cols of A, dim=2: rows of A
     bool is_min,
     char *msg
+); 
+LAGRAPHX_PUBLIC
+int LAGr_Modularity2(
+    //output
+    double *Q, //modularity Q
+    // GrB_Matrix B,
+    //input
+    double gamma, //Optional resolution limit: default is 1
+    // LAGraph_Graph G, TODO
+    GrB_Matrix A, //adjacency matrix
+    GrB_Matrix S, //community matrix
+    char* msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_Louvain
+(
+    //ouptut
+    GrB_Matrix S,
+    // input
+    LAGraph_Graph G,
+    char* msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_Louvain2
+(
+    //ouptut
+    GrB_Matrix S,
+    // input
+    LAGraph_Graph G,
+    char* msg
+);
 ) ; 
 LAGRAPHX_PUBLIC
 int LAGr_Modularity2(

@@ -26,7 +26,6 @@ const matrix_info files[] = {
 //Store matrix by row
 void test_Louvain(void){
     LAGraph_Init(msg);
-    //Lagraph+RAndom_init
     printf("\n");
     for(int k = 0;;k++){
         if (strlen(files[k].matrix_file) == 0)

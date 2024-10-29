@@ -54,9 +54,9 @@ void test_Louvain(void){
         {
             G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
         }
-        GrB_Matrix S;
+        GrB_Matrix S=NULL;
         double tsimple = LAGraph_WallClockTime ( ) ;
-        OK(LAGraph_Louvain2(&S,G,msg));
+        OK(LAGraph_Louvain2(S,G,msg));
         tsimple = LAGraph_WallClockTime ( ) - tsimple ;
         printf(" time: %f\n",tsimple);
 

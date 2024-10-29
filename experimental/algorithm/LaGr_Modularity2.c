@@ -41,9 +41,7 @@
         GrB_free (&kk_) ;               \
         GrB_free (&BS) ;                \
         GrB_free (&S_BS) ;              \
-        GrB_free (&Diag) ;              \
     }
-#undef LG_FREE_ALL
 #define LG_FREE_ALL                     \
     {                                   \
         LG_FREE_MOD;                   \
@@ -63,11 +61,6 @@ int LAGr_Modularity2(
     char* msg
 )
 {
-    LG_CLEAR_MSG ;
-
-    char MATRIX_TYPE[LAGRAPH_MSG_LEN];
-    if (DEBUG)
-        GrB_set (GrB_GLOBAL, true, GxB_BURBLE);
     //------------------------------------------------------------------------------
     // Declare Monoids, Brinary Operations, Semirings,(for easier reference) and Matrices
     //------------------------------------------------------------------------------
@@ -85,7 +78,6 @@ int LAGr_Modularity2(
     GrB_Matrix B =    NULL; // B = A - (kk^t/2m)
     GrB_Matrix BS =   NULL; // BS
     GrB_Matrix S_BS = NULL; // S_BS
-    GrB_Matrix Diag = NULL;
 
     GRB_TRY(GrB_Matrix_nrows(&n, A));
     // GRB_TRY(GrB_Matrix_new(&S_, GrB_FP64, n, n));
@@ -103,7 +95,7 @@ int LAGr_Modularity2(
     double m;
     GRB_TRY(GrB_Matrix_reduce_FP64(&m,plusf64,plusmon,A,NULL));
     m/=2;
-    // printf("m:%f\n",m);
+    printf("m:%f\n",m);
     // GxB_print(S,5);
     // GxB_print(A,5);
     GRB_TRY(GrB_Matrix_reduce_Monoid ((GrB_Vector)k_,NULL,NULL,plusmon,A, GrB_DESC_T0));
@@ -127,14 +119,13 @@ int LAGr_Modularity2(
     //------------------------------------------------------------------------------
     // Final Computation of Modularity Q
     //------------------------------------------------------------------------------
+    GrB_Matrix Diag;
     GRB_TRY(GrB_Matrix_new(&Diag,GrB_FP64,n,n));
     GRB_TRY(GrB_select(Diag,NULL,NULL,GrB_DIAG,S_BS,0,NULL));
     // GxB_print(Diag,5);
-    double Q_;
-    // printf("here");
-    GRB_TRY(GrB_Matrix_reduce_FP64(&Q_,NULL,plusmon,Diag,NULL));
-    Q_ *= -inv_m;
-    *Q = Q_;
+    // double *Q_;
+    GRB_TRY(GrB_Matrix_reduce_FP64(Q,NULL,plusmon,Diag,NULL));
+    *Q *= -inv_m;
     LG_FREE_ALL;
     return 0;
 }

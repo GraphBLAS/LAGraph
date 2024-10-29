@@ -30,6 +30,7 @@ const matrix_info files[] = {
 void test_modularity (void)
 {
     LAGraph_Init (msg) ;
+    double *Q;
     for(int k = 0;;k++){
         if (strlen(files[k].matrix_file) == 0)
             break;
@@ -52,13 +53,12 @@ void test_modularity (void)
 
         GrB_Matrix B=NULL;
         double gamma = files[k].gamma;
-        double Q;
-        OK(LAGr_Modularity2(&Q,gamma,A,S,msg));
-        bool ok_mod =false;
+        OK(LAGr_Modularity2(Q,gamma,A,S,msg));
+        bool ok_mod;
         // GxB_print()
-        printf("Q:%.15g\n",Q);
+        printf("Q:%.15g\n",*Q);
         // printf("mod:%.15g\n",files[k].mod);
-        ok_mod =( Q  - files[k].mod < 1e-5);
+        ok_mod =( *Q  - files[k].mod < 1e-5);
         TEST_CHECK(ok_mod);
         OK (GrB_free (&A)) ;
         OK (GrB_free (&S)) ;
