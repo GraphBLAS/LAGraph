@@ -67,7 +67,6 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-//taken from LAGraph_BF_full_mxv
 typedef void (*LAGraph_binary_function) (void *, const void *, const void *) ;
 
 /* #define TWO_ONE_ADD                                                         \

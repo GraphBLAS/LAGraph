@@ -94,6 +94,7 @@ void test_SwapEdges (void)
         GrB_Index n = 0;
         OK (LAGraph_Cached_OutDegree (G, msg)) ;
         OK (GrB_Matrix_nrows(&n, G->A));
+
         //----------------------------------------------------------------------
         // test the algorithm
         //----------------------------------------------------------------------
