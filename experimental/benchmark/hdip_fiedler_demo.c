@@ -11,29 +11,6 @@
 
 //------------------------------------------------------------------------------
 
-// This main program is a simple driver for testing and benchmarking the
-// LAGraph_HelloWorld "algorithm", in experimental/algorithm.  To use it,
-// compile LAGraph while in the build folder with these commands:
-//
-//      cd LAGraph/build
-//      cmake ..
-//      make -j8
-//
-// Then run this demo with an input matrix.  For example:
-//
-//      ./experimental/benchmark/hellworld_demo ../data/west0067.mtx
-//      ./experimental/benchmark/hellworld_demo < ../data/west0067.mtx
-//      ./experimental/benchmark/hellworld_demo ../data/karate.mtx
-//
-// If you create your own algorithm and want to mimic this main program, call
-// it write in experimental/benchmark/whatever_demo.c (with "_demo.c" as the
-// end of the filename), and the cmake will find it and compile it.
-
-// This main program makes use of supporting utilities in
-// src/benchmark/LAGraph_demo.h and src/utility/LG_internal.h.
-// See helloworld2_demo.c for a main program that just uses the
-// user-callable methods in LAGraph.h and LAGraphX.h.
-
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LAGraphX.h"
 #include "LG_internal.h"
