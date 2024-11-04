@@ -21,8 +21,6 @@
     GrB_free (&M) ;                             \
     GrB_free (&M_fours) ;                       \
     GrB_free (&pairs_4s) ;                      \
-    GrB_free (&M_1) ;                           \
-    GrB_free (&M_2) ;                           \
     GrB_free (E_arranged) ;                     \
     GrB_free (E_arranged + 1) ;                 \
     GrB_free (E_arranged + 2) ;                 \
@@ -33,6 +31,8 @@
     GrB_free(&buckets);                         \
     GrB_free(&hashed_edges);                    \
     GrB_free(&exists);                          \
+    GrB_free(&dense2_hash);                     \
+    GrB_free(&dense_hash);                      \
     LAGraph_Free((void **) &hash_vals_new, NULL);\
     LAGraph_Free((void **) &hash_vals, NULL);   \
 }
@@ -42,7 +42,6 @@
     /* free any workspace used here */          \
     GrB_free (&E) ;                             \
     GrB_free (&E_half) ;                        \
-    GrB_free (&E_t) ;                           \
     GrB_free (&A_tril) ;                        \
     GrB_free (&random_v) ;                      \
     GrB_free (&r_permute) ;                     \
@@ -55,13 +54,19 @@
     GrB_free (&first_bit) ;                     \
     GrB_free (&swap_op) ;                       \
     GrB_free (&any_bxor) ;                      \
+    GrB_free (&hash_one) ;                      \
+    GrB_free (&hash_two) ;                      \
+    GrB_free (&bhash_one) ;                     \
+    GrB_free (&bhash_two) ;                     \
+    GrB_free (&hash_edges) ;                    \
+    GrB_free (&hash_edges2) ;                   \
     LAGraph_Free((void**)&row_indices, msg) ;   \
     LAGraph_Free((void**)&col_indices, msg) ;   \
-    LAGraph_Free((void**)&values, msg) ;        \
     LAGraph_Free((void**)&ramp, msg) ;          \
     LAGraph_Free((void**)&half_ramp, msg) ;     \
-    LAGraph_Free((void**)&edge_perm, msg) ;     \
     LAGraph_Free((void**)&swap_type, msg) ;     \
+    LAGraph_Free((void**)&edge_perm, msg) ;     \
+    LAGraph_Free((void**)&swaps, msg) ;         \
     FREE_LOOP ;                                 \
 }
 
@@ -154,7 +159,6 @@ int LAGraph_SwapEdges
     //--------------------------------------------------------------------------
     GrB_Matrix A = NULL; // n x n Adjacency Matrix 
     GrB_Matrix E = NULL; // e x n Incidence Matrix
-    GrB_Matrix E_t = NULL; // n x e Incidence Transposed
 
     // cmatrix [E_selected, M_1, M_2]
     GrB_Matrix E_arranged[3] = {NULL, NULL, NULL};
@@ -171,13 +175,7 @@ int LAGraph_SwapEdges
     GrB_Matrix M = NULL;
     GrB_Matrix M_fours = NULL; // M with exactly 4 entries
 
-    GrB_Matrix M_1 = NULL; // M_1 + M_2 = M
-    GrB_Matrix M_2 = NULL; // M_1 + M_2 = M
-
-    // Has a 2 in a certain row if the planned swap already exists in the matrix
-    GrB_Matrix exists_1 = NULL, exists_2 = NULL;
-
-    GrB_Index n = 0, e = 0, nvals = 0;
+    GrB_Index n = 0, e = 0;
 
     // Copied vars from LAGraph_Incidence_Matrix
     GrB_Matrix E_half = NULL ;
@@ -186,9 +184,8 @@ int LAGraph_SwapEdges
     // random vector 
     GrB_Vector random_v = NULL, r_permute = NULL, r_sorted = NULL;
 
-    GrB_Index *row_indices = NULL ;
-    GrB_Index *col_indices = NULL ;
-    void *values = NULL ;
+    //indicies for A
+    GrB_Index *row_indices = NULL, *col_indices = NULL ;
 
     // [0,2,0,3,0,3,0 . . .] numSwaps?
     GrB_Vector swapVals = NULL;
@@ -218,13 +215,14 @@ int LAGraph_SwapEdges
     GrB_Matrix dense2_hash = NULL, new_hashed_edges = NULL, buckets = NULL;
     GrB_Vector dense_hash = NULL, hashed_edges = NULL, exists = NULL; 
     GrB_Index *hash_vals_new = NULL, *hash_vals = NULL;
+    uint8_t *swaps = NULL;
+
 
     GrB_IndexUnaryOp first_bit = NULL;
     GrB_IndexUnaryOp swap_op = NULL;
     GzB_IndexBinaryOp hash_one = NULL, hash_two = NULL;
     GrB_BinaryOp bhash_one = NULL, bhash_two = NULL;
     GrB_Semiring hash_edges = NULL, hash_edges2 = NULL;
-    GrB_Monoid one_monoid = NULL;
 
     GrB_Semiring any_bxor = NULL;
 
@@ -258,7 +256,6 @@ int LAGraph_SwapEdges
 
     GRB_TRY (GrB_Matrix_new(&E, GrB_UINT8, e, n)) ;
     GRB_TRY (GrB_Matrix_new (&E_half, GrB_UINT8, e, n)) ;
-    GRB_TRY (GrB_Matrix_new (&E_t, GrB_UINT8, n, e)) ;
     
     GRB_TRY (GxB_IndexUnaryOp_new (
         &first_bit, (GxB_index_unary_function) (&first_bit_equals),
@@ -296,8 +293,7 @@ int LAGraph_SwapEdges
     GRB_TRY(GrB_Semiring_new(
         &any_bxor, GxB_ANY_UINT8_MONOID ,GrB_BXOR_UINT8 
     )) ;
-    GRB_TRY(GxB_Monoid_terminal_new(
-        &one_monoid, GrB_ONEB_UINT8, (uint8_t) 255, (uint8_t) 1));
+
     GrB_Index num_swaps = 0, num_attempts = 0; 
     // Q: Should this decrease if edges are interfering alot?
     // Bound number of swaps by E-2 * (max deg)?
@@ -327,10 +323,8 @@ int LAGraph_SwapEdges
     // QUESTION: can't I just use an unpack and use the arrays GBLAS allocated?
     LG_TRY (LAGraph_Malloc ((void**)(&row_indices), e, sizeof(GrB_Index), msg)) ;
     LG_TRY (LAGraph_Malloc ((void**)(&col_indices), e, sizeof(GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void**)(&values), e, sizeof(bool), msg)) ;
-
     GRB_TRY (
-        GrB_Matrix_extractTuples_BOOL (row_indices, col_indices, values, &e, A_tril)
+        GrB_Matrix_extractTuples_BOOL (row_indices, col_indices, NULL, &e, A_tril)
         ) ;
 
     //Build large ramp
@@ -366,7 +360,6 @@ int LAGraph_SwapEdges
 
     LG_TRY (LAGraph_Free((void**)(&row_indices), msg));
     LG_TRY (LAGraph_Free((void**)(&col_indices), msg));
-    LG_TRY (LAGraph_Free((void**)(&values), msg));
 
     GRB_TRY (GrB_Vector_assign_UINT8 (
         x, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
@@ -411,20 +404,17 @@ int LAGraph_SwapEdges
             r_sorted, (uint8_t) 0, NULL)) ;
         // NOTE: Small typo on 6.11.6. Refers to vb even though its not a bitmap
         // Also 
-        // TODO: handle memory
         // TODO: try and make this more efficient maybe just rand % e rather 
         // than a permutation
         GrB_Index perm_size, swap_size;
         GRB_TRY (GxB_Vector_unpack_Full(
             r_permute, (void **)&edge_perm, &perm_size, &iso, NULL
         )) ;
-        uint8_t *swaps = NULL;
         LG_ASSERT(!iso, GrB_NOT_IMPLEMENTED);
         GRB_TRY (GxB_Vector_unpack_Full(
             swapVals, (void **)&swaps, &swap_size, NULL, NULL
         )) ;
         LG_ASSERT(!iso, GrB_NOT_IMPLEMENTED);
-
 
         // Pair edges. Take a random permutation and pair adjacent values.
         // pairs wants:

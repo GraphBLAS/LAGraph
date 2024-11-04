@@ -58,6 +58,7 @@ int main (int argc, char **argv)
     // mtx2bin_demo).
 
     double t = LAGraph_WallClockTime ( ) ;
+    GrB_Index swaps = (argc > 2) ? atoi(argv [2]): 100;
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     LG_TRY (readproblem (
         &G,         // the graph that is read from stdin or a file
@@ -81,12 +82,12 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
     printf("Time To Swap #################################################") ;
     t = LAGraph_WallClockTime ( ) ;
-    LG_TRY (LAGraph_SwapEdges (&Y, G, (GrB_Index) 10, msg)) ;
+    LG_TRY (LAGraph_SwapEdges (&Y, G, swaps, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
-    printf ("Time for LAGraph_SwapEdges:  %g sec\n", t) ;
+    printf ("===============================TLAGraph_SwapEdges took:  %g sec\n", t) ;
     
     //--------------------------------------------------------------------------
-    // check the results (make sure Y is a copy of G->A)
+    // check the results 
     //--------------------------------------------------------------------------
 
     t = LAGraph_WallClockTime ( ) ;
@@ -102,8 +103,8 @@ int main (int argc, char **argv)
     // print the results (Y is just a copy of G->A)
     //--------------------------------------------------------------------------
 
-    printf ("\n===============================The result matrix Y:\n") ;
-    LG_TRY (LAGraph_Matrix_Print (Y, LAGraph_SHORT, stdout, msg)) ;
+    printf ("\n===============================The result matrix:\n") ;
+    LG_TRY (LAGraph_Matrix_Print (G_new -> A, LAGraph_SHORT, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // free everyting and finish
