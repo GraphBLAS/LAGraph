@@ -136,16 +136,15 @@ int LAGraph_Louvain2(
     bool changed = true;
     int max_iter = 20;
     int iter =0;
-
+    GRB_TRY(GrB_mxv(z,NULL,NULL,stdmxm,S,k,NULL));
     while(changed && iter < max_iter){
         changed = false;
         double k_i;
-        GRB_TRY(GrB_mxv(z,NULL,NULL,stdmxm,S,k,NULL));
+
         for(int i=0;i<n;i++){//extract tuples
             // v = A(i,:)
             GRB_TRY (GrB_Col_extract (v, NULL, NULL, A, GrB_ALL, b, i,GrB_DESC_T0));
             // GxB_print(v,5);
-
             // -- extract k_i
             GRB_TRY(GrB_Vector_extractElement_FP64(&k_i,k,i));
             
@@ -163,6 +162,7 @@ int LAGraph_Louvain2(
             Sx[i] = false;
             GRB_TRY (GxB_Matrix_pack_CSR (S, &Sp, &Sj, (void**)&Sx,
                 Sp_size, Sj_size, Sx_size, NULL, S_jumbled, NULL));
+
 ////////////////////////////////////////////////////////////
 
             double alpha = -k_i/m;
@@ -184,9 +184,9 @@ int LAGraph_Louvain2(
             // GxB_print(z,5);
             GRB_TRY(GrB_Vector_apply_BinaryOp2nd_FP64(z,NULL,NULL,timesf64,dSk,alpha,NULL));
             // GxB_print(z,5);
+            
             // vtS
             GRB_TRY(GrB_vxm(vtS,NULL,NULL,stdmxm,v,S,GrB_DESC_T0));
-            
             // GxB_print(vtS,5);
 
             //Compute q1
