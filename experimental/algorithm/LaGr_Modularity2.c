@@ -95,7 +95,7 @@ int LAGr_Modularity2(
     double m;
     GRB_TRY(GrB_Matrix_reduce_FP64(&m,plusf64,plusmon,A,NULL));
     m/=2;
-    printf("m:%f\n",m);
+    // printf("m:%f\n",m);
     // GxB_print(S,5);
     // GxB_print(A,5);
     GRB_TRY(GrB_Matrix_reduce_Monoid ((GrB_Vector)k_,NULL,NULL,plusmon,A, GrB_DESC_T0));
