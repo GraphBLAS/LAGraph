@@ -44,6 +44,8 @@
 
 int test_edgeBetweenessCentrality
 (
+    // output
+    GrB_Matrix *C,      // centrality matrix
     // input
     LAGraph_Graph G,
     char *msg
@@ -90,8 +92,8 @@ int test_edgeBetweenessCentrality
 
     GrB_Info info;
 
-    // A centrality matrix initialized to 0 for all edges.
-    GrB_Matrix CB = NULL ;
+    // A temporary result centrality matrix initialized to 0 for all edges.
+    GrB_Matrix result = NULL ;
 
     // Keeps track of the number of shortest paths.
     GrB_Vector sigma = NULL ;
@@ -107,7 +109,7 @@ int test_edgeBetweenessCentrality
     LG_TRY (LAGraph_Malloc ((void **) &queue, n, sizeof (int64_t), msg)) ;
 
     //--------------------------------------------------------------------------
-    // unpack the matrix in CSR form for SuiteSparse:GraphBLAS
+    // unpack the A matrix in CSR form for SuiteSparse:GraphBLAS
     //--------------------------------------------------------------------------
 
     #if LAGRAPH_SUITESPARSE
@@ -127,9 +129,21 @@ int test_edgeBetweenessCentrality
         tt = LAGraph_WallClockTime ( ) ;
     }
 
-    // Initialize centrality matrix CB to 0
-    // 1. CB [(v, w)] ← 0, ∀(v, w) ∈ E
-    GRB_TRY (GrB_Matrix_new(CB, GrB_FP64, n, n)) ;
+    // Initialize centrality matrix result to 0
+    // 1. result [(v, w)] ← 0, ∀(v, w) ∈ E
+    GRB_TRY (GrB_Matrix_new(result, GrB_FP64, n, n, A)) ;
+    GRB_TRY (GrB_assign(result, A, null, 0, GrB_ALL, n, Grb_ALL, n, GrB_DESC_S)) ;
+
+    //--------------------------------------------------------------------------
+    // unpack the centrality matrix in CSR form for SuiteSparse:GraphBLAS
+    //--------------------------------------------------------------------------
+
+    #if LAGRAPH_SUITESPARSE
+    bool Ciso, Cjumbled ;
+    GRB_TRY (GxB_Matrix_unpack_CSR (result,
+        &Cp, &Cj, &Cx, &Cp_size, &Cj_size, &Cx_size, &Ciso, &Cjumbled, NULL)) ;
+    #endif
+
 
     GRB_TRY (GrB_Vector_new(&sigma, GrB_FP64, n)) ;
     GRB_TRY (GrB_Vector_new(&d, GrB_INT64, n)) ;
@@ -237,8 +251,12 @@ int test_edgeBetweenessCentrality
                     double centrality = sigma_v * ((delta_w / sigma_w) + 1);
                     // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
                     delta[v] += centrality;
-                    // 31. CB [(v, w)] ← CB [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
-                    CB[v * n + w] += centrality;
+                    // 31. result [(v, w)] ← result [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
+                    result[v * n + w] += centrality;
+
+                    // TODO: maybe get rid of this
+                    // int x;
+                    // GrB_extract(&x, c, v, w) ; 
                 }
             }
         }
@@ -252,13 +270,24 @@ int test_edgeBetweenessCentrality
     }
 
     //--------------------------------------------------------------------------
-    // repack the matrix in CSR form for SuiteSparse:GraphBLAS
+    // repack the A matrix in CSR form for SuiteSparse:GraphBLAS
     //--------------------------------------------------------------------------
 
     #if LAGRAPH_SUITESPARSE
     GRB_TRY (GxB_Matrix_pack_CSR (G->A,
         &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
     #endif
+
+     //--------------------------------------------------------------------------
+    // repack the centrality matrix in CSR form for SuiteSparse:GraphBLAS
+    //--------------------------------------------------------------------------
+
+    #if LAGRAPH_SUITESPARSE
+    GRB_TRY (GxB_Matrix_pack_CSR (result,
+        &Cp, &Cj, &Cx, Cp_size, Cj_size, Cx_size, Ciso, Cjumbled, NULL)) ;
+    #endif
+
+    (*C) = result ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result
@@ -269,7 +298,7 @@ int test_edgeBetweenessCentrality
     if (print_timings)
     {
         tt = LAGraph_WallClockTime ( ) - tt ;
-        printf ("test_edgeBetweennessCentrality check time: %g sec\n", tt) ;
+        printf ("LG_check_edgeBetweennessCentrality check time: %g sec\n", tt) ;
     }
     return (GrB_SUCCESS) ;
 }
