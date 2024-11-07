@@ -84,7 +84,7 @@ int main (int argc, char **argv)
     t = LAGraph_WallClockTime ( ) ;
     LG_TRY (LAGraph_SwapEdges (&Y, G, swaps, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
-    printf ("===============================TLAGraph_SwapEdges took:  %g sec\n", t) ;
+    printf ("===============================LAGraph_SwapEdges took:  %g sec\n", t) ;
     
     //--------------------------------------------------------------------------
     // check the results 
@@ -96,6 +96,15 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Cached_OutDegree (G_new, msg)) ;
     LG_TRY (LAGraph_Vector_IsEqual(
         &result, G->out_degree, G_new->out_degree, msg)) ;
+    if (result)
+    {
+        printf ("Test passed.\n") ;
+    }
+    else
+    {
+        printf ("Test failure!\n") ;
+    }
+
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time to check results:       %g sec\n", t) ;
 

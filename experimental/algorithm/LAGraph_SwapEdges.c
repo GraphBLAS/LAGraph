@@ -344,12 +344,13 @@ int LAGraph_SwapEdges
     GRB_TRY (GxB_Vector_unpack_Full (
         hramp_v, (void **)&half_ramp, &ramp_size, &iso, NULL)) ;
 
-    GrB_Scalar zero8 ;
-    GrB_Scalar one8 ;
+    GrB_Scalar zero8 = NULL, one8 = NULL, one64 = NULL ;
     GRB_TRY (GrB_Scalar_new (&zero8, GrB_UINT8)) ;
     GRB_TRY (GrB_Scalar_new (&one8, GrB_UINT8)) ;
+    GRB_TRY (GrB_Scalar_new (&one64, GrB_UINT64)) ;
     GRB_TRY (GrB_Scalar_setElement_UINT8 (zero8, 0)) ;
     GRB_TRY (GrB_Scalar_setElement_UINT8 (one8, 1)) ;
+    GRB_TRY (GrB_Scalar_setElement_UINT64 (one64, 1ull)) ;
 
     GRB_TRY (GxB_Matrix_build_Scalar (E_half, ramp, col_indices, zero8, e)) ;
     GRB_TRY (GxB_Matrix_build_Scalar (E, ramp, row_indices, one8, e)) ;
@@ -523,29 +524,28 @@ int LAGraph_SwapEdges
             hashed_edges, (void **) &hash_vals, &junk_size, &iso, NULL
         )) ;
 
-        GRB_TRY (GrB_Vector_new(&exists, GrB_UINT8, 1ULL << 60)) ;
+        GRB_TRY (GrB_Vector_new(&exists, GrB_UINT64, 1ULL << 60)) ;
         GRB_TRY (GrB_Matrix_new(
-            &buckets, GrB_UINT8, 1ULL << 60, n_keep)) ;
-        // Build hash buckets
+            &buckets, GrB_UINT64, 1ULL << 60, n_keep)) ;
         
+        // Build hash buckets
         GRB_TRY(GxB_Vector_build_Scalar(
-            exists, hash_vals, one8, e
+            exists, hash_vals, one64, e
         )) ;
         // GxB_Vector_fprint(exists,"exists",GxB_SHORT, stdout);
         GRB_TRY(GxB_Matrix_build_Scalar(
-            buckets, hash_vals_new, half_ramp, one8, n_keep * 2
+            buckets, hash_vals_new, half_ramp, one64, n_keep * 2
         )) ;
-
 
         // Any collisions will use the monoid and will be marked by a 1 in the 
         // vector
         GRB_TRY(GrB_Matrix_reduce_Monoid(
-            exists, NULL, GrB_PLUS_UINT8, GrB_PLUS_MONOID_UINT8, buckets, GrB_DESC_R
+            exists, NULL, GrB_PLUS_UINT64, GrB_PLUS_MONOID_UINT64, buckets, NULL
         )) ;
-        //TODO: fix, this can overflow.
-        GRB_TRY(GrB_Vector_select_UINT8(
-            exists, NULL, NULL, GrB_VALUEGT_UINT8, exists, (uint8_t)1, GrB_DESC_R
+        GRB_TRY(GrB_Vector_select_UINT64(
+            exists, NULL, NULL, GrB_VALUEGT_UINT64, exists, 1ull, GrB_DESC_R
         )) ;
+        // GxB_Vector_fprint(exists,"exists",GxB_SHORT, stdout);
 
         GrB_Index badcount;
         GRB_TRY (GrB_Vector_nvals(&badcount, exists)) ;

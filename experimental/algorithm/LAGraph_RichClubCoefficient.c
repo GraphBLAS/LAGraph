@@ -196,7 +196,7 @@ int LAGraph_RichClubCoefficient
         GrB_FP64, GrB_INT64, GrB_INT64, 
         "rich_club_formula", RICH_CLUB_FORMULA)) ;
 
-    // degrees = G->out_degree
+    // degrees = G->out_degree - 1
     GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(
         degrees, NULL, NULL, GrB_MINUS_INT64, G->out_degree, 1, NULL)) ;
 
@@ -221,17 +221,10 @@ int LAGraph_RichClubCoefficient
     GRB_TRY (GrB_mxm(
         edge_degrees, NULL, NULL, GxB_ANY_FIRST_INT64, D, A, NULL)) ;
 
-    // // If the nodes of an edge have different degrees, the edge is counted once.
-    // // If they have the same degree, that edge is double counted. So, we adjust:
-    // GRB_TRY(GrB_mxm(
-    //     edge_degrees, NULL, NULL, plus_2le, D, edge_degrees, NULL)) ;
-    // // Sum up the number of edges each node is "responsible" for.
-    // GRB_TRY(GrB_Matrix_reduce_Monoid(
-    //     node_edges, NULL, NULL, GrB_PLUS_MONOID_INT64, edge_degrees, NULL)) ;
-
-
+    // Sum up the number of edges each node is "responsible" for.
     GRB_TRY (GrB_mxv(
         node_edges, NULL, NULL, plus_2le, edge_degrees, degrees, NULL)) ;
+
     // The rest of this is indexing the number of edges and number of nodes at 
     // each degree and then doing a cummulative sum to know the amount of edges 
     // and nodes at degree geq k.
