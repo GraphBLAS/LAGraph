@@ -129,7 +129,7 @@ int LAGraph_SwapEdges
     GrB_Matrix A = NULL; // n x n Adjacency Matrix 
 
     // e x 2 with entries corresponding to verticies of an edge
-    GrB_Matrix E = NULL; 
+    GrB_Matrix E = NULL, E_t = NULL; 
 
     // e entries. E_split[0] has those which are planning to swap.
     GrB_Matrix E_split[2] = {NULL, NULL}; 
@@ -255,6 +255,7 @@ int LAGraph_SwapEdges
     GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
     GRB_TRY (GrB_Matrix_nvals(&e, A_tril)) ;
     GRB_TRY (GrB_Matrix_new(&E, GrB_UINT64, e, 2)) ;
+    GRB_TRY (GrB_Matrix_new(&E_t, GrB_UINT64, 2, e)) ;
     
     //----------------------------------------------------------- Init Operators
     GRB_TRY (GxB_UnaryOp_new (
@@ -290,9 +291,10 @@ int LAGraph_SwapEdges
         GrB_Matrix_extractTuples_BOOL (indices, indices + e, NULL, &e, A_tril)
         ) ;
     GRB_TRY (GxB_Matrix_pack_FullC (
-        E, (void **)&indices, 2 * e * sizeof(GrB_Index), false, NULL
+        E_t, (void **)&indices, 2 * e * sizeof(GrB_Index), false, NULL
     )) ;
-
+    GRB_TRY (GrB_transpose(E, NULL, NULL, E_t, NULL));
+    GrB_free(&E_t);
     // Init Ramps --------------------------------------------------------------
     GRB_TRY (GrB_Vector_new(&ramp_v, GrB_UINT64, e + 1)) ;
     GRB_TRY (GrB_Vector_new(&hramp_v, GrB_UINT64, e + 1)) ;
