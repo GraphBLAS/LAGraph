@@ -178,7 +178,6 @@ void test_RichClubCoefficient (void)
     //--------------------------------------------------------------------------
 
 
-
     LAGraph_Finalize (msg) ;
 }
 

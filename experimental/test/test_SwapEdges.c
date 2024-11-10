@@ -41,6 +41,7 @@ void test_SwapEdges (void)
     // start LAGraph
     //--------------------------------------------------------------------------
     OK (LAGraph_Init (msg)) ;
+    OK (LAGraph_Random_Init(msg)) ;
     GrB_Matrix A = NULL, C = NULL, A_new = NULL, C_new = NULL;
     LAGraph_Graph G = NULL, G_new = NULL;
 
@@ -138,6 +139,7 @@ void test_SwapEdges (void)
     //--------------------------------------------------------------------------
     // free everything and finalize LAGraph
     //--------------------------------------------------------------------------
+    LAGraph_Random_Finalize(msg);
     LAGraph_Finalize (msg) ;
 }
 

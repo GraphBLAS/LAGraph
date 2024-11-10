@@ -120,6 +120,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     LG_FREE_ALL ;
+    LG_TRY (LAGraph_Random_Finalize (msg)) ;
     LG_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

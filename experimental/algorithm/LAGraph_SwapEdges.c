@@ -25,7 +25,6 @@
     GrB_free(&new_hashed_edges);                \
     GrB_free(&buckets);                         \
     GrB_free(&hashed_edges);                    \
-    GrB_free(&exists);                          \
     LAGraph_Free((void **) &hash_vals_new, NULL);\
     LAGraph_Free((void **) &hash_vals, NULL);   \
 }
@@ -37,7 +36,6 @@
     GrB_free (&A_tril) ;                        \
     GrB_free (&random_v) ;                      \
     GrB_free (&r_permute) ;                     \
-    GrB_free (&r_sorted) ;                      \
     GrB_free (&r_pairs) ;                       \
     GrB_free (&ramp_v) ;                        \
     GrB_free (&hramp_v) ;                       \
@@ -48,6 +46,8 @@
     GrB_free (&bxor_first) ;                    \
     GrB_free(&hash_s);                          \
     GrB_free (&hash_seed) ;                     \
+    GrB_free (&r_60) ;                     \
+    GrB_free(&exists);                          \
     GrB_free (&bxor_hash) ;                     \
     LAGraph_Free((void**)&indices, msg) ;       \
     LAGraph_Free((void**)&ramp, msg) ;          \
@@ -152,7 +152,7 @@ int LAGraph_SwapEdges
     GrB_Matrix A_tril = NULL ;
 
     // e x 1 random vectors
-    GrB_Vector random_v = NULL, r_permute = NULL, r_sorted = NULL;
+    GrB_Vector random_v = NULL, r_permute = NULL;
 
     //indicies for A
     GrB_Index *indices = NULL;
@@ -170,8 +170,9 @@ int LAGraph_SwapEdges
     GrB_Vector ramp_v = NULL;
     GrB_Vector hramp_v = NULL;
 
-    // C array [0, ... , e-1]
+    // [0, ... , e]
     GrB_Index *ramp = NULL ;
+    // [0,0,1,1,2,2,...]
     GrB_Index *half_ramp = NULL ;
 
     // Arrays to unpack edge permutation
@@ -212,6 +213,9 @@ int LAGraph_SwapEdges
     GrB_Semiring bxor_hash = NULL;
 
     GrB_Semiring bxor_first = NULL;
+
+    GrB_Vector sort_h = NULL;
+    GrB_Vector r_60;
 
     // Constants ---------------------------------------------------------------
 
@@ -286,6 +290,7 @@ int LAGraph_SwapEdges
     //TODO: should I remove the diagonal? change the 0 if so
     // Arrays to extract A into
 
+    // Make E Matrix -----------------------------------------------------------
     LG_TRY (LAGraph_Malloc ((void**)(&indices), 2 * e, sizeof(GrB_Index), msg)) ;
     GRB_TRY (
         GrB_Matrix_extractTuples_BOOL (indices, indices + e, NULL, &e, A_tril)
@@ -295,6 +300,9 @@ int LAGraph_SwapEdges
     )) ;
     GRB_TRY (GrB_transpose(E, NULL, NULL, E_t, NULL));
     GrB_free(&E_t);
+    GRB_TRY (GrB_Vector_new(&exists, GrB_UINT64, 1ULL << 60)) ;
+    // GRB_TRY (GrB_set(exists, GxB_HYPERSPARSE, GxB_SPARSITY_CONTROL)) ;
+
     // Init Ramps --------------------------------------------------------------
     GRB_TRY (GrB_Vector_new(&ramp_v, GrB_UINT64, e + 1)) ;
     GRB_TRY (GrB_Vector_new(&hramp_v, GrB_UINT64, e + 1)) ;
@@ -302,7 +310,6 @@ int LAGraph_SwapEdges
     GRB_TRY (GrB_Vector_assign_UINT64 (ramp_v, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
     GRB_TRY (GrB_Vector_apply_IndexOp_UINT64 (ramp_v, NULL, NULL,
         GrB_ROWINDEX_INT64, ramp_v, 0, NULL)) ;
-    // [0,0,1,1,2,2,...]
     GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64(
         hramp_v, NULL, NULL, GrB_DIV_UINT64, ramp_v, 2UL, NULL)) ;
 
@@ -345,11 +352,10 @@ int LAGraph_SwapEdges
         swap_p, srows, scols, one64, 4
     )) ;
 
-    // Init Random -------------------------------------------------------------
+    // Make Random -------------------------------------------------------------
     GRB_TRY (GrB_Vector_new(&random_v, GrB_UINT64, e)) ;
+    GRB_TRY (GrB_Vector_new(&r_60, GrB_UINT64, e)) ;
     GRB_TRY (GrB_Vector_new(&r_permute, GrB_UINT64, e)) ;
-    GRB_TRY (GrB_Vector_new(&r_sorted, GrB_UINT64, e)) ;
-    LAGRAPH_TRY(LAGraph_Random_Init(msg)) ;
     GRB_TRY (GrB_Vector_assign_UINT64 (
         random_v, NULL, NULL, 0, GrB_ALL, e, NULL)) ;
     //TODO: Change seed
@@ -363,18 +369,20 @@ int LAGraph_SwapEdges
         // E must be the incidence matrix of the new graph. W/o self edges nor 
         // parallel edges. Each row must have exactly two distinct values.
         // random_v has a radom dense vector.
-
         GRB_TRY (GrB_Matrix_new(&P, GrB_UINT8, e, e)) ; 
         GRB_TRY (GrB_Matrix_new (&swapMask, GrB_BOOL, e, 2)) ;
         GRB_TRY (GrB_Vector_new (&M_outdeg, GrB_UINT8, swaps_per_loop)) ;
-        
+
         
         GRB_TRY (GxB_Vector_sort (
-            r_sorted, r_permute, GrB_LT_UINT64, random_v, GrB_NULL
+            NULL, r_permute, GrB_LT_UINT64, random_v, GrB_NULL
         )) ;
-        GRB_TRY(GrB_Vector_apply(swapVals, NULL, NULL, first_bit, 
-            r_sorted, NULL)) ;
+        GrB_Index *rand_arr, rand_size;
 
+        GRB_TRY(GrB_Vector_apply(
+            swapVals, NULL, NULL, first_bit, random_v, NULL
+        )) ;
+        
         // TODO: try and make this more efficient maybe just rand % e rather 
         // than a permutation
         GrB_Index perm_size;
@@ -414,6 +422,7 @@ int LAGraph_SwapEdges
         GrB_Index E_bounds[3] = {swaps_per_loop * 2, e - swaps_per_loop * 2, 2};
         GRB_TRY (GrB_Matrix_new(E_split, GrB_UINT64, E_bounds[0], 2));
         GRB_TRY (GrB_Matrix_new(E_split + 1, GrB_UINT64, E_bounds[1], 2));
+        
         GRB_TRY (GxB_Matrix_split(
             E_split, 2, 1, E_bounds, E_bounds + 2, E, NULL));
         // GRB_TRY (GrB_Matrix_dup(&M,E));
@@ -451,10 +460,10 @@ int LAGraph_SwapEdges
             hashed_edges, (void **) &hash_vals, &junk_size, &iso, NULL
         )) ;
 
-        GRB_TRY (GrB_Vector_new(&exists, GrB_UINT64, 1ULL << 60)) ;
+        
         GRB_TRY (GrB_Matrix_new(
             &buckets, GrB_UINT64, 1ULL << 60, swaps_per_loop)) ;
-        
+        // GRB_TRY (GrB_set(buckets, GxB_HYPERSPARSE, GxB_SPARSITY_CONTROL)) ;
         // Build hash buckets
         GRB_TRY(GxB_Vector_build_Scalar(
             exists, hash_vals, one64, e
@@ -476,7 +485,7 @@ int LAGraph_SwapEdges
         GRB_TRY(GrB_vxm(
             r_exists, NULL, NULL, LAGraph_any_one_uint8, exists, buckets, NULL
         )) ;
-        
+        GRB_TRY (GrB_Vector_clear(exists)) ;
         // GxB_Vector_fprint(r_exists,"r_exists",GxB_SHORT, stdout);
         GRB_TRY (GrB_Vector_assign_INT8(
             r_exists, r_exists, NULL, (uint8_t) 0, GrB_ALL, 0, GrB_DESC_RSC)) ;
