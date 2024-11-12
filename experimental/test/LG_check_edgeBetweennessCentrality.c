@@ -18,13 +18,12 @@
 
 #define LG_FREE_WORK                                \
 {                                                   \
-    LAGraph_Free ((void **) &queue, NULL) ;         \
-    LAGraph_Free ((void **) &level_check, NULL) ;   \
-    LAGraph_Free ((void **) &level_in, NULL) ;      \
-    LAGraph_Free ((void **) &parent_in, NULL) ;     \
-    LAGraph_Free ((void **) &visited, NULL) ;       \
-    LAGraph_Free ((void **) &neighbors, NULL) ;     \
-    GrB_free (&Row) ;                               \
+    free(queue) ;                                   \
+    free(sigma) ;                                   \
+    free(d) ;                                       \
+    free(delta) ;                                   \
+    free(S) ;                                       \
+    free(P) ;                                       \
 }
 
 #define LG_FREE_ALL                                 \
@@ -92,21 +91,17 @@ int test_edgeBetweenessCentrality
 
     GrB_Info info;
 
-    // A temporary result centrality matrix initialized to 0 for all edges.
-    GrB_Matrix result = NULL ;
-
-    // Keeps track of the number of shortest paths.
-    GrB_Vector sigma = NULL ;
-
     // Holds the distances (depth levels) from the source vertex.
-    GrB_Vector d = NULL ;
+    int64_t *d = malloc(Ax_size * sizeof(int64_t)) ;
 
     // Stores dependency scores for each vertex.
-    GrB_Vector delta = NULL ;
+    int64_t *delta = malloc(Ax_size * sizeof(int64_t)) ;
 
-    GrB_Index *S = NULL, *P = NULL ;
+    int64_t *S = malloc(n * sizeof(int64_t)) ;
 
-    LG_TRY (LAGraph_Malloc ((void **) &queue, n, sizeof (int64_t), msg)) ;
+    int64_t *P = malloc((n * ncols) * sizeof(int64_t));
+
+    int64_t *queue = malloc(n * sizeof(int64_t)) ;
 
     //--------------------------------------------------------------------------
     // unpack the A matrix in CSR form for SuiteSparse:GraphBLAS
@@ -119,7 +114,7 @@ int test_edgeBetweenessCentrality
     #endif
 
     //--------------------------------------------------------------------------
-    // compute the level of each node
+    // bfs on the C
     //--------------------------------------------------------------------------
 
     if (print_timings)
@@ -131,31 +126,10 @@ int test_edgeBetweenessCentrality
 
     // Initialize centrality matrix result to 0
     // 1. result [(v, w)] ← 0, ∀(v, w) ∈ E
-    GRB_TRY (GrB_Matrix_new(result, GrB_FP64, n, n, A)) ;
-    GRB_TRY (GrB_assign(result, A, null, 0, GrB_ALL, n, Grb_ALL, n, GrB_DESC_S)) ;
-
-    //--------------------------------------------------------------------------
-    // unpack the centrality matrix in CSR form for SuiteSparse:GraphBLAS
-    //--------------------------------------------------------------------------
-
-    #if LAGRAPH_SUITESPARSE
-    bool Ciso, Cjumbled ;
-    GRB_TRY (GxB_Matrix_unpack_CSR (result,
-        &Cp, &Cj, &Cx, &Cp_size, &Cj_size, &Cx_size, &Ciso, &Cjumbled, NULL)) ;
-    #endif
-
-
-    GRB_TRY (GrB_Vector_new(&sigma, GrB_FP64, n)) ;
-    GRB_TRY (GrB_Vector_new(&d, GrB_INT64, n)) ;
-    GRB_TRY (GrB_Vector_new(&delta, GrB_FP64, n)) ;
-
-    LG_TRY(LAGraph_Malloc((void **) &S, n, sizeof(GrB_Index), msg)) ;
-    LG_TRY(LAGraph_Malloc((void **) &P, n * n, sizeof(GrB_Index), msg)) ;
-
-    #if !LAGRAPH_SUITESPARSE
-    GRB_TRY (GrB_Vector_new (&Row, GrB_BOOL, n)) ;
-    LG_TRY (LAGraph_Malloc ((void **) &neighbors, n, sizeof (GrB_Index), msg)) ;
-    #endif
+    // TODO
+    // A temporary result centrality matrix initialized to 0 for all vertice,
+    // -- further changes would need to be made to make it a dictionary of edges.
+    int64_t *result = calloc(Ax_size, sizeof(int64_t));
 
     // 2. for ∀s ∈ V
     for (int64_t s = 0; s < n; s++) {
@@ -163,66 +137,63 @@ int test_edgeBetweenessCentrality
         size_t sp = 0;
 
         // Initialize predecessors list P[w] to empty
-        // 5. P [w] ← empty list, ∀w ∈ V
+        // TODO
+        // 5. P [w] ← empty queue, ∀w ∈ V
         memset(P, 0, n * n * sizeof(GrB_Index));
 
         // Initialize sigma[t], d[t] for all t
         // 6. σ[t] ← 0, ∀t ∈ V , σ[s] ← 1
-        GRB_TRY (GrB_Vector_setElement(sigma, 1, s));
+        // Keeps track of the number of shortest paths for each vertex.
+        int64_t *sigma = calloc(Ax_size, sizeof(int64_t)) ;
+        sigma[s] = 1 ;
+
         // 7. d[t] ← −1, ∀t ∈ V , d[s] ← 0
-        GRB_TRY (GrB_Vector_setElement(d, 0, s));
+        for (size_t t = 0; t < Ax_size; t++) {
+            d[t] = -1;
+        }
+        d[s] = 0;
 
         // Initialize queue and enqueue starting node s
         // 8. Q ← empty queue
-        int64_t qp = 0, qlen = 1;
+        int64_t qh = 0, qt = 0;
         // 9. enqueue(Q, s)
         queue[0] = s;
 
         // 10. while ¬empty(Q)
-        while (qlen > 0) {
+        while (qh < qt) {
             // Dequeue v from Q and push onto S
             // 12. v ← dequeue(Q)
-            int64_t v = queue [qp++] ;
-            qlen--;
+            int64_t v = queue [qh++] ;
 
             // 13. push(S, v)
             S[sp++] = v;
 
-            #if LAGRAPH_SUITESPARSE
             // directly access the indices of entries in A(v,:)
             GrB_Index degree = Ap [v+1] - Ap [v] ;
             GrB_Index *node_u_adjacency_list = Aj + Ap [v] ;
-            #else
-            // extract the indices of entries in A(v,:)
-            GrB_Index degree = n ;
-            GRB_TRY (GrB_Col_extract (Row, NULL, NULL, G->A, GrB_ALL, n, v,
-                GrB_DESC_T0)) ;
-            GRB_TRY (GrB_Vector_extractTuples_BOOL (neighbors, NULL, &degree, Row));
-            GrB_Index *node_v_adjacency_list = neighbors ;
-            #endif
 
+            // TODO
             // traverse all entries in A(v,:)
             for (int64_t k = 0 ; k < degree ; k++)
             {
                 // consider edge (v,w)
                 int64_t w = node_v_adjacency_list [k] ;
-                int64_t d_w;
-                bool d_w_exists = GrB_Vector_extractElement_INT64(&d_w, d, w) == GrB_SUCCESS;
 
                 // 16. if d[w] < 0
-                if (!d_w_exists || d_w < 0) {
+                if (d[w] < 0) {
                     // Update depth and enqueue
                     // 18. enqueue(Q, w)
-                    queue[qp + qlen++] = w;
+                    queue[qt++] = w;
                     // 19. d[w] ← d[v] + 1
-                    GRB_TRY (GrB_Vector_setElement(d, d[v] + 1, w)) ;
+                    d[w] = d[v] + 1
                 }
 
                 // 20. if d[w] = d[v] + 1
-                if (d_w == d[v] + 1) {
+                if (d[w] == d[v] + 1) {
                     // Update shortest path count and add predecessor
                     // 22. σ[w] ← σ[w] + σ[v]
-                    GRB_TRY (GrB_Vector_setElement(sigma, sigma[v] + sigma[w], w)) ;
+                    sigma[w] = sigma[w] + sigma[v]
+                    // TODO
                     // 23. append(P [w], v)
                     P[w * n + v] = 1;
                 }
@@ -243,20 +214,12 @@ int test_edgeBetweenessCentrality
             for (int64_t v = 0; v < n; v++) {
                 if (P[w * n + v]) {
                     // Update dependency and centrality values
-                    double sigma_v, sigma_w, delta_w;
-                    GRB_TRY (GrB_Vector_extractElement(&sigma_v, sigma, v));
-                    GRB_TRY (GrB_Vector_extractElement(&sigma_w, sigma, w));
-                    GRB_TRY (GrB_Vector_extractElement(&delta_w, delta, w));
-
-                    double centrality = sigma_v * ((delta_w / sigma_w) + 1);
+                    double centrality = sigma[v] * ((delta[w] / sigma[w]) + 1);
                     // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
                     delta[v] += centrality;
                     // 31. result [(v, w)] ← result [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
                     result[v * n + w] += centrality;
 
-                    // TODO: maybe get rid of this
-                    // int x;
-                    // GrB_extract(&x, c, v, w) ; 
                 }
             }
         }
@@ -276,15 +239,6 @@ int test_edgeBetweenessCentrality
     #if LAGRAPH_SUITESPARSE
     GRB_TRY (GxB_Matrix_pack_CSR (G->A,
         &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
-    #endif
-
-     //--------------------------------------------------------------------------
-    // repack the centrality matrix in CSR form for SuiteSparse:GraphBLAS
-    //--------------------------------------------------------------------------
-
-    #if LAGRAPH_SUITESPARSE
-    GRB_TRY (GxB_Matrix_pack_CSR (result,
-        &Cp, &Cj, &Cx, Cp_size, Cj_size, Cx_size, Ciso, Cjumbled, NULL)) ;
     #endif
 
     (*C) = result ;
