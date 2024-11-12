@@ -129,6 +129,7 @@ int test_edgeBetweenessCentrality
     // TODO make this a copy of A except with 1 = 0
     // A temporary result centrality matrix initialized to 0 for all vertice,
     // -- further changes would need to be made to make it a dictionary of edges.
+    GrB_Matrix result;
     int64_t *result_p = malloc (n * sizeof (int64_t)) ;
     int64_t *result_j = malloc (Aj_size * sizeof (int64_t)) ;
     int64_t *result_x = calloc (Ax_size * sizeof (int64_t)) ;
@@ -252,7 +253,12 @@ int test_edgeBetweenessCentrality
 
     #if LAGRAPH_SUITESPARSE
     GRB_TRY (GxB_Matrix_pack_CSR (G->A,
-        &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
+        &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, NULL, NULL)) ;
+    #endif
+
+    #if LAGRAPH_SUITESPARSE
+    GRB_TRY (GxB_Matrix_pack_CSR (&result,
+        result_p, result_j, result_x, Ap_size, Aj_size, Ax_size, iso, NULL, NULL)) ;
     #endif
 
     (*C) = result ;
