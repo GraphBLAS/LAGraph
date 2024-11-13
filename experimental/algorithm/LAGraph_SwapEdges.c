@@ -296,17 +296,17 @@ int LAGraph_SwapEdges
     // Arrays to extract A into
 
     // Make E Matrix -----------------------------------------------------------
-    LG_TRY (LAGraph_Malloc ((void**)(&indices), 2 * e, sizeof(GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void**)(&indices), 2ull * e, sizeof(GrB_Index), msg)) ;
     GRB_TRY (
         GrB_Matrix_extractTuples_BOOL (indices, indices + e, NULL, &e, A_tril)
         ) ;
-    GRB_TRY (GxB_Matrix_pack_FullC (
-        E_t, (void **)&indices, 2 * e * sizeof(GrB_Index), false, NULL
+    GRB_TRY (GxB_Matrix_pack_FullR (
+        E_t, (void **)&indices, 2ull * e * sizeof(GrB_Index), false, NULL
     )) ;
     GRB_TRY (GrB_transpose(E, NULL, NULL, E_t, NULL));
     GrB_free(&E_t);
     GRB_TRY (GrB_Vector_new(&exists, GrB_UINT64, 1ULL << 60)) ;
-
+    GxB_Matrix_fprint(E, "E", GxB_SHORT, stdout);
     // Init Ramps --------------------------------------------------------------
     GRB_TRY (GrB_Vector_new(&ramp_v, GrB_UINT64, e + 1)) ;
     GRB_TRY (GrB_Vector_new(&hramp_v, GrB_UINT64, e + 1)) ;
@@ -474,7 +474,6 @@ int LAGraph_SwapEdges
             hashed_edges, (void **) &hash_vals, &junk_size, &iso, NULL
         )) ;
 
-        
         GRB_TRY (GrB_Matrix_new(
             &buckets, GrB_UINT64, 1ULL << 60, swaps_per_loop)) ;
         // Build hash buckets
@@ -502,12 +501,14 @@ int LAGraph_SwapEdges
         )) ;
 
         GRB_TRY (GrB_Vector_clear(exists)) ;
+
         // GxB_Vector_fprint(r_exists,"r_exists",GxB_SHORT, stdout);
         GRB_TRY (GrB_Vector_assign_INT8(
             r_exists, r_exists, NULL, (uint8_t) 0, GrB_ALL, 0, GrB_DESC_RSC)) ;
         GRB_TRY (GxB_Vector_unpack_CSC(
-                 r_exists, &arr_keep, &junk, &arr_size, &junk_size, &iso, &n_keep,
-                 NULL,NULL));
+            r_exists, &arr_keep, &junk, &arr_size, &junk_size, &iso, &n_keep,
+            NULL, NULL
+        ));
         GRB_TRY(GrB_Matrix_new(&M_fours, GrB_UINT64, n_keep, 4)) ;
 
         GRB_TRY (GrB_Matrix_extract(
