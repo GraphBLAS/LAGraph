@@ -20,9 +20,7 @@
     GrB_free (&P) ;                             \
     GrB_free (&M) ;                             \
     GrB_free (&M_fours) ;                       \
-    GrB_free (&r_exists) ;                      \
     GrB_free(&new_hashed_edges);                \
-    GrB_free(&buckets);                         \
     GrB_free(&hashed_edges);                    \
     GrB_free (&big_dense) ;                     \
     LAGraph_Free((void **) &hash_vals_new, NULL);\
@@ -36,7 +34,6 @@
     GrB_free (&A_tril) ;                        \
     GrB_free (&random_v) ;                      \
     GrB_free (&r_permute) ;                     \
-    GrB_free (&r_pairs) ;                       \
     GrB_free (&ramp_v) ;                        \
     GrB_free (&hramp_v) ;                       \
     GrB_free (&swapVals) ;                      \
@@ -49,10 +46,10 @@
     GrB_free (&r_60) ;                     \
     GrB_free(&exists);                          \
     GrB_free (&bxor_hash) ;                     \
+    LAGraph_Free((void**)&dup_swaps, msg) ;       \
     LAGraph_Free((void**)&indices, msg) ;       \
     LAGraph_Free((void**)&ramp, msg) ;          \
     LAGraph_Free((void**)&half_ramp, msg) ;     \
-    LAGraph_Free((void**)&swap_type, msg) ;     \
     LAGraph_Free((void**)&edge_perm, msg) ;     \
     LAGraph_Free((void**) &val_of_P, msg);      \
     FREE_LOOP ;                                 \
@@ -112,7 +109,19 @@ void hash_node
 "    (*z) = ((*y) * (*x)) >> (4);                                            \n"\
 "}"
 
-
+void log_duplicate
+    (uint64_t *z, const uint64_t *x, const uint64_t *y)
+{
+    **((int8_t **)y) = (int8_t) 0;
+    *z = *x;
+}
+#define LOG_DUPLICATE                                                           \
+"void log_duplicate                                                          \n"\
+"    (uint64_t *z, const uint64_t *x, const uint64_t *y)                     \n"\
+"{                                                                           \n"\
+"    **((int8_t **)y) = (int8_t) 0;                                          \n"\
+"    *z = *x;                                                                \n"\
+"}"
 int LAGraph_SwapEdges
 (
     // output
@@ -145,6 +154,7 @@ int LAGraph_SwapEdges
     GrB_Matrix M = NULL;
     GrB_Matrix M_fours = NULL; // M with exactly 4 entries
 
+    // n = |V| e = |E|
     GrB_Index n = 0, e = 0;
 
     // n x n 
@@ -154,19 +164,18 @@ int LAGraph_SwapEdges
     // e x 1 random vectors
     GrB_Vector random_v = NULL, r_permute = NULL;
 
-    //indicies for A
+    // indicies for A
     GrB_Index *indices = NULL;
 
-    // [0,2,0,3,0,3,0 . . .] numSwaps?
+    // IDK
     GrB_Vector swapVals = NULL;
 
     // e x 2 Matrix that picks the edges for which we will swap values.
     GrB_Matrix swapMask = NULL;
 
-    // Swaps 0,3 and 2,1
+    // Swaps 2,1
     GrB_Matrix swap_p = NULL;
 
-    // This ramp will likely get recycled a few times. 
     GrB_Vector ramp_v = NULL;
     GrB_Vector hramp_v = NULL;
 
@@ -177,13 +186,7 @@ int LAGraph_SwapEdges
 
     // Arrays to unpack edge permutation
     GrB_Index *edge_perm = NULL ;
-    uint8_t *swap_type = NULL ;
     bool iso = false;
-
-    // Reduced Vectors
-    GrB_Vector r_exists = NULL, r_pairs;
-    GrB_Matrix existMask = NULL;
-    
 
     // Number of values kept in each phase
     GrB_Index n_keep;
@@ -194,10 +197,7 @@ int LAGraph_SwapEdges
     // swaps x 2 matrix which holds the hashes of each planned edge. 
     GrB_Matrix new_hashed_edges = NULL;
 
-    // 2^60 x swaps holds the swaps in hash buckets
-    GrB_Matrix buckets = NULL;
-
-    GrB_Matrix p_buckets = NULL;
+    // GrB_Matrix p_buckets = NULL;
     
     // swaps used for "outdegree"
     GrB_Vector big_dense; 
@@ -207,6 +207,7 @@ int LAGraph_SwapEdges
 
     // 2^60 holds the buckets in which hashes collided.
     GrB_Vector exists = NULL; 
+    GrB_Vector new_edges_h = NULL; 
     GrB_Index *hash_vals_new = NULL, *hash_vals = NULL;
     
     GrB_UnaryOp first_bit = NULL;
@@ -219,8 +220,15 @@ int LAGraph_SwapEdges
 
     GrB_Semiring bxor_first = NULL;
 
+    GrB_BinaryOp duplicate = NULL;
+
+    int8_t *dup_swaps = NULL;
+    GrB_Vector dup_swaps_v = NULL;
+    GrB_Vector not_pointers = NULL;
+    uint64_t *not_ptrs = NULL; 
+
     GrB_Vector sort_h = NULL;
-    GrB_Vector r_60;
+    GrB_Vector r_60 = NULL;
 
     // Constants ---------------------------------------------------------------
 
@@ -266,7 +274,7 @@ int LAGraph_SwapEdges
     GRB_TRY (GrB_Matrix_new(&E, GrB_UINT64, e, 2)) ;
     GRB_TRY (GrB_Matrix_new(&E_t, GrB_UINT64, 2, e)) ;
     
-    //----------------------------------------------------------- Init Operators
+    //Init Operators -----------------------------------------------------------
     GRB_TRY (GxB_UnaryOp_new (
         &first_bit, (GxB_unary_function) (&first_bit_equals),
         GrB_BOOL, GrB_UINT64, "first_bit_equals", FIRST_BIT_EQ
@@ -276,7 +284,10 @@ int LAGraph_SwapEdges
         &hash_seed, (GxB_binary_function) (&hash_node),
         GrB_UINT64, GrB_UINT64, GrB_UINT64, "hash_node", HASH_ONE
     )) ;
-    
+    GRB_TRY(GxB_BinaryOp_new(
+        &duplicate, (GxB_binary_function) (&log_duplicate),
+        GrB_UINT64, GrB_UINT64, GrB_UINT64, "log_duplicate", LOG_DUPLICATE
+    )) ;
     // I use a bit wise xor to combine the hashes since the same column number 
     // will not appear twice in my multiplication and I want combination to be 
     // commutative.
@@ -286,14 +297,8 @@ int LAGraph_SwapEdges
     GRB_TRY(GrB_Semiring_new(
         &bxor_first, GxB_BXOR_UINT64_MONOID , GrB_FIRST_UINT64 
     )) ;
-
     // count swaps 
     GrB_Index num_swaps = 0, num_attempts = 0, swaps_per_loop = e / 3 ;
-    
-    // Extract adjacency matrix to make incidence matrix - E
-    // get just the lower triangular entries
-    //TODO: should I remove the diagonal? change the 0 if so
-    // Arrays to extract A into
 
     // Make E Matrix -----------------------------------------------------------
     LG_TRY (LAGraph_Malloc ((void**)(&indices), 2ull * e, sizeof(GrB_Index), msg)) ;
@@ -316,7 +321,7 @@ int LAGraph_SwapEdges
         GrB_ROWINDEX_INT64, ramp_v, 0, NULL)) ;
     GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64(
         hramp_v, NULL, NULL, GrB_DIV_UINT64, ramp_v, 2UL, NULL)) ;
-
+    GRB_TRY(GrB_Vector_dup(&not_pointers, hramp_v)) ;
     GrB_Index ramp_size;
     GRB_TRY (GxB_Vector_unpack_Full (
         ramp_v, (void **)&ramp, &ramp_size, &iso, NULL)) ;
@@ -335,7 +340,7 @@ int LAGraph_SwapEdges
     GRB_TRY (GrB_Matrix_new (&y, GrB_UINT8, 2, 2)) ;
     GRB_TRY (GrB_Matrix_new (&hash_s, GrB_UINT64, 4, 2)) ;
     GRB_TRY (GrB_Matrix_new (&swap_p, GrB_UINT8, 4, 4)) ;
-    GRB_TRY (GrB_Vector_new (&r_pairs, GrB_INT64, e)) ;
+    GRB_TRY (GrB_Vector_new (&new_edges_h, GrB_UINT64, 1ull << 60)) ;
 
     GRB_TRY (GrB_Vector_assign_UINT8 (
         dense_hash, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
@@ -388,6 +393,8 @@ int LAGraph_SwapEdges
         // GRB_TRY (GxB_Vector_unpack_Full(
         //     r_60, (void **)&rand_arr, &rand_size, &iso, NULL
         // )) ;
+        // Hash (rand_arr)
+        // Matrix_Build (rand_arr, ramp, ramp, )
 
         
 
@@ -396,9 +403,10 @@ int LAGraph_SwapEdges
         )) ;
         
 
-        GrB_Index perm_size;
-        GRB_TRY (GxB_Vector_unpack_Full(
-            r_permute, (void **)&edge_perm, &perm_size, &iso, NULL
+        GrB_Index perm_size, arr_size, junk_size;
+        GRB_TRY (GxB_Vector_unpack_Bitmap(
+            r_permute, (int8_t **)&dup_swaps, (void **)&edge_perm, &junk_size, 
+            &perm_size, &iso, &arr_size, NULL
         )) ;
         LG_ASSERT(!iso, GrB_NOT_IMPLEMENTED);
 
@@ -417,7 +425,7 @@ int LAGraph_SwapEdges
         // Pair edges. Take a random permutation and pair adjacent values.
         GRB_TRY (GrB_mxm(E, NULL, NULL, GxB_ANY_SECOND_UINT64, P, E, NULL)) ;
         
-        GrB_Index arr_size, junk_size;
+        
         GRB_TRY (GxB_Matrix_unpack_CSR(
             P, &ramp, &edge_perm, (void**) &val_of_P, &arr_size,
             &perm_size,  &junk_size, &iso, false, NULL
@@ -440,7 +448,9 @@ int LAGraph_SwapEdges
         M = E_split[0];
         GRB_TRY (GxB_Matrix_reshape(M, false, swaps_per_loop, 4, NULL)) ;
 
-        GRB_TRY (GrB_Matrix_new(&new_hashed_edges, GrB_UINT64, swaps_per_loop, 2)) ;
+        // Hash Edges ----------------------------------------------------------
+        GRB_TRY (GrB_Matrix_new(
+            &new_hashed_edges, GrB_UINT64, swaps_per_loop, 2)) ;
         GRB_TRY (GrB_Vector_new(&hashed_edges, GrB_UINT64, e)) ;
         GRB_TRY (GrB_Vector_new(&big_dense, GrB_UINT64, swaps_per_loop)) ;
 
@@ -456,90 +466,109 @@ int LAGraph_SwapEdges
         GRB_TRY (GrB_Vector_assign_UINT64(
             big_dense, NULL, NULL, (uint64_t) 0, GrB_ALL, 0, NULL
         )) ;
-        // GxB_Matrix_fprint(hash_s, "hash_s", GxB_SHORT, stdout);
         GRB_TRY(GrB_mxm(
             new_hashed_edges, NULL, NULL, bxor_hash, 
             M, hash_s, NULL
-        ));
+        )) ;
         GRB_TRY(GrB_mxv(
             hashed_edges, NULL, NULL, bxor_hash, 
             E, dense_hash, NULL
         ));
 
         // I will unpack and then reconstruct with hash as index.
-        GRB_TRY(GxB_Matrix_unpack_FullR(
-            new_hashed_edges, (void **) &hash_vals_new, &junk_size, &iso, NULL
+        GRB_TRY(GxB_Matrix_unpack_BitmapR(
+            new_hashed_edges, &dup_swaps, (void **) &hash_vals_new, 
+            &junk_size, &junk_size, &iso, &junk_size, NULL
         )) ;
         GRB_TRY(GxB_Vector_unpack_Full(
             hashed_edges, (void **) &hash_vals, &junk_size, &iso, NULL
         )) ;
+        GRB_TRY(GrB_Vector_apply_BinaryOp1st_UINT64(
+            not_pointers, NULL,NULL, GrB_PLUS_UINT64, (uint64_t) dup_swaps, 
+            not_pointers, NULL
+        )) ;
+        GRB_TRY(GxB_Vector_unpack_Full(
+            not_pointers, (void **) &not_ptrs, &arr_size, &iso, NULL
+        )) ;
 
-        GRB_TRY (GrB_Matrix_new(
-            &buckets, GrB_UINT64, 1ULL << 60, swaps_per_loop)) ;
-        // Build hash buckets
+        // Build Hash Buckets --------------------------------------------------
+        GRB_TRY(GrB_Vector_build_UINT64(
+            new_edges_h, hash_vals_new, not_ptrs, swaps_per_loop * 2, duplicate
+        )) ;
         GRB_TRY(GxB_Vector_build_Scalar(
             exists, hash_vals, one64, e
         )) ;
-        GRB_TRY(GxB_Matrix_build_Scalar(
-            buckets, hash_vals_new, half_ramp, one64, swaps_per_loop * 2
-        )) ;
-
-        GRB_TRY (GrB_mxv(
-            exists, NULL, GrB_PLUS_UINT64, LAGraph_plus_one_uint64, buckets, 
-            big_dense, NULL
-        )) ;
-
-        GRB_TRY(GrB_Vector_select_UINT64(
-            exists, NULL, NULL, GrB_VALUEGT_UINT64, exists, 1ull, GrB_DESC_R
-        )) ;
-        GRB_TRY(GrB_Vector_setElement_UINT64(exists, 1ll, (GrB_Index)0)) ;
-        GRB_TRY(GrB_Vector_new(&r_exists, GrB_UINT8, swaps_per_loop)) ;
-        
-        // Search through array for bad swaps.
-        GRB_TRY(GrB_vxm(
-            r_exists, NULL, NULL, LAGraph_any_one_uint8, exists, buckets, NULL
-        )) ;
-
-        GRB_TRY (GrB_Vector_clear(exists)) ;
-
-        // GxB_Vector_fprint(r_exists,"r_exists",GxB_SHORT, stdout);
-        GRB_TRY (GrB_Vector_assign_INT8(
-            r_exists, r_exists, NULL, (uint8_t) 0, GrB_ALL, 0, GrB_DESC_RSC)) ;
-        GRB_TRY (GxB_Vector_unpack_CSC(
-            r_exists, &arr_keep, &junk, &arr_size, &junk_size, &iso, &n_keep,
-            NULL, NULL
+        GRB_TRY(GrB_Vector_setElement_UINT64(exists, 1ull, (GrB_Index)0)) ;
+        GRB_TRY(GrB_Vector_eWiseMult_BinaryOp(
+            new_edges_h, NULL, NULL, duplicate, exists, new_edges_h, NULL
         ));
+
+        // TODO: not sure I need this
+        GRB_TRY(GrB_wait(new_edges_h, GrB_COMPLETE)) ;
+        // GRB_TRY(GrB_Vector_new(
+        //     &dup_swaps_v, GrB_BOOL, swaps_per_loop * 2
+        // )) ;
+        GRB_TRY(GxB_Vector_pack_Full(
+            not_pointers, (void **) &not_ptrs, arr_size, iso, NULL
+        )) ;
+        GRB_TRY(GrB_Vector_apply_BinaryOp2nd_UINT64(
+            not_pointers, NULL,NULL, GrB_MINUS_UINT64, not_pointers,
+            (uint64_t) dup_swaps, NULL
+        )) ;
+        LG_TRY(LAGraph_Malloc(
+            (void **) &arr_keep, swaps_per_loop, sizeof(uint64_t), msg) ;)
+        n_keep = 0;
+        for (int64_t i = 0; i < swaps_per_loop; i++)
+            if(dup_swaps[i])
+                arr_keep[n_keep++] = i;
+        GRB_TRY (GrB_Vector_clear(exists)) ;
+        GRB_TRY (GrB_Vector_clear(new_edges_h)) ;
+        // bool *iso_dup_value = NULL;
+        // LAGraph_Malloc((void **) &iso_dup_value, 1, 1, msg) ;
+        // iso_dup_value[0] = true;
+        // GRB_TRY(GxB_Vector_pack_Bitmap(
+        //     dup_swaps_v, &dup_swaps, (void **)&iso_dup_value, 
+        //     swaps_per_loop * 2, 1, true, swaps_per_loop * 2, NULL
+        // ));
+        // GxB_Vector_fprint(dup_swaps_v, "Dups", GxB_SHORT, stdout) ;
+        // Search through array for bad swaps.
+
+        // Swap Good Edges -----------------------------------------------------
         GRB_TRY(GrB_Matrix_new(&M_fours, GrB_UINT64, n_keep, 4)) ;
 
         GRB_TRY (GrB_Matrix_extract(
-            M_fours, NULL, NULL, M, arr_keep, n_keep, 
-            GrB_ALL, 0, NULL)) ;
-        LG_TRY (LAGraph_Free(&junk, msg)) ;
-        GRB_TRY (GrB_mxm(M_fours, NULL, NULL, GxB_ANY_FIRST_UINT64, M_fours, swap_p, NULL)) ;
-        GRB_TRY (GrB_assign(M, NULL, NULL, M_fours, arr_keep, n_keep, GrB_ALL, 0, NULL)) ;
+            M_fours, NULL, NULL, M, arr_keep, n_keep, GrB_ALL, 0, NULL
+        )) ;
+        GRB_TRY (GrB_mxm(
+            M_fours, NULL, NULL, GxB_ANY_FIRST_UINT64, M_fours, swap_p, NULL
+        )) ;
+        GRB_TRY (GrB_assign(
+            M, NULL, NULL, M_fours, arr_keep, n_keep, GrB_ALL, 0, NULL
+        )) ;
         GRB_TRY (GxB_Matrix_reshape(M, false, swaps_per_loop * 2, 2, NULL));
-        
         GRB_TRY(GxB_Matrix_concat(E, E_split, 2, 1, NULL));
 
-        // Free Matricies that have to be rebuilt
-        FREE_LOOP ;
+        
+        FREE_LOOP ; // Free Matricies that have to be rebuilt
 
+        // Adjust number of swaps to do next.
         num_attempts += swaps_per_loop;
         num_swaps += n_keep;
         swaps_per_loop = (n_keep * 3) / 2;
         swaps_per_loop = LAGRAPH_MAX(swaps_per_loop, 16) ;
         swaps_per_loop = LAGRAPH_MIN(swaps_per_loop, e / 3) ;
 
-        // Maintain random Vector
         LG_TRY (LAGraph_Random_Next(random_v, msg)) ;
         printf("#####Made %ld swaps. Total %ld out of %ld. Attempting %ld swaps next.#####\n\n", n_keep, num_swaps, e * Q, swaps_per_loop);
     } 
+    // Build Output Matrix
     GrB_Index ind_size = 0;
     GRB_TRY (GxB_Matrix_unpack_FullC(
         E, (void **)&indices, &ind_size, &iso, NULL)) ;
     GRB_TRY (GxB_Matrix_build_Scalar(*A_new, indices, indices + e, one8, e));
-    GRB_TRY (GrB_eWiseAdd(*A_new, NULL, NULL, GrB_PLUS_UINT8, *A_new,*A_new, GrB_DESC_T0)) ;
-    GxB_Matrix_fprint(*A_new,"A_new",GxB_SHORT, stdout);
+    GRB_TRY (GrB_eWiseAdd(
+        *A_new, NULL, NULL, GrB_PLUS_UINT8, *A_new,*A_new, GrB_DESC_T0
+    )) ;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
