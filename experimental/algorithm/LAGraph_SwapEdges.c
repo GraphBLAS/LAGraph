@@ -17,7 +17,6 @@
 
 #define FREE_LOOP                               \
 {                                               \
-    GrB_free (&P) ;                             \
     GrB_free (&M) ;                             \
     GrB_free (&M_fours) ;                       \
     GrB_free(&new_hashed_edges);                \
@@ -142,11 +141,6 @@ int LAGraph_SwapEdges
 
     // e entries. E_split[0] has those which are planning to swap.
     GrB_Matrix E_split[2] = {NULL, NULL}; 
-
-    // swaps x e
-    // Selected pairs for next batch of swaps
-    // Each row contains 2 entries for the edges involved in a swap.
-    GrB_Matrix P = NULL;
 
     // swaps x 4
     // Each row contains 4 entries corresponding to the verticies 
@@ -311,7 +305,7 @@ int LAGraph_SwapEdges
     GRB_TRY (GrB_transpose(E, NULL, NULL, E_t, NULL));
     GrB_free(&E_t);
     GRB_TRY (GrB_Vector_new(&exists, GrB_UINT64, 1ULL << 60)) ;
-    GxB_Matrix_fprint(E, "E", GxB_SHORT, stdout);
+    // GxB_Matrix_fprint(E, "E", GxB_SHORT, stdout);
     // Init Ramps --------------------------------------------------------------
     GRB_TRY (GrB_Vector_new(&ramp_v, GrB_UINT64, e + 1)) ;
     GRB_TRY (GrB_Vector_new(&hramp_v, GrB_UINT64, e + 1)) ;
@@ -378,7 +372,6 @@ int LAGraph_SwapEdges
         // E must be the incidence matrix of the new graph. W/o self edges nor 
         // parallel edges. Each row must have exactly two distinct values.
         // random_v has a radom dense vector.
-        GRB_TRY (GrB_Matrix_new(&P, GrB_UINT8, e, e)) ; 
         GRB_TRY (GrB_Matrix_new (&swapMask, GrB_BOOL, e, 2)) ;
         // GRB_TRY (GrB_Matrix_new (&p_buckets, GrB_UINT8, e, 2)) ;
 
@@ -412,23 +405,9 @@ int LAGraph_SwapEdges
         
         // TODO: Should there be a function that takes in A matrix and computes
         // in or out degree 
-        // GRB_TRY (GxB_Matrix_build_Scalar(
-        //     P, ramp, edge_perm, one8, e
-        // ));
-        
-        GRB_TRY (GxB_Matrix_pack_CSR(
-            P, &ramp, &edge_perm, (void**) &val_of_P, (e + 1) * sizeof(GrB_Index),
-            perm_size, sizeof(GrB_Index) , true, false, NULL
-        ));
-
-        // Pair edges. Take a random permutation and pair adjacent values.
-        GRB_TRY (GrB_mxm(E, NULL, NULL, GxB_ANY_SECOND_UINT64, P, E, NULL)) ;
-        
-        
-        GRB_TRY (GxB_Matrix_unpack_CSR(
-            P, &ramp, &edge_perm, (void**) &val_of_P, &arr_size,
-            &perm_size,  &junk_size, &iso, false, NULL
-        ));
+        GRB_TRY (GrB_Matrix_extract(
+            E, NULL, NULL, E, edge_perm, e, GrB_ALL, 0, NULL
+        )) ;
 
         //increase width of sorted so it can be used as a mask.
         GRB_TRY (GrB_mxm (swapMask, NULL, NULL, GxB_ANY_FIRST_BOOL,
