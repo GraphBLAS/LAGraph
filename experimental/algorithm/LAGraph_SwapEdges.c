@@ -404,9 +404,8 @@ int LAGraph_SwapEdges
         
 
         GrB_Index perm_size, arr_size, junk_size;
-        GRB_TRY (GxB_Vector_unpack_Bitmap(
-            r_permute, (int8_t **)&dup_swaps, (void **)&edge_perm, &junk_size, 
-            &perm_size, &iso, &arr_size, NULL
+        GRB_TRY (GxB_Vector_unpack_Full(
+            r_permute, (void **)&edge_perm, &perm_size, &iso, NULL
         )) ;
         LG_ASSERT(!iso, GrB_NOT_IMPLEMENTED);
 
