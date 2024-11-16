@@ -102,7 +102,7 @@ void Rxd_AddMonoid(MF_result_tuple * z, const MF_result_tuple * x, const MF_resu
 
 // R is resulting residual graph
 // f is max flow
-int LAGraph_MaxFlow(LAGraph_Graph *G, GrB_Index S, GrB_Index T, GrB_Matrix *R, int * f, char *msg){
+int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, int * f, char *msg){
   
   //create semirings and types
   GrB_Type GrB_ResidualEdge;
@@ -136,7 +136,28 @@ int LAGraph_MaxFlow(LAGraph_Graph *G, GrB_Index S, GrB_Index T, GrB_Matrix *R, i
 
   GrB_Semiring Rxd_semiring;
   GRB_TRY(GrB_Semiring_new(&Rxd_semiring, GrB_RxdAdd, GrB_RxdMult));
- 
+
+  //make R symmetyric of resiual edge type
+  GrB_Matrix A = G->A;
+  GrB_Matrix R = NULL;
+  GrB_Index n;
+  GRB_TRY(GrB_Matrix_nrows(&n, A));
+  GRB_TRY(GrB_Matrix_new(&R, GrB_ResidualEdge, n, n));
+  GRB_TRY(GrB_apply(R, NULL, NULL, GrB_CRF_UOp, A, NULL));
+  GRB_TRY(GrB_apply(R, NULL, NULL, GrB_CRB_UOp, A, GrB_DESC_T1));
+  
+  //create d (height) vector and e (excess) vector
+  GrB_Vector d = NULL;
+  GrB_Vector e = NULL;
+  GRB_TRY(GrB_Vector_new(&e, GrB_FP32, n));
+  GRB_TRY(GrB_Vector_new(&d, GrB_INT32, n));
+
+  //init e and d
+  GrB_Scalar size;
+  GRB_TRY(GrB_Scalar_new(&size, GrB_INT32));
+  GRB_TRY(GrB_Scalar_setElement_INT32(size, n));
+  GRB_TRY(GrB_Vector_setElement(d, size, S)); 
+  
   LG_FREE_ALL;
   return 0;
 }
