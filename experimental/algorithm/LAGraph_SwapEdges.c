@@ -309,7 +309,7 @@ int LAGraph_SwapEdges
     // Init Ramps --------------------------------------------------------------
     GRB_TRY (GrB_Vector_new(&ramp_v, GrB_UINT64, e + 1)) ;
     GRB_TRY (GrB_Vector_new(&hramp_v, GrB_UINT64, e + 1)) ;
-    GRB_TRY (GrB_Vector_new(&swapVals, GrB_BOOL, e)) ;
+    GRB_TRY (GrB_Vector_new(&swapVals, GrB_UINT64, e)) ;
     GRB_TRY (GrB_Vector_assign_UINT64 (ramp_v, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
     GRB_TRY (GrB_Vector_apply_IndexOp_UINT64 (ramp_v, NULL, NULL,
         GrB_ROWINDEX_INT64, ramp_v, 0, NULL)) ;
@@ -402,19 +402,21 @@ int LAGraph_SwapEdges
         )) ;
         LG_ASSERT(!iso, GrB_NOT_IMPLEMENTED);
 
-        
-        // TODO: Should there be a function that takes in A matrix and computes
-        // in or out degree 
         GRB_TRY (GrB_Matrix_extract(
             E, NULL, NULL, E, edge_perm, e, GrB_ALL, 0, NULL
         )) ;
-
-        //increase width of sorted so it can be used as a mask.
-        GRB_TRY (GrB_mxm (swapMask, NULL, NULL, GxB_ANY_FIRST_BOOL,
-            (GrB_Matrix) swapVals, (GrB_Matrix) dense_hash, GrB_DESC_T1)) ; 
-        //swap vertexes in E randomly.
+        GRB_TRY (GrB_Matrix_reduce_Monoid(
+            swapVals, swapVals, NULL, GxB_BXOR_UINT64_MONOID, E, NULL));
+        GrB_Matrix xor_diag = NULL;
+        GRB_TRY (GrB_Matrix_diag(&xor_diag, swapVals, 0));
         GRB_TRY (GrB_mxm(
-            E, swapMask, NULL, GxB_ANY_FIRST_UINT64, E, y, NULL)) ;
+            E, NULL, NULL, GxB_BXOR_BXOR_UINT64, xor_diag, E, NULL)) ;
+        //increase width of sorted so it can be used as a mask.
+        // GRB_TRY (GrB_mxm (swapMask, NULL, NULL, GxB_ANY_FIRST_BOOL,
+        //     (GrB_Matrix) swapVals, (GrB_Matrix) dense_hash, GrB_DESC_T1)) ; 
+        //swap vertexes in E randomly.
+        // GRB_TRY (GrB_mxm(
+        //     E, swapMask, NULL, GxB_ANY_FIRST_UINT64, E, y, NULL)) ;
         
         GrB_Index E_bounds[3] = {swaps_per_loop * 2, e - swaps_per_loop * 2, 2};
         GRB_TRY (GrB_Matrix_new(E_split, GrB_UINT64, E_bounds[0], 2));
