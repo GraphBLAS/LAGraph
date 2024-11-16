@@ -133,16 +133,14 @@ typedef struct {
 // TO BE USED AS AN INPLACE OP
 void swap_ab (edge_type *z, const edge_type *x)
 {
-    z->a ^= x->b;
-    z->b ^= x->a;
-    z->a ^= x->b;
+    z->a = x->b;
+    z->b = x->a;
 }
 #define SWAP_AB                                                                 \
 "void swap_ab (uint64_t *z, const uint64_t *x)                               \n"\
 "{                                                                           \n"\
-"    z[0] ^= x[1];                                                           \n"\
-"    z[1] ^= x[0];                                                           \n"\
-"    z[0] ^= x[1];                                                           \n"\
+"    z[0] = x[1];                                                           \n"\
+"    z[1] = x[0];                                                           \n"\
 "}"
 int LAGraph_SwapEdges
 (
@@ -454,7 +452,7 @@ int LAGraph_SwapEdges
             E, (void **) &indices, &ind_size, &iso, NULL));
         GRB_TRY (GxB_Vector_pack_Full(
             E_vec, (void **) &indices, ind_size, iso, NULL));
-        GRB_TRY(GrB_Vector_apply(E_vec, NULL, NULL, swap_verts, E_vec, NULL)) ;
+        GRB_TRY(GrB_Vector_apply(E_vec, swapVals, NULL, swap_verts, E_vec, NULL)) ;
         GRB_TRY (GxB_Vector_unpack_Full(
             E_vec, (void **) &indices, &ind_size, &iso, NULL));
         GRB_TRY (GxB_Matrix_pack_FullR(
