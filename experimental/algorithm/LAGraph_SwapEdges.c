@@ -121,6 +121,25 @@ void log_duplicate
 "    **((int8_t **)y) = (int8_t) 0;                                          \n"\
 "    *z = *x;                                                                \n"\
 "}"
+
+typedef struct {
+    uint64_t a; 
+    uint64_t b;
+} edge_type;
+#define EDGE_TYPE                                                               \
+"typedef struct { uint64_t a; uint64_t b; } edge_type;"
+
+void swap_ab (edge_type *z, const edge_type *x)
+{
+    z->a = x->b;
+    z->b = x->a;
+}
+#define SWAP_AB                                                                 \
+"void swap_ab (uint64_t *z, const uint64_t *x)                               \n"\
+"{                                                                           \n"\
+"    z[0] = x[1];                                                            \n"\
+"    z[1] = x[0];                                                            \n"\
+"}"
 int LAGraph_SwapEdges
 (
     // output
@@ -137,7 +156,8 @@ int LAGraph_SwapEdges
     GrB_Matrix A = NULL; // n x n Adjacency Matrix 
 
     // e x 2 with entries corresponding to verticies of an edge
-    GrB_Matrix E = NULL, E_t = NULL; 
+    GrB_Matrix E = NULL, E_t = NULL;
+    GrB_Matrix E_vec = NULL; 
 
     // e entries. E_split[0] has those which are planning to swap.
     GrB_Matrix E_split[2] = {NULL, NULL}; 
@@ -206,6 +226,8 @@ int LAGraph_SwapEdges
     
     GrB_UnaryOp first_bit = NULL;
 
+    GrB_UnaryOp swap_verts = NULL;
+
     // z = h_y(x)
     GrB_BinaryOp hash_seed = NULL;
 
@@ -215,6 +237,8 @@ int LAGraph_SwapEdges
     GrB_Semiring bxor_first = NULL;
 
     GrB_BinaryOp duplicate = NULL;
+
+    GrB_Type lg_edge = NULL;
 
     int8_t *dup_swaps = NULL;
     GrB_Vector dup_swaps_v = NULL;
@@ -265,9 +289,14 @@ int LAGraph_SwapEdges
     GRB_TRY (GrB_Matrix_new (&A_tril, GrB_BOOL, n, n)) ;
     GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
     GRB_TRY (GrB_Matrix_nvals(&e, A_tril)) ;
+
+    GRB_TRY (GxB_Type_new(
+        &lg_edge, sizeof(edge_type), "edge_type", EDGE_TYPE)) ;
     GRB_TRY (GrB_Matrix_new(&E, GrB_UINT64, e, 2)) ;
     GRB_TRY (GrB_Matrix_new(&E_t, GrB_UINT64, 2, e)) ;
-    
+    GRB_TRY (GrB_Vector_new(&E_vec, lg_edge, e)) ;
+
+        
     //Init Operators -----------------------------------------------------------
     GRB_TRY (GxB_UnaryOp_new (
         &first_bit, (GxB_unary_function) (&first_bit_equals),
@@ -281,6 +310,10 @@ int LAGraph_SwapEdges
     GRB_TRY(GxB_BinaryOp_new(
         &duplicate, (GxB_binary_function) (&log_duplicate),
         GrB_UINT64, GrB_UINT64, GrB_UINT64, "log_duplicate", LOG_DUPLICATE
+    )) ;
+    GRB_TRY (GxB_UnaryOp_new (
+        &swap_verts, (GxB_unary_function) (&swap_ab),
+        lg_edge, lg_edge, "swap_ab", SWAP_AB
     )) ;
     // I use a bit wise xor to combine the hashes since the same column number 
     // will not appear twice in my multiplication and I want combination to be 
