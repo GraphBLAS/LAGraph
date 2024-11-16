@@ -45,6 +45,7 @@
     GrB_free (&r_60) ;                     \
     GrB_free(&exists);                          \
     GrB_free (&bxor_hash) ;                     \
+    GrB_free (&E_vec) ;                     \
     LAGraph_Free((void**)&dup_swaps, msg) ;       \
     LAGraph_Free((void**)&indices, msg) ;       \
     LAGraph_Free((void**)&ramp, msg) ;          \
@@ -129,16 +130,19 @@ typedef struct {
 #define EDGE_TYPE                                                               \
 "typedef struct { uint64_t a; uint64_t b; } edge_type;"
 
+// TO BE USED AS AN INPLACE OP
 void swap_ab (edge_type *z, const edge_type *x)
 {
-    z->a = x->b;
-    z->b = x->a;
+    z->a ^= x->b;
+    z->b ^= x->a;
+    z->a ^= x->b;
 }
 #define SWAP_AB                                                                 \
 "void swap_ab (uint64_t *z, const uint64_t *x)                               \n"\
 "{                                                                           \n"\
-"    z[0] = x[1];                                                            \n"\
-"    z[1] = x[0];                                                            \n"\
+"    z[0] ^= x[1];                                                           \n"\
+"    z[1] ^= x[0];                                                           \n"\
+"    z[0] ^= x[1];                                                           \n"\
 "}"
 int LAGraph_SwapEdges
 (
@@ -157,7 +161,7 @@ int LAGraph_SwapEdges
 
     // e x 2 with entries corresponding to verticies of an edge
     GrB_Matrix E = NULL, E_t = NULL;
-    GrB_Matrix E_vec = NULL; 
+    GrB_Vector E_vec = NULL; 
 
     // e entries. E_split[0] has those which are planning to swap.
     GrB_Matrix E_split[2] = {NULL, NULL}; 
@@ -262,6 +266,8 @@ int LAGraph_SwapEdges
     GrB_Vector dense_hash = NULL;
 
     GrB_Scalar zero8 = NULL, one8 = NULL, one64 = NULL ;
+
+    GrB_Index ind_size = 0;
     
     //--------------------------------------------------------------------------
     // Check inputs TODO
@@ -438,13 +444,24 @@ int LAGraph_SwapEdges
         GRB_TRY (GrB_Matrix_extract(
             E, NULL, NULL, E, edge_perm, e, GrB_ALL, 0, NULL
         )) ;
-        GRB_TRY (GrB_Matrix_reduce_Monoid(
-            swapVals, swapVals, NULL, GxB_BXOR_UINT64_MONOID, E, NULL));
-        GrB_Matrix xor_diag = NULL;
-        GRB_TRY (GrB_Matrix_diag(&xor_diag, swapVals, 0));
-        GRB_TRY (GrB_mxm(
-            E, NULL, NULL, GxB_BXOR_BXOR_UINT64, xor_diag, E, NULL)) ;
-        //increase width of sorted so it can be used as a mask.
+        // GRB_TRY (GrB_Matrix_reduce_Monoid(
+        //     swapVals, swapVals, NULL, GxB_BXOR_UINT64_MONOID, E, NULL));
+        // GrB_Matrix xor_diag = NULL;
+        // GRB_TRY (GrB_Matrix_diag(&xor_diag, swapVals, 0));
+        // GRB_TRY (GrB_mxm(
+        //     E, NULL, NULL, GxB_BXOR_BXOR_UINT64, xor_diag, E, NULL)) ;
+        GRB_TRY (GxB_Matrix_unpack_FullR(
+            E, (void **) &indices, &ind_size, &iso, NULL));
+        GRB_TRY (GxB_Vector_pack_Full(
+            E_vec, (void **) &indices, ind_size, iso, NULL));
+        GRB_TRY(GrB_Vector_apply(E_vec, NULL, NULL, swap_verts, E_vec, NULL)) ;
+        GRB_TRY (GxB_Vector_unpack_Full(
+            E_vec, (void **) &indices, &ind_size, &iso, NULL));
+        GRB_TRY (GxB_Matrix_pack_FullR(
+            E, (void **) &indices, ind_size, iso, NULL));
+        // GxB_Matrix_fprint(E, "E", GxB_SHORT, stdout) ;
+
+        // increase width of sorted so it can be used as a mask.
         // GRB_TRY (GrB_mxm (swapMask, NULL, NULL, GxB_ANY_FIRST_BOOL,
         //     (GrB_Matrix) swapVals, (GrB_Matrix) dense_hash, GrB_DESC_T1)) ; 
         //swap vertexes in E randomly.
@@ -575,7 +592,6 @@ int LAGraph_SwapEdges
         printf("#####Made %ld swaps. Total %ld out of %ld. Attempting %ld swaps next.#####\n\n", n_keep, num_swaps, e * Q, swaps_per_loop);
     } 
     // Build Output Matrix
-    GrB_Index ind_size = 0;
     GRB_TRY (GxB_Matrix_unpack_FullC(
         E, (void **)&indices, &ind_size, &iso, NULL)) ;
     GRB_TRY (GxB_Matrix_build_Scalar(*A_new, indices, indices + e, one8, e));
