@@ -232,6 +232,7 @@ int LAGraph_Louvain(
     GRB_TRY(LAGr_Modularity2(&Q,gamma,A,S,msg));
     printf("Iterations: %d\n", iter);
     printf("Q:%.15g\n",Q);
-    LG_FREE_ALL;
+    // LG_FREE_ALL;
+    LAGraph_Random_Finalize(msg);
     return 0;
 }
