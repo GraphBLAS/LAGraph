@@ -54,7 +54,7 @@ void test_modularity (void)
         GrB_Matrix B=NULL;
         double gamma = files[k].gamma;
         OK(LAGr_Modularity2(Q,gamma,A,S,msg));
-        bool ok_mod;
+        bool ok_mod =false;
         // GxB_print()
         printf("Q:%.15g\n",*Q);
         // printf("mod:%.15g\n",files[k].mod);
