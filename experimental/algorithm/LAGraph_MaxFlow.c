@@ -32,6 +32,8 @@
 #define GRB_CRB_STR "void CreateResidualBackward_UOp(GrB_Flow_Edge *f, const float *cap) {f->flow = 0; f->capacity = (*cap);}"
 #define GZB_MULT_STR "void Rxd_MultBOp(MF_result_tuple *y, const GrB_Flow_Edge *R, GrB_Index ix, GrB_Index jx, const int *d, GrB_Index iy, GrB_Index ik, const int* theta) { float r = R->capacity - R->flow; if(r > 0){ y->residual = r; y->d = *d; y->j = jx; } else{ y->residual = 0; y->d = INT32_MAX; y->j = -1; } }"
 #define GRB_ADD_STR "void Rxd_AddMonoid(MF_result_tuple * z, const MF_result_tuple * x, const MF_result_tuple * y) {if(x->d < y->d){ memcpy(z, x, sizeof(MF_result_tuple)); } else if(x->d > y->d){ memcpy(z, y, sizeof(MF_result_tuple));}else{if(x->residual > y->residual){ memcpy(z, x, sizeof(MF_result_tuple)); } else if(x->residual < y->residual){ memcpy(z, y, sizeof(MF_result_tuple)); } else{ if(x->j > y->j){ memcpy(z, x, sizeof(MF_result_tuple)); } else{ memcpy(z, y, sizeof(MF_result_tuple)); } } } }"
+#define GRB_INIT_FLOW_STR "void GrB_init_flows(GrB_Flow_Edge * z, const GrB_Flow_Edge * y, const float * x){z->flow = *x;}"
+
 
 //custom types
 typedef struct{
@@ -61,7 +63,7 @@ void CreateResidualBackward_UOp(GrB_Flow_Edge *f, const float *cap) {
 
 //TO-DO: create add operation for flow edges.
 
-void Rxd_MultBOp(MF_result_tuple *y, const GrB_Flow_Edge *R, GrB_Index ix, GrB_Index jx, const int *d, GrB_Index iy, GrB_Index ik, const int* theta) {
+void Rxd_MultBOp(MF_result_tuple *y, const GrB_Flow_Edge *R, GrB_Index ix, GrB_Index jx, const int *d, GrB_Index iy, GrB_Index jy, const int* theta) {
   float r = R->capacity - R->flow;
   if(r > 0){
     y->residual = r;
@@ -100,6 +102,9 @@ void Rxd_AddMonoid(MF_result_tuple * z, const MF_result_tuple * x, const MF_resu
   }
 }
 
+void GrB_init_flows(GrB_Flow_Edge * z, const GrB_Flow_Edge * y, const float * x){
+  z->flow = *x;
+}
 // R is resulting residual graph
 // f is max flow
 int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, int * f, char *msg){
@@ -144,19 +149,33 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, int * f, char *ms
   GRB_TRY(GrB_Matrix_nrows(&n, A));
   GRB_TRY(GrB_Matrix_new(&R, GrB_ResidualEdge, n, n));
   GRB_TRY(GrB_apply(R, NULL, NULL, GrB_CRF_UOp, A, NULL));
-  GRB_TRY(GrB_apply(R, NULL, NULL, GrB_CRB_UOp, A, GrB_DESC_T1));
+  GRB_TRY(GrB_apply(R, R, NULL, GrB_CRB_UOp, A, GrB_DESC_SCT1));
   
   //create d (height) vector and e (excess) vector
   GrB_Vector d = NULL;
   GrB_Vector e = NULL;
   GRB_TRY(GrB_Vector_new(&e, GrB_FP32, n));
   GRB_TRY(GrB_Vector_new(&d, GrB_INT32, n));
+  GRB_TRY(GrB_assign(d, NULL, NULL, 0, GrB_ALL, n, NULL));
 
   //init e and d
   GrB_Scalar size;
+  GrB_Vector t = NULL;
+  GrB_BinaryOp init_flow;
+  GRB_TRY(GxB_BinaryOp_new(&init_flow, F_BINARY(GrB_init_flows), GrB_ResidualEdge, GrB_ResidualEdge, GrB_FP32, "GrB_init_flows", GRB_INIT_FLOW_STR)); //accum
+  GRB_TRY(GrB_Vector_new(&t, GrB_FP32, n));
   GRB_TRY(GrB_Scalar_new(&size, GrB_INT32));
   GRB_TRY(GrB_Scalar_setElement_INT32(size, n));
-  GRB_TRY(GrB_Vector_setElement(d, size, S)); 
+  GRB_TRY(GrB_Vector_setElement(d, size, S));
+  GRB_TRY(GrB_Vector_setElement(t, 1, S)); 
+  GRB_TRY(GrB_mxv(e, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP32, A, t, GrB_DESC_T0));
+  GRB_TRY(GrB_assign(R, NULL, init_flow, e, GrB_ALL, n, S, GrB_DESC_T0));
+  GRB_TRY(GrB_Vector_free(&t)); //no longer needed
+
+  //begin algorithm loop
+  //check if all values of e are zero except the sink index
+  GrB_Scalar excess = NULL;
+  //GRB_TRY();
   
   LG_FREE_ALL;
   return 0;
