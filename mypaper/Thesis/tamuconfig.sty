@@ -1,0 +1,193 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  New template code for TAMU Theses and Dissertations starting Spring 2021.  
+%
+%
+%  Author: Thesis Office
+%	 Version 3.17.09
+%  Last updated 1/13/2021
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ProvidesPackage{tamuconfig}
+
+% Default packages have moved here from the preamble.
+%
+% September 2017: Margins are required to be at least one inch on all sides. If binding, a left margin of 1.4 inches
+% is recommended.
+%
+% The settings below reflect the minimum.
+\usepackage[letterpaper]{geometry}
+% Margins must be a minimum of one inch on all sides.
+\geometry{verbose, margin = 1in}
+	\usepackage[doublespacing]{setspace}
+	\usepackage{tocloft}
+		\renewcommand{\cftdotsep}{1.00} % Adjusts the size of the leader dot separation.
+	\usepackage[rm, tiny, center, compact]{titlesec}
+	\usepackage{indentfirst}
+	\usepackage{etoolbox}
+
+\usepackage{tocvsec2}
+\usepackage[titletoc]{appendix}
+\usepackage{appendix}
+\usepackage{tamuconfig}
+
+\usepackage{rotating}
+
+% These are common AMS packages. Many LaTeX documents
+% have these packages declared in their preambles.
+\usepackage{amsmath, amsthm}
+
+% If needed, this will allow you to add the word "Page"
+% to extra pages on your front matter lists.
+\usepackage{afterpage}
+
+% This is from the mdwtools package; it fixes some
+% footnote commands and allows you to have footnotes in
+% tables via the savenotes environment.
+\usepackage{footnote}
+
+% If you have a table that spans multiple pages, this
+% package allows for the use of the longtable
+% environment.
+\usepackage{longtable}
+
+%For the Nomenclature. Test.
+\usepackage{setspace}
+
+%For figures and tables.
+\usepackage{float}
+
+%To customize captions in floats.
+\usepackage{caption}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%   Titlepage Commands
+%%%%%%%%%%\newcommand{\tamumanuscripttitle}{\title{Default Title}}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\tamumanuscripttitle}{\title{Default Title}}
+\newcommand{\tamupapertype}{DissertationOrThesis}
+\newcommand{\tamufullname}{Full Name}
+\newcommand{\tamudegree}{Doctor of Philosophy}
+\newcommand{\tamuchairone}{Chair Name}
+\newcommand{\tamumemberone}{Committee Member1}
+%\newcommand{\tamumembertwo}{Committee Member2}
+%\newcommand{\tamumemberthree}{Committee Member3}
+\newcommand{\tamudepthead}{Department Head}
+\newcommand{\tamugradmonth}{MonthofGraduation}
+\newcommand{\tamugradyear}{YearofGraduation}
+\newcommand{\tamudepartment}{Department Name}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%   Titlesec Customations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	
+\titleformat{\chapter}{\centering\normalsize}{\thechapter.}{1em}{}
+\titleformat{\section}{\bf}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bf}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\it}{\thesubsubsection}{1em}{}
+
+\setcounter{secnumdepth}{5}
+
+\addtocontents{toc}{\protect\renewcommand{\protect\cftchapleader}
+        {\protect\cftdotfill{\cftsecdotsep}}}  % puts leader dots on chapters.
+
+
+%%%%%%%%  Remove the extra vertical space before chapter titles when using report class %%%%%%%%%%%
+\makeatletter
+\def\ttl@mkchap@i#1#2#3#4#5#6#7{%
+    \ttl@assign\@tempskipa#3\relax\beforetitleunit
+    \vspace{\@tempskipa}%<<<<<< REMOVE THE * AFTER \vspace
+    \global\@afterindenttrue
+    \ifcase#5 \global\@afterindentfalse\fi
+    \ttl@assign\@tempskipb#4\relax\aftertitleunit
+    \ttl@topmode{\@tempskipb}{%
+        \ttl@select{#6}{#1}{#2}{#7}}%
+    \ttl@finmarks  % Outside the box!
+    \@ifundefined{ttlp@#6}{}{\ttlp@write{#6}}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%  TOC Customations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Aesthetic spacing redefines that look nicer to me than the defaults.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%  Makes the font in the TOC normal.
+\renewcommand\cftsecfont{\normalfont}
+\renewcommand\cftsecpagefont{\normalfont}
+
+\renewcommand\cftpartfont{\normalfont}
+\renewcommand\cftpartpagefont{\normalfont}
+
+
+\renewcommand{\cftpartleader}{\cftdotfill{\cftdotsep}} % adds leader dots for parts
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % adds leader dots for chapters
+
+\renewcommand{\cftchapaftersnum}{.} % adds a period after chapter numbers in the toc.
+
+% commented out 3-24
+% \renewcommand\cftsecafterpnum{\vskip\baselineskip} % These lines allow for long toc titles to be displayed single-spaced within.
+% \renewcommand\cftsubsecafterpnum{\vskip\baselineskip}
+% \renewcommand\cftsubsubsecafterpnum{\vskip\baselineskip}
+% \renewcommand\cftchapafterpnum{\vskip\baselineskip}
+% \renewcommand\cftpartafterpnum{\vskip\baselineskip}
+
+
+% Uncomment this line if you need more space between your table/figure numbers and your title in your 
+% lof or lot. This will only need to be done if you have > 99 tables or figures in your manuscript.
+%\setlength{\cfttabnumwidth}{3em}  % Modify number width in LoT and LOF
+
+%%%%%%%%%%%  Makes the appear TOC doublespaced and almost singlespaced for sections.
+
+%commented out 3-24
+% \setlength\cftparskip{-2pt}
+% \setlength\cftbeforechapskip{0pt}
+% \setlength\cftbeforepartskip{0pt}
+% \setlength\cftbeforesubsecskip{-6pt}
+% \setlength\cftbeforesubsubsecskip{-6pt}
+% \setlength\cftbeforesecskip{-6pt}
+%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%  These change spacing in the toc.. Leave for now for tweaking.
+%\cftsetindents{chapter}{0in}{.3in}
+%\cftsetindents{section}{0.5in}{0in}  %%  adjusts Indents and Numwidths for tocloft. http://tex.stackexchange.com/questions/50471/question-about-indent-lengths-in-toc
+%\cftsetindents{subsection}{1in}{0in}
+%\cftsetindents{subsubsection}{1.5in}{0in}
+%\cftsetindents{paragraph}{0.5in}{0.5in}
+
+
+
+\preto\figure{%  Removes the extra space added before new chapters
+  \ifnum\value{figure}=0\addtocontents{lof}{\vskip-10pt}\fi
+}
+\preto\table{%  Removes the extra space added before new chapters
+  \ifnum\value{table}=0\addtocontents{lot}{\vskip-10pt}\fi
+}
+
+ \preto\section{%  Removes the extra space added before new chapters
+  \ifnum\value{section}=0\addtocontents{toc}{\vskip+10pt}\fi
+ }
+
+\renewcommand{\cftloftitlefont}{\hfill\normalsize\rm\uppercase}
+\renewcommand{\cftchappagefont}{\normalsize\rm}  % Makes the chapter page numbers the default size and font.
+\renewcommand{\cftchapfont}{\normalsize\rm}
+\renewcommand{\cftchapleader}{\normalsize\rm}
+
+\let\chaptermarkOLD\chaptermark
+    \renewcommand*\chaptermark[1]{\chaptermarkOLD{#1}\addtocontents{thefigure}{\protect\addvspace{30pt}}}
+		
+		
+		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fix spacing in front of figures
+\setlength{\textfloatsep}{40pt plus 8.0pt minus 4.0pt}
+\setlength{\floatsep}{40pt plus 8.0pt minus 4.0pt}
+\setlength{\intextsep}{40pt plus 8.0pt minus 4.0pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
