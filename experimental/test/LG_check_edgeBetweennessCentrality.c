@@ -19,7 +19,6 @@
 #define LG_FREE_WORK                                \
 {                                                   \
     free(queue) ;                                   \
-    free(sigma) ;                                   \
     free(d) ;                                       \
     free(delta) ;                                   \
     free(S) ;                                       \
@@ -238,6 +237,9 @@ int test_edgeBetweenessCentrality
 
             }
         }
+
+        free(sigma) ; 
+        sigma = NULL ;
     }
 
     if (print_timings)
