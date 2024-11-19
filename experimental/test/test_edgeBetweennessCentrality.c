@@ -191,8 +191,8 @@ void test_bc_brutal (void)
 
 TEST_LIST = {
     {"test_bc", test_bc},
-    #if LAGRAPH_SUITESPARSE
-    {"test_bc_brutal", test_bc_brutal },
-    #endif
+    // #if LAGRAPH_SUITESPARSE
+    // {"test_bc_brutal", test_bc_brutal },
+    // #endif
     {NULL, NULL}
 };

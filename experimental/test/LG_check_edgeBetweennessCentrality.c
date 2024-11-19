@@ -16,22 +16,22 @@
 
 //------------------------------------------------------------------------------
 
-#define LG_FREE_WORK                                \
-{                                                   \
-    free(queue) ;                                   \
-    free(d) ;                                       \
-    free(delta) ;                                   \
-    free(S) ;                                       \
-    free(P) ;                                       \
-}
+// #define LG_FREE_WORK                                \
+// {                                                   \
+//     LAGraph_Free ((void **) &queue, NULL) ;         \
+//     LAGraph_Free ((void **) &d, NULL) ;             \
+//     LAGraph_Free ((void **) &delta, NULL) ;         \
+//     LAGraph_Free ((void **) &S, NULL) ;             \
+//     LAGraph_Free ((void **) &P, NULL) ;             \
+// }
 
-#define LG_FREE_ALL                                 \
-{                                                   \
-    LG_FREE_WORK ;                                  \
-    LAGraph_Free ((void **) &Ap, NULL) ;            \
-    LAGraph_Free ((void **) &Aj, NULL) ;            \
-    LAGraph_Free ((void **) &Ax, NULL) ;            \
-}
+// #define LG_FREE_ALL                                 \
+// {                                                   \
+//     LG_FREE_WORK ;                                  \
+//     LAGraph_Free ((void **) &Ap, NULL) ;            \
+//     LAGraph_Free ((void **) &Aj, NULL) ;            \
+//     LAGraph_Free ((void **) &Ax, NULL) ;            \
+// }
 
 #include "LG_internal.h"
 #include "LG_test.h"
@@ -59,7 +59,6 @@ int test_edgeBetweenessCentrality
     GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
     void *Ax = NULL ;
     GrB_Index Ap_size, Aj_size, Ax_size, n, ncols ;
-    int64_t *queue = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
@@ -123,17 +122,29 @@ int test_edgeBetweenessCentrality
         tt = LAGraph_WallClockTime ( ) ;
     }
 
+    GxB_print(A, GxB_COMPLETE) ; 
+
     // Initialize centrality matrix result to 0
     // 1. result [(v, w)] ← 0, ∀(v, w) ∈ E
     // TODO make this a copy of A except with 1 = 0
     // A temporary result centrality matrix initialized to 0 for all vertice,
     // -- further changes would need to be made to make it a dictionary of edges.
-    GrB_Matrix result;
-    int64_t *result_p = malloc (n * sizeof (int64_t)) ;
-    int64_t *result_j = malloc (Aj_size * sizeof (int64_t)) ;
-    int64_t *result_x = calloc (Ax_size * sizeof (int64_t)) ;
-    memcpy (result_p, Ap, n * sizeof (int64_t)) ;
-    memcpy (result_j, Aj, Aj_size * sizeof (int64_t)) ;
+    int64_t* result ; 
+    GrB_Index result_size = n * ncols * sizeof(int64_t) ;
+
+    // for (int64_t i = 0 ; i < n ; i++)
+    // {
+    //     for (int64_t j = 0 ; j < ncols ; j++)
+    //     {
+    //         int64_t p = i + j * n ;
+    //         double aij = Ax [iso ? 0 : p] ;
+    //         printf("%lld\n", aij) ;
+    //         // numerical value of A(i,j)
+    //     } 
+    // }
+
+    
+    LG_TRY (GxB_Matrix_unpack_FullC(A, (void **) &result, &result_size, &iso, NULL)) ; 
 
     // 2. for ∀s ∈ V
     for (int64_t s = 0; s < n; s++) {
@@ -143,10 +154,10 @@ int test_edgeBetweenessCentrality
         // Initialize predecessors list P[w] to empty
         // TODO
         // 5. P [w] ← empty queue, ∀w ∈ V
-        int64_t *Pj = malloc (n * sizeof (int64_t)) ;
-        int64_t *Ptail = malloc (n * sizeof (int64_t)) ;
-        int64_t *Phead = Ap ;
-        memcpy (Ptail, Ap, n * sizeof (int64_t)) ;
+        GrB_Index *Pj = malloc (n * sizeof (GrB_Index)) ;
+        GrB_Index *Ptail = malloc (n * sizeof (GrB_Index)) ;
+        GrB_Index *Phead = Ap ;
+        memcpy (Ptail, Ap, n * sizeof (GrB_Index)) ;
 
         // Initialize sigma[t], d[t] for all t
         // 6. σ[t] ← 0, ∀t ∈ V , σ[s] ← 1
@@ -185,16 +196,16 @@ int test_edgeBetweenessCentrality
                 if (d [w] < 0) {
                     // Update depth and enqueue
                     // 18. enqueue(Q, w)
-                    queue [qt++] = w;
+                    queue [qt++] = w ;
                     // 19. d[w] ← d[v] + 1
-                    d [w] = d [v] + 1
+                    d [w] = d [v] + 1 ;
                 }
 
                 // 20. if d[w] = d[v] + 1
                 if (d [w] == d [v] + 1) {
                     // Update shortest path count and add predecessor
                     // 22. σ[w] ← σ[w] + σ[v]
-                    sigma [w] = sigma [w] + sigma [v]
+                    sigma [w] = sigma [w] + sigma [v] ;
                     // 23. append(P [w], v)
                     Pj [Ptail [w]++] = v ;
                 }
@@ -205,14 +216,14 @@ int test_edgeBetweenessCentrality
         // Set dependency score δ[v] ← 0
         // 24. δ[v] ← 0, ∀v ∈ V
         for (size_t v = 0; v < n; v++) {
-            d[v] = 0;
+            d[v] = 0 ;
         }
 
         // Process stack S
         // 25. while ¬empty(S)
         while (sp > 0) {
             // 27. w ← pop(S)
-            int64_t w = S [--sp];
+            int64_t w = S [--sp] ;
 
             // 28. for v ∈ P [w]
             for (int64_t p = Phead [w] ; p < Ptail [w+1] ; p++)
@@ -221,31 +232,22 @@ int test_edgeBetweenessCentrality
                 
                 // Update dependency and centrality values
                 // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
-                double centrality = sigma[ v] * ((delta [w] / sigma [w]) + 1);
-                delta [v] += centrality;
+                double centrality = sigma[ v] * ((delta [w] / sigma [w]) + 1) ;
+                delta [v] += centrality ;
 
                 // 31. result [(v, w)] ← result [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
-                size_t w_i = 0;
-                for (size_t i = result_p [v]; i < result_p [v + 1]; i++) {
-                    if (result_j[i] == w) {
-                        w_i = i - result_p [v];
-                        break ;
-                    }
-                }
-
-                result_x[result_p [v] + w_i] += centrality;
+                result[v + w * n] += centrality;
 
             }
         }
 
-        free(sigma) ; 
-        sigma = NULL ;
+        LAGraph_Free ((void **) &sigma, NULL) ; 
     }
 
     if (print_timings)
     {
         tt = LAGraph_WallClockTime ( ) - tt ;
-        printf ("LG_check_bfs bfs   time: %g sec\n", tt) ;
+        printf ("LG_check_edgeBetweenessCentrality time: %g sec\n", tt) ;
         tt = LAGraph_WallClockTime ( ) ;
     }
 
@@ -258,18 +260,16 @@ int test_edgeBetweenessCentrality
         &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, NULL, NULL)) ;
     #endif
 
-    #if LAGRAPH_SUITESPARSE
-    GRB_TRY (GxB_Matrix_pack_CSR (&result,
-        result_p, result_j, result_x, Ap_size, Aj_size, Ax_size, iso, NULL, NULL)) ;
-    #endif
+    GrB_Matrix C_temp;
+    LG_TRY ( GxB_Matrix_pack_FullC(C_temp, (void **) &result, result_size, iso, NULL) ) ;
 
-    (*C) = result ;
+    C = &C_temp;
 
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LG_FREE_WORK ;
+    // LG_FREE_WORK ;
 
     if (print_timings)
     {
