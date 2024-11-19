@@ -18,7 +18,6 @@
 #define FREE_LOOP                               \
 {                                               \
     GrB_free (&M) ;                             \
-    GrB_free (&M_fours) ;                       \
     GrB_free(&new_hashed_edges);                \
     GrB_free(&hashed_edges);                    \
     GrB_free (&big_dense) ;                     \
@@ -168,7 +167,6 @@ int LAGraph_SwapEdges
     // Each row contains 4 entries corresponding to the verticies 
     // that are involved in the swap.
     GrB_Matrix M = NULL;
-    GrB_Matrix M_fours = NULL; // M with exactly 4 entries
 
     // n = |V| e = |E|
     GrB_Index n = 0, e = 0;
@@ -183,7 +181,7 @@ int LAGraph_SwapEdges
     // indicies for A
     GrB_Index *indices = NULL;
 
-    // IDK
+    // [0,1,1,. . ., 0] swap a given edge. Boolean
     GrB_Vector swapVals = NULL;
 
     // e x 2 Matrix that picks the edges for which we will swap values.
@@ -439,19 +437,13 @@ int LAGraph_SwapEdges
         )) ;
         LG_ASSERT(!iso, GrB_NOT_IMPLEMENTED);
 
-        GRB_TRY (GrB_Matrix_extract(
-            E, NULL, NULL, E, edge_perm, e, GrB_ALL, 0, NULL
-        )) ;
-        // GRB_TRY (GrB_Matrix_reduce_Monoid(
-        //     swapVals, swapVals, NULL, GxB_BXOR_UINT64_MONOID, E, NULL));
-        // GrB_Matrix xor_diag = NULL;
-        // GRB_TRY (GrB_Matrix_diag(&xor_diag, swapVals, 0));
-        // GRB_TRY (GrB_mxm(
-        //     E, NULL, NULL, GxB_BXOR_BXOR_UINT64, xor_diag, E, NULL)) ;
         GRB_TRY (GxB_Matrix_unpack_FullR(
             E, (void **) &indices, &ind_size, &iso, NULL));
         GRB_TRY (GxB_Vector_pack_Full(
             E_vec, (void **) &indices, ind_size, iso, NULL));
+        GRB_TRY (GrB_Vector_extract(
+            E_vec, NULL, NULL, E_vec, edge_perm, e, NULL
+        )) ;
         GRB_TRY(GrB_Vector_apply(E_vec, swapVals, NULL, swap_verts, E_vec, NULL)) ;
         GRB_TRY (GxB_Vector_unpack_Full(
             E_vec, (void **) &indices, &ind_size, &iso, NULL));
@@ -473,8 +465,8 @@ int LAGraph_SwapEdges
         GRB_TRY (GxB_Matrix_split(
             E_split, 2, 1, E_bounds, E_bounds + 2, E, NULL));
 
-        M = E_split[0];
-        GRB_TRY (GxB_Matrix_reshape(M, false, swaps_per_loop, 4, NULL)) ;
+        GRB_TRY (GxB_Matrix_reshape(
+            E_split[0], false, swaps_per_loop, 4, NULL)) ;
 
         // Hash Edges ----------------------------------------------------------
         GRB_TRY (GrB_Matrix_new(
@@ -496,7 +488,7 @@ int LAGraph_SwapEdges
         )) ;
         GRB_TRY(GrB_mxm(
             new_hashed_edges, NULL, NULL, bxor_hash, 
-            M, hash_s, NULL
+            E_split[0], hash_s, NULL
         )) ;
         GRB_TRY(GrB_mxv(
             hashed_edges, NULL, NULL, bxor_hash, 
@@ -562,21 +554,20 @@ int LAGraph_SwapEdges
         // Search through array for bad swaps.
 
         // Swap Good Edges -----------------------------------------------------
-        GRB_TRY(GrB_Matrix_new(&M_fours, GrB_UINT64, n_keep, 4)) ;
+        GRB_TRY(GrB_Matrix_new(&M, GrB_UINT64, n_keep, 4)) ;
 
         GRB_TRY (GrB_Matrix_extract(
-            M_fours, NULL, NULL, M, arr_keep, n_keep, GrB_ALL, 0, NULL
+            M, NULL, NULL, E_split[0], arr_keep, n_keep, GrB_ALL, 0, NULL
         )) ;
         GRB_TRY (GrB_mxm(
-            M_fours, NULL, NULL, GxB_ANY_FIRST_UINT64, M_fours, swap_p, NULL
+            M, NULL, NULL, GxB_ANY_FIRST_UINT64, M, swap_p, NULL
         )) ;
         GRB_TRY (GrB_assign(
-            M, NULL, NULL, M_fours, arr_keep, n_keep, GrB_ALL, 0, NULL
+            E_split[0], NULL, NULL, M, arr_keep, n_keep, GrB_ALL, 0, NULL
         )) ;
-        GRB_TRY (GxB_Matrix_reshape(M, false, swaps_per_loop * 2, 2, NULL));
+        GRB_TRY (GxB_Matrix_reshape(
+            E_split[0], false, swaps_per_loop * 2, 2, NULL));
         GRB_TRY(GxB_Matrix_concat(E, E_split, 2, 1, NULL));
-
-        
         FREE_LOOP ; // Free Matricies that have to be rebuilt
 
         // Adjust number of swaps to do next.
