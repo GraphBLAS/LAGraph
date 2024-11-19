@@ -35,6 +35,8 @@
 
 #include "LG_internal.h"
 #include "LG_test.h"
+#include <graph_zachary_karate.h>
+// #include "LG_alg_internal.h"
 
 //------------------------------------------------------------------------------
 // test the results from a Edge Betweenness Centrality

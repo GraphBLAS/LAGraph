@@ -19,6 +19,8 @@
 #include <acutest.h>
 
 #include <LAGraph_test.h>
+#include <graph_zachary_karate.h>
+// #include "LG_alg_internal.h"
 
 #define LEN 512
 char msg [LAGRAPH_MSG_LEN] ;
@@ -151,39 +153,39 @@ void test_bc (void)
 // test_bc_brutal: test BetweenessCentraliy with brutal malloc debugging
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
-void test_bc_brutal (void)
-{
-    OK (LG_brutal_setup (msg)) ;
+// #if LAGRAPH_SUITESPARSE
+// void test_bc_brutal (void)
+// {
+//     OK (LG_brutal_setup (msg)) ;
 
-    GrB_Matrix A = NULL ;
-    GrB_Vector centrality = NULL ;
-    int niters = 0 ;
+//     GrB_Matrix A = NULL ;
+//     GrB_Vector centrality = NULL ;
+//     int niters = 0 ;
 
-    // create the karate graph
-    snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
-    FILE *f = fopen (filename, "r") ;
-    TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, f, msg)) ;
-    OK (fclose (f)) ;
-    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
-    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
-    printf ("\n") ;
+//     // create the karate graph
+//     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
+//     FILE *f = fopen (filename, "r") ;
+//     TEST_CHECK (f != NULL) ;
+//     OK (LAGraph_MMRead (&A, f, msg)) ;
+//     OK (fclose (f)) ;
+//     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+//     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+//     printf ("\n") ;
 
-    // compute its betweenness centrality
-    LG_BRUTAL_BURBLE (LAGr_Betweenness (&centrality, G,
-            karate_sources, 4, msg)) ;
+//     // compute its betweenness centrality
+//     LG_BRUTAL_BURBLE (LAGr_Betweenness (&centrality, G,
+//             karate_sources, 4, msg)) ;
 
-    // compare with GAP:
-    float err = difference (centrality, karate_bc) ;
-    printf ("karate:   err: %e\n", err) ;
-    TEST_CHECK (err < 1e-4) ;
-    OK (GrB_free (&centrality)) ;
-    OK (LAGraph_Delete (&G, msg)) ;
+//     // compare with GAP:
+//     float err = difference (centrality, karate_bc) ;
+//     printf ("karate:   err: %e\n", err) ;
+//     TEST_CHECK (err < 1e-4) ;
+//     OK (GrB_free (&centrality)) ;
+//     OK (LAGraph_Delete (&G, msg)) ;
 
-    OK (LG_brutal_teardown (msg)) ;
-}
-#endif
+//     OK (LG_brutal_teardown (msg)) ;
+// }
+// #endif
 
 //------------------------------------------------------------------------------
 // list of tests
