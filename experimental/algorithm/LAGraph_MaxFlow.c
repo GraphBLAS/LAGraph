@@ -1,28 +1,68 @@
-
-#include <LG_internal.h>
-#include <LAGraphX.h>
-#include <LAGraph.h>
-#include <math.h>
-
-#undef LG_FREE_ALL
-#undef LG_FREE_WORK
-
 //************************HOUSE RULES *******************
 // user defined typedefs are MF for Max Flow
 // when registered with GraphBLAS, replace MF with GrB
 // macros are all caps
 // op params will be z, y, x accordingly
 
+#include <LAGraphX.h>
+#include "LG_internal.h"
+#include <LAGraph.h>
 
-#define LG_FREE_WORK                        \
-{                                           \
-  GrB_Type_free(&GrB_FlowEdge);         \
-}                                           \
+#undef LG_FREE_WORK
+#undef LG_FREE_ALL
 
-#define LG_FREE_ALL                                 \
-{                                                   \
-    LG_FREE_WORK ;                                  \
+#define LG_FREE_WORK                    \
+{                                      \
+  GrB_free(&GrB_FlowEdge);             \
+  GrB_free(&GrB_CompareTuple);         \
+  GrB_free(&GrB_ResultTuple);          \
+  GrB_free(&e); \
+  GrB_free(&d);\
+  GrB_free(&theta);\
+  GrB_free(&R);\
+  GrB_free(&delta);\
+  GrB_free(&e_dup);\
+  GrB_free(&A);	   \
+  GrB_free(&d_dup);\
+  GrB_free(&delta);\
+  GrB_free(&delta_vec); \
+  GrB_free(&delta_mat); \
+  GrB_free(&R_temp1);\
+  GrB_free(&R_temp2);\
+  GrB_free(&e_temp);\
+  GrB_free(&active_set);\
+  GrB_free(&map);\
+  GrB_free(&y);\
+  GrB_free(&yd);\
+  GrB_free(&mask_vector);\
+  GrB_free(&Jvec);\
+  GrB_free(&R_dup);\
+  GrB_free(&e_dup);\
+  GrB_free(&GrB_UpdateFlows);\
+  GrB_free(&GrB_UpdateHeight);\
+  GrB_free(&GrB_extractFlows);\
+  GrB_free(&GrB_MxeIndexMult);\
+  GrB_free(&GrB_MxeMult);\
+  GrB_free(&GrB_MxeAdd);\
+  GrB_free(&GrB_MxeAddMonoid);\
+  GrB_free(&GrB_MxeSemiring);\
+  GrB_free(&GrB_extractJ);\
+  GrB_free(&GrB_CreateCompareVec);\
+  GrB_free(&GrB_RxdSemiring);\
+  GrB_free(&GrB_RxdAdd);\
+  GrB_free(&GrB_RxdAddMonoid);\
+  GrB_free(&GrB_RxdIndexMult);\
+  GrB_free(&GrB_RxdMult);\
+  GrB_free(&GrB_InitFlows);\
+  GrB_free(&GrB_CreateResidual);\
 }
+
+
+#define LG_FREE_ALL \
+{ \
+  LG_FREE_WORK; \
+}
+
 
 //casting for unary ops
 #define F_UNARY(f) ((void (*)(void *, const void *))f)
@@ -209,22 +249,90 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index* S, GrB_Index *T, int * f, char *
   //13. get number of active nodes from e through an extract op
   //
   // 14. set f to value of e(T)
+
+  //types
+  GrB_Type GrB_FlowEdge;
+  GrB_Type GrB_ResultTuple;
+  GrB_Type GrB_CompareTuple;
+
+  //to create R
+  GrB_UnaryOp GrB_CreateResidual;
+  GrB_Matrix A = G->A;
+  GrB_Index n;
+  GrB_Matrix R_temp1, R_temp2, R;
+
+  //to init R with initial saturated flows
+  GrB_Vector e_temp;
+  GrB_Vector e;
+  GrB_BinaryOp GrB_InitFlows;
+
+  //create height vector
+  GrB_Vector d;
+ 
+
+  //active_set and n_active
+  GrB_Vector active_set;
+  GrB_Vector mask_vector;
+  GrB_Index n_active;
+
+  //semiring and vectors for y<e, struct> = R x d
+  GrB_Vector y;
+  GzB_IndexBinaryOp GrB_RxdIndexMult;
+  GrB_BinaryOp GrB_RxdAdd, GrB_RxdMult;
+  GrB_Monoid GrB_RxdAddMonoid;
+  GrB_Semiring GrB_RxdSemiring;
+  GrB_Scalar theta;
+ 
+  //binary op and yd
+  GrB_Vector yd;
+  GrB_BinaryOp GrB_CreateCompareVec;
+  
+  //utility vectors, Matrix, and ops for mapping
+  GrB_Matrix map;
+  GrB_Vector Jvec;
+  GrB_UnaryOp GrB_extractJ;
+  GrB_Index* Jmap;
+  GrB_Index* Imap;
+  GrB_Index* Jvec_value;
+  MF_compareTuple* yd_value;
+ 
+  //map x e semiring
+  GrB_Semiring GrB_MxeSemiring;
+  GrB_Monoid GrB_MxeAddMonoid;
+  GrB_BinaryOp GrB_MxeAdd, GrB_MxeMult;
+  GzB_IndexBinaryOp GrB_MxeIndexMult;
+
+  //residual flow vec
+  GrB_Vector residual_vec;
+  GrB_UnaryOp GrB_extractFlows;
+ 
+  //delta structures
+  GrB_Vector delta_vec;
+  GrB_Matrix delta, delta_mat;
+  GrB_Index* Idelta;
+  float* delta_raw;
+
+  //relabel
+  GrB_Vector d_dup;
+
+  //update height
+  GrB_BinaryOp GrB_UpdateHeight;
+
+  //update R structure
+  GrB_Matrix R_dup;
+  GrB_BinaryOp GrB_UpdateFlows;
+
+  //update e
+  GrB_Vector e_dup;
   
   //create types for computation
-  GrB_Type GrB_FlowEdge;
   GRB_TRY(GxB_Type_new(&GrB_FlowEdge, sizeof(MF_flowEdge), "MF_FlowEdge", GRB_FLOWEDGE_STR));
-  GrB_Type GrB_ResultTuple;
   GRB_TRY(GxB_Type_new(&GrB_ResultTuple, sizeof(MF_resultTuple), "MF_resultTuple", GRB_RESULTTUPLE_STR));
-  GrB_Type GrB_CompareTuple;
   GRB_TRY(GxB_Type_new(&GrB_CompareTuple, sizeof(MF_compareTuple), "MF_compareTuple", GRB_COMPARETUPLE_STR));
 
   //create R
-  GrB_UnaryOp GrB_CreateResidual; 
   GRB_TRY(GxB_UnaryOp_new(&GrB_CreateResidual, F_UNARY(MF_CreateResidual), GrB_FlowEdge , GrB_FP32, "MF_CreateResidual", GRB_CR_STR));
-  GrB_Matrix A = G->A;
-  GrB_Index n;
   GRB_TRY(GrB_Matrix_nrows(&n, A));
-  GrB_Matrix R_temp1, R_temp2, R;
   GRB_TRY(GrB_Matrix_new(&R_temp1, GrB_FlowEdge, n, n));
   GRB_TRY(GrB_Matrix_new(&R_temp2, GrB_FlowEdge, n, n));
   GRB_TRY(GrB_Matrix_new(&R, GrB_FlowEdge, n, n));
@@ -236,9 +344,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index* S, GrB_Index *T, int * f, char *
   GrB_free(&R_temp1);
 
   //init R with initial saturated flows
-  GrB_Vector e_temp;
-  GrB_Vector e;
-  GrB_BinaryOp GrB_InitFlows;
   GRB_TRY(GxB_BinaryOp_new(&GrB_InitFlows, F_BINARY(MF_initFlows), GrB_FlowEdge, GrB_FlowEdge, GrB_FP32, "MF_initFlows", GRB_INIT_FLOW_STR));
   GRB_TRY(GrB_Vector_new(&e_temp, GrB_FP32, n));
   GRB_TRY(GrB_Vector_new(&e, GrB_FP32, n));
@@ -248,15 +353,11 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index* S, GrB_Index *T, int * f, char *
   GrB_free(&e_temp);
 
   //create and init d vector
-  GrB_Vector d;
   GRB_TRY(GrB_Vector_new(&d, GrB_INT32, n));
   GRB_TRY(GrB_assign(d, NULL, NULL, 0, GrB_ALL, n, NULL));
   GRB_TRY(GrB_assign(d, NULL, NULL, n, S, 1, NULL));
 
-  //extract active_set and n_active from e<mask_vector, comp, struct>
-  GrB_Vector active_set;
-  GrB_Vector mask_vector;
-  GrB_Index n_active;
+  //extract n_active from e masking T and S then assign to e
   GRB_TRY(GrB_Vector_new(&active_set, GrB_FP32, n));
   GRB_TRY(GrB_Vector_new(&mask_vector, GrB_BOOL, n)); //keep as bool?
   GRB_TRY(GrB_assign(mask_vector, NULL, NULL, true, T, 1, NULL));
@@ -266,12 +367,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index* S, GrB_Index *T, int * f, char *
   GRB_TRY(GrB_Vector_nvals(&n_active, active_set));
 
   //create semiring and vectors for y<e, struct> = R x d
-  GrB_Vector y;
-  GzB_IndexBinaryOp GrB_RxdIndexMult;
-  GrB_BinaryOp GrB_RxdAdd, GrB_RxdMult;
-  GrB_Monoid GrB_RxdAddMonoid;
-  GrB_Semiring GrB_RxdSemiring;
-  GrB_Scalar theta;
   GRB_TRY(GrB_Scalar_new(&theta, GrB_INT32));
   GRB_TRY(GrB_Scalar_setElement_INT32(theta, 0));
   GRB_TRY(GrB_Vector_new(&y, GrB_ResultTuple, n));
@@ -283,28 +378,15 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index* S, GrB_Index *T, int * f, char *
   GRB_TRY(GrB_Semiring_new(&GrB_RxdSemiring, GrB_RxdAddMonoid, GrB_RxdMult));
 
   //create binary op and yd
-  GrB_Vector yd;
-  GrB_BinaryOp GrB_CreateCompareVec;
   GRB_TRY(GrB_Vector_new(&yd, GrB_CompareTuple, n));
   GRB_TRY(GxB_BinaryOp_new(&GrB_CreateCompareVec, F_BINARY(MF_CreateCompareVec), GrB_CompareTuple, GrB_ResultTuple, GrB_INT32, "MF_CreateCompareVec", GRB_CREATECOMPVEC_STR));
 
   //create utility vectors, Matrix, and ops for mapping
-  GrB_Matrix map;
-  GrB_Vector Jvec;
-  GrB_UnaryOp GrB_extractJ;
-  GrB_Index* Jmap;
-  GrB_Index* Imap;
-  GrB_Index* Jvec_value;
-  MF_compareTuple* yd_value;
   GRB_TRY(GrB_Vector_new(&Jvec, GrB_INT32, n));
   GRB_TRY(GrB_Matrix_new(&map, GrB_CompareTuple, n,n));
   GRB_TRY(GxB_UnaryOp_new(&GrB_extractJ, F_UNARY(MF_extractJ), GrB_INT32, GrB_CompareTuple, "MF_extractJ", GRB_EXTRACTJ_STR));
 
   //create map x e semiring
-  GrB_Semiring GrB_MxeSemiring;
-  GrB_Monoid GrB_MxeAddMonoid;
-  GrB_BinaryOp GrB_MxeAdd, GrB_MxeMult;
-  GzB_IndexBinaryOp GrB_MxeIndexMult;
   GRB_TRY(GzB_IndexBinaryOp_new(&GrB_MxeIndexMult, F_INDEX_BINARY(MF_MxeMult), GrB_ResultTuple, GrB_CompareTuple, GrB_FP32, GrB_INT32, "MF_MxeMult", GRB_MXEMULT_STR));
   GRB_TRY(GzB_BinaryOp_new_IndexOp(&GrB_MxeMult, GrB_MxeIndexMult, theta));
   GRB_TRY(GxB_BinaryOp_new(&GrB_MxeAdd, F_BINARY(MF_MxeAdd), GrB_ResultTuple, GrB_ResultTuple, GrB_ResultTuple, "MF_MxeAdd", GRB_MXEADD_STR));
@@ -312,37 +394,24 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index* S, GrB_Index *T, int * f, char *
   GRB_TRY(GrB_Semiring_new(&GrB_MxeSemiring, GrB_MxeAddMonoid, GrB_MxeMult));
 
   //create flow vec
-  GrB_Vector residual_vec;
-  GrB_UnaryOp GrB_extractFlows;
   GRB_TRY(GrB_Vector_new(&residual_vec, GrB_FP32, n));
   GRB_TRY(GxB_UnaryOp_new(&GrB_extractFlows, F_UNARY(MF_extractFlow), GrB_FP32, GrB_ResultTuple, "MF_extractFlow", GRB_EXTRACTFLOW_STR));
 
-  //delta structures
-  GrB_Vector delta_vec;
-  GrB_Matrix delta, delta_mat;
-  GrB_Index* Idelta;
-  //GrB_Index* Jdelta;
-  float* delta_raw;
   GRB_TRY(GrB_Matrix_new(&delta_mat, GrB_FP32, n, n));
   GRB_TRY(GrB_Matrix_new(&delta, GrB_FP32, n, n));
   GRB_TRY(GrB_Vector_new(&delta_vec, GrB_FP32, n));
 
   //relable structures
-  GrB_Vector d_dup;
   GRB_TRY(GrB_Vector_new(&d_dup, GrB_INT32, n));
 
   //update height binary op
-  GrB_BinaryOp GrB_UpdateHeight;
   GRB_TRY(GxB_BinaryOp_new(&GrB_UpdateHeight, F_BINARY(MF_updateHeight), GrB_INT32, GrB_INT32, GrB_ResultTuple, "MF_updateHeight", GRB_UPDATEHEIGHT_STR));
 
   //update R structure
-  GrB_Matrix R_dup;
-  GrB_BinaryOp GrB_UpdateFlows;
   GRB_TRY(GrB_Matrix_new(&R_dup, GrB_FlowEdge, n, n));
   GRB_TRY(GxB_BinaryOp_new(&GrB_UpdateFlows, F_BINARY(MF_updateFlow), GrB_FlowEdge, GrB_FlowEdge, GrB_FP32, "MF_updateflows", GRB_UPDATEFLOWS_STR));
 
   //update e structures
-  GrB_Vector e_dup;
   GRB_TRY(GrB_Vector_new(&e_dup, GrB_FP32, n));
   
   while(n_active > 0){
@@ -404,6 +473,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index* S, GrB_Index *T, int * f, char *
   //set f
   GRB_TRY(GrB_Vector_extractElement(f, e, *T));
   
-  LG_FREE_ALL;
-  return 0;
+  LG_FREE_WORK;
+  return GrB_SUCCESS;
 }
