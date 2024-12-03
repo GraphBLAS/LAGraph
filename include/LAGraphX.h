@@ -1257,7 +1257,7 @@ LAGRAPHX_PUBLIC
 int LAGraph_Louvain2
 (
     //ouptut
-    GrB_Matrix S,
+    GrB_Matrix *S_result,
     // input
     LAGraph_Graph G,
     char* msg

@@ -19,8 +19,8 @@ typedef struct
 const matrix_info files[] = {
 
     {"comm0.mtx", 0.357142857142857},
-    // {"res1.mtx", 0.0},
-    // {"karate2.mtx", .42},
+    {"res1.mtx", 0.0},
+    {"karate2.mtx", .42},
     {"",-1}  
 };
 //Store matrix by row
@@ -54,9 +54,9 @@ void test_Louvain(void){
         {
             G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
         }
-        GrB_Matrix S=NULL;
+        GrB_Matrix S;
         double tsimple = LAGraph_WallClockTime ( ) ;
-        OK(LAGraph_Louvain2(S,G,msg));
+        OK(LAGraph_Louvain2(&S,G,msg));
         tsimple = LAGraph_WallClockTime ( ) - tsimple ;
         printf(" time: %f\n",tsimple);
 

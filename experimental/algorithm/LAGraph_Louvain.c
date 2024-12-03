@@ -124,7 +124,7 @@ int LAGraph_Louvain(
     bool changed = true;
     int max_iter = 20;
     int iter =0;
-    while(changed && iter <= max_iter){
+    while(changed && iter < max_iter){
         changed = false;
         double k_i;
         for(int i=0;i<n;i++){//extract tuples
