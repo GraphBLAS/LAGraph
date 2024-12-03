@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "lg_internal.h": "c"
+        "lg_internal.h": "c",
+        "lagraphx.h": "c"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }
