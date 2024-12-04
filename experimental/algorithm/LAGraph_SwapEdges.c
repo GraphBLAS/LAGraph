@@ -216,6 +216,8 @@ int LAGraph_SwapEdges
     GrB_Matrix E = NULL, E_t = NULL;
     GrB_Vector E_vec = NULL; 
 
+    GrB_Matrix P = NULL;
+
     // swaps x 4
     // Each row contains 4 entries corresponding to the verticies 
     // that are involved in the swap.
@@ -427,12 +429,6 @@ int LAGraph_SwapEdges
     GRB_TRY (GxB_Vector_unpack_Full (
         hramp_v, (void **)&half_ramp, &ramp_size, &iso, NULL)) ;
 
-    // Remake Ramp
-    GRB_TRY (GrB_Vector_resize(ramp_v, e))
-    GRB_TRY (GrB_Vector_assign_UINT64 (ramp_v, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
-    GRB_TRY (GrB_Vector_apply_IndexOp_UINT64 (ramp_v, NULL, NULL,
-        GrB_ROWINDEX_INT64, ramp_v, 0, NULL)) ;
-
     // Init Constants ----------------------------------------------------------
     GRB_TRY (GrB_Scalar_new (&zero8, GrB_UINT8)) ;
     GRB_TRY (GrB_Scalar_new (&one8, GrB_UINT8)) ;
@@ -443,6 +439,7 @@ int LAGraph_SwapEdges
 
     GRB_TRY (GrB_Matrix_new (&y, GrB_UINT8, 2, 2)) ;
     GRB_TRY (GrB_Matrix_new (&swap_p, GrB_UINT8, 4, 4)) ;
+    GRB_TRY (GrB_Matrix_new(&P, GrB_UINT64, e, 1ull << (64-shift_e))) ;
     GRB_TRY (GrB_Vector_new (&new_edges_h, GrB_UINT64, 1ull << 60)) ;
 
     GRB_TRY (GrB_Matrix_assign_UINT8 (
@@ -462,8 +459,8 @@ int LAGraph_SwapEdges
     // Make Random -------------------------------------------------------------
     GRB_TRY (GrB_Vector_new(&random_v, GrB_UINT64, e)) ;
     GRB_TRY (GrB_Vector_new(&r_60, GrB_UINT64, e)) ;
-    // GRB_TRY (GrB_Vector_new(&r_permute, GrB_UINT64, 1ull << (64-shift_e))) ;
-    GRB_TRY (GrB_Vector_new(&r_permute, GrB_UINT64, e)) ;
+    GRB_TRY (GrB_Vector_new(&r_permute, GrB_UINT64, 1ull << (64-shift_e))) ;
+    // GRB_TRY (GrB_Vector_new(&r_permute, GrB_UINT64, e)) ;
     GRB_TRY (GrB_Vector_assign_UINT64 (
         random_v, NULL, NULL, 0, GrB_ALL, e, NULL)) ;
     //TODO: Change seed
@@ -483,30 +480,48 @@ int LAGraph_SwapEdges
         // random_v has a radom dense vector.
         GRB_TRY (GrB_Matrix_new (&swapMask, GrB_BOOL, e, 2)) ;
 
-        GRB_TRY (GxB_Vector_sort (
-            NULL, r_permute, GrB_LT_UINT64, random_v, GrB_NULL
-        )) ;
-        // GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64(
-        //     r_60, NULL, NULL, GxB_BSHIFT_UINT64, random_v, -(shift_e), NULL
+        // GRB_TRY (GxB_Vector_sort (
+        //     NULL, r_permute, GrB_LT_UINT64, random_v, GrB_NULL
         // )) ;
+        GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64(
+            r_60, NULL, NULL, GxB_BSHIFT_UINT64, random_v, -(shift_e), NULL
+        )) ;
+        GRB_TRY (GxB_Vector_unpack_Full(
+            r_60, (void **) &edge_perm, &perm_size, &iso, NULL
+        )) ;
+        GRB_TRY (GxB_Matrix_pack_CSR(
+            P, &ramp, &edge_perm, (void**) &val_of_P, ramp_size,
+            perm_size, sizeof(GrB_Index), true, false, NULL
+        ));
+        GRB_TRY (GrB_vxm(
+            r_permute, NULL, NULL, GxB_ANY_SECONDI_INT64, random_v, P, NULL
+        ));
+        GRB_TRY (GxB_Matrix_unpack_CSR(
+            P, &ramp, &edge_perm, (void**) &val_of_P, &ramp_size,
+            &perm_size, &junk_size, &iso, NULL, NULL
+        ));
+        LAGraph_Free((void **) &edge_perm, msg);
+        
+        GrB_Index edges_permed = 0;
+        GRB_TRY (GrB_Vector_nvals(&edges_permed, r_permute));
+        LAGraph_Malloc((void **) &edge_perm, edges_permed, 8,msg);
+        GRB_TRY (GrB_Vector_extractTuples_UINT64(
+            NULL, edge_perm, &edges_permed, r_permute
+        )) ; 
+        swaps_per_loop = LAGRAPH_MIN(swaps_per_loop, edges_permed / 2) ;
         // GxB_fprint(r_60, GxB_SHORT, stdout);
         // GxB_fprint(r_permute, GxB_SHORT, stdout);
         // GxB_Vector_fprint(r_60, "r_60", GxB_SHORT, stdout);
-        GRB_TRY (GxB_Vector_unpack_Full(
-            r_permute, (void **) &edge_perm, &perm_size, &iso, NULL
-        )) ;
         // GRB_TRY (GrB_set(r_permute, GxB_BITMAP, GxB_SPARSITY_CONTROL));
         // GRB_TRY (GrB_Vector_assign(
         //     r_permute, NULL, NULL, ramp_v, edge_perm, e, NULL
         // ));
-        // printf("HELLO");
+        
         // GxB_fprint(r_permute, GxB_SHORT, stdout);
-        LG_ASSERT(!iso, GrB_NOT_IMPLEMENTED);
+        GRB_TRY (GrB_Vector_new(&M_thin, lg_edge, swaps_per_loop * 2));
         GRB_TRY (GrB_Vector_extract(
-            E_vec, NULL, NULL, E_vec, edge_perm, e, NULL
+            M_thin, NULL, NULL, E_vec, edge_perm, swaps_per_loop * 2, NULL
         )) ;
-        GRB_TRY (GrB_Vector_dup(&M_thin, E_vec));
-        GRB_TRY (GrB_Vector_resize(M_thin, swaps_per_loop * 2));
         GRB_TRY(GrB_Vector_new(&M, lg_swap, swaps_per_loop)) ;
         GrB_Index dup_arr_size = 0;
         GRB_TRY (GxB_Vector_unpack_Bitmap(
@@ -594,7 +609,7 @@ int LAGraph_SwapEdges
         )) ;
 
         GRB_TRY(GxB_Vector_subassign(
-            E_vec, dup_swaps_v, NULL, M_thin, ramp, swaps_per_loop * 2, NULL
+            E_vec, dup_swaps_v, NULL, M_thin, edge_perm, swaps_per_loop * 2, NULL
         )) ;
 
         FREE_LOOP ; // Free Matricies that have to be rebuilt
