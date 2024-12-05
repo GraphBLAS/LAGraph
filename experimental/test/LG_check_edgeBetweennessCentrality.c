@@ -68,18 +68,18 @@ int LG_check_edgeBetweennessCentrality
 
     GrB_Matrix A = G->A ;
     GrB_Matrix AT ;
-    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
-        G->is_symmetric_structure == LAGraph_TRUE)
-    {
-        // A and A' have the same structure
-        AT = A ;
-    }
-    else
-    {
-        // A and A' differ
-        AT = G->AT ;
-        LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
-    }
+    // if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+    //     G->is_symmetric_structure == LAGraph_TRUE)
+    // {
+    //     // A and A' have the same structure
+    //     AT = A ;
+    // }
+    // else
+    // {
+    //     // A and A' differ
+    //     AT = G->AT ;
+    //     LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
+    // }
 
     LG_CLEAR_MSG ;
 
@@ -88,6 +88,8 @@ int LG_check_edgeBetweennessCentrality
     //--------------------------------------------------------------------------
 
     GrB_Info info;
+
+    double* result ; 
 
     // Holds the distances (depth levels) from the source vertex.
     int64_t *d = NULL ;
@@ -120,16 +122,6 @@ int LG_check_edgeBetweennessCentrality
     LG_TRY(LAGraph_Malloc((void **)&queue, n, sizeof(int64_t), msg));
 
     //--------------------------------------------------------------------------
-    // unpack the A matrix in CSR form for SuiteSparse:GraphBLAS
-    //--------------------------------------------------------------------------
-
-    #if LAGRAPH_SUITESPARSE
-    bool iso ;
-    GRB_TRY (GxB_Matrix_unpack_CSR (G->A,
-        &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, NULL, NULL)) ;
-    #endif
-
-    //--------------------------------------------------------------------------
     // bfs on the A
     //--------------------------------------------------------------------------
 
@@ -140,28 +132,53 @@ int LG_check_edgeBetweennessCentrality
         tt = LAGraph_WallClockTime ( ) ;
     }
 
-    GxB_print(A, GxB_COMPLETE) ; 
-
     // Initialize centrality matrix result to 0
     // 1. result [(v, w)] ← 0, ∀(v, w) ∈ E
     // TODO make this a copy of A except with 1 = 0
     // A temporary result centrality matrix initialized to 0 for all vertice,
     // -- further changes would need to be made to make it a dictionary of edges.
-    int64_t* result ; 
-    GrB_Index result_size = n * ncols * sizeof(int64_t) ;
+    GrB_Index result_size = n * ncols * sizeof(double) ;
+    LG_TRY(LAGraph_Malloc((void **)&result, result_size, sizeof(double), msg));
 
-    // for (int64_t i = 0 ; i < n ; i++)
-    // {
-    //     for (int64_t j = 0 ; j < ncols ; j++)
-    //     {
-    //         int64_t p = i + j * n ;
-    //         double aij = Ax [iso ? 0 : p] ;
-    //         printf("%lld\n", aij) ;
-    //         // numerical value of A(i,j)
-    //     } 
-    // }
+    printf("before unpacking result \n") ;
 
-    LG_TRY (GxB_Matrix_unpack_FullR(A, (void **) &result, &result_size, &iso, NULL)) ; 
+    printf("G->A:\n") ;
+    GRB_TRY (GxB_print(G->A, GxB_COMPLETE)) ;
+
+    for (GrB_Index i = 0; i < n; i++) {
+        for (GrB_Index j = 0; j < ncols; j++) {
+            double value;
+            if (GrB_Matrix_extractElement(&value, G->A, i, j) == GrB_SUCCESS) {
+                result [i*ncols+j] = value;
+            }
+        }
+    }
+
+
+    printf("result: \n") ;
+    for (int64_t i = 0 ; i < n ; i++)
+    {
+        for (int64_t j = 0 ; j < ncols ; j++)
+        {
+            int64_t p = i + j * n ;
+            double aij = result [p] ;
+            printf("%0.0f ", aij) ;
+            // numerical value of A(i,j)
+        } 
+        printf("\n") ; 
+    }
+
+    //--------------------------------------------------------------------------
+    // unpack the A matrix in CSR form for SuiteSparse:GraphBLAS
+    //--------------------------------------------------------------------------
+
+    #if LAGRAPH_SUITESPARSE
+    bool iso ; 
+    GRB_TRY (GxB_Matrix_unpack_CSR (G->A,
+        &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, NULL, NULL)) ;
+    #endif
+
+    //--------------------------------------------------------------------------
 
     // 2. for ∀s ∈ V
     for (int64_t s = 0; s < n; s++) {
