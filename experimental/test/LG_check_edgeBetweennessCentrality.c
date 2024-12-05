@@ -34,15 +34,13 @@
 // }
 
 #include "LG_internal.h"
-#include "LG_test.h"
-#include <graph_zachary_karate.h>
-// #include "LG_alg_internal.h"
+#include <LAGraphX.h>
 
 //------------------------------------------------------------------------------
 // test the results from a Edge Betweenness Centrality
 //------------------------------------------------------------------------------
 
-int test_edgeBetweenessCentrality
+int LG_check_edgeBetweennessCentrality
 (
     // output
     GrB_Matrix *C,      // centrality matrix
@@ -86,22 +84,40 @@ int test_edgeBetweenessCentrality
     LG_CLEAR_MSG ;
 
     //--------------------------------------------------------------------------
-    // initialize / allocate workspace
+    // initialize workspace
     //--------------------------------------------------------------------------
 
     GrB_Info info;
 
     // Holds the distances (depth levels) from the source vertex.
-    int64_t *d = malloc(n * sizeof(int64_t)) ;
+    int64_t *d = NULL ;
 
     // Stores dependency scores for each vertex.
-    int64_t *delta = malloc(n * sizeof(int64_t)) ;
+    int64_t *delta = NULL ;
 
     // Stack used for backtracking phase
-    int64_t *S = malloc(n * sizeof(int64_t)) ;
+    int64_t *S = NULL ;
 
     // Queue used for BFS phase
-    int64_t *queue = malloc(n * sizeof(int64_t)) ;
+    int64_t *queue = NULL ;
+
+    GrB_Index *Pj = NULL ;
+    GrB_Index *Ptail = NULL ;
+    GrB_Index *Phead = Ap ;
+
+    int64_t *sigma = NULL ;
+
+    //--------------------------------------------------------------------------
+    // allocate workspace
+    //--------------------------------------------------------------------------
+
+    LG_TRY(LAGraph_Malloc((void **)&d, n, sizeof(int64_t), msg));
+
+    LG_TRY(LAGraph_Malloc((void **)&delta, n, sizeof(int64_t), msg));
+
+    LG_TRY(LAGraph_Malloc((void **)&S, n, sizeof(int64_t), msg));
+
+    LG_TRY(LAGraph_Malloc((void **)&queue, n, sizeof(int64_t), msg));
 
     //--------------------------------------------------------------------------
     // unpack the A matrix in CSR form for SuiteSparse:GraphBLAS
@@ -145,8 +161,7 @@ int test_edgeBetweenessCentrality
     //     } 
     // }
 
-    
-    LG_TRY (GxB_Matrix_unpack_FullC(A, (void **) &result, &result_size, &iso, NULL)) ; 
+    LG_TRY (GxB_Matrix_unpack_FullR(A, (void **) &result, &result_size, &iso, NULL)) ; 
 
     // 2. for ∀s ∈ V
     for (int64_t s = 0; s < n; s++) {
@@ -156,20 +171,20 @@ int test_edgeBetweenessCentrality
         // Initialize predecessors list P[w] to empty
         // TODO
         // 5. P [w] ← empty queue, ∀w ∈ V
-        GrB_Index *Pj = malloc (n * sizeof (GrB_Index)) ;
-        GrB_Index *Ptail = malloc (n * sizeof (GrB_Index)) ;
+        LG_TRY(LAGraph_Malloc((void **)&Pj, n, sizeof(GrB_Index), msg));
+        LG_TRY(LAGraph_Malloc((void **)&Ptail, n, sizeof(GrB_Index), msg));
         GrB_Index *Phead = Ap ;
         memcpy (Ptail, Ap, n * sizeof (GrB_Index)) ;
 
         // Initialize sigma[t], d[t] for all t
         // 6. σ[t] ← 0, ∀t ∈ V , σ[s] ← 1
         // Keeps track of the number of shortest paths for each vertex.
-        int64_t *sigma = calloc(n, sizeof(int64_t)) ;
+        LAGraph_Calloc ((void **) &sigma, n, sizeof (int8_t), msg) ;
         sigma [s] = 1 ;
 
         // 7. d[t] ← −1, ∀t ∈ V , d[s] ← 0
         for (size_t t = 0; t < n; t++) {
-            d[t] = -1;
+            d [t] = -1;
         }
         d [s] = 0;
 
@@ -218,7 +233,7 @@ int test_edgeBetweenessCentrality
         // Set dependency score δ[v] ← 0
         // 24. δ[v] ← 0, ∀v ∈ V
         for (size_t v = 0; v < n; v++) {
-            d[v] = 0 ;
+            d [v] = 0 ;
         }
 
         // Process stack S
@@ -234,11 +249,11 @@ int test_edgeBetweenessCentrality
                 
                 // Update dependency and centrality values
                 // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
-                double centrality = sigma[ v] * ((delta [w] / sigma [w]) + 1) ;
+                double centrality = sigma [v] * ((delta [w] / sigma [w]) + 1) ;
                 delta [v] += centrality ;
 
                 // 31. result [(v, w)] ← result [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
-                result[v + w * n] += centrality;
+                result [v + w * n] += centrality;
 
             }
         }
@@ -263,7 +278,7 @@ int test_edgeBetweenessCentrality
     #endif
 
     GrB_Matrix C_temp;
-    LG_TRY ( GxB_Matrix_pack_FullC(C_temp, (void **) &result, result_size, iso, NULL) ) ;
+    LG_TRY ( GxB_Matrix_pack_FullR(C_temp, (void **) &result, result_size, iso, NULL) ) ;
 
     C = &C_temp;
 

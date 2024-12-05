@@ -17,10 +17,12 @@
 
 #include <stdio.h>
 #include <acutest.h>
+#include "LAGraphX.h"
+#include "LAGraph_test.h"
+#include "LG_Xtest.h"
+#include "LG_internal.h"
 
-#include <LAGraph_test.h>
 #include <graph_zachary_karate.h>
-// #include "LG_alg_internal.h"
 
 #define LEN 512
 char msg [LAGRAPH_MSG_LEN] ;
