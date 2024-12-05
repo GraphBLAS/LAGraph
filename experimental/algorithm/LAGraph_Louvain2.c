@@ -30,15 +30,21 @@
         GrB_free (&k) ;                 \
         GrB_free (&x) ;                 \
         GrB_free (&v) ;                 \
+        GrB_free (&srxq) ;              \
+        GrB_free (&sr) ;                \
         GrB_free (&q1) ;                \
         GrB_free (&t) ;                 \
         GrB_free (&t_q) ;               \
         GrB_free (&Theta) ;             \
         GrB_free (&Semiring) ;          \
+        GrB_free (&Mon) ;               \
+        GrB_free (&Tuple) ;             \
         GrB_free (&dS) ;                \
         GrB_free (&dSk) ;               \
         GrB_free (&vtS) ;               \
         GrB_free (&temp) ;              \
+        GrB_free (&y_rand) ;            \
+        GrB_free (&max_q1) ;            \
     }
 #define DEBUG 0
 
@@ -119,7 +125,6 @@ int LAGraph_Louvain2(
     GrB_Vector k = NULL ;
     GrB_Vector x = NULL ;
     GrB_Vector z = NULL ;
-    GrB_Index *coor = NULL;
     GrB_Index n,b;
     GrB_Matrix S = NULL;
     GrB_Vector sr = NULL;
