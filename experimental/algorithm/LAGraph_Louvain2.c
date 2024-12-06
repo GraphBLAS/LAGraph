@@ -84,7 +84,7 @@ void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
 #define MAKE_FP64                                                \
 "void make_fp64(tuple_fp64 *z,                               \n" \
 "               const double *x, GrB_Index ix, GrB_Index jx, \n" \
-"               const int *y, GrB_Index iy, GrB_Index jy,    \n" \
+"               const uint64_t *y, GrB_Index iy, GrB_Index jy,    \n" \
 "               const void *theta)                           \n" \
 "{                                                           \n" \
 "    z->k = (int64_t)jx;                                     \n" \
@@ -101,11 +101,12 @@ int LAGraph_Louvain2(
     char* msg
 )
 {
+    LG_CLEAR_MSG ;
+
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
     if (DEBUG)
         GrB_set (GrB_GLOBAL, true, GxB_BURBLE);
 
-    
     //assignment of monoids, bops, and semis   
     GrB_Monoid plusmon = GrB_PLUS_MONOID_FP64;
     GrB_Monoid maxmon = GrB_MAX_MONOID_FP64;
@@ -156,10 +157,11 @@ int LAGraph_Louvain2(
 
 //index bin op definitions
 //------------------------------------------------------------------------------------------------------------------
+
     GRB_TRY(GrB_Scalar_new(&Theta, GrB_BOOL));
     GRB_TRY(GrB_Scalar_setElement_BOOL(Theta, 0));
     GRB_TRY(GxB_Type_new(&Tuple, sizeof(tuple_fp64), "tuple_fp64", FP64_K));
-    GRB_TRY(GzB_IndexBinaryOp_new (&Iop, make_fp64, Tuple, GrB_FP64, GrB_BOOL, GrB_BOOL,"make_fp64", MAKE_FP64));
+    GRB_TRY(GzB_IndexBinaryOp_new (&Iop, (GzB_index_binary_function) make_fp64, Tuple, GrB_FP64, GrB_UINT64, GrB_BOOL,"make_fp64", MAKE_FP64));
     GRB_TRY(GzB_BinaryOp_new_IndexOp(&Bop, Iop, Theta));
     tuple_fp64 id;
     memset(&id, 0, sizeof(tuple_fp64));
@@ -284,7 +286,7 @@ int LAGraph_Louvain2(
             Sj[i] = o.k;
             Sx[i] = true;
             GRB_TRY (GxB_Matrix_pack_CSR (S, &Sp, &Sj, (void**)&Sx,
-                Sp_size, Sj_size, Sx_size, NULL, S_jumbled, NULL));
+                Sp_size, Sj_size, Sx_size, false, S_jumbled, NULL));
             // GxB_print(sr,5);
             GRB_TRY(GrB_Vector_eWiseMult_BinaryOp(srxq,NULL,NULL,timesf64,sr,q1,NULL));
             GRB_TRY(GrB_Vector_nvals(&vals_srxq,srxq));
