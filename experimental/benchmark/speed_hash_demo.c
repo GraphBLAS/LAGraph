@@ -27,6 +27,7 @@
     GrB_free (&rand_v) ;                             \
     GrB_free (&sort_r) ;                             \
     GrB_free (&set_v) ;                             \
+    GrB_free (&assign_s) ;                             \
 }
 
 int main (int argc, char **argv)
@@ -41,8 +42,9 @@ int main (int argc, char **argv)
     bool burble = true ;               // set true for diagnostic outputs
     demo_init (burble) ;
 
-    GrB_Vector rand_v = NULL, sort_r = NULL, set_v = NULL;
-    GrB_Index *rand_a = NULL, *set_a = NULL;
+    GrB_Vector rand_v = NULL, sort_r = NULL, set_v = NULL, assign_s = NULL;
+    GrB_Index *rand_a = NULL;
+    bool *set_a = NULL;
     GrB_Index r_size = 0;
     bool iso = false;
     LG_TRY (LAGraph_Random_Init (msg)) ;
@@ -62,10 +64,14 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Vector_new(&rand_v, GrB_UINT64, size)) ;
     GRB_TRY (GrB_Vector_new(&sort_r, GrB_UINT64, size)) ;
     GRB_TRY (GrB_Vector_new(&set_v, GrB_BOOL, size_p2)) ;
+    GRB_TRY (GrB_Vector_new(&assign_s, GrB_BOOL, size_p2)) ;
 
 
     GRB_TRY (GrB_Vector_assign_UINT64(
         rand_v, NULL, NULL, 0ull, GrB_ALL, 0, NULL)) ;
+    // GRB_TRY (GrB_Vector_assign_BOOL(
+    //     assign_s, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
+    GRB_TRY(GrB_set (assign_s, GxB_BITMAP, GxB_SPARSITY_CONTROL) ;)
     LG_TRY (LAGraph_Random_Seed(rand_v, 1548945616ul, msg)) ;
     GRB_TRY (GrB_Vector_apply_BinaryOp1st_UINT64(
         rand_v, NULL, NULL, GrB_BAND_UINT64, bit_mask, rand_v, NULL)) ;
@@ -89,49 +95,53 @@ int main (int argc, char **argv)
     )) ;
     LAGraph_Calloc((void **)&set_a, size_p2, sizeof(bool), msg);
 
-    // #pragma omp parallel for schedule(static) num_threads(omp_get_max_threads())
+    int nthreads, nthreads_outer, nthreads_inner ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, msg)) ;
+    nthreads = nthreads_outer * nthreads_inner ;
+    printf("%d", nthreads);
+    // #pragma omp parallel for num_threads(nthreads) schedule(static)
     for(int64_t i = 0; i < size; ++i)
     {
         set_a[rand_a[i]] = (bool) 1;
     }
+    t = LAGraph_WallClockTime ( ) - t ;
+    printf ("Time for Single Thread Unpack: %g sec\n", t) ;
 
-    // #pragma omp parallel num_threads(omp_get_max_threads())
-    // {
-    //     int64_t bounds[2] = {omp_get_thread_num() * size_p2 / omp_get_max_threads(), size_p2 / omp_get_max_threads()};
-    //     bounds[1] += bounds[0];
-    //     if(omp_get_thread_num() - 1 == omp_get_max_threads())
-    //         bounds[1] = size_p2;
+    GRB_TRY (GxB_Vector_pack_Full (
+        set_v, (void **)&set_a, 1ull << (64-shift_e), false, NULL
+    )) ;
+    
 
-    //     #pragma omp for
-    //     for(int64_t i = 0; i < size; ++i)
-    //     {
-    //         int64_t rx = rand_a[i];
-    //         if (bounds[0] <= rx && rx < bounds[1])
-    //             set_a[rx] = (bool) 1;
-    //     }
-    // }
+
+
+    t = LAGraph_WallClockTime ( ) ;
+    GRB_TRY (GrB_Vector_assign_BOOL(
+        assign_s, NULL, NULL, 1, rand_a, size, NULL)) ;
+    t = LAGraph_WallClockTime ( ) - t ;
+    printf ("Time for Assign: %g sec\n", t) ;
 
     GRB_TRY (GxB_Vector_pack_Full (
         rand_v, (void **)&rand_a, r_size, iso, NULL
     )) ;
-    GRB_TRY (GxB_Vector_pack_Full (
-        set_v, (void **)&set_a, 1ull << (64-shift_e), false, NULL
-    )) ;
-    t = LAGraph_WallClockTime ( ) - t ;
-    printf ("Time for Single Thread Unpack: %g sec\n", t) ;
-
     //--------------------------------------------------------------------------
     // check the results (make sure Y is a copy of G->A)
     //--------------------------------------------------------------------------
-
-    printf("RESULTS UNTESTED\n");
+    bool isEq = 0;
+    GRB_TRY (GrB_Vector_assign_BOOL(
+        assign_s, assign_s, NULL, 0, GrB_ALL, 0, GrB_DESC_SC)) ;
+    LG_TRY (LAGraph_Vector_IsEqual(&isEq, assign_s, set_v, msg));
+    if(isEq)
+        printf("TEST PASSED\n");
+    else
+        printf("TEST FAILED\n");
 
     //--------------------------------------------------------------------------
     // print the results (Y is just a copy of G->A)
     //--------------------------------------------------------------------------
 
     printf ("\n===============================The result set vector:\n") ;
-    GRB_TRY (GxB_fprint(set_v, GxB_SHORT, stdout)) ;
+    // GRB_TRY (GxB_fprint(set_v, GxB_SHORT, stdout)) ;
+    // GRB_TRY (GxB_fprint(assign_s, GxB_SHORT, stdout)) ;
     //--------------------------------------------------------------------------
     // free everyting and finish
     //--------------------------------------------------------------------------
