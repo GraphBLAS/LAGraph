@@ -47,7 +47,7 @@
         GrB_free (&max_q1) ;            \
     }
 #define DEBUG 0
-
+// uint64_t seed = 213;
 typedef struct tuple_fp64{
     int64_t k;
     double v;
@@ -55,11 +55,11 @@ typedef struct tuple_fp64{
 #define FP64_K "typedef struct tuple_fp64 { int64_t k ; double v ; } tuple_fp64 ;"
 void make_fp64(tuple_fp64 *z,
                const double *x, GrB_Index ix, GrB_Index jx,
-               const int *y, GrB_Index iy, GrB_Index jy,
+               const uint64_t *y, GrB_Index iy, GrB_Index jy,
                const void *theta)
 {
     z->k = (int64_t)jx;
-    z->v = (*x) + (*y)*10e-3;
+    z->v = (*x) + rd();
 }
 void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
     if (x->v > y->v ){
@@ -167,7 +167,7 @@ int LAGraph_Louvain2(
     memset(&id, 0, sizeof(tuple_fp64));
     id.k = INT64_MAX;
     id.v = (double)(-INFINITY);
-    GRB_TRY(GxB_BinaryOp_new(&MonOp, max_fp64, Tuple, Tuple, Tuple, "max_fp64", MAX_FP64));
+    GRB_TRY(GxB_BinaryOp_new(&MonOp, (GxB_binary_function)max_fp64, Tuple, Tuple, Tuple, "max_fp64", MAX_FP64));
     GRB_TRY(GrB_Monoid_new_UDT(&Mon, MonOp, &id));
     GRB_TRY(GrB_Semiring_new(&Semiring, Mon, Bop));
 //------------------------------------------------------------------------------------------------------------------
@@ -211,7 +211,7 @@ int LAGraph_Louvain2(
     GRB_TRY(GrB_Vector_new(&y_rand, GrB_UINT64,n));
     GRB_TRY(GrB_Vector_new(&sr, GrB_FP64,n));
     GRB_TRY(GrB_Vector_new(&srxq, GrB_FP64,n));
-    GRB_TRY (GrB_assign (y_rand, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_assign (y_rand, NULL, NULL, 1, GrB_ALL, n, NULL)) ;
 
     bool changed = true;
     int max_iter = 20;
@@ -270,9 +270,9 @@ int LAGraph_Louvain2(
             
 ///////////////////////////////////////////////////////////
 //-------------Index Binary OP Rand_argminmax -----------//
-            seed++ ;
-            GRB_TRY(LAGraph_Random_Seed(y_rand,seed,msg));
-
+            // seed++ ;
+            // GRB_TRY(LAGraph_Random_Seed(y_rand,seed,msg));
+            // GRB_TRY(GrB_Vector_setElement_UINT64(y_rand,seed,0));
             // GxB_print(y_rand,5);
             // GxB_print(q1,5);
             GRB_TRY(GrB_mxv(max_q1,NULL,NULL,Semiring,(GrB_Matrix)q1,y_rand,GrB_DESC_T0));
