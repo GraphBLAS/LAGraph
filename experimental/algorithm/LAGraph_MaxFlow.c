@@ -134,7 +134,7 @@
 
 #define GRB_CREATECOMPVEC_STR "void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int *x) {\nz->di = (*x);\nz->j = y->j;\nz->residual = y->residual;\nz->y_dmin = y->d;\n}"
 #define GRB_EXTRACTJ_STR "void MF_extractJ(int *z, const MF_compareTuple *y) {\nif(y->di < INT32_MAX){\n(*z) = y->j;\n}\n}"
-#define GRB_MXEMULT_STR "void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const float * x, GrB_Index ix, GrB_Index jx, const int* theta){\nif(y->y_dmin == INT32_MAX){\nz = NULL;\n}\n\nif((*x) == 0){\nif(y->di < y->y_dmin-1 || y->di == y->y_dmin+1){\nz->d = y->y_dmin;\nz->residual = y->residual;\nz->j = y->j;\n}\nelse if(y->di == y->y_dmin){ \nif(iy < ix){\nz->d = y->y_dmin;\nz->residual = y->residual;\nz->j = y->j;\n}\n}\n}\nelse{\nz->d = y->y_dmin;\nz->residual = y->residual;\nz->j = y->j;\n}\n}"
+#define GRB_MXEMULT_STR "void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const float * x, GrB_Index ix, GrB_Index jx, const int* theta){\nif(y->y_dmin == INT32_MAX){\nz = NULL;\n}\n\nif((*x) > 0){\nif(y->di < y->y_dmin-1 || y->di == y->y_dmin+1){\nz->d = y->y_dmin;\nz->residual = y->residual;\nz->j = y->j;\n}\nelse if(y->di == y->y_dmin){ \nif(iy < ix){\nz->d = y->y_dmin;\nz->residual = y->residual;\nz->j = y->j;\n}\n}\n}\nelse{\nz->d = y->y_dmin;\nz->residual = y->residual;\nz->j = y->j;\n}\n}"
 #define GRB_MXEADD_STR "void MF_MxeAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x){\nif(x){\nmemcpy(z, x, sizeof(MF_resultTuple));\n}\nelse{\nmemcpy(z, y, sizeof(MF_resultTuple));\n}\n}"
 #define GRB_EXTRACTFLOW_STR "void MF_extractFlow(float *z, const MF_resultTuple *y) {\n(*z) = y->residual;\n}"
 #define GRB_UPDATEHEIGHT_STR "void MF_updateHeight(int *z, const int *y, const MF_resultTuple *x) {\nif((*y) != x->d+1){\n(*z) = x->d + 1;\n}\nelse{\n(*z) = x->d;\n}\n}"
@@ -246,7 +246,7 @@ void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB
     z = NULL;
   }
 
-  if((*x) == 0){
+  if((*x) > 0){
     if(y->di < y->y_dmin-1 || y->di == y->y_dmin+1){
       z->d = y->y_dmin;
       z->residual = y->residual;
@@ -523,7 +523,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, int * f, char *ms
 
   int iter = 0;
   
-  while(n_active > 0 && iter < 12){
+  while(n_active > 0){
 
     //create C arrays
     GrB_Index Jmap[LEN];
