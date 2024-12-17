@@ -146,7 +146,7 @@ int main (int argc, char **argv)
         &r_size, &junk_size, &iso, NULL, NULL
     ));
     t = LAGraph_WallClockTime ( ) - t ;
-    printf ("Time for CSR Magic: %g sec\n", t) ;
+    printf ("Time for CSC Magic: %g sec\n", t) ;
 
     GRB_TRY (GxB_Vector_pack_Full (
         rand_v, (void **)&rand_a, r_size, iso, NULL
