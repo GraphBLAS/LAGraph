@@ -597,9 +597,8 @@ int LAGraph_SwapEdges
 
         GRB_TRY(GrB_Vector_new(&M, lg_swap, swaps_per_loop)) ;
         GrB_Index dup_arr_size = 0;
-        GRB_TRY (GxB_Vector_unpack_Bitmap(
-            M_thin, (int8_t **) &dup_swaps, (void **) &indices, &dup_arr_size, 
-            &ind_size, &iso, &junk_size, NULL
+        GRB_TRY (GxB_Vector_unpack_Full(
+            M_thin, (void **) &indices, &ind_size, &iso, NULL
         )) ;
         GRB_TRY (GxB_Vector_pack_Full(
             M, (void **) &indices, ind_size, iso, NULL
