@@ -1498,7 +1498,7 @@ int LAGraph_MaxFlow(
     GrB_Index S, //source node index
     GrB_Index T, // sink node index
     //outputs
-    float* f,
+    double* f,
     //inout
     char* msg
 );

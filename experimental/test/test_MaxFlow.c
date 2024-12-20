@@ -11,19 +11,21 @@ char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 GrB_Matrix A = NULL;
 #define LEN 512
-#define NTESTS 2
+#define NTESTS 4
 char filename[LEN + 1];
 
 typedef struct{
   char* filename;
   GrB_Index S;
   GrB_Index T;
-  float F;
+  double F;
 }test_info;
 
 test_info tests[] = {
   {"wiki.mtx", 0, 5, 4},
-  {"matrix_random_flow.mtx", 0,9, 22}
+  {"matrix_random_flow.mtx", 0,9, 22},
+  {"rand.mtx", 0, 19, 37},
+  {"random_weighted_general2.mtx", 0, 299, 11098623877}
 };
 
 
@@ -43,11 +45,11 @@ void test_MaxFlow(void) {
     OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
 
     //begin test
-    float flow = 0;
+    double flow = 0;
     OK(LAGraph_MaxFlow(G, tests[test].S, tests[test].T, &flow, msg));
     printf("%s\n", msg);
     TEST_CHECK(flow == tests[test].F);
-    printf("flow is: %f\n", flow);
+    printf("flow is: %lf\n", flow);
 
     //free work
     GrB_free(&A);

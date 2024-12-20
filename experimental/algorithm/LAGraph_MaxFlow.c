@@ -88,37 +88,37 @@
 "}"
 
 #define GRB_FLOWEDGE_STR "typedef struct{"\
-  "float flow;"\
-  "float capacity;"\
+  "double flow;"\
+  "double capacity;"\
 "} MF_flowEdge;"
 
 #define GRB_RESULTTUPLE_STR "typedef struct{"\
-  "float residual;"\
+  "double residual;"\
   "int d;"\
   "GrB_Index j;"\
 "} MF_resultTuple;"
 
 #define GRB_COMPARETUPLE_STR                                                   \
   "typedef struct{"                                                            \
-  "float residual;"                                                            \
+  "double residual;"                                                            \
   "int di;"                                                                    \
   "int y_dmin;"                                                                \
   "GrB_Index j;"                                                               \
   "} MF_compareTuple;"
 
-#define GRB_CRF_STR "void MF_CreateResidualForward(MF_flowEdge *z, const float *y) {"\
+#define GRB_CRF_STR "void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {"\
   "z->flow = 0;"\
   "z->capacity = (*y);"\
 "}"
 
-#define GRB_CRB_STR "void MF_CreateResidualBackward(MF_flowEdge *z, const float *y)"\
+#define GRB_CRB_STR "void MF_CreateResidualBackward(MF_flowEdge *z, const double *y)"\
  "{"\
   "z->flow " \
   "= 0;\nz->capacity = 0;"\
 "}"
 
 #define GRB_RXDMULT_STR "void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index jy, const int *x, GrB_Index ix, GrB_Index jx, const int* theta) {"\
-  "float r = y->capacity - y->flow;"\
+  "double r = y->capacity - y->flow;"\
   "if(r > 0){"\
     "z->residual = r;"\
     "z->d = *x;"\
@@ -180,7 +180,7 @@
   "}"\
 "}"
 
-#define GRB_MXEMULT_STR "void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const float * x, GrB_Index ix, GrB_Index jx, const int* theta){"\
+#define GRB_MXEMULT_STR "void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int* theta){"\
   "if(y->y_dmin == INT32_MAX){"\
     "z = NULL;"\
   "}"\
@@ -215,49 +215,49 @@
   "}"\
 "}"
 
-#define GRB_EXTRACTFLOW_STR "void MF_extractFlow(float *z, const MF_resultTuple *y) {\n(*z) = y->residual;\n}"
-#define GRB_UPDATEHEIGHT_STR "void MF_updateHeight(int *z, const int *y, const MF_resultTuple *x) {\nif((*y) != x->d+1){\n(*z) = x->d + 1;\n}\nelse{\n(*z) = x->d;\n}\n}"
-#define GRB_UPDATEFLOWS_STR "void MF_updateFlow(MF_flowEdge *z, const MF_flowEdge *y, const float *x) {"\
+#define GRB_EXTRACTFLOW_STR "void MF_extractFlow(double *z, const MF_resultTuple *y) {\n(*z) = y->residual;\n}"
+#define GRB_UPDATEHEIGHT_STR "void MF_updateHeight(int *z, const int *y, const MF_resultTuple *x) {\nif((*y) < x->d+1){\n(*z) = x->d + 1;\n}\nelse if((*y) == x->d+1){\n(*z) = x->d;\n}\n}"
+#define GRB_UPDATEFLOWS_STR "void MF_updateFlow(MF_flowEdge *z, const MF_flowEdge *y, const double *x) {"\
   "z->capacity = y->capacity;"\
   "z->flow = y->flow + (*x);"\
 "}"
 
-#define GRB_MAKEF_STR "void MF_MakeFlow(MF_flowEdge * z, const float * y){"\
+#define GRB_MAKEF_STR "void MF_MakeFlow(MF_flowEdge * z, const double * y){"\
   "z->capacity = 0;"\
   "z->flow = (*y);"\
 "}"
 
 //custom types
 typedef struct{
-  float flow;
-  float capacity;
+  double flow;
+  double capacity;
 } MF_flowEdge;
 
 typedef struct{
-  float residual;
+  double residual;
   int d;
   GrB_Index j;
 } MF_resultTuple;
 
 typedef struct{
-  float residual;
+  double residual;
   int di;
   int y_dmin;
   GrB_Index j;
 } MF_compareTuple;
  
-void MF_CreateResidualForward(MF_flowEdge *z, const float *y) {
+void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {
   z->flow = 0;
   z->capacity = (*y);
 }
 
-void MF_CreateResidualBackward(MF_flowEdge *z, const float *y) {
+void MF_CreateResidualBackward(MF_flowEdge *z, const double *y) {
   z->flow = 0;
   z->capacity = 0;
 }
 
 void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index jy, const int *x, GrB_Index ix, GrB_Index jx, const int* theta) {
-  float r = y->capacity - y->flow;
+  double r = y->capacity - y->flow;
   if(r > 0){
     z->residual = r;
     z->d = *x;
@@ -296,23 +296,20 @@ void MF_RxdAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTupl
 }
 
 
-void MF_extractFlow(float *z, const MF_resultTuple *y) {
+void MF_extractFlow(double *z, const MF_resultTuple *y) {
   (*z) = y->residual;
 }
 
-void MF_updateFlow(MF_flowEdge *z, const MF_flowEdge *y, const float *x) {
+void MF_updateFlow(MF_flowEdge *z, const MF_flowEdge *y, const double *x) {
   z->capacity = y->capacity;
   z->flow = y->flow + (*x);
 }
 
 void MF_updateHeight(int *z, const int *y, const MF_resultTuple *x) {
-  if(x->d == INT32_MAX){
-    return;
-  }
-  if((*y) != x->d+1){
+  if((*y) < x->d+1){
     (*z) = x->d + 1;
   }
-  else{
+  else if ((*y) == x->d+1){
     (*z) = x->d;
   }
 }
@@ -332,7 +329,7 @@ void MF_initBackwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowE
   z->capacity = y->capacity; 
 }
 
-void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const float * x, GrB_Index ix, GrB_Index jx, const int* theta){
+void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int* theta){
   if(y->y_dmin == INT32_MAX){
     z = NULL;
   }
@@ -378,7 +375,7 @@ void MF_Prune(bool * z, const MF_resultTuple * y, const GrB_Index iy, const GrB_
   (*z) = y->j >= (*theta);
 }
 
-void MF_MakeFlow(MF_flowEdge * z, const float * y){
+void MF_MakeFlow(MF_flowEdge * z, const double * y){
   z->capacity = 0;
   z->flow = (*y);
 }
@@ -422,7 +419,7 @@ void print_resultVec(const GrB_Vector vec) {
 }
 
 
-int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *msg){
+int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *msg){
 
   //plan of ATTACK ****************************************
   //1. Create R as an anti-symmetric graph of flow edges from Adj of G, using ewise union
@@ -523,6 +520,24 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *
   GrB_Scalar zero_int32;
   GrB_Scalar zero_fp32;
 
+
+  //do input checks
+  if(*f){
+    (*f) = 0;
+  }
+
+  LG_TRY(LAGraph_CheckGraph(G, msg));
+  LG_ASSERT_MSG(G->kind == LAGraph_ADJACENCY_DIRECTED, GrB_INVALID_VALUE, "LAGraph_MaxFlow requires a directed graph");
+
+  GrB_Index ncols, nrows;
+  GRB_TRY(GrB_Matrix_ncols(&ncols, G->A));
+  GRB_TRY(GrB_Matrix_nrows(&nrows, G->A));
+  LG_ASSERT_MSG(nrows == ncols, GrB_INVALID_VALUE, "Matrix must be square"); 
+  LG_ASSERT_MSG(S < ncols && S >= 0 && T < ncols && T >= 0, GrB_INVALID_VALUE, "S and T must be a value between [0, n)");
+  LG_TRY(LAGraph_Cached_EMin(G, msg));
+  LG_ASSERT_MSG(G->emin > 0, GrB_INVALID_VALUE, "the edge weights (capacities) must be greater than 0");
+  
+
   //create types for computation
   GRB_TRY(GxB_Type_new(&GrB_FlowEdge, sizeof(MF_flowEdge), "MF_flowEdge", GRB_FLOWEDGE_STR));
   GRB_TRY(GxB_Type_new(&GrB_ResultTuple, sizeof(MF_resultTuple), "MF_resultTuple", GRB_RESULTTUPLE_STR));
@@ -535,8 +550,8 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *
   GRB_TRY(GrB_Scalar_setElement(zero_fp32, 0));
   
   //create R
-  GRB_TRY(GxB_UnaryOp_new(&GrB_CreateResidualForward, F_UNARY(MF_CreateResidualForward), GrB_FlowEdge , GrB_FP32, "MF_CreateResidualForward", GRB_CRF_STR));
-  GRB_TRY(GxB_UnaryOp_new(&GrB_CreateResidualBackward, F_UNARY(MF_CreateResidualBackward), GrB_FlowEdge , GrB_FP32, "MF_CreateResidualBackward", GRB_CRB_STR));
+  GRB_TRY(GxB_UnaryOp_new(&GrB_CreateResidualForward, F_UNARY(MF_CreateResidualForward), GrB_FlowEdge , GrB_FP64, "MF_CreateResidualForward", GRB_CRF_STR));
+  GRB_TRY(GxB_UnaryOp_new(&GrB_CreateResidualBackward, F_UNARY(MF_CreateResidualBackward), GrB_FlowEdge , GrB_FP64, "MF_CreateResidualBackward", GRB_CRB_STR));
   GRB_TRY(GrB_Matrix_new(&R_temp1, GrB_FlowEdge, n, n));
   GRB_TRY(GrB_Matrix_new(&R_temp2, GrB_FlowEdge, n, n));
   GRB_TRY(GrB_Matrix_new(&R, GrB_FlowEdge, n, n));
@@ -548,9 +563,9 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *
   //init R with initial saturated flows
   GRB_TRY(GxB_BinaryOp_new(&GrB_InitForwardFlows, F_BINARY(MF_initForwardFlows), GrB_FlowEdge, GrB_FlowEdge, GrB_FlowEdge, "MF_initForwardFlows", GRB_INITFLOWF_STR));
   GRB_TRY(GxB_BinaryOp_new(&GrB_InitBackwardFlows, F_BINARY(MF_initBackwardFlows), GrB_FlowEdge, GrB_FlowEdge, GrB_FlowEdge, "MF_initBackwardFlows", GRB_INITFLOWB_STR));
-  GRB_TRY(GxB_UnaryOp_new(&GrB_MakeFlow, F_UNARY(MF_MakeFlow), GrB_FlowEdge, GrB_FP32, "MF_MakeFlow", GRB_MAKEF_STR));
+  GRB_TRY(GxB_UnaryOp_new(&GrB_MakeFlow, F_UNARY(MF_MakeFlow), GrB_FlowEdge, GrB_FP64, "MF_MakeFlow", GRB_MAKEF_STR));
   GRB_TRY(GrB_Vector_new(&Re, GrB_FlowEdge, n));
-  GRB_TRY(GrB_Vector_new(&e, GrB_FP32, n));
+  GRB_TRY(GrB_Vector_new(&e, GrB_FP64, n));
   GRB_TRY(GrB_extract(e, NULL, NULL, A, GrB_ALL, n, S, GrB_DESC_T0));
   GRB_TRY(GrB_apply(Re, NULL, NULL, GrB_MakeFlow, e, NULL));
   GRB_TRY(GxB_subassign(R, NULL, GrB_InitForwardFlows, Re, S, GrB_ALL, n, NULL));
@@ -562,11 +577,11 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *
   GRB_TRY(GrB_assign(d, NULL, NULL, n, &S, 1, NULL));
 
   //extract n_active from e masking T and S then assign to e
-  GRB_TRY(GrB_Vector_new(&active_set, GrB_FP32, n));
+  GRB_TRY(GrB_Vector_new(&active_set, GrB_FP64, n));
   GRB_TRY(GrB_Vector_new(&mask_vector, GrB_BOOL, n)); //keep as bool?
   GRB_TRY(GrB_assign(mask_vector, NULL, NULL, true, &T, 1, NULL));
   GRB_TRY(GrB_assign(mask_vector, NULL, NULL, true, &S, 1, NULL));
-  GRB_TRY(GrB_select(active_set, mask_vector, NULL, GrB_VALUEGE_FP32, e, 0, GrB_DESC_RSC));
+  GRB_TRY(GrB_select(active_set, mask_vector, NULL, GrB_VALUEGE_FP64, e, 0, GrB_DESC_RSC));
   GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_SC));
   GRB_TRY(GrB_Vector_nvals(&n_active, active_set));
 
@@ -592,19 +607,19 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *
   GRB_TRY(GxB_UnaryOp_new(&GrB_extractJ, F_UNARY(MF_extractJ), GrB_INT32, GrB_CompareTuple, "MF_extractJ", GRB_EXTRACTJ_STR));
 
   //create map x e semiring
-  GRB_TRY(GzB_IndexBinaryOp_new(&GrB_MxeIndexMult, F_INDEX_BINARY(MF_MxeMult), GrB_ResultTuple, GrB_CompareTuple, GrB_FP32, GrB_INT32, "MF_MxeMult", GRB_MXEMULT_STR));
+  GRB_TRY(GzB_IndexBinaryOp_new(&GrB_MxeIndexMult, F_INDEX_BINARY(MF_MxeMult), GrB_ResultTuple, GrB_CompareTuple, GrB_FP64, GrB_INT32, "MF_MxeMult", GRB_MXEMULT_STR));
   GRB_TRY(GzB_BinaryOp_new_IndexOp(&GrB_MxeMult, GrB_MxeIndexMult, theta));
   GRB_TRY(GxB_BinaryOp_new(&GrB_MxeAdd, F_BINARY(MF_MxeAdd), GrB_ResultTuple, GrB_ResultTuple, GrB_ResultTuple, "MF_MxeAdd", GRB_MXEADD_STR));
   GRB_TRY(GrB_Monoid_new_UDT(&GrB_MxeAddMonoid, GrB_MxeAdd, &id));
   GRB_TRY(GrB_Semiring_new(&GrB_MxeSemiring, GrB_MxeAddMonoid, GrB_MxeMult));
 
   //create flow vec
-  GRB_TRY(GrB_Vector_new(&residual_vec, GrB_FP32, n));
-  GRB_TRY(GxB_UnaryOp_new(&GrB_extractFlows, F_UNARY(MF_extractFlow), GrB_FP32, GrB_ResultTuple, "MF_extractFlow", GRB_EXTRACTFLOW_STR));
+  GRB_TRY(GrB_Vector_new(&residual_vec, GrB_FP64, n));
+  GRB_TRY(GxB_UnaryOp_new(&GrB_extractFlows, F_UNARY(MF_extractFlow), GrB_FP64, GrB_ResultTuple, "MF_extractFlow", GRB_EXTRACTFLOW_STR));
 
-  GRB_TRY(GrB_Matrix_new(&delta_mat, GrB_FP32, n, n));
-  GRB_TRY(GrB_Matrix_new(&delta, GrB_FP32, n, n));
-  GRB_TRY(GrB_Vector_new(&delta_vec, GrB_FP32, n));
+  GRB_TRY(GrB_Matrix_new(&delta_mat, GrB_FP64, n, n));
+  GRB_TRY(GrB_Matrix_new(&delta, GrB_FP64, n, n));
+  GRB_TRY(GrB_Vector_new(&delta_vec, GrB_FP64, n));
 
   //relable structures
   GRB_TRY(GrB_Vector_new(&d_dup, GrB_INT32, n));
@@ -614,10 +629,10 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *
 
   //update R structure
   GRB_TRY(GrB_Matrix_new(&R_dup, GrB_FlowEdge, n, n));
-  GRB_TRY(GxB_BinaryOp_new(&GrB_UpdateFlows, F_BINARY(MF_updateFlow), GrB_FlowEdge, GrB_FlowEdge, GrB_FP32, "MF_updateFlow", GRB_UPDATEFLOWS_STR));
+  GRB_TRY(GxB_BinaryOp_new(&GrB_UpdateFlows, F_BINARY(MF_updateFlow), GrB_FlowEdge, GrB_FlowEdge, GrB_FP64, "MF_updateFlow", GRB_UPDATEFLOWS_STR));
 
   //update e structures
-  GRB_TRY(GrB_Vector_new(&e_dup, GrB_FP32, n));
+  GRB_TRY(GrB_Vector_new(&e_dup, GrB_FP64, n));
 
   int iter = 0;
   
@@ -629,12 +644,12 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *
     GrB_Index Jvec_value[LEN];
     MF_compareTuple yd_value[LEN];
     GrB_Index Idelta[LEN];
-    float delta_raw[LEN];
+    double delta_raw[LEN];
 
     int f_T = 0;
 
 
-    //printf("******iter: %d\n\n", iter);
+    printf("******iter: %d\n\n", iter);
     //GxB_print(e, 5);
     //GxB_print(d, 5);
 
@@ -665,7 +680,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *
     
     //make e dense for map computation
     GRB_TRY(GrB_assign(e, e, NULL, 0, GrB_ALL, n, GrB_DESC_SC));
-    printf("***begin map computation***");
+    //printf("***begin map computation***");
     //GxB_print(e, 5);
 
     //y = map x e
@@ -676,6 +691,8 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *
     // add alpha and beta scalars
     GRB_TRY(GrB_Vector_dup(&d_dup, d));
     GRB_TRY(GrB_eWiseMult(d, y, NULL, GrB_UpdateHeight, d_dup, y, GrB_DESC_S));
+    //assert correct labels
+    
     //GxB_print(d, 5);
 
     //extract residual flows from y
@@ -694,44 +711,49 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, float * f, char *
     //GxB_print(delta, 5);
 
     //make delta anti-symmetric
-    GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP32, delta, zero_fp32, delta, zero_fp32, GrB_DESC_RT1));
+    GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64, delta, zero_fp32, delta, zero_fp32, GrB_DESC_RT1));
     //GxB_print(delta_mat, 5);
 
     //update R
     GRB_TRY(GrB_Matrix_dup(&R_dup, R));
     GRB_TRY(GrB_eWiseMult(R, delta_mat, NULL, GrB_UpdateFlows, R_dup, delta_mat, GrB_DESC_S));
 
-    printf("---New R---\n");
+    //printf("---New R---\n");
     //print_flowMtx(R);
 
     //reduce delat_mat to delta_vec
-    GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP32, delta_mat, GrB_DESC_RT0));
+    GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, delta_mat, GrB_DESC_RT0));
     //GxB_print(delta_vec, 5);
 
     //add to e
     //add alpha and beta scalars
     GRB_TRY(GrB_Vector_dup(&e_dup, e));
-    GRB_TRY(GxB_eWiseUnion(e, NULL, NULL, GrB_PLUS_FP32, e_dup, zero_fp32, delta_vec, zero_fp32, NULL));
+    GRB_TRY(GxB_eWiseUnion(e, NULL, NULL, GrB_PLUS_FP64, e_dup, zero_fp32, delta_vec, zero_fp32, NULL));
     //GxB_print(e, 5);
 
+    //TO-DO:
+    //backwards BFS periodically, if can't find src: give up
+    //add checks for d vector 
+    //
+    
     //extract active nodes
     GRB_TRY(GrB_Vector_extractElement(&f_T, e, T));
     (*f) += f_T;
-    GRB_TRY(GrB_select(active_set, mask_vector, NULL, GrB_VALUEGT_FP32, e, 0, GrB_DESC_RSC));
-    GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, NULL));
+    GRB_TRY(GrB_select(active_set, mask_vector, NULL, GrB_VALUEGT_FP64, e, 0, GrB_DESC_RSC));
+    GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_R));
     GRB_TRY(GrB_Vector_nvals(&n_active, active_set));
     //GxB_print(active_set, 5);
-    printf("max flow in alg iter is: %f\n", *f);
+    //printf("max flow in alg iter is: %f\n", *f);
 
     //clear map and delta
     GRB_TRY(GrB_Matrix_clear(map));
     GRB_TRY(GrB_Matrix_clear(delta));
 
     ++iter;
-
-    //print_flowMtx(R);
     
   }
+
+  //print_flowMtx(R);
   
   
   LG_FREE_ALL;
