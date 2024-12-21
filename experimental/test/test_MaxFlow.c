@@ -25,13 +25,15 @@ test_info tests[] = {
   {"wiki.mtx", 0, 5, 4},
   {"matrix_random_flow.mtx", 0,9, 22},
   {"rand.mtx", 0, 19, 37},
-  {"random_weighted_general2.mtx", 0, 299, 11098623877}
+  {"mcl.mtx", 0, 2, 1}, //discuss with davis on this testcase
+  {"cycle_flow.mtx", 0, 89, 1},
+  {"random_weighted_general2.mtx", 0, 299, 11098623877} //error with unoptimal flow :(
 };
 
 
 void test_MaxFlow(void) {
   LAGraph_Init(msg);
-  OK(LG_SET_BURBLE(1));
+  //OK(LG_SET_BURBLE(1));
   OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, 4));
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A;
