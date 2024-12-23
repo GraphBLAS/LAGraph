@@ -11,7 +11,7 @@ char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 GrB_Matrix A = NULL;
 #define LEN 512
-#define NTESTS 4
+#define NTESTS 6
 char filename[LEN + 1];
 
 typedef struct{

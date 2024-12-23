@@ -87,7 +87,7 @@
 // strings for JIT
 
 #define GRB_PRUNE_STR "void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int * theta){"\
-  "(*z) = y->j >= 0;"\
+  "(*z) = (y->j > 0);"\
 "}"
 
 #define GRB_FLOWEDGE_STR "typedef struct{"\
@@ -381,7 +381,7 @@ void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int 
 }
 
 void MF_Prune(bool * z, const MF_resultTuple * y, const GrB_Index iy, const GrB_Index jy, const int * theta){
-  (*z) = y->j >= (*theta);
+  (*z) = (y->j > 0);
 }
 
 void MF_MakeFlow(MF_flowEdge * z, const double * y){
@@ -722,9 +722,9 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     //y<e, struct> = R x d
     GRB_TRY(GrB_mxv(y, e, NULL, GrB_RxdSemiring, R, d, GrB_DESC_RS));
     printf("---y---\n\n");
-    GRB_TRY(GrB_Vector_dup(&y_dup, y));
-    GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y_dup, -1, GrB_DESC_R));
     print_resultVec(y);
+    GRB_TRY(GrB_Vector_dup(&y_dup, y));
+    //GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y_dup, -1, GrB_DESC_R));
 
     //create yd vector of type compare tuple
     GRB_TRY(GrB_eWiseMult(yd, NULL, NULL, GrB_CreateCompareVec, y,  d, GrB_DESC_R));
