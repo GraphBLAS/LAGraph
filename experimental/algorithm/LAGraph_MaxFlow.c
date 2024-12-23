@@ -709,15 +709,15 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GrB_Index Idelta[LEN];
     double delta_raw[LEN];
 
-    int f_T = 0;
+    double f_T = 0;
 
 
     printf("******iter: %d\n\n", iter);
     GxB_print(e, 5);
-    GxB_print(d, 5);
+    //GxB_print(d, 5);
 
     //printf("---R matrix-----\n");
-    print_flowMtx(R);
+    //print_flowMtx(R);
     
     //y<e, struct> = R x d
     GRB_TRY(GrB_mxv(y, e, NULL, GrB_RxdSemiring, R, d, GrB_DESC_RS));
@@ -758,7 +758,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     // add alpha and beta scalars
     GRB_TRY(GrB_Vector_dup(&d_dup, d));
     GRB_TRY(GrB_eWiseMult(d, y, NULL, GrB_UpdateHeight, d_dup, y, GrB_DESC_S));
-    GxB_print(d, 5);
+    //GxB_print(d, 5);
     //assert correct labels
     GRB_TRY(GrB_eWiseMult(invariant, y, NULL, GrB_InvariantCheck, d, y, GrB_DESC_RS));
     GRB_TRY(GrB_reduce(check, NULL, GrB_LAND_MONOID_BOOL, invariant, GrB_DESC_R));
@@ -819,7 +819,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_R));
     GRB_TRY(GrB_Vector_nvals(&n_active, active_set));
     //GxB_print(active_set, 5);
-    //printf("max flow in alg iter is: %f\n", *f);
+    printf("max flow in alg iter is: %f\n", *f);
 
     //clear map and delta
     GRB_TRY(GrB_Matrix_clear(map));
@@ -829,7 +829,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     
   }
 
-  //print_flowMtx(R);
+  print_flowMtx(R);
   //GxB_print(d, 5);
   
   LG_FREE_ALL;
