@@ -285,14 +285,14 @@ int LAGraph_RegularPathQuery
     GRB_TRY (GrB_Vector_new (&final_reducer, GrB_BOOL, nr)) ;
 
     // Initialize matrix for reducing the result
-    GrB_assign (final_reducer, NULL, NULL, true, QF, nqf, NULL) ;
+    GRB_TRY (GrB_assign (final_reducer, NULL, NULL, true, QF, nqf, NULL)) ;
 
     GRB_TRY (GrB_Matrix_new (&next_frontier, GrB_BOOL, nr, ng)) ;
     GRB_TRY (GrB_Matrix_new (&visited, GrB_BOOL, nr, ng)) ;
 
     // Initialize frontier with the source nodes
-    GrB_assign (next_frontier, NULL, NULL, true, QS, nqs, S, ns, NULL) ;
-    GrB_assign (visited, NULL, NULL, true, QS, nqs, S, ns, NULL) ;
+    GRB_TRY (GrB_assign (next_frontier, NULL, NULL, true, QS, nqs, S, ns, NULL)) ;
+    GRB_TRY (GrB_assign (visited, NULL, NULL, true, QS, nqs, S, ns, NULL)) ;
 
     // Initialize a few utility matrices
     GRB_TRY (GrB_Matrix_new (&frontier, GrB_BOOL, nr, ng)) ;
@@ -317,17 +317,17 @@ int LAGraph_RegularPathQuery
             if (BT[i] != NULL)
             {
                 GRB_TRY (GrB_mxm (symbol_frontier, GrB_NULL, GrB_NULL,
-                    GrB_LOR_LAND_SEMIRING_BOOL, BT[i], frontier, GrB_DESC_R)) ;
+                    LAGraph_any_one_bool, BT[i], frontier, GrB_DESC_R)) ;
             }
             else
             {
                 GRB_TRY (GrB_mxm (symbol_frontier, GrB_NULL, GrB_NULL,
-                    GrB_LOR_LAND_SEMIRING_BOOL, B[i], frontier, GrB_DESC_RT0)) ;
+                    LAGraph_any_one_bool, B[i], frontier, GrB_DESC_RT0)) ;
             }
 
             // Traverse the graph
             GRB_TRY (GrB_mxm (next_frontier, visited, GrB_LOR,
-                GrB_LOR_LAND_SEMIRING_BOOL, symbol_frontier, A[i], GrB_DESC_SC)) ;
+                LAGraph_any_one_bool, symbol_frontier, A[i], GrB_DESC_SC)) ;
         }
 
         // Accumulate the new state <-> node correspondence
@@ -339,7 +339,7 @@ int LAGraph_RegularPathQuery
 
     // Extract the nodes matching the final NFA states
     GRB_TRY (GrB_vxm (*reachable, GrB_NULL, GrB_NULL,
-        GrB_LOR_LAND_SEMIRING_BOOL, final_reducer, visited, GrB_NULL)) ;
+        LAGraph_any_one_bool, final_reducer, visited, GrB_NULL)) ;
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
