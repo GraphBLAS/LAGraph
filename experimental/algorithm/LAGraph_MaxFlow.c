@@ -79,7 +79,7 @@
 #define F_INDEX_BINARY(f) ((void (*)(void*, const void*, GrB_Index, GrB_Index, const void *, GrB_Index, GrB_Index, const void *)) f)
 
 // casting for index unary op
-#define F_INDEX_UNARY(f) ((void (*)(void*, const void*, GrB_Index, GrB_Index, const void*)) f)
+//#define F_INDEX_UNARY(f) ((void (*)(void*, const void*, GrB_Index, GrB_Index, const void*)) f)
 
 // casting for binary op
 #define F_BINARY(f) ((void (*)(void *, const void *, const void *)) f)
@@ -87,7 +87,12 @@
 // strings for JIT
 
 #define GRB_PRUNE_STR "void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int * theta){"\
-  "(*z) = (y->j > 0);"\
+  "if(y->j != *theta){"\
+    "*z = true;" \
+  "}" \
+  "else{" \
+    "*z = false;" \
+  "}" \
 "}"
 
 #define GRB_FLOWEDGE_STR "typedef struct{"\
@@ -183,26 +188,29 @@
   "}"\
 "}"
 
-#define GRB_MXEMULT_STR "void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int* theta){"\
-  "if((*x) > 0){"\
-    "if(y->di < y->y_dmin-1 || y->di == y->y_dmin+1){"\
-      "z->d = y->y_dmin;"\
-      "z->residual = y->residual;"\
-      "z->j = y->j;"\
-    "}"\
-    "else if(y->di == y->y_dmin){"\
-      "if(iy < y->j){"\
-	"z->d = y->y_dmin;"\
-	"z->residual = y->residual;"\
-	"z->j = y->j;"\
-      "}"\
-    "}"\
-  "}"\
-  "else{"\
-    "z->d = y->y_dmin;"\
-    "z->residual = y->residual;"\
-    "z->j = y->j;"\
-  "}"\
+#define GRB_MXEMULT_STR "void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int* theta){" \
+  "if(y->di == y->y_dmin && (*x) > 0){" \
+    "if(iy < jy){" \
+      "z->d = y->y_dmin;" \
+      "z->residual = y->residual;" \
+      "z->j = y->j;" \
+    "}" \
+  "}" \
+  "else if(y->di == y->y_dmin){" \
+    "z->d = y->y_dmin;" \
+    "z->j = y->j;" \
+    "z->residual = y->residual;" \
+  "}" \
+  "else if(y->di < y->y_dmin-1 || y->di == y->y_dmin+1 || y->di == y->y_dmin-1){" \
+    "z->d = y->y_dmin;" \
+    "z->residual = y->residual;" \
+    "z->j = y->j;" \
+  "}" \
+  "else{" \
+    "z->d = INT32_MAX;" \
+    "z->residual = 0;" \
+    "z->j = -1;" \
+  "}" \
 "}"
 
 
@@ -343,24 +351,32 @@ void MF_initBackwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowE
 }
 
 void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int* theta){
-  if((*x) > 0){
-    if(y->di < y->y_dmin-1 || y->di == y->y_dmin+1){
+  if(y->di == y->y_dmin && (*x) > 0){ //check this
+    if(iy < jy){
       z->d = y->y_dmin;
       z->residual = y->residual;
       z->j = y->j;
-    }
-    else if(y->di == y->y_dmin){ //check this
-      if(iy < y->j){
-	z->d = y->y_dmin;
-	z->residual = y->residual;
-	z->j = y->j;
-      }
-    }
+    } //add else to populate with empty tuple, prune after.
+    /* else{ */
+    /*   z->d = INT32_MAX; */
+    /*   z->j = -1; */
+    /*   z->residual = 0; */
+    /* } */
   }
-  else{
+  else if(y->di == y->y_dmin){
+    z->d = y->y_dmin;
+    z->j = y->j;
+    z->residual = y->residual;
+  }
+  else if(y->di < y->y_dmin-1 || y->di == y->y_dmin+1 || y->di == y->y_dmin-1){
     z->d = y->y_dmin;
     z->residual = y->residual;
     z->j = y->j;
+  }
+  else{ //change later to signify the removal of the node from the active set since flow cannot be pushed anywhere.
+    z->d = INT32_MAX;
+    z->residual = 0;
+    z->j = -1;
   }
 }
 
@@ -380,8 +396,13 @@ void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int 
   z->y_dmin = y->d;
 }
 
-void MF_Prune(bool * z, const MF_resultTuple * y, const GrB_Index iy, const GrB_Index jy, const int * theta){
-  (*z) = (y->j > 0);
+void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int * theta){
+  if(y->j != *theta){
+    *z = true;
+  }
+  else{
+    *z = false;
+  }
 }
 
 void MF_MakeFlow(MF_flowEdge * z, const double * y){
@@ -644,8 +665,13 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GrB_Vector_new(&mask_vector, GrB_BOOL, n)); //keep as bool?
   GRB_TRY(GrB_assign(mask_vector, NULL, NULL, true, &T, 1, NULL));
   GRB_TRY(GrB_assign(mask_vector, NULL, NULL, true, &S, 1, NULL));
+  double f_T = 0;
+  GrB_Info info = GrB_Vector_extractElement(&f_T, e, T); //if value at T
+  if(info == GrB_SUCCESS){
+    (*f) += f_T;
+  }
   GRB_TRY(GrB_select(active_set, mask_vector, NULL, GrB_VALUEGE_FP64, e, 0, GrB_DESC_RSC));
-  GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_SC));
+  GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_R));
   GRB_TRY(GrB_Vector_nvals(&n_active, active_set));
 
   //create semiring and vectors for y<e, struct> = R x d
@@ -662,7 +688,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   //create binary op and yd
   GRB_TRY(GrB_Vector_new(&yd, GrB_CompareTuple, n));
   GRB_TRY(GxB_BinaryOp_new(&GrB_CreateCompareVec, F_BINARY(MF_CreateCompareVec), GrB_CompareTuple, GrB_ResultTuple, GrB_INT32, "MF_CreateCompareVec", GRB_CREATECOMPVEC_STR));
-  GRB_TRY(GxB_IndexUnaryOp_new(&GrB_Prune, F_INDEX_UNARY(MF_Prune), GrB_BOOL, GrB_ResultTuple, GrB_INT32, "MF_Prune", GRB_PRUNE_STR));
+  GRB_TRY(GxB_IndexUnaryOp_new(&GrB_Prune, (GxB_index_unary_function) MF_Prune, GrB_BOOL, GrB_ResultTuple, GrB_INT32, "MF_Prune", GRB_PRUNE_STR));
 
   //create utility vectors, Matrix, and ops for mapping
   GRB_TRY(GrB_Vector_new(&Jvec, GrB_INT32, n));
@@ -709,8 +735,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GrB_Index Idelta[LEN];
     double delta_raw[LEN];
 
-    double f_T = 0;
-
 
     printf("******iter: %d\n\n", iter);
     GxB_print(e, 5);
@@ -748,10 +772,14 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     //GxB_print(e, 5);
 
     //y = map x e
-    GRB_TRY(GrB_mxv(y, NULL, NULL, GrB_MxeSemiring, map, e, GrB_DESC_R));
+    GRB_TRY(GrB_mxv(y_dup, NULL, NULL, GrB_MxeSemiring, map, e, GrB_DESC_R));
     printf("******MAP***********\n\n");
     print_MapMtx(map);
     printf("\n");
+    printf("----y-prePrune----\n\n");
+    print_resultVec(y_dup);
+    GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y_dup, -1, GrB_DESC_R));
+    printf("----y-postPrune----\n\n");
     print_resultVec(y);
 
     //relable, update heights
@@ -777,7 +805,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     //.min(flow_vec and e)
     GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, residual_vec, e, GrB_DESC_R));
-    GxB_print(delta_vec, 5);
+    //GxB_print(delta_vec, 5);
 
     //create delta matrix from delta vector
     GrB_Index delta_vec_n;
@@ -788,7 +816,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     //make delta anti-symmetric
     GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64, delta, zero_fp32, delta, zero_fp32, GrB_DESC_RT1));
-    GxB_print(delta_mat, 5);
+    //GxB_print(delta_mat, 5);
 
     //update R
     GRB_TRY(GrB_Matrix_dup(&R_dup, R));
