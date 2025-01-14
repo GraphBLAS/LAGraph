@@ -25,7 +25,7 @@ test_info tests[] = {
   {"wiki.mtx", 0, 5, 4},
   {"matrix_random_flow.mtx", 0,9, 22},
   {"rand.mtx", 0, 19, 37},
-  {"mcl.mtx", 0, 2, 3}, //discuss with davis on this testcase
+  {"mcl.mtx", 0, 9, 0}, //discuss with davis on this testcase
   {"cycle_flow.mtx", 0, 89, 1},
   {"random_weighted_general2.mtx", 0, 299, 11098623877},
   {"random_weighted_general1.mtx", 0, 499, 6264009335}

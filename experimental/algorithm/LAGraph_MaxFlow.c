@@ -63,6 +63,7 @@
   GrB_free(&invariant);\
   GrB_free(&GrB_InvariantCheck);\
   GrB_free(&check);\
+  GrB_free(&GrB_extractYJ);\
 }
 
 #define LG_FREE_ALL \
@@ -85,6 +86,11 @@
 #define F_BINARY(f) ((void (*)(void *, const void *, const void *)) f)
 
 // strings for JIT
+
+#define GRB_EXTRACTYJ_STR "void MF_extractYJ(int *z, const MF_resultTuple *y) {" \
+  "(*z) = y->j;" \
+"}"
+
 
 #define GRB_PRUNE_STR "void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int * theta){"\
   "if(y->j != *theta){"\
@@ -195,13 +201,18 @@
       "z->residual = y->residual;" \
       "z->j = y->j;" \
     "}" \
+    "else{"  \
+      "z->d = INT32_MAX;" \
+      "z->j = -1;" \
+      "z->residual = 0;" \
+    "}" \
   "}" \
-  "else if(y->di == y->y_dmin){" \
-    "z->d = y->y_dmin;" \
-    "z->j = y->j;" \
-    "z->residual = y->residual;" \
+  "else if(y->di == y->y_dmin - 1 && (*x) > 0){" \
+    "z->d = INT32_MAX;" \
+    "z->j = -1;" \
+    "z->residual = 0;" \
   "}" \
-  "else if(y->di < y->y_dmin-1 || y->di == y->y_dmin+1 || y->di == y->y_dmin-1){" \
+  "else if(y->di < y->y_dmin-1 || y->di == y->y_dmin+1 || y->di == y->y_dmin-1 || y->di == y->y_dmin){" \
     "z->d = y->y_dmin;" \
     "z->residual = y->residual;" \
     "z->j = y->j;" \
@@ -340,6 +351,11 @@ void MF_extractJ(int *z, const MF_compareTuple *y) {
   (*z) = y->j;
 }
 
+void MF_extractYJ(int *z, const MF_resultTuple *y) {
+  (*z) = y->j;
+}
+
+
 void MF_initForwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){
   z->flow = x->flow + y->flow;
   z->capacity = y->capacity;
@@ -357,18 +373,18 @@ void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB
       z->residual = y->residual;
       z->j = y->j;
     } //add else to populate with empty tuple, prune after.
-    /* else{ */
-    /*   z->d = INT32_MAX; */
-    /*   z->j = -1; */
-    /*   z->residual = 0; */
-    /* } */
+    else{
+      z->d = INT32_MAX;
+      z->j = -1;
+      z->residual = 0;
+    }
   }
-  else if(y->di == y->y_dmin){
-    z->d = y->y_dmin;
-    z->j = y->j;
-    z->residual = y->residual;
+  else if(y->di == y->y_dmin - 1 && (*x) > 0){
+    z->d = INT32_MAX;
+    z->j = -1;
+    z->residual = 0;
   }
-  else if(y->di < y->y_dmin-1 || y->di == y->y_dmin+1 || y->di == y->y_dmin-1){
+  else if(y->di < y->y_dmin-1 || y->di == y->y_dmin+1 || y->di == y->y_dmin-1 || y->di == y->y_dmin){
     z->d = y->y_dmin;
     z->residual = y->residual;
     z->j = y->j;
@@ -560,7 +576,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   //utility vectors, Matrix, and ops for mapping
   GrB_Matrix map;
   GrB_Vector Jvec;
-  GrB_UnaryOp GrB_extractJ;
+  GrB_UnaryOp GrB_extractJ, GrB_extractYJ;
   
   //map x e semiring
   GrB_Semiring GrB_MxeSemiring;
@@ -694,6 +710,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GrB_Vector_new(&Jvec, GrB_INT32, n));
   GRB_TRY(GrB_Matrix_new(&map, GrB_CompareTuple, n,n));
   GRB_TRY(GxB_UnaryOp_new(&GrB_extractJ, F_UNARY(MF_extractJ), GrB_INT32, GrB_CompareTuple, "MF_extractJ", GRB_EXTRACTJ_STR));
+  GRB_TRY(GxB_UnaryOp_new(&GrB_extractYJ, F_UNARY(MF_extractYJ), GrB_INT32, GrB_ResultTuple, "MF_extractYJ", GRB_EXTRACTYJ_STR));
 
   //create map x e semiring
   GRB_TRY(GzB_IndexBinaryOp_new(&GrB_MxeIndexMult, F_INDEX_BINARY(MF_MxeMult), GrB_ResultTuple, GrB_CompareTuple, GrB_FP64, GrB_INT32, "MF_MxeMult", GRB_MXEMULT_STR));
@@ -728,11 +745,10 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   while(n_active > 0){
 
     //create C arrays
-    GrB_Index Jmap[LEN];
-    GrB_Index Imap[LEN];
-    GrB_Index Jvec_value[LEN];
+    GrB_Index Jmap[LEN], Imap[LEN];
+    GrB_Index Jvec_value[LEN], deltaJi[LEN];
     MF_compareTuple yd_value[LEN];
-    GrB_Index Idelta[LEN];
+    GrB_Index Idelta[LEN], Jdelta[LEN];
     double delta_raw[LEN];
 
 
@@ -801,17 +817,20 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     //extract residual flows from y
     GRB_TRY(GrB_apply(residual_vec, NULL, NULL, GrB_extractFlows, y, GrB_DESC_R));
-    //GxB_print(residual_vec, 5);
+    GxB_print(residual_vec, 5);
 
     //.min(flow_vec and e)
     GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, residual_vec, e, GrB_DESC_R));
     //GxB_print(delta_vec, 5);
 
     //create delta matrix from delta vector
-    GrB_Index delta_vec_n;
+    GrB_Index delta_vec_n, delta_jn;
     GRB_TRY(GrB_Vector_nvals(&delta_vec_n, delta_vec));
     GRB_TRY(GrB_Vector_extractTuples(Idelta, delta_raw, &delta_vec_n, delta_vec));
-    GRB_TRY(GrB_Matrix_build(delta, Idelta, Jvec_value, delta_raw, delta_vec_n, GxB_IGNORE_DUP));
+    GRB_TRY(GrB_Vector_nvals(&delta_jn, y));
+    GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractYJ, y, GrB_DESC_R));
+    GRB_TRY(GrB_Vector_extractTuples(deltaJi, Jdelta, &delta_jn, Jvec));
+    GRB_TRY(GrB_Matrix_build(delta, Idelta, Jdelta, delta_raw, delta_vec_n, GxB_IGNORE_DUP));
     //GxB_print(delta, 5);
 
     //make delta anti-symmetric
@@ -827,7 +846,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     //reduce delat_mat to delta_vec
     GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, delta_mat, GrB_DESC_RT0));
-    //GxB_print(delta_vec, 5);
+    GxB_print(delta_vec, 5);
 
     //add to e
     //add alpha and beta scalars
