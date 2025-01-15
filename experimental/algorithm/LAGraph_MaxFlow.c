@@ -519,21 +519,21 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
     GrB_UnaryOp GrB_GetResidual;                                               \
     GrB_Matrix res_mat, modified_res_mat;                                      \
     LAGraph_Graph res_graph;                                                   \
-    GrB_Vector_new(&parent, n, GrB_INT64);                                     \
-    GrB_Vector_new(&lvl, n, GrB_INT64);                                        \
-    GrB_Matrix_new(&res_mat, n, GrB_FP64);                                     \
-    GrB_Matrix_new(&modified_res_mat, n, GrB_FP64);                            \
+    GrB_Vector_new(&parent, GrB_INT64, n);				\
+    GrB_Vector_new(&lvl, GrB_INT64, n);					\
+    GrB_Matrix_new(&res_mat, GrB_FP64, n, n);				\
+    GrB_Matrix_new(&modified_res_mat, GrB_FP64, n, n);			\
     GxB_UnaryOp_new(&GrB_GetResidual, F_UNARY(MF_getResidual), GrB_FP64,       \
                     GrB_FlowEdge, "MF_getResidual", GRB_GETRES_STR);           \
     GrB_apply(res_mat, NULL, NULL, GrB_GetResidual, R, NULL);                  \
     GrB_Matrix_dup(&modified_res_mat, res_mat);                                \
     GrB_select(modified_res_mat, NULL, NULL, GrB_VALUEGT_FP64, res_mat, 0,     \
-               NULL);                                                          \
-    OK(LAGraph_New(&modified_res_mat, &res_graph, LAGraph_ADJACENCY_DIRECTED,  \
-                   msg));                                                      \
-    OK(LAGraph_Cached_AT(res_graph, msg));                                     \
-    OK(LAGraph_Cached_OutDegree(res_graph, msg));                              \
-    OK(LAGr_BreadthFirstSearch(&lvl, &parent, res_graph, T, msg));             \
+               GrB_DESC_R);                                                          \
+    LAGraph_New(&res_graph, &modified_res_mat, LAGraph_ADJACENCY_DIRECTED,  \
+                   msg);                                                      \
+    LAGraph_Cached_AT(res_graph, msg);                                     \
+    LAGraph_Cached_OutDegree(res_graph, msg);                              \
+    LAGr_BreadthFirstSearch(&lvl, &parent, res_graph, T, msg);             \
     GrB_assign(d, NULL, NULL, lvl, GrB_ALL, n, GrB_DESC_R);                    \
     GrB_assign(d, lvl, NULL, 0, GrB_ALL, n, GrB_DESC_SC);                      \
     GrB_free(&parent);                                                         \
@@ -541,7 +541,7 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
     GrB_free(&GrB_GetResidual);                                                \
     GrB_free(&res_mat);                                                        \
     GrB_free(&modified_res_mat);                                               \
-    OK(LAGraph_Delete(&res_graph, msg));                                       \
+    LAGraph_Delete(&res_graph, msg);                                       \
   }
 
   
@@ -780,6 +780,11 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   int iter = 0;
   
   while(n_active > 0){
+
+    //BUG
+    /* if(iter % 12 == 0){ */
+    /*   GLOBAL_RELABEL; */
+    /* } */
 
     //create C arrays
     GrB_Index Jmap[LEN], Imap[LEN];
