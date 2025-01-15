@@ -86,11 +86,13 @@
 #define F_BINARY(f) ((void (*)(void *, const void *, const void *)) f)
 
 // strings for JIT
-
 #define GRB_EXTRACTYJ_STR "void MF_extractYJ(int *z, const MF_resultTuple *y) {" \
   "(*z) = y->j;" \
 "}"
 
+#define GRB_GETRES_STR "void MF_getResidual(double * z, const MF_flowEdge * y){" \
+  "*z = y->capacity - y->flow;" \
+"}"
 
 #define GRB_PRUNE_STR "void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int * theta){"\
   "if(y->j != *theta){"\
@@ -507,7 +509,42 @@ void MF_CheckInvariant(bool *z, const int *y, const MF_resultTuple *x) {
   (*z) = ((*y) == x->d+1);
 }
 
+void MF_getResidual(double * z, const MF_flowEdge * y){
+  *z = y->capacity - y->flow;
+}
 
+#define GLOBAL_RELABEL                                                         \
+  {                                                                            \
+    GrB_Vector parent, lvl;                                                    \
+    GrB_UnaryOp GrB_GetResidual;                                               \
+    GrB_Matrix res_mat, modified_res_mat;                                      \
+    LAGraph_Graph res_graph;                                                   \
+    GrB_Vector_new(&parent, n, GrB_INT64);                                     \
+    GrB_Vector_new(&lvl, n, GrB_INT64);                                        \
+    GrB_Matrix_new(&res_mat, n, GrB_FP64);                                     \
+    GrB_Matrix_new(&modified_res_mat, n, GrB_FP64);                            \
+    GxB_UnaryOp_new(&GrB_GetResidual, F_UNARY(MF_getResidual), GrB_FP64,       \
+                    GrB_FlowEdge, "MF_getResidual", GRB_GETRES_STR);           \
+    GrB_apply(res_mat, NULL, NULL, GrB_GetResidual, R, NULL);                  \
+    GrB_Matrix_dup(&modified_res_mat, res_mat);                                \
+    GrB_select(modified_res_mat, NULL, NULL, GrB_VALUEGT_FP64, res_mat, 0,     \
+               NULL);                                                          \
+    OK(LAGraph_New(&modified_res_mat, &res_graph, LAGraph_ADJACENCY_DIRECTED,  \
+                   msg));                                                      \
+    OK(LAGraph_Cached_AT(res_graph, msg));                                     \
+    OK(LAGraph_Cached_OutDegree(res_graph, msg));                              \
+    OK(LAGr_BreadthFirstSearch(&lvl, &parent, res_graph, T, msg));             \
+    GrB_assign(d, NULL, NULL, lvl, GrB_ALL, n, GrB_DESC_R);                    \
+    GrB_assign(d, lvl, NULL, 0, GrB_ALL, n, GrB_DESC_SC);                      \
+    GrB_free(&parent);                                                         \
+    GrB_free(&lvl);                                                            \
+    GrB_free(&GrB_GetResidual);                                                \
+    GrB_free(&res_mat);                                                        \
+    GrB_free(&modified_res_mat);                                               \
+    OK(LAGraph_Delete(&res_graph, msg));                                       \
+  }
+
+  
 int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *msg){
 
   //plan of ATTACK ****************************************
@@ -761,8 +798,8 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     
     //y<e, struct> = R x d
     GRB_TRY(GrB_mxv(y, e, NULL, GrB_RxdSemiring, R, d, GrB_DESC_RS));
-    printf("---y---\n\n");
-    print_resultVec(y);
+    //printf("---y---\n\n");
+    //print_resultVec(y);
     GRB_TRY(GrB_Vector_dup(&y_dup, y));
     //GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y_dup, -1, GrB_DESC_R));
 
@@ -789,14 +826,14 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     //y = map x e
     GRB_TRY(GrB_mxv(y_dup, NULL, NULL, GrB_MxeSemiring, map, e, GrB_DESC_R));
-    printf("******MAP***********\n\n");
-    print_MapMtx(map);
-    printf("\n");
-    printf("----y-prePrune----\n\n");
-    print_resultVec(y_dup);
+    //printf("******MAP***********\n\n");
+    //print_MapMtx(map);
+    //printf("\n");
+    //printf("----y-prePrune----\n\n");
+    //print_resultVec(y_dup);
     GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y_dup, -1, GrB_DESC_R));
-    printf("----y-postPrune----\n\n");
-    print_resultVec(y);
+    //printf("----y-postPrune----\n\n");
+    //print_resultVec(y);
 
     //relable, update heights
     // add alpha and beta scalars
@@ -846,7 +883,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     //reduce delat_mat to delta_vec
     GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, delta_mat, GrB_DESC_RT0));
-    GxB_print(delta_vec, 5);
+    //GxB_print(delta_vec, 5);
 
     //add to e
     //add alpha and beta scalars
@@ -866,7 +903,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_R));
     GRB_TRY(GrB_Vector_nvals(&n_active, active_set));
     //GxB_print(active_set, 5);
-    printf("max flow in alg iter is: %f\n", *f);
+    //printf("max flow in alg iter is: %f\n", *f);
 
     //clear map and delta
     GRB_TRY(GrB_Matrix_clear(map));
