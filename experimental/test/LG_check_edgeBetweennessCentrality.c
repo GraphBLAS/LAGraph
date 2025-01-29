@@ -86,16 +86,14 @@ int LG_check_edgeBetweennessCentrality
 
     GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
     void *Ax = NULL ;
-    GrB_Index Ap_size, Aj_size, Ax_size, n, ncols, nvals ;
+    GrB_Index Ap_size, Aj_size, Ax_size, n, nvals ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GRB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
     bool print_timings = (n >= 2000) ;
 
-    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-
     GrB_Matrix A = G->A ;
+
     GrB_Matrix AT ;
     // if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
     //     G->is_symmetric_structure == LAGraph_TRUE)
@@ -110,6 +108,22 @@ int LG_check_edgeBetweennessCentrality
     //     LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
     // }
 
+    // better: as basic algo
+    /*
+        GrB_Matrix A_temp = NULL
+        if nself_edges is unknown
+            compute it
+        if any self edges
+            copy G->A into A_temp
+            remove self edges from A_temp
+            A = A_temp
+        now A has no self edges
+        when done: free A_temp
+    */
+
+    // hack:
+    // G->nself_edges = LAGRAPH_UNKNOWN ; <=== overkill
+    LG_TRY (LAGraph_DeleteSelfEdges (G, msg)) ;
 
     //--------------------------------------------------------------------------
 
@@ -121,7 +135,7 @@ int LG_check_edgeBetweennessCentrality
 
     LG_TRY(LAGraph_Malloc((void **)&d, n, sizeof(int64_t), msg));
 
-    LG_TRY(LAGraph_Calloc((void **)&delta, n, sizeof(int64_t), msg));
+    LG_TRY(LAGraph_Calloc((void **)&delta, n, sizeof(double), msg));
 
     LG_TRY(LAGraph_Malloc((void **)&S, n, sizeof(int64_t), msg));
 
@@ -143,20 +157,11 @@ int LG_check_edgeBetweennessCentrality
     // TODO make this a copy of A except with 1 = 0
     // A temporary result centrality matrix initialized to 0 for all vertice,
     // -- further changes would need to be made to make it a dictionary of edges.
-    GrB_Index result_size = n * ncols ;
+    GrB_Index result_size = n * n ;
     LG_TRY(LAGraph_Calloc((void **)&result, result_size, sizeof(double), msg));
 
-    for (GrB_Index i = 0; i < n; i++) {
-        for (GrB_Index j = 0; j < ncols; j++) {
-            double value; 
-            // don't need the value just 1 or 0
-            if (GrB_Matrix_extractElement(&value, G->A, i, j) == GrB_SUCCESS) {
-                result [i*ncols+j] = 1;
-            }
-        }
-    }
-
-    // masked assignment (probably better) or select
+    // result (v,w) is held in result (INDEX(v,w)):
+    #define INDEX(i,j) ((i)*n+(j))
 
     //--------------------------------------------------------------------------
     // unpack the A matrix in CSR form for SuiteSparse:GraphBLAS
@@ -164,7 +169,7 @@ int LG_check_edgeBetweennessCentrality
 
     #if LAGRAPH_SUITESPARSE
     bool iso ; 
-    GRB_TRY (GxB_Matrix_unpack_CSR (G->A,
+    GRB_TRY (GxB_Matrix_unpack_CSR (A,
         &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, NULL, NULL)) ;
     #endif
 
@@ -175,7 +180,7 @@ int LG_check_edgeBetweennessCentrality
     LG_TRY(LAGraph_Malloc((void **)&Pj, nvals, sizeof(GrB_Index), msg));
     LG_TRY(LAGraph_Malloc((void **)&Ptail, n, sizeof(GrB_Index), msg)); // might need to be + 1
 
-    LAGraph_Calloc ((void **) &sigma, n, sizeof (int64_t), msg) ;
+    LAGraph_Calloc ((void **) &sigma, n, sizeof (double), msg) ;
 
     // 2. for ∀s ∈ V
     for (int64_t s = 0; s < n; s++) {
@@ -262,13 +267,15 @@ int LG_check_edgeBetweennessCentrality
                 
                 // Update dependency and centrality values
                 // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
-                printf("%0.0f = %0.0f * (%0.0f/%0.0f + 1)\n", sigma [v] * ((delta [w] / sigma [w]) + 1), sigma [v], delta [w], sigma [w]) ;
+                printf("%g = %g * (%g/%g + 1)\n", sigma [v] * ((delta [w] / sigma [w]) + 1), sigma [v], delta [w], sigma [w]) ;
+
+                if (v == w) { printf ("Ack!!\n") ; fflush (stdout) ; abort ( ) ; }
 
                 double centrality = sigma [v] * ((delta [w] / sigma [w]) + 1) ;
                 delta [v] += centrality ;
 
                 // 31. result [(v, w)] ← result [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
-                result [v + w * n] += centrality;
+                result [INDEX (v,w)] += centrality;
 
             }
         }
@@ -287,32 +294,45 @@ int LG_check_edgeBetweennessCentrality
     //--------------------------------------------------------------------------
 
     #if LAGRAPH_SUITESPARSE
-    GRB_TRY (GxB_Matrix_pack_CSR (G->A,
+    GRB_TRY (GxB_Matrix_pack_CSR (A,
         &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, NULL, NULL)) ;
     #endif
 
     printf("result: \n") ;
     for (int64_t i = 0 ; i < n ; i++)
     {
-        for (int64_t j = 0 ; j < ncols ; j++)
+        printf ("row: %ld\n", i) ;
+        for (int64_t j = 0 ; j < n ; j++)
         {
-            int64_t p = i + j * n ;
+            int64_t p = INDEX (i,j) ;
             double aij = result [p] ;
-            printf("%0.0f ", aij) ;
+            printf("  C(%ld,%ld) = %g\n", i, j, aij) ;
             // numerical value of A(i,j)
         } 
         printf("\n") ; 
     }
 
+#if 0
+GrB_Info GxB_Matrix_pack_FullR  // pack a full matrix, held by row
+(
+    GrB_Matrix A,       // matrix to create (type, nrows, ncols unchanged)
+    void **Ax,          // values, Ax_size >= nrows*ncols * (type size)
+                        // or Ax_size >= (type size), if iso is true
+    GrB_Index Ax_size,  // size of Ax in bytes
+    bool iso,           // if true, A is iso
+    const GrB_Descriptor desc
+) ;
+#endif
+
     GrB_Matrix C_temp;
-    LG_TRY (GrB_Matrix_new(&C_temp, GrB_FP64, n, ncols)) ;
+    LG_TRY (GrB_Matrix_new(&C_temp, GrB_FP64, n, n)) ;
     LG_TRY (GxB_Matrix_pack_FullR(C_temp, (void **) &result, result_size * sizeof(double), false, NULL) ) ;
 
-    LG_TRY (GrB_assign(C_temp, G->A, NULL, C_temp, GrB_ALL, n, GrB_ALL, ncols, GrB_DESC_RS)) ;
+    LG_TRY (GrB_assign(C_temp, A, NULL, C_temp, GrB_ALL, n, GrB_ALL, n, GrB_DESC_RS)) ;
 
     GxB_print(C_temp, GxB_COMPLETE) ;
 
-    // GrB_TRY (GrB_select(*C_temp, G->A, NULL, NULL, G->A, NULL, NULL)) ;
+    // GrB_TRY (GrB_select(*C_temp, A, NULL, NULL, A, NULL, NULL)) ;
 
     *C = C_temp;
 
