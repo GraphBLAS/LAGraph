@@ -38,6 +38,7 @@
 {                                                       \
     /* free any workspace used here */                  \
     GrB_free(&D) ;                                      \
+    GrB_free(&P) ;                                      \
     GrB_free(&edge_degrees) ;                           \
     GrB_free(&degrees) ;                                \
     GrB_free(&node_edges) ;                             \
@@ -53,6 +54,8 @@
     LAGraph_Free((void **) &edges_per_deg_arr, NULL);   \
     LAGraph_Free((void **) &ones, NULL);                \
     LAGraph_Free((void **) &deg_vertex_count, NULL);    \
+    LAGraph_Free((void **) &epd_index, NULL);           \
+    LAGraph_Free((void **) &vpd_index, NULL);           \
 }
 
 
@@ -81,9 +84,9 @@ void two_one_add(int64_t *z, const int64_t *x, const int64_t *y)
 }
  */
 #define ISEQ_2ISLT                                                          \
-    "void iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)"    \
-    "{"                                                                     \
-        "(*z) = (int64_t)((*x < *y) + (*x <= *y)) ;"                                   \
+    "void iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)            \n"\
+    "{                                                                          \n"\
+        "(*z) = (int64_t)((*x < *y) + (*x <= *y)) ;                             \n"\
     "}"
 void iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)
 {
@@ -91,9 +94,9 @@ void iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)
 }
 
 #define RICH_CLUB_FORMULA                                                      \
-    "void rich_club_formula(double *z, const int64_t *x, const int64_t *y)"  \
-    "{"                                                                        \
-        "(*z) = ((double)(*x)) / (((double)(*y)) * (((double)(*y)) - 1.0)) ;"  \
+    "void rich_club_formula(double *z, const int64_t *x, const int64_t *y)      \n"\
+    "{                                                                          \n"\
+    "   (*z) = ((double)(*x)) / (((double)(*y)) * (((double)(*y)) - 1.0)) ;     \n"\
     "}"
 void rich_club_formula(double *z, const int64_t *x, const int64_t *y)
 {
@@ -115,28 +118,34 @@ int LAGraph_RichClubCoefficient
     // Declorations
     //--------------------------------------------------------------------------
     LG_CLEAR_MSG ;
-    //Matrix containing every edge 
-    //With an entry cooresponding to the degree of its column
+
+    // n x n Adjacency Matrix
+    // With values cooresponding to the degree of its column
     GrB_Matrix edge_degrees = NULL;
 
-    //A matrix with diagonal entries corresponding to degrees.
+    // n x n Diagonal Matrix
+    // entries corresponding to degrees.
     GrB_Matrix D = NULL;
 
-    //degrees of nodes.
+    // n degrees vector
     GrB_Vector degrees = NULL;
 
+    // n x 1
     // contains the number of edges for which the ith node is
     // the smallest degree node * 2 + # edges w/ same degree as the other node
     // to account for double counting of edges w/ same degree as the other node.
     GrB_Vector node_edges = NULL;
 
+    // max_degree x 1
     // the ith entry contains the number of edges whose lowest degree is i.
     GrB_Vector edges_per_deg = NULL;
 
+    // max_degree x 1
     // the ith entry contains the number of verticies whose degree is i.
     GrB_Vector verts_per_deg = NULL;
 
-    //Vector of ones
+    // 
+    // Vector of ones
     GrB_Vector ones_v = NULL;
 
     // 2 * (x < y) + (x == y)
@@ -149,16 +158,26 @@ int LAGraph_RichClubCoefficient
     GrB_BinaryOp rcCalculation = NULL;
 
     GrB_Matrix A ; // G->A, the adjacency matrix
+
+    // Matrix used for row reduction
+    GrB_Matrix P = NULL;
+
     GrB_Index n ;
     GrB_Index vi_size ;
     GrB_Index vx_size ;
     GrB_Index edge_vec_nvals;
     GrB_Index deg_vec_size;
+    GrB_Index max_deg;
     bool iso = false;
     
     int64_t *node_edges_arr = NULL, *deg_arr = NULL, 
         *edges_per_deg_arr = NULL, *ones = NULL, 
         *deg_vertex_count = NULL;
+
+
+    GrB_Index *epd_index = NULL,  *vpd_index = NULL;
+    
+    int64_t *ramp = NULL;
     GrB_Index *index_edge = NULL;
 
     //--------------------------------------------------------------------------
@@ -167,7 +186,6 @@ int LAGraph_RichClubCoefficient
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (rich_club_coefficents != NULL, GrB_NULL_POINTER);
 
-    //TODO: double check this
     LG_ASSERT_MSG(
         G->kind == LAGraph_ADJACENCY_UNDIRECTED, GrB_INVALID_VALUE, 
         "G->A must be symmetric") ;
@@ -180,59 +198,54 @@ int LAGraph_RichClubCoefficient
     // Initializations
     //--------------------------------------------------------------------------
     A = G->A ;
-    GRB_TRY(GrB_Matrix_nrows (&n, A)) ;
-    GRB_TRY(GrB_Matrix_new(&edge_degrees, GrB_INT64,n,n)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_new(&edge_degrees, GrB_INT64,n,n)) ;
 
+    GRB_TRY (GrB_Vector_new(&degrees, GrB_INT64, n)) ;
+    GRB_TRY (GrB_Vector_new(&node_edges, GrB_INT64, n)) ;
 
-    GRB_TRY(GrB_Vector_new(&degrees, GrB_INT64, n)) ;
-    GRB_TRY(GrB_Vector_new(&node_edges, GrB_INT64, n)) ;
-
-    GRB_TRY(GxB_BinaryOp_new(
+    GRB_TRY (GxB_BinaryOp_new(
         &iseq_2lt, (LAGraph_binary_function) (&iseq_2islt), 
         GrB_INT64, GrB_INT64, GrB_INT64, "iseq_2islt", ISEQ_2ISLT)) ;
-    GRB_TRY(GrB_Semiring_new(&plus_2le, GrB_PLUS_MONOID_INT64, iseq_2lt)) ;
-    GRB_TRY(GxB_BinaryOp_new(
+    GRB_TRY (GxB_BinaryOp_new(
         &rcCalculation, (LAGraph_binary_function) (&rich_club_formula), 
         GrB_FP64, GrB_INT64, GrB_INT64, 
         "rich_club_formula", RICH_CLUB_FORMULA)) ;
 
+    GRB_TRY (GrB_Semiring_new(&plus_2le, GrB_PLUS_MONOID_INT64, iseq_2lt)) ;
+    
+    GRB_TRY (GrB_Vector_reduce_INT64(
+        &max_deg, NULL, GrB_MAX_MONOID_INT64, G->out_degree, NULL)) ;
+    GRB_TRY (GrB_Vector_new(&edges_per_deg, GrB_INT64, max_deg)) ;
+    GRB_TRY (GrB_Vector_new(&verts_per_deg, GrB_INT64, max_deg)) ;
+    GRB_TRY (GrB_Vector_new(rich_club_coefficents, GrB_FP64, max_deg)) ;
+
+    //--------------------------------------------------------------------------
+    // Calculations
+    //--------------------------------------------------------------------------
+
     // degrees = G->out_degree - 1
     GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(
         degrees, NULL, NULL, GrB_MINUS_INT64, G->out_degree, 1, NULL)) ;
-
     
-    // Fill out degree vector, to activate col_scale and row_scale on graphs 
-    // with singletons, scalar irrelevant
+    // Fill out degree vector, to target col_scale mxm on graphs 
+    // with singletons, scalar value irrelevant.
     GRB_TRY (GrB_Vector_assign_INT64(
         degrees, degrees, NULL, (int64_t) -1, GrB_ALL, 0, GrB_DESC_SC)) ;
     GRB_TRY (GrB_Matrix_diag(&D, degrees, 0)) ;
 
-    int64_t max_deg;
-    GRB_TRY(GrB_Vector_reduce_INT64(
-        &max_deg, NULL, GrB_MAX_MONOID_INT64, G->out_degree, NULL)) ;
-    GRB_TRY(GrB_Vector_new(&edges_per_deg, GrB_INT64, max_deg)) ;
-    GRB_TRY(GrB_Vector_new(&verts_per_deg, GrB_INT64, max_deg)) ;
-    GRB_TRY(GrB_Vector_new(rich_club_coefficents, GrB_FP64, max_deg)) ;
-    //--------------------------------------------------------------------------
-    // Calculating time
-    //--------------------------------------------------------------------------
-
-    // Each edge in the graph gets the value of the degree of its column node
+    // Each edge in the graph gets the value of the degree of its row node
     GRB_TRY (GrB_mxm(
         edge_degrees, NULL, NULL, GxB_ANY_FIRST_INT64, D, A, NULL)) ;
-
-    // Sum up the number of edges each node is "responsible" for.
+    // Sum the number of edges each node is "responsible" for.
     GRB_TRY (GrB_mxv(
         node_edges, NULL, NULL, plus_2le, edge_degrees, degrees, NULL)) ;
+
 
     // The rest of this is indexing the number of edges and number of nodes at 
     // each degree and then doing a cummulative sum to know the amount of edges 
     // and nodes at degree geq k.
-    GRB_TRY(GrB_Vector_nvals (&edge_vec_nvals, node_edges)) ;
-
-    // Grab the index and edge count arrays from GBLAS
-    // Jumbled NULL so must return sorted. Needed because arrays with 
-    // # of edges and # of degrees should line up.
+    GRB_TRY (GrB_Vector_nvals (&edge_vec_nvals, node_edges)) ;
     if(n == edge_vec_nvals)
     {
         GRB_TRY (GxB_Vector_unpack_Full (
@@ -245,44 +258,64 @@ int LAGraph_RichClubCoefficient
     else
     {
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(
-            degrees, NULL, NULL, GrB_MINUS_INT64, G->out_degree, 1, GrB_DESC_R)) ;
-            
-        GRB_TRY(GxB_Vector_unpack_CSC(
-            node_edges, &index_edge, (void **) &node_edges_arr,
-            &vi_size,&vx_size,&iso,&edge_vec_nvals, NULL, NULL)) ;
-        LG_TRY(LAGraph_Free((void **)&index_edge, msg)) ;
-
-        GRB_TRY(GxB_Vector_unpack_CSC(
-            degrees, &index_edge, (void **) &deg_arr,
-            &vi_size,&vx_size,&iso,&deg_vec_size, NULL, NULL)) ; 
-        LG_TRY(LAGraph_Free((void **)&index_edge, msg)) ;
+            degrees, NULL, NULL, GrB_MINUS_INT64, G->out_degree, 1, NULL)) ;
+        LG_TRY(LAGraph_Malloc(
+            (void **) &deg_arr, edge_vec_nvals, sizeof(int64_t), NULL)) ;
+        LG_TRY(LAGraph_Malloc(
+            (void **) &deg_vec_size, edge_vec_nvals, sizeof(int64_t), NULL)) ;
+        GRB_TRY (GrB_Vector_extractTuples_INT64(
+            NULL, deg_arr, &deg_vec_size, degrees
+        )) ;
+        GRB_TRY (GrB_Vector_extractTuples_INT64(
+            NULL, node_edges_arr, &edge_vec_nvals, node_edges
+        )) ;
     }
 
+    #if LAGRAPH_SUITESPARSE
+    LG_TRY (LAGraph_Malloc(
+        (void **) &ramp, edge_vec_nvals + 1, sizeof(int64_t), NULL)) ;
+    GRB_TRY (GrB_Vector_new(&ones_v, GrB_INT64, edge_vec_nvals));
+    GRB_TRY (GrB_Matrix_new (&P, GrB_INT64, max_deg, edge_vec_nvals));
+    GRB_TRY (GrB_Vector_assign_INT64(
+        ones_v, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL)) ;
+    GRB_TRY (GrB_Vector_extractTuples_INT64(
+        ramp, NULL, &edge_vec_nvals, ones_v)) ;
+    ramp[edge_vec_nvals] = edge_vec_nvals;
+    GRB_TRY (GxB_Matrix_pack_CSC(
+        P, (GrB_Index **)&ramp, (GrB_Index **)&deg_arr, 
+        (void **) &node_edges_arr, (edge_vec_nvals + 1) * sizeof(int64_t), 
+        vx_size, vx_size, false, false, NULL
+    ));
+    GRB_TRY (GrB_mxv(
+        edges_per_deg, NULL, NULL, GxB_PLUS_FIRST_INT64, P, ones_v, NULL)) ;
+    GRB_TRY (GrB_mxv(
+        verts_per_deg, NULL, NULL, GxB_PLUS_PAIR_INT64, P, ones_v, NULL)) ;
+    #else
     // Build with degrees as indecies and handle duplicates via adition
-    GRB_TRY(GrB_Vector_build (
+    GRB_TRY (GrB_Vector_build (
         edges_per_deg, deg_arr, node_edges_arr, deg_vec_size, 
         GrB_PLUS_INT64)) ;
 
     //Hack to make an array of ones
-    LG_TRY(
+    LG_TRY (
         LAGraph_Malloc((void **) &ones, deg_vec_size, sizeof(int64_t), NULL)) ;
-    GRB_TRY(GrB_Vector_new(&ones_v, GrB_INT64, deg_vec_size));
-    GRB_TRY(GrB_Vector_assign_INT64(
+    GRB_TRY (GrB_Vector_new(&ones_v, GrB_INT64, deg_vec_size));
+    GRB_TRY (GrB_Vector_assign_INT64(
         ones_v, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL)) ;
-    GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, ones, &deg_vec_size, ones_v)) ;
+    GRB_TRY (GrB_Vector_extractTuples_INT64(NULL, ones, &deg_vec_size, ones_v)) ;
 
-    GRB_TRY(GrB_Vector_build (
+    GRB_TRY (GrB_Vector_build (
         verts_per_deg, deg_arr, ones, deg_vec_size, GrB_PLUS_INT64)) ;
+    #endif
 
-    GrB_Index *epd_index = NULL,  *vpd_index = NULL;
-    GRB_TRY(GxB_Vector_unpack_CSC(
+    // Cumulative sum (TODO: should be a GBLAS method!)
+    GRB_TRY (GxB_Vector_unpack_CSC(
         edges_per_deg, &epd_index, (void **)&edges_per_deg_arr,
         &vi_size, &vx_size, &iso, &edge_vec_nvals, NULL, NULL)) ;
-    GRB_TRY(GxB_Vector_unpack_CSC(
+    GRB_TRY (GxB_Vector_unpack_CSC(
         verts_per_deg, &vpd_index, (void **)&deg_vertex_count,
         &vi_size, &vx_size, &iso, &deg_vec_size, NULL, NULL)) ;
 
-    //TODO: parralelize these sums:
     //run a cummulative sum (backwards) on deg_vertex_count
     for(uint64_t i = deg_vec_size - 1; i > 0; --i)
     {
@@ -295,10 +328,10 @@ int LAGraph_RichClubCoefficient
         edges_per_deg_arr[i-1]+=edges_per_deg_arr[i];
     }
 
-    GRB_TRY(GxB_Vector_pack_CSC(
+    GRB_TRY (GxB_Vector_pack_CSC(
         edges_per_deg, &epd_index, (void **)&edges_per_deg_arr,
         vi_size, vx_size, false, edge_vec_nvals, NULL, NULL));
-    GRB_TRY(GxB_Vector_pack_CSC(
+    GRB_TRY (GxB_Vector_pack_CSC(
         verts_per_deg, &vpd_index, (void **)&deg_vertex_count,
         vi_size, vx_size, false, deg_vec_size, NULL, NULL));
 
