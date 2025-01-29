@@ -16,22 +16,24 @@
 
 //------------------------------------------------------------------------------
 
-// #define LG_FREE_WORK                                \
-// {                                                   \
-//     LAGraph_Free ((void **) &queue, NULL) ;         \
-//     LAGraph_Free ((void **) &d, NULL) ;             \
-//     LAGraph_Free ((void **) &delta, NULL) ;         \
-//     LAGraph_Free ((void **) &S, NULL) ;             \
-//     LAGraph_Free ((void **) &P, NULL) ;             \
-// }
+#define LG_FREE_WORK                                \
+{                                                   \
+    LAGraph_Free ((void **) &queue, NULL) ;         \
+    LAGraph_Free ((void **) &d, NULL) ;             \
+    LAGraph_Free ((void **) &delta, NULL) ;         \
+    LAGraph_Free ((void **) &S, NULL) ;             \
+    LAGraph_Free ((void **) &sigma, NULL) ;         \
+    LAGraph_Free ((void **) &Pj, NULL) ;            \
+    LAGraph_Free ((void **) &Ptail, NULL) ;         \
+}
 
-// #define LG_FREE_ALL                                 \
-// {                                                   \
-//     LG_FREE_WORK ;                                  \
-//     LAGraph_Free ((void **) &Ap, NULL) ;            \
-//     LAGraph_Free ((void **) &Aj, NULL) ;            \
-//     LAGraph_Free ((void **) &Ax, NULL) ;            \
-// }
+#define LG_FREE_ALL                                 \
+{                                                   \
+    LG_FREE_WORK ;                                  \
+    LAGraph_Free ((void **) &Ap, NULL) ;            \
+    LAGraph_Free ((void **) &Aj, NULL) ;            \
+    LAGraph_Free ((void **) &Ax, NULL) ;            \
+}
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
@@ -51,17 +53,44 @@ int LG_check_edgeBetweennessCentrality
 {
 
     //--------------------------------------------------------------------------
-    // check inputs
+    // initialize workspace
     //--------------------------------------------------------------------------
 
     double tt = LAGraph_WallClockTime ( ) ;
 
+    GrB_Info info;
+
+    double* result ; 
+
+    // Holds the distances (depth levels) from the source vertex.
+    int64_t *d = NULL ;
+
+    // Stores dependency scores for each vertex.
+    double *delta = NULL ;
+
+    // Stack used for backtracking phase
+    int64_t *S = NULL ;
+
+    // Queue used for BFS phase
+    int64_t *queue = NULL ;
+
+    GrB_Index *Pj = NULL ;
+    GrB_Index *Ptail = NULL ;
+    GrB_Index *Phead = NULL ;
+
+    double *sigma = NULL ;
+
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
     GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
     void *Ax = NULL ;
-    GrB_Index Ap_size, Aj_size, Ax_size, n, ncols ;
+    GrB_Index Ap_size, Aj_size, Ax_size, n, ncols, nvals ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
     bool print_timings = (n >= 2000) ;
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
@@ -81,41 +110,18 @@ int LG_check_edgeBetweennessCentrality
     //     LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
     // }
 
+
+    //--------------------------------------------------------------------------
+
     LG_CLEAR_MSG ;
-
-    //--------------------------------------------------------------------------
-    // initialize workspace
-    //--------------------------------------------------------------------------
-
-    GrB_Info info;
-
-    double* result ; 
-
-    // Holds the distances (depth levels) from the source vertex.
-    int64_t *d = NULL ;
-
-    // Stores dependency scores for each vertex.
-    int64_t *delta = NULL ;
-
-    // Stack used for backtracking phase
-    int64_t *S = NULL ;
-
-    // Queue used for BFS phase
-    int64_t *queue = NULL ;
-
-    GrB_Index *Pj = NULL ;
-    GrB_Index *Ptail = NULL ;
-    GrB_Index *Phead = Ap ;
-
-    int64_t *sigma = NULL ;
-
+    
     //--------------------------------------------------------------------------
     // allocate workspace
     //--------------------------------------------------------------------------
 
     LG_TRY(LAGraph_Malloc((void **)&d, n, sizeof(int64_t), msg));
 
-    LG_TRY(LAGraph_Malloc((void **)&delta, n, sizeof(int64_t), msg));
+    LG_TRY(LAGraph_Calloc((void **)&delta, n, sizeof(int64_t), msg));
 
     LG_TRY(LAGraph_Malloc((void **)&S, n, sizeof(int64_t), msg));
 
@@ -137,36 +143,20 @@ int LG_check_edgeBetweennessCentrality
     // TODO make this a copy of A except with 1 = 0
     // A temporary result centrality matrix initialized to 0 for all vertice,
     // -- further changes would need to be made to make it a dictionary of edges.
-    GrB_Index result_size = n * ncols * sizeof(double) ;
-    LG_TRY(LAGraph_Malloc((void **)&result, result_size, sizeof(double), msg));
-
-    printf("before unpacking result \n") ;
-
-    printf("G->A:\n") ;
-    GRB_TRY (GxB_print(G->A, GxB_COMPLETE)) ;
+    GrB_Index result_size = n * ncols ;
+    LG_TRY(LAGraph_Calloc((void **)&result, result_size, sizeof(double), msg));
 
     for (GrB_Index i = 0; i < n; i++) {
         for (GrB_Index j = 0; j < ncols; j++) {
-            double value;
+            double value; 
+            // don't need the value just 1 or 0
             if (GrB_Matrix_extractElement(&value, G->A, i, j) == GrB_SUCCESS) {
-                result [i*ncols+j] = value;
+                result [i*ncols+j] = 1;
             }
         }
     }
 
-
-    printf("result: \n") ;
-    for (int64_t i = 0 ; i < n ; i++)
-    {
-        for (int64_t j = 0 ; j < ncols ; j++)
-        {
-            int64_t p = i + j * n ;
-            double aij = result [p] ;
-            printf("%0.0f ", aij) ;
-            // numerical value of A(i,j)
-        } 
-        printf("\n") ; 
-    }
+    // masked assignment (probably better) or select
 
     //--------------------------------------------------------------------------
     // unpack the A matrix in CSR form for SuiteSparse:GraphBLAS
@@ -178,7 +168,14 @@ int LG_check_edgeBetweennessCentrality
         &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, NULL, NULL)) ;
     #endif
 
+    Phead = Ap ;
+
     //--------------------------------------------------------------------------
+
+    LG_TRY(LAGraph_Malloc((void **)&Pj, nvals, sizeof(GrB_Index), msg));
+    LG_TRY(LAGraph_Malloc((void **)&Ptail, n, sizeof(GrB_Index), msg)); // might need to be + 1
+
+    LAGraph_Calloc ((void **) &sigma, n, sizeof (int64_t), msg) ;
 
     // 2. for ∀s ∈ V
     for (int64_t s = 0; s < n; s++) {
@@ -188,15 +185,14 @@ int LG_check_edgeBetweennessCentrality
         // Initialize predecessors list P[w] to empty
         // TODO
         // 5. P [w] ← empty queue, ∀w ∈ V
-        LG_TRY(LAGraph_Malloc((void **)&Pj, n, sizeof(GrB_Index), msg));
-        LG_TRY(LAGraph_Malloc((void **)&Ptail, n, sizeof(GrB_Index), msg));
-        GrB_Index *Phead = Ap ;
         memcpy (Ptail, Ap, n * sizeof (GrB_Index)) ;
 
         // Initialize sigma[t], d[t] for all t
         // 6. σ[t] ← 0, ∀t ∈ V , σ[s] ← 1
         // Keeps track of the number of shortest paths for each vertex.
-        LAGraph_Calloc ((void **) &sigma, n, sizeof (int8_t), msg) ;
+        for (int64_t i = 0; i < n; i++) {
+            sigma [i] = 0 ;
+        }
         sigma [s] = 1 ;
 
         // 7. d[t] ← −1, ∀t ∈ V , d[s] ← 0
@@ -209,7 +205,7 @@ int LG_check_edgeBetweennessCentrality
         // 8. Q ← empty queue
         int64_t qh = 0, qt = 0;
         // 9. enqueue(Q, s)
-        queue [0] = s;
+        queue [qt++] = s;
 
         // 10. while ¬empty(Q)
         while (qh < qt) {
@@ -250,7 +246,7 @@ int LG_check_edgeBetweennessCentrality
         // Set dependency score δ[v] ← 0
         // 24. δ[v] ← 0, ∀v ∈ V
         for (size_t v = 0; v < n; v++) {
-            d [v] = 0 ;
+            delta [v] = 0 ;
         }
 
         // Process stack S
@@ -260,12 +256,14 @@ int LG_check_edgeBetweennessCentrality
             int64_t w = S [--sp] ;
 
             // 28. for v ∈ P [w]
-            for (int64_t p = Phead [w] ; p < Ptail [w+1] ; p++)
+            for (int64_t p = Phead [w] ; p < Ptail [w] ; p++)
             {
                 int64_t v = Pj [p] ;
                 
                 // Update dependency and centrality values
                 // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
+                printf("%0.0f = %0.0f * (%0.0f/%0.0f + 1)\n", sigma [v] * ((delta [w] / sigma [w]) + 1), sigma [v], delta [w], sigma [w]) ;
+
                 double centrality = sigma [v] * ((delta [w] / sigma [w]) + 1) ;
                 delta [v] += centrality ;
 
@@ -275,7 +273,6 @@ int LG_check_edgeBetweennessCentrality
             }
         }
 
-        LAGraph_Free ((void **) &sigma, NULL) ; 
     }
 
     if (print_timings)
@@ -294,16 +291,36 @@ int LG_check_edgeBetweennessCentrality
         &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, NULL, NULL)) ;
     #endif
 
-    GrB_Matrix C_temp;
-    LG_TRY ( GxB_Matrix_pack_FullR(C_temp, (void **) &result, result_size, iso, NULL) ) ;
+    printf("result: \n") ;
+    for (int64_t i = 0 ; i < n ; i++)
+    {
+        for (int64_t j = 0 ; j < ncols ; j++)
+        {
+            int64_t p = i + j * n ;
+            double aij = result [p] ;
+            printf("%0.0f ", aij) ;
+            // numerical value of A(i,j)
+        } 
+        printf("\n") ; 
+    }
 
-    C = &C_temp;
+    GrB_Matrix C_temp;
+    LG_TRY (GrB_Matrix_new(&C_temp, GrB_FP64, n, ncols)) ;
+    LG_TRY (GxB_Matrix_pack_FullR(C_temp, (void **) &result, result_size * sizeof(double), false, NULL) ) ;
+
+    LG_TRY (GrB_assign(C_temp, G->A, NULL, C_temp, GrB_ALL, n, GrB_ALL, ncols, GrB_DESC_RS)) ;
+
+    GxB_print(C_temp, GxB_COMPLETE) ;
+
+    // GrB_TRY (GrB_select(*C_temp, G->A, NULL, NULL, G->A, NULL, NULL)) ;
+
+    *C = C_temp;
 
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    // LG_FREE_WORK ;
+    LG_FREE_WORK ;
 
     if (print_timings)
     {

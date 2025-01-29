@@ -1,0 +1,230 @@
+==52222== Memcheck, a memory error detector
+==52222== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==52222== Using Valgrind-3.24.0-fcdaa47426-20241101 and LibVEX; rerun with -h for copyright info
+==52222== Command: ./build/experimental/test/test_edgeBetweennessCentrality
+==52222== Parent PID: 767
+==52222== 
+--52222-- 
+--52222-- Valgrind options:
+--52222--    --leak-check=full
+--52222--    --show-leak-kinds=all
+--52222--    --track-origins=yes
+--52222--    --verbose
+--52222--    --log-file=valgrind-out.txt
+--52222-- Contents of /proc/version:
+--52222--   Linux version 5.15.167.4-microsoft-standard-WSL2 (root@f9c826d3017f) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.37) #1 SMP Tue Nov 5 00:21:55 UTC 2024
+--52222-- 
+--52222-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand-rdseed-fma
+--52222-- Page sizes: currently 4096, max supported 4096
+--52222-- Valgrind library directory: /usr/local/libexec/valgrind
+--52222-- Reading syms from /home/peicasey/csce491h/LAGraph/build/experimental/test/test_edgeBetweennessCentrality
+--52222-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+--52222--   Considering /usr/lib/debug/.build-id/35/3e1b6cb0eebc08cf3ff812eae8a51b4efd684e.debug ..
+--52222--   .. build-id is valid
+--52222-- Reading syms from /usr/local/libexec/valgrind/memcheck-amd64-linux
+--52222--    object doesn't have a dynamic symbol table
+--52222-- Scheduler: using generic scheduler lock implementation.
+--52222-- Reading suppressions file: /usr/local/libexec/valgrind/default.supp
+==52222== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-52222-by-peicasey-on-???
+==52222== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-52222-by-peicasey-on-???
+==52222== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-52222-by-peicasey-on-???
+==52222== 
+==52222== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==52222== don't want to do, unless you know exactly what you're doing,
+==52222== or are doing some strange experiment):
+==52222==   /usr/local/libexec/valgrind/../../bin/vgdb --pid=52222 ...command...
+==52222== 
+==52222== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==52222==   /path/to/gdb ./build/experimental/test/test_edgeBetweennessCentrality
+==52222== and then give GDB the following command
+==52222==   target remote | /usr/local/libexec/valgrind/../../bin/vgdb --pid=52222
+==52222== --pid is optional if only one valgrind process is running
+==52222== 
+--52222-- REDIR: 0x4028b00 (ld-linux-x86-64.so.2:strlen) redirected to 0x580c18b2 (vgPlain_amd64_linux_REDIR_FOR_strlen)
+--52222-- REDIR: 0x40274e0 (ld-linux-x86-64.so.2:strcmp) redirected to 0x580c18cc (vgPlain_amd64_linux_REDIR_FOR_strcmp)
+--52222-- REDIR: 0x40272b0 (ld-linux-x86-64.so.2:index) redirected to 0x580c18e7 (vgPlain_amd64_linux_REDIR_FOR_index)
+--52222-- Reading syms from /usr/local/libexec/valgrind/vgpreload_core-amd64-linux.so
+--52222-- Reading syms from /usr/local/libexec/valgrind/vgpreload_memcheck-amd64-linux.so
+==52222== WARNING: new redirection conflicts with existing -- ignoring it
+--52222--     old: 0x040274e0 (strcmp              ) R-> (0000.0) 0x580c18cc vgPlain_amd64_linux_REDIR_FOR_strcmp
+--52222--     new: 0x040274e0 (strcmp              ) R-> (2016.0) 0x04851320 strcmp
+==52222== WARNING: new redirection conflicts with existing -- ignoring it
+--52222--     old: 0x04028b00 (strlen              ) R-> (0000.0) 0x580c18b2 vgPlain_amd64_linux_REDIR_FOR_strlen
+--52222--     new: 0x04028b00 (strlen              ) R-> (2007.0) 0x048500d0 strlen
+--52222-- REDIR: 0x4026910 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4854b90 (mempcpy)
+--52222-- Reading syms from /home/peicasey/csce491h/LAGraph/build/experimental/test/liblagraphxtest.so.1.2.0
+--52222-- Reading syms from /home/peicasey/csce491h/LAGraph/build/src/liblagraph.so.1.2.0
+--52222-- Reading syms from /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2
+--52222-- Reading syms from /usr/lib/x86_64-linux-gnu/libc.so.6
+--52222--   Considering /usr/lib/debug/.build-id/6d/64b17fbac799e68da7ebd9985ddf9b5cb375e6.debug ..
+--52222--   .. build-id is valid
+--52222-- Reading syms from /home/peicasey/csce491h/LAGraph/build/src/test/liblagraphtest.so.1.2.0
+--52222-- Reading syms from /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+--52222-- Reading syms from /usr/lib/x86_64-linux-gnu/libm.so.6
+--52222-- REDIR: 0x4028ca0 (ld-linux-x86-64.so.2:strncmp) redirected to 0x4850b50 (strncmp)
+--52222-- REDIR: 0x8603040 (libc.so.6:strnlen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86030d0 (libc.so.6:strpbrk) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8601190 (libc.so.6:strcmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x861a3b0 (libc.so.6:wcsnlen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8600280 (libc.so.6:memset) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8619b20 (libc.so.6:wcslen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86853c0 (libc.so.6:__memcpy_chk) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86001f0 (libc.so.6:memrchr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x861a350 (libc.so.6:wcsncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x85ff710 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86188e0 (libc.so.6:wcschr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8601080 (libc.so.6:index) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8603100 (libc.so.6:rindex) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8618990 (libc.so.6:wcscmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86004a0 (libc.so.6:stpncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8626eb0 (libc.so.6:wmemchr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8602ee0 (libc.so.6:strncmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8600500 (libc.so.6:strcasecmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8602300 (libc.so.6:strcspn) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86198f0 (libc.so.6:wcscpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8601010 (libc.so.6:strcat) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8602de0 (libc.so.6:strncasecmp_l) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8601100 (libc.so.6:strchrnul) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x85ff620 (libc.so.6:bcmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8602290 (libc.so.6:strcpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86005a0 (libc.so.6:strcasecmp_l) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8602cb0 (libc.so.6:strlen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8602f80 (libc.so.6:strncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8626f30 (libc.so.6:wmemcmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86854e0 (libc.so.6:__memmove_chk) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+==52222== WARNING: new redirection conflicts with existing -- ignoring it
+--52222--     old: 0x086d69d0 (__memcpy_chk_avx_una) R-> (2030.0) 0x04854c90 __memcpy_chk
+--52222--     new: 0x086d69d0 (__memcpy_chk_avx_una) R-> (2024.0) 0x04854600 __memmove_chk
+--52222-- REDIR: 0x8600430 (libc.so.6:stpcpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x85fffb0 (libc.so.6:memmove) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+==52222== Preferring higher priority redirection:
+--52222--     old: 0x086d6a00 (__memcpy_avx_unalign) R-> (2018.0) 0x04852440 __memcpy_avx_unaligned_erms
+--52222--     new: 0x086d6a00 (__memcpy_avx_unalign) R-> (2018.1) 0x04853c20 memmove
+--52222-- REDIR: 0x85ff5a0 (libc.so.6:memchr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86032d0 (libc.so.6:strspn) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8618320 (libc.so.6:wcpncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86000d0 (libc.so.6:mempcpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8602d40 (libc.so.6:strncasecmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x8603b90 (libc.so.6:strstr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--52222-- REDIR: 0x86db5f0 (libc.so.6:__strrchr_avx2) redirected to 0x484f950 (rindex)
+--52222-- REDIR: 0x86d6000 (libc.so.6:__memchr_avx2) redirected to 0x48513a0 (memchr)
+--52222-- REDIR: 0x85fb640 (libc.so.6:malloc) redirected to 0x4846799 (malloc)
+--52222-- REDIR: 0x86d7400 (libc.so.6:__memset_avx2_unaligned_erms) redirected to 0x4853b10 (memset)
+--52222-- REDIR: 0x85fc790 (libc.so.6:calloc) redirected to 0x484e052 (calloc)
+--52222-- REDIR: 0x86da820 (libc.so.6:__strncmp_avx2) redirected to 0x4850970 (strncmp)
+--52222-- REDIR: 0x86d9740 (libc.so.6:__strlen_avx2) redirected to 0x484ffb0 (strlen)
+--52222-- REDIR: 0x86d8da0 (libc.so.6:__strchrnul_avx2) redirected to 0x4854670 (strchrnul)
+--52222-- REDIR: 0x86d6a00 (libc.so.6:__memcpy_avx_unaligned_erms) redirected to 0x4853c20 (memmove)
+--52222-- REDIR: 0x86d69c0 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4854790 (mempcpy)
+--52222-- REDIR: 0x86db320 (libc.so.6:__strnlen_avx2) redirected to 0x484ff50 (strnlen)
+--52222-- REDIR: 0x86d8b60 (libc.so.6:__strchr_avx2) redirected to 0x484fb30 (index)
+--52222-- REDIR: 0x85fbd20 (libc.so.6:free) redirected to 0x4849aba (free)
+--52222-- REDIR: 0x85fc640 (libc.so.6:memalign) redirected to 0x484e84c (memalign)
+--52222-- REDIR: 0x86d69d0 (libc.so.6:__memcpy_chk_avx_unaligned_erms) redirected to 0x4854c90 (__memcpy_chk)
+--52222-- Reading syms from /home/peicasey/.SuiteSparse/GrB9.4.2/lib/25/libGB_jit__bitmap_assign_4_whole__803f0002bb93.so
+--52222-- REDIR: 0x86d8f90 (libc.so.6:__strcmp_avx2) redirected to 0x4851220 (strcmp)
+--52222-- Discarding syms at 0x8547120-0x8548efb in /home/peicasey/.SuiteSparse/GrB9.4.2/lib/25/libGB_jit__bitmap_assign_4_whole__803f0002bb93.so (have_dinfo 1)
+==52222== 
+==52222== HEAP SUMMARY:
+==52222==     in use at exit: 3,304 bytes in 7 blocks
+==52222==   total heap usage: 115 allocs, 108 frees, 1,910,039 bytes allocated
+==52222== 
+==52222== Searching for pointers to 7 not-freed blocks
+==52222== Checked 1,103,272 bytes
+==52222== 
+==52222== 8 bytes in 1 blocks are still reachable in loss record 1 of 7
+==52222==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==52222==    by 0x877D4A4: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==52222==    by 0x879410E: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==52222==    by 0x877BC5B: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==52222==    by 0x400571E: call_init.part.0 (dl-init.c:74)
+==52222==    by 0x4005823: call_init (dl-init.c:120)
+==52222==    by 0x4005823: _dl_init (dl-init.c:121)
+==52222==    by 0x401F59F: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+==52222== 
+==52222== 96 bytes in 1 blocks are still reachable in loss record 2 of 7
+==52222==    at 0x484E0DC: calloc (vg_replace_malloc.c:1675)
+==52222==    by 0x877D4DC: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==52222==    by 0x877BBA0: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==52222==    by 0x877BC77: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==52222==    by 0x400571E: call_init.part.0 (dl-init.c:74)
+==52222==    by 0x4005823: call_init (dl-init.c:120)
+==52222==    by 0x4005823: _dl_init (dl-init.c:121)
+==52222==    by 0x401F59F: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+==52222== 
+==52222== 192 bytes in 1 blocks are still reachable in loss record 3 of 7
+==52222==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==52222==    by 0x877D4A4: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==52222==    by 0x87919A3: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==52222==    by 0x878795A: GOMP_parallel (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==52222==    by 0x4C41B55: GB_builder (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C3E420: GB_build (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C440F7: GrB_Matrix_build_BOOL (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x489BD0A: LAGraph_MMRead (LAGraph_MMRead.c:992)
+==52222==    by 0x10DD61: test_bc (test_edgeBetweennessCentrality.c:139)
+==52222==    by 0x10BCC8: acutest_do_run_ (acutest.h:1025)
+==52222==    by 0x10C0F3: acutest_run_ (acutest.h:1196)
+==52222==    by 0x10D50B: main (acutest.h:1724)
+==52222== 
+==52222== 280 bytes in 1 blocks are indirectly lost in loss record 4 of 7
+==52222==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==52222==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C6A008: GB_convert_bitmap_to_sparse (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C66148: GB_conform (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4B6FECC: GB_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C2C323: GrB_Matrix_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4861638: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:315)
+==52222==    by 0x10DE78: test_bc (test_edgeBetweennessCentrality.c:145)
+==52222==    by 0x10BCC8: acutest_do_run_ (acutest.h:1025)
+==52222==    by 0x10C0F3: acutest_run_ (acutest.h:1196)
+==52222==    by 0x10D50B: main (acutest.h:1724)
+==52222== 
+==52222== 1,248 bytes in 1 blocks are indirectly lost in loss record 5 of 7
+==52222==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==52222==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C6A026: GB_convert_bitmap_to_sparse (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C66148: GB_conform (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4B6FECC: GB_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C2C323: GrB_Matrix_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4861638: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:315)
+==52222==    by 0x10DE78: test_bc (test_edgeBetweennessCentrality.c:145)
+==52222==    by 0x10BCC8: acutest_do_run_ (acutest.h:1025)
+==52222==    by 0x10C0F3: acutest_run_ (acutest.h:1196)
+==52222==    by 0x10D50B: main (acutest.h:1724)
+==52222== 
+==52222== 1,248 bytes in 1 blocks are indirectly lost in loss record 6 of 7
+==52222==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==52222==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C6A1DF: GB_convert_bitmap_to_sparse (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C66148: GB_conform (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4B6FECC: GB_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4C2C323: GrB_Matrix_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4861638: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:315)
+==52222==    by 0x10DE78: test_bc (test_edgeBetweennessCentrality.c:145)
+==52222==    by 0x10BCC8: acutest_do_run_ (acutest.h:1025)
+==52222==    by 0x10C0F3: acutest_run_ (acutest.h:1196)
+==52222==    by 0x10D50B: main (acutest.h:1724)
+==52222== 
+==52222== 3,008 (232 direct, 2,776 indirect) bytes in 1 blocks are definitely lost in loss record 7 of 7
+==52222==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==52222==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4D59844: GB_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x4D59178: GB_Matrix_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==52222==    by 0x48613E0: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:312)
+==52222==    by 0x10DE78: test_bc (test_edgeBetweennessCentrality.c:145)
+==52222==    by 0x10BCC8: acutest_do_run_ (acutest.h:1025)
+==52222==    by 0x10C0F3: acutest_run_ (acutest.h:1196)
+==52222==    by 0x10D50B: main (acutest.h:1724)
+==52222== 
+==52222== LEAK SUMMARY:
+==52222==    definitely lost: 232 bytes in 1 blocks
+==52222==    indirectly lost: 2,776 bytes in 3 blocks
+==52222==      possibly lost: 0 bytes in 0 blocks
+==52222==    still reachable: 296 bytes in 3 blocks
+==52222==         suppressed: 0 bytes in 0 blocks
+==52222== 
+==52222== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
