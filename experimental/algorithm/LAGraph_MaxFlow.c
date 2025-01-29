@@ -544,6 +544,7 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
     LAGraph_Delete(&res_graph, msg);                                       \
   }
 
+//GrB_assign(d, lvl, NULL, 0, GrB_ALL, n, GrB_DESC_SC);                      \
   
 int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *msg){
 
@@ -782,11 +783,11 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   while(n_active > 0){
 
     //BUG
-    /* if(iter % 12 == 0){ */
-    /*   GLOBAL_RELABEL; */
-    /* } */
+    if(iter % 15 == 0 && iter > 0){
+      GLOBAL_RELABEL;
+    }
 
-    //create C arrays
+    //Create C arrays
     GrB_Index Jmap[LEN], Imap[LEN];
     GrB_Index Jvec_value[LEN], deltaJi[LEN];
     MF_compareTuple yd_value[LEN];
@@ -795,7 +796,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
 
     printf("******iter: %d\n\n", iter);
-    GxB_print(e, 5);
+    //GxB_print(e, 5);
     //GxB_print(d, 5);
 
     //printf("---R matrix-----\n");
@@ -806,7 +807,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     //printf("---y---\n\n");
     //print_resultVec(y);
     GRB_TRY(GrB_Vector_dup(&y_dup, y));
-    //GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y_dup, -1, GrB_DESC_R));
+    GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y_dup, -1, GrB_DESC_R));
 
     //create yd vector of type compare tuple
     GRB_TRY(GrB_eWiseMult(yd, NULL, NULL, GrB_CreateCompareVec, y,  d, GrB_DESC_R));
@@ -859,7 +860,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     //extract residual flows from y
     GRB_TRY(GrB_apply(residual_vec, NULL, NULL, GrB_extractFlows, y, GrB_DESC_R));
-    GxB_print(residual_vec, 5);
+    //GxB_print(residual_vec, 5);
 
     //.min(flow_vec and e)
     GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, residual_vec, e, GrB_DESC_R));
@@ -918,7 +919,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     
   }
 
-  print_flowMtx(R);
+  //print_flowMtx(R);
   //GxB_print(d, 5);
   
   LG_FREE_ALL;
