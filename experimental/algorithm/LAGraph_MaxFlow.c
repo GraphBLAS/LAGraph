@@ -173,12 +173,12 @@
   "}"\
 "}" 
 
-#define GRB_INITFLOWF_STR "void MF_initFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){"\
+#define GRB_INITFLOWF_STR "void MF_initForwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){"\
   "z->flow = x->flow + y->flow;"\
   "z->capacity = y->capacity;"\
 "}"
 
-#define GRB_INITFLOWB_STR "void MF_initFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){"\
+#define GRB_INITFLOWB_STR "void MF_initBackwardsFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){"\
   "z->flow = y->flow - x->flow;"\
   "z->capacity = y->capaciy;"\
 "}"
