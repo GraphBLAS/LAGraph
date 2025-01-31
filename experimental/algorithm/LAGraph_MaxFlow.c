@@ -178,9 +178,9 @@
   "z->capacity = y->capacity;"\
 "}"
 
-#define GRB_INITFLOWB_STR "void MF_initBackwardsFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){"\
+#define GRB_INITFLOWB_STR "void MF_initBackwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){"\
   "z->flow = y->flow - x->flow;"\
-  "z->capacity = y->capaciy;"\
+  "z->capacity = y->capacity;"\ 
 "}"
 
 #define GRB_CREATECOMPVEC_STR "void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int *x) {"\
@@ -601,7 +601,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   //semiring and vectors for y<e, struct> = R x d
   GrB_Vector y, y_dup;
   GrB_IndexUnaryOp GrB_Prune;
-  GzB_IndexBinaryOp GrB_RxdIndexMult;
+  GxB_IndexBinaryOp GrB_RxdIndexMult;
   GrB_BinaryOp GrB_RxdAdd, GrB_RxdMult;
   GrB_Monoid GrB_RxdAddMonoid;
   GrB_Semiring GrB_RxdSemiring;
@@ -620,7 +620,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GrB_Semiring GrB_MxeSemiring;
   GrB_Monoid GrB_MxeAddMonoid;
   GrB_BinaryOp GrB_MxeAdd, GrB_MxeMult;
-  GzB_IndexBinaryOp GrB_MxeIndexMult;
+  GxB_IndexBinaryOp GrB_MxeIndexMult;
 
   //residual flow vec
   GrB_Vector residual_vec;
@@ -732,8 +732,8 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GrB_Scalar_new(&theta, GrB_INT32));
   GRB_TRY(GrB_Scalar_setElement_INT32(theta, 0));
   GRB_TRY(GrB_Vector_new(&y, GrB_ResultTuple, n));
-  GRB_TRY(GzB_IndexBinaryOp_new(&GrB_RxdIndexMult, F_INDEX_BINARY(MF_RxdMult), GrB_ResultTuple, GrB_FlowEdge, GrB_INT32, GrB_INT32, "MF_RxdMult", GRB_RXDMULT_STR));
-  GRB_TRY(GzB_BinaryOp_new_IndexOp(&GrB_RxdMult, GrB_RxdIndexMult, theta));
+  GRB_TRY(GxB_IndexBinaryOp_new(&GrB_RxdIndexMult, F_INDEX_BINARY(MF_RxdMult), GrB_ResultTuple, GrB_FlowEdge, GrB_INT32, GrB_INT32, "MF_RxdMult", GRB_RXDMULT_STR));
+  GRB_TRY(GxB_BinaryOp_new_IndexOp(&GrB_RxdMult, GrB_RxdIndexMult, theta));
   GRB_TRY(GxB_BinaryOp_new(&GrB_RxdAdd, F_BINARY(MF_RxdAdd), GrB_ResultTuple, GrB_ResultTuple, GrB_ResultTuple, "MF_RxdAdd", GRB_RXDADD_STR));
   MF_resultTuple id = {.d = INT32_MAX, .j = -1, .residual = 0};
   GRB_TRY(GrB_Monoid_new_UDT(&GrB_RxdAddMonoid, GrB_RxdAdd, &id));
@@ -751,8 +751,8 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GxB_UnaryOp_new(&GrB_extractYJ, F_UNARY(MF_extractYJ), GrB_INT32, GrB_ResultTuple, "MF_extractYJ", GRB_EXTRACTYJ_STR));
 
   //create map x e semiring
-  GRB_TRY(GzB_IndexBinaryOp_new(&GrB_MxeIndexMult, F_INDEX_BINARY(MF_MxeMult), GrB_ResultTuple, GrB_CompareTuple, GrB_FP64, GrB_INT32, "MF_MxeMult", GRB_MXEMULT_STR));
-  GRB_TRY(GzB_BinaryOp_new_IndexOp(&GrB_MxeMult, GrB_MxeIndexMult, theta));
+  GRB_TRY(GxB_IndexBinaryOp_new(&GrB_MxeIndexMult, F_INDEX_BINARY(MF_MxeMult), GrB_ResultTuple, GrB_CompareTuple, GrB_FP64, GrB_INT32, "MF_MxeMult", GRB_MXEMULT_STR));
+  GRB_TRY(GxB_BinaryOp_new_IndexOp(&GrB_MxeMult, GrB_MxeIndexMult, theta));
   GRB_TRY(GxB_BinaryOp_new(&GrB_MxeAdd, F_BINARY(MF_MxeAdd), GrB_ResultTuple, GrB_ResultTuple, GrB_ResultTuple, "MF_MxeAdd", GRB_MXEADD_STR));
   GRB_TRY(GrB_Monoid_new_UDT(&GrB_MxeAddMonoid, GrB_MxeAdd, &id));
   GRB_TRY(GrB_Semiring_new(&GrB_MxeSemiring, GrB_MxeAddMonoid, GrB_MxeMult));
