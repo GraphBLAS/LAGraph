@@ -71,7 +71,7 @@
   LG_FREE_WORK; \
 }
 
-#define LEN 512
+#define LEN INT32_MAX
 
 //casting for unary ops
 #define F_UNARY(f) ((void (*)(void *, const void *))f)
