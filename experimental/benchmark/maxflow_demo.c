@@ -27,11 +27,11 @@ int main (int argc, char ** argv){
   
   //read in graph
   double t = LAGraph_WallClockTime ( ) ;
-  char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
+  //char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
   
   LAGRAPH_TRY(readproblem(&G, NULL, false, true, false, NULL, true, argc, argv));
   
-  t = LAGraph_WallClockTime ( ) - t ;
+  t = LAGraph_WallClockTime() - t;
   printf ("Time to read the graph:      %g sec\n", t) ;
 
   
