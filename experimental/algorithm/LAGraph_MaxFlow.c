@@ -71,7 +71,7 @@
   LG_FREE_WORK; \
 }
 
-#define LEN 65365
+#define LEN INT16_MAX
 
 //casting for unary ops
 #define F_UNARY(f) ((void (*)(void *, const void *))f)
@@ -522,7 +522,6 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
     GrB_Vector_new(&parent, GrB_INT64, n);				\
     GrB_Vector_new(&lvl, GrB_INT64, n);					\
     GrB_Matrix_new(&res_mat, GrB_FP64, n, n);				\
-    GrB_Matrix_new(&modified_res_mat, GrB_FP64, n, n);			\
     GxB_UnaryOp_new(&GrB_GetResidual, F_UNARY(MF_getResidual), GrB_FP64,       \
                     GrB_FlowEdge, "MF_getResidual", GRB_GETRES_STR);           \
     GrB_apply(res_mat, NULL, NULL, GrB_GetResidual, R, NULL);                  \
@@ -766,17 +765,17 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GrB_Vector_new(&delta_vec, GrB_FP64, n));
 
   //relable structures
-  GRB_TRY(GrB_Vector_new(&d_dup, GrB_INT32, n));
+  //GRB_TRY(GrB_Vector_new(&d_dup, GrB_INT32, n));
 
   //update height binary op
   GRB_TRY(GxB_BinaryOp_new(&GrB_UpdateHeight, F_BINARY(MF_updateHeight), GrB_INT32, GrB_INT32, GrB_ResultTuple, "MF_updateHeight", GRB_UPDATEHEIGHT_STR));
 
   //update R structure
-  GRB_TRY(GrB_Matrix_new(&R_dup, GrB_FlowEdge, n, n));
+  //GRB_TRY(GrB_Matrix_new(&R_dup, GrB_FlowEdge, n, n));
   GRB_TRY(GxB_BinaryOp_new(&GrB_UpdateFlows, F_BINARY(MF_updateFlow), GrB_FlowEdge, GrB_FlowEdge, GrB_FP64, "MF_updateFlow", GRB_UPDATEFLOWS_STR));
 
   //update e structures
-  GRB_TRY(GrB_Vector_new(&e_dup, GrB_FP64, n));
+  //GRB_TRY(GrB_Vector_new(&e_dup, GrB_FP64, n));
 
   int iter = 0;
   
@@ -914,6 +913,26 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     //clear map and delta
     GRB_TRY(GrB_Matrix_clear(map));
     GRB_TRY(GrB_Matrix_clear(delta));
+
+    /* GRB_TRY(GrB_Vector_clear(d_dup)); */
+    /* GRB_TRY(GrB_Vector_clear(y_dup)); */
+    /* GRB_TRY(GrB_Vector_clear(e_dup)); */
+    /* GRB_TRY(GrB_Matrix_clear(R_dup)); */
+
+    GRB_TRY(GrB_free(&d_dup));
+    GRB_TRY(GrB_free(&y_dup));
+    GRB_TRY(GrB_free(&e_dup));
+    GRB_TRY(GrB_free(&R_dup));
+    
+    //free C arrays
+    /* LAGraph_Free((void*)Jmap, msg); */
+    /* LAGraph_Free((void*)Imap, msg); */
+    /* LAGraph_Free((void*)Jvec_value, msg); */
+    /* LAGraph_Free((void*)deltaJi, msg); */
+    /* LAGraph_Free((void*)yd_value, msg); */
+    /* LAGraph_Free((void*)Idelta, msg); */
+    /* LAGraph_Free((void*)Jdelta, msg); */
+    /* LAGraph_Free((void*)delta_raw, msg); */
 
     ++iter;
     

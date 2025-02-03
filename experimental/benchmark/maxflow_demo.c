@@ -42,8 +42,9 @@ int main (int argc, char ** argv){
   double time = LAGraph_WallClockTime();
   LAGRAPH_TRY(LAGraph_MaxFlow(G, S, T, &flow, msg));
   time = LAGraph_WallClockTime() - time;
-
+  
   printf("Time for LAGraph_MaxFlow: %g sec\n", time);
+  printf("Max Flow is: %lf\n", flow);
  
   LAGraph_Delete(&G, msg);
   LAGRAPH_TRY(LAGraph_Finalize(msg));

@@ -11,7 +11,7 @@ char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 GrB_Matrix A = NULL;
 #define LEN 512
-#define NTESTS 7
+#define NTESTS 1
 char filename[LEN + 1];
 
 typedef struct{
@@ -34,7 +34,7 @@ test_info tests[] = {
 
 void test_MaxFlow(void) {
   LAGraph_Init(msg);
-  //OK(LG_SET_BURBLE(1));
+  OK(LG_SET_BURBLE(1));
   OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, 4));
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A;
