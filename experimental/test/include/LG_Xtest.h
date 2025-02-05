@@ -80,6 +80,7 @@ int LG_check_coarsen
     int combine_weights,        // whether to combine the weights of edges that collapse together
 ) ;
 
+
 int LG_check_coloring
 (
     // inputs
