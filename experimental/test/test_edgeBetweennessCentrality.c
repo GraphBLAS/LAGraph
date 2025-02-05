@@ -65,14 +65,14 @@ float difference (GrB_Vector bc, double *gap_result)
 
 double example_bc [8][8] = 
 {
- {0.000000,   0.0952381,  0.08333333, 0.0952381,  0.000000,   0.000000,   0.000000,   0.000000},
- {0.0952381,  0.000000,   0.04761905, 0.000000,   0.20238095, 0.000000,   0.000000,   0.000000},
- {0.08333333, 0.04761905, 0.000000,   0.04761905, 0.19047619, 0.000000,   0.000000,   0.000000},
- {0.0952381,  0.000000,   0.04761905, 0.000000,   0.20238095, 0.000000,   0.000000,   0.000000},
- {0.000000,   0.20238095, 0.19047619, 0.20238095, 0.000000,   0.28571429, 0.28571429, 0.000000},
- {0.000000,   0.000000,   0.000000,   0.000000,   0.28571429, 0.000000,   0.000000,   0.14285714},
- {0.000000,   0.000000,   0.000000,   0.000000,   0.28571429, 0.000000,   0.000000,   0.14285714},
- {0.000000,   0.000000,   0.000000,   0.000000,   0.000000,   0.14285714, 0.14285714, 0.000000},
+    {0.0, 2.666666666666666, 2.333333333333333, 2.666666666666666, 0.0, 0.0, 0.0, 0.0},
+    {2.666666666666666, 0.0, 1.3333333333333333, 0.0, 5.666666666666667, 0.0, 0.0, 0.0},
+    {2.333333333333333, 1.3333333333333333, 0.0, 1.3333333333333333, 5.333333333333333, 0.0, 0.0, 0.0},
+    {2.666666666666666, 0.0, 1.3333333333333333, 0.0, 5.666666666666667, 0.0, 0.0, 0.0},
+    {0.0, 5.666666666666667, 5.333333333333333, 5.666666666666667, 0.0, 8.0, 8.0, 0.0},
+    {0.0, 0.0, 0.0, 0.0, 8.0, 0.0, 0.0, 4.0},
+    {0.0, 0.0, 0.0, 0.0, 8.0, 0.0, 0.0, 4.0},
+    {0.0, 0.0, 0.0, 0.0, 0.0, 4.0, 4.0, 0.0},
 } ; 
 
 //------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ void test_bc (void)
     int niters = 0 ;
 
     // create the karate graph
-    snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "diamonds.mtx") ;
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, f, msg)) ;
@@ -143,10 +143,31 @@ void test_bc (void)
 
     // compute its betweenness centrality
     OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
-    printf ("\nkarate bc:\n") ;
+    printf ("\ndiamonds:\n") ;
     OK (LAGraph_Delete (&G, msg)) ;
 
     LAGraph_Finalize (msg) ;
+
+    // LAGraph_Init (msg) ;
+    // GrB_Matrix A = NULL ;
+    // GrB_Matrix centrality = NULL ;
+    // int niters = 0 ;
+
+    // // create the karate graph
+    // snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
+    // FILE *f = fopen (filename, "r") ;
+    // TEST_CHECK (f != NULL) ;
+    // OK (LAGraph_MMRead (&A, f, msg)) ;
+    // OK (fclose (f)) ;
+    // OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+    // TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+    // // compute its betweenness centrality
+    // OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
+    // printf ("\nkarate bc:\n") ;
+    // OK (LAGraph_Delete (&G, msg)) ;
+
+    // LAGraph_Finalize (msg) ;
 }
 
 //------------------------------------------------------------------------------

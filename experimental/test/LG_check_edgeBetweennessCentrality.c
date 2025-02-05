@@ -269,7 +269,11 @@ int LG_check_edgeBetweennessCentrality
                 // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
                 printf("%g = %g * (%g/%g + 1)\n", sigma [v] * ((delta [w] / sigma [w]) + 1), sigma [v], delta [w], sigma [w]) ;
 
-                if (v == w) { printf ("Ack!!\n") ; fflush (stdout) ; abort ( ) ; }
+                // if (v == w) { printf ("Ack!!\n") ; fflush (stdout) ; abort ( ) ; }
+                if (v == w) { 
+                    printf ("Ack!!\n") ; 
+                    goto flag;
+                }
 
                 double centrality = sigma [v] * ((delta [w] / sigma [w]) + 1) ;
                 delta [v] += centrality ;
@@ -282,6 +286,7 @@ int LG_check_edgeBetweennessCentrality
 
     }
 
+    flag:
     if (print_timings)
     {
         tt = LAGraph_WallClockTime ( ) - tt ;
