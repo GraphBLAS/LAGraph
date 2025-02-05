@@ -78,8 +78,8 @@ int LG_check_coarsen
     GrB_Vector inv_newlabel,   // inverse of newlabel, can be NULL if preserve_mapping = 1, else must be a valid result
     int preserve_mapping,       // whether to preserve the original namespace of nodes
     int combine_weights,        // whether to combine the weights of edges that collapse together
+    char *msg
 ) ;
-
 
 int LG_check_coloring
 (
