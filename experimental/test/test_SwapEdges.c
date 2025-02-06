@@ -32,7 +32,7 @@ const char* tests [ ] =
 {
     "random_unweighted_general1.mtx",
     "random_unweighted_general2.mtx",
-    //"bcsstk13.mtx",
+    "bcsstk13.mtx",
     ""
 } ;
 void test_SwapEdges (void)

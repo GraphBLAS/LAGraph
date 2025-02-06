@@ -1,5 +1,6 @@
 //----------------------------------------------------------------------------
-// LAGraph/src/test/test_HelloWorld.c: test cases for LAGraph_HelloWorld
+// LAGraph/src/test/test_RichClubCoefficient.c: test cases for 
+// LAGraph_RichClubCoefficient
 //----------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -13,8 +14,7 @@
 
 //-----------------------------------------------------------------------------
 
-// This is a very simple "hello world" example of a test program for an
-// algorithm in the experimental/algorithm folder.
+// This program tests Rich Club Coefficient by comparing it to know values.
 
 #include <stdio.h>
 #include <acutest.h>
@@ -84,7 +84,7 @@ const matrix_info tests [ ] =
 {
     {rcc1, sizeof(rcc1) / sizeof(rcc1[0]), "random_unweighted_general1.mtx"},
     {rcc2, sizeof(rcc2) / sizeof(rcc2[0]), "random_unweighted_general2.mtx"},
-    {rcc3, sizeof(rcc3) / sizeof(rcc2[0]), "bcsstk13.mtx"},
+    {rcc3, sizeof(rcc3) / sizeof(rcc3[0]), "bcsstk13.mtx"},
     {NULL, 0, ""}
 } ;
 

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_SwapEdges: Randomly Swaps edges in a graph
+// LAGraph_SwapEdges: randomly swaps edges in a graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -105,7 +105,7 @@ void swap_pattern
         "(*z) = (uint8_t) (((i & 1) * 2) | (*x & 1));"                          \
     "}"
 
-//Hashes any node with a simple Multiply-shift from 
+// Hashes any node with a simple Multiply-shift from 
 // https://arxiv.org/pdf/1504.06804
 // QUESTION: this hash is a bit simple but I doubt it will result in a ton of 
 // collisions unless the input graph is very specifically constucted
@@ -228,6 +228,21 @@ void zero_function
 "{                                                                            \n"\
 "    (*z) = (*z) != (*z);                                                     \n"\
 "}"
+
+void add_term
+    (uint8_t *z, const uint8_t *x, const uint8_t *y)
+{
+    uint8_t temp = (*x) + (*y);
+    (*z) = (temp > 2)? 2: temp;
+}
+#define ADD_TERM                                                               \
+"void add_term                                                                \n"\
+"(uint8_t *z, const uint8_t *x, const uint8_t *y)                             \n"\
+"{                                                                            \n"\
+"    uint8_t temp = (*x) + (*y);                                              \n"\
+"    (*z) = (temp > 2)? 2: temp;                                              \n"\
+"}"
+
 int LAGraph_SwapEdges
 (
     // output
@@ -321,6 +336,12 @@ int LAGraph_SwapEdges
     // z = h_y(x)
     GrB_BinaryOp hash_seed = NULL;
     GrB_BinaryOp hash_seed_e = NULL;
+
+    // z = min(2,x+y)
+    GrB_BinaryOp add_term_biop = NULL;
+    GrB_Monoid add_term_monoid = NULL;
+    GrB_Semiring plus_term_one = NULL;
+
 
     // [^],[h_y(x)]
     GrB_Semiring bxor_hash = NULL;
@@ -421,6 +442,16 @@ int LAGraph_SwapEdges
         &swap_pair, (GxB_index_unary_function) (&swap_bc),
         lg_swap, lg_swap, GrB_BOOL, "swap_bc", SWAP_BC
     )) ;
+    GRB_TRY(GxB_BinaryOp_new(
+        &add_term_biop, (GxB_binary_function) (&add_term), 
+        GrB_UINT8, GrB_UINT8, GrB_UINT8, "add_term", ADD_TERM
+    ));
+    // GRB_TRY (GrB_Monoid_new_UINT8(
+    //     &add_term_monoid, add_term_biop, (uint8_t) 0
+    // ))
+    GRB_TRY (GxB_Monoid_terminal_new_UINT8(
+        &add_term_monoid, add_term_biop, (uint8_t) 0, (uint8_t) 2
+    ));
     // I use a bit wise xor to combine the hashes since the same column number 
     // will not appear twice in my multiplication and I want combination to be 
     // commutative.
@@ -430,6 +461,10 @@ int LAGraph_SwapEdges
     GRB_TRY(GrB_Semiring_new(
         &bxor_first, GxB_BXOR_UINT64_MONOID , GrB_FIRST_UINT64 
     )) ;
+    // TODO: get this working with the right monoid
+    GRB_TRY(GrB_Semiring_new(
+        &plus_term_one, GxB_PLUS_UINT8_MONOID, GrB_ONEB_UINT8
+    ));// add_term_monoid
     // count swaps 
     GrB_Index num_swaps = 0, num_attempts = 0, swaps_per_loop = e / 3 ;
 
@@ -444,8 +479,9 @@ int LAGraph_SwapEdges
     GRB_TRY (GrB_set(E, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT));
     int shift_e = __builtin_clzl(e);
     uint64_t ehash_size = (1ull << (67-shift_e));
+    // if(ehash_size > 6*e) ehash_size/=2;
     printf("Hash Size: %ld", ehash_size);
-    GRB_TRY (GrB_Vector_new(&exists, GrB_INT8, ehash_size)) ;
+    GRB_TRY (GrB_Vector_new(&exists, GrB_UINT8, ehash_size)) ;
     
     // GxB_Matrix_fprint(E, "E", GxB_SHORT, stdout);
     // Init Ramps --------------------------------------------------------------
@@ -620,7 +656,7 @@ int LAGraph_SwapEdges
 
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64(
             new_hashed_edges, NULL, NULL, hash_seed_e, M_thin, 
-            ehash_size - 1, NULL
+            ehash_size - 1ll, NULL
         )) ;//0xFB21C651E98DF25ULL
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64(
             hashed_edges, NULL, NULL, hash_seed_e, E_vec, 
@@ -648,8 +684,6 @@ int LAGraph_SwapEdges
         // Build Hash Buckets
         //----------------------------------------------------------------------
 
-        // TODO: probably faster to make a single array to force a bitmap saxpy
-        // We're gonna need a bigger ramp.
         // Making the hash set for existing edges via a pack CSC trick.
         GRB_TRY(GrB_Vector_new(&dup_swaps_v, GrB_INT8, swaps_per_loop * 2)) ;
         GRB_TRY (GrB_set (dup_swaps_v, GxB_BITMAP, GxB_SPARSITY_CONTROL)) ;
@@ -660,7 +694,7 @@ int LAGraph_SwapEdges
             perm_size, sizeof(bool), true, false, NULL
         ));
         GRB_TRY (GrB_reduce(
-            exists, NULL, NULL, GxB_ANY_INT8_MONOID, hash_m, NULL));
+            exists, NULL, NULL, GxB_ANY_UINT8_MONOID, hash_m, NULL));
         GRB_TRY (GxB_Matrix_unpack_CSC(
             hash_m, &ramp, &hash_vals, (void**) &val_of_P, &ramp_size,
             &perm_size, &junk_size, &iso, NULL, NULL
@@ -674,12 +708,13 @@ int LAGraph_SwapEdges
         GRB_TRY (GrB_Vector_resize(x, swaps_per_loop * 2));
         GRB_TRY (GrB_Vector_assign_BOOL(
             x, NULL, NULL, true, GrB_ALL, 0, NULL)) ;
+
         //TODO: fix overflow!
         GRB_TRY (GrB_mxv(
-            exists, NULL, GrB_PLUS_INT8, GxB_PLUS_PAIR_INT8, hash_m, x, NULL
+            exists, NULL, add_term_biop, plus_term_one, hash_m, x, NULL
         ));
-        GRB_TRY (GrB_Vector_select_INT8(
-            exists, NULL, NULL, GrB_VALUEEQ_INT8, exists, (int8_t) 1,
+        GRB_TRY (GrB_Vector_select_UINT8(
+            exists, NULL, NULL, GrB_VALUEEQ_UINT8, exists, (uint8_t) 1,
             NULL
         ));
         GRB_TRY (GrB_vxm(
@@ -691,25 +726,7 @@ int LAGraph_SwapEdges
             &hvn_size, &junk_size, &iso, NULL, NULL
         ));
         GRB_TRY (GrB_Vector_clear(x));
-        // GRB_TRY (GrB_Vector_assign(
-        //     new_edges_h, exists, NULL, new_edges_h, GrB_ALL, 0, GrB_DESC_RSC));
-        // GxB_fprint(new_edges_h, GxB_SHORT, stdout);
-        // Use yet another hash set to find bad swaps
-        // GRB_TRY (GrB_Vector_extractTuples(
-        //     NULL, hash_vals_new, &hvn_size, new_edges_h)) ;
-        // GRB_TRY (GrB_Matrix_resize(
-        //     hash_m, swaps_per_loop * 2, hvn_size)) ;
-        // GRB_TRY (GxB_Matrix_pack_CSC(
-        //     hash_m, &ramp, &hash_vals_new, (void**) &val_of_P, 
-        //     (hvn_size + 1) * sizeof(GrB_Index), hvn_size * sizeof(GrB_Index), 
-        //     sizeof(bool), true, false, NULL
-        // ));
-        // GRB_TRY (GrB_reduce(
-        //     dup_swaps_v, NULL, NULL, GrB_PLUS_INT8, hash_m, NULL));
-        // GRB_TRY (GxB_Matrix_unpack_CSC(
-        //     hash_m, &ramp, &hash_vals_new, (void**) &val_of_P, &junk_size,
-        //     &hvn_size, &junk_size, &iso, NULL, NULL
-        // ));
+
         int8_t *dup_val = NULL;
         GRB_TRY (GxB_Vector_unpack_Bitmap(
             dup_swaps_v, (int8_t **) &dup_swaps, (void **) &dup_val, 

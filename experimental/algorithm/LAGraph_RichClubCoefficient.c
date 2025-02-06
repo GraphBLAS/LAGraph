@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_RichClubCoefficient: rich club coefficient
+// LAGraph_RichClubCoefficient: rich club coefficient of a graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -15,14 +15,15 @@
 
 //------------------------------------------------------------------------------
 
-// Get the rich club coefficient of a graph, also allows for edge randomization
-// to normalize the coefficients in a graph.
+// Get the rich club coefficient of a graph.
 
 // Given a Symetric Graph with no self edges, LAGraph_RichClubCoefficient will
 // calculate the rich club coefficients of the graph. 
 
 // The values will be output as a sparse GrB_Vector, the rich club coefficient 
-// of k will be found at the closeste entry at or above k.
+// of k will be found at the closest entry at or above k.
+
+// The G->out_degree cached property must be defined for this method.
 
 // References:
 
@@ -73,16 +74,6 @@
 
 typedef void (*LAGraph_binary_function) (void *, const void *, const void *) ;
 
-/* #define TWO_ONE_ADD                                                         \
-    "void two_one_add(int64_t *z, const int64_t *x, const int64_t *y)"   \
-    "{"                                                                     \
-        "(*z) = 2 * (*x) + (*y) ;"                                          \
-    "}"
-void two_one_add(int64_t *z, const int64_t *x, const int64_t *y)
-{ 
-    (*z) = 2 * (*x) + (*y);
-}
- */
 #define ISEQ_2ISLT                                                          \
     "void iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)            \n"\
     "{                                                                          \n"\
@@ -106,7 +97,7 @@ void rich_club_formula(double *z, const int64_t *x, const int64_t *y)
 int LAGraph_RichClubCoefficient
 (
     // output:
-    //rich_club_coefficents(i): rich club coefficents of i
+    //rich_club_coefficents(i): rich club coefficent of i
     GrB_Vector *rich_club_coefficents,    
 
     // input: 
@@ -144,7 +135,7 @@ int LAGraph_RichClubCoefficient
     // the ith entry contains the number of verticies whose degree is i.
     GrB_Vector verts_per_deg = NULL;
 
-    // 
+    // edge_vec_nvals x 1
     // Vector of ones
     GrB_Vector ones_v = NULL;
 
@@ -309,6 +300,19 @@ int LAGraph_RichClubCoefficient
     #endif
 
     // Cumulative sum (TODO: should be a GBLAS method!)
+
+    /**
+     * GrB_cumsum(GrB_Matrix C, const GrB_Matrix mask, const GrB_BinaryOp accum,
+     *      const GrB_Monoid monoid, GrB_Matrix A, const GrB_Descriptor desc)
+     * 
+     * By default sums rows. Returns a nearly full matrix:
+     * [., ., 1, 1, 1, 1, ., ., 1] --> [., ., 1, 2, 3, 4, 4, 4, 5]
+     * Mask can be A, then returns a matrix with the same pattern.
+     * [., ., 1, 1, 1, 1, ., ., 1] --> [., ., 1, 2, 3, 4, ., ., 5]
+     * 
+     * Should we be able to sum in the opposite direction?
+     * If Monoid is not comutative, this method should still work. 
+     */
     GRB_TRY (GxB_Vector_unpack_CSC(
         edges_per_deg, &epd_index, (void **)&edges_per_deg_arr,
         &vi_size, &vx_size, &iso, &edge_vec_nvals, NULL, NULL)) ;
