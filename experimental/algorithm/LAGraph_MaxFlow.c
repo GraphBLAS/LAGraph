@@ -513,38 +513,35 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
   *z = y->capacity - y->flow;
 }
 
-void MF_GlobalRelabel(int* z, const int* y, const int* x){
-  if(*y < *x){
-    *z = *x;
-  }
-  else{
-    *z = *y;
-  }
-}
+/* void MF_GlobalRelabel(int* z, const int* y, const int* x){ */
+/*   if(*y < *x){ */
+/*     *z = *x; */
+/*   } */
+/*   else{ */
+/*     *z = *y; */
+/*   } */
+/* } */
 
-#define GRB_GRLBL "void MF_GlobalRelabel(int* z, const int* y, const int* x){" \
-  "if(*y < *x){" \
-    "*z = *x;" \
-  "}" \
-  "else{" \
-    "*z = *y;" \
-  "}" \
-"}" 
+/* #define GRB_GRLBL "void MF_GlobalRelabel(int* z, const int* y, const int* x){" \ */
+/*   "if(*y < *x){" \ */
+/*     "*z = *x;" \ */
+/*   "}" \ */
+/*   "else{" \ */
+/*     "*z = *y;" \ */
+/*   "}" \ */
+/* "}"  */
 
 #define GLOBAL_RELABEL                                                         \
   {                                                                            \
     GrB_Vector parent, lvl;                                                    \
     GrB_UnaryOp GrB_GetResidual;                                               \
     GrB_Matrix res_mat, modified_res_mat, modified_res_matT;				\
-    GrB_BinaryOp GrB_GlobalRelabel; \
     LAGraph_Graph res_graph;                                                   \
     GrB_Vector_new(&parent, GrB_INT64, n);				\
     GrB_Vector_new(&lvl, GrB_INT64, n);					\
     GrB_Matrix_new(&res_mat, GrB_FP64, n, n);				\
     GxB_UnaryOp_new(&GrB_GetResidual, F_UNARY(MF_getResidual), GrB_FP64,       \
                     GrB_FlowEdge, "MF_getResidual", GRB_GETRES_STR);           \
-    GxB_BinaryOp_new(&GrB_GlobalRelabel, F_BINARY(MF_GlobalRelabel), GrB_INT32, \
-		     GrB_INT32, GrB_INT32, "MF_GlobalRelabel", GRB_GRLBL);   \
     GrB_apply(res_mat, NULL, NULL, GrB_GetResidual, R, NULL);                  \
     GrB_Matrix_dup(&modified_res_mat, res_mat);                                \
     GrB_select(modified_res_mat, NULL, NULL, GrB_VALUEGT_FP64, res_mat, 0,     \
@@ -564,7 +561,6 @@ void MF_GlobalRelabel(int* z, const int* y, const int* x){
     GrB_free(&res_mat);                                                        \
     GrB_free(&modified_res_mat);                                               \
     GrB_free(&modified_res_matT);                                               \
-    GrB_free(&GrB_GlobalRelabel);                                               \
     LAGraph_Delete(&res_graph, msg);                                       \
   }
 
