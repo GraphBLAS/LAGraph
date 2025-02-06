@@ -11,7 +11,7 @@ char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 GrB_Matrix A = NULL;
 #define LEN 512
-#define NTESTS 1
+#define NTESTS 7
 char filename[LEN + 1];
 
 typedef struct{
@@ -24,17 +24,18 @@ typedef struct{
 test_info tests[] = {
   {"wiki.mtx", 0, 5, 4},
   {"matrix_random_flow.mtx", 0,9, 22},
-  {"rand.mtx", 0, 19, 37}, //fails during global relabel when relable happens every 12 iterations. Works when 15
+  {"rand.mtx", 0, 19, 37}, 
   {"mcl.mtx", 0, 9, 0}, 
   {"cycle_flow.mtx", 0, 89, 1},
   {"random_weighted_general2.mtx", 0, 299, 11098623877},
   {"random_weighted_general1.mtx", 0, 499, 6264009335}
 };
 
+//399 11098623877 alt sink and src for test 6
 
 void test_MaxFlow(void) {
   LAGraph_Init(msg);
-  OK(LG_SET_BURBLE(1));
+  //OK(LG_SET_BURBLE(1));
   OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, 4));
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A;

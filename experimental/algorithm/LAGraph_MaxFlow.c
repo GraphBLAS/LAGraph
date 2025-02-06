@@ -513,37 +513,63 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
   *z = y->capacity - y->flow;
 }
 
+void MF_GlobalRelabel(int* z, const int* y, const int* x){
+  if(*y < *x){
+    *z = *x;
+  }
+  else{
+    *z = *y;
+  }
+}
+
+#define GRB_GRLBL "void MF_GlobalRelabel(int* z, const int* y, const int* x){" \
+  "if(*y < *x){" \
+    "*z = *x;" \
+  "}" \
+  "else{" \
+    "*z = *y;" \
+  "}" \
+"}" 
+
 #define GLOBAL_RELABEL                                                         \
   {                                                                            \
     GrB_Vector parent, lvl;                                                    \
     GrB_UnaryOp GrB_GetResidual;                                               \
-    GrB_Matrix res_mat, modified_res_mat;                                      \
+    GrB_Matrix res_mat, modified_res_mat, modified_res_matT;				\
+    GrB_BinaryOp GrB_GlobalRelabel; \
     LAGraph_Graph res_graph;                                                   \
     GrB_Vector_new(&parent, GrB_INT64, n);				\
     GrB_Vector_new(&lvl, GrB_INT64, n);					\
     GrB_Matrix_new(&res_mat, GrB_FP64, n, n);				\
     GxB_UnaryOp_new(&GrB_GetResidual, F_UNARY(MF_getResidual), GrB_FP64,       \
                     GrB_FlowEdge, "MF_getResidual", GRB_GETRES_STR);           \
+    GxB_BinaryOp_new(&GrB_GlobalRelabel, F_BINARY(MF_GlobalRelabel), GrB_INT32, \
+		     GrB_INT32, GrB_INT32, "MF_GlobalRelabel", GRB_GRLBL);   \
     GrB_apply(res_mat, NULL, NULL, GrB_GetResidual, R, NULL);                  \
     GrB_Matrix_dup(&modified_res_mat, res_mat);                                \
     GrB_select(modified_res_mat, NULL, NULL, GrB_VALUEGT_FP64, res_mat, 0,     \
                GrB_DESC_R);                                                          \
-    LAGraph_New(&res_graph, &modified_res_mat, LAGraph_ADJACENCY_DIRECTED,  \
+    GrB_Matrix_dup(&modified_res_matT, modified_res_mat); \
+    GrB_transpose(modified_res_matT, NULL, NULL, modified_res_mat, GrB_DESC_R);	\
+    LAGraph_New(&res_graph, &modified_res_matT, LAGraph_ADJACENCY_DIRECTED,  \
                    msg);                                                      \
     LAGraph_Cached_AT(res_graph, msg);                                     \
     LAGraph_Cached_OutDegree(res_graph, msg);                              \
     LAGr_BreadthFirstSearch(&lvl, &parent, res_graph, T, msg);             \
-    GrB_assign(d, NULL, NULL, lvl, GrB_ALL, n, GrB_DESC_R);                    \
-    GrB_assign(d, lvl, NULL, 0, GrB_ALL, n, GrB_DESC_SC);                      \
+    GrB_assign(d, lvl, NULL, lvl, GrB_ALL, n, GrB_DESC_S);                    \
+    GrB_assign(d, lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC);                      \
     GrB_free(&parent);                                                         \
     GrB_free(&lvl);                                                            \
     GrB_free(&GrB_GetResidual);                                                \
     GrB_free(&res_mat);                                                        \
     GrB_free(&modified_res_mat);                                               \
+    GrB_free(&modified_res_matT);                                               \
+    GrB_free(&GrB_GlobalRelabel);                                               \
     LAGraph_Delete(&res_graph, msg);                                       \
   }
 
 //GrB_assign(d, lvl, NULL, 0, GrB_ALL, n, GrB_DESC_SC);                      \
+//GxB_print(lvl, 5);							\
   
 int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *msg){
 
@@ -779,11 +805,12 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
   int iter = 0;
   
-  while(n_active > 0){
+  while(n_active > 0 && iter < 90){
 
     //BUG
-    if(iter % 15 == 0 && iter > 0){
+    if(iter % 12 == 0){
       GLOBAL_RELABEL;
+      //printf("GLOBAL RELABEL\n\n");
     }
 
     //Create C arrays
@@ -794,17 +821,17 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     double delta_raw[LEN];
 
 
-    printf("******iter: %d\n\n", iter);
-    //GxB_print(e, 5);
-    //GxB_print(d, 5);
+    printf("******iter: %d\n\n", iter); 
+    /* GxB_print(e, 5); */
+    /* GxB_print(d, 5); */
 
-    //printf("---R matrix-----\n");
-    //print_flowMtx(R);
+    /* printf("---R matrix-----\n"); */
+    /* print_flowMtx(R); */
     
     //y<e, struct> = R x d
     GRB_TRY(GrB_mxv(y, e, NULL, GrB_RxdSemiring, R, d, GrB_DESC_RS));
-    //printf("---y---\n\n");
-    //print_resultVec(y);
+    /* printf("---y---\n\n"); */
+    /* print_resultVec(y); */
     GRB_TRY(GrB_Vector_dup(&y_dup, y));
     GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y_dup, -1, GrB_DESC_R));
 
