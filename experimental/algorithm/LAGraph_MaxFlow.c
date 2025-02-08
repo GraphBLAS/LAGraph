@@ -522,6 +522,8 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
 /*   } */
 /* } */
 
+//#define DBG
+
 /* #define GRB_GRLBL "void MF_GlobalRelabel(int* z, const int* y, const int* x){" \ */
 /*   "if(*y < *x){" \ */
 /*     "*z = *x;" \ */
@@ -875,17 +877,17 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GRB_TRY(GrB_eWiseMult(d, y, NULL, GrB_UpdateHeight, d_dup, y, GrB_DESC_S));
     //GxB_print(d, 5);
 
-#ifdef NDEBUG
+    #ifdef DBG
     //assert correct labels
-    GRB_TRY(GrB_eWiseMult(invariant, y, NULL, GrB_InvariantCheck, d, y, GrB_DESC_RS));
-    GRB_TRY(GrB_reduce(check, NULL, GrB_LAND_MONOID_BOOL, invariant, GrB_DESC_R));
-    GRB_TRY(GrB_Scalar_extractElement(&check_raw, check));
-    GxB_print(d, 5);
-    printf("\n");
-    print_resultVec(y);
-    GxB_print(invariant, 5);
-    ASSERT(check_raw == true);
-#endif
+        GRB_TRY(GrB_eWiseMult(invariant, y, NULL, GrB_InvariantCheck, d, y, GrB_DESC_RS));
+	GRB_TRY(GrB_reduce(check, NULL, GrB_LAND_MONOID_BOOL, invariant, GrB_DESC_R));
+	GRB_TRY(GrB_Scalar_extractElement(&check_raw, check));
+	//GxB_print(d, 5);
+	//printf("\n");
+	//print_resultVec(y);
+	GxB_print(invariant, 5);
+	ASSERT(check_raw == true);
+    #endif
     
     //GxB_print(d, 5);
 
