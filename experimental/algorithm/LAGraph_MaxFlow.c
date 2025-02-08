@@ -862,6 +862,12 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y_dup, -1, GrB_DESC_R));
     //printf("----y-postPrune----\n\n");
     //print_resultVec(y);
+    GrB_Index y_nvals;
+    GRB_TRY(GrB_Vector_nvals(&y_nvals, y));
+    if(y_nvals == 0){
+      LG_FREE_ALL;
+      return GrB_SUCCESS;
+    }
 
     //relable, update heights
     // add alpha and beta scalars

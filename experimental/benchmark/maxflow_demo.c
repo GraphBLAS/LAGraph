@@ -38,10 +38,18 @@ int main (int argc, char ** argv){
   //GRB_TRY(GrB_Matrix_nrows(&T, G->A));
   //T--;
 
-  S = argv[2];
-  T = argv[3];
+  char* end1, *end2;
 
-  printf("Starting max flow from %d to %d", S, T);
+  S = strtoul(argv[2], &end1, 10);
+  T = strtoul(argv[3], &end2, 10);
+
+  if(end1 == 0 || end2 == 0){
+    printf("values for source and sink are incorrect.\n");
+  }
+
+  
+
+  printf("Starting max flow from %ld to %ld", S, T);
 
   //LG_SET_BURBLE(1);
   double time = LAGraph_WallClockTime();
