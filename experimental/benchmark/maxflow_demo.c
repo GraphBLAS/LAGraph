@@ -35,10 +35,15 @@ int main (int argc, char ** argv){
   printf ("Time to read the graph:      %g sec\n", t) ;
 
   
-  GRB_TRY(GrB_Matrix_nrows(&T, G->A));
-  T--;
+  //GRB_TRY(GrB_Matrix_nrows(&T, G->A));
+  //T--;
 
-  LG_SET_BURBLE(1);
+  S = argv[2];
+  T = argv[3];
+
+  printf("Starting max flow from %d to %d", S, T);
+
+  //LG_SET_BURBLE(1);
   double time = LAGraph_WallClockTime();
   LAGRAPH_TRY(LAGraph_MaxFlow(G, S, T, &flow, msg));
   time = LAGraph_WallClockTime() - time;

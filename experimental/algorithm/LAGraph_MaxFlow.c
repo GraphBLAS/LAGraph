@@ -550,7 +550,7 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
     GrB_transpose(modified_res_matT, NULL, NULL, modified_res_mat, GrB_DESC_R);	\
     LAGraph_New(&res_graph, &modified_res_matT, LAGraph_ADJACENCY_DIRECTED,  \
                    msg);                                                      \
-    LAGraph_Cached_AT(res_graph, msg);                                     \
+    res_graph->AT = modified_res_mat;					\
     LAGraph_Cached_OutDegree(res_graph, msg);                              \
     LAGr_BreadthFirstSearch(&lvl, &parent, res_graph, T, msg);             \
     GrB_assign(d, lvl, NULL, lvl, GrB_ALL, n, GrB_DESC_S);                    \
