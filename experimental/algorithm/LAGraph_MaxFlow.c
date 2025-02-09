@@ -71,7 +71,7 @@
   LG_FREE_WORK; \
 }
 
-#define LEN INT16_MAX
+//#define LEN INT16_MAX
 
 //casting for unary ops
 #define F_UNARY(f) ((void (*)(void *, const void *))f)
@@ -812,12 +812,19 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     }
 
     //Create C arrays
-    GrB_Index Jmap[LEN], Imap[LEN];
-    GrB_Index Jvec_value[LEN], deltaJi[LEN];
-    MF_compareTuple yd_value[LEN];
-    GrB_Index Idelta[LEN], Jdelta[LEN];
-    double delta_raw[LEN];
+    GrB_Index *Jmap, *Imap, *Jvec_value, *deltaJi, *Idelta, *Jdelta;
+    MF_compareTuple *yd_value;
+    double *delta_raw;
 
+    Jmap = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    Imap = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    Jvec_value = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    deltaJi = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    Idelta = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    Jdelta = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    yd_value = (MF_compareTuple*) malloc(sizeof(MF_compareTuple) * n);
+    delta_raw = (double*) malloc(sizeof(double) * n);
+    
 
     printf("******iter: %d\n\n", iter); 
     /* GxB_print(e, 5); */
@@ -967,6 +974,15 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     /* LAGraph_Free((void*)Idelta, msg); */
     /* LAGraph_Free((void*)Jdelta, msg); */
     /* LAGraph_Free((void*)delta_raw, msg); */
+
+    free(Jmap);
+    free(Imap);
+    free(Jvec_value);
+    free(deltaJi);
+    free(Idelta);
+    free(Jdelta);
+    free(yd_value);
+    free(delta_raw);
 
     ++iter;
     
