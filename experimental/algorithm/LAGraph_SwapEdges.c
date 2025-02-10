@@ -232,15 +232,24 @@ void zero_function
 void add_term
     (uint8_t *z, const uint8_t *x, const uint8_t *y)
 {
-    uint8_t temp = (*x) + (*y);
-    (*z) = (temp > 2)? 2: temp;
+    (*z) = (*x) | (*y) + ((uint8_t)1 & (*x) & (*y));
 }
 #define ADD_TERM                                                               \
 "void add_term                                                                \n"\
 "(uint8_t *z, const uint8_t *x, const uint8_t *y)                             \n"\
 "{                                                                            \n"\
-"    uint8_t temp = (*x) + (*y);                                              \n"\
-"    (*z) = (temp > 2)? 2: temp;                                              \n"\
+"    (*z) = (*x) | (*y) + ((uint8_t)1 & (*x) & (*y));                         \n"\
+"}"
+
+void makeOne (uint8_t *z, const void *x, const void *y)
+{
+    (*z) = (uint8_t) 1;
+}
+#define MAKE_ONE                                                               \
+"void makeOne                                                                \n"\
+"(uint8_t *z, const void *x, const void *y)                                     \n"\
+"{                                                                           \n"\
+"    (*z) = (uint8_t) 1;                                                     \n"\
 "}"
 
 int LAGraph_SwapEdges
@@ -341,7 +350,7 @@ int LAGraph_SwapEdges
     GrB_BinaryOp add_term_biop = NULL;
     GrB_Monoid add_term_monoid = NULL;
     GrB_Semiring plus_term_one = NULL;
-
+    GrB_BinaryOp lg_one_uint8 = NULL;
 
     // [^],[h_y(x)]
     GrB_Semiring bxor_hash = NULL;
@@ -446,12 +455,16 @@ int LAGraph_SwapEdges
         &add_term_biop, (GxB_binary_function) (&add_term), 
         GrB_UINT8, GrB_UINT8, GrB_UINT8, "add_term", ADD_TERM
     ));
-    // GRB_TRY (GrB_Monoid_new_UINT8(
-    //     &add_term_monoid, add_term_biop, (uint8_t) 0
-    // ))
-    GRB_TRY (GxB_Monoid_terminal_new_UINT8(
-        &add_term_monoid, add_term_biop, (uint8_t) 0, (uint8_t) 2
+    GRB_TRY (GrB_Monoid_new_UINT8(
+        &add_term_monoid, add_term_biop, (uint8_t) 0
+    ))
+    GRB_TRY (GxB_BinaryOp_new(
+        &lg_one_uint8, (GxB_binary_function) (&makeOne),
+        GrB_UINT8, GrB_UINT8, GrB_UINT8, "makeOne", MAKE_ONE
     ));
+    // GRB_TRY (GxB_Monoid_terminal_new_UINT8(
+    //     &add_term_monoid, add_term_biop, (uint8_t) 0, (uint8_t) 2
+    // ));
     // I use a bit wise xor to combine the hashes since the same column number 
     // will not appear twice in my multiplication and I want combination to be 
     // commutative.
@@ -461,10 +474,10 @@ int LAGraph_SwapEdges
     GRB_TRY(GrB_Semiring_new(
         &bxor_first, GxB_BXOR_UINT64_MONOID , GrB_FIRST_UINT64 
     )) ;
-    // TODO: get this working with the right monoid
+    // TODO: get this working with the built-in ONEB binary op
     GRB_TRY(GrB_Semiring_new(
-        &plus_term_one, GxB_PLUS_UINT8_MONOID, GrB_ONEB_UINT8
-    ));// add_term_monoid
+        &plus_term_one, add_term_monoid, lg_one_uint8
+    ));
     // count swaps 
     GrB_Index num_swaps = 0, num_attempts = 0, swaps_per_loop = e / 3 ;
 
