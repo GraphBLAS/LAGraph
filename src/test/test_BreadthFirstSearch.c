@@ -506,13 +506,14 @@ void test_BreadthFirstSearch_many(void)
                 GrB_Vector parent = NULL ;
                 GrB_Vector level = NULL ;
 
-                int64_t maxlevel ;
+                int64_t maxlevel = -9999 ;
                 GrB_Index nvisited ;
 
                 OK (LAGr_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
                 OK (LG_check_bfs (level, parent, G, src, msg)) ;
                 OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
                     level, NULL)) ;
+                TEST_CHECK (maxlevel != -9999) ;
                 OK (GrB_Vector_nvals (&nvisited, level)) ;
                 {
                     printf ("src %g n: %g max level: %g nvisited: %g\n",

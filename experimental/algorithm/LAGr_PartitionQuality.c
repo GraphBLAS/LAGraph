@@ -44,8 +44,6 @@
         LG_FREE_WORK;                                                          \
     }
 
-#define DEBUG 0
-
 #include "LG_internal.h"
 #include <LAGraphX.h>
 
@@ -89,7 +87,7 @@ int LAGr_PartitionQuality(
     // Delete self-edges, not relevant to these clustering metrics
     GRB_TRY(GrB_select(A, NULL, NULL, GrB_OFFDIAG, A, 0, NULL));
 
-#if DEBUG
+#if 0
     FILE *f = fopen("./data/pp_sanitized_data.mtx", "w");
     LAGRAPH_TRY(LAGraph_MMWrite(A, f, NULL, msg));
     fclose(f);
