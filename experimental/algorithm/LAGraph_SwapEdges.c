@@ -476,7 +476,10 @@ int LAGraph_SwapEdges
     )) ;
     // TODO: get this working with the built-in ONEB binary op
     GRB_TRY(GrB_Semiring_new(
-        &plus_term_one, add_term_monoid, lg_one_uint8
+        &plus_term_one, add_term_monoid, 
+//        lg_one_uint8   /* OK */
+// evil:broken, but should work:
+            GrB_ONEB_UINT8
     ));
     // count swaps 
     GrB_Index num_swaps = 0, num_attempts = 0, swaps_per_loop = e / 3 ;
@@ -723,6 +726,7 @@ int LAGraph_SwapEdges
             x, NULL, NULL, true, GrB_ALL, 0, NULL)) ;
 
         //TODO: fix overflow!
+// JIT dies here
         GRB_TRY (GrB_mxv(
             exists, NULL, add_term_biop, plus_term_one, hash_m, x, NULL
         ));
