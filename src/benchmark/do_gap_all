@@ -33,6 +33,8 @@ echo "GAP matrices located in:  " $GAP
 
 hostname
 
+printenv | grep OMP
+
 ./do_gap_bfs $KIND $GAP
 ./do_gap_bc $KIND $GAP
 ./do_gap_cc $KIND $GAP

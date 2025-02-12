@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/benchmark/tc_demo.c: benchmark for LAGr_TriangleCount_GPU
+// LAGraph/src/benchmark/tc_gpu_demo.c: benchmark for LAGr_TriangleCount_GPU
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -37,7 +37,6 @@
 void GB_Global_hack_set (int k, int64_t hack) ;
 
 #define NTHREAD_LIST 1
-// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6

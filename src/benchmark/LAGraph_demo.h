@@ -894,6 +894,15 @@ static int readproblem          // returns 0 if successful, -1 if failure
     if (nrows != ncols) CATCH (GrB_DIMENSION_MISMATCH) ;    // A must be square
 
     //--------------------------------------------------------------------------
+    // convert to 32-bit
+    //--------------------------------------------------------------------------
+
+    GRB_TRY (GrB_Matrix_set_INT32 (A, 32, GxB_ROWINDEX_INTEGER_HINT)) ;
+    GRB_TRY (GrB_Matrix_set_INT32 (A, 32, GxB_COLINDEX_INTEGER_HINT)) ;
+    GRB_TRY (GrB_Matrix_set_INT32 (A, 32, GxB_OFFSET_INTEGER_HINT)) ;
+    printf ("A converted to 32-bit\n") ;
+
+    //--------------------------------------------------------------------------
     // typecast, if requested
     //--------------------------------------------------------------------------
 
@@ -1112,6 +1121,15 @@ static inline int demo_init (bool burble)
     mallopt (M_MMAP_MAX, 0) ;           // disable mmap; it's too slow
     mallopt (M_TRIM_THRESHOLD, -1) ;    // disable sbrk trimming
     mallopt (M_TOP_PAD, 16*1024*1024) ; // increase padding to speedup malloc
+    #endif
+
+    #ifdef _OPENMP
+    int bind = omp_get_proc_bind ( ) ;
+    int nplaces = omp_get_num_places ( ) ;
+    printf ("OPENMP: nplaces %d, bind: %d\n", nplaces, bind) ;
+    fprintf (stderr, "OPENMP: nplaces %d, bind: %d\n", nplaces, bind) ;
+    fflush (stdout) ;
+    fflush (stderr) ;
     #endif
 
 #if defined ( EXPERIMENTAL_GPU )

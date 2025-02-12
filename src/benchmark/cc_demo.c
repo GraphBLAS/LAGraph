@@ -33,8 +33,10 @@
 }
 
 #define NTHREAD_LIST 1
-// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
+
+// #define NTHREAD_LIST 4
+// #define THREAD_LIST 32, 24, 16, 8
 
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
@@ -106,7 +108,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    fprintf (stderr, "\n%s:\n", matrix_name) ;
+    printf ("\n%s:\n", matrix_name) ;
     LAGRAPH_TRY (readproblem (&G,
         NULL,   // no source nodes
         true,   // make the graph undirected, and symmetrize the matrix
@@ -118,6 +120,7 @@ int main (int argc, char **argv)
     GrB_Index n, nvals ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // begin tests
@@ -143,6 +146,7 @@ int main (int argc, char **argv)
     #define NTRIALS 16
     // #define NTRIALS 1
     printf ("# of trials: %d\n\n", NTRIALS) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // LAGr_ConnectedComponents
@@ -167,13 +171,16 @@ int main (int argc, char **argv)
             GrB_Index nCC2 = countCC (components2, n) ;
             if (nCC != nCC2) printf ("failure! %g %g diff %g\n",
                 (double) nCC, (double) nCC2, (double) (nCC-nCC2)) ;
+            fflush (stdout) ; fflush (stderr) ;
         }
         ttt = ttt / ntrials ;
-        printf ("SV6:      nthreads: %2d Avg: time: %10.4f sec ntrials %d\n\n",
-                nthreads, ttt, ntrials) ;
-        fprintf (stderr,
-                "SV6:      nthreads: %2d Avg: time: %10.4f sec ntrials %d\n",
-                nthreads, ttt, ntrials) ;
+
+        printf (         "Avg: CC threads %3d: %10.3f sec, graph: %s\n",
+                nthreads, ttt, matrix_name) ;
+        fprintf (stderr, "Avg: CC threads %3d: %10.3f sec, graph: %s\n",
+                nthreads, ttt, matrix_name) ;
+        fflush (stdout) ; fflush (stderr) ;
+
     }
 
     //--------------------------------------------------------------------------
