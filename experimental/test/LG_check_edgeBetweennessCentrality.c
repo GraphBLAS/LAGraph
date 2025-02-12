@@ -221,12 +221,17 @@ int LG_check_edgeBetweennessCentrality
             // 13. push(S, v)
             S [sp++] = v;
 
+            printf("v: %d\n", v); 
+
             // TODO
             // traverse all entries in A(v,:)
             for (int64_t p = Ap [v] ; p < Ap [v+1] ; p++)
             {
                 int64_t w = Aj [p] ;
                 
+                printf(" w: %d\n", w);
+
+                printf("  %d - d[w] (%d) < 0?\n", w, d [w]);
                 // 16. if d[w] < 0
                 if (d [w] < 0) {
                     // Update depth and enqueue
@@ -234,18 +239,30 @@ int LG_check_edgeBetweennessCentrality
                     queue [qt++] = w ;
                     // 19. d[w] ← d[v] + 1
                     d [w] = d [v] + 1 ;
+                    printf("  changed d[w] (%d) = d[v] (%d) + 1\n", d [w], d [v] );
+
                 }
+
+                printf("  %d - d[w] (%d) == d[v] (%d) + 1?\n", w, d [w], d [v]);
 
                 // 20. if d[w] = d[v] + 1
                 if (d [w] == d [v] + 1) {
                     // Update shortest path count and add predecessor
                     // 22. σ[w] ← σ[w] + σ[v]
+                    // printf("  sigma[w] (%g) = sigma[w] (%g) + sigma[v] (%g)\n", sigma[w]+sigma[v], sigma[w], sigma[v]);
                     sigma [w] = sigma [w] + sigma [v] ;
                     // 23. append(P [w], v)
                     Pj [Ptail [w]++] = v ;
-                }
+                    printf("  added\n   Pj: ");
+                    
+                    for (int64_t p = Phead [w] ; p < Ptail [w] ; p++) { 
+                        printf("%d ", Pj [p]) ;
+                    }
+                    printf("\n");
 
-            }       
+                }
+            }   
+            printf("\n");    
         }
 
         // Set dependency score δ[v] ← 0
@@ -254,25 +271,63 @@ int LG_check_edgeBetweennessCentrality
             delta [v] = 0 ;
         }
 
+
+        // PRINT OUT STUFF
+        printf("==========================================\n");
+        printf("d:\n");
+        for (size_t i = 0; i < n; i++) {
+            printf("(%d, %d) ", i, d[i]);
+        }
+        printf("\n");
+
+        printf("delta:\n");
+        for (size_t i = 0; i < n; i++) {
+            printf("(%d, %g) ", i, delta[i]);
+        }
+        printf("\n");
+
+        printf("S:\n");
+        for (size_t i = 0; i < n; i++) {
+            printf("(%d, %d) ", i, S[i]);
+        }
+        printf("\n");
+
+        printf("queue:\n");
+        for (size_t i = 0; i < n; i++) {
+            printf("(%d, %d) ", i, queue[i]);
+        }
+        printf("\n");
+
+        printf("sigma:\n");
+        for (size_t i = 0; i < n; i++) {
+            printf("(%d, %g) ", i, sigma[i]);
+        }
+        printf("\n==========================================\n");
+        printf("\n");
+
+
         // Process stack S
         // 25. while ¬empty(S)
         while (sp > 0) {
             // 27. w ← pop(S)
             int64_t w = S [--sp] ;
 
+            printf("w: %d\n", w);
+
             // 28. for v ∈ P [w]
             for (int64_t p = Phead [w] ; p < Ptail [w] ; p++)
             {
                 int64_t v = Pj [p] ;
+                printf(" v: %d\n", v);
                 
                 // Update dependency and centrality values
                 // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
-                printf("%g = %g * (%g/%g + 1)\n", sigma [v] * ((delta [w] / sigma [w]) + 1), sigma [v], delta [w], sigma [w]) ;
+                printf("  %g = %g * (%g/%g + 1)\n", sigma [v] * ((delta [w] / sigma [w]) + 1), sigma [v], delta [w], sigma [w]) ;
 
                 // if (v == w) { printf ("Ack!!\n") ; fflush (stdout) ; abort ( ) ; }
                 if (v == w) { 
-                    printf ("Ack!!\n") ; 
-                    goto flag;
+                    printf ("  Ack!!\n") ; 
+                    continue;
                 }
 
                 double centrality = sigma [v] * ((delta [w] / sigma [w]) + 1) ;
@@ -281,7 +336,19 @@ int LG_check_edgeBetweennessCentrality
                 // 31. result [(v, w)] ← result [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
                 result [INDEX (v,w)] += centrality;
 
+                printf("  delta:\n ");
+                for (size_t i = 0; i < n; i++) {
+                    printf(" (%d, %g)", i, delta[i]);
+                }
+                printf("\n");
+                printf("  sigma:\n ");
+                for (size_t i = 0; i < n; i++) {
+                    printf(" (%d, %g)", i, sigma[i]);
+                }
+                printf("\n");
             }
+            printf("\n");
+
         }
 
     }
