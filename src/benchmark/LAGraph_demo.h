@@ -21,6 +21,7 @@
 #include <LAGraph.h>
 #include <LG_test.h>
 #include "LG_internal.h"
+#include "omp.h"
 
 #if defined ( __linux__ )
 // for mallopt
