@@ -183,16 +183,16 @@ int LAGr_Init
     // ask SuiteSparse:GraphBLAS for the function pointers
     GRB_TRY (GrB_Global_get_VOID (GrB_GLOBAL,
         (void *) (&LAGraph_Malloc_function),
-        (GrB_Field) GxB_MALLOC_FUNCTION)) ;
+        GxB_MALLOC_FUNCTION)) ;
     GRB_TRY (GrB_Global_get_VOID (GrB_GLOBAL,
         (void *) (&LAGraph_Calloc_function),
-        (GrB_Field) GxB_CALLOC_FUNCTION)) ;
+        GxB_CALLOC_FUNCTION)) ;
     GRB_TRY (GrB_Global_get_VOID (GrB_GLOBAL,
         (void *) (&LAGraph_Realloc_function),
-        (GrB_Field) GxB_REALLOC_FUNCTION)) ;
+        GxB_REALLOC_FUNCTION)) ;
     GRB_TRY (GrB_Global_get_VOID (GrB_GLOBAL,
         (void *) (&LAGraph_Free_function),
-        (GrB_Field) GxB_FREE_FUNCTION)) ;
+        GxB_FREE_FUNCTION)) ;
     #else
     LAGraph_Malloc_function  = user_malloc_function ;
     LAGraph_Calloc_function  = user_calloc_function ;

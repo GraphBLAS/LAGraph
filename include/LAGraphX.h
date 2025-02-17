@@ -19,6 +19,9 @@
 #include <GraphBLAS.h>
 #include <LAGraph.h>
 
+void     GB_Global_hack_set (int k, int64_t hack) ;
+int64_t  GB_Global_hack_get (int k) ;
+
 #if ( _MSC_VER && !__INTEL_COMPILER && LGX_DLL )
     #ifdef LGX_LIBRARY
         // compiling LAGraph itself, exporting symbols to user apps

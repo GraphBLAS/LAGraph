@@ -122,7 +122,11 @@ void test_SSaveSet (void)
     printf ("nmatrices %g r %d msg %s\n", (double) nmatrices, r, msg) ;
     TEST_CHECK (nmatrices == NFILES) ;
     TEST_CHECK (Set2 != NULL) ;
-    TEST_CHECK (strcmp (collection, "many test matrices") == 0) ;
+    TEST_CHECK (collection != NULL) ;
+    if (collection != NULL)
+    {
+        TEST_CHECK (strcmp (collection, "many test matrices") == 0) ;
+    }
 
     // check the matrices
     for (int k = 0 ; k < NFILES ; k++)

@@ -108,6 +108,7 @@ int main (int argc, char **argv)
                 damping, tol, itermax, msg)) ;
     t1 = LAGraph_WallClockTime ( ) - t1 ;
     printf ("warmup: %10.4f sec\n", t1) ;
+    fflush (stdout) ;
 
     //--------------------------------------------------------------------------
     // compute the GAP pagerank
@@ -134,6 +135,7 @@ int main (int argc, char **argv)
                 damping, tol, itermax, msg)) ;
             t1 = LAGraph_WallClockTime ( ) - t1 ;
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
+            fflush (stdout) ;
             total_time += t1 ;
         }
 

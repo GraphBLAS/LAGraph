@@ -71,6 +71,7 @@ const matrix_info files [ ] =
 void test_SingleSourceShortestPath(void)
 {
     LAGraph_Init(msg);
+//  GrB_Global_set_INT32 (GrB_GLOBAL, true, GxB_BURBLE) ;
     GrB_Matrix A = NULL, T = NULL ;
     GrB_Scalar Delta = NULL ;
     OK (GrB_Scalar_new (&Delta, GrB_INT32)) ;

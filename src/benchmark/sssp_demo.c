@@ -87,6 +87,7 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
     LAGRAPH_TRY (LAGraph_Cached_EMin (G, msg)) ;
+    fflush (stdout) ;
 
     //--------------------------------------------------------------------------
     // get delta
@@ -131,6 +132,7 @@ int main (int argc, char **argv)
     LAGRAPH_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src, Delta, msg)) ;
     t1 = LAGraph_WallClockTime ( ) - t1 ;
     printf ("warmup: %g sec\n", t1) ;
+    fflush (stdout) ;
 
     //--------------------------------------------------------------------------
     // begin tests
@@ -167,6 +169,7 @@ int main (int argc, char **argv)
 
             printf ("sssp15:  threads: %2d trial: %2d source %12" PRId64
                 " time: %10.4f sec\n", nthreads, trial, src, ttrial) ;
+            fflush (stdout) ;
             total_time += ttrial ;
 
 #if LG_CHECK_RESULT

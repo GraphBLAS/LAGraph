@@ -138,12 +138,14 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     GrB_Index kmatrices = 0 ;
     for (GrB_Index i = 0 ; i < ncontents ; i++)
     {
+printf ("\n=============================== load %g\n", (double) i) ;
         // convert Contents [i]
         void *blob = Contents [i].blob ;
         size_t blob_size = Contents [i].blob_size ;
 
         if (Contents [i].kind == LAGraph_matrix_kind)
         {
+printf ("MATRIX KIND\n") ;
             // convert Contents [i].typename to a GrB_Type ctype.
             // SuiteSparse:GraphBLAS allows this to be NULL for built-in types.
             GrB_Type ctype = NULL ;

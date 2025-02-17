@@ -48,8 +48,6 @@
         GrB_free(c_f);                                                         \
     }
 
-#define DEBUG
-
 #include "LG_internal.h"
 #include <LAGraphX.h>
 
