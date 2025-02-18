@@ -1,13 +1,14 @@
-#include "LG_internal.h"
-#include "LAGraphX.h"
-// add this algorithm to LAGraphX.h
+#include "LG_internal.h" // contains all internal grb operations
+#include "LAGraphX.h"    // algorithm added to LAGraphX.h
 
+#undef  LG_FREE_WORK
 #define LG_FREE_WORK                \
     GrB_free (&local_color) ;       \
     GrB_free (&weight) ;            \
     GrB_free (&in_curr_subset) ;    \
     GrB_free (&max_weights) ;
 
+#undef  LG_FREE_ALL
 #define LG_FREE_ALL                 \
     LG_FREE_WORK ;
 
@@ -22,6 +23,9 @@ int LAGraph_coloring_independent_set_optimized
     char *msg
 )
 {
+    // printf("initial graph: \n");
+    // LAGraph_Matrix_Print(G->A, LAGraph_SHORT, stdout, msg);
+
     bool verbose = false;
     GrB_Vector local_color = NULL;
     GrB_Vector weight = NULL;
@@ -42,13 +46,20 @@ int LAGraph_coloring_independent_set_optimized
     *  seed of 20 was chosen arbitrarily */   
     GRB_TRY(GrB_Vector_new(&weight, GrB_UINT64, n));
     GRB_TRY(GrB_assign (weight, NULL, NULL, 0, GrB_ALL, n, NULL));
-    LG_TRY(LAGraph_Random_Seed(weight, 20, msg));
+
+    // LG_TRY(LAGraph_Random_Seed(weight, 2, msg));
+    LG_TRY (LAGraph_Random_Seed(weight, 2, msg)) ;
+
+    // printf("random done\n");
+    // printf("weight vector\n");
+    // GxB_print(weight, 3);
 
     GRB_TRY(GrB_Vector_new(&in_curr_subset, GrB_BOOL, n));
 
     GRB_TRY(GrB_Vector_new(&max_weights, GrB_UINT64, n));
 
     /* algorithm start */
+    // printf("starting algorithm\n");
     int64_t curr_color;
     for (curr_color = 1; curr_color < n+1; curr_color++) {
         /* mxv - find maximum of all neighboring weights */
@@ -76,7 +87,7 @@ int LAGraph_coloring_independent_set_optimized
         /* assign - write 0 to weight according to in_curr_subset mask */
         GRB_TRY(GrB_assign(weight, in_curr_subset, GrB_NULL, 0, GrB_ALL, n, GrB_DESC_S));
     }
-
+    // printf("finished algorithm\n");
     (*num_colors) = curr_color - 1;
     (*color) = local_color;
     local_color = NULL ;

@@ -1,7 +1,7 @@
-#include "../../src/benchmark/LAGraph_demo.h"
-#include "LAGraphX.h"           // for LAGraph_coloring_independent_set
-#include "LG_Xtest.h"           // for LG_check_coloring
-#include "LG_internal.h"        // ?
+#include "../../src/benchmark/LAGraph_demo.h"   // for readproblem
+#include "LAGraphX.h"                           // for LAGraph_coloring_independent_set
+#include "LG_Xtest.h"                           // for LG_check_coloring
+#include "LG_internal.h"                        // ?
 
 // LG_FREE_ALL is required by LG_TRY
 #undef  LG_FREE_ALL
@@ -25,6 +25,7 @@ int main (int argc, char **argv)
     // start GraphBLAS and LAGraph
     bool burble = false ;               // set true for diagnostic outputs
     demo_init (burble) ;
+    LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
 
     //--------------------------------------------------------------------------
     // read in the graph (defined in LAGraph_demo.h)
@@ -35,29 +36,29 @@ int main (int argc, char **argv)
     LG_TRY (readproblem (
         &G,         // the graph that is read from stdin or a file
         NULL,       // source nodes (none, if NULL)
-        true,       // make the graph undirected, if true
-        true,       // remove self-edges, if true
-        true,       // return G->A as structural, if true,
+        false,       // make the graph undirected, if true
+        false,       // remove self-edges, if true
+        false,       // return G->A as structural, if true,
         NULL,       // prefered GrB_Type of G->A; null if no preference
         false,      // ensure all entries are positive, if true
         argc, argv)) ;  // input to this main program
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time to read the graph:      %g sec\n", t) ;
 
-    printf ("\n==========================The input graph matrix G:\n") ;
-    LG_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
+    // printf ("\n==========================The input graph matrix G:\n") ;
+    // LG_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // execute independent set coloring algorithm
     //--------------------------------------------------------------------------
-
+    
     t = LAGraph_WallClockTime ( ) ;
-    LG_TRY (LAGraph_coloring_independent_set_optimized (&C, &num_colors, G, msg)) ;
+    int status = (LAGraph_coloring_independent_set_optimized (&C, &num_colors, G, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for Independent Set Coloring: %g sec\n", t) ;
 
     //--------------------------------------------------------------------------
-    // check the results (make sure Y is a copy of G->A)
+    // check the results
     //--------------------------------------------------------------------------
 
     bool isequal ;
@@ -67,7 +68,7 @@ int main (int argc, char **argv)
     printf ("Time to check results:       %g sec\n", t) ;
 
     //--------------------------------------------------------------------------
-    // print the results (Y is just a copy of G->A)
+    // print the results
     //--------------------------------------------------------------------------
 
     printf ("\n===============================Number of colors: %d\n", num_colors) ;
@@ -77,6 +78,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     LG_FREE_ALL ;
+    LAGRAPH_TRY (LAGraph_Random_Finalize (msg)) ;
     LG_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 
