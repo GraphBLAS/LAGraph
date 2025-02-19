@@ -58,7 +58,7 @@ int LG_check_edgeBetweennessCentrality
 
     double tt = LAGraph_WallClockTime ( ) ;
 
-    GrB_Info info;
+    GrB_Info info ;
 
     double* result ; 
 
@@ -84,29 +84,33 @@ int LG_check_edgeBetweennessCentrality
     // check inputs
     //--------------------------------------------------------------------------
 
-    GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
-    void *Ax = NULL ;
-    GrB_Index Ap_size, Aj_size, Ax_size, n, nvals ;
+    GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL, *ATp = NULL, *ATj = NULL ;
+    void *Ax = NULL, *ATx = NULL ;
+    GrB_Index Ap_size, Aj_size, Ax_size, n, nvals, ATp_size, ATj_size, ATx_size ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
     bool print_timings = (n >= 2000) ;
 
+    LG_TRY (LAGraph_DeleteSelfEdges (G, msg)) ;
+
     GrB_Matrix A = G->A ;
 
+    LG_TRY (LAGraph_Cached_AT (G, msg)) ;
+
     GrB_Matrix AT ;
-    // if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
-    //     G->is_symmetric_structure == LAGraph_TRUE)
-    // {
-    //     // A and A' have the same structure
-    //     AT = A ;
-    // }
-    // else
-    // {
-    //     // A and A' differ
-    //     AT = G->AT ;
-    //     LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
-    // }
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+         G->is_symmetric_structure == LAGraph_TRUE)
+    {
+         // A and A' have the same structure
+         AT = A ;
+    }
+    else
+    {
+        // A and A' differ
+         AT = G->AT ;
+         LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
+    }
 
     // better: as basic algo
     /*
@@ -123,8 +127,10 @@ int LG_check_edgeBetweennessCentrality
 
     // hack:
     // G->nself_edges = LAGRAPH_UNKNOWN ; <=== overkill
-    LG_TRY (LAGraph_DeleteSelfEdges (G, msg)) ;
 
+    // GRB_TRY (LAGraph_Graph_Print (G, 500, stdout, msg)) ;
+    // GxB_print (A, 5) ;
+    // GxB_print (AT, 5) ;
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
@@ -168,12 +174,15 @@ int LG_check_edgeBetweennessCentrality
     //--------------------------------------------------------------------------
 
     #if LAGRAPH_SUITESPARSE
-    bool iso ; 
+    bool iso, AT_iso ; 
     GRB_TRY (GxB_Matrix_unpack_CSR (A,
         &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, NULL, NULL)) ;
+
+    GRB_TRY (GxB_Matrix_unpack_CSR (AT,
+        &ATp, &ATj, &ATx, &ATp_size, &ATj_size, &ATx_size, &AT_iso, NULL, NULL)) ;
     #endif
 
-    Phead = Ap ;
+    Phead = ATp ;
 
     //--------------------------------------------------------------------------
 
@@ -190,7 +199,7 @@ int LG_check_edgeBetweennessCentrality
         // Initialize predecessors list P[w] to empty
         // TODO
         // 5. P [w] ← empty queue, ∀w ∈ V
-        memcpy (Ptail, Ap, n * sizeof (GrB_Index)) ;
+        memcpy (Ptail, ATp, n * sizeof (GrB_Index)) ;
 
         // Initialize sigma[t], d[t] for all t
         // 6. σ[t] ← 0, ∀t ∈ V , σ[s] ← 1
@@ -221,17 +230,16 @@ int LG_check_edgeBetweennessCentrality
             // 13. push(S, v)
             S [sp++] = v;
 
-            printf("v: %d\n", v); 
+            printf("v: %ld\n", v); 
 
             // TODO
             // traverse all entries in A(v,:)
-            for (int64_t p = Ap [v] ; p < Ap [v+1] ; p++)
-            {
+            for (int64_t p = Ap [v] ; p < Ap [v+1] ; p++) {
                 int64_t w = Aj [p] ;
                 
-                printf(" w: %d\n", w);
+                printf(" w: %ld\n", w);
 
-                printf("  %d - d[w] (%d) < 0?\n", w, d [w]);
+                printf("  %ld - d[w] (%ld) < 0?\n", w, d [w]);
                 // 16. if d[w] < 0
                 if (d [w] < 0) {
                     // Update depth and enqueue
@@ -239,11 +247,11 @@ int LG_check_edgeBetweennessCentrality
                     queue [qt++] = w ;
                     // 19. d[w] ← d[v] + 1
                     d [w] = d [v] + 1 ;
-                    printf("  changed d[w] (%d) = d[v] (%d) + 1\n", d [w], d [v] );
+                    printf("  changed d[w] (%ld) = d[v] (%ld) + 1\n", d [w], d [v] );
 
                 }
 
-                printf("  %d - d[w] (%d) == d[v] (%d) + 1?\n", w, d [w], d [v]);
+                printf("  %ld - d[w] (%ld) == d[v] (%ld) + 1?\n", w, d [w], d [v]);
 
                 // 20. if d[w] = d[v] + 1
                 if (d [w] == d [v] + 1) {
@@ -252,11 +260,17 @@ int LG_check_edgeBetweennessCentrality
                     // printf("  sigma[w] (%g) = sigma[w] (%g) + sigma[v] (%g)\n", sigma[w]+sigma[v], sigma[w], sigma[v]);
                     sigma [w] = sigma [w] + sigma [v] ;
                     // 23. append(P [w], v)
+                    if (Ptail [w] >= Phead [w+1] || Ptail [w] < Phead [w])
+                    {
+                        printf ("Ack! w %ld Ptail [w]=%ld, Phead [w]=%ld Phead[w+1]=%ld\n", 
+                            w, Ptail [w], Phead [w], Phead [w+1]) ;
+                        fflush (stdout) ; abort ( ) ;
+                    }
                     Pj [Ptail [w]++] = v ;
                     printf("  added\n   Pj: ");
                     
                     for (int64_t p = Phead [w] ; p < Ptail [w] ; p++) { 
-                        printf("%d ", Pj [p]) ;
+                        printf("%ld ", Pj [p]) ;
                     }
                     printf("\n");
 
@@ -273,37 +287,37 @@ int LG_check_edgeBetweennessCentrality
 
 
         // PRINT OUT STUFF
-        printf("==========================================\n");
-        printf("d:\n");
-        for (size_t i = 0; i < n; i++) {
-            printf("(%d, %d) ", i, d[i]);
-        }
-        printf("\n");
+        // printf("==========================================\n");
+        // printf("d:\n");
+        // for (size_t i = 0; i < n; i++) {
+        //     printf("(%ld, %ld) ", i, d[i]);
+        // }
+        // printf("\n");
 
-        printf("delta:\n");
-        for (size_t i = 0; i < n; i++) {
-            printf("(%d, %g) ", i, delta[i]);
-        }
-        printf("\n");
+        // printf("delta:\n");
+        // for (size_t i = 0; i < n; i++) {
+        //     printf("(%ld, %g) ", i, delta[i]);
+        // }
+        // printf("\n");
 
-        printf("S:\n");
-        for (size_t i = 0; i < n; i++) {
-            printf("(%d, %d) ", i, S[i]);
-        }
-        printf("\n");
+        // printf("S:\n");
+        // for (size_t i = 0; i < n; i++) {
+        //     printf("(%ld, %ld) ", i, S[i]);
+        // }
+        // printf("\n");
 
-        printf("queue:\n");
-        for (size_t i = 0; i < n; i++) {
-            printf("(%d, %d) ", i, queue[i]);
-        }
-        printf("\n");
+        // printf("queue:\n");
+        // for (size_t i = 0; i < n; i++) {
+        //     printf("(%ld, %ld) ", i, queue[i]);
+        // }
+        // printf("\n");
 
-        printf("sigma:\n");
-        for (size_t i = 0; i < n; i++) {
-            printf("(%d, %g) ", i, sigma[i]);
-        }
-        printf("\n==========================================\n");
-        printf("\n");
+        // printf("sigma:\n");
+        // for (size_t i = 0; i < n; i++) {
+        //     printf("(%ld, %g) ", i, sigma[i]);
+        // }
+        // printf("\n==========================================\n");
+        // printf("\n");
 
 
         // Process stack S
@@ -312,13 +326,13 @@ int LG_check_edgeBetweennessCentrality
             // 27. w ← pop(S)
             int64_t w = S [--sp] ;
 
-            printf("w: %d\n", w);
+            printf("w: %ld\n", w);
 
             // 28. for v ∈ P [w]
             for (int64_t p = Phead [w] ; p < Ptail [w] ; p++)
             {
                 int64_t v = Pj [p] ;
-                printf(" v: %d\n", v);
+                printf(" v: %ld\n", v);
                 
                 // Update dependency and centrality values
                 // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
@@ -326,7 +340,7 @@ int LG_check_edgeBetweennessCentrality
 
                 // if (v == w) { printf ("Ack!!\n") ; fflush (stdout) ; abort ( ) ; }
                 if (v == w) { 
-                    printf ("  Ack!!\n") ; 
+                    printf ("  Ack!!\n") ; fflush (stdout) ; abort ( ) ;
                     continue;
                 }
 
@@ -338,14 +352,20 @@ int LG_check_edgeBetweennessCentrality
 
                 printf("  delta:\n ");
                 for (size_t i = 0; i < n; i++) {
-                    printf(" (%d, %g)", i, delta[i]);
+                    printf(" (%ld, %g)", i, delta[i]);
                 }
                 printf("\n");
                 printf("  sigma:\n ");
                 for (size_t i = 0; i < n; i++) {
-                    printf(" (%d, %g)", i, sigma[i]);
+                    printf(" (%ld, %g)", i, sigma[i]);
                 }
                 printf("\n");
+
+                if (w != s) {
+                    printf("   alert!\n");
+                    // betweenness[w] += delta[w]
+                }
+                    
             }
             printf("\n");
 
@@ -353,7 +373,6 @@ int LG_check_edgeBetweennessCentrality
 
     }
 
-    flag:
     if (print_timings)
     {
         tt = LAGraph_WallClockTime ( ) - tt ;
@@ -367,7 +386,9 @@ int LG_check_edgeBetweennessCentrality
 
     #if LAGRAPH_SUITESPARSE
     GRB_TRY (GxB_Matrix_pack_CSR (A,
-        &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, NULL, NULL)) ;
+        &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, false, NULL)) ;
+    GRB_TRY (GxB_Matrix_pack_CSR (AT,
+        &ATp, &ATj, &ATx, ATp_size, ATj_size, ATx_size, AT_iso, false, NULL)) ;
     #endif
 
     printf("result: \n") ;

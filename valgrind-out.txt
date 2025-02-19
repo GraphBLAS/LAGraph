@@ -1,1048 +1,216 @@
-==60312== Memcheck, a memory error detector
-==60312== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==60312== Using Valgrind-3.24.0-fcdaa47426-20241101 and LibVEX; rerun with -h for copyright info
-==60312== Command: ./build/experimental/test/test_edgeBetweennessCentrality
-==60312== Parent PID: 6780
-==60312== 
---60312-- 
---60312-- Valgrind options:
---60312--    --leak-check=full
---60312--    --show-leak-kinds=all
---60312--    --track-origins=yes
---60312--    --verbose
---60312--    --log-file=valgrind-out.txt
---60312-- Contents of /proc/version:
---60312--   Linux version 5.15.167.4-microsoft-standard-WSL2 (root@f9c826d3017f) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.37) #1 SMP Tue Nov 5 00:21:55 UTC 2024
---60312-- 
---60312-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand-rdseed-fma
---60312-- Page sizes: currently 4096, max supported 4096
---60312-- Valgrind library directory: /usr/local/libexec/valgrind
---60312-- Reading syms from /home/peicasey/csce491h/LAGraph/build/experimental/test/test_edgeBetweennessCentrality
---60312-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
---60312--   Considering /usr/lib/debug/.build-id/35/3e1b6cb0eebc08cf3ff812eae8a51b4efd684e.debug ..
---60312--   .. build-id is valid
---60312-- Reading syms from /usr/local/libexec/valgrind/memcheck-amd64-linux
---60312--    object doesn't have a dynamic symbol table
---60312-- Scheduler: using generic scheduler lock implementation.
---60312-- Reading suppressions file: /usr/local/libexec/valgrind/default.supp
-==60312== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-60312-by-peicasey-on-???
-==60312== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-60312-by-peicasey-on-???
-==60312== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-60312-by-peicasey-on-???
-==60312== 
-==60312== TO CONTROL THIS PROCESS USING vgdb (which you probably
-==60312== don't want to do, unless you know exactly what you're doing,
-==60312== or are doing some strange experiment):
-==60312==   /usr/local/libexec/valgrind/../../bin/vgdb --pid=60312 ...command...
-==60312== 
-==60312== TO DEBUG THIS PROCESS USING GDB: start GDB like this
-==60312==   /path/to/gdb ./build/experimental/test/test_edgeBetweennessCentrality
-==60312== and then give GDB the following command
-==60312==   target remote | /usr/local/libexec/valgrind/../../bin/vgdb --pid=60312
-==60312== --pid is optional if only one valgrind process is running
-==60312== 
---60312-- REDIR: 0x4028b00 (ld-linux-x86-64.so.2:strlen) redirected to 0x580c18b2 (vgPlain_amd64_linux_REDIR_FOR_strlen)
---60312-- REDIR: 0x40274e0 (ld-linux-x86-64.so.2:strcmp) redirected to 0x580c18cc (vgPlain_amd64_linux_REDIR_FOR_strcmp)
---60312-- REDIR: 0x40272b0 (ld-linux-x86-64.so.2:index) redirected to 0x580c18e7 (vgPlain_amd64_linux_REDIR_FOR_index)
---60312-- Reading syms from /usr/local/libexec/valgrind/vgpreload_core-amd64-linux.so
---60312-- Reading syms from /usr/local/libexec/valgrind/vgpreload_memcheck-amd64-linux.so
-==60312== WARNING: new redirection conflicts with existing -- ignoring it
---60312--     old: 0x040274e0 (strcmp              ) R-> (0000.0) 0x580c18cc vgPlain_amd64_linux_REDIR_FOR_strcmp
---60312--     new: 0x040274e0 (strcmp              ) R-> (2016.0) 0x04851320 strcmp
-==60312== WARNING: new redirection conflicts with existing -- ignoring it
---60312--     old: 0x04028b00 (strlen              ) R-> (0000.0) 0x580c18b2 vgPlain_amd64_linux_REDIR_FOR_strlen
---60312--     new: 0x04028b00 (strlen              ) R-> (2007.0) 0x048500d0 strlen
---60312-- REDIR: 0x4026910 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4854b90 (mempcpy)
---60312-- Reading syms from /home/peicasey/csce491h/LAGraph/build/experimental/test/liblagraphxtest.so.1.2.0
---60312-- Reading syms from /home/peicasey/csce491h/LAGraph/build/src/liblagraph.so.1.2.0
---60312-- Reading syms from /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2
---60312-- Reading syms from /usr/lib/x86_64-linux-gnu/libc.so.6
---60312--   Considering /usr/lib/debug/.build-id/6d/64b17fbac799e68da7ebd9985ddf9b5cb375e6.debug ..
---60312--   .. build-id is valid
---60312-- Reading syms from /home/peicasey/csce491h/LAGraph/build/src/test/liblagraphtest.so.1.2.0
---60312-- Reading syms from /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
---60312-- Reading syms from /usr/lib/x86_64-linux-gnu/libm.so.6
---60312-- REDIR: 0x4028ca0 (ld-linux-x86-64.so.2:strncmp) redirected to 0x4850b50 (strncmp)
---60312-- REDIR: 0x8603040 (libc.so.6:strnlen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86030d0 (libc.so.6:strpbrk) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8601190 (libc.so.6:strcmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x861a3b0 (libc.so.6:wcsnlen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8600280 (libc.so.6:memset) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8619b20 (libc.so.6:wcslen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86853c0 (libc.so.6:__memcpy_chk) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86001f0 (libc.so.6:memrchr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x861a350 (libc.so.6:wcsncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x85ff710 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86188e0 (libc.so.6:wcschr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8601080 (libc.so.6:index) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8603100 (libc.so.6:rindex) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8618990 (libc.so.6:wcscmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86004a0 (libc.so.6:stpncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8626eb0 (libc.so.6:wmemchr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8602ee0 (libc.so.6:strncmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8600500 (libc.so.6:strcasecmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8602300 (libc.so.6:strcspn) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86198f0 (libc.so.6:wcscpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8601010 (libc.so.6:strcat) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8602de0 (libc.so.6:strncasecmp_l) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8601100 (libc.so.6:strchrnul) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x85ff620 (libc.so.6:bcmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8602290 (libc.so.6:strcpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86005a0 (libc.so.6:strcasecmp_l) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8602cb0 (libc.so.6:strlen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8602f80 (libc.so.6:strncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8626f30 (libc.so.6:wmemcmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86854e0 (libc.so.6:__memmove_chk) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
-==60312== WARNING: new redirection conflicts with existing -- ignoring it
---60312--     old: 0x086d69d0 (__memcpy_chk_avx_una) R-> (2030.0) 0x04854c90 __memcpy_chk
---60312--     new: 0x086d69d0 (__memcpy_chk_avx_una) R-> (2024.0) 0x04854600 __memmove_chk
---60312-- REDIR: 0x8600430 (libc.so.6:stpcpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x85fffb0 (libc.so.6:memmove) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
-==60312== Preferring higher priority redirection:
---60312--     old: 0x086d6a00 (__memcpy_avx_unalign) R-> (2018.0) 0x04852440 __memcpy_avx_unaligned_erms
---60312--     new: 0x086d6a00 (__memcpy_avx_unalign) R-> (2018.1) 0x04853c20 memmove
---60312-- REDIR: 0x85ff5a0 (libc.so.6:memchr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86032d0 (libc.so.6:strspn) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8618320 (libc.so.6:wcpncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86000d0 (libc.so.6:mempcpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8602d40 (libc.so.6:strncasecmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x8603b90 (libc.so.6:strstr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
---60312-- REDIR: 0x86db5f0 (libc.so.6:__strrchr_avx2) redirected to 0x484f950 (rindex)
---60312-- REDIR: 0x86d6000 (libc.so.6:__memchr_avx2) redirected to 0x48513a0 (memchr)
---60312-- REDIR: 0x85fb640 (libc.so.6:malloc) redirected to 0x4846799 (malloc)
---60312-- REDIR: 0x86d7400 (libc.so.6:__memset_avx2_unaligned_erms) redirected to 0x4853b10 (memset)
---60312-- REDIR: 0x85fc790 (libc.so.6:calloc) redirected to 0x484e052 (calloc)
---60312-- REDIR: 0x86da820 (libc.so.6:__strncmp_avx2) redirected to 0x4850970 (strncmp)
---60312-- REDIR: 0x86d9740 (libc.so.6:__strlen_avx2) redirected to 0x484ffb0 (strlen)
---60312-- REDIR: 0x86d8da0 (libc.so.6:__strchrnul_avx2) redirected to 0x4854670 (strchrnul)
---60312-- REDIR: 0x86d6a00 (libc.so.6:__memcpy_avx_unaligned_erms) redirected to 0x4853c20 (memmove)
---60312-- REDIR: 0x86d69c0 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4854790 (mempcpy)
---60312-- REDIR: 0x86db320 (libc.so.6:__strnlen_avx2) redirected to 0x484ff50 (strnlen)
---60312-- REDIR: 0x86d8b60 (libc.so.6:__strchr_avx2) redirected to 0x484fb30 (index)
---60312-- REDIR: 0x85fbd20 (libc.so.6:free) redirected to 0x4849aba (free)
---60312-- REDIR: 0x85fc640 (libc.so.6:memalign) redirected to 0x484e84c (memalign)
---60312-- REDIR: 0x86d69d0 (libc.so.6:__memcpy_chk_avx_unaligned_erms) redirected to 0x4854c90 (__memcpy_chk)
-==60312== Invalid write of size 8
-==60312==    at 0x4860C9C: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:245)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312==  Address 0x88bd680 is 0 bytes after a block of size 96 alloc'd
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x48A54E4: LAGraph_Malloc (LAGraph_Malloc.c:50)
-==60312==    by 0x4860795: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:180)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== Invalid read of size 8
-==60312==    at 0x4860D74: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:266)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312==  Address 0x88bd680 is 0 bytes after a block of size 96 alloc'd
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x48A54E4: LAGraph_Malloc (LAGraph_Malloc.c:50)
-==60312==    by 0x4860795: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:180)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 
-==60312== Process terminating with default action of signal 6 (SIGABRT)
-==60312==    at 0x85ECB1C: __pthread_kill_implementation (pthread_kill.c:44)
-==60312==    by 0x85ECB1C: __pthread_kill_internal (pthread_kill.c:78)
-==60312==    by 0x85ECB1C: pthread_kill@@GLIBC_2.34 (pthread_kill.c:89)
-==60312==    by 0x859326D: raise (raise.c:26)
-==60312==    by 0x85768FE: abort (abort.c:79)
-==60312==    by 0x4860E70: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:272)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== HEAP SUMMARY:
-==60312==     in use at exit: 10,095 bytes in 71 blocks
-==60312==   total heap usage: 97 allocs, 26 frees, 35,912 bytes allocated
-==60312== 
-==60312== Searching for pointers to 71 not-freed blocks
-==60312== Checked 1,108,352 bytes
-==60312== 
-==60312== 2 bytes in 1 blocks are still reachable in loss record 1 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2F8A: GB_Global_persistent_malloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D0F51D: GB_jitifyer_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01A03: GB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01E4B: GxB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48903BA: LAGr_Init (LAGr_Init.c:156)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 2 bytes in 1 blocks are still reachable in loss record 2 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2F8A: GB_Global_persistent_malloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D0F6FA: GB_jitifyer_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01A03: GB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01E4B: GxB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48903BA: LAGr_Init (LAGr_Init.c:156)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 2 bytes in 1 blocks are still reachable in loss record 3 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2F8A: GB_Global_persistent_malloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D0F71B: GB_jitifyer_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01A03: GB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01E4B: GxB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48903BA: LAGr_Init (LAGr_Init.c:156)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 8 bytes in 1 blocks are still reachable in loss record 4 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x877D4A4: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
-==60312==    by 0x879410E: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
-==60312==    by 0x877BC5B: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
-==60312==    by 0x400571E: call_init.part.0 (dl-init.c:74)
-==60312==    by 0x4005823: call_init (dl-init.c:120)
-==60312==    by 0x4005823: _dl_init (dl-init.c:121)
-==60312==    by 0x401F59F: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-==60312== 
-==60312== 8 bytes in 1 blocks are still reachable in loss record 5 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D59FCD: GB_calloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D592BA: GB_bix_alloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5995F: GB_new_bix (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x511F38E: GB_select_bitmap (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x5132E16: GB_selector (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x511E383: GB_select (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x5134738: GrB_Matrix_select_INT32 (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4896EC6: LAGraph_DeleteSelfEdges (LAGraph_DeleteSelfEdges.c:51)
-==60312==    by 0x485FF4A: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:126)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312== 
-==60312== 8 bytes in 1 blocks are still reachable in loss record 6 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D59FCD: GB_calloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4CF945E: GB_export (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x50FF50D: GxB_Matrix_unpack_CSR (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x486062A: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:172)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 11 bytes in 1 blocks are still reachable in loss record 7 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2F8A: GB_Global_persistent_malloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D0F619: GB_jitifyer_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01A03: GB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01E4B: GxB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48903BA: LAGr_Init (LAGr_Init.c:156)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 13 bytes in 1 blocks are still reachable in loss record 8 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2F8A: GB_Global_persistent_malloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D0F549: GB_jitifyer_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01A03: GB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01E4B: GxB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48903BA: LAGr_Init (LAGr_Init.c:156)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 16 bytes in 1 blocks are still reachable in loss record 9 of 71
-==60312==    at 0x484E0DC: calloc (vg_replace_malloc.c:1675)
-==60312==    by 0x10D37C: main (acutest.h:1656)
-==60312== 
-==60312== 16 bytes in 1 blocks are still reachable in loss record 10 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D59FCD: GB_calloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4CF91D6: GB_export (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x50FF50D: GxB_Matrix_unpack_CSR (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x486062A: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:172)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 28 bytes in 1 blocks are still reachable in loss record 11 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2F8A: GB_Global_persistent_malloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D0F652: GB_jitifyer_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01A03: GB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01E4B: GxB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48903BA: LAGr_Init (LAGr_Init.c:156)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 64 bytes in 1 blocks are still reachable in loss record 12 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x48A54E4: LAGraph_Malloc (LAGraph_Malloc.c:50)
-==60312==    by 0x4860069: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:136)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 64 bytes in 1 blocks are still reachable in loss record 13 of 71
-==60312==    at 0x484E0DC: calloc (vg_replace_malloc.c:1675)
-==60312==    by 0x4895BA9: LAGraph_Calloc (LAGraph_Calloc.c:58)
-==60312==    by 0x4860174: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:138)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 64 bytes in 1 blocks are still reachable in loss record 14 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x48A54E4: LAGraph_Malloc (LAGraph_Malloc.c:50)
-==60312==    by 0x486027F: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:140)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 64 bytes in 1 blocks are still reachable in loss record 15 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x48A54E4: LAGraph_Malloc (LAGraph_Malloc.c:50)
-==60312==    by 0x486038A: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:142)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 64 bytes in 1 blocks are still reachable in loss record 16 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x48A54E4: LAGraph_Malloc (LAGraph_Malloc.c:50)
-==60312==    by 0x48608A0: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:181)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 64 bytes in 1 blocks are still reachable in loss record 17 of 71
-==60312==    at 0x484E0DC: calloc (vg_replace_malloc.c:1675)
-==60312==    by 0x4895BA9: LAGraph_Calloc (LAGraph_Calloc.c:58)
-==60312==    by 0x48609AB: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:183)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 72 bytes in 1 blocks are still reachable in loss record 18 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4C6A008: GB_convert_bitmap_to_sparse (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x50FF4AA: GxB_Matrix_unpack_CSR (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x486062A: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:172)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 76 bytes in 1 blocks are still reachable in loss record 19 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2F8A: GB_Global_persistent_malloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D10172: GB_jitifyer_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01A03: GB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01E4B: GxB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48903BA: LAGr_Init (LAGr_Init.c:156)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 20 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890775: LAGr_Init (LAGr_Init.c:228)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 21 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890815: LAGr_Init (LAGr_Init.c:230)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 22 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48908B5: LAGr_Init (LAGr_Init.c:232)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 23 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890955: LAGr_Init (LAGr_Init.c:234)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 24 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48909F5: LAGr_Init (LAGr_Init.c:236)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 25 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890A95: LAGr_Init (LAGr_Init.c:238)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 26 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890B35: LAGr_Init (LAGr_Init.c:240)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 27 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890BD5: LAGr_Init (LAGr_Init.c:242)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 28 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890C75: LAGr_Init (LAGr_Init.c:244)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 29 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890D15: LAGr_Init (LAGr_Init.c:246)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 30 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890DA9: LAGr_Init (LAGr_Init.c:256)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 31 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890E3D: LAGr_Init (LAGr_Init.c:258)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 32 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890ED1: LAGr_Init (LAGr_Init.c:260)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 33 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890F65: LAGr_Init (LAGr_Init.c:262)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 34 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4890FF9: LAGr_Init (LAGr_Init.c:264)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 35 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x489108D: LAGr_Init (LAGr_Init.c:266)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 36 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891121: LAGr_Init (LAGr_Init.c:268)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 37 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48911B5: LAGr_Init (LAGr_Init.c:270)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 38 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891249: LAGr_Init (LAGr_Init.c:272)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 39 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48912DD: LAGr_Init (LAGr_Init.c:274)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 40 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891371: LAGr_Init (LAGr_Init.c:286)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 41 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891405: LAGr_Init (LAGr_Init.c:288)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 42 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891499: LAGr_Init (LAGr_Init.c:290)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 43 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x489152D: LAGr_Init (LAGr_Init.c:292)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 44 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48915C1: LAGr_Init (LAGr_Init.c:294)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 45 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891655: LAGr_Init (LAGr_Init.c:296)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 46 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48916E9: LAGr_Init (LAGr_Init.c:298)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 47 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x489177D: LAGr_Init (LAGr_Init.c:300)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 48 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891811: LAGr_Init (LAGr_Init.c:302)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 49 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48918A5: LAGr_Init (LAGr_Init.c:304)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 50 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891939: LAGr_Init (LAGr_Init.c:323)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 51 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48919CD: LAGr_Init (LAGr_Init.c:325)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 52 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891A61: LAGr_Init (LAGr_Init.c:327)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 53 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891AF5: LAGr_Init (LAGr_Init.c:329)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 54 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891B89: LAGr_Init (LAGr_Init.c:331)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 55 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891C1D: LAGr_Init (LAGr_Init.c:333)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 56 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891CB1: LAGr_Init (LAGr_Init.c:335)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 57 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891D45: LAGr_Init (LAGr_Init.c:337)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 58 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891DD9: LAGr_Init (LAGr_Init.c:339)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 59 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891E6D: LAGr_Init (LAGr_Init.c:341)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 80 bytes in 1 blocks are still reachable in loss record 60 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x513FA63: GrB_Semiring_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4891F01: LAGr_Init (LAGr_Init.c:343)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 88 bytes in 1 blocks are still reachable in loss record 61 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x48A54E4: LAGraph_Malloc (LAGraph_Malloc.c:50)
-==60312==    by 0x48AE80D: LAGraph_New (LAGraph_New.c:53)
-==60312==    by 0x10DE8D: test_bc (test_edgeBetweennessCentrality.c:144)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 89 bytes in 1 blocks are still reachable in loss record 62 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2F8A: GB_Global_persistent_malloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D0F68E: GB_jitifyer_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01A03: GB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01E4B: GxB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48903BA: LAGr_Init (LAGr_Init.c:156)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 96 bytes in 1 blocks are still reachable in loss record 63 of 71
-==60312==    at 0x484E0DC: calloc (vg_replace_malloc.c:1675)
-==60312==    by 0x877D4DC: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
-==60312==    by 0x877BBA0: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
-==60312==    by 0x877BC77: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
-==60312==    by 0x400571E: call_init.part.0 (dl-init.c:74)
-==60312==    by 0x4005823: call_init (dl-init.c:120)
-==60312==    by 0x4005823: _dl_init (dl-init.c:121)
-==60312==    by 0x401F59F: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-==60312== 
-==60312== 96 bytes in 1 blocks are still reachable in loss record 64 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4C6A026: GB_convert_bitmap_to_sparse (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x50FF4AA: GxB_Matrix_unpack_CSR (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x486062A: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:172)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 96 bytes in 1 blocks are still reachable in loss record 65 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x48A54E4: LAGraph_Malloc (LAGraph_Malloc.c:50)
-==60312==    by 0x4860795: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:180)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 138 bytes in 1 blocks are still reachable in loss record 66 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2F8A: GB_Global_persistent_malloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D0F589: GB_jitifyer_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01A03: GB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01E4B: GxB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48903BA: LAGr_Init (LAGr_Init.c:156)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 192 bytes in 1 blocks are still reachable in loss record 67 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x877D4A4: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
-==60312==    by 0x87919A3: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
-==60312==    by 0x878795A: GOMP_parallel (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
-==60312==    by 0x4C41B55: GB_builder (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4C3E420: GB_build (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4C440F7: GrB_Matrix_build_BOOL (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x489BD0A: LAGraph_MMRead (LAGraph_MMRead.c:992)
-==60312==    by 0x10DD81: test_bc (test_edgeBetweennessCentrality.c:139)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 232 bytes in 1 blocks are still reachable in loss record 68 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D5A143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D59844: GB_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D59178: GB_Matrix_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x489B217: LAGraph_MMRead (LAGraph_MMRead.c:838)
-==60312==    by 0x10DD81: test_bc (test_edgeBetweennessCentrality.c:139)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 512 bytes in 1 blocks are still reachable in loss record 69 of 71
-==60312==    at 0x484E0DC: calloc (vg_replace_malloc.c:1675)
-==60312==    by 0x4895BA9: LAGraph_Calloc (LAGraph_Calloc.c:58)
-==60312==    by 0x4860501: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:161)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 1,024 bytes in 1 blocks are still reachable in loss record 70 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x85D31A4: _IO_file_doallocate (filedoalloc.c:101)
-==60312==    by 0x85E3513: _IO_doallocbuf (genops.c:347)
-==60312==    by 0x85E0F7F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:745)
-==60312==    by 0x85E1A9E: _IO_new_file_xsputn (fileops.c:1244)
-==60312==    by 0x85E1A9E: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1197)
-==60312==    by 0x85AECB8: __printf_buffer_flush_to_file (printf_buffer_to_file.c:59)
-==60312==    by 0x85AECB8: __printf_buffer_to_file_done (printf_buffer_to_file.c:120)
-==60312==    by 0x85B9732: __vfprintf_internal (vfprintf-internal.c:1545)
-==60312==    by 0x85AE1A2: printf (printf.c:33)
-==60312==    by 0x10AB31: acutest_colored_printf_ (acutest.h:550)
-==60312==    by 0x10AC21: acutest_begin_test_line_ (acutest.h:595)
-==60312==    by 0x10BC7A: acutest_do_run_ (acutest.h:1010)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312== 
-==60312== 3,606 bytes in 1 blocks are still reachable in loss record 71 of 71
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x4CF2F8A: GB_Global_persistent_malloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D0E11B: GB_jitifyer_alloc_space (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D0F735: GB_jitifyer_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01A03: GB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x4D01E4B: GxB_init (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
-==60312==    by 0x48903BA: LAGr_Init (LAGr_Init.c:156)
-==60312==    by 0x4899183: LAGraph_Init (LAGraph_Init.c:26)
-==60312==    by 0x10DCD2: test_bc (test_edgeBetweennessCentrality.c:130)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== LEAK SUMMARY:
-==60312==    definitely lost: 0 bytes in 0 blocks
-==60312==    indirectly lost: 0 bytes in 0 blocks
-==60312==      possibly lost: 0 bytes in 0 blocks
-==60312==    still reachable: 10,095 bytes in 71 blocks
-==60312==         suppressed: 0 bytes in 0 blocks
-==60312== 
-==60312== ERROR SUMMARY: 4 errors from 2 contexts (suppressed: 0 from 0)
-==60312== 
-==60312== 2 errors in context 1 of 2:
-==60312== Invalid read of size 8
-==60312==    at 0x4860D74: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:266)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312==  Address 0x88bd680 is 0 bytes after a block of size 96 alloc'd
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x48A54E4: LAGraph_Malloc (LAGraph_Malloc.c:50)
-==60312==    by 0x4860795: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:180)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== 
-==60312== 2 errors in context 2 of 2:
-==60312== Invalid write of size 8
-==60312==    at 0x4860C9C: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:245)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312==  Address 0x88bd680 is 0 bytes after a block of size 96 alloc'd
-==60312==    at 0x484680F: malloc (vg_replace_malloc.c:446)
-==60312==    by 0x48A54E4: LAGraph_Malloc (LAGraph_Malloc.c:50)
-==60312==    by 0x4860795: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:180)
-==60312==    by 0x10DF11: test_bc (test_edgeBetweennessCentrality.c:148)
-==60312==    by 0x10BCE8: acutest_do_run_ (acutest.h:1025)
-==60312==    by 0x10C113: acutest_run_ (acutest.h:1196)
-==60312==    by 0x10D52B: main (acutest.h:1724)
-==60312== 
-==60312== ERROR SUMMARY: 4 errors from 2 contexts (suppressed: 0 from 0)
+==17764== Memcheck, a memory error detector
+==17764== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==17764== Using Valgrind-3.24.0-fcdaa47426-20241101 and LibVEX; rerun with -h for copyright info
+==17764== Command: ./build/experimental/test/test_edgeBetweennessCentrality
+==17764== Parent PID: 787
+==17764== 
+--17764-- 
+--17764-- Valgrind options:
+--17764--    --leak-check=full
+--17764--    --show-leak-kinds=all
+--17764--    --track-origins=yes
+--17764--    --verbose
+--17764--    --log-file=valgrind-out.txt
+--17764-- Contents of /proc/version:
+--17764--   Linux version 5.15.167.4-microsoft-standard-WSL2 (root@f9c826d3017f) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.37) #1 SMP Tue Nov 5 00:21:55 UTC 2024
+--17764-- 
+--17764-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand-rdseed-fma
+--17764-- Page sizes: currently 4096, max supported 4096
+--17764-- Valgrind library directory: /usr/local/libexec/valgrind
+--17764-- Reading syms from /home/peicasey/csce491h/LAGraph/build/experimental/test/test_edgeBetweennessCentrality
+--17764-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+--17764--   Considering /usr/lib/debug/.build-id/1c/8db5f83bba514f8fd5f1fb6d7be975be1bb855.debug ..
+--17764--   .. build-id is valid
+--17764-- Reading syms from /usr/local/libexec/valgrind/memcheck-amd64-linux
+--17764--    object doesn't have a dynamic symbol table
+--17764-- Scheduler: using generic scheduler lock implementation.
+--17764-- Reading suppressions file: /usr/local/libexec/valgrind/default.supp
+==17764== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-17764-by-peicasey-on-???
+==17764== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-17764-by-peicasey-on-???
+==17764== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-17764-by-peicasey-on-???
+==17764== 
+==17764== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==17764== don't want to do, unless you know exactly what you're doing,
+==17764== or are doing some strange experiment):
+==17764==   /usr/local/libexec/valgrind/../../bin/vgdb --pid=17764 ...command...
+==17764== 
+==17764== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==17764==   /path/to/gdb ./build/experimental/test/test_edgeBetweennessCentrality
+==17764== and then give GDB the following command
+==17764==   target remote | /usr/local/libexec/valgrind/../../bin/vgdb --pid=17764
+==17764== --pid is optional if only one valgrind process is running
+==17764== 
+--17764-- REDIR: 0x4028b00 (ld-linux-x86-64.so.2:strlen) redirected to 0x580c18b2 (vgPlain_amd64_linux_REDIR_FOR_strlen)
+--17764-- REDIR: 0x40274e0 (ld-linux-x86-64.so.2:strcmp) redirected to 0x580c18cc (vgPlain_amd64_linux_REDIR_FOR_strcmp)
+--17764-- REDIR: 0x40272b0 (ld-linux-x86-64.so.2:index) redirected to 0x580c18e7 (vgPlain_amd64_linux_REDIR_FOR_index)
+--17764-- Reading syms from /usr/local/libexec/valgrind/vgpreload_core-amd64-linux.so
+--17764-- Reading syms from /usr/local/libexec/valgrind/vgpreload_memcheck-amd64-linux.so
+==17764== WARNING: new redirection conflicts with existing -- ignoring it
+--17764--     old: 0x040274e0 (strcmp              ) R-> (0000.0) 0x580c18cc vgPlain_amd64_linux_REDIR_FOR_strcmp
+--17764--     new: 0x040274e0 (strcmp              ) R-> (2016.0) 0x04851320 strcmp
+==17764== WARNING: new redirection conflicts with existing -- ignoring it
+--17764--     old: 0x04028b00 (strlen              ) R-> (0000.0) 0x580c18b2 vgPlain_amd64_linux_REDIR_FOR_strlen
+--17764--     new: 0x04028b00 (strlen              ) R-> (2007.0) 0x048500d0 strlen
+--17764-- REDIR: 0x4026910 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4854b90 (mempcpy)
+--17764-- Reading syms from /home/peicasey/csce491h/LAGraph/build/experimental/test/liblagraphxtest.so.1.2.0
+--17764-- Reading syms from /home/peicasey/csce491h/LAGraph/build/src/liblagraph.so.1.2.0
+--17764-- Reading syms from /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2
+--17764-- Reading syms from /usr/lib/x86_64-linux-gnu/libc.so.6
+--17764--   Considering /usr/lib/debug/.build-id/42/c84c92e6f98126b3e2230ebfdead22c235b667.debug ..
+--17764--   .. build-id is valid
+--17764-- Reading syms from /home/peicasey/csce491h/LAGraph/build/src/test/liblagraphtest.so.1.2.0
+--17764-- Reading syms from /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+--17764-- Reading syms from /usr/lib/x86_64-linux-gnu/libm.so.6
+--17764-- REDIR: 0x4028ca0 (ld-linux-x86-64.so.2:strncmp) redirected to 0x4850b50 (strncmp)
+--17764-- REDIR: 0x8604050 (libc.so.6:strnlen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86040e0 (libc.so.6:strpbrk) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86021a0 (libc.so.6:strcmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x861b3b0 (libc.so.6:wcsnlen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8601290 (libc.so.6:memset) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x861ab20 (libc.so.6:wcslen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86863c0 (libc.so.6:__memcpy_chk) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8601200 (libc.so.6:memrchr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x861b350 (libc.so.6:wcsncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8600720 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86198e0 (libc.so.6:wcschr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8602090 (libc.so.6:index) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8604110 (libc.so.6:rindex) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8619990 (libc.so.6:wcscmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86014b0 (libc.so.6:stpncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8627eb0 (libc.so.6:wmemchr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8603ef0 (libc.so.6:strncmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8601510 (libc.so.6:strcasecmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8603310 (libc.so.6:strcspn) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x861a8f0 (libc.so.6:wcscpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8602020 (libc.so.6:strcat) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8603df0 (libc.so.6:strncasecmp_l) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8602110 (libc.so.6:strchrnul) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8600630 (libc.so.6:bcmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86032a0 (libc.so.6:strcpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86015b0 (libc.so.6:strcasecmp_l) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8603cc0 (libc.so.6:strlen) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8603f90 (libc.so.6:strncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8627f30 (libc.so.6:wmemcmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86864e0 (libc.so.6:__memmove_chk) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+==17764== WARNING: new redirection conflicts with existing -- ignoring it
+--17764--     old: 0x086d79d0 (__memcpy_chk_avx_una) R-> (2030.0) 0x04854c90 __memcpy_chk
+--17764--     new: 0x086d79d0 (__memcpy_chk_avx_una) R-> (2024.0) 0x04854600 __memmove_chk
+--17764-- REDIR: 0x8601440 (libc.so.6:stpcpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8600fc0 (libc.so.6:memmove) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+==17764== Preferring higher priority redirection:
+--17764--     old: 0x086d7a00 (__memcpy_avx_unalign) R-> (2018.0) 0x04852440 __memcpy_avx_unaligned_erms
+--17764--     new: 0x086d7a00 (__memcpy_avx_unalign) R-> (2018.1) 0x04853c20 memmove
+--17764-- REDIR: 0x86005b0 (libc.so.6:memchr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86042e0 (libc.so.6:strspn) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8619320 (libc.so.6:wcpncpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86010e0 (libc.so.6:mempcpy) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8603d50 (libc.so.6:strncasecmp) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x8604ba0 (libc.so.6:strstr) redirected to 0x483d1ba (_vgnU_ifunc_wrapper)
+--17764-- REDIR: 0x86dc5f0 (libc.so.6:__strrchr_avx2) redirected to 0x484f950 (rindex)
+--17764-- REDIR: 0x86d7000 (libc.so.6:__memchr_avx2) redirected to 0x48513a0 (memchr)
+--17764-- REDIR: 0x85fc650 (libc.so.6:malloc) redirected to 0x4846799 (malloc)
+--17764-- REDIR: 0x86d8400 (libc.so.6:__memset_avx2_unaligned_erms) redirected to 0x4853b10 (memset)
+--17764-- REDIR: 0x85fd7a0 (libc.so.6:calloc) redirected to 0x484e052 (calloc)
+--17764-- REDIR: 0x86db820 (libc.so.6:__strncmp_avx2) redirected to 0x4850970 (strncmp)
+--17764-- REDIR: 0x86da740 (libc.so.6:__strlen_avx2) redirected to 0x484ffb0 (strlen)
+--17764-- REDIR: 0x86d9da0 (libc.so.6:__strchrnul_avx2) redirected to 0x4854670 (strchrnul)
+--17764-- REDIR: 0x86d7a00 (libc.so.6:__memcpy_avx_unaligned_erms) redirected to 0x4853c20 (memmove)
+--17764-- REDIR: 0x86d79c0 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4854790 (mempcpy)
+--17764-- REDIR: 0x86dc320 (libc.so.6:__strnlen_avx2) redirected to 0x484ff50 (strnlen)
+--17764-- REDIR: 0x86d9b60 (libc.so.6:__strchr_avx2) redirected to 0x484fb30 (index)
+--17764-- REDIR: 0x85fcd30 (libc.so.6:free) redirected to 0x4849aba (free)
+--17764-- REDIR: 0x85fd650 (libc.so.6:memalign) redirected to 0x484e84c (memalign)
+--17764-- REDIR: 0x86d79d0 (libc.so.6:__memcpy_chk_avx_unaligned_erms) redirected to 0x4854c90 (__memcpy_chk)
+--17764-- REDIR: 0x86d9f90 (libc.so.6:__strcmp_avx2) redirected to 0x4851220 (strcmp)
+--17764-- Reading syms from /home/peicasey/.SuiteSparse/GrB9.4.2/lib/25/libGB_jit__bitmap_assign_4_whole__803f0002bb93.so
+--17764-- Discarding syms at 0x8548120-0x8549efb in /home/peicasey/.SuiteSparse/GrB9.4.2/lib/25/libGB_jit__bitmap_assign_4_whole__803f0002bb93.so (have_dinfo 1)
+==17764== 
+==17764== HEAP SUMMARY:
+==17764==     in use at exit: 1,104 bytes in 6 blocks
+==17764==   total heap usage: 137 allocs, 131 frees, 1,890,162 bytes allocated
+==17764== 
+==17764== Searching for pointers to 6 not-freed blocks
+==17764== Checked 1,103,400 bytes
+==17764== 
+==17764== 8 bytes in 1 blocks are still reachable in loss record 1 of 6
+==17764==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==17764==    by 0x877E4A4: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==17764==    by 0x879510E: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==17764==    by 0x877CC5B: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==17764==    by 0x400571E: call_init.part.0 (dl-init.c:74)
+==17764==    by 0x4005823: call_init (dl-init.c:120)
+==17764==    by 0x4005823: _dl_init (dl-init.c:121)
+==17764==    by 0x401F59F: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+==17764== 
+==17764== 64 bytes in 1 blocks are indirectly lost in loss record 2 of 6
+==17764==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==17764==    by 0x4CF3DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4D5B143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4C6B2F0: GB_convert_full_to_bitmap (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4B7AF42: GB_bitmap_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4B70E96: GB_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4C2D323: GrB_Matrix_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4862278: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:426)
+==17764==    by 0x10DE78: test_bc (test_edgeBetweennessCentrality.c:145)
+==17764==    by 0x10BCC8: acutest_do_run_ (acutest.h:1025)
+==17764==    by 0x10C0F3: acutest_run_ (acutest.h:1196)
+==17764==    by 0x10D50B: main (acutest.h:1724)
+==17764== 
+==17764== 96 bytes in 1 blocks are still reachable in loss record 3 of 6
+==17764==    at 0x484E0DC: calloc (vg_replace_malloc.c:1675)
+==17764==    by 0x877E4DC: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==17764==    by 0x877CBA0: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==17764==    by 0x877CC77: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==17764==    by 0x400571E: call_init.part.0 (dl-init.c:74)
+==17764==    by 0x4005823: call_init (dl-init.c:120)
+==17764==    by 0x4005823: _dl_init (dl-init.c:121)
+==17764==    by 0x401F59F: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+==17764== 
+==17764== 192 bytes in 1 blocks are still reachable in loss record 4 of 6
+==17764==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==17764==    by 0x877E4A4: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==17764==    by 0x87929A3: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==17764==    by 0x878895A: GOMP_parallel (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==17764==    by 0x4C42B55: GB_builder (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4C3F420: GB_build (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4C450F7: GrB_Matrix_build_BOOL (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x489CD0A: LAGraph_MMRead (LAGraph_MMRead.c:992)
+==17764==    by 0x10DD61: test_bc (test_edgeBetweennessCentrality.c:139)
+==17764==    by 0x10BCC8: acutest_do_run_ (acutest.h:1025)
+==17764==    by 0x10C0F3: acutest_run_ (acutest.h:1196)
+==17764==    by 0x10D50B: main (acutest.h:1724)
+==17764== 
+==17764== 512 bytes in 1 blocks are indirectly lost in loss record 5 of 6
+==17764==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==17764==    by 0x4CF3DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4D5B143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4D5A2BA: GB_bix_alloc (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4D5A95F: GB_new_bix (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4C75AA6: GB_dup_worker (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4B74C78: GB_assign_prep (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4B70D90: GB_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4C2D323: GrB_Matrix_assign (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4862278: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:426)
+==17764==    by 0x10DE78: test_bc (test_edgeBetweennessCentrality.c:145)
+==17764==    by 0x10BCC8: acutest_do_run_ (acutest.h:1025)
+==17764== 
+==17764== 808 (232 direct, 576 indirect) bytes in 1 blocks are definitely lost in loss record 6 of 6
+==17764==    at 0x484680F: malloc (vg_replace_malloc.c:446)
+==17764==    by 0x4CF3DE9: GB_Global_malloc_function (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4D5B143: GB_malloc_memory (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4D5A844: GB_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4D5A178: GB_Matrix_new (in /home/peicasey/csce491h/GraphBLAS/build/libgraphblas.so.9.4.2)
+==17764==    by 0x4862026: LG_check_edgeBetweennessCentrality (LG_check_edgeBetweennessCentrality.c:423)
+==17764==    by 0x10DE78: test_bc (test_edgeBetweennessCentrality.c:145)
+==17764==    by 0x10BCC8: acutest_do_run_ (acutest.h:1025)
+==17764==    by 0x10C0F3: acutest_run_ (acutest.h:1196)
+==17764==    by 0x10D50B: main (acutest.h:1724)
+==17764== 
+==17764== LEAK SUMMARY:
+==17764==    definitely lost: 232 bytes in 1 blocks
+==17764==    indirectly lost: 576 bytes in 2 blocks
+==17764==      possibly lost: 0 bytes in 0 blocks
+==17764==    still reachable: 296 bytes in 3 blocks
+==17764==         suppressed: 0 bytes in 0 blocks
+==17764== 
+==17764== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
