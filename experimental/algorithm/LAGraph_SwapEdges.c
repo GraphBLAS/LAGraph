@@ -542,7 +542,7 @@ int LAGraph_SwapEdges
     GRB_TRY (GrB_Vector_new(&r_60, GrB_UINT64, e)) ;
     GRB_TRY (GrB_Vector_new(&r_permute, GrB_UINT64, 1ull << (64-shift_e))) ;
     GRB_TRY(GrB_set (r_permute, GxB_BITMAP, GxB_SPARSITY_CONTROL)) ;
-    GRB_TRY(GrB_set (exists, GxB_BITMAP, GxB_SPARSITY_CONTROL)) ;
+    GRB_TRY(GrB_set (exists, GxB_BITMAP | GxB_FULL, GxB_SPARSITY_CONTROL)) ;
     // GRB_TRY(GrB_set (new_edges_h, GxB_BITMAP, GxB_SPARSITY_CONTROL)) ;
     // GRB_TRY (GrB_Vector_new(&r_permute, GrB_UINT64, e)) ;
     GRB_TRY (GrB_Vector_assign_UINT64 (
@@ -587,7 +587,6 @@ int LAGraph_SwapEdges
             P, &ramp, &edge_perm, (void**) &val_of_P, &ramp_size,
             &perm_size, &junk_size, &iso, NULL, NULL
         ));
-        GRB_TRY (GrB_Vector_clear(x));
         LAGraph_Free((void **) &edge_perm, msg);
         
         GrB_Index edges_permed = 0;
@@ -688,13 +687,6 @@ int LAGraph_SwapEdges
         GRB_TRY(GxB_Vector_unpack_Full(
             hashed_edges, (void **) &hash_vals, &junk_size, &iso, NULL
         )) ;
-        // GRB_TRY(GrB_Vector_apply_BinaryOp1st_UINT64(
-        //     not_pointers, NULL,NULL, GrB_PLUS_UINT64, (uint64_t) dup_swaps, 
-        //     not_pointers, NULL
-        // )) ;
-        // GRB_TRY(GxB_Vector_unpack_Full(
-        //     not_pointers, (void **) &not_ptrs, &arr_size, &iso, NULL
-        // )) ;
 
         //----------------------------------------------------------------------
         // Build Hash Buckets
@@ -709,8 +701,8 @@ int LAGraph_SwapEdges
             hash_m, &ramp, &hash_vals, (void**) &val_of_P, ramp_size,
             perm_size, sizeof(bool), true, false, NULL
         ));
-        GRB_TRY (GrB_reduce(
-            exists, NULL, NULL, GxB_ANY_UINT8_MONOID, hash_m, NULL));
+        GRB_TRY (GrB_mxv(
+            exists, NULL, NULL, GxB_ANY_PAIR_UINT8, hash_m, x, NULL));
         GRB_TRY (GxB_Matrix_unpack_CSC(
             hash_m, &ramp, &hash_vals, (void**) &val_of_P, &ramp_size,
             &perm_size, &junk_size, &iso, NULL, NULL
@@ -725,8 +717,17 @@ int LAGraph_SwapEdges
         GRB_TRY (GrB_Vector_assign_BOOL(
             x, NULL, NULL, true, GrB_ALL, 0, NULL)) ;
 
-        //TODO: fix overflow!
-// JIT dies here
+        // Want to make exists full. But assign takes too long.
+        // Exists cannot possibly be full at this point.
+        int8_t *exists_bitmap = NULL;
+        uint64_t exists_bsize;
+        GRB_TRY (GxB_Vector_unpack_Bitmap(
+            exists, &exists_bitmap, &junk, &exists_bsize, &junk_size, &iso, 
+            &junk_size, NULL
+        ));
+        GRB_TRY (GxB_Vector_pack_Full(
+            exists, (void **)&exists_bitmap, exists_bsize, false, NULL
+        ));
         GRB_TRY (GrB_mxv(
             exists, NULL, add_term_biop, plus_term_one, hash_m, x, NULL
         ));
