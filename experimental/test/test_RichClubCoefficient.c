@@ -79,12 +79,15 @@ double rcc3[] = {0.020418922066450775, 0.020418922066450775,
 0.1989280560709132, 0.20149602618045817, 0.20475808607324245,
 0.16666666666666666, 0.16840882694541232, 0.17894736842105263,
 0.16666666666666666, 1.0} ;
-
+double rcc4[] = {0.0016506547800326698, 0.0017226315730560155, 
+    0.0034201182512489416, 0.0037033309852068028, 0.05405405405405406};
+// TODO: add singleton test
 const matrix_info tests [ ] =
 {
     {rcc1, sizeof(rcc1) / sizeof(rcc1[0]), "random_unweighted_general1.mtx"},
     {rcc2, sizeof(rcc2) / sizeof(rcc2[0]), "random_unweighted_general2.mtx"},
     {rcc3, sizeof(rcc3) / sizeof(rcc3[0]), "bcsstk13.mtx"},
+    {rcc4, sizeof(rcc4) / sizeof(rcc4[0]), "test_FW_2500.mtx"},
     {NULL, 0, ""}
 } ;
 

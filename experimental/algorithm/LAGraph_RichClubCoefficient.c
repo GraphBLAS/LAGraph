@@ -262,6 +262,9 @@ int LAGraph_RichClubCoefficient
             NULL, node_edges_arr, &edge_vec_nvals, node_edges
         )) ;
         #else 
+        //dimensions should get adjusted in theory.
+        GRB_TRY (GrB_Vector_new(&deg_x, GrB_BOOL, 0)) ;  
+        GRB_TRY (GrB_Vector_new(&node_edges_x, GrB_BOOL, 0)) ;  
         GRB_TRY (GxB_Vector_extractTuples_Vector(
             NULL, deg_x, degrees, NULL
         )) ;
