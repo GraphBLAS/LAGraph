@@ -14,6 +14,19 @@
     free(Ax);                                   \
 }
 
+void print_progress(double progress) {
+    int bar_width = 50;
+    printf("\r[");
+    int pos = (int)(bar_width * progress);
+    for (int i = 0; i < bar_width; ++i) {
+        if (i < pos) printf("=");
+        else if (i == pos) printf(">");
+        else printf(" ");
+    }
+    printf("] %.2f%%", progress * 100);
+    fflush(stdout);
+}
+
 int main (int argc, char **argv)
 {
     //--------------------------------------------------------------------------
@@ -118,8 +131,12 @@ int main (int argc, char **argv)
         // reset used colors
         // printf("resetting used colors\n");
         memset(used_colors, 0, sizeof(int) * (Ap_size - 1));
+
+        // print progress
+        print_progress(((double)Ap_index + 1) / (Ap_size - 1));
     }
 
+    printf("\n");
     
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for Greedy Coloring:    %g sec\n", t) ;
