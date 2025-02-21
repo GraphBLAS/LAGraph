@@ -169,7 +169,7 @@ int main (int argc, char **argv)
     // printf ("\n===============================The coloring vector C:\n") ;
     // LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg) ;
 
-    printf ("\n===============================Time for Greedy:  %g sec\n", t) ;
+    printf ("\n===============================Time for Greedy:  %g sec", t) ;
     printf ("\n===============================Number of colors: %d\n\n", num_colors) ;
     
     //--------------------------------------------------------------------------
