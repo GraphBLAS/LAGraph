@@ -70,6 +70,7 @@ int LAGraph_coloring_independent_set_optimized
 
         /* eWiseAdd - 1 if current weight > max neighboring weight */
         GRB_TRY(GrB_eWiseMult(in_curr_subset, GrB_NULL, GrB_NULL, GrB_GT_UINT64, weight, max_weights, GrB_NULL));
+
         /* select - select all entries in in_curr_subset that are true, and delete falses */
         GRB_TRY(GrB_select(in_curr_subset, GrB_NULL, GrB_NULL, GrB_VALUEEQ_BOOL, in_curr_subset, true, GrB_NULL));
 
@@ -84,7 +85,8 @@ int LAGraph_coloring_independent_set_optimized
                 printf("ERROR in LAGraph_coloring_independent_set_optimized: in_curr_subset is empty, but nvals (local_color) < n\n");
                 LG_FREE_ALL ;
                 return (1) ;
-            }   
+            }
+            break;
         }
 
         /* assign - write current color to C vector according to in_curr_subset mask */
