@@ -37,7 +37,7 @@ int main (int argc, char **argv)
         &G,         // the graph that is read from stdin or a file
         NULL,       // source nodes (none, if NULL)
         true,       // make the graph undirected, if true
-        false,       // remove self-edges, if true
+        true,       // remove self-edges, if true
         true,       // return G->A as structural, if true,
         NULL,       // prefered GrB_Type of G->A; null if no preference
         false,      // ensure all entries are positive, if true
@@ -56,9 +56,6 @@ int main (int argc, char **argv)
     int status = (LAGraph_coloring_independent_set_optimized (&C, &num_colors, G, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for IS Coloring:        %g sec\n", t) ;
-
-    printf ("\n===============================Independent Set Coloring:\n") ;
-    LAGRAPH_TRY (LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // check the results

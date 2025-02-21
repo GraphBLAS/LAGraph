@@ -58,7 +58,7 @@ int main (int argc, char **argv)
         &G,         // the graph that is read from stdin or a file
         NULL,       // source nodes (none, if NULL)
         true,       // make the graph undirected, if true
-        false,       // remove self-edges, if true
+        true,       // remove self-edges, if true
         true,       // return G->A as structural, if true,
         NULL,       // prefered GrB_Type of G->A; null if no preference
         false,      // ensure all entries are positive, if true
@@ -165,9 +165,6 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // print the results
     //--------------------------------------------------------------------------
-
-    printf ("\n===============================The coloring vector C:\n") ;
-    LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg) ;
 
     printf ("\n===============================Time for Greedy:  %g sec", t) ;
     printf ("\n===============================Number of colors: %d\n\n", num_colors) ;
