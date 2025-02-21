@@ -5,6 +5,14 @@
 #include "LG_test.h"
 #include "LG_Xtest.h"
 
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK                            \
+{                                               \
+    free(Ap);                                   \
+    free(Ai);                                   \
+    free(Ax);                                   \
+}
+
 int LG_check_coloring
 (
     LAGraph_Graph G,
@@ -36,6 +44,7 @@ int LG_check_coloring
     *   - Ap_index: current node
     *   - Ai_index: a neighbor
     */
+   
     GrB_Index *Ap = NULL;
     GrB_Index *Ai = NULL;
     void *Ax = NULL;

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Usage:
+#
+#       ./do_coloring
+#
+
+echo " "
+echo "======================================================================"
+echo "Benchmarks using LAGraph+GraphBLAS: Coloring"
+echo "======================================================================"
+
+# GAP="../../../GAP"
+# echo "GAP matrices located in:  " $GAP
+
+../../build/experimental/benchmark/coloring_greedy_demo ../../data/ldbc-undirected-example-unweighted.mtx
+
+../../build/experimental/benchmark/coloring_IS_demo ../../data/ldbc-undirected-example-unweighted.mtx
+
+

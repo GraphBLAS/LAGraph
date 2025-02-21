@@ -20,7 +20,7 @@ int main (int argc, char **argv)
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
     LAGraph_Graph G = NULL ;
     GrB_Vector C = NULL ;
-    int num_colors;
+    int num_colors = 0;
 
     // start GraphBLAS and LAGraph
     bool burble = false ;               // set true for diagnostic outputs
@@ -70,6 +70,9 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // print the results
     //--------------------------------------------------------------------------
+
+    printf ("\n===============================Independent Set Coloring:\n") ;
+    LAGRAPH_TRY (LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg)) ;
 
     printf ("\n===============================Number of colors: %d\n", num_colors) ;
     
