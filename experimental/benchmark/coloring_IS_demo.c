@@ -57,6 +57,9 @@ int main (int argc, char **argv)
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for IS Coloring:        %g sec\n", t) ;
 
+    printf ("\n===============================Independent Set Coloring:\n") ;
+    LAGRAPH_TRY (LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg)) ;
+
     //--------------------------------------------------------------------------
     // check the results
     //--------------------------------------------------------------------------
@@ -69,10 +72,7 @@ int main (int argc, char **argv)
 
     //--------------------------------------------------------------------------
     // print the results
-    //--------------------------------------------------------------------------
-
-    printf ("\n===============================Independent Set Coloring:\n") ;
-    LAGRAPH_TRY (LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg)) ;
+    //--------------------------------------------------------------------------   
     
     printf ("\n===============================Time for IS       %g sec", t) ;
     printf ("\n===============================Number of colors: %d\n\n", num_colors) ;
