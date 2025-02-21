@@ -20,16 +20,16 @@
     GrB_free (&M) ;                             \
     GrB_free (&M_thin) ;                        \
     GrB_free (E_split) ;                        \
-    GrB_free (E_split + 1) ;                     \
+    GrB_free (E_split + 1) ;                    \
     GrB_free(&dup_swaps_v);                     \
-    GrB_free(&bad_swaps);                     \
+    GrB_free(&bad_swaps);                       \
     GrB_free(&new_hashed_edges);                \
-    GrB_free(&selected_m);                    \
+    GrB_free(&selected_m);                      \
     GrB_free(&hashed_edges);                    \
-    GrB_free(&swapMask);                    \
-    LAGraph_Free((void**)&leftover_e, msg) ;       \
-    LAGraph_Free((void**)&hash_vals, msg) ;       \
-    LAGraph_Free((void**)&hash_vals_new, msg) ;       \
+    GrB_free(&swapMask);                        \
+    LAGraph_Free((void**)&leftover_e, msg) ;    \
+    LAGraph_Free((void**)&hash_vals, msg) ;     \
+    LAGraph_Free((void**)&hash_vals_new, msg) ; \
     LAGraph_Free((void**)&edge_perm, msg) ;     \
 }
 
@@ -38,31 +38,28 @@
     /* free any workspace used here */          \
     GrB_free (&E) ;                             \
     GrB_free (&P) ;                             \
-    GrB_free (&hash_m) ;                     \
+    GrB_free (&hash_m) ;                        \
     GrB_free (&A_tril) ;                        \
     GrB_free (&random_v) ;                      \
     GrB_free (&r_permute) ;                     \
     GrB_free (&ramp_v) ;                        \
     GrB_free (&hramp_v) ;                       \
     GrB_free (&swapVals) ;                      \
-    GrB_free (&bxor_first) ;                    \
-    GrB_free (&hash_seed) ;                     \
-    GrB_free (&r_60) ;                     \
+    GrB_free (&r_60) ;                          \
     GrB_free(&exists);                          \
-    GrB_free (&bxor_hash) ;                     \
-    GrB_free (&selected) ;                     \
-    GrB_free (&E_vec) ;                     \
+    GrB_free (&selected) ;                      \
+    GrB_free (&E_vec) ;                         \
     GrB_free (&swap_pair) ;                     \
-    GrB_free (&swap_verts) ;                     \
-    GrB_free (&hash_seed_e) ;                     \
+    GrB_free (&swap_verts) ;                    \
+    GrB_free (&hash_seed_e) ;                   \
     GrB_free (&duplicate) ;                     \
-    GrB_free (&not_pointers) ;                     \
+    GrB_free (&not_pointers) ;                  \
     LAGraph_Free((void**)&indices, msg) ;       \
     LAGraph_Free((void**)&ramp, msg) ;          \
     LAGraph_Free((void**)&half_ramp, msg) ;     \
     LAGraph_Free((void**) &val_of_P, msg);      \
-    LAGraph_Free((void **) &dup_swaps, NULL);\
-    LAGraph_Free((void **) &not_ptrs, NULL);\
+    LAGraph_Free((void **) &dup_swaps, NULL);   \
+    LAGraph_Free((void **) &not_ptrs, NULL);    \
     FREE_LOOP ;                                 \
 }
 
@@ -84,56 +81,13 @@ void shift_and
         (*z) = (*x) & ((*x) << 8);
         (*z) |= (*z) >> 8;
     }
-#define FIRST_BIT_EQ                                                            \
+#define SHIFT_AND                                                               \
 "void shift_and                                                              \n"\
 "   (uint16_t *z, const uint16_t *x)                                         \n"\
 "   {                                                                        \n"\
 "       (*z) = (*x) & ((*x) << 8);                                           \n"\
 "       (*z) |= (*z) >> 8;                                                   \n"\
 "   }"
-
-// creates [0,3,1,2,1,3,. . .] pattern from random vector.
-void swap_pattern 
-    (uint8_t *z, const uint64_t *x, int64_t i, int64_t j, const uint8_t *y)
-    {
-        (*z) = (uint8_t) (((i & 1) * 2) | (*x & 1));
-    }
-#define SWAP_PAT                                                                \
-"void swap_pattern"                                                             \
-    "(uint8_t *z, const uint64_t *x, int64_t i, int64_t j, const uint8_t *y)"   \
-    "{"                                                                         \
-        "(*z) = (uint8_t) (((i & 1) * 2) | (*x & 1));"                          \
-    "}"
-
-// Hashes any node with a simple Multiply-shift from 
-// https://arxiv.org/pdf/1504.06804
-// QUESTION: this hash is a bit simple but I doubt it will result in a ton of 
-// collisions unless the input graph is very specifically constucted
-
-void hash_node 
-    (uint64_t *z, const uint64_t *x, const uint64_t *y)
-{
-    (*z) = ((*y) * (*x)) & 0xFFFFFFFFFFFFFFF;
-}
-#define HASH_ONE                                                                \
-"void hash_node                                                              \n"\
-"    (uint64_t *z, const uint64_t *x, const uint64_t *y)                     \n"\
-"{                                                                           \n"\
-"    (*z) = ((*y) * (*x)) & 0xFFFFFFFFFFFFFFF;                               \n"\
-"}"
-void log_duplicate
-    (uint64_t *z, const uint64_t *x, const uint64_t *y)
-{
-    **((int16_t **)y) = (int16_t) 0;
-    *z = *x;
-}
-#define LOG_DUPLICATE                                                           \
-"void log_duplicate                                                          \n"\
-"    (uint64_t *z, const uint64_t *x, const uint64_t *y)                     \n"\
-"{                                                                           \n"\
-"    **((int16_t **)y) = (int16_t) 0;                                          \n"\
-"    *z = *x;                                                                \n"\
-"}"
 
 typedef struct {
     uint64_t a; 
@@ -174,6 +128,7 @@ void swap_ab
 "       z[0] ^= x[1];                                                           \n"\
 "   }                                                                           \n"\
 "}"
+
 void swap_bc
 (swap_type *z, const swap_type *x, GrB_Index I, GrB_Index J, const bool *y)
 {
@@ -217,17 +172,6 @@ void hash_edge
 "    (*z) += x[x[0] > x[1]];                                                  \n"\
 "    (*z) &= (*mask);                                                         \n"\
 "}"
-void zero_function
-    (bool *z, const bool *x, const bool *y)
-{
-    (*z) = (*z) != (*z);
-}
-#define ZERO_FUNC                                                               \
-"void zero_function                                                           \n"\
-"(bool *z, const bool *x, const bool *y)                                      \n"\
-"{                                                                            \n"\
-"    (*z) = (*z) != (*z);                                                     \n"\
-"}"
 
 void add_term
     (uint8_t *z, const uint8_t *x, const uint8_t *y)
@@ -239,17 +183,6 @@ void add_term
 "(uint8_t *z, const uint8_t *x, const uint8_t *y)                             \n"\
 "{                                                                            \n"\
 "    (*z) = (*x) | (*y) + ((uint8_t)1 & (*x) & (*y));                         \n"\
-"}"
-
-void makeOne (uint8_t *z, const void *x, const void *y)
-{
-    (*z) = (uint8_t) 1;
-}
-#define MAKE_ONE                                                               \
-"void makeOne                                                                \n"\
-"(uint8_t *z, const void *x, const void *y)                                     \n"\
-"{                                                                           \n"\
-"    (*z) = (uint8_t) 1;                                                     \n"\
 "}"
 
 int LAGraph_SwapEdges
@@ -343,7 +276,6 @@ int LAGraph_SwapEdges
     
 
     // z = h_y(x)
-    GrB_BinaryOp hash_seed = NULL;
     GrB_BinaryOp hash_seed_e = NULL;
 
     // z = min(2,x+y)
@@ -353,9 +285,6 @@ int LAGraph_SwapEdges
     GrB_BinaryOp lg_one_uint8 = NULL;
 
     // [^],[h_y(x)]
-    GrB_Semiring bxor_hash = NULL;
-
-    GrB_Semiring bxor_first = NULL;
 
     GrB_BinaryOp duplicate = NULL;
 
@@ -428,20 +357,11 @@ int LAGraph_SwapEdges
     //Init Operators -----------------------------------------------------------
     GRB_TRY (GxB_UnaryOp_new (
         &lg_shiftland, (GxB_unary_function) (&shift_and),
-        GrB_UINT16, GrB_UINT16, "shift_and", FIRST_BIT_EQ
-    )) ;
-
-    GRB_TRY(GxB_BinaryOp_new(
-        &hash_seed, (GxB_binary_function) (&hash_node),
-        GrB_UINT64, GrB_UINT64, GrB_UINT64, "hash_node", HASH_ONE
+        GrB_UINT16, GrB_UINT16, "shift_and", SHIFT_AND
     )) ;
     GRB_TRY(GxB_BinaryOp_new(
         &hash_seed_e, (GxB_binary_function) (&hash_edge),
         GrB_UINT64, lg_edge, GrB_UINT64, "hash_edge", HASH_EDGE
-    )) ;
-    GRB_TRY(GxB_BinaryOp_new(
-        &duplicate, (GxB_binary_function) (&log_duplicate),
-        GrB_UINT64, GrB_UINT64, GrB_UINT64, "log_duplicate", LOG_DUPLICATE
     )) ;
     GRB_TRY (GxB_IndexUnaryOp_new (
         &swap_verts, (GxB_index_unary_function) (&swap_ab),
@@ -458,28 +378,12 @@ int LAGraph_SwapEdges
     GRB_TRY (GrB_Monoid_new_UINT8(
         &add_term_monoid, add_term_biop, (uint8_t) 0
     ))
-    GRB_TRY (GxB_BinaryOp_new(
-        &lg_one_uint8, (GxB_binary_function) (&makeOne),
-        GrB_UINT8, GrB_UINT8, GrB_UINT8, "makeOne", MAKE_ONE
-    ));
     // GRB_TRY (GxB_Monoid_terminal_new_UINT8(
     //     &add_term_monoid, add_term_biop, (uint8_t) 0, (uint8_t) 2
     // ));
-    // I use a bit wise xor to combine the hashes since the same column number 
-    // will not appear twice in my multiplication and I want combination to be 
-    // commutative.
+    // Now working with the built-in ONEB binary op
     GRB_TRY(GrB_Semiring_new(
-        &bxor_hash, GxB_BXOR_UINT64_MONOID, hash_seed 
-    )) ;
-    GRB_TRY(GrB_Semiring_new(
-        &bxor_first, GxB_BXOR_UINT64_MONOID , GrB_FIRST_UINT64 
-    )) ;
-    // TODO: get this working with the built-in ONEB binary op
-    GRB_TRY(GrB_Semiring_new(
-        &plus_term_one, add_term_monoid, 
-//        lg_one_uint8   /* OK */
-// evil:broken, but should work:
-            GrB_ONEB_UINT8
+        &plus_term_one, add_term_monoid, GrB_ONEB_UINT8
     ));
     // count swaps 
     GrB_Index num_swaps = 0, num_attempts = 0, swaps_per_loop = e / 3 ;

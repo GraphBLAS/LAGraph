@@ -293,29 +293,14 @@ int LAGraph_Incidence_Matrix
     char *msg
 ) ;
 
-//------------------------------------------------------------------------------
-// LAGraph_RichClubCoefficient: Compute Rich Club Coefficient of Graph
-//------------------------------------------------------------------------------
-
 LAGRAPHX_PUBLIC
-int LAGraph_RichClubCoefficient
+int LAGraph_Fast_Build
 (
-    GrB_Vector *rich_club_coefficents, //output
-    LAGraph_Graph G, //input graph
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_SwapEdges: Randomize Graph while maintaining degree sequence. 
-//------------------------------------------------------------------------------
-LAGRAPHX_PUBLIC
-int LAGraph_SwapEdges
-(
-    // output
-    GrB_Matrix *A_new, //The adjacency matrix of G with edges randomly swapped
-    // input: not modified
-    LAGraph_Graph G,
-    GrB_Index Q, // Swaps per edge
+    GrB_Vector c, // Vector to be built: initialized with correct dimensions.
+    GrB_Vector i, // Indecies 
+    GrB_Vector x, // Values
+    // GrB_Vector ramp, // Optional (makes P load O(1))
+    GrB_Monoid dup, // Applied to duplicates
     char *msg
 );
 
@@ -1260,6 +1245,31 @@ int LAGraph_argminmax
     char *msg
 ); 
 
+//------------------------------------------------------------------------------
+// LAGraph_RichClubCoefficient: Compute Rich Club Coefficient of Graph
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGraph_RichClubCoefficient
+(
+    GrB_Vector *rich_club_coefficents, //output
+    LAGraph_Graph G, //input graph
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_SwapEdges: Randomize Graph while maintaining degree sequence. 
+//------------------------------------------------------------------------------
+LAGRAPHX_PUBLIC
+int LAGraph_SwapEdges
+(
+    // output
+    GrB_Matrix *A_new, //The adjacency matrix of G with edges randomly swapped
+    // input: not modified
+    LAGraph_Graph G,
+    GrB_Index Q, // Swaps per edge
+    char *msg
+);
 
 #if defined ( __cplusplus )
 }
