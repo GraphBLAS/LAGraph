@@ -149,8 +149,8 @@ int main (int argc, char **argv)
     // print the results
     //--------------------------------------------------------------------------
 
-    printf ("\n===============================The coloring vector C:\n") ;
-    LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg) ;
+    // printf ("\n===============================The coloring vector C:\n") ;
+    // LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg) ;
 
     printf ("\n===============================Number of colors: %d\n", num_colors) ;
     
