@@ -55,7 +55,7 @@ int main (int argc, char **argv)
     t = LAGraph_WallClockTime ( ) ;
     int status = (LAGraph_coloring_independent_set_optimized (&C, &num_colors, G, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
-    printf ("Time for Independent Set Coloring: %g sec\n", t) ;
+    printf ("Time for IS Coloring:        %g sec\n", t) ;
 
     //--------------------------------------------------------------------------
     // check the results

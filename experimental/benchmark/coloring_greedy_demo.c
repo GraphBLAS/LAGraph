@@ -122,7 +122,7 @@ int main (int argc, char **argv)
 
     
     t = LAGraph_WallClockTime ( ) - t ;
-    printf ("Time for Greedy Coloring: %g sec\n", t) ;
+    printf ("Time for Greedy Coloring:    %g sec\n", t) ;
 
     //--------------------------------------------------------------------------
     // check the results
