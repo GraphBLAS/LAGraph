@@ -52,10 +52,18 @@ int LG_check_coloring
     GRB_TRY(GxB_Matrix_unpack_CSC(G->A, &Ap, &Ai, &Ax, &Ap_size, &Ai_size, &Ax_size, NULL, NULL, NULL));
     
     Ap_size = Ap_size / sizeof(GrB_Index);
-   
+
     GrB_Index Ap_index;
     GrB_Index Ai_index;
     GrB_Index Ai_index_start, Ai_index_end;
+
+    for (GrB_Index i = 0; i < Ap_size - 1; i++) {
+        int color;
+        if (GrB_Vector_extractElement(&color, C, i) != GrB_SUCCESS) {
+            printf("error: node %lu has no assigned color!\n", i);
+        }
+    }
+
     int current_color, neighbor_color;
     for (Ap_index = 0; Ap_index < Ap_size - 1; Ap_index++) {
         
