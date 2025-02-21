@@ -73,8 +73,9 @@ int main (int argc, char **argv)
 
     // printf ("\n===============================Independent Set Coloring:\n") ;
     // LAGRAPH_TRY (LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg)) ;
-
-    printf ("\n===============================Number of colors: %d\n", num_colors) ;
+    
+    printf ("\n===============================Time for IS       %g sec\n", t) ;
+    printf ("\n===============================Number of colors: %d\n\n", num_colors) ;
     
     //--------------------------------------------------------------------------
     // free everything and finish
