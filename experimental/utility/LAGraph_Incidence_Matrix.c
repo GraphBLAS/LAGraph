@@ -12,6 +12,7 @@
 
 // FIXME: not ready for src; should handle all builtin types, with option to
 // typecast to INT64, UINT64, or FP64 as is currently done.
+
 // FIXME: this method is required for MaximalMatching and CoarsenMatching
 
 // Given an undirected graph G, construct the incidence matrix E.
@@ -34,8 +35,8 @@ Note that complex types are NOT supported.
 #include "LAGraphX.h"
 
 #include <omp.h>
-
-// #define dbg
+//#define LOADTRICKIM
+//#define dbg
 
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                                           \
@@ -46,6 +47,14 @@ Note that complex types are NOT supported.
    LAGraph_Free ((void**)(&ramp), msg) ;                      \
    GrB_free (&E_half) ;                                       \
    GrB_free (&A_tril) ;                                       \
+   GrB_free (&x);                                             \
+   GrB_free (&i);                                             \
+   GrB_free (&j);                                             \
+   GrB_free (&Ep);                                            \
+   GrB_free (&Ei);                                            \
+   GrB_free (&Ex);                                            \
+   GrB_free (&fullx);                                         \
+   GrB_free(&build_desc);                                     \
 }                                                             \
 
 int LAGraph_Incidence_Matrix
@@ -59,7 +68,9 @@ int LAGraph_Incidence_Matrix
     GrB_Matrix E = NULL ;
     GrB_Matrix E_half = NULL ;
     GrB_Matrix A_tril = NULL ;
-
+    GrB_Vector i = NULL, j = NULL, x = NULL, fullx = NULL;
+    GrB_Vector Ep = NULL, Ei = NULL, Ex = NULL;
+    GrB_Descriptor build_desc = NULL;
     GrB_Index *row_indices = NULL ;
     GrB_Index *col_indices = NULL ;
     void *values = NULL ;
@@ -78,8 +89,13 @@ int LAGraph_Incidence_Matrix
 
     char typename[LAGRAPH_MAX_NAME_LEN] ;
     GrB_Type type ;
+    #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
     LG_TRY (LAGraph_Matrix_TypeName (typename, A, msg)) ;
     LG_TRY (LAGraph_TypeFromName (&type, typename, msg)) ;
+    #else 
+    // No longer historical
+    GRB_TRY (GxB_Matrix_type(&type, A));
+    #endif
 
     GrB_Index nvals ;
     GrB_Index num_nodes, num_edges ;
@@ -92,6 +108,10 @@ int LAGraph_Incidence_Matrix
     GRB_TRY (GrB_Matrix_new (&E, type, num_nodes, num_edges)) ;
     GRB_TRY (GrB_Matrix_new (&E_half, type, num_nodes, num_edges)) ;
 
+    // get just the lower triangular entries
+    GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
+
+    #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
     bool is_uint64 = (type == GrB_UINT64) ;
     bool is_float = ((type == GrB_FP32) || (type == GrB_FP64)) ;
 
@@ -106,9 +126,6 @@ int LAGraph_Incidence_Matrix
 
     // (*result) = E ;
     // return (GrB_SUCCESS) ;
-
-    // get just the lower triangular entries
-    GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
 
     // Arrays to extract A into
     LG_TRY (LAGraph_Malloc ((void**)(&row_indices), num_edges, sizeof(GrB_Index), msg)) ;
@@ -157,11 +174,68 @@ int LAGraph_Incidence_Matrix
             GRB_TRY (GrB_Matrix_build_INT64 (E, row_indices, ramp, values, num_edges, NULL)) ;
             break;
     }
-
     GRB_TRY (GrB_eWiseAdd (E, NULL, NULL, GrB_PLUS_FP64, E, E_half, NULL)) ;
+    #else
+    // The vector types and sizes get overriden by extract.
+    GRB_TRY (GrB_Vector_new(&x, GrB_BOOL, 0)) ;
+    GRB_TRY (GrB_Vector_new(&i, GrB_BOOL, 0)) ;
+    GRB_TRY (GrB_Vector_new(&j, GrB_BOOL, 0)) ;
+    GRB_TRY (GxB_Matrix_extractTuples_Vector(i, j, x, A_tril, NULL)) ;
 
+        // TODO: if we want to return in col major form, 
+        // this load/unload could be quicker, needs to be configured to handle 
+        // isos better though
+        #ifdef LOADTRICKIM
+        GRB_TRY (GrB_Vector_new(&Ep, GrB_INT64, num_edges + 1)) ;
+        GrB_Type ij_type = NULL;
+        GRB_TRY (GxB_Vector_type(&ij_type, i));
+        GRB_TRY (GrB_Vector_new(&Ei, ij_type, num_edges * 2)) ;
+        GRB_TRY (GrB_Vector_new(&Ex, type, num_edges * 2)) ;
+        GRB_TRY (GrB_assign(
+            Ep, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL));
+        GRB_TRY (GrB_Vector_new(&Ex, type, num_edges * 2)) ;
+        GrB_Index stride[] = {(GrB_Index) 0, num_edges * 2 - 1, (GrB_Index) 2} ;
+        GRB_TRY (GrB_Vector_assign(
+            Ei, NULL, NULL, j, stride, GxB_STRIDE, NULL)) ;
+        stride[GxB_BEGIN] = 1;
+        GRB_TRY (GrB_Vector_assign(
+            Ei, NULL, NULL, i, stride, GxB_STRIDE, NULL)) ;
+        stride[GxB_BEGIN] = 0;
+        GRB_TRY (GrB_Vector_assign(
+            Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
+        stride[GxB_BEGIN] = 1;
+        GRB_TRY (GrB_Vector_assign(
+            Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
+        GRB_TRY (GrB_Vector_apply_IndexOp_INT64(
+            Ep, NULL, NULL, GrB_ROWINDEX_INT64, Ep, (uint64_t) 0, NULL)) ;
+        GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(
+            Ep, NULL, NULL, GrB_TIMES_INT64, Ep, (int64_t) 2, NULL)) ;
+        
+        GxB_Container con;
+        GRB_TRY (GxB_Container_new(&con));
+        con->p = Ep;
+        con->i = Ei;
+        con->x = Ex;
+        con->format = GxB_SPARSE;
+        con->orientation = GrB_COLMAJOR;
+        con->nrows = num_nodes;
+        con->ncols = num_edges;
+        con->nvals = num_edges * 2;
+        con->jumbled = false;
+        GRB_TRY (GxB_load_Matrix_from_Container(E, con, NULL));
+        #else
+        GRB_TRY (GrB_Vector_new(
+            &fullx, GrB_BOOL, num_edges)) ;
+        GRB_TRY (GrB_assign(
+            fullx, NULL, NULL, (bool) 1, GrB_ALL, 0, NULL));
+        GRB_TRY (GrB_Descriptor_new(&build_desc));
+        GRB_TRY (GrB_set(build_desc, GxB_USE_INDICES, GxB_COLINDEX_LIST));
+        GRB_TRY (GxB_Matrix_build_Vector(E_half, j, fullx, x, NULL, build_desc));
+        GRB_TRY (GxB_Matrix_build_Vector(E, i, fullx, x, NULL, build_desc));
+        GRB_TRY (GrB_eWiseAdd (E, NULL, NULL, GrB_PLUS_FP64, E, E_half, NULL)) ;
+        #endif
+    #endif
     // LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg) ;
-
     LG_FREE_ALL ;
     
     (*result) = E ;
