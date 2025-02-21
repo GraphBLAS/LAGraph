@@ -57,9 +57,9 @@ int main (int argc, char **argv)
     LG_TRY (readproblem (
         &G,         // the graph that is read from stdin or a file
         NULL,       // source nodes (none, if NULL)
-        false,       // make the graph undirected, if true
+        true,       // make the graph undirected, if true
         false,       // remove self-edges, if true
-        false,       // return G->A as structural, if true,
+        true,       // return G->A as structural, if true,
         NULL,       // prefered GrB_Type of G->A; null if no preference
         false,      // ensure all entries are positive, if true
         argc, argv)) ;  // input to this main program
