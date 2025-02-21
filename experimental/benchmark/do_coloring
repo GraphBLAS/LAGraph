@@ -14,7 +14,11 @@ echo "======================================================================"
 # echo "GAP matrices located in:  " $GAP
 
 ../../build/experimental/benchmark/coloring_greedy_demo ../../data/ldbc-undirected-example-unweighted.mtx
+../../build/experimental/benchmark/coloring_greedy_demo ../../data/karate.mtx
+../../build/experimental/benchmark/coloring_greedy_demo /raid/GAP/GAP-road/GAP-road.grb
 
 ../../build/experimental/benchmark/coloring_IS_demo ../../data/ldbc-undirected-example-unweighted.mtx
+../../build/experimental/benchmark/coloring_IS_demo ../../data/karate.mtx
+../../build/experimental/benchmark/coloring_IS_demo ../../../raid/GAP/GAP-road/GAP-road.grb
 
 
