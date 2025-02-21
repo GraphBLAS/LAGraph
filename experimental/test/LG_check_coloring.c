@@ -72,6 +72,10 @@ int LG_check_coloring
 
             GrB_Vector_extractElement(&neighbor_color, C, Ai[Ai_index]);
 
+            if (current_color == neighbor_color) {
+                printf("node 1: %ld, node 2: %ld, color: %d\n", Ap_index, Ai[Ai_index], current_color);
+            }
+
             LG_ASSERT_MSG(neighbor_color != current_color, LAGRAPH_COLORING_INVALID_COLORING, "found 2 connected nodes with the same color");
         }
     }

@@ -114,7 +114,7 @@ int main (int argc, char **argv)
                 
         // find first unused color
         // printf("finding color for node \n");
-        for (current_color = 1; current_color < Ap_size - 1; current_color++) {
+        for (current_color = 1; current_color < Ap_size; current_color++) {
             if (used_colors[current_color] == 0) break;
         }
         if (current_color == Ap_size - 1) {
