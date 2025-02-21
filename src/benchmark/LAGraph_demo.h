@@ -898,10 +898,14 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // convert to 32-bit
     //--------------------------------------------------------------------------
 
+    #if LAGRAPH_SUITESPARSE
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
     GRB_TRY (GrB_Matrix_set_INT32 (A, 32, GxB_ROWINDEX_INTEGER_HINT)) ;
     GRB_TRY (GrB_Matrix_set_INT32 (A, 32, GxB_COLINDEX_INTEGER_HINT)) ;
     GRB_TRY (GrB_Matrix_set_INT32 (A, 32, GxB_OFFSET_INTEGER_HINT)) ;
     printf ("A converted to 32-bit\n") ;
+    #endif
+    #endif
 
     //--------------------------------------------------------------------------
     // typecast, if requested
