@@ -857,6 +857,16 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     char *msg
 ) ;
 
+LAGRAPHX_PUBLIC
+int LG_check_edgeBetweennessCentrality
+(
+    // output
+    GrB_Matrix *C,      // centrality matrix
+    // input
+    LAGraph_Graph G,
+    char *msg
+) ;
+
 //------------------------------------------------------------------------------
 // kcore algorithms
 //------------------------------------------------------------------------------
@@ -1330,7 +1340,7 @@ int LAGraph_argminmax
     int dim,                    // dim=1: cols of A, dim=2: rows of A
     bool is_min,
     char *msg
-); 
+) ; 
 
 
 #if defined ( __cplusplus )
