@@ -62,7 +62,7 @@ int LG_check_coloring
         Ai_index_start = Ap[Ap_index];
         Ai_index_end = Ap[Ap_index + 1];
 
-        GrB_Vector_extractElement(&current_color, C, Ap_index);
+        GRB_TRY(GrB_Vector_extractElement(&current_color, C, Ap_index));
 
         for (Ai_index = Ai_index_start; Ai_index < Ai_index_end; Ai_index++) {
 
@@ -70,7 +70,7 @@ int LG_check_coloring
                 continue; // skip self-edges
             }
 
-            GrB_Vector_extractElement(&neighbor_color, C, Ai[Ai_index]);
+            GRB_TRY(GrB_Vector_extractElement(&neighbor_color, C, Ai[Ai_index]));
 
             if (current_color == neighbor_color) {
                 printf("node 1: %ld, node 2: %ld, color: %d\n", Ap_index, Ai[Ai_index], current_color);
