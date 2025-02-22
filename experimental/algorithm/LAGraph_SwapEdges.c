@@ -26,7 +26,6 @@
     GrB_free(&new_hashed_edges);                \
     GrB_free(&selected_m);                      \
     GrB_free(&hashed_edges);                    \
-    GrB_free(&swapMask);                        \
     LAGraph_Free((void**)&leftover_e, msg) ;    \
     LAGraph_Free((void**)&hash_vals, msg) ;     \
     LAGraph_Free((void**)&hash_vals_new, msg) ; \
@@ -110,49 +109,61 @@ typedef struct {
 void swap_ab 
 (edge_type *z, const edge_type *x, GrB_Index I, GrB_Index J, const bool *y)
 {
-    if(I < *y)
+    if(I & 1)
     {
-        z->a ^= x->b;
-        z->b ^= x->a;
-        z->a ^= x->b;
+        uint64_t temp = x->a;
+        z->a = x->b;
+        z->b = temp;
     }
 }
 #define SWAP_AB                                                                 \
 "void swap_ab                                                                   \n"\
-"(uint64_t *z, const uint64_t *x, GrB_Index I, GrB_Index J, const bool *y)      \n"\
+"(edge_type *z, const edge_type *x, GrB_Index I, GrB_Index J, const bool *y)    \n"\
 "{                                                                              \n"\
 "   if (I & 1)                                                                  \n"\
 "   {                                                                           \n"\
-"       z[0] ^= x[1];                                                           \n"\
-"       z[1] ^= x[0];                                                           \n"\
-"       z[0] ^= x[1];                                                           \n"\
+"       uint64_t temp = x->a;                                                   \n"\
+"       z->a = x->b;                                                            \n"\
+"       z->b = temp;                                                            \n"\
 "   }                                                                           \n"\
 "}"
 
 void swap_bc
 (swap_type *z, const swap_type *x, GrB_Index I, GrB_Index J, const bool *y)
 {
+    memcpy(z, x, sizeof(*z)); //unnessesary when aliassed but done for safety.
+    if(z->a == z->c || z->b == z->c || z->a == z->d || z->b == z->d ) return;
     if(I & 1)
     {
-        z->b ^= z->c;
-        z->c ^= z->b;
-        z->b ^= z->c;
+        uint64_t temp = z->d;
+        z->d = z->b;
+        z->b = temp; 
     }
     else
     {
-        z->b ^= z->d;
-        z->d ^= z->b;
-        z->b ^= z->d;
+        uint64_t temp = z->c;
+        z->c = z->b;
+        z->b = temp; 
     }    
 }
 #define SWAP_BC                                                                 \
 "void swap_bc                                                                   \n"\
-"(uint64_t *z, const uint64_t *x, GrB_Index I, GrB_Index J, const bool *y)      \n"\
+"(swap_type *z, const swap_type *x, GrB_Index I, GrB_Index J, const bool *y)    \n"\
 "{                                                                              \n"\
-"    if(z[1] == z[2] || z[1] == z[3] || z[0] == z[2] || z[0] == z[3] ) return;  \n"\
-"    z[1] ^= z[2 | (I & 1)];                                                    \n"\
-"    z[2 | (I & 1)] ^= z[1];                                                    \n"\
-"    z[1] ^= z[2 | (I & 1)];                                                    \n"\
+"    memcpy(z, x, sizeof(*z)); //unnessesary when aliassed but done for safety. \n"\
+"    if(z->a == z->c || z->b == z->c || z->a == z->d || z->b == z->d ) return;  \n"\
+"if(I & 1)                                                                      \n"\
+"    {                                                                          \n"\
+"        uint64_t temp = z->d;                                                  \n"\
+"        z->d = z->b;                                                           \n"\
+"        z->b = temp;                                                           \n"\
+"    }                                                                          \n"\
+"    else                                                                       \n"\
+"    {                                                                          \n"\
+"        uint64_t temp = z->c;                                                  \n"\
+"        z->c = z->b;                                                           \n"\
+"        z->b = temp;                                                           \n"\
+"    }                                                                          \n"\
 "}"
 
 
@@ -166,10 +177,10 @@ void hash_edge
 }
 #define HASH_EDGE                                                                \
 "void hash_edge                                                               \n"\
-"(uint64_t *z, const uint64_t *x, const uint64_t *mask)                       \n"\
+"(uint64_t *z, const edge_type *x, const uint64_t *mask)                      \n"\
 "{                                                                            \n"\
-"    (*z) = ((x[0] + x[1] + 1) * (x[0] + x[1])) / 2 & (*mask) ;               \n"\
-"    (*z) += x[x[0] > x[1]];                                                  \n"\
+"    (*z) = (((x->a + x->b + 1) * (x->a + x->b)) / 2) & (*mask) ;             \n"\
+"    (*z) += (x->a < x->b)? x->a: x->b;                                       \n"\
 "    (*z) &= (*mask);                                                         \n"\
 "}"
 
@@ -227,9 +238,6 @@ int LAGraph_SwapEdges
 
     // [0,1,1,. . ., 0] swap a given edge. Boolean
     GrB_Vector swapVals = NULL;
-
-    // e x 2 Matrix that picks the edges for which we will swap values.
-    GrB_Matrix swapMask = NULL;
 
     GrB_Vector ramp_v = NULL;
     GrB_Vector hramp_v = NULL;
@@ -323,12 +331,12 @@ int LAGraph_SwapEdges
         LAGRAPH_INVALID_GRAPH, 
         "G must be undirected"
     ) ;
-
+    // char type[LAGRAPH_MAX_NAME_LEN];
     LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, 
         "G->nself_edges must be zero") ;
-    // GRB_TRY (GrB_get(A, (void*)&type, GrB_EL_TYPE_CODE)) ;
-    // LG_ASSERT_MSG (type == GrB_BOOL_CODE, LAGRAPH_INVALID_GRAPH, 
-    //     "A must be type boolean") ;
+    // GRB_TRY (GrB_get(A, type, GrB_EL_TYPE_STRING)) ;
+    // LG_ASSERT_MSG (MATCHNAME(type, "GrB_BOOL") || MATCHNAME(type, "bool"), LAGRAPH_INVALID_GRAPH, 
+    //     "A must be structural") ;
 
     //--------------------------------------------------------------------------
     // Initializations
@@ -375,12 +383,14 @@ int LAGraph_SwapEdges
         &add_term_biop, (GxB_binary_function) (&add_term), 
         GrB_UINT8, GrB_UINT8, GrB_UINT8, "add_term", ADD_TERM
     ));
-    GRB_TRY (GrB_Monoid_new_UINT8(
-        &add_term_monoid, add_term_biop, (uint8_t) 0
-    ))
-    // GRB_TRY (GxB_Monoid_terminal_new_UINT8(
-    //     &add_term_monoid, add_term_biop, (uint8_t) 0, (uint8_t) 2
-    // ));
+
+    // This monoid has only been designed for inputs in {0,1,2}, other behavior 
+    // is undefined.
+    // (0,x) -> x, (1,1) -> 2, (2,x) -> 2 (and commutative)
+    // Aka (x,y) -> min(2, x + y)
+    GRB_TRY (GxB_Monoid_terminal_new_UINT8(
+        &add_term_monoid, add_term_biop, (uint8_t) 0, (uint8_t) 2
+    ));
     // Now working with the built-in ONEB binary op
     GRB_TRY(GrB_Semiring_new(
         &plus_term_one, add_term_monoid, GrB_ONEB_UINT8
@@ -466,8 +476,6 @@ int LAGraph_SwapEdges
         // E must be the incidence matrix of the new graph. W/o self edges nor 
         // parallel edges. Each row must have exactly two distinct values.
         // random_v has a radom dense vector.
-        GRB_TRY (GrB_Matrix_new (&swapMask, GrB_BOOL, e, 2)) ;
-
         // GRB_TRY (GxB_Vector_sort (
         //     NULL, r_permute, GrB_LT_UINT64, random_v, GrB_NULL
         // )) ;

@@ -1,17 +1,26 @@
+
 //------------------------------------------------------------------------------
 // LAGraph_Fast_Build: Uses saxpy methods for faster builds, especially powerful
 // when output is bitmap.
 //------------------------------------------------------------------------------
 
-// SuiteSparse:GraphBLAS, Timothy A. Davis, (c) 2017-2021, All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+// LAGraph, (c) 2019-2024 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
+
+// Contributed by Gabriel Gomez, Texas A&M University
+
+//------------------------------------------------------------------------------
 
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
-
+#if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
 #include <omp.h>
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                                           \
@@ -20,10 +29,12 @@
     GrB_free(&ramp);                                          \
 }                                                     
 
-int LAGraph_Fast_Build
+int LAGraph_FastAssign
 (
-    GrB_Vector c, // Vector to be built: initialized with correct dimensions.
-    GrB_Vector i, // Indecies 
+    GrB_Vector c, // Vector to be built (or assigned): initialized with correct dimensions.
+    GrB_Vector mask,
+    GrB_BinaryOp accum, 
+    GrB_Vector i, // Indecies  (duplicates allowed)
     GrB_Vector x, // Values
     // GrB_Vector ramp, // Optional (makes P load O(1))
     GrB_Monoid dup, // Applied to duplicates
@@ -78,7 +89,7 @@ int LAGraph_Fast_Build
     con->jumbled = false;
     GRB_TRY (GxB_load_Matrix_from_Container(P, con, NULL));
     GRB_TRY (GrB_reduce(
-        c, NULL, NULL, dup, P, NULL)) ;
+        c, mask, accum, dup, P, NULL)) ;
     GRB_TRY (GxB_unload_Matrix_into_Container(P, con, NULL));
     temp = con->p;
     con->p = ramp;
@@ -91,3 +102,4 @@ int LAGraph_Fast_Build
     x = temp;
     GrB_free(&con);
 }
+#endif

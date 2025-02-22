@@ -294,15 +294,17 @@ int LAGraph_Incidence_Matrix
 ) ;
 
 LAGRAPHX_PUBLIC
-int LAGraph_Fast_Build
+int LAGraph_FastAssign
 (
-    GrB_Vector c, // Vector to be built: initialized with correct dimensions.
-    GrB_Vector i, // Indecies 
+    GrB_Vector c, // Vector to be built (or assigned): initialized with correct dimensions.
+    GrB_Vector mask,
+    GrB_BinaryOp accum, 
+    GrB_Vector i, // Indecies  (duplicates allowed)
     GrB_Vector x, // Values
     // GrB_Vector ramp, // Optional (makes P load O(1))
     GrB_Monoid dup, // Applied to duplicates
     char *msg
-);
+) ;
 
 //****************************************************************************
 // Algorithms

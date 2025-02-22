@@ -42,7 +42,9 @@
     GrB_free(&P) ;                                      \
     GrB_free(&edge_degrees) ;                           \
     GrB_free(&degrees) ;                                \
+    GrB_free(&deg_x) ;                                  \
     GrB_free(&node_edges) ;                             \
+    GrB_free(&node_edges_x) ;                           \
     GrB_free(&ones_v) ;                                 \
     GrB_free(&edges_per_deg) ;                          \
     GrB_free(&verts_per_deg) ;                          \
@@ -262,7 +264,6 @@ int LAGraph_RichClubCoefficient
             NULL, node_edges_arr, &edge_vec_nvals, node_edges
         )) ;
         #else 
-        //dimensions should get adjusted in theory.
         GRB_TRY (GrB_Vector_new(&deg_x, GrB_BOOL, 0)) ;  
         GRB_TRY (GrB_Vector_new(&node_edges_x, GrB_BOOL, 0)) ;  
         GRB_TRY (GxB_Vector_extractTuples_Vector(
@@ -273,18 +274,19 @@ int LAGraph_RichClubCoefficient
         )) ;
         #endif
     }
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
-    LG_TRY (LAGraph_Fast_Build (
-        edges_per_deg, deg_x, node_edges_x, GxB_PLUS_UINT64_MONOID, msg)) ;
     GRB_TRY (GrB_Vector_new(&ones_v, GrB_INT64, edge_vec_nvals));
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    LG_TRY (LAGraph_FastAssign (
+        edges_per_deg, NULL, NULL, deg_x, node_edges_x, 
+        GxB_PLUS_UINT64_MONOID, msg
+    )) ;
     GRB_TRY (GrB_Vector_assign_INT64(
         ones_v, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL)) ;
-    GRB_TRY (LAGraph_Fast_Build (
-        verts_per_deg, deg_x, ones_v, GxB_PLUS_UINT64_MONOID, msg)) ;
+    GRB_TRY (LAGraph_FastAssign (
+        verts_per_deg, NULL, NULL, deg_x, ones_v, GxB_PLUS_UINT64_MONOID, msg)) ;
     #elif LAGRAPH_SUITESPARSE
     LG_TRY (LAGraph_Malloc(
         (void **) &ramp, edge_vec_nvals + 1, sizeof(int64_t), NULL)) ;
-    GRB_TRY (GrB_Vector_new(&ones_v, GrB_INT64, edge_vec_nvals));
     GRB_TRY (GrB_Matrix_new (&P, GrB_INT64, max_deg, edge_vec_nvals));
     GRB_TRY (GrB_Vector_assign_INT64(
         ones_v, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL)) ;
@@ -309,7 +311,6 @@ int LAGraph_RichClubCoefficient
     //Hack to make an array of ones
     LG_TRY (
         LAGraph_Malloc((void **) &ones, deg_vec_size, sizeof(int64_t), NULL)) ;
-    GRB_TRY (GrB_Vector_new(&ones_v, GrB_INT64, deg_vec_size));
     GRB_TRY (GrB_Vector_assign_INT64(
         ones_v, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL)) ;
     GRB_TRY (GrB_Vector_extractTuples_INT64(NULL, ones, &deg_vec_size, ones_v)) ;
