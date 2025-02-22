@@ -48,7 +48,7 @@ int LAGraph_coloring_independent_set_optimized
     GRB_TRY(GrB_assign (weight, NULL, NULL, 0, GrB_ALL, n, NULL));
 
     // LG_TRY(LAGraph_Random_Seed(weight, 2, msg));
-    LG_TRY (LAGraph_Random_Seed(weight, 2, msg)) ;
+    LG_TRY (LAGraph_Random_Seed(weight, 20, msg)) ;
 
     // printf("random done\n");
     // printf("weight vector\n");

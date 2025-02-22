@@ -30,18 +30,23 @@ void print_progress(double progress) {
 int main (int argc, char **argv)
 {
     //--------------------------------------------------------------------------
-    // startup LAGraph and GraphBLAS
+    // setup variables, startup LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
+    // results
+    GrB_Vector C = NULL ;
+    int num_colors = 0 ;
+    double alg_time = 0 ;
+
+    // other variables
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
     LAGraph_Graph G = NULL ;
-    GrB_Vector C = NULL ;
     GrB_Matrix dupe = NULL;
     int *used_colors = NULL;
     GrB_Index *Ap = NULL;
     GrB_Index *Ai = NULL;
     void *Ax = NULL;
-    int num_colors = 0;
+
 
     // start GraphBLAS and LAGraph
     bool burble = false ;               // set true for diagnostic outputs
@@ -133,13 +138,13 @@ int main (int argc, char **argv)
         memset(used_colors, 0, sizeof(int) * (Ap_size - 1));
 
         // print progress
-        print_progress(((double)Ap_index + 1) / (Ap_size - 1));
+        // print_progress(((double)Ap_index + 1) / (Ap_size - 1));
     }
 
     printf("\n");
     
-    t = LAGraph_WallClockTime ( ) - t ;
-    printf ("Time for Greedy Coloring:    %g sec\n", t) ;
+    alg_time = LAGraph_WallClockTime ( ) - t ;
+    printf ("Time for Greedy Coloring:    %g sec\n", alg_time) ;
 
     //--------------------------------------------------------------------------
     // check the results
@@ -166,7 +171,7 @@ int main (int argc, char **argv)
     // print the results
     //--------------------------------------------------------------------------
 
-    printf ("\n===============================Time for Greedy:  %g sec", t) ;
+    printf ("\n===============================Time for Greedy : %g sec", alg_time) ;
     printf ("\n===============================Number of colors: %d\n\n", num_colors) ;
     
     //--------------------------------------------------------------------------
