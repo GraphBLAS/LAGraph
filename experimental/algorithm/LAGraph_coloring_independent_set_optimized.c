@@ -48,7 +48,7 @@ int LAGraph_coloring_independent_set_optimized
     GRB_TRY(GrB_assign (weight, NULL, NULL, 0, GrB_ALL, n, NULL));
 
     // LG_TRY(LAGraph_Random_Seed(weight, 2, msg));
-    LG_TRY (LAGraph_Random_Seed(weight, 2, msg)) ;
+    LG_TRY (LAGraph_Random_Seed(weight, 20, msg)) ;
 
     // printf("random done\n");
     // printf("weight vector\n");
@@ -70,16 +70,24 @@ int LAGraph_coloring_independent_set_optimized
 
         /* eWiseAdd - 1 if current weight > max neighboring weight */
         GRB_TRY(GrB_eWiseMult(in_curr_subset, GrB_NULL, GrB_NULL, GrB_GT_UINT64, weight, max_weights, GrB_NULL));
+
         /* select - select all entries in in_curr_subset that are true, and delete falses */
         GRB_TRY(GrB_select(in_curr_subset, GrB_NULL, GrB_NULL, GrB_VALUEEQ_BOOL, in_curr_subset, true, GrB_NULL));
 
-        /* reduce - OR all entries in in_curr_subset - if false, break */
-        // FIXME: just check nvals(in_curr_subset)
-        bool subset_exists;
-        GRB_TRY(GrB_reduce(&subset_exists, GrB_NULL, GrB_LOR_MONOID_BOOL, in_curr_subset, GrB_NULL));
-        if (subset_exists == false) { break; }
-
-        // FIXME: future: if in_curr_subset is empty, but nvals (local_color) < n, then BROKEN
+        /* check if in_curr_subset is empty then break */
+        GrB_Index nvals_in_curr_subset;
+        GRB_TRY(GrB_Vector_nvals(&nvals_in_curr_subset, in_curr_subset));
+        if (nvals_in_curr_subset == 0) { 
+            // FIXME: future: if in_curr_subset is empty, but nvals (local_color) < n, then BROKEN
+            GrB_Index nvals_local_color;
+            GRB_TRY(GrB_Vector_nvals(&nvals_local_color, local_color));
+            if (nvals_local_color < n) {
+                printf("ERROR in LAGraph_coloring_independent_set_optimized: in_curr_subset is empty, but nvals (local_color) < n\n");
+                LG_FREE_ALL ;
+                return (1) ;
+            }
+            break;
+        }
 
         /* assign - write current color to C vector according to in_curr_subset mask */
         GRB_TRY(GrB_assign(local_color, in_curr_subset, GrB_NULL, curr_color, GrB_ALL, n, GrB_DESC_S));

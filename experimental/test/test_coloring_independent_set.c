@@ -17,6 +17,10 @@ const char* matrix_files[] = {
 
 void test_coloring_independent_set(void)
 {
+    // ------------------------------------------------
+    // setup
+    // ------------------------------------------------
+
     /* required initialization (found from other test files) */
     LAGraph_Init(msg);
     LAGraph_Random_Init(msg);
@@ -34,7 +38,10 @@ void test_coloring_independent_set(void)
     OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg));
     TEST_CHECK(A == NULL); // A has been moved into G->A
 
-    /* run the algorithm */
+    // ------------------------------------------------
+    // run algorithm
+    // ------------------------------------------------
+
     GxB_set (GxB_BURBLE, false) ;
 
     int num_colors = 0;

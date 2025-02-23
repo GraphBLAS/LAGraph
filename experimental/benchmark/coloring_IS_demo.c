@@ -14,13 +14,17 @@
 int main (int argc, char **argv)
 {
     //--------------------------------------------------------------------------
-    // startup LAGraph and GraphBLAS
+    // setup variables, startup LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
+    // results
+    GrB_Vector C = NULL ;    
+    int num_colors = 0;
+    double alg_time = 0;
+
+    // other variables
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
-    LAGraph_Graph G = NULL ;
-    GrB_Vector C = NULL ;
-    int num_colors;
+    LAGraph_Graph G = NULL ;   
 
     // start GraphBLAS and LAGraph
     bool burble = false ;               // set true for diagnostic outputs
@@ -36,9 +40,9 @@ int main (int argc, char **argv)
     LG_TRY (readproblem (
         &G,         // the graph that is read from stdin or a file
         NULL,       // source nodes (none, if NULL)
-        false,       // make the graph undirected, if true
-        false,       // remove self-edges, if true
-        false,       // return G->A as structural, if true,
+        true,       // make the graph undirected, if true
+        true,       // remove self-edges, if true
+        true,       // return G->A as structural, if true,
         NULL,       // prefered GrB_Type of G->A; null if no preference
         false,      // ensure all entries are positive, if true
         argc, argv)) ;  // input to this main program
@@ -54,8 +58,8 @@ int main (int argc, char **argv)
     
     t = LAGraph_WallClockTime ( ) ;
     int status = (LAGraph_coloring_independent_set_optimized (&C, &num_colors, G, msg)) ;
-    t = LAGraph_WallClockTime ( ) - t ;
-    printf ("Time for Independent Set Coloring: %g sec\n", t) ;
+    alg_time = LAGraph_WallClockTime ( ) - t ;
+    printf ("Time for IS Coloring:        %g sec\n", alg_time) ;
 
     //--------------------------------------------------------------------------
     // check the results
@@ -69,9 +73,10 @@ int main (int argc, char **argv)
 
     //--------------------------------------------------------------------------
     // print the results
-    //--------------------------------------------------------------------------
-
-    printf ("\n===============================Number of colors: %d\n", num_colors) ;
+    //--------------------------------------------------------------------------   
+    
+    printf ("\n===============================Time for IS       %g sec", alg_time) ;
+    printf ("\n===============================Number of colors: %d\n\n", num_colors) ;
     
     //--------------------------------------------------------------------------
     // free everything and finish
