@@ -55,7 +55,6 @@ Note that complex types are NOT supported.
    GrB_free (&Ex);                                            \
    GrB_free (&fullx);                                         \
    GrB_free(&build_desc);                                     \
-   GrB_free(&con);                                            \
 }                                                             
 
 
@@ -76,7 +75,6 @@ int LAGraph_Incidence_Matrix
     GrB_Index *row_indices = NULL ;
     GrB_Index *col_indices = NULL ;
     void *values = NULL ;
-    GxB_Container con = NULL;
 
     GrB_Index *ramp = NULL ;
 
@@ -114,7 +112,7 @@ int LAGraph_Incidence_Matrix
     // get just the lower triangular entries
     GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
 
-    #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
+    #if 1 || GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
     bool is_uint64 = (type == GrB_UINT64) ;
     bool is_float = ((type == GrB_FP32) || (type == GrB_FP64)) ;
 
@@ -187,6 +185,7 @@ int LAGraph_Incidence_Matrix
 
         // this load trick is quicker, but returns GrB_COLMAJOR
         #ifdef LOADTRICKIM
+        GxB_Container con = NULL;
         GRB_TRY (GrB_Vector_new(&Ep, GrB_INT64, num_edges + 1)) ;
         GrB_Type ij_type = NULL;
         int32_t iso;
@@ -248,6 +247,7 @@ int LAGraph_Incidence_Matrix
         // Ei = [j[0], i[0], j[1], i[1], . . ., i[num_edges -1]]
         // So each column k has two entries at j[k] and i[k] with values x[k]
         GRB_TRY (GxB_load_Matrix_from_Container(E, con, NULL));
+        GRB_TRY (GrB_free(&con));
         #else
         GRB_TRY (GrB_Vector_new(
             &fullx, GrB_BOOL, num_edges)) ;
