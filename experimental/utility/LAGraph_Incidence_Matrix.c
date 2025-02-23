@@ -35,7 +35,7 @@ Note that complex types are NOT supported.
 #include "LAGraphX.h"
 
 #include <omp.h>
-//#define LOADTRICKIM
+#define LOADTRICKIM
 //#define dbg
 
 #undef LG_FREE_ALL
@@ -183,34 +183,44 @@ int LAGraph_Incidence_Matrix
     GRB_TRY (GxB_Matrix_extractTuples_Vector(i, j, x, A_tril, NULL)) ;
 
         // TODO: if we want to return in col major form, 
-        // this load/unload could be quicker, needs to be configured to handle 
-        // isos better though
+        // this load/unload could be quicker
         #ifdef LOADTRICKIM
         GRB_TRY (GrB_Vector_new(&Ep, GrB_INT64, num_edges + 1)) ;
         GrB_Type ij_type = NULL;
+        int32_t iso;
         GRB_TRY (GxB_Vector_type(&ij_type, i));
         GRB_TRY (GrB_Vector_new(&Ei, ij_type, num_edges * 2)) ;
-        GRB_TRY (GrB_Vector_new(&Ex, type, num_edges * 2)) ;
+        GRB_TRY (GrB_Vector_get_INT32(x, &iso, GxB_ISO));
         GRB_TRY (GrB_assign(
             Ep, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL));
-        GRB_TRY (GrB_Vector_new(&Ex, type, num_edges * 2)) ;
+        // Filling out Ei helps assign be much quicker.
+        GRB_TRY (GrB_assign(
+            Ei, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL));
         GrB_Index stride[] = {(GrB_Index) 0, num_edges * 2 - 1, (GrB_Index) 2} ;
         GRB_TRY (GrB_Vector_assign(
             Ei, NULL, NULL, j, stride, GxB_STRIDE, NULL)) ;
         stride[GxB_BEGIN] = 1;
         GRB_TRY (GrB_Vector_assign(
             Ei, NULL, NULL, i, stride, GxB_STRIDE, NULL)) ;
-        stride[GxB_BEGIN] = 0;
-        GRB_TRY (GrB_Vector_assign(
-            Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
-        stride[GxB_BEGIN] = 1;
-        GRB_TRY (GrB_Vector_assign(
-            Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
         GRB_TRY (GrB_Vector_apply_IndexOp_INT64(
             Ep, NULL, NULL, GrB_ROWINDEX_INT64, Ep, (uint64_t) 0, NULL)) ;
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(
             Ep, NULL, NULL, GrB_TIMES_INT64, Ep, (int64_t) 2, NULL)) ;
-        
+        if(!iso)
+        {
+            // Filling out Ex helps assign be much quicker.
+            GRB_TRY (GrB_Vector_new(&Ex, type, num_edges * 2)) ;
+            GRB_TRY (GrB_assign(
+                Ex, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL));
+            stride[GxB_BEGIN] = 0;
+            GRB_TRY (GrB_Vector_assign(
+                Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
+            stride[GxB_BEGIN] = 1;
+            GRB_TRY (GrB_Vector_assign(
+                Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
+        }
+        else
+            Ex = x;
         GxB_Container con;
         GRB_TRY (GxB_Container_new(&con));
         con->p = Ep;
@@ -222,7 +232,9 @@ int LAGraph_Incidence_Matrix
         con->ncols = num_edges;
         con->nvals = num_edges * 2;
         con->jumbled = false;
+        con->iso = iso;
         GRB_TRY (GxB_load_Matrix_from_Container(E, con, NULL));
+        // GRB_TRY (GrB_set(E, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
         #else
         GRB_TRY (GrB_Vector_new(
             &fullx, GrB_BOOL, num_edges)) ;
