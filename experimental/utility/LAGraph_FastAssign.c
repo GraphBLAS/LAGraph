@@ -27,6 +27,8 @@
 {                                                             \
     GrB_free(&P);                                             \
     GrB_free(&ramp);                                          \
+    GrB_free(&con);                                           \
+    GrB_free(&temp);                                          \
 }                                                     
 
 int LAGraph_FastAssign
@@ -41,9 +43,12 @@ int LAGraph_FastAssign
     char *msg
 )
 {
-    GrB_Vector ramp;
-    GrB_Matrix P;
+    GrB_Vector ramp = NULL;
+    GrB_Matrix P = NULL;
     int64_t n, nrows;
+    GxB_Container con = NULL;
+    GrB_Vector temp = NULL;
+
     bool iso;
     //TODO: allow user to input a ramp for faster times
     //TODO: assert inputs are full etc
@@ -56,7 +61,7 @@ int LAGraph_FastAssign
     GRB_TRY (GrB_Vector_get_INT32(x, (int32_t *) &iso, GxB_ISO));
 
     GrB_Type ramp_type = (n + 1 <= INT32_MAX)? GrB_UINT32: GrB_UINT64;
-    GrB_Type x_type;
+    GrB_Type x_type = NULL;
     char typename[LAGRAPH_MAX_NAME_LEN];
     LG_TRY (LAGraph_Vector_TypeName(typename, x, msg));
     LG_TRY (LAGraph_TypeFromName (&x_type, typename, msg)) ;
@@ -68,9 +73,7 @@ int LAGraph_FastAssign
     GRB_TRY (GrB_assign (ramp, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
     GRB_TRY (GrB_apply (ramp, NULL, NULL, idxnum, ramp, 0, NULL)) ;
     // GxB_fprint(ramp, GxB_COMPLETE, stdout);
-    GxB_Container con;
     GRB_TRY (GxB_Container_new(&con));
-    GrB_Vector temp;
     temp = con->p;
     con->p = ramp;
     ramp = temp;
@@ -100,6 +103,6 @@ int LAGraph_FastAssign
     temp = con->x;
     con->x = x;
     x = temp;
-    GrB_free(&con);
+    LG_FREE_ALL;
 }
 #endif
