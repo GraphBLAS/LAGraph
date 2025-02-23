@@ -812,18 +812,14 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     }
 
     //Create C arrays
-    GrB_Index *Jmap, *Imap, *Jvec_value, *deltaJi, *Idelta, *Jdelta;
-    MF_compareTuple *yd_value;
-    double *delta_raw;
-
-    Jmap = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    Imap = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    Jvec_value = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    deltaJi = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    Idelta = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    Jdelta = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    yd_value = (MF_compareTuple*) malloc(sizeof(MF_compareTuple) * n);
-    delta_raw = (double*) malloc(sizeof(double) * n);
+    GrB_Index *Jmap = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    GrB_Index *Imap = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    GrB_Index *Jvec_value = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    GrB_Index *deltaJi = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    GrB_Index *Idelta = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    GrB_Index *Jdelta = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    MF_compareTuple *yd_value = (MF_compareTuple*) malloc(sizeof(MF_compareTuple) * n);
+    double *delta_raw = (double*) malloc(sizeof(double) * n);
     
 
     printf("******iter: %d\n\n", iter); 
@@ -874,6 +870,15 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GrB_Index y_nvals;
     GRB_TRY(GrB_Vector_nvals(&y_nvals, y));
     if(y_nvals == 0){
+      free(Jmap);
+      free(Imap);
+      free(Jvec_value);
+      free(deltaJi);
+      free(Idelta);
+      free(Jdelta);
+      free(yd_value);
+      free(delta_raw);
+
       LG_FREE_ALL;
       return GrB_SUCCESS;
     }

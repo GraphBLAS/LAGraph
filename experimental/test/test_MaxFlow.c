@@ -45,7 +45,6 @@ void test_MaxFlow(void) {
     TEST_CHECK(f != NULL);
     OK(LAGraph_MMRead(&A, f, msg));
     OK(fclose(f));
-    //OK(GrB_Matrix_new(&A, GrB_FP32, nrows, ncols));
     OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
 
     //begin test
