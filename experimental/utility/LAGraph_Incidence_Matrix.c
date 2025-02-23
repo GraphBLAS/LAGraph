@@ -112,7 +112,7 @@ int LAGraph_Incidence_Matrix
     // get just the lower triangular entries
     GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
 
-    #if 1 || GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
+    #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
     bool is_uint64 = (type == GrB_UINT64) ;
     bool is_float = ((type == GrB_FP32) || (type == GrB_FP64)) ;
 
