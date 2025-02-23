@@ -95,6 +95,7 @@ int LAGraph_coloring_independent_set_optimized
         /* assign - write 0 to weight according to in_curr_subset mask */
         GRB_TRY(GrB_assign(weight, in_curr_subset, GrB_NULL, 0, GrB_ALL, n, GrB_DESC_S));
     }
+    
     // printf("finished algorithm\n");
     (*num_colors) = curr_color - 1;
     (*color) = local_color;
