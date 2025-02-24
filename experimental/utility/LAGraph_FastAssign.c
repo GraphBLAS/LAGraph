@@ -49,6 +49,10 @@ int LAGraph_FastAssign
 {
     // TODO: put data from ALL input vectors into a GxB_IS_READONLY vector
     // to be sure it remains completely unchanged? 
+    // TODO: take a descriptor for the mask and also to get i by value or 
+    // by index. Ditto for x.
+    // TODO: take in a semiring instead of dup? less intuitive but faster and 
+    // more flexible. 
     GrB_Vector ramp_loc = NULL;
     GrB_Matrix P = NULL;
     int64_t n, nrows;
@@ -58,7 +62,7 @@ int LAGraph_FastAssign
     int64_t ramp_n = 0, ramp_size = 0;
 
     bool iso = false;
-    //TODO: assert inputs are full etc.
+    //TODO: assert inputs are full or desc say to use by value or by index.
     LG_ASSERT (c != NULL, GrB_NULL_POINTER);
     LG_ASSERT (i != NULL, GrB_NULL_POINTER);
     LG_ASSERT (x != NULL, GrB_NULL_POINTER);
@@ -104,7 +108,9 @@ int LAGraph_FastAssign
         GRB_TRY (GrB_Vector_dup(&con->i, i)) ;
     }
     else
+    {
         con->i = i;
+    }
     con->x = x;
     con->format = GxB_SPARSE;
     con->orientation = GrB_COLMAJOR;
@@ -114,6 +120,7 @@ int LAGraph_FastAssign
     con->nvals = n;
     con->jumbled = false;
     GRB_TRY (GxB_load_Matrix_from_Container(P, con, NULL));
+    // TODO: check if it's faster to make P iso and multiply by x with/SECOND 
     GRB_TRY (GrB_reduce(
         c, mask, accum, dup, P, NULL)) ;
     GRB_TRY (GxB_unload_Matrix_into_Container(P, con, NULL));

@@ -499,6 +499,7 @@ int LAGraph_SwapEdges
             P, &ramp, &edge_perm, (void**) &val_of_P, &ramp_size,
             &perm_size, &junk_size, &iso, NULL, NULL
         ));
+
         LAGraph_Free((void **) &edge_perm, msg);
         
         GrB_Index edges_permed = 0;

@@ -258,7 +258,7 @@ int main (int argc, char **argv)
     // LG_CC_Boruvka
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
@@ -325,7 +325,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // LG_CC_FastSV6_SSGrB10
     //--------------------------------------------------------------------------
-#if 1
+#if 0
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
