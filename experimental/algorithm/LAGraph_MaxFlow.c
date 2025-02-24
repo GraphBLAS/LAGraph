@@ -802,16 +802,8 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   //GRB_TRY(GrB_Vector_new(&e_dup, GrB_FP64, n));
 
   int iter = 0;
-  
-  while(n_active > 0 && iter < 90){
 
-    //BUG
-    if(iter % 12 == 0){
-      GLOBAL_RELABEL;
-      //printf("GLOBAL RELABEL\n\n");
-    }
-
-    //Create C arrays
+  //Create C arrays
     GrB_Index *Jmap = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
     GrB_Index *Imap = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
     GrB_Index *Jvec_value = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
@@ -820,7 +812,13 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GrB_Index *Jdelta = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
     MF_compareTuple *yd_value = (MF_compareTuple*) malloc(sizeof(MF_compareTuple) * n);
     double *delta_raw = (double*) malloc(sizeof(double) * n);
-    
+  
+  while(n_active > 0 && iter < 90){
+
+    if(iter % 12 == 0){
+      GLOBAL_RELABEL;
+      //printf("GLOBAL RELABEL\n\n");
+    }
 
     printf("******iter: %d\n\n", iter); 
     /* GxB_print(e, 5); */
@@ -980,7 +978,11 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     /* LAGraph_Free((void*)Jdelta, msg); */
     /* LAGraph_Free((void*)delta_raw, msg); */
 
-    free(Jmap);
+    ++iter;
+    
+  }
+
+  free(Jmap);
     free(Imap);
     free(Jvec_value);
     free(deltaJi);
@@ -989,9 +991,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     free(yd_value);
     free(delta_raw);
 
-    ++iter;
-    
-  }
 
   //print_flowMtx(R);
   //GxB_print(d, 5);
