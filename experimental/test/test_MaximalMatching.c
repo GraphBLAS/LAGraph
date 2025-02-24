@@ -139,6 +139,8 @@ void test_MaximalMatching (void)
         OK (GrB_Matrix_ncols (&num_edges, E)) ;
         OK (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, num_nodes)) ;
         OK (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
+        // set to row major incase Incidence_Matrix gave col_major
+        OK (GrB_set(E, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
 
         // get weight vector
         OK (GrB_Vector_new (&weight, GrB_FP64, num_edges)) ;

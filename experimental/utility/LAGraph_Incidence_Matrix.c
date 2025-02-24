@@ -12,7 +12,6 @@
 
 // FIXME: not ready for src; should handle all builtin types, with option to
 // typecast to INT64, UINT64, or FP64 as is currently done.
-// Working with Suitesparse:GraphBLAS v10!
 
 // FIXME: this method is required for MaximalMatching and CoarsenMatching
 
@@ -36,7 +35,7 @@ Note that complex types are NOT supported.
 #include "LAGraphX.h"
 
 #include <omp.h>
-
+#define LOADTRICKIM
 //#define dbg
 
 #undef LG_FREE_ALL
@@ -51,9 +50,13 @@ Note that complex types are NOT supported.
    GrB_free (&x);                                             \
    GrB_free (&i);                                             \
    GrB_free (&j);                                             \
+   GrB_free (&Ep);                                            \
+   GrB_free (&Ei);                                            \
+   GrB_free (&Ex);                                            \
    GrB_free (&fullx);                                         \
    GrB_free(&build_desc);                                     \
-}                                                             \
+}                                                             
+
 
 int LAGraph_Incidence_Matrix
 (
@@ -67,6 +70,7 @@ int LAGraph_Incidence_Matrix
     GrB_Matrix E_half = NULL ;
     GrB_Matrix A_tril = NULL ;
     GrB_Vector i = NULL, j = NULL, x = NULL, fullx = NULL;
+    GrB_Vector Ep = NULL, Ei = NULL, Ex = NULL;
     GrB_Descriptor build_desc = NULL;
     GrB_Index *row_indices = NULL ;
     GrB_Index *col_indices = NULL ;
@@ -171,26 +175,93 @@ int LAGraph_Incidence_Matrix
             GRB_TRY (GrB_Matrix_build_INT64 (E, row_indices, ramp, values, num_edges, NULL)) ;
             break;
     }
+    GRB_TRY (GrB_eWiseAdd (E, NULL, NULL, GrB_PLUS_FP64, E, E_half, NULL)) ;
     #else
     // The vector types and sizes get overriden by extract.
-    GRB_TRY (GrB_Vector_new(&x, GrB_BOOL, 0));
-    GRB_TRY (GrB_Vector_new(&i, GrB_BOOL, 0));
-    GRB_TRY (GrB_Vector_new(&j, GrB_BOOL, 0));
-    GRB_TRY (GrB_Vector_new(&fullx, GrB_BOOL, num_edges));
-    GRB_TRY (GrB_Descriptor_new(&build_desc));
-    GRB_TRY (GrB_set(build_desc, GxB_USE_INDICES, GxB_COLINDEX_LIST));
-    GRB_TRY (GrB_Vector_assign_BOOL(
-        fullx, NULL, NULL, (bool) 1, GrB_ALL, 0, NULL));
-    
-    GRB_TRY (GxB_Matrix_extractTuples_Vector(i, j, x, A_tril, NULL));
-    GRB_TRY (GxB_Matrix_build_Vector(E_half, j, fullx, x, NULL, build_desc));
-    GRB_TRY (GxB_Matrix_build_Vector(E, i, fullx, x, NULL, build_desc));
+    GRB_TRY (GrB_Vector_new(&x, GrB_BOOL, 0)) ;
+    GRB_TRY (GrB_Vector_new(&i, GrB_BOOL, 0)) ;
+    GRB_TRY (GrB_Vector_new(&j, GrB_BOOL, 0)) ;
+    GRB_TRY (GxB_Matrix_extractTuples_Vector(i, j, x, A_tril, NULL)) ;
+
+        // this load trick is quicker, but returns GrB_COLMAJOR
+        #ifdef LOADTRICKIM
+        GxB_Container con = NULL;
+        GRB_TRY (GrB_Vector_new(&Ep, GrB_INT64, num_edges + 1)) ;
+        GrB_Type ij_type = NULL;
+        int32_t iso;
+        GRB_TRY (GxB_Vector_type(&ij_type, i));
+        GRB_TRY (GrB_Vector_new(&Ei, ij_type, num_edges * 2)) ;
+        GRB_TRY (GrB_Vector_get_INT32(x, &iso, GxB_ISO));
+        GRB_TRY (GrB_assign(
+            Ep, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL));
+
+        // Shuffle i and j into Ei.
+        // Ei = [j[0], i[0], j[1], i[1], . . ., i[num_edges -1]]
+        // Filling out Ei helps assign be much quicker.
+        GRB_TRY (GrB_assign(
+            Ei, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL));
+        GrB_Index stride[] = {(GrB_Index) 0, num_edges * 2 - 1, (GrB_Index) 2} ;
+        GRB_TRY (GrB_Vector_assign(
+            Ei, NULL, NULL, j, stride, GxB_STRIDE, NULL)) ;
+        stride[GxB_BEGIN] = 1;
+        GRB_TRY (GrB_Vector_assign(
+            Ei, NULL, NULL, i, stride, GxB_STRIDE, NULL)) ;
+
+        // Ep = [0,2,4,...,2 * numedges]
+        GRB_TRY (GrB_Vector_apply_IndexOp_INT64(
+            Ep, NULL, NULL, GrB_ROWINDEX_INT64, Ep, (uint64_t) 0, NULL)) ;
+        GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(
+            Ep, NULL, NULL, GrB_TIMES_INT64, Ep, (int64_t) 2, NULL)) ;
+        if(!iso)
+        {
+            // Filling out Ex helps assign be much quicker.
+            GRB_TRY (GrB_Vector_new(&Ex, type, num_edges * 2)) ;
+            GRB_TRY (GrB_assign(
+                Ex, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL));
+            stride[GxB_BEGIN] = 0;
+            GRB_TRY (GrB_Vector_assign(
+                Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
+            stride[GxB_BEGIN] = 1;
+            GRB_TRY (GrB_Vector_assign(
+                Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
+        }
+        else
+        Ex = x;
+        //load up container
+        GRB_TRY (GxB_Container_new(&con));
+        GRB_TRY (GrB_free(&con->p));
+        GRB_TRY (GrB_free(&con->i));
+        GRB_TRY (GrB_free(&con->x));
+        con->p = Ep;
+        con->i = Ei;
+        con->x = Ex;
+        con->format = GxB_SPARSE;
+        con->orientation = GrB_COLMAJOR;
+        con->nrows = num_nodes;
+        con->ncols = num_edges;
+        con->nvals = num_edges * 2;
+        con->jumbled = false;
+        con->iso = iso;
+        // Ep = [0,2,4,...,2 * numedges]
+        // Ex = [x[0], x[0], x[1], x[1], . . ., x[num_edges -1]]
+        // Ei = [j[0], i[0], j[1], i[1], . . ., i[num_edges -1]]
+        // So each column k has two entries at j[k] and i[k] with values x[k]
+        GRB_TRY (GxB_load_Matrix_from_Container(E, con, NULL));
+        GRB_TRY (GrB_free(&con));
+        #else
+        GRB_TRY (GrB_Vector_new(
+            &fullx, GrB_BOOL, num_edges)) ;
+        GRB_TRY (GrB_assign(
+            fullx, NULL, NULL, (bool) 1, GrB_ALL, 0, NULL));
+        GRB_TRY (GrB_Descriptor_new(&build_desc));
+        GRB_TRY (GrB_set(build_desc, GxB_USE_INDICES, GxB_COLINDEX_LIST));
+        // fullx interpreted by index so is just a ramp.
+        GRB_TRY (GxB_Matrix_build_Vector(E_half, j, fullx, x, NULL, build_desc));
+        GRB_TRY (GxB_Matrix_build_Vector(E, i, fullx, x, NULL, build_desc));
+        GRB_TRY (GrB_eWiseAdd (E, NULL, NULL, GrB_PLUS_FP64, E, E_half, NULL)) ;
+        #endif
     #endif
-
-    GRB_TRY (GrB_eWiseAdd (E, NULL, NULL, GrB_PLUS_FP64, E, E_half, NULL)) ;
-
     // LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg) ;
-
     LG_FREE_ALL ;
     
     (*result) = E ;

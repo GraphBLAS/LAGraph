@@ -25,6 +25,7 @@
 #define LG_FREE_ALL                             \
 {                                               \
     GrB_free (&Y) ;                             \
+    GrB_free (&E) ;                             \
     LAGraph_Delete (&G, msg) ;                  \
 }
 
