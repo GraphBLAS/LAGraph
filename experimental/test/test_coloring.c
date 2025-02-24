@@ -15,7 +15,7 @@ const char* matrix_files[] = {
     "ldbc-undirected-example-unweighted.mtx",
 };
 
-void test_coloring_independent_set(void)
+void test_coloring(void)
 {
     // ------------------------------------------------
     // setup
@@ -39,7 +39,7 @@ void test_coloring_independent_set(void)
     TEST_CHECK(A == NULL); // A has been moved into G->A
 
     // ------------------------------------------------
-    // run algorithm
+    // run algorithm independet set
     // ------------------------------------------------
 
     GxB_set (GxB_BURBLE, false) ;
@@ -61,8 +61,47 @@ void test_coloring_independent_set(void)
     // ------------------------------------------------
 
     OK (LG_check_coloring(G, C, msg));
+    printf("Number of Colors: %d\n", num_colors);
 
 
+    // ------------------------------------------------
+    // run algorithm maximal independet set
+    // ------------------------------------------------
+
+    GxB_set (GxB_BURBLE, false) ;
+
+    GrB_free(&C);
+    C = NULL;
+    LAGraph_Delete(&G, msg);
+    
+    /* open matrix market file */
+    snprintf(filename, LEN, LG_DATA_DIR "%s", "ldbc-undirected-example-unweighted.mtx");
+    f = fopen(filename, "r");
+    TEST_CHECK(f != NULL);
+    OK(LAGraph_MMRead(&A, f, msg));
+    OK(fclose(f));
+    OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg));
+    TEST_CHECK(A == NULL); // A has been moved into G->A
+
+    printf("Initial Matrix:\n"); LAGraph_Matrix_Print(G->A, LAGraph_SHORT, stdout, msg);
+
+    num_colors = 0;
+    time = LAGraph_WallClockTime();    
+    LAGraph_coloring_MIS(&C, &num_colors, G, msg);
+    time = LAGraph_WallClockTime() - time;
+
+    GxB_set (GxB_BURBLE, false) ;
+
+    printf("\nTook %g seconds\n", time);
+    
+    printf("Final color vector:\n"); LAGraph_Vector_Print(C, LAGraph_SHORT, stdout, msg);
+
+    
+    // ------------------------------------------------
+    // check if coloring is valid
+    // ------------------------------------------------
+
+    OK (LG_check_coloring(G, C, msg));
     printf("Number of Colors: %d\n", num_colors);
 
 
@@ -74,6 +113,6 @@ void test_coloring_independent_set(void)
 
 TEST_LIST =
 {
-    {"coloring_independent_set", test_coloring_independent_set},
+    {"coloring", test_coloring},
     {NULL, NULL}
 };
