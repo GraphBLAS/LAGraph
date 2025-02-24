@@ -72,7 +72,7 @@ void test_MCM(void)
 
             GrB_Vector mateC_init = NULL;
 
-            if (filenames[test] == "lp_afiro_structure.mtx")
+            if (!strcmp(filenames[test], "lp_afiro_structure.mtx"))
             {
                 OK(GrB_Vector_new(&mateC_init, GrB_UINT64, ncols));
                 OK(GrB_Vector_setElement_UINT64(
