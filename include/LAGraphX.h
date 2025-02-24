@@ -1262,6 +1262,18 @@ int LAGraph_coloring_independent_set_optimized
     char *msg
 ) ;
 
+LAGRAPHX_PUBLIC
+int LAGraph_coloring_MIS
+(
+    // output
+    GrB_Vector *color,
+    int *num_colors,
+
+    // input
+    LAGraph_Graph G,
+    char *msg
+) ;
+
 #if defined ( __cplusplus )
 }
 #endif
