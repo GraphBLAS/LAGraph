@@ -11,7 +11,7 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
-// Contributed by Timothy A. Davis, Texas A&M University
+// Contributed by Gabriel Gomez, Texas A&M University
 
 //------------------------------------------------------------------------------
 
@@ -363,7 +363,7 @@ int LAGraph_RichClubCoefficient
         &vi_size, &vx_size, &iso, &deg_vec_size, NULL, NULL
     )) ;
 
-    LG_ASSERT(deg_vec_size == deg_vec_size, GrB_DIMENSION_MISMATCH);
+    LG_ASSERT(deg_vec_size == edge_vec_nvals, GrB_DIMENSION_MISMATCH);
     //run a cummulative sum (backwards) on deg_vertex_count
     for(uint64_t i = deg_vec_size - 1; i > 0; --i)
     {

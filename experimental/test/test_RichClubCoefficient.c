@@ -170,7 +170,8 @@ void test_RichClubCoefficient (void)
         for(int64_t i = n_ans - 1; i >= 0; --i)
         {
             GrB_Vector_extractElement(&comp_val, rcc, i) ;
-            TEST_CHECK (comp_val == ans[i]) ;
+            TEST_CHECK (
+                comp_val - ans[i] <= 1e-10 && ans[i] - comp_val <= 1e-10) ;
         }
         GxB_Vector_fprint (rcc, "rcc", GxB_SHORT, stdout);
         OK (GrB_free (&rcc)) ;

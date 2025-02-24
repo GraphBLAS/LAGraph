@@ -32,6 +32,7 @@ int LAGr_ConnectedComponents
     char *msg
 )
 {
+    
     #if LAGRAPH_SUITESPARSE
     return (LG_CC_FastSV6 (component, G, msg)) ;
     #else
