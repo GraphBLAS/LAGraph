@@ -3,7 +3,7 @@ import time
 from scipy.io import mmread
 
 files = [
-    "/matrices/karate/karate.mtx",
+    "/raid/matrices/karate/karate.mtx",
     "/raid/matrices/Harvard500/Harvard500.mtx",
     "/raid/matrices/USpowerGrid/USpowerGrid.mtx",
     "/raid/matrices/as-Skitter/as-Skitter.mtx",
