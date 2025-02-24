@@ -444,6 +444,8 @@ int LAGraph_Coarsen_Matching
     CHKPT("Done with LAGraph_IncidenceMatrix");
 
     GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
+    // set to row major incase Incidence_Matrix gave col_major
+    GRB_TRY (GrB_set(E, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
     CHKPT("Starting maximal matching");
     // run maximal matching
     LG_TRY (LAGraph_MaximalMatching (&matched_edges, E, E_t, matching_type, seed, msg)) ;
