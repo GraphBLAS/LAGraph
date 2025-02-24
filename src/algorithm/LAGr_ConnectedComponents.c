@@ -32,8 +32,7 @@ int LAGr_ConnectedComponents
     char *msg
 )
 {
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
-    #elif LAGRAPH_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     return (LG_CC_FastSV6 (component, G, msg)) ;
     #else
     return (LG_CC_Boruvka (component, G, msg)) ;

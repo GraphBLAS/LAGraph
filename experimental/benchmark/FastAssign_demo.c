@@ -19,7 +19,6 @@
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LAGraphX.h"
 #include "LG_internal.h"
-#if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
 // LG_FREE_ALL is required by LG_TRY
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL                             \
@@ -90,20 +89,19 @@ int main (int argc, char **argv)
     // try Methods of building a "set"
     //--------------------------------------------------------------------------
 
-
+    GRB_TRY (GxB_Vector_unpack_Full (
+        rand_v, (void **)&rand_a, &r_size, &iso, NULL
+    )) ;
     // Baseline: Build
     t = LAGraph_WallClockTime ( ) ;
-    GRB_TRY (GxB_Vector_build_Scalar_Vector (
-        build_v, rand_v, bool1, NULL)) ;
+    GRB_TRY (GxB_Vector_build_Scalar (
+        build_v, rand_a, bool1, r_size)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for Build: %g sec\n", t) ;
     t = LAGraph_WallClockTime ( ) ;
 
 
     // Baseline: Single Threaded random access insert
-    GRB_TRY (GxB_Vector_unpack_Full (
-        rand_v, (void **)&rand_a, &r_size, &iso, NULL
-    )) ;
     LAGraph_Calloc((void **)&set_a, size_p2, sizeof(bool), msg);
     for(int64_t i = 0; i < size; ++i)
     {
@@ -127,7 +125,9 @@ int main (int argc, char **argv)
     GRB_TRY (GxB_Vector_pack_Full (
         rand_v, (void **)&rand_a, r_size, iso, NULL
     )) ;
-
+    #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0) 
+    printf ("GraphBLAS version too low to test LAGraph_FastAssign\n") ;
+    #else
     // FastAssign!
     GRB_TRY (GrB_Vector_clear(assign_s)) ;
     t = LAGraph_WallClockTime ( ) ;
@@ -136,6 +136,7 @@ int main (int argc, char **argv)
     ));
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGraph_FastAssign: %g sec\n", t) ;
+    #endif
 
     //--------------------------------------------------------------------------
     // check the results (Make sure that assign == build == FastAssign )
@@ -165,4 +166,3 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Random_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }
-#endif
