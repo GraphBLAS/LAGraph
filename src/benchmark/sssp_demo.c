@@ -23,11 +23,13 @@
 #include "LAGraph_demo.h"
 
 // #define NTHREAD_LIST 1
-// #define NTHREAD_LIST 2
 // #define THREAD_LIST 0
 
-#define NTHREAD_LIST 1
-#define THREAD_LIST 0
+#define NTHREAD_LIST 7
+#define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
+
+// #define NTHREAD_LIST 4
+// #define THREAD_LIST 32, 24, 16, 8
 
 #define LG_FREE_ALL                 \
 {                                   \
@@ -87,7 +89,7 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
     LAGRAPH_TRY (LAGraph_Cached_EMin (G, msg)) ;
-    fflush (stdout) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // get delta
@@ -132,7 +134,7 @@ int main (int argc, char **argv)
     LAGRAPH_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src, Delta, msg)) ;
     t1 = LAGraph_WallClockTime ( ) - t1 ;
     printf ("warmup: %g sec\n", t1) ;
-    fflush (stdout) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // begin tests
@@ -169,7 +171,7 @@ int main (int argc, char **argv)
 
             printf ("sssp15:  threads: %2d trial: %2d source %12" PRId64
                 " time: %10.4f sec\n", nthreads, trial, src, ttrial) ;
-            fflush (stdout) ;
+            fflush (stdout) ; fflush (stderr) ;
             total_time += ttrial ;
 
 #if LG_CHECK_RESULT
@@ -193,10 +195,12 @@ int main (int argc, char **argv)
         printf ("\n") ;
         double e = (double) nvals ;
         total_time = total_time / ntrials ;
-        printf ("%2d: SSSP    time: %14.6f sec  rate: %8.2f (delta %d)\n",
-            nthreads, total_time, 1e-6 * e / total_time, delta);
-        fprintf (stderr, "Avg: SSSP         %3d: %10.3f sec: %s\n",
-             nthreads, total_time, matrix_name) ;
+
+        printf (         "Avg: SSSP threads %3d: %10.3f sec (delta: %d), graph: %s\n",
+            nthreads, total_time, delta, matrix_name) ;
+        fprintf (stderr, "Avg: SSSP threads %3d: %10.3f sec (delta: %d), graph: %s\n",
+            nthreads, total_time, delta, matrix_name) ;
+        fflush (stdout) ; fflush (stderr) ;
     }
 
     //--------------------------------------------------------------------------

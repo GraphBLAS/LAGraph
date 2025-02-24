@@ -28,9 +28,15 @@
 
 #include "LAGraph_demo.h"
 
-#define NTHREAD_LIST 1
-// #define NTHREAD_LIST 2
-#define THREAD_LIST 0
+// to run just once, with p = omp_get_max_threads() threads
+// #define NTHREAD_LIST 1
+// #define THREAD_LIST 0
+
+#define NTHREAD_LIST 7
+#define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
+
+// #define NTHREAD_LIST 4
+// #define THREAD_LIST 32, 24, 16, 8
 
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
@@ -130,6 +136,7 @@ int main (int argc, char **argv)
     GrB_Index n, nvals ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // triangle counting
@@ -151,6 +158,7 @@ int main (int argc, char **argv)
     printf ("\nwarmup method: ") ;
     LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
     print_method (stdout, 6, presort) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     // warmup method:
     // LAGr_TriangleCount_Sandia_ULT: sum (sum ((U * L') .* U))
@@ -161,6 +169,7 @@ int main (int argc, char **argv)
     ttot = LAGraph_WallClockTime ( ) - ttot ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (Sandia_ULT, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
+    fflush (stdout) ; fflush (stderr) ;
 
 #if 0
     if (ntriangles != ntsimple)
@@ -222,6 +231,7 @@ int main (int argc, char **argv)
                     printf ("trial %2d: %12.6f sec rate %6.2f  # triangles: "
                         "%g\n", trial, ttrial [trial],
                         1e-6 * nvals / ttrial [trial], (double) nt2) ;
+                    fflush (stdout) ; fflush (stderr) ;
                 }
                 ttot = ttot / ntrials ;
                 printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads,
@@ -233,10 +243,12 @@ int main (int argc, char **argv)
                     printf ("Test failure!\n") ;
                     abort ( ) ;
                 }
-                fprintf (stderr, "\nMethod used: ") ;
-                print_method (stderr, m, p) ;
-                fprintf (stderr, "Avg: TC method%d.%d %3d: %10.3f sec: %s\n",
-                         method, sorting, nthreads, ttot, matrix_name) ;
+
+                printf (         "Avg: TC (%s) threads %3d: %10.3f sec, graph: %s\n",
+                    method_name (method, sorting), nthreads, ttot, matrix_name) ;
+                fprintf (stderr, "Avg: TC (%s) threads %3d: %10.3f sec, graph: %s\n",
+                    method_name (method, sorting), nthreads, ttot, matrix_name) ;
+                fflush (stdout) ; fflush (stderr) ;
 
                 if (ttot < t_best)
                 {

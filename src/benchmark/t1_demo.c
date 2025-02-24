@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/benchmark/tc_demo.c: benchmark for LAGr_TriangleCount_GPU
+// LAGraph/src/benchmark/t1_demo.c: benchmark for LAGr_TriangleCount_GPU
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.

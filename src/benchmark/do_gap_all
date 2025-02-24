@@ -25,6 +25,10 @@
 #
 #       ./do_gap_all grb /my/stuff/GAP > myoutput.txt
 
+export OMP_PLACES=cores
+export OMP_PROC_BIND=spread
+export OMP_DISPLAY_ENV=true
+
 if [ -z "$1" ]; then KIND="mtx" ; else KIND=$1 ; fi
 echo "Matrix input file format: " $KIND
 
@@ -32,6 +36,8 @@ if [ -z "$2" ]; then GAP="../../../GAP" ; else GAP=$2 ; fi
 echo "GAP matrices located in:  " $GAP
 
 hostname
+
+printenv | grep OMP
 
 ./do_gap_bfs $KIND $GAP
 ./do_gap_bc $KIND $GAP
