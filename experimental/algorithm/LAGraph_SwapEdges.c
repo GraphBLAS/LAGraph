@@ -591,14 +591,7 @@ int LAGraph_SwapEdges
         )) ;
         // GxB_Vector_fprint(hashed_edges, "Hashed", GxB_SHORT, stdout);
         // I will unpack and then reconstruct with hash as index.
-        GrB_Index hvn_size;
-        GRB_TRY(GxB_Vector_unpack_Full(
-            new_hashed_edges, (void **) &hash_vals_new, 
-            &hvn_size, &iso, NULL
-        )) ;
-        GRB_TRY(GxB_Vector_unpack_Full(
-            hashed_edges, (void **) &hash_vals, &junk_size, &iso, NULL
-        )) ;
+        
 
         //----------------------------------------------------------------------
         // Build Hash Buckets
@@ -609,6 +602,14 @@ int LAGraph_SwapEdges
         GRB_TRY (GrB_set (dup_swaps_v, GxB_BITMAP, GxB_SPARSITY_CONTROL)) ;
         GRB_TRY (GrB_Vector_new(&bad_swaps, GrB_INT16, swaps_per_loop)) ;
         GRB_TRY (GrB_Matrix_resize(hash_m, ehash_size, e)) ;
+        GrB_Index hvn_size;
+        GRB_TRY(GxB_Vector_unpack_Full(
+            new_hashed_edges, (void **) &hash_vals_new, 
+            &hvn_size, &iso, NULL
+        )) ;
+        GRB_TRY(GxB_Vector_unpack_Full(
+            hashed_edges, (void **) &hash_vals, &junk_size, &iso, NULL
+        )) ;
         GRB_TRY (GxB_Matrix_pack_CSC(
             hash_m, &ramp, &hash_vals, (void**) &val_of_P, ramp_size,
             perm_size, sizeof(bool), true, false, NULL

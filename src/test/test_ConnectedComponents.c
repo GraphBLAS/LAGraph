@@ -132,6 +132,14 @@ void test_cc_matrices (void)
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
+            #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+            printf ("\n------ CC_FastSV6_SSGrB_v10:\n") ;
+            OK (LG_CC_FastSV6_SSGrB10 (&C2, G, msg)) ;
+            ncomponents = count_connected_components (C2) ;
+            TEST_CHECK (ncomponents == ncomp) ;
+            OK (LG_check_cc (C2, G, msg)) ;
+            OK (GrB_free (&C2)) ;
+            #endif
             #endif
 
             // find the connected components with LG_CC_Boruvka
@@ -189,7 +197,12 @@ void test_cc_errors (void)
     #if LAGRAPH_SUITESPARSE
     result = LG_CC_FastSV6 (NULL, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    result = LG_CC_FastSV6_SSGrB10 (NULL, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     #endif
+    #endif
+
 
     // load a valid matrix
     FILE *f = fopen (LG_DATA_DIR "LFAT5_two.mtx", "r") ;
@@ -208,6 +221,11 @@ void test_cc_errors (void)
     result = LG_CC_FastSV6 (&C, G, msg) ;
     TEST_CHECK (result == -1001) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    result = LG_CC_FastSV6_SSGrB10 (&C, G, msg) ;
+    TEST_CHECK (result == -1001) ;
+    printf ("result expected: %d msg:\n%s\n", result, msg) ;
+    #endif
     #endif
 
     OK (LAGraph_Finalize (msg)) ;

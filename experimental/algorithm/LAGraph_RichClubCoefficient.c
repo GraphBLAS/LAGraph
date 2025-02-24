@@ -51,6 +51,7 @@
     GrB_free(&iseq_2lt) ;                               \
     GrB_free(&plus_2le) ;                               \
     GrB_free(&rcCalculation) ;                          \
+    GrB_free(&ramp_v) ;                                 \
     LAGraph_Free((void **) &index_edge, NULL) ;         \
     LAGraph_Free((void **) &node_edges_arr, NULL);      \
     LAGraph_Free((void **) &deg_arr, NULL);             \
@@ -140,16 +141,19 @@ int LAGraph_RichClubCoefficient
     // Vector of ones
     GrB_Vector ones_v = NULL;
 
+    // Ramp vector
+    GrB_Vector ramp_v = NULL;
+
     // 2 * (x < y) + (x == y)
     GrB_BinaryOp iseq_2lt = NULL;
 
     // [+].[iseq_2lt]
-    GrB_Semiring plus_2le;
+    GrB_Semiring plus_2le = NULL;
 
     // 2E_K / (N_k (N_k -1))
     GrB_BinaryOp rcCalculation = NULL;
 
-    GrB_Matrix A ; // G->A, the adjacency matrix
+    GrB_Matrix A = NULL; // G->A, the adjacency matrix
 
     // Matrix used for row reduction
     GrB_Matrix P = NULL;
@@ -238,12 +242,32 @@ int LAGraph_RichClubCoefficient
     // each degree and then doing a cummulative sum to know the amount of edges 
     // and nodes at degree geq k.
     GRB_TRY (GrB_Vector_nvals (&edge_vec_nvals, node_edges)) ;
+    #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
     if(n == edge_vec_nvals)
     {
-        // GRB_TRY (GxB_Vector_unpack_Full (
-        //     node_edges, (void **)&node_edges_arr, &vx_size, &iso, NULL)) ;
-        // GRB_TRY (GxB_Vector_unpack_Full (
-        //     degrees, (void **)&deg_arr, &vx_size, &iso, NULL)) ;
+        GRB_TRY (GxB_Vector_unpack_Full (
+            node_edges, (void **)&node_edges_arr, &vx_size, &iso, NULL)) ;
+        GRB_TRY (GxB_Vector_unpack_Full (
+            degrees, (void **)&deg_arr, &vx_size, &iso, NULL)) ;
+    }
+    else
+    {
+        GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(
+            degrees, NULL, NULL, GrB_MINUS_INT64, G->out_degree, 1, NULL)) ;
+        LG_TRY(LAGraph_Malloc(
+            (void **) &deg_arr, edge_vec_nvals, sizeof(int64_t), NULL)) ;
+        LG_TRY(LAGraph_Malloc(
+            (void **) &node_edges_arr, edge_vec_nvals, sizeof(int64_t), NULL)) ;
+        GRB_TRY (GrB_Vector_extractTuples_INT64(
+            NULL, deg_arr, &deg_vec_size, degrees
+        )) ;
+        GRB_TRY (GrB_Vector_extractTuples_INT64(
+            NULL, node_edges_arr, &edge_vec_nvals, node_edges
+        )) ;
+    }
+    #else
+    if(n == edge_vec_nvals)
+    {
         deg_x = degrees;
         node_edges_x = node_edges;
         deg_vec_size = n;
@@ -252,18 +276,6 @@ int LAGraph_RichClubCoefficient
     {
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(
             degrees, NULL, NULL, GrB_MINUS_INT64, G->out_degree, 1, NULL)) ;
-        #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
-        LG_TRY(LAGraph_Malloc(
-            (void **) &deg_arr, edge_vec_nvals, sizeof(int64_t), NULL)) ;
-        LG_TRY(LAGraph_Malloc(
-            (void **) &deg_vec_size, edge_vec_nvals, sizeof(int64_t), NULL)) ;
-        GRB_TRY (GrB_Vector_extractTuples_INT64(
-            NULL, deg_arr, &deg_vec_size, degrees
-        )) ;
-        GRB_TRY (GrB_Vector_extractTuples_INT64(
-            NULL, node_edges_arr, &edge_vec_nvals, node_edges
-        )) ;
-        #else 
         GRB_TRY (GrB_Vector_new(&deg_x, GrB_BOOL, 0)) ;  
         GRB_TRY (GrB_Vector_new(&node_edges_x, GrB_BOOL, 0)) ;  
         GRB_TRY (GxB_Vector_extractTuples_Vector(
@@ -272,18 +284,26 @@ int LAGraph_RichClubCoefficient
         GRB_TRY (GxB_Vector_extractTuples_Vector(
             NULL, node_edges_x, node_edges, NULL
         )) ;
-        #endif
     }
+    #endif
+
     GRB_TRY (GrB_Vector_new(&ones_v, GrB_INT64, edge_vec_nvals));
     #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    GRB_TRY (GrB_Vector_new(&ramp_v, GrB_INT64, edge_vec_nvals + 1)) ;  
+    GRB_TRY (GrB_Vector_assign_INT64(
+        ramp_v, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL)) ;
+    GRB_TRY (GrB_apply (
+        ramp_v, NULL, NULL, GrB_ROWINDEX_INT64, ramp_v, 0, NULL)) ;
     LG_TRY (LAGraph_FastAssign (
-        edges_per_deg, NULL, NULL, deg_x, node_edges_x, 
+        edges_per_deg, NULL, NULL, deg_x, node_edges_x, ramp_v,
         GxB_PLUS_UINT64_MONOID, msg
     )) ;
     GRB_TRY (GrB_Vector_assign_INT64(
         ones_v, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL)) ;
     GRB_TRY (LAGraph_FastAssign (
-        verts_per_deg, NULL, NULL, deg_x, ones_v, GxB_PLUS_UINT64_MONOID, msg)) ;
+        verts_per_deg, NULL, NULL, deg_x, ones_v, ramp_v,
+        GxB_PLUS_UINT64_MONOID, msg
+    )) ;
     #elif LAGRAPH_SUITESPARSE
     LG_TRY (LAGraph_Malloc(
         (void **) &ramp, edge_vec_nvals + 1, sizeof(int64_t), NULL)) ;
@@ -323,7 +343,7 @@ int LAGraph_RichClubCoefficient
      * Cumulative sum (TODO: should be a GBLAS method!)
      * 
      * GrB_cumsum(GrB_Matrix C, const GrB_Matrix mask, const GrB_BinaryOp accum,
-     *      const GrB_Monoid monoid, GrB_Matrix A, const GrB_Descriptor desc)
+     *      const GrB_BinaryOp plus, GrB_Matrix A, const GrB_Descriptor desc)
      * 
      * By default sums rows. Returns a nearly full matrix:
      * [., ., 1, 1, 1, 1, ., ., 1] --> [., ., 1, 2, 3, 4, 4, 4, 5]
@@ -331,7 +351,8 @@ int LAGraph_RichClubCoefficient
      * [., ., 1, 1, 1, 1, ., ., 1] --> [., ., 1, 2, 3, 4, ., ., 5]
      * 
      * Should we be able to sum in the opposite direction?
-     * If Monoid is not comutative, this method should still work. 
+     * 
+     * If plus biop is not a monoid, this method should still work?
      */
     GRB_TRY (GxB_Vector_unpack_CSC(
         edges_per_deg, &epd_index, (void **)&edges_per_deg_arr,

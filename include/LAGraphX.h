@@ -296,16 +296,19 @@ int LAGraph_Incidence_Matrix
 LAGRAPHX_PUBLIC
 int LAGraph_FastAssign
 (
-    GrB_Vector c, // Vector to be built (or assigned): initialized with correct dimensions.
-    GrB_Vector mask,
-    GrB_BinaryOp accum, 
-    GrB_Vector i, // Indecies  (duplicates allowed)
-    GrB_Vector x, // Values
-    // GrB_Vector ramp, // Optional (makes P load O(1))
-    GrB_Monoid dup, // Applied to duplicates
+    // output
+    // Vector to be built (or assigned): initialized with correct dimensions.
+    GrB_Vector c, 
+    // inputs
+    const GrB_Vector mask,
+    const GrB_BinaryOp accum, 
+    const GrB_Vector i, // Indecies  (duplicates allowed)
+    const GrB_Vector x, // Values
+    // Optional (Give me a ramp with size > x.size for faster calculations) 
+    const GrB_Vector ramp, 
+    const GrB_Monoid dup, // Applied to duplicates
     char *msg
 ) ;
-
 //****************************************************************************
 // Algorithms
 //****************************************************************************
@@ -1391,6 +1394,15 @@ int LAGraph_SwapEdges
     // input: not modified
     LAGraph_Graph G,
     GrB_Index Q, // Swaps per edge
+    char *msg
+) ;
+
+int LG_CC_FastSV6_SSGrB10 // SuiteSparse:GraphBLAS method, with GxB extensions
+(
+    // output:
+    GrB_Vector *component,  // component(i)=r if node is in the component r
+    // input:
+    LAGraph_Graph G,        // input graph (modified then restored)
     char *msg
 );
 

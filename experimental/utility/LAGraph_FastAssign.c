@@ -26,63 +26,86 @@
 #define LG_FREE_ALL                                           \
 {                                                             \
     GrB_free(&P);                                             \
-    GrB_free(&ramp);                                          \
+    GrB_free(&ramp_loc);                                      \
     GrB_free(&con);                                           \
-    GrB_free(&temp);                                          \
+    LAGraph_Free(&ramp_a, msg);                               \
 }                                                     
 
 int LAGraph_FastAssign
 (
-    GrB_Vector c, // Vector to be built (or assigned): initialized with correct dimensions.
-    GrB_Vector mask,
-    GrB_BinaryOp accum, 
-    GrB_Vector i, // Indecies  (duplicates allowed)
-    GrB_Vector x, // Values
-    // GrB_Vector ramp, // Optional (makes P load O(1))
-    GrB_Monoid dup, // Applied to duplicates
+    // output
+    // Vector to be built (or assigned): initialized with correct dimensions.
+    GrB_Vector c, 
+    // inputs
+    const GrB_Vector mask,
+    const GrB_BinaryOp accum, 
+    const GrB_Vector i, // Indecies  (duplicates allowed)
+    const GrB_Vector x, // Values
+    // Optional (Give me a ramp with size > x.size for faster calculations) 
+    const GrB_Vector ramp, 
+    const GrB_Monoid dup, // Applied to duplicates
     char *msg
 )
 {
-    GrB_Vector ramp = NULL;
+    // TODO: put data from ALL input vectors into a GxB_IS_READONLY vector
+    // to be sure it remains completely unchanged? 
+    GrB_Vector ramp_loc = NULL;
     GrB_Matrix P = NULL;
     int64_t n, nrows;
     GxB_Container con = NULL;
-    GrB_Vector temp = NULL;
+    void *ramp_a = NULL;
+    int ramp_h = 0;
+    int64_t ramp_n = 0, ramp_size = 0;
 
-    bool iso;
-    //TODO: allow user to input a ramp for faster times
-    //TODO: assert inputs are full etc
+    bool iso = false;
+    //TODO: assert inputs are full etc.
     LG_ASSERT (c != NULL, GrB_NULL_POINTER);
     LG_ASSERT (i != NULL, GrB_NULL_POINTER);
     LG_ASSERT (x != NULL, GrB_NULL_POINTER);
+    LG_ASSERT_MSG (c != x, GrB_NOT_IMPLEMENTED, "c cannot be aliased with x.");   
 
     GRB_TRY (GrB_Vector_size(&n, i));
     GRB_TRY (GrB_Vector_size(&nrows, c));
     GRB_TRY (GrB_Vector_get_INT32(x, (int32_t *) &iso, GxB_ISO));
 
-    GrB_Type ramp_type = (n + 1 <= INT32_MAX)? GrB_UINT32: GrB_UINT64;
     GrB_Type x_type = NULL;
     char typename[LAGRAPH_MAX_NAME_LEN];
     LG_TRY (LAGraph_Vector_TypeName(typename, x, msg));
     LG_TRY (LAGraph_TypeFromName (&x_type, typename, msg)) ;
 
+    GrB_Type ramp_type = (n + 1 <= INT32_MAX)? GrB_UINT32: GrB_UINT64;
     GrB_IndexUnaryOp idxnum = (n <= INT32_MAX)? 
-                GrB_ROWINDEX_INT32: GrB_ROWINDEX_INT64;
-    GRB_TRY (GrB_Vector_new(&ramp, ramp_type, n + 1));
+            GrB_ROWINDEX_INT32: GrB_ROWINDEX_INT64;
+    GRB_TRY (GrB_Vector_new(&ramp_loc, ramp_type, n + 1));
+    if(ramp == NULL)
+    {
+        
+        GRB_TRY (GrB_assign (ramp_loc, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
+        GRB_TRY (GrB_apply (ramp_loc, NULL, NULL, idxnum, ramp_loc, 0, NULL)) ;
+    }
+    else
+    {
+        GRB_TRY (GxB_Vector_unload(
+            ramp, &ramp_a, &ramp_type, &ramp_n, &ramp_size, &ramp_h, NULL)) ;
+        LG_ASSERT (ramp_n > n, GrB_DIMENSION_MISMATCH);
+        GRB_TRY (GxB_Vector_load(
+            ramp_loc, &ramp_a, ramp_type, n + 1, (n + 1) * (ramp_size / ramp_n),
+            GxB_IS_READONLY, NULL)) ;
+    }
     GRB_TRY (GrB_Matrix_new(&P, x_type, nrows, n));
-    GRB_TRY (GrB_assign (ramp, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
-    GRB_TRY (GrB_apply (ramp, NULL, NULL, idxnum, ramp, 0, NULL)) ;
-    // GxB_fprint(ramp, GxB_COMPLETE, stdout);
+    // GxB_fprint(ramp_loc, GxB_COMPLETE, stdout);
     GRB_TRY (GxB_Container_new(&con));
-    temp = con->p;
-    con->p = ramp;
-    ramp = temp;
-    temp = con->i;
-    con->i = i;
-    i = temp;
-    temp = con->x;
+    GRB_TRY (GrB_free(&con->p)) ;
+    GRB_TRY (GrB_free(&con->i)) ;
+    GRB_TRY (GrB_free(&con->x)) ;
+    con->p = ramp_loc;
+    if (c == i)
+    {
+        GRB_TRY (GrB_Vector_dup(&con->i, i)) ;
+    }
+    else
+        con->i = i;
     con->x = x;
-    x = temp;
     con->format = GxB_SPARSE;
     con->orientation = GrB_COLMAJOR;
     con->nrows = nrows;
@@ -94,15 +117,16 @@ int LAGraph_FastAssign
     GRB_TRY (GrB_reduce(
         c, mask, accum, dup, P, NULL)) ;
     GRB_TRY (GxB_unload_Matrix_into_Container(P, con, NULL));
-    temp = con->p;
-    con->p = ramp;
-    ramp = temp;
-    temp = con->i;
-    con->i = i;
-    i = temp;
-    temp = con->x;
-    con->x = x;
-    x = temp;
+    // Don't let inputs get freed
+    con->p = NULL;
+    if (c != i)
+        con->i = NULL;
+    con->x = NULL;
+    if (ramp)
+    {
+        GRB_TRY (GxB_Vector_load(
+            ramp, &ramp_a, ramp_type, ramp_n, ramp_size, ramp_h, NULL)) ;
+    }
     LG_FREE_ALL;
 }
 #endif

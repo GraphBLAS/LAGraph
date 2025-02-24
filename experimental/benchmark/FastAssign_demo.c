@@ -19,7 +19,7 @@
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LAGraphX.h"
 #include "LG_internal.h"
-
+#if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
 // LG_FREE_ALL is required by LG_TRY
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL                             \
@@ -76,8 +76,6 @@ int main (int argc, char **argv)
         x, NULL, NULL, (bool) 1, GrB_ALL, 0, NULL)) ;
     GRB_TRY (GrB_Scalar_setElement_BOOL(bool1, (bool) 1));
 
-    // GRB_TRY (GrB_Vector_assign_BOOL(
-    //     assign_s, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
     GRB_TRY(GrB_set (assign_s, GxB_BITMAP, GxB_SPARSITY_CONTROL) ;)
     LG_TRY (LAGraph_Random_Seed(rand_v, 1548945616ul, msg)) ;
     GRB_TRY (GrB_Vector_apply_BinaryOp1st_UINT64(
@@ -130,11 +128,11 @@ int main (int argc, char **argv)
         rand_v, (void **)&rand_a, r_size, iso, NULL
     )) ;
 
-    // FastAssign time!
+    // FastAssign!
     GRB_TRY (GrB_Vector_clear(assign_s)) ;
     t = LAGraph_WallClockTime ( ) ;
     LG_TRY (LAGraph_FastAssign(
-        assign_s, NULL, NULL, rand_v, x, GxB_ANY_BOOL_MONOID, msg
+        assign_s, NULL, NULL, rand_v, x, NULL, GxB_ANY_BOOL_MONOID, msg
     ));
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGraph_FastAssign: %g sec\n", t) ;
@@ -167,3 +165,4 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Random_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }
+#endif
