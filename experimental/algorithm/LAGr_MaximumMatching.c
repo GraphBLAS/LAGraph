@@ -253,6 +253,7 @@ static inline GrB_Info invert_nondestructive(
     GRB_TRY(GxB_Vector_pack_CSC(in, (GrB_Index **)&I, (void **)&X1, IBytes,
                                 XBytes, NULL, nvals, jumbled, NULL));
 #endif
+    return (GrB_SUCCESS);
 }
 
 static inline GrB_Info
@@ -314,6 +315,7 @@ invert(GrB_Vector out,  // input/output.  Same as invert_nondescructive above.
         // build copies the lists so they need to be freed in LG_FREE_ALL
         LG_FREE_ALL;
     }
+    return (GrB_SUCCESS);
 }
 
 static inline GrB_Info
@@ -425,6 +427,7 @@ invert_2(GrB_Vector out,  // input/output
     }
     LG_FREE_ALL;
 #endif
+    return (GrB_SUCCESS);
 }
 
 //------------------------------------------------------------------------------

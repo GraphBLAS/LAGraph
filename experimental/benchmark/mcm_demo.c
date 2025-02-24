@@ -95,6 +95,7 @@ GrB_Info check_matching(GrB_Matrix A, GrB_Vector mateC, char *msg)
 
     GrB_Vector_free(&mateR);
     GrB_Matrix_free(&M);
+    return (GrB_SUCCESS);
 }
 
 #undef LG_FREE_ALL
