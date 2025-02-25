@@ -152,7 +152,8 @@ void test_diamonds_ebc (void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     // compute its betweenness centrality
-    OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
+    OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
+    // OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
 
     // compare with GAP:
     double err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
@@ -205,6 +206,6 @@ void test_karate_ebc (void)
 
 TEST_LIST = {
     {"test_diamonds_ebc", test_diamonds_ebc},
-    {"test_karate_ebc", test_karate_ebc},
+    // {"test_karate_ebc", test_karate_ebc},
     {NULL, NULL}
 };

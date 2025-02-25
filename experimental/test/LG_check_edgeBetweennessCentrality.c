@@ -286,20 +286,20 @@ int LG_check_edgeBetweennessCentrality
             // printf("\n");    
         }
 
-        if (s < 10) {
+        // if (s < 10) {
 
-            printf("==========================================\n");
+        //     printf("==========================================\n");
 
-            for (int64_t w = 0; w < n; w++) {
-                printf("%ld's: ", w);
-                for (int64_t p = Phead [w] ; p < Ptail [w] ; p++) { 
-                    printf("%ld ", Pj [p]) ;
-                }
-                printf("\n");
-            }
-            printf("\n");
+        //     for (int64_t w = 0; w < n; w++) {
+        //         printf("%ld's: ", w);
+        //         for (int64_t p = Phead [w] ; p < Ptail [w] ; p++) { 
+        //             printf("%ld ", Pj [p]) ;
+        //         }
+        //         printf("\n");
+        //     }
+        //     printf("\n");
 
-        }
+        // }
 
         // Set dependency score δ[v] ← 0
         // 24. δ[v] ← 0, ∀v ∈ V
@@ -348,17 +348,17 @@ int LG_check_edgeBetweennessCentrality
             // 27. w ← pop(S)
             int64_t w = S [--sp] ;
 
-            if (s < 10) printf("w: %ld\n", w);
+            // if (s < 10) printf("w: %ld\n", w);
 
             // 28. for v ∈ P [w]
             for (int64_t p = Phead [w] ; p < Ptail [w] ; p++)
             {
                 int64_t v = Pj [p] ;
-                if (s < 10) printf(" v: %ld\n", v);
+                // if (s < 10) printf(" v: %ld\n", v);
                 
                 // Update dependency and centrality values
                 // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
-                if (s < 10) printf("  %g = %g * (%g + 1)/%g\n", sigma [v] * ((delta [w] + 1) / sigma [w]), sigma [v], delta [w], sigma [w]) ;
+                // if (s < 10) printf("  %g = %g * (%g + 1)/%g\n", sigma [v] * ((delta [w] + 1) / sigma [w]), sigma [v], delta [w], sigma [w]) ;
 
                 // if (v == w) { printf ("Ack!!\n") ; fflush (stdout) ; abort ( ) ; }
                 if (v == w) { 
@@ -372,7 +372,7 @@ int LG_check_edgeBetweennessCentrality
                 // 31. result [(v, w)] ← result [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
                 result [INDEX (v,w)] += centrality;
                 // result [INDEX (w,v)] += centrality;
-                if (s < 10) printf("   result: %g\n", result[INDEX(v,w)]);
+                // if (s < 10) printf("   result: %g\n", result[INDEX(v,w)]);
 
                 // if (result [INDEX (v,w)] == 0) {
                 //     result [INDEX (w,v)] += centrality;

@@ -1284,11 +1284,11 @@ LAGRAPHX_PUBLIC
 int LAGr_EdgeBetweennessCentrality
 (
     // output:
-    GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
+    GrB_Matrix *centrality,     // centrality(i): betweeness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
     char *msg
-)
+);
 
 //------------------------------------------------------------------------------
 // graph clustering with quality metrics
