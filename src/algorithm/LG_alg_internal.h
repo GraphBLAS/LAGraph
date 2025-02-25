@@ -54,6 +54,15 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
     char *msg
 ) ;
 
+int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
+(
+    // output:
+    GrB_Vector *component,  // component(i)=r if node is in the component r
+    // input:
+    LAGraph_Graph G,        // input graph (modified then restored)
+    char *msg
+) ;
+
 int LG_CC_Boruvka
 (
     // output:

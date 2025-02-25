@@ -1,8 +1,8 @@
 //------------------------------------------------------------------------------
-// LG_CC_FastSV6: connected components
+// LG_CC_FastSV7: connected components
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -30,10 +30,9 @@
 // 144: 14-27 (2020).
 
 // Modified by Tim Davis, Texas A&M University: revised Reduce_assign to use
-// purely GrB* and GxB* methods and the matrix C.  Added warmup phase.  Changed
-// to use GxB pack/unpack instead of GxB import/export.  Converted to use the
-// LAGraph_Graph object.  Exploiting iso status for the temporary matrices
-// C and T.
+// purely GrB* and GxB* methods and the matrix Parent.  Added warmup phase.
+// Changed to use GxB load/unload.  Converted to use the LAGraph_Graph object.
+// Exploiting iso status for the temporary matrices Parent and T.
 
 // The input graph G must be undirected, or directed and with an adjacency
 // matrix that has a symmetric structure.  Self-edges (diagonal entries) are
@@ -53,7 +52,15 @@
 #define LG_FREE_ALL ;
 #include "LG_internal.h"
 
-#if LAGRAPH_SUITESPARSE
+#define USING_GRAPHBLAS_V10 0
+#if LAGRAPH_SUITESPARSE 
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+        #undef  USING_GRAPHBLAS_V10
+        #define USING_GRAPHBLAS_V10 1
+    #endif
+#endif
+
+#if USING_GRAPHBLAS_V10
 
 //==============================================================================
 // fastsv: find the components of a graph
@@ -62,7 +69,7 @@
 static inline GrB_Info fastsv
 (
     GrB_Matrix A,           // adjacency matrix, G->A or a subset of G->A
-    GrB_Vector parent,      // parent vector
+    GrB_Vector parent2,     // workspace
     GrB_Vector mngp,        // min neighbor grandparent
     GrB_Vector *gp,         // grandparent
     GrB_Vector *gp_new,     // new grandparent (swapped with gp)
@@ -70,19 +77,15 @@ static inline GrB_Info fastsv
     GrB_BinaryOp eq,        // GrB_EQ_(integer type)
     GrB_BinaryOp min,       // GrB_MIN_(integer type)
     GrB_Semiring min_2nd,   // GrB_MIN_SECOND_(integer type)
-    GrB_Matrix C,           // C(i,j) present if i = Px (j)
-    GrB_Index **Cp,         // 0:n, size n+1
-    GrB_Index **Px,         // Px: non-opaque copy of parent vector, size n
-    void **Cx,              // size 1, contents not accessed
+    GrB_Matrix Parent,      // Parent(i,j) present if i = parent (j)
+    GxB_Container Parent_Container,   // holds the Parent matrix
     char *msg
 )
 {
-    GrB_Index n ;
-    GRB_TRY (GrB_Vector_size (&n, parent)) ;
-    GrB_Index Cp_size = (n+1) * sizeof (GrB_Index) ;
-    GrB_Index Ci_size = n * sizeof (GrB_Index) ;
-    GrB_Index Cx_size = sizeof (bool) ;
-    bool iso = true, jumbled = false, done = false ;
+
+    GrB_Index n = Parent_Container->nrows ;
+    GrB_Vector parent = Parent_Container->i ;
+    bool done = false ;
 
     while (true)
     {
@@ -95,58 +98,62 @@ static inline GrB_Info fastsv
         GRB_TRY (GrB_mxv (mngp, NULL, min, min_2nd, A, *gp, NULL)) ;
 
         //----------------------------------------------------------------------
-        // parent = min (parent, C*mngp) where C(i,j) is present if i=Px(j)
+        // parent2 = min (mngp, gp)
         //----------------------------------------------------------------------
 
-        // Reduce_assign: The Px array of size n is the non-opaque copy of the
-        // parent vector, where i = Px [j] if the parent of node j is node i.
-        // It can thus have duplicates.  The vectors parent and mngp are full
-        // (all entries present).  This function computes the following, which
+        // The parent vector is Parent_Container->i, and thus no longer exists
+        // when the Parent matrix exists.  So the accumulation is done in a
+        // workspace vector, parent2.
+
+        GRB_TRY (GrB_eWiseAdd (parent2, NULL, NULL, min, mngp, *gp, NULL)) ;
+
+        //----------------------------------------------------------------------
+        // parent2 = min (parent2, Parent*mngp) using the MIN_SECOND semiring
+        //----------------------------------------------------------------------
+
+        // Reduce_assign: This function computes the following, which
         // is done explicitly in the Reduce_assign function in LG_CC_Boruvka:
         //
         //      for (j = 0 ; j < n ; j++)
         //      {
-        //          uint64_t i = Px [j] ;
-        //          parent [i] = min (parent [i], mngp [j]) ;
+        //          uint64_t i = parent [j] ;
+        //          parent2 [i] = min (parent2 [i], mngp [j]) ;
         //      }
         //
-        // If C(i,j) is present where i == Px [j], then this can be written as:
+        // If Parent(i,j) is present where i == parent (j), then this can be
+        // written as:
         //
-        //      parent = min (parent, C*mngp)
+        //      parent2 = min (parent2, Parent*mngp)
         //
         // when using the min_2nd semiring.  This can be done efficiently
-        // because C can be constructed in O(1) time and O(1) additional space
-        // (not counting the prior Cp, Px, and Cx arrays), when using the
-        // SuiteSparse pack/unpack move constructors.  The min_2nd semiring
-        // ignores the values of C and operates only on the structure, so its
-        // values are not relevant.  Cx is thus chosen as a GrB_BOOL array of
-        // size 1 where Cx [0] = false, so the all entries present in C are
-        // equal to false.
+        // because Parent can be constructed in O(1) time and O(1) additional
+        // space when using the SuiteSparse load/unload move constructors.  The
+        // min_2nd semiring ignores the values of Parent and operates only on
+        // the structure, so its values are not relevant.  Parent_Container->x
+        // is thus chosen as a GrB_BOOL array of size 1 where x [0] = false, so
+        // all entries present in Parent are equal to false.
 
-        // pack Cp, Px, and Cx into a matrix C with C(i,j) present if Px(j) == i
-        GRB_TRY (GxB_Matrix_pack_CSC (C, Cp, /* Px is Ci: */ Px, Cx,
-            Cp_size, Ci_size, Cx_size, iso, jumbled, NULL)) ;
+        // load the parent vector into its matrix form, Parent
+        GRB_TRY (GxB_load_Matrix_from_Container (Parent, Parent_Container,
+            NULL)) ;
 
-        // parent = min (parent, C*mngp) using the MIN_SECOND semiring
-        GRB_TRY (GrB_mxv (parent, NULL, min, min_2nd, C, mngp, NULL)) ;
+        GRB_TRY (GrB_mxv (parent2, NULL, min, min_2nd, Parent, mngp, NULL)) ;
 
-        // unpack the contents of C, to make Px available to this method again.
-        GRB_TRY (GxB_Matrix_unpack_CSC (C, Cp, Px, Cx,
-            &Cp_size, &Ci_size, &Cx_size, &iso, &jumbled, NULL)) ;
+        // unload the container to regain the parent vector
+        GRB_TRY (GxB_unload_Matrix_into_Container (Parent, Parent_Container,
+            NULL)) ;
 
         //----------------------------------------------------------------------
-        // parent = min (parent, mngp, gp)
+        // parent = min (parent, parent2)
         //----------------------------------------------------------------------
 
-        GRB_TRY (GrB_eWiseAdd (parent, NULL, min, min, mngp, *gp, NULL)) ;
+        GRB_TRY (GrB_assign (parent, NULL, min, parent2, GrB_ALL, n, NULL)) ;
 
         //----------------------------------------------------------------------
-        // calculate grandparent: gp_new = parent (parent), and extract Px
+        // calculate grandparent: gp_new = parent (parent)
         //----------------------------------------------------------------------
 
-        // if parent is uint32, GraphBLAS typecasts to uint64 for Px.
-        GRB_TRY (GrB_Vector_extractTuples (NULL, *Px, &n, parent)) ;
-        GRB_TRY (GrB_extract (*gp_new, NULL, NULL, parent, *Px, n, NULL)) ;
+        GRB_TRY (GrB_extract (*gp_new, NULL, NULL, parent, parent, NULL)) ;
 
         //----------------------------------------------------------------------
         // terminate if gp and gp_new are the same
@@ -159,13 +166,13 @@ static inline GrB_Info fastsv
         // swap gp and gp_new
         GrB_Vector s = (*gp) ; (*gp) = (*gp_new) ; (*gp_new) = s ;
 
-//      printf ("\n========================== fastsv6: parent\n") ; GxB_print (parent, 5) ;
+//      printf ("\n========================== fastsv: parent\n") ; GxB_print (parent, 5) ;
     }
     return (GrB_SUCCESS) ;
 }
 
 //==============================================================================
-// LG_CC_FastSV6
+// LG_CC_FastSV7
 //==============================================================================
 
 // The output of LG_CC_FastSV* is a vector component, where component(i)=r if
@@ -179,32 +186,30 @@ static inline GrB_Info fastsv
     LAGraph_Free ((void **) &Tp, NULL) ;        \
     LAGraph_Free ((void **) &Tj, NULL) ;        \
     LAGraph_Free ((void **) &Tx, NULL) ;        \
-    LAGraph_Free ((void **) &Cp, NULL) ;        \
-    LAGraph_Free ((void **) &Px, NULL) ;        \
-    LAGraph_Free ((void **) &Cx, NULL) ;        \
     LAGraph_Free ((void **) &ht_key, NULL) ;    \
     LAGraph_Free ((void **) &ht_count, NULL) ;  \
     LAGraph_Free ((void **) &count, NULL) ;     \
     LAGraph_Free ((void **) &range, NULL) ;     \
-    GrB_free (&C) ;                             \
+    LAGraph_Free ((void **) &Px, NULL) ;        \
     GrB_free (&T) ;                             \
     GrB_free (&t) ;                             \
-    GrB_free (&y) ;                             \
     GrB_free (&gp) ;                            \
     GrB_free (&mngp) ;                          \
     GrB_free (&gp_new) ;                        \
+    GrB_free (&parent2) ;                       \
+    GrB_free (&Parent) ;                        \
+    GrB_free (&Parent_Container) ;              \
 }
 
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL                             \
 {                                               \
     LG_FREE_WORK ;                              \
-    GrB_free (&parent) ;                        \
 }
 
 #endif
 
-int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
+int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
 (
     // output:
     GrB_Vector *component,  // component(i)=r if node is in the component r
@@ -214,9 +219,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 )
 {
 
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
+#if USING_GRAPHBLAS_V10
+//  printf ("LG_CC_FastSV7:\n") ;
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -225,13 +229,16 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     LG_CLEAR_MSG ;
 
     int64_t *range = NULL ;
-    GrB_Index n, nvals, Cp_size = 0, *ht_key = NULL, *Px = NULL, *Cp = NULL,
+    void *Px = NULL ;
+    uint64_t Px_size = 0 ;
+    GrB_Index n, nvals, *ht_key = NULL,
         *count = NULL, *Tp = NULL, *Tj = NULL ;
     GrB_Vector parent = NULL, gp_new = NULL, mngp = NULL, gp = NULL, t = NULL,
-        y = NULL ;
-    GrB_Matrix T = NULL, C = NULL ;
-    void *Tx = NULL, *Cx = NULL ;
+        parent2 = NULL ;
+    GrB_Matrix T = NULL, Parent = NULL ;
+    void *Tx = NULL ;
     int *ht_count = NULL ;
+    GxB_Container Parent_Container = NULL ;
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (component != NULL, GrB_NULL_POINTER) ;
@@ -243,7 +250,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
 
-//  printf ("input graph6:\n") ; GxB_print (G->A, 2) ;
+//  printf ("input graph7:\n") ; GxB_print (G->A, 2) ;
 
     //--------------------------------------------------------------------------
     // initializations
@@ -268,7 +275,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     #endif
     if (n > NBIG)
     {
-        // use 64-bit integers throughout
+        // use 64-bit integers
         Uint = GrB_UINT64 ;
         Int  = GrB_INT64  ;
         ramp = GrB_ROWINDEX_INT64 ;
@@ -280,7 +287,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     }
     else
     {
-        // use 32-bit integers, except for Px and for constructing the matrix C
+        // use 32-bit integers
         Uint = GrB_UINT32 ;
         Int  = GrB_INT32  ;
         ramp = GrB_ROWINDEX_INT32 ;
@@ -290,6 +297,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         min_2nd  = GrB_MIN_SECOND_SEMIRING_UINT32 ;
         min_2ndi = GxB_MIN_SECONDI_INT32 ;
     }
+
+//  printf ("type:\n") ; GxB_print (Uint, 5) ;
 
     // FASTSV_SAMPLES: number of samples to take from each row A(i,:).
     // Sampling is used if the average degree is > 8 and if n > 1024.
@@ -306,53 +315,82 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
 // ]
 
-    LG_TRY (LAGraph_Calloc ((void **) &Cx, 1, sizeof (bool), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void **) &Px, n, sizeof (GrB_Index), msg)) ;
+    //--------------------------------------------------------------------------
+    // create the Parent Matrix and Container
+    //--------------------------------------------------------------------------
 
-    // create Cp = 0:n (always 64-bit) and the empty C matrix
-    GRB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
-    GRB_TRY (GrB_Vector_new (&t, GrB_INT64, n+1)) ;
-    GRB_TRY (GrB_assign (t, NULL, NULL, 0, GrB_ALL, n+1, NULL)) ;
-    GRB_TRY (GrB_apply (t, NULL, NULL, GrB_ROWINDEX_INT64, t, 0, NULL)) ;
-    GRB_TRY (GxB_Vector_unpack_Full (t, (void **) &Cp, &Cp_size, NULL, NULL)) ;
-    GRB_TRY (GrB_free (&t)) ;
+    // The Parent matrix is held in the Parent_Container nearly all the time,
+    // except for a single call to GrB_mxv in the fastsv method.  It is n-by-n
+    // in sparse CSC form, with exactly one entry per column.  That entry is
+    // Parent(i,j) if i = parent(j).  The Parent matrix is iso-valued since no
+    // operation needs its values.  Only its structure is used.
+
+    GRB_TRY (GrB_Matrix_new (&Parent, GrB_BOOL, n, n)) ;
+
+    // While the Parent_Container holds the data, instead of the Parent matrix,
+    // the parent vector is an alias to Parent_Container->i.  Thus, at any
+    // given moment, either the parent vector exists, or the Parent matrix
+    // exists.
+
+    GRB_TRY (GxB_Container_new (&Parent_Container)) ;
+
+    // Parent_Container->p = 0:n
+    GRB_TRY (GrB_Vector_free (&(Parent_Container->p))) ;
+    GRB_TRY (GrB_Vector_new (&(Parent_Container->p), Uint, n+1)) ;
+    GRB_TRY (GrB_assign (Parent_Container->p, NULL, NULL, 0, GrB_ALL, n+1,
+        NULL)) ;
+    GRB_TRY (GrB_apply (Parent_Container->p, NULL, NULL, ramp, 
+        Parent_Container->p, 0, NULL)) ;
+
+    // Parent_Container->x [0] = false, of length 1
+    GRB_TRY (GrB_Vector_free (&(Parent_Container->x))) ;
+    GRB_TRY (GrB_Vector_new (&(Parent_Container->x), GrB_BOOL, 1)) ;
+    GRB_TRY (GrB_assign (Parent_Container->x, NULL, NULL, 0, GrB_ALL, 1,
+        NULL)) ;
+
+    Parent_Container->nrows = n ;
+    Parent_Container->ncols = n ;
+    Parent_Container->nvals = n ;
+    Parent_Container->nrows_nonempty = -1 ;
+    Parent_Container->ncols_nonempty = n ;
+    Parent_Container->iso = true ;
+    Parent_Container->jumbled = false ;
+    Parent_Container->format = GxB_SPARSE ;
+    Parent_Container->orientation = GrB_COLMAJOR ;
+    Parent_Container->Y = NULL ;
+
+    // the GrB_Vector parent is identical to Parent_Container->i
+    GRB_TRY (GrB_Vector_free (&(Parent_Container->i))) ;
+    GRB_TRY (GrB_Vector_new (&(Parent_Container->i), Uint, n)) ;
+    parent = Parent_Container->i ;
 
     //--------------------------------------------------------------------------
     // warmup: parent = min (0:n-1, A*1) using the MIN_SECONDI semiring
     //--------------------------------------------------------------------------
 
-    // y (i) = min (i, j) for all entries A(i,j).  This warmup phase takes only
+    // parent (i) = min (i, j) for all entries A(i,j).  This warmup phase takes only
     // O(n) time, because of how the MIN_SECONDI semiring is implemented in
     // SuiteSparse:GraphBLAS.  A is held by row, and the first entry in A(i,:)
     // is the minimum index j, so only the first entry in A(i,:) needs to be
     // considered for each row i.
 
-    GRB_TRY (GrB_Vector_new (&t, Int, n)) ;
-    GRB_TRY (GrB_Vector_new (&y, Int, n)) ;
+    GRB_TRY (GrB_Vector_new (&t, Uint, n)) ;
     GRB_TRY (GrB_assign (t, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-    GRB_TRY (GrB_assign (y, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-    GRB_TRY (GrB_apply (y, NULL, NULL, ramp, y, 0, NULL)) ;
-    GRB_TRY (GrB_mxv (y, NULL, imin, min_2ndi, A, t, NULL)) ;
+    GRB_TRY (GrB_assign (parent, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_apply (parent, NULL, NULL, ramp, parent, 0, NULL)) ;
+    GRB_TRY (GrB_mxv (parent, NULL, imin, min_2ndi, A, t, NULL)) ;
     GRB_TRY (GrB_free (&t)) ;
 
-    // The typecast from Int to Uint is required because the ROWINDEX operator
-    // and MIN_SECONDI do not work in the UINT* domains, as built-in operators.
-    // parent = (Uint) y
-    GRB_TRY (GrB_Vector_new (&parent, Uint, n)) ;
-    GRB_TRY (GrB_assign (parent, NULL, NULL, y, GrB_ALL, n, NULL)) ;
-    GRB_TRY (GrB_free (&y)) ;
-
-    // copy parent into gp, mngp, and Px.  Px is a non-opaque 64-bit copy of the
-    // parent GrB_Vector.  The Px array is always of type GrB_Index since it
-    // must be used as the input array for extractTuples and as Ci for pack_CSR.
-    // If parent is uint32, GraphBLAS typecasts it to the uint64 Px array.
-    GRB_TRY (GrB_Vector_extractTuples (NULL, Px, &n, parent)) ;
+    // copy parent into gp and mngp.
     GRB_TRY (GrB_Vector_dup (&gp, parent)) ;
     GRB_TRY (GrB_Vector_dup (&mngp, parent)) ;
+
+    // allocate workspace vectors
     GRB_TRY (GrB_Vector_new (&gp_new, Uint, n)) ;
     GRB_TRY (GrB_Vector_new (&t, GrB_BOOL, n)) ;
+    GRB_TRY (GrB_Vector_new (&parent2, Uint, n)) ;
 
-//  printf ("\n========================== init6: parent\n") ; GxB_print (parent, 5) ;
+//  printf ("\n========================== init: parent\n") ; GxB_print (parent, 5) ;
 
     //--------------------------------------------------------------------------
     // sample phase
@@ -383,9 +421,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 // Other:
 //      give me 3 random items from the row (y = 3)
 //      give me the 4 biggest *values* in each row (y = 4)
-
-// mxv:
-//      C = A*diag(D)
 
         //----------------------------------------------------------------------
         // unpack A in CSR format
@@ -484,8 +519,22 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         // find the connected components of T
         //----------------------------------------------------------------------
 
-        LG_TRY (fastsv (T, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
-            C, &Cp, &Px, &Cx, msg)) ;
+        LG_TRY (fastsv (T, parent2, mngp, &gp, &gp_new, t, eq, min, min_2nd,
+            Parent, Parent_Container, msg)) ;
+
+        //----------------------------------------------------------------------
+        // unload the parent == Parent_Container->i vector into the Px array
+        //----------------------------------------------------------------------
+
+        int handling = 0 ;
+        GrB_Type type = NULL ;
+        GRB_TRY (GxB_Vector_unload (parent, &Px, &type, &n, &Px_size,
+            &handling, NULL)) ;
+        uint32_t *Px32 = (type == GrB_UINT32) ? Px : NULL ;
+        uint64_t *Px64 = (type == GrB_UINT32) ? NULL : Px ;
+        #define PARENT(i) (Px32 ? Px32 [i] : Px64 [i])
+
+        // At this pointer, the
 
         //----------------------------------------------------------------------
         // use sampling to estimate the largest connected component in T
@@ -518,8 +567,9 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         int max_count = 0 ;         // frequency of most frequent entry
         for (int64_t k = 0 ; k < HASH_SAMPLES ; k++)
         {
-            // select an entry from Px at random
-            GrB_Index x = Px [LG_Random60 (&seed) % n] ;
+            // select an entry ii from PARENT at random
+            uint64_t i = LG_Random60 (&seed) % n ;
+            GrB_Index x = PARENT (i) ;
             // find x in the hash table
             GrB_Index h = HASH (x) ;
             while (ht_key [h] != UINT64_MAX && ht_key [h] != x) h = NEXT (h) ;
@@ -570,7 +620,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
             // and constructs T(i,:) for all rows in this range.
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
-                int64_t pi = Px [i] ;   // pi = parent (i)
+                int64_t pi = PARENT (i) ;
                 Tp [i] = p ;            // start the construction of T(i,:)
                 // T(i,:) is empty if pi == key
                 if (pi != key)
@@ -580,19 +630,19 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
                     {
                         // get A(i,j)
                         int64_t j = Aj [pS] ;
-                        if (Px [j] != key)
+                        if (PARENT (j) != key)
                         {
                             // add the entry T(i,j) to T, but skip it if
-                            // Px [j] is equal to key
+                            // PARENT (j) is equal to key
                             Tj [p++] = j ;
                         }
                     }
                     // Add the entry T(i,key) if there is room for it in T(i,:);
                     // if and only if node i is adjacent to a node j in the
                     // largest component.  The only way there can be space if
-                    // at least one T(i,j) appears with Px [j] equal to the key
+                    // at least one T(i,j) appears with PARENT (j) equal to the key
                     // (that is, node j is in the largest connected component,
-                    // key == Px [j].  One of these j's can then be replaced
+                    // key == PARENT (j).  One of these j's can then be replaced
                     // with the key.  If node i is not adjacent to any node in
                     // the largest component, then there is no space in T(i,:)
                     // and no new edge to the largest component is added.
@@ -638,6 +688,13 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         GRB_TRY (GxB_Matrix_pack_CSR (A, &Ap, &Aj, &Ax, Ap_size, Aj_size,
             Ax_size, A_iso, A_jumbled, NULL)) ;
 
+        //----------------------------------------------------------------------
+        // load the Px array back into the parent == Parent_Container->i vector
+        //----------------------------------------------------------------------
+
+        GRB_TRY (GxB_Vector_load (parent, &Px, type, n, Px_size,
+            GrB_DEFAULT, NULL)) ;
+
 // ].  The unpack/pack of A into Ap, Aj, Ax will not be needed, and G->A
 // will become truly a read-only matrix.
 
@@ -655,6 +712,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     if (nvals == 0)
     {
         (*component) = parent ;
+        Parent_Container->i = NULL ;        // do not free the parent vector
         LG_FREE_WORK ;
         return (GrB_SUCCESS) ;
     }
@@ -663,15 +721,18 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     // final phase
     //--------------------------------------------------------------------------
 
-    LG_TRY (fastsv (A, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
-        C, &Cp, &Px, &Cx, msg)) ;
+    LG_TRY (fastsv (A, parent2, mngp, &gp, &gp_new, t, eq, min, min_2nd,
+        Parent, Parent_Container, msg)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
 
     (*component) = parent ;
+    Parent_Container->i = NULL ;        // do not free the parent vector
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #endif
 }

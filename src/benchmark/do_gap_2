@@ -25,6 +25,12 @@
 #
 #       ./do_gap_all grb /my/stuff/GAP > myoutput.txt
 
+export OMP_PLACES=cores
+export OMP_PROC_BIND=spread
+export OMP_DISPLAY_ENV=true
+hostname
+printenv | grep OMP
+
 if [ -z "$1" ]; then KIND="mtx" ; else KIND=$1 ; fi
 echo "Matrix input file format: " $KIND
 
