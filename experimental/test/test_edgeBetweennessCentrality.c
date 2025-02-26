@@ -139,8 +139,10 @@ void test_diamonds_ebc (void)
 {
     LAGraph_Init (msg) ;
     GrB_Matrix A = NULL ;
+    GrB_Matrix AT = NULL ;
     GrB_Matrix centrality = NULL ;
     int niters = 0 ;
+    LAGraph_Kind kind = LAGraph_ADJACENCY_DIRECTED ;
 
     // create the karate graph
     snprintf (filename, LEN, LG_DATA_DIR "%s", "diamonds.mtx") ;
@@ -148,8 +150,18 @@ void test_diamonds_ebc (void)
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
-    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, kind, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+    OK (GrB_transpose(AT, NULL, NULL, A, GrB_DESC_R)) ;
+    G->AT = AT;
+
+    // check that AT is cached
+    int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+        LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+    int result = LAGraph_Cached_AT (G, msg) ;
+    TEST_CHECK (result == ok_result) ;
+
 
     // compute its betweenness centrality
     OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;

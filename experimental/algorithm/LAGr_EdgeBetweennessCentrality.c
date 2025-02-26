@@ -116,6 +116,7 @@ int LAGr_EdgeBetweennessCentrality
 
     GrB_BinaryOp Add_One_Divide = NULL ;
 
+    GrB_Matrix centrality_temp = NULL;    
 
     // Temporary workspace matrix (sparse).
     // GrB_Matrix W = NULL ;
@@ -162,8 +163,9 @@ int LAGr_EdgeBetweennessCentrality
     GRB_TRY (GrB_Vector_new (&bc_update, GrB_FP64, n)) ;
 
 
-    // Initialize centrality matrix with zeros using A as structural mask
-    GRB_TRY (GrB_assign (centrality, A, NULL, 0.0, GrB_ALL, n, GrB_ALL, n, NULL)) ;
+    // Initialize centrality_temp matrix with zeros using A as structural mask
+    LG_TRY (GrB_Matrix_new(&centrality_temp, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_assign (centrality_temp, A, NULL, 0.0, GrB_ALL, n, GrB_ALL, n, NULL)) ;
 
     // Initial frontier: frontier<!paths>= frontier*A
     // GRB_TRY (GrB_vxv (frontier, paths, NULL, LAGraph_plus_first_fp64,
@@ -176,14 +178,13 @@ int LAGr_EdgeBetweennessCentrality
     // === Breadth-first search stage ==========================================
     // =========================================================================
 
-    bool last_was_pull = false ;
     GrB_Index frontier_size, last_frontier_size = 0 ;
     GRB_TRY (GrB_Vector_nvals (&frontier_size, frontier)) ;
 
     int64_t depth, root ;
-    for (root = 1 ; root <= n ; root++)
+    for (root = 0 ; root < n ; root++)
     {
-
+        printf("root: %ld \n", root) ;
         depth = 0 ;
         S [root] = NULL ;
         LG_TRY (LAGraph_Vector_Structure (&(S [root]), frontier, msg)) ;
@@ -197,6 +198,9 @@ int LAGr_EdgeBetweennessCentrality
 
         // Extract row root from A into frontier vector: frontier = A(root,:)
         GRB_TRY (GrB_Col_extract (frontier, NULL, NULL, A, GrB_ALL, n, root, NULL)) ;
+        GRB_TRY (GrB_Vector_nvals (&frontier_size, frontier)) ;
+
+        GxB_print(frontier, 5) ;
 
         while (frontier_size != 0)
         {
@@ -229,9 +233,12 @@ int LAGr_EdgeBetweennessCentrality
             //----------------------------------------------------------------------
 
             last_frontier_size = frontier_size ;
-            GRB_TRY (GrB_Matrix_nvals (&frontier_size, frontier)) ;
+            GRB_TRY (GrB_Vector_nvals (&frontier_size, frontier)) ;
         }
     }
+
+    printf("  after:\n") ;
+    GxB_print(frontier, 5) ;
 
     GRB_TRY (GrB_free (&frontier)) ;
 
@@ -273,7 +280,9 @@ int LAGr_EdgeBetweennessCentrality
         GrB_Vector I_vec ;
         GRB_TRY (GrB_Vector_new (&I_vec, GrB_FP64, n)) ;
 
-        GRB_TRY (GrB_Vector_extract (I_vec, f_d1, NULL, paths, depth-1, 1, GrB_DESC_R)) ;
+        GrB_Index idx[1];
+        idx[0] = depth-1;
+        GRB_TRY (GrB_Vector_extract (I_vec, f_d1, NULL, paths, idx, 1, NULL)) ;
 
         GrB_Matrix I_matrix ;
         GRB_TRY (GrB_Matrix_diag(&I_matrix, I_vec, 0)) ;
@@ -293,7 +302,9 @@ int LAGr_EdgeBetweennessCentrality
 
 
         // 22 B = B + U
-        GRB_TRY (GrB_assign(centrality, centrality, GrB_PLUS_FP64, U, GrB_ALL, n, GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_assign(centrality_temp, centrality_temp, GrB_PLUS_FP64, U, GrB_ALL, n, GrB_ALL, n, NULL)) ;
+        //  GRB_TRY (GrB_eWiseAdd (*centrality_temp, NULL, GrB_PLUS_FP64, U, *centrality, NULL)) ;
+
 
         // 23 v = U +.
         GrB_Vector temp_update ; 
@@ -314,7 +325,9 @@ int LAGr_EdgeBetweennessCentrality
     // === finalize the centrality =============================================
     // =========================================================================
 
-    GxB_print(*centrality, GxB_COMPLETE) ;
+    GxB_print(centrality_temp, GxB_COMPLETE) ;
+    
+    *centrality = centrality_temp;
 
     // Initialize the centrality array with -n to avoid counting
     // zero length paths
