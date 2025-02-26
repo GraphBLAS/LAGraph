@@ -96,6 +96,7 @@ void test_cc_matrices (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
+        GxB_print (A, 2) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
         GrB_Index n ;
@@ -108,7 +109,7 @@ void test_cc_matrices (void)
         for (int trial = 0 ; trial <= 1 ; trial++)
         {
             // find the connected components
-            printf ("\n--- CC: FastSV6 if SuiteSparse, Boruvka if vanilla:\n") ;
+            printf ("\n--- CC: FastSV6/7 if SuiteSparse, Boruvka vanilla:\n") ;
             OK (LAGr_ConnectedComponents (&C, G, msg)) ;
             OK (LAGraph_Vector_Print (C, 2, stdout, msg)) ;
 

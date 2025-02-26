@@ -1,0 +1,836 @@
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Connected Components
+======================================================================
+csce-4cs2q54.engr.tamu.edu
+OMP_PLACES=cores
+OMP_PROC_BIND=spread
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+threads to test:  32
+
+../../../GAP/GAP-urand/GAP-urand.grb:
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+A converted to 32-bit
+read time: 28.4677
+SV7     0.518074 (12.2%) init
+SV7     3.723222 (87.8%) total sampling:
+SV7            0.029747 ( 0.7%) setup T
+SV7            0.469019 (11.1%) create T
+SV7            3.171607 (74.8%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.052774 ( 1.2%) prune
+SV7     0.000000 ( 0.0%) total final
+nCC:                    1
+# of trials: 16
+
+SV7     0.445444 (11.9%) init
+SV7     3.290753 (88.1%) total sampling:
+SV7            0.012882 ( 0.3%) setup T
+SV7            0.419649 (11.2%) create T
+SV7            2.805424 (75.1%) fastsv sample
+SV7            0.000075 ( 0.0%) hash
+SV7            0.052723 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  0 time:     3.7362 sec
+SV7     0.445596 (11.8%) init
+SV7     3.316987 (88.2%) total sampling:
+SV7            0.012828 ( 0.3%) setup T
+SV7            0.421419 (11.2%) create T
+SV7            2.826922 (75.1%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.055744 ( 1.5%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  1 time:     3.7626 sec
+SV7     0.445633 (11.9%) init
+SV7     3.290482 (88.1%) total sampling:
+SV7            0.012804 ( 0.3%) setup T
+SV7            0.418839 (11.2%) create T
+SV7            2.805952 (75.1%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.052815 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  2 time:     3.7361 sec
+SV7     0.449713 (12.0%) init
+SV7     3.282732 (88.0%) total sampling:
+SV7            0.012786 ( 0.3%) setup T
+SV7            0.411166 (11.0%) create T
+SV7            2.806010 (75.2%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.052697 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  3 time:     3.7325 sec
+SV7     0.449694 (12.0%) init
+SV7     3.298059 (88.0%) total sampling:
+SV7            0.012855 ( 0.3%) setup T
+SV7            0.424256 (11.3%) create T
+SV7            2.808041 (74.9%) fastsv sample
+SV7            0.000077 ( 0.0%) hash
+SV7            0.052829 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  4 time:     3.7478 sec
+SV7     0.450519 (12.1%) init
+SV7     3.278057 (87.9%) total sampling:
+SV7            0.012794 ( 0.3%) setup T
+SV7            0.410160 (11.0%) create T
+SV7            2.802352 (75.2%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.052679 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  5 time:     3.7286 sec
+SV7     0.450435 (11.9%) init
+SV7     3.324418 (88.1%) total sampling:
+SV7            0.013177 ( 0.3%) setup T
+SV7            0.416457 (11.0%) create T
+SV7            2.841932 (75.3%) fastsv sample
+SV7            0.000073 ( 0.0%) hash
+SV7            0.052778 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  6 time:     3.7749 sec
+SV7     0.445887 (11.9%) init
+SV7     3.297473 (88.1%) total sampling:
+SV7            0.012821 ( 0.3%) setup T
+SV7            0.416267 (11.1%) create T
+SV7            2.815163 (75.2%) fastsv sample
+SV7            0.000078 ( 0.0%) hash
+SV7            0.053144 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  7 time:     3.7434 sec
+SV7     0.445801 (12.0%) init
+SV7     3.276606 (88.0%) total sampling:
+SV7            0.012837 ( 0.3%) setup T
+SV7            0.414419 (11.1%) create T
+SV7            2.796550 (75.1%) fastsv sample
+SV7            0.000073 ( 0.0%) hash
+SV7            0.052726 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  8 time:     3.7224 sec
+SV7     0.445537 (11.9%) init
+SV7     3.288484 (88.1%) total sampling:
+SV7            0.012850 ( 0.3%) setup T
+SV7            0.410431 (11.0%) create T
+SV7            2.812329 (75.3%) fastsv sample
+SV7            0.000076 ( 0.0%) hash
+SV7            0.052799 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  9 time:     3.7340 sec
+SV7     0.454276 (12.2%) init
+SV7     3.272662 (87.8%) total sampling:
+SV7            0.012968 ( 0.3%) setup T
+SV7            0.411315 (11.0%) create T
+SV7            2.795617 (75.0%) fastsv sample
+SV7            0.000073 ( 0.0%) hash
+SV7            0.052688 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial: 10 time:     3.7270 sec
+SV7     0.457290 (12.1%) init
+SV7     3.331629 (87.9%) total sampling:
+SV7            0.012816 ( 0.3%) setup T
+SV7            0.409709 (10.8%) create T
+SV7            2.850984 (75.2%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.058047 ( 1.5%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial: 11 time:     3.7889 sec
+SV7     0.458587 (12.2%) init
+SV7     3.290249 (87.8%) total sampling:
+SV7            0.013299 ( 0.4%) setup T
+SV7            0.412435 (11.0%) create T
+SV7            2.811616 (75.0%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.052824 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial: 12 time:     3.7489 sec
+SV7     0.446213 (11.9%) init
+SV7     3.314589 (88.1%) total sampling:
+SV7            0.012806 ( 0.3%) setup T
+SV7            0.421566 (11.2%) create T
+SV7            2.827409 (75.2%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.052734 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial: 13 time:     3.7608 sec
+SV7     0.445690 (11.8%) init
+SV7     3.346408 (88.2%) total sampling:
+SV7            0.012815 ( 0.3%) setup T
+SV7            0.420475 (11.1%) create T
+SV7            2.857054 (75.3%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.055989 ( 1.5%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial: 14 time:     3.7921 sec
+SV7     0.445393 (11.9%) init
+SV7     3.292441 (88.1%) total sampling:
+SV7            0.012803 ( 0.3%) setup T
+SV7            0.419008 (11.2%) create T
+SV7            2.807726 (75.1%) fastsv sample
+SV7            0.000070 ( 0.0%) hash
+SV7            0.052835 ( 1.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial: 15 time:     3.7379 sec
+Avg: CC threads  32:      3.748 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+threads to test:  32
+
+../../../GAP/GAP-kron/GAP-kron.grb:
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+A converted to 32-bit
+read time: 32.1092
+SV7     0.392267 (14.2%) init
+SV7     2.125905 (77.1%) total sampling:
+SV7            0.012877 ( 0.5%) setup T
+SV7            0.145016 ( 5.3%) create T
+SV7            1.887770 (68.5%) fastsv sample
+SV7            0.000085 ( 0.0%) hash
+SV7            0.080157 ( 2.9%) prune
+SV7     0.237437 ( 8.6%) total final
+nCC:                7e+07
+# of trials: 16
+
+SV7     0.336724 (12.6%) init
+SV7     2.098005 (78.5%) total sampling:
+SV7            0.012824 ( 0.5%) setup T
+SV7            0.144108 ( 5.4%) create T
+SV7            1.860744 (69.6%) fastsv sample
+SV7            0.000084 ( 0.0%) hash
+SV7            0.080245 ( 3.0%) prune
+SV7     0.238153 ( 8.9%) total final
+SV6:      nthreads: 32 trial:  0 time:     2.6729 sec
+SV7     0.336422 (12.6%) init
+SV7     2.092669 (78.3%) total sampling:
+SV7            0.012851 ( 0.5%) setup T
+SV7            0.144379 ( 5.4%) create T
+SV7            1.855570 (69.4%) fastsv sample
+SV7            0.000080 ( 0.0%) hash
+SV7            0.079789 ( 3.0%) prune
+SV7     0.242756 ( 9.1%) total final
+SV6:      nthreads: 32 trial:  1 time:     2.6719 sec
+SV7     0.336308 (12.4%) init
+SV7     2.127479 (78.6%) total sampling:
+SV7            0.012876 ( 0.5%) setup T
+SV7            0.158907 ( 5.9%) create T
+SV7            1.875248 (69.3%) fastsv sample
+SV7            0.000081 ( 0.0%) hash
+SV7            0.080366 ( 3.0%) prune
+SV7     0.241963 ( 8.9%) total final
+SV6:      nthreads: 32 trial:  2 time:     2.7058 sec
+SV7     0.336744 (12.5%) init
+SV7     2.103752 (78.4%) total sampling:
+SV7            0.012798 ( 0.5%) setup T
+SV7            0.154500 ( 5.8%) create T
+SV7            1.854695 (69.1%) fastsv sample
+SV7            0.000082 ( 0.0%) hash
+SV7            0.081677 ( 3.0%) prune
+SV7     0.243401 ( 9.1%) total final
+SV6:      nthreads: 32 trial:  3 time:     2.6839 sec
+SV7     0.336377 (12.5%) init
+SV7     2.109544 (78.6%) total sampling:
+SV7            0.013057 ( 0.5%) setup T
+SV7            0.150183 ( 5.6%) create T
+SV7            1.860636 (69.3%) fastsv sample
+SV7            0.000079 ( 0.0%) hash
+SV7            0.085589 ( 3.2%) prune
+SV7     0.238907 ( 8.9%) total final
+SV6:      nthreads: 32 trial:  4 time:     2.6848 sec
+SV7     0.351185 (12.7%) init
+SV7     2.171395 (78.7%) total sampling:
+SV7            0.014914 ( 0.5%) setup T
+SV7            0.145900 ( 5.3%) create T
+SV7            1.930284 (69.9%) fastsv sample
+SV7            0.000084 ( 0.0%) hash
+SV7            0.080212 ( 2.9%) prune
+SV7     0.238061 ( 8.6%) total final
+SV6:      nthreads: 32 trial:  5 time:     2.7607 sec
+SV7     0.341508 (12.7%) init
+SV7     2.116579 (78.5%) total sampling:
+SV7            0.012936 ( 0.5%) setup T
+SV7            0.144282 ( 5.4%) create T
+SV7            1.879291 (69.7%) fastsv sample
+SV7            0.000081 ( 0.0%) hash
+SV7            0.079990 ( 3.0%) prune
+SV7     0.237951 ( 8.8%) total final
+SV6:      nthreads: 32 trial:  6 time:     2.6961 sec
+SV7     0.349837 (13.0%) init
+SV7     2.094370 (78.1%) total sampling:
+SV7            0.012794 ( 0.5%) setup T
+SV7            0.144884 ( 5.4%) create T
+SV7            1.856651 (69.2%) fastsv sample
+SV7            0.000080 ( 0.0%) hash
+SV7            0.079960 ( 3.0%) prune
+SV7     0.238257 ( 8.9%) total final
+SV6:      nthreads: 32 trial:  7 time:     2.6825 sec
+SV7     0.339403 (12.5%) init
+SV7     2.138205 (78.7%) total sampling:
+SV7            0.012913 ( 0.5%) setup T
+SV7            0.144931 ( 5.3%) create T
+SV7            1.900367 (70.0%) fastsv sample
+SV7            0.000084 ( 0.0%) hash
+SV7            0.079909 ( 2.9%) prune
+SV7     0.238037 ( 8.8%) total final
+SV6:      nthreads: 32 trial:  8 time:     2.7157 sec
+SV7     0.336494 (12.5%) init
+SV7     2.120656 (78.7%) total sampling:
+SV7            0.012842 ( 0.5%) setup T
+SV7            0.144133 ( 5.3%) create T
+SV7            1.883380 (69.9%) fastsv sample
+SV7            0.000079 ( 0.0%) hash
+SV7            0.080221 ( 3.0%) prune
+SV7     0.238251 ( 8.8%) total final
+SV6:      nthreads: 32 trial:  9 time:     2.6954 sec
+SV7     0.337444 (12.6%) init
+SV7     2.097269 (78.5%) total sampling:
+SV7            0.012872 ( 0.5%) setup T
+SV7            0.144233 ( 5.4%) create T
+SV7            1.860260 (69.6%) fastsv sample
+SV7            0.000080 ( 0.0%) hash
+SV7            0.079824 ( 3.0%) prune
+SV7     0.237842 ( 8.9%) total final
+SV6:      nthreads: 32 trial: 10 time:     2.6726 sec
+SV7     0.336520 (12.3%) init
+SV7     2.106173 (76.7%) total sampling:
+SV7            0.013051 ( 0.5%) setup T
+SV7            0.144831 ( 5.3%) create T
+SV7            1.859537 (67.7%) fastsv sample
+SV7            0.000080 ( 0.0%) hash
+SV7            0.088674 ( 3.2%) prune
+SV7     0.302584 (11.0%) total final
+SV6:      nthreads: 32 trial: 11 time:     2.7453 sec
+SV7     0.336571 (12.6%) init
+SV7     2.095815 (78.2%) total sampling:
+SV7            0.012831 ( 0.5%) setup T
+SV7            0.144390 ( 5.4%) create T
+SV7            1.858629 (69.4%) fastsv sample
+SV7            0.000082 ( 0.0%) hash
+SV7            0.079884 ( 3.0%) prune
+SV7     0.247193 ( 9.2%) total final
+SV6:      nthreads: 32 trial: 12 time:     2.6796 sec
+SV7     0.336709 (12.5%) init
+SV7     2.101236 (78.2%) total sampling:
+SV7            0.012857 ( 0.5%) setup T
+SV7            0.144458 ( 5.4%) create T
+SV7            1.863700 (69.4%) fastsv sample
+SV7            0.000077 ( 0.0%) hash
+SV7            0.080144 ( 3.0%) prune
+SV7     0.247803 ( 9.2%) total final
+SV6:      nthreads: 32 trial: 13 time:     2.6858 sec
+SV7     0.337016 (12.5%) init
+SV7     2.120705 (78.4%) total sampling:
+SV7            0.012940 ( 0.5%) setup T
+SV7            0.155399 ( 5.7%) create T
+SV7            1.868738 (69.1%) fastsv sample
+SV7            0.000080 ( 0.0%) hash
+SV7            0.083549 ( 3.1%) prune
+SV7     0.246581 ( 9.1%) total final
+SV6:      nthreads: 32 trial: 14 time:     2.7043 sec
+SV7     0.402712 (14.7%) init
+SV7     2.101432 (76.6%) total sampling:
+SV7            0.013292 ( 0.5%) setup T
+SV7            0.146203 ( 5.3%) create T
+SV7            1.859955 (67.8%) fastsv sample
+SV7            0.000086 ( 0.0%) hash
+SV7            0.081896 ( 3.0%) prune
+SV7     0.238570 ( 8.7%) total final
+SV6:      nthreads: 32 trial: 15 time:     2.7427 sec
+Avg: CC threads  32:      2.700 sec, graph: ../../../GAP/GAP-kron/GAP-kron.grb
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+threads to test:  32
+
+../../../GAP/GAP-twitter/GAP-twitter.grb:
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+A converted to 32-bit
+forcing G-> to be symmetric (via A = A+A')
+read time: 24.4512
+SV7     0.173787 (14.7%) init
+SV7     0.798796 (67.7%) total sampling:
+SV7            0.006141 ( 0.5%) setup T
+SV7            0.108928 ( 9.2%) create T
+SV7            0.653642 (55.4%) fastsv sample
+SV7            0.000075 ( 0.0%) hash
+SV7            0.030009 ( 2.5%) prune
+SV7     0.207047 (17.6%) total final
+nCC:                2e+07
+# of trials: 16
+
+SV7     0.179686 (15.1%) init
+SV7     0.801743 (67.5%) total sampling:
+SV7            0.006191 ( 0.5%) setup T
+SV7            0.108892 ( 9.2%) create T
+SV7            0.656629 (55.2%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.029958 ( 2.5%) prune
+SV7     0.207217 (17.4%) total final
+SV6:      nthreads: 32 trial:  0 time:     1.1887 sec
+SV7     0.172998 (14.6%) init
+SV7     0.800083 (67.8%) total sampling:
+SV7            0.006191 ( 0.5%) setup T
+SV7            0.109019 ( 9.2%) create T
+SV7            0.654871 (55.5%) fastsv sample
+SV7            0.000073 ( 0.0%) hash
+SV7            0.029928 ( 2.5%) prune
+SV7     0.207825 (17.6%) total final
+SV6:      nthreads: 32 trial:  1 time:     1.1809 sec
+SV7     0.177362 (14.8%) init
+SV7     0.795233 (66.5%) total sampling:
+SV7            0.006208 ( 0.5%) setup T
+SV7            0.108875 ( 9.1%) create T
+SV7            0.649978 (54.3%) fastsv sample
+SV7            0.000075 ( 0.0%) hash
+SV7            0.030097 ( 2.5%) prune
+SV7     0.223383 (18.7%) total final
+SV6:      nthreads: 32 trial:  2 time:     1.1960 sec
+SV7     0.173015 (14.6%) init
+SV7     0.804424 (67.9%) total sampling:
+SV7            0.006208 ( 0.5%) setup T
+SV7            0.108926 ( 9.2%) create T
+SV7            0.659081 (55.6%) fastsv sample
+SV7            0.000076 ( 0.0%) hash
+SV7            0.030132 ( 2.5%) prune
+SV7     0.207098 (17.5%) total final
+SV6:      nthreads: 32 trial:  3 time:     1.1845 sec
+SV7     0.172869 (14.6%) init
+SV7     0.800312 (67.7%) total sampling:
+SV7            0.006303 ( 0.5%) setup T
+SV7            0.108946 ( 9.2%) create T
+SV7            0.655033 (55.4%) fastsv sample
+SV7            0.000076 ( 0.0%) hash
+SV7            0.029953 ( 2.5%) prune
+SV7     0.209651 (17.7%) total final
+SV6:      nthreads: 32 trial:  4 time:     1.1828 sec
+SV7     0.172887 (14.6%) init
+SV7     0.799476 (67.7%) total sampling:
+SV7            0.006214 ( 0.5%) setup T
+SV7            0.112184 ( 9.5%) create T
+SV7            0.651069 (55.1%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.029936 ( 2.5%) prune
+SV7     0.208879 (17.7%) total final
+SV6:      nthreads: 32 trial:  5 time:     1.1813 sec
+SV7     0.172861 (13.9%) init
+SV7     0.860318 (69.3%) total sampling:
+SV7            0.006199 ( 0.5%) setup T
+SV7            0.109130 ( 8.8%) create T
+SV7            0.713732 (57.5%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.031182 ( 2.5%) prune
+SV7     0.208558 (16.8%) total final
+SV6:      nthreads: 32 trial:  6 time:     1.2417 sec
+SV7     0.172685 (14.6%) init
+SV7     0.805967 (68.0%) total sampling:
+SV7            0.006205 ( 0.5%) setup T
+SV7            0.108909 ( 9.2%) create T
+SV7            0.660830 (55.7%) fastsv sample
+SV7            0.000073 ( 0.0%) hash
+SV7            0.029950 ( 2.5%) prune
+SV7     0.207431 (17.5%) total final
+SV6:      nthreads: 32 trial:  7 time:     1.1861 sec
+SV7     0.172956 (14.6%) init
+SV7     0.803962 (67.9%) total sampling:
+SV7            0.006184 ( 0.5%) setup T
+SV7            0.109313 ( 9.2%) create T
+SV7            0.658471 (55.6%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.029920 ( 2.5%) prune
+SV7     0.207130 (17.5%) total final
+SV6:      nthreads: 32 trial:  8 time:     1.1841 sec
+SV7     0.183376 (15.4%) init
+SV7     0.795246 (66.6%) total sampling:
+SV7            0.006335 ( 0.5%) setup T
+SV7            0.108876 ( 9.1%) create T
+SV7            0.649939 (54.5%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.030021 ( 2.5%) prune
+SV7     0.214910 (18.0%) total final
+SV6:      nthreads: 32 trial:  9 time:     1.1935 sec
+SV7     0.173761 (14.7%) init
+SV7     0.802738 (67.8%) total sampling:
+SV7            0.006245 ( 0.5%) setup T
+SV7            0.108938 ( 9.2%) create T
+SV7            0.657527 (55.5%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.029954 ( 2.5%) prune
+SV7     0.208340 (17.6%) total final
+SV6:      nthreads: 32 trial: 10 time:     1.1849 sec
+SV7     0.172812 (14.5%) init
+SV7     0.802190 (67.2%) total sampling:
+SV7            0.006209 ( 0.5%) setup T
+SV7            0.108958 ( 9.1%) create T
+SV7            0.656989 (55.1%) fastsv sample
+SV7            0.000071 ( 0.0%) hash
+SV7            0.029962 ( 2.5%) prune
+SV7     0.218336 (18.3%) total final
+SV6:      nthreads: 32 trial: 11 time:     1.1933 sec
+SV7     0.172961 (14.6%) init
+SV7     0.800572 (67.8%) total sampling:
+SV7            0.006208 ( 0.5%) setup T
+SV7            0.112529 ( 9.5%) create T
+SV7            0.651801 (55.2%) fastsv sample
+SV7            0.000073 ( 0.0%) hash
+SV7            0.029960 ( 2.5%) prune
+SV7     0.207479 (17.6%) total final
+SV6:      nthreads: 32 trial: 12 time:     1.1810 sec
+SV7     0.174918 (14.7%) init
+SV7     0.798068 (67.1%) total sampling:
+SV7            0.006195 ( 0.5%) setup T
+SV7            0.108869 ( 9.2%) create T
+SV7            0.652652 (54.9%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.030277 ( 2.5%) prune
+SV7     0.216465 (18.2%) total final
+SV6:      nthreads: 32 trial: 13 time:     1.1895 sec
+SV7     0.227927 (18.1%) init
+SV7     0.820099 (65.3%) total sampling:
+SV7            0.014798 ( 1.2%) setup T
+SV7            0.120704 ( 9.6%) create T
+SV7            0.654515 (52.1%) fastsv sample
+SV7            0.000074 ( 0.0%) hash
+SV7            0.030007 ( 2.4%) prune
+SV7     0.207785 (16.5%) total final
+SV6:      nthreads: 32 trial: 14 time:     1.2558 sec
+SV7     0.173143 (14.4%) init
+SV7     0.820164 (68.3%) total sampling:
+SV7            0.006216 ( 0.5%) setup T
+SV7            0.108912 ( 9.1%) create T
+SV7            0.674984 (56.2%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.029981 ( 2.5%) prune
+SV7     0.207705 (17.3%) total final
+SV6:      nthreads: 32 trial: 15 time:     1.2010 sec
+Avg: CC threads  32:      1.195 sec, graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+threads to test:  32
+
+../../../GAP/GAP-web/GAP-web.grb:
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+A converted to 32-bit
+forcing G-> to be symmetric (via A = A+A')
+read time: 18.9497
+SV7     0.165561 (10.0%) init
+SV7     1.107138 (67.1%) total sampling:
+SV7            0.005166 ( 0.3%) setup T
+SV7            0.135715 ( 8.2%) create T
+SV7            0.881146 (53.4%) fastsv sample
+SV7            0.000077 ( 0.0%) hash
+SV7            0.085034 ( 5.2%) prune
+SV7     0.376147 (22.8%) total final
+nCC:                1e+02
+# of trials: 16
+
+SV7     0.164875 ( 9.9%) init
+SV7     1.113681 (66.9%) total sampling:
+SV7            0.005188 ( 0.3%) setup T
+SV7            0.132314 ( 8.0%) create T
+SV7            0.893774 (53.7%) fastsv sample
+SV7            0.000071 ( 0.0%) hash
+SV7            0.082334 ( 4.9%) prune
+SV7     0.385088 (23.1%) total final
+SV6:      nthreads: 32 trial:  0 time:     1.6637 sec
+SV7     0.164315 (10.0%) init
+SV7     1.110390 (67.5%) total sampling:
+SV7            0.005167 ( 0.3%) setup T
+SV7            0.132276 ( 8.0%) create T
+SV7            0.890602 (54.1%) fastsv sample
+SV7            0.000071 ( 0.0%) hash
+SV7            0.082274 ( 5.0%) prune
+SV7     0.371133 (22.5%) total final
+SV6:      nthreads: 32 trial:  1 time:     1.6459 sec
+SV7     0.173924 (10.5%) init
+SV7     1.118031 (67.2%) total sampling:
+SV7            0.010959 ( 0.7%) setup T
+SV7            0.138883 ( 8.4%) create T
+SV7            0.884547 (53.2%) fastsv sample
+SV7            0.000070 ( 0.0%) hash
+SV7            0.083571 ( 5.0%) prune
+SV7     0.370968 (22.3%) total final
+SV6:      nthreads: 32 trial:  2 time:     1.6629 sec
+SV7     0.164411 ( 9.1%) init
+SV7     1.261574 (70.0%) total sampling:
+SV7            0.005184 ( 0.3%) setup T
+SV7            0.132404 ( 7.3%) create T
+SV7            1.041187 (57.8%) fastsv sample
+SV7            0.000070 ( 0.0%) hash
+SV7            0.082729 ( 4.6%) prune
+SV7     0.376417 (20.9%) total final
+SV6:      nthreads: 32 trial:  3 time:     1.8024 sec
+SV7     0.164553 (10.0%) init
+SV7     1.111238 (67.4%) total sampling:
+SV7            0.005175 ( 0.3%) setup T
+SV7            0.132350 ( 8.0%) create T
+SV7            0.891455 (54.1%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.082186 ( 5.0%) prune
+SV7     0.372212 (22.6%) total final
+SV6:      nthreads: 32 trial:  4 time:     1.6480 sec
+SV7     0.164972 (10.0%) init
+SV7     1.114405 (67.5%) total sampling:
+SV7            0.005184 ( 0.3%) setup T
+SV7            0.132369 ( 8.0%) create T
+SV7            0.894419 (54.2%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.082359 ( 5.0%) prune
+SV7     0.371480 (22.5%) total final
+SV6:      nthreads: 32 trial:  5 time:     1.6509 sec
+SV7     0.164911 (10.0%) init
+SV7     1.109571 (67.2%) total sampling:
+SV7            0.005113 ( 0.3%) setup T
+SV7            0.134632 ( 8.2%) create T
+SV7            0.886284 (53.7%) fastsv sample
+SV7            0.000070 ( 0.0%) hash
+SV7            0.083471 ( 5.1%) prune
+SV7     0.377168 (22.8%) total final
+SV6:      nthreads: 32 trial:  6 time:     1.6517 sec
+SV7     0.164779 ( 9.9%) init
+SV7     1.105044 (66.7%) total sampling:
+SV7            0.005101 ( 0.3%) setup T
+SV7            0.132334 ( 8.0%) create T
+SV7            0.885317 (53.4%) fastsv sample
+SV7            0.000081 ( 0.0%) hash
+SV7            0.082210 ( 5.0%) prune
+SV7     0.386923 (23.4%) total final
+SV6:      nthreads: 32 trial:  7 time:     1.6568 sec
+SV7     0.164158 (10.0%) init
+SV7     1.106017 (67.3%) total sampling:
+SV7            0.005175 ( 0.3%) setup T
+SV7            0.132263 ( 8.0%) create T
+SV7            0.885981 (53.9%) fastsv sample
+SV7            0.000070 ( 0.0%) hash
+SV7            0.082527 ( 5.0%) prune
+SV7     0.374328 (22.8%) total final
+SV6:      nthreads: 32 trial:  8 time:     1.6445 sec
+SV7     0.164228 ( 9.4%) init
+SV7     1.219522 (69.5%) total sampling:
+SV7            0.005190 ( 0.3%) setup T
+SV7            0.142252 ( 8.1%) create T
+SV7            0.989396 (56.4%) fastsv sample
+SV7            0.000077 ( 0.0%) hash
+SV7            0.082607 ( 4.7%) prune
+SV7     0.370732 (21.1%) total final
+SV6:      nthreads: 32 trial:  9 time:     1.7545 sec
+SV7     0.164383 ( 9.8%) init
+SV7     1.120721 (67.1%) total sampling:
+SV7            0.005331 ( 0.3%) setup T
+SV7            0.132316 ( 7.9%) create T
+SV7            0.900804 (53.9%) fastsv sample
+SV7            0.000071 ( 0.0%) hash
+SV7            0.082199 ( 4.9%) prune
+SV7     0.385955 (23.1%) total final
+SV6:      nthreads: 32 trial: 10 time:     1.6711 sec
+SV7     0.164385 ( 9.8%) init
+SV7     1.136874 (68.0%) total sampling:
+SV7            0.005167 ( 0.3%) setup T
+SV7            0.146050 ( 8.7%) create T
+SV7            0.903128 (54.0%) fastsv sample
+SV7            0.000071 ( 0.0%) hash
+SV7            0.082458 ( 4.9%) prune
+SV7     0.371685 (22.2%) total final
+SV6:      nthreads: 32 trial: 11 time:     1.6730 sec
+SV7     0.172435 (10.4%) init
+SV7     1.116000 (67.2%) total sampling:
+SV7            0.005569 ( 0.3%) setup T
+SV7            0.132351 ( 8.0%) create T
+SV7            0.895813 (54.0%) fastsv sample
+SV7            0.000071 ( 0.0%) hash
+SV7            0.082195 ( 5.0%) prune
+SV7     0.371045 (22.4%) total final
+SV6:      nthreads: 32 trial: 12 time:     1.6595 sec
+SV7     0.164575 (10.0%) init
+SV7     1.106682 (66.9%) total sampling:
+SV7            0.005159 ( 0.3%) setup T
+SV7            0.132399 ( 8.0%) create T
+SV7            0.886805 (53.6%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.082247 ( 5.0%) prune
+SV7     0.382691 (23.1%) total final
+SV6:      nthreads: 32 trial: 13 time:     1.6540 sec
+SV7     0.164773 ( 9.8%) init
+SV7     1.107032 (65.6%) total sampling:
+SV7            0.005231 ( 0.3%) setup T
+SV7            0.132374 ( 7.8%) create T
+SV7            0.886983 (52.6%) fastsv sample
+SV7            0.000070 ( 0.0%) hash
+SV7            0.082374 ( 4.9%) prune
+SV7     0.415267 (24.6%) total final
+SV6:      nthreads: 32 trial: 14 time:     1.6871 sec
+SV7     0.226396 (13.3%) init
+SV7     1.106095 (65.0%) total sampling:
+SV7            0.005289 ( 0.3%) setup T
+SV7            0.132376 ( 7.8%) create T
+SV7            0.886076 (52.0%) fastsv sample
+SV7            0.000071 ( 0.0%) hash
+SV7            0.082283 ( 4.8%) prune
+SV7     0.370261 (21.7%) total final
+SV6:      nthreads: 32 trial: 15 time:     1.7028 sec
+Avg: CC threads  32:      1.677 sec, graph: ../../../GAP/GAP-web/GAP-web.grb
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+threads to test:  32
+
+../../../GAP/GAP-road/GAP-road.grb:
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+A converted to 32-bit
+read time: 0.969621
+SV7     0.111030 (14.8%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.641096 (85.2%) total final
+nCC:                    1
+# of trials: 16
+
+SV7     0.048218 ( 6.8%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.663575 (93.2%) total final
+SV6:      nthreads: 32 trial:  0 time:     0.7118 sec
+SV7     0.048014 ( 6.8%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.663272 (93.2%) total final
+SV6:      nthreads: 32 trial:  1 time:     0.7113 sec
+SV7     0.047821 ( 6.8%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.655730 (93.2%) total final
+SV6:      nthreads: 32 trial:  2 time:     0.7036 sec
+SV7     0.059679 ( 8.4%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.649756 (91.6%) total final
+SV6:      nthreads: 32 trial:  3 time:     0.7094 sec
+SV7     0.047770 ( 6.6%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.675378 (93.4%) total final
+SV6:      nthreads: 32 trial:  4 time:     0.7232 sec
+SV7     0.048020 ( 6.8%) init
+SV7     0.000001 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.658479 (93.2%) total final
+SV6:      nthreads: 32 trial:  5 time:     0.7065 sec
+SV7     0.047943 ( 6.5%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.694095 (93.5%) total final
+SV6:      nthreads: 32 trial:  6 time:     0.7420 sec
+SV7     0.112801 (13.8%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.704986 (86.2%) total final
+SV6:      nthreads: 32 trial:  7 time:     0.8178 sec
+SV7     0.048232 ( 6.8%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.665658 (93.2%) total final
+SV6:      nthreads: 32 trial:  8 time:     0.7139 sec
+SV7     0.048162 ( 6.8%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.663993 (93.2%) total final
+SV6:      nthreads: 32 trial:  9 time:     0.7122 sec
+SV7     0.047772 ( 6.8%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.655711 (93.2%) total final
+SV6:      nthreads: 32 trial: 10 time:     0.7035 sec
+SV7     0.055693 ( 7.9%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.651396 (92.1%) total final
+SV6:      nthreads: 32 trial: 11 time:     0.7071 sec
+SV7     0.047722 ( 6.6%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.675226 (93.4%) total final
+SV6:      nthreads: 32 trial: 12 time:     0.7230 sec
+SV7     0.048107 ( 6.8%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.656038 (93.2%) total final
+SV6:      nthreads: 32 trial: 13 time:     0.7042 sec
+SV7     0.048276 ( 6.8%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.657960 (93.2%) total final
+SV6:      nthreads: 32 trial: 14 time:     0.7062 sec
+SV7     0.049115 ( 6.9%) init
+SV7     0.000000 ( 0.0%) total sampling:
+SV7            0.000000 ( 0.0%) setup T
+SV7            0.000000 ( 0.0%) create T
+SV7            0.000000 ( 0.0%) fastsv sample
+SV7            0.000000 ( 0.0%) hash
+SV7            0.000000 ( 0.0%) prune
+SV7     0.662970 (93.1%) total final
+SV6:      nthreads: 32 trial: 15 time:     0.7121 sec
+Avg: CC threads  32:      0.719 sec, graph: ../../../GAP/GAP-road/GAP-road.grb

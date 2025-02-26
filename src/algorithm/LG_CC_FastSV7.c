@@ -40,11 +40,13 @@
 // structure is accessed.
 
 // NOTE: This function must not be called by multiple user threads at the same
-// time on the same graph G, since it unpacks G->A and then packs it back when
+// time on the same graph G, since it unloads G->A and loads it back when
 // done.  G->A is unchanged when the function returns, but during execution
 // G->A is empty.  This will be fixed once the todos are finished below, and
 // G->A will then become a truly read-only object (assuming GrB_wait (G->A)
 // has been done first).
+
+#define TIMINGS
 
 #define __STDC_WANT_LIB_EXT1__ 1
 #include <string.h>
@@ -53,12 +55,14 @@
 #include "LG_internal.h"
 
 #define USING_GRAPHBLAS_V10 0
-#if LAGRAPH_SUITESPARSE 
+#if LAGRAPH_SUITESPARSE
     #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
         #undef  USING_GRAPHBLAS_V10
         #define USING_GRAPHBLAS_V10 1
     #endif
 #endif
+
+double timings [16] ;
 
 #if USING_GRAPHBLAS_V10
 
@@ -137,6 +141,7 @@ static inline GrB_Info fastsv
         GRB_TRY (GxB_load_Matrix_from_Container (Parent, Parent_Container,
             NULL)) ;
 
+        // parent2 = min (parent2, Parent*mngp) using the min_2nd semiring
         GRB_TRY (GrB_mxv (parent2, NULL, min, min_2nd, Parent, mngp, NULL)) ;
 
         // unload the container to regain the parent vector
@@ -165,8 +170,6 @@ static inline GrB_Info fastsv
 
         // swap gp and gp_new
         GrB_Vector s = (*gp) ; (*gp) = (*gp_new) ; (*gp_new) = s ;
-
-//      printf ("\n========================== fastsv: parent\n") ; GxB_print (parent, 5) ;
     }
     return (GrB_SUCCESS) ;
 }
@@ -199,6 +202,8 @@ static inline GrB_Info fastsv
     GrB_free (&parent2) ;                       \
     GrB_free (&Parent) ;                        \
     GrB_free (&Parent_Container) ;              \
+    GrB_free (&A_Container) ;                   \
+    GrB_free (&T_Container) ;                   \
 }
 
 #undef  LG_FREE_ALL
@@ -207,6 +212,30 @@ static inline GrB_Info fastsv
     LG_FREE_WORK ;                              \
 }
 
+#endif
+
+// get/set macros for 32/64 bit arrays:
+#define AP(k) (Ap32 ? Ap32 [k] : Ap64 [k])
+#define AJ(k) (Aj32 ? Aj32 [k] : Aj64 [k])
+#define PARENT(i) (Px32 ? Px32 [i] : Px64 [i])
+#define TP(k) (Tp32 ? Tp32 [k] : Tp64 [k])
+#define TJ(k) (Tj32 ? Tj32 [k] : Tj64 [k])
+#define SET_TP(k,p) { if (Tp32) { Tp32 [k] = p ; } else { Tp64 [k] = p ; }}
+#define SET_TJ(k,i) { if (Tj32) { Tj32 [k] = i ; } else { Tj64 [k] = i ; }}
+
+#ifdef TIMINGS
+static void print_timings (double timings [16])
+{
+    double total = timings [0] + timings [1] + timings [2] ;
+    printf ("SV7 %12.6f (%4.1f%%) init\n", timings [0], 100. * timings [0] / total) ;
+    printf ("SV7 %12.6f (%4.1f%%) total sampling:\n", timings [1], 100. * timings [1] / total) ;
+    printf ("SV7        %12.6f (%4.1f%%) setup T\n", timings [3], 100. * timings [3] / total) ;
+    printf ("SV7        %12.6f (%4.1f%%) create T\n", timings [4], 100. * timings [4] / total) ;
+    printf ("SV7        %12.6f (%4.1f%%) fastsv sample\n", timings [5], 100 * timings [5] / total) ;
+    printf ("SV7        %12.6f (%4.1f%%) hash\n", timings [6], 100. * timings [6] / total) ;
+    printf ("SV7        %12.6f (%4.1f%%) prune\n", timings [7], 100. * timings [7] / total) ;
+    printf ("SV7 %12.6f (%4.1f%%) total final\n", timings [2], 100. * timings [2] / total) ;
+}
 #endif
 
 int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
@@ -220,7 +249,6 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
 {
 
 #if USING_GRAPHBLAS_V10
-//  printf ("LG_CC_FastSV7:\n") ;
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -228,17 +256,25 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
 
     LG_CLEAR_MSG ;
 
+    #ifdef TIMINGS
+    double timings [16] ;
+    for (int kk = 0 ; kk < 16 ; kk++) timings [kk] = 0 ;
+    double tic = LAGraph_WallClockTime ( ) ;
+    LG_SET_BURBLE (true) ;
+    #endif
+
     int64_t *range = NULL ;
     void *Px = NULL ;
     uint64_t Px_size = 0 ;
-    GrB_Index n, nvals, *ht_key = NULL,
-        *count = NULL, *Tp = NULL, *Tj = NULL ;
+    GrB_Index n, nvals, *ht_key = NULL, *count = NULL ;
+    void *Tp = NULL, *Tj = NULL ;
     GrB_Vector parent = NULL, gp_new = NULL, mngp = NULL, gp = NULL, t = NULL,
         parent2 = NULL ;
     GrB_Matrix T = NULL, Parent = NULL ;
     void *Tx = NULL ;
     int *ht_count = NULL ;
-    GxB_Container Parent_Container = NULL ;
+    GxB_Container Parent_Container = NULL,
+        A_Container = NULL, T_Container = NULL ;
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (component != NULL, GrB_NULL_POINTER) ;
@@ -249,8 +285,6 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         G->is_symmetric_structure == LAGraph_TRUE)),
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
-
-//  printf ("input graph7:\n") ; GxB_print (G->A, 2) ;
 
     //--------------------------------------------------------------------------
     // initializations
@@ -298,8 +332,6 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         min_2ndi = GxB_MIN_SECONDI_INT32 ;
     }
 
-//  printf ("type:\n") ; GxB_print (Uint, 5) ;
-
     // FASTSV_SAMPLES: number of samples to take from each row A(i,:).
     // Sampling is used if the average degree is > 8 and if n > 1024.
     #define FASTSV_SAMPLES 4
@@ -316,7 +348,7 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
 // ]
 
     //--------------------------------------------------------------------------
-    // create the Parent Matrix and Container
+    // create the Parent Matrix and Containers
     //--------------------------------------------------------------------------
 
     // The Parent matrix is held in the Parent_Container nearly all the time,
@@ -339,7 +371,7 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
     GRB_TRY (GrB_Vector_new (&(Parent_Container->p), Uint, n+1)) ;
     GRB_TRY (GrB_assign (Parent_Container->p, NULL, NULL, 0, GrB_ALL, n+1,
         NULL)) ;
-    GRB_TRY (GrB_apply (Parent_Container->p, NULL, NULL, ramp, 
+    GRB_TRY (GrB_apply (Parent_Container->p, NULL, NULL, ramp,
         Parent_Container->p, 0, NULL)) ;
 
     // Parent_Container->x [0] = false, of length 1
@@ -363,6 +395,9 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
     GRB_TRY (GrB_Vector_free (&(Parent_Container->i))) ;
     GRB_TRY (GrB_Vector_new (&(Parent_Container->i), Uint, n)) ;
     parent = Parent_Container->i ;
+
+    GRB_TRY (GxB_Container_new (&A_Container)) ;
+    GRB_TRY (GxB_Container_new (&T_Container)) ;
 
     //--------------------------------------------------------------------------
     // warmup: parent = min (0:n-1, A*1) using the MIN_SECONDI semiring
@@ -390,7 +425,11 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
     GRB_TRY (GrB_Vector_new (&t, GrB_BOOL, n)) ;
     GRB_TRY (GrB_Vector_new (&parent2, Uint, n)) ;
 
-//  printf ("\n========================== init: parent\n") ; GxB_print (parent, 5) ;
+    #ifdef TIMINGS
+    double toc = LAGraph_WallClockTime ( ) ;
+    timings [0] = toc - tic ;  // init time
+    tic = toc ;
+    #endif
 
     //--------------------------------------------------------------------------
     // sample phase
@@ -423,30 +462,63 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
 //      give me the 4 biggest *values* in each row (y = 4)
 
         //----------------------------------------------------------------------
-        // unpack A in CSR format
+        // unload A in CSR format
         //----------------------------------------------------------------------
 
-        void *Ax ;
-        GrB_Index *Ap, *Aj, Ap_size, Aj_size, Ax_size ;
+        #ifdef TIMINGS
+        double tic2 = LAGraph_WallClockTime ( ) ;
+        #endif
+
+        void *Ap = NULL, *Aj = NULL ;
+        uint64_t Ap_size, Aj_size, Ap_len, Aj_len ;
         bool A_jumbled, A_iso ;
-        GRB_TRY (GxB_Matrix_unpack_CSR (A, &Ap, &Aj, &Ax,
-            &Ap_size, &Aj_size, &Ax_size, &A_iso, &A_jumbled, NULL)) ;
+        int Ap_handling, Aj_handling ;
+
+        // unload A in sparse CSR format into the A_Container
+        GRB_TRY (GrB_set (A, GxB_SPARSE, GxB_SPARSITY_CONTROL)) ;
+        GRB_TRY (GrB_set (A, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
+        GRB_TRY (GxB_unload_Matrix_into_Container (A, A_Container, NULL)) ;
+        A_jumbled = A_Container->jumbled ;
+        A_iso = A_Container->iso ;
+
+        // unload A_Container->p,i into the C arrays, Ap and Aj
+        GrB_Type Ap_type, Aj_type ;
+        GRB_TRY (GxB_Vector_unload (A_Container->p, &Ap, &Ap_type, &Ap_len,
+            &Ap_size, &Ap_handling, NULL)) ;
+        GRB_TRY (GxB_Vector_unload (A_Container->i, &Aj, &Aj_type, &Aj_len,
+            &Aj_size, &Aj_handling, NULL)) ;
+
+        const uint32_t *Ap32 = (Ap_type == GrB_UINT32) ? Ap : NULL ;
+        const uint64_t *Ap64 = (Ap_type == GrB_UINT32) ? NULL : Ap ;
+        const uint32_t *Aj32 = (Aj_type == GrB_UINT32) ? Aj : NULL ;
+        const uint64_t *Aj64 = (Aj_type == GrB_UINT32) ? NULL : Aj ;
 
         //----------------------------------------------------------------------
         // allocate workspace, including space to construct T
         //----------------------------------------------------------------------
 
-        GrB_Index Tp_size = (n+1) * sizeof (GrB_Index) ;
-        GrB_Index Tj_size = nvals * sizeof (GrB_Index) ;
+        bool Tp_is_32 = (nvals < UINT32_MAX) ;
+        bool Tj_is_32 = (n < INT32_MAX) ;
+        GrB_Type Tp_type = Tp_is_32 ? GrB_UINT32 : GrB_UINT64 ;
+        GrB_Type Tj_type = Tj_is_32 ? GrB_UINT32 : GrB_UINT64 ;
+        size_t tpsize = Tp_is_32 ? sizeof (uint32_t) : sizeof (uint64_t) ;
+        size_t tjsize = Tj_is_32 ? sizeof (uint32_t) : sizeof (uint64_t) ;
+
+        GrB_Index Tp_size = (n+1) * tpsize ;
+        GrB_Index Tj_size = nvals * tjsize ;
         GrB_Index Tx_size = sizeof (bool) ;
-        LG_TRY (LAGraph_Malloc ((void **) &Tp, n+1, sizeof (GrB_Index), msg)) ;
-        LG_TRY (LAGraph_Malloc ((void **) &Tj, nvals, sizeof (GrB_Index),
-            msg)) ;
+        LG_TRY (LAGraph_Malloc ((void **) &Tp, n+1, tpsize, msg)) ;
+        LG_TRY (LAGraph_Malloc ((void **) &Tj, nvals, tjsize, msg)) ;
         LG_TRY (LAGraph_Calloc ((void **) &Tx, 1, sizeof (bool), msg)) ;
-        LG_TRY (LAGraph_Malloc ((void **) &range, nthreads + 1,
-            sizeof (int64_t), msg)) ;
-        LG_TRY (LAGraph_Calloc ((void **) &count, nthreads + 1,
-            sizeof (GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void **) &range, nthreads+1, sizeof (int64_t),
+            msg)) ;
+        LG_TRY (LAGraph_Calloc ((void **) &count, nthreads+1, sizeof (uint64_t),
+            msg)) ;
+
+        uint32_t *Tp32 = Tp_is_32 ? Tp : NULL ;
+        uint64_t *Tp64 = Tp_is_32 ? NULL : Tp ;
+        uint32_t *Tj32 = Tj_is_32 ? Tj : NULL ;
+        uint64_t *Tj64 = Tj_is_32 ? NULL : Tj ;
 
         //----------------------------------------------------------------------
         // define parallel tasks to construct T
@@ -468,7 +540,7 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         {
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
-                int64_t deg = Ap [i + 1] - Ap [i] ;
+                int64_t deg = AP (i + 1) - AP (i) ;
                 count [tid + 1] += LAGRAPH_MIN (FASTSV_SAMPLES, deg) ;
             }
         }
@@ -482,6 +554,12 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
             count [tid + 1] += count [tid] ;
         }
 
+        #ifdef TIMINGS
+        double toc2 = LAGraph_WallClockTime ( ) ;
+        timings [3] = toc2 - tic2 ;  // setup T
+        tic2 = toc2 ;
+        #endif
+
         //----------------------------------------------------------------------
         // construct T
         //----------------------------------------------------------------------
@@ -492,16 +570,20 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         for (tid = 0 ; tid < nthreads ; tid++)
         {
             GrB_Index p = count [tid] ;
-            Tp [range [tid]] = p ;
+            int64_t ktid = range [tid] ;
+            SET_TP (ktid, p) ;      // Tp [ktid] = p ;
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
                 // construct T (i,:) from the first entries in A (i,:)
                 for (int64_t j = 0 ;
-                    j < FASTSV_SAMPLES && Ap [i] + j < Ap [i + 1] ; j++)
+                    j < FASTSV_SAMPLES && AP (i) + j < AP (i + 1) ; j++)
                 {
-                    Tj [p++] = Aj [Ap [i] + j] ;
+                    uint64_t pi = AP (i) + j ;
+                    uint64_t j = AJ (pi) ;
+                    SET_TJ (p, j) ;         // Tj [p] = j ;
+                    p++ ;
                 }
-                Tp [i + 1] = p ;
+                SET_TP (i+1, p) ;           // Tp [i + 1] = p ;
             }
         }
 
@@ -510,10 +592,39 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         //----------------------------------------------------------------------
 
         GRB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
-        GRB_TRY (GxB_Matrix_pack_CSR (T, &Tp, &Tj, &Tx, Tp_size, Tj_size,
-            Tx_size, /* T is iso: */ true, A_jumbled, NULL)) ;
+
+        uint64_t T_nvals = TP (n) ;
+        uint64_t Tp_len = n+1 ;
+        uint64_t Tj_len = T_nvals ;
+
+        T_Container->nrows = n ;
+        T_Container->ncols = n ;
+        T_Container->nrows_nonempty = -1 ;
+        T_Container->ncols_nonempty = -1 ;
+        T_Container->nvals = T_nvals ;
+        T_Container->format = GxB_SPARSE ;
+        T_Container->orientation = GrB_ROWMAJOR ;
+        T_Container->iso = true ;
+        T_Container->jumbled = A_jumbled ;
+
+        // load Tp, Tj, and Tx into the T_Container
+        GRB_TRY (GxB_Vector_load (T_Container->p, &Tp, Tp_type, Tp_len,
+            Tp_size, GrB_DEFAULT, NULL)) ;
+        GRB_TRY (GxB_Vector_load (T_Container->i, &Tj, Tj_type, Tj_len,
+            Tj_size, GrB_DEFAULT, NULL)) ;
+        GRB_TRY (GxB_Vector_load (T_Container->x, &Tx, GrB_BOOL, 1,
+            Tx_size, GrB_DEFAULT, NULL)) ;
+
+        // load T from the T_Container
+        GRB_TRY (GxB_load_Matrix_from_Container (T, T_Container, NULL)) ;
 
 // ] todo: the above will all be done as a single call to GxB_select.
+
+        #ifdef TIMINGS
+        toc2 = LAGraph_WallClockTime ( ) ;
+        timings [4] = toc2 - tic2 ;  // create T
+        tic2 = toc2 ;
+        #endif
 
         //----------------------------------------------------------------------
         // find the connected components of T
@@ -521,6 +632,12 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
 
         LG_TRY (fastsv (T, parent2, mngp, &gp, &gp_new, t, eq, min, min_2nd,
             Parent, Parent_Container, msg)) ;
+
+        #ifdef TIMINGS
+        toc2 = LAGraph_WallClockTime ( ) ;
+        timings [5] = toc2 - tic2 ;  // fastsv, in sampling
+        tic2 = toc2 ;
+        #endif
 
         //----------------------------------------------------------------------
         // unload the parent == Parent_Container->i vector into the Px array
@@ -532,9 +649,9 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
             &handling, NULL)) ;
         uint32_t *Px32 = (type == GrB_UINT32) ? Px : NULL ;
         uint64_t *Px64 = (type == GrB_UINT32) ? NULL : Px ;
-        #define PARENT(i) (Px32 ? Px32 [i] : Px64 [i])
 
-        // At this pointer, the
+        // At this point, both the parent vector and Parent matrix are empty,
+        // and the Px array holds the content of parent vector.
 
         //----------------------------------------------------------------------
         // use sampling to estimate the largest connected component in T
@@ -584,6 +701,12 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
             }
         }
 
+        #ifdef TIMINGS
+        toc2 = LAGraph_WallClockTime ( ) ;
+        timings [6] = toc2 - tic2 ;  // hash
+        tic2 = toc2 ;
+        #endif
+
         //----------------------------------------------------------------------
         // compact the largest connected component in A
         //----------------------------------------------------------------------
@@ -608,60 +731,88 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
 // GrB_Col_assign (T, M, NULL, t, GrB_ALL, j, NULL) with an all-true
 // vector t.
 
-        // unpack T to reuse the space (all content is overwritten below)
-        bool T_jumbled, T_iso ;
-        GRB_TRY (GxB_Matrix_unpack_CSR (T, &Tp, &Tj, &Tx, &Tp_size, &Tj_size,
-            &Tx_size, &T_iso, &T_jumbled, NULL)) ;
+        // unload T from the T_Container; its contents are revised below
+        GRB_TRY (GxB_unload_Matrix_into_Container (T, T_Container, NULL)) ;
+
+        // unload Tp and Tj from the T_Container
+        int ignore ;
+        GRB_TRY (GxB_Vector_unload (T_Container->p, &Tp, &Tp_type, &Tp_len,
+            &Tp_size, &ignore, NULL)) ;
+        GRB_TRY (GxB_Vector_unload (T_Container->i, &Tj, &Tj_type, &Tj_len,
+            &Tj_size, &ignore, NULL)) ;
+
+        // these are likely to be unchanged since the last load of T
+        Tp_is_32 = (Tp_type == GrB_UINT32) ;
+        Tj_is_32 = (Tj_type == GrB_UINT32) ;
+        Tp32 = Tp_is_32 ? Tp : NULL ;
+        Tp64 = Tp_is_32 ? NULL : Tp ;
+        Tj32 = Tj_is_32 ? Tj : NULL ;
+        Tj64 = Tj_is_32 ? NULL : Tj ;
+
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (tid = 0 ; tid < nthreads ; tid++)
         {
-            GrB_Index p = Ap [range [tid]] ;
+            uint64_t ktid = range [tid] ;
+            GrB_Index p = AP (ktid) ;
             // thread tid scans A (range [tid]:range [tid+1]-1,:),
             // and constructs T(i,:) for all rows in this range.
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
                 int64_t pi = PARENT (i) ;
-                Tp [i] = p ;            // start the construction of T(i,:)
+                int64_t pstart = p ;
+                SET_TP (i, p) ; // Tp [i] = p ; start the construction of T(i,:)
                 // T(i,:) is empty if pi == key
                 if (pi != key)
                 {
                     // scan A(i,:)
-                    for (GrB_Index pS = Ap [i] ; pS < Ap [i+1] ; pS++)
+                    for (GrB_Index pS = AP (i) ; pS < AP (i+1) ; pS++)
                     {
                         // get A(i,j)
-                        int64_t j = Aj [pS] ;
+                        int64_t j = AJ (pS) ;
                         if (PARENT (j) != key)
                         {
                             // add the entry T(i,j) to T, but skip it if
                             // PARENT (j) is equal to key
-                            Tj [p++] = j ;
+                            SET_TJ (p, j)       // Tj [p] = j ;
+                            p++ ;
                         }
                     }
                     // Add the entry T(i,key) if there is room for it in T(i,:);
                     // if and only if node i is adjacent to a node j in the
                     // largest component.  The only way there can be space if
-                    // at least one T(i,j) appears with PARENT (j) equal to the key
-                    // (that is, node j is in the largest connected component,
-                    // key == PARENT (j).  One of these j's can then be replaced
-                    // with the key.  If node i is not adjacent to any node in
-                    // the largest component, then there is no space in T(i,:)
-                    // and no new edge to the largest component is added.
-                    if (p - Tp [i] < Ap [i+1] - Ap [i])
+                    // at least one T(i,j) appears with PARENT (j) equal to the
+                    // key (that is, node j is in the largest connected
+                    // component, key == PARENT (j).  One of these j's can then
+                    // be replaced with the key.  If node i is not adjacent to
+                    // any node in the largest component, then there is no
+                    // space in T(i,:) and no new edge to the largest component
+                    // is added.
+                    if (p - pstart < AP (i+1) - AP (i))
                     {
-                        Tj [p++] = key ;
+                        SET_TJ (p, key) ;       // Tj [p] = key ;
+                        p++ ;
                     }
                 }
             }
             // count the number of entries inserted into T by this thread
-            count [tid] = p - Tp [range [tid]] ;
+            count [tid] = p - TP (ktid) ;
         }
 
         // Compact empty space out of Tj not filled in from the above phase.
         nvals = 0 ;
         for (tid = 0 ; tid < nthreads ; tid++)
         {
-            memmove (Tj + nvals,
-                Tj + Tp [range [tid]], sizeof (GrB_Index) * count [tid]) ;
+            int64_t ktid = range [tid]  ;
+            if (Tj32)
+            {
+                memmove (Tj32 + nvals, Tj32 + TP (ktid),
+                    sizeof (uint32_t) * count [tid]) ;
+            }
+            else
+            {
+                memmove (Tj64 + nvals, Tj64 + TP (ktid),
+                    sizeof (uint64_t) * count [tid]) ;
+            }
             nvals += count [tid] ;
             count [tid] = nvals - count [tid] ;
         }
@@ -670,23 +821,41 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (tid = 0 ; tid < nthreads ; tid++)
         {
-            GrB_Index p = Tp [range [tid]] ;
+            int64_t ktid = range [tid] ;
+            GrB_Index p = TP (ktid) ;
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
-                Tp [i] -= p - count [tid] ;
+                int64_t tp = TP (i) ;
+                tp -= p - count [tid] ;
+                SET_TP (i, tp) ;            // Tp [i] = tp ;
             }
         }
 
         // finalize T
-        Tp [n] = nvals ;
+        SET_TP (n, nvals) ;     // Tp [n] = nvals ;
+        Tj_len = nvals ;
 
-        // pack T for the final phase
-        GRB_TRY (GxB_Matrix_pack_CSR (T, &Tp, &Tj, &Tx, Tp_size, Tj_size,
-            Tx_size, T_iso, /* T is now jumbled */ true, NULL)) ;
+        // load T_Container->p,i from the C arrays, Tp and Tj, for final phase
+        GRB_TRY (GxB_Vector_load (T_Container->p, &Tp, Tp_type, Tp_len,
+            Tp_size, GrB_DEFAULT, NULL)) ;
+        GRB_TRY (GxB_Vector_load (T_Container->i, &Tj, Tj_type, Tj_len,
+            Tj_size, GrB_DEFAULT, NULL)) ;
 
-        // pack A (unchanged since last unpack); this is the original G->A.
-        GRB_TRY (GxB_Matrix_pack_CSR (A, &Ap, &Aj, &Ax, Ap_size, Aj_size,
-            Ax_size, A_iso, A_jumbled, NULL)) ;
+        T_Container->jumbled = true ;
+        T_Container->nvals = nvals ;
+
+        // load T in sparse CSR format from the T_Container
+        GRB_TRY (GxB_load_Matrix_from_Container (T, T_Container, NULL)) ;
+
+        // load A_Container->p,i from the C arrays, Ap and Aj
+        // This is the original G->A, and it is unchanged.
+        GRB_TRY (GxB_Vector_load (A_Container->p, &Ap, Ap_type, Ap_len,
+            Ap_size, Ap_handling, NULL)) ;
+        GRB_TRY (GxB_Vector_load (A_Container->i, &Aj, Aj_type, Aj_len,
+            Aj_size, Aj_handling, NULL)) ;
+
+        // load A in sparse CSR format from the A_Container
+        GRB_TRY (GxB_load_Matrix_from_Container (A, A_Container, NULL)) ;
 
         //----------------------------------------------------------------------
         // load the Px array back into the parent == Parent_Container->i vector
@@ -695,12 +864,24 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         GRB_TRY (GxB_Vector_load (parent, &Px, type, n, Px_size,
             GrB_DEFAULT, NULL)) ;
 
-// ].  The unpack/pack of A into Ap, Aj, Ax will not be needed, and G->A
+// ].  The unload/load of A into Ap, Aj, Ax will not be needed, and G->A
 // will become truly a read-only matrix.
 
         // final phase uses the pruned matrix T
         A = T ;
+
+        #ifdef TIMINGS
+        toc2 = LAGraph_WallClockTime ( ) ;
+        timings [7] = toc2 - tic2 ;  // prune
+        tic2 = toc2 ;
+        #endif
     }
+
+    #ifdef TIMINGS
+    toc = LAGraph_WallClockTime ( ) ;
+    timings [1] = toc - tic ;  // total sampling time
+    tic = toc ;
+    #endif
 
     //--------------------------------------------------------------------------
     // check for quick return
@@ -714,6 +895,10 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         (*component) = parent ;
         Parent_Container->i = NULL ;        // do not free the parent vector
         LG_FREE_WORK ;
+        #ifdef TIMINGS
+        print_timings (timings) ;
+        LG_SET_BURBLE (false) ;
+        #endif
         return (GrB_SUCCESS) ;
     }
 
@@ -731,6 +916,12 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
     (*component) = parent ;
     Parent_Container->i = NULL ;        // do not free the parent vector
     LG_FREE_WORK ;
+    #ifdef TIMINGS
+    toc = LAGraph_WallClockTime ( ) ;
+    timings [2] = toc - tic ;  // final phase
+    print_timings (timings) ;
+    LG_SET_BURBLE (false) ;
+    #endif
     return (GrB_SUCCESS) ;
 #else
     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
