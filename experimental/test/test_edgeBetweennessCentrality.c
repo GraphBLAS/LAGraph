@@ -153,9 +153,6 @@ void test_diamonds_ebc (void)
     OK (LAGraph_New (&G, &A, kind, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
-    OK (GrB_transpose(AT, NULL, NULL, A, GrB_DESC_R)) ;
-    G->AT = AT;
-
     // check that AT is cached
     int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
         LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
