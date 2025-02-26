@@ -91,8 +91,16 @@ static inline GrB_Info fastsv
     GrB_Vector parent = Parent_Container->i ;
     bool done = false ;
 
+    #ifdef TIMINGS
+    int pass = 0 ;
+    #endif
+
     while (true)
     {
+        #ifdef TIMINGS
+        printf ("\n-------------------------------------------fastsv: %d\n",
+            ++pass) ;
+        #endif
 
         //----------------------------------------------------------------------
         // hooking & shortcutting

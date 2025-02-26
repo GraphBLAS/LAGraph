@@ -47,6 +47,8 @@
 // G->A will then become a truly read-only object (assuming GrB_wait (G->A)
 // has been done first).
 
+#define TIMINGS
+
 #define __STDC_WANT_LIB_EXT1__ 1
 #include <string.h>
 
@@ -84,8 +86,16 @@ static inline GrB_Info fastsv
     GrB_Index Cx_size = sizeof (bool) ;
     bool iso = true, jumbled = false, done = false ;
 
+    #ifdef TIMINGS
+    int pass = 0 ;
+    #endif
+
     while (true)
     {
+        #ifdef TIMINGS
+        printf ("\n-------------------------------------------fastsv: %d\n",
+            ++pass) ;
+        #endif
 
         //----------------------------------------------------------------------
         // hooking & shortcutting
@@ -204,6 +214,21 @@ static inline GrB_Info fastsv
 
 #endif
 
+#ifdef TIMINGS
+static void print_timings (double timings [16])
+{
+    double total = timings [0] + timings [1] + timings [2] ;
+    printf ("SV7 %12.6f (%4.1f%%) init\n", timings [0], 100. * timings [0] / total) ;
+    printf ("SV7 %12.6f (%4.1f%%) total sampling:\n", timings [1], 100. * timings [1] / total) ;
+    printf ("SV7        %12.6f (%4.1f%%) setup T\n", timings [3], 100. * timings [3] / total) ;
+    printf ("SV7        %12.6f (%4.1f%%) create T\n", timings [4], 100. * timings [4] / total) ;
+    printf ("SV7        %12.6f (%4.1f%%) fastsv sample\n", timings [5], 100 * timings [5] / total) ;
+    printf ("SV7        %12.6f (%4.1f%%) hash\n", timings [6], 100. * timings [6] / total) ;
+    printf ("SV7        %12.6f (%4.1f%%) prune\n", timings [7], 100. * timings [7] / total) ;
+    printf ("SV7 %12.6f (%4.1f%%) total final\n", timings [2], 100. * timings [2] / total) ;
+}
+#endif
+
 int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 (
     // output:
@@ -223,6 +248,13 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
+
+    #ifdef TIMINGS
+    double timings [16] ;
+    for (int kk = 0 ; kk < 16 ; kk++) timings [kk] = 0 ;
+    double tic = LAGraph_WallClockTime ( ) ;
+    LG_SET_BURBLE (true) ;
+    #endif
 
     int64_t *range = NULL ;
     GrB_Index n, nvals, Cp_size = 0, *ht_key = NULL, *Px = NULL, *Cp = NULL,
@@ -354,6 +386,12 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 
 //  printf ("\n========================== init6: parent\n") ; GxB_print (parent, 5) ;
 
+    #ifdef TIMINGS
+    double toc = LAGraph_WallClockTime ( ) ;
+    timings [0] = toc - tic ;  // init time
+    tic = toc ;
+    #endif
+
     //--------------------------------------------------------------------------
     // sample phase
     //--------------------------------------------------------------------------
@@ -390,6 +428,10 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         //----------------------------------------------------------------------
         // unpack A in CSR format
         //----------------------------------------------------------------------
+
+        #ifdef TIMINGS
+        double tic2 = LAGraph_WallClockTime ( ) ;
+        #endif
 
         void *Ax ;
         GrB_Index *Ap, *Aj, Ap_size, Aj_size, Ax_size ;
@@ -447,6 +489,12 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
             count [tid + 1] += count [tid] ;
         }
 
+        #ifdef TIMINGS
+        double toc2 = LAGraph_WallClockTime ( ) ;
+        timings [3] = toc2 - tic2 ;  // setup T
+        tic2 = toc2 ;
+        #endif
+
         //----------------------------------------------------------------------
         // construct T
         //----------------------------------------------------------------------
@@ -480,12 +528,24 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 
 // ] todo: the above will all be done as a single call to GxB_select.
 
+        #ifdef TIMINGS
+        toc2 = LAGraph_WallClockTime ( ) ;
+        timings [4] = toc2 - tic2 ;  // create T
+        tic2 = toc2 ;
+        #endif
+
         //----------------------------------------------------------------------
         // find the connected components of T
         //----------------------------------------------------------------------
 
         LG_TRY (fastsv (T, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
             C, &Cp, &Px, &Cx, msg)) ;
+
+        #ifdef TIMINGS
+        toc2 = LAGraph_WallClockTime ( ) ;
+        timings [5] = toc2 - tic2 ;  // fastsv, in sampling
+        tic2 = toc2 ;
+        #endif
 
         //----------------------------------------------------------------------
         // use sampling to estimate the largest connected component in T
@@ -533,6 +593,12 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
                 max_count = ht_count [h] ;
             }
         }
+
+        #ifdef TIMINGS
+        toc2 = LAGraph_WallClockTime ( ) ;
+        timings [6] = toc2 - tic2 ;  // hash
+        tic2 = toc2 ;
+        #endif
 
         //----------------------------------------------------------------------
         // compact the largest connected component in A
@@ -643,7 +709,19 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 
         // final phase uses the pruned matrix T
         A = T ;
+
+        #ifdef TIMINGS
+        toc2 = LAGraph_WallClockTime ( ) ;
+        timings [7] = toc2 - tic2 ;  // prune
+        tic2 = toc2 ;
+        #endif
     }
+
+    #ifdef TIMINGS
+    toc = LAGraph_WallClockTime ( ) ;
+    timings [1] = toc - tic ;  // total sampling time
+    tic = toc ;
+    #endif
 
     //--------------------------------------------------------------------------
     // check for quick return
@@ -656,6 +734,10 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     {
         (*component) = parent ;
         LG_FREE_WORK ;
+        #ifdef TIMINGS
+        print_timings (timings) ;
+        LG_SET_BURBLE (false) ;
+        #endif
         return (GrB_SUCCESS) ;
     }
 
@@ -672,6 +754,12 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 
     (*component) = parent ;
     LG_FREE_WORK ;
+    #ifdef TIMINGS
+    toc = LAGraph_WallClockTime ( ) ;
+    timings [2] = toc - tic ;  // final phase
+    print_timings (timings) ;
+    LG_SET_BURBLE (false) ;
+    #endif
     return (GrB_SUCCESS) ;
 #endif
 }

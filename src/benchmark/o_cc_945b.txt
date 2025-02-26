@@ -1,0 +1,603 @@
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Connected Components
+======================================================================
+csce-4cs2q54.engr.tamu.edu
+OMP_PLACES=cores
+OMP_PROC_BIND=spread
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+library: SuiteSparse:GraphBLAS v9.4.5 [Feb 20, 2025]
+threads to test:  32
+
+../../../GAP/GAP-urand/GAP-urand.grb:
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+read time: 32.6875
+ [ GrB_Matrix_nvals 
+   6.52e-08 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   1.96e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0478 sec ]
+ [ GxB_Vector_unpack_Full 
+   5.64e-06 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   3.67e-05 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   2.71e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0298 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.291 sec ]
+ [ GrB_assign (pending: 0) Method 24: C = Z (typecast) 
+   0.0309 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0661 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0333 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0328 sec ]
+ [ GxB_Matrix_unpack_CSR (iso export) 
+   9.83e-06 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   1.38e-05 sec ]
+
+-------------------------------------------fastsv: 1
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.712 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   9.29e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.241 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   1.41e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0506 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0644 sec ]
+ [ GrB_extract (A full) (jit: cpu load) 
+   0.103 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0312 sec ]
+ [ GrB_reduce (A full) 
+   8.94e-05 sec ]
+
+-------------------------------------------fastsv: 2
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.577 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   3.72e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.121 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   1.43e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0503 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0646 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0754 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0312 sec ]
+ [ GrB_reduce (A full) 
+   0.000119 sec ]
+
+-------------------------------------------fastsv: 3
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.578 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   7.43e-06 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0664 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   2.81e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0559 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0648 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0725 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0308 sec ]
+ [ GrB_reduce (A full) 
+   0.000251 sec ]
+
+-------------------------------------------fastsv: 4
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.235 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   1.76e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0616 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   1.85e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0502 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0643 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0754 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0299 sec ]
+ [ GrB_reduce (A full) 
+   0.00428 sec ]
+ [ GxB_Matrix_unpack_CSR (iso export) 
+   2.54e-05 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   2.46e-05 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   1.74e-05 sec ]
+SV7     0.532299 (11.2%) init
+SV7     4.236683 (88.8%) total sampling:
+SV7            0.029366 ( 0.6%) setup T
+SV7            0.581349 (12.2%) create T
+SV7            3.513457 (73.7%) fastsv sample
+SV7            0.000073 ( 0.0%) hash
+SV7            0.112438 ( 2.4%) prune
+SV7     0.000000 ( 0.0%) total final
+nCC: 1
+# of trials: 1
+
+ [ GrB_Matrix_nvals 
+   7.26e-07 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   1.74e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0397 sec ]
+ [ GxB_Vector_unpack_Full 
+   8.83e-06 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   1.64e-05 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   2.88e-06 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0264 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.276 sec ]
+ [ GrB_assign (pending: 0) Method 24: C = Z (typecast) 
+   0.0311 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0676 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0292 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0295 sec ]
+ [ GxB_Matrix_unpack_CSR (iso export) 
+   6.31e-06 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   1.54e-05 sec ]
+
+-------------------------------------------fastsv: 1
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.571 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   7.6e-06 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.26 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   8.27e-06 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0526 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0666 sec ]
+ [ GrB_extract (A full) 
+   0.182 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0301 sec ]
+ [ GrB_reduce (A full) 
+   4.68e-05 sec ]
+
+-------------------------------------------fastsv: 2
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.585 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   1.48e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.197 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   3.79e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0498 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0671 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0776 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0289 sec ]
+ [ GrB_reduce (A full) 
+   6.68e-05 sec ]
+
+-------------------------------------------fastsv: 3
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.59 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   1.25e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0618 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   1.42e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0517 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0683 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0759 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0302 sec ]
+ [ GrB_reduce (A full) 
+   4.56e-05 sec ]
+
+-------------------------------------------fastsv: 4
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.209 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   2.82e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0616 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   2.47e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0509 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0631 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0728 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0318 sec ]
+ [ GrB_reduce (A full) 
+   0.00391 sec ]
+ [ GxB_Matrix_unpack_CSR (iso export) 
+   2.58e-05 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   1.54e-05 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   9.4e-06 sec ]
+SV7     0.500188 (10.5%) init
+SV7     4.278499 (89.5%) total sampling:
+SV7            0.029992 ( 0.6%) setup T
+SV7            0.585157 (12.2%) create T
+SV7            3.548455 (74.3%) fastsv sample
+SV7            0.000072 ( 0.0%) hash
+SV7            0.114823 ( 2.4%) prune
+SV7     0.000000 ( 0.0%) total final
+SV6:      nthreads: 32 trial:  0 time:     4.7787 sec
+Avg: CC threads  32:      4.779 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+library: SuiteSparse:GraphBLAS v9.4.5 [Feb 20, 2025]
+threads to test:  32
+
+../../../GAP/GAP-kron/GAP-kron.grb:
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+read time: 32.2174
+ [ GrB_Matrix_nvals 
+   9.69e-08 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   7.98e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0426 sec ]
+ [ GxB_Vector_unpack_Full 
+   2.45e-05 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   7.81e-05 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   5.35e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.027 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.157 sec ]
+ [ GrB_assign (pending: 0) Method 24: C = Z (typecast) 
+   0.0373 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0675 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.035 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.033 sec ]
+ [ GxB_Matrix_unpack_CSR (iso export) 
+   3.66e-05 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   6.23e-06 sec ]
+
+-------------------------------------------fastsv: 1
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.215 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   7.03e-06 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.147 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   8.12e-06 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0519 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0623 sec ]
+ [ GrB_extract (A full) (jit: cpu load) 
+   0.1 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0323 sec ]
+ [ GrB_reduce (A full) 
+   0.00103 sec ]
+
+-------------------------------------------fastsv: 2
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.216 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   6.38e-06 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0816 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   3.97e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0517 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0653 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0866 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.029 sec ]
+ [ GrB_reduce (A full) 
+   5.27e-05 sec ]
+
+-------------------------------------------fastsv: 3
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.209 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   1.28e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0733 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   1.58e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0505 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0632 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0857 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0302 sec ]
+ [ GrB_reduce (A full) 
+   6.23e-05 sec ]
+
+-------------------------------------------fastsv: 4
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.222 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   1.4e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0764 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   1.49e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0527 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0648 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0859 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0302 sec ]
+ [ GrB_reduce (A full) 
+   5.14e-05 sec ]
+
+-------------------------------------------fastsv: 5
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.211 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   2.63e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0739 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   2.78e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0509 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0638 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0856 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0301 sec ]
+ [ GrB_reduce (A full) 
+   0.00933 sec ]
+ [ GxB_Matrix_unpack_CSR (iso export) 
+   3.32e-05 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   7.99e-05 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   1.82e-05 sec ]
+
+-------------------------------------------fastsv: 1
+ [ GrB_mxv C=A'*B, dot_product (iso wait:A 0 zombies, 0 pending, jumbled, nvec) (dot4: F += S'*F) (C in place) 
+   0.107 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   3.08e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0755 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   2.94e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0501 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0639 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0866 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0303 sec ]
+ [ GrB_reduce (A full) 
+   0.00389 sec ]
+SV7     0.401045 (10.1%) init
+SV7     3.153091 (79.4%) total sampling:
+SV7            0.033350 ( 0.8%) setup T
+SV7            0.227972 ( 5.7%) create T
+SV7            2.712336 (68.3%) fastsv sample
+SV7            0.000086 ( 0.0%) hash
+SV7            0.179347 ( 4.5%) prune
+SV7     0.418232 (10.5%) total final
+nCC: 71164263
+# of trials: 1
+
+ [ GrB_Matrix_nvals 
+   6.98e-07 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   1.89e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0437 sec ]
+ [ GxB_Vector_unpack_Full 
+   1.13e-05 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   1.82e-05 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   2.74e-06 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0274 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.144 sec ]
+ [ GrB_assign (pending: 0) Method 24: C = Z (typecast) 
+   0.0285 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.066 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0302 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0305 sec ]
+ [ GxB_Matrix_unpack_CSR (iso export) 
+   9.54e-06 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   1.03e-05 sec ]
+
+-------------------------------------------fastsv: 1
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.207 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   2.23e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.139 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   1.54e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.05 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0663 sec ]
+ [ GrB_extract (A full) 
+   0.0968 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.03 sec ]
+ [ GrB_reduce (A full) 
+   5.78e-05 sec ]
+
+-------------------------------------------fastsv: 2
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.207 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   1.35e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0797 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   1.81e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0503 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0634 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0884 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0331 sec ]
+ [ GrB_reduce (A full) 
+   0.00168 sec ]
+
+-------------------------------------------fastsv: 3
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.207 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   1.02e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0761 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   1.28e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0571 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0659 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0914 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0328 sec ]
+ [ GrB_reduce (A full) 
+   4.88e-05 sec ]
+
+-------------------------------------------fastsv: 4
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.211 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   1.25e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0734 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   1.28e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0568 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0642 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0919 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0413 sec ]
+ [ GrB_reduce (A full) 
+   0.0023 sec ]
+
+-------------------------------------------fastsv: 5
+ [ GrB_mxv C=A'*B, dot_product (dot4: F += S'*F) (C in place) 
+   0.211 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   3.66e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.0744 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   2.95e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0489 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.0677 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0883 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.0307 sec ]
+ [ GrB_reduce (A full) 
+   0.00315 sec ]
+ [ GxB_Matrix_unpack_CSR (iso export) 
+   1.3e-05 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   5.28e-05 sec ]
+ [ GxB_Matrix_pack_CSR (iso import) 
+   1.8e-05 sec ]
+
+-------------------------------------------fastsv: 1
+ [ GrB_mxv C=A'*B, dot_product (iso wait:A 0 zombies, 0 pending, jumbled, nvec) (dot4: F += S'*F) (C in place) 
+   0.101 sec ]
+ [ GxB_Matrix_pack_CSC (iso import) 
+   2.3e-05 sec ]
+ [ GrB_mxv C=A*B, saxpy (saxpy4: F += S*F) (threads: 32, relwspace: 10.7, intensity: 1: fine atomic, tasks: 128, tasks per vector: 128) (C in place) 
+   0.075 sec ]
+ [ GxB_Matrix_unpack_CSC (iso export) 
+   2.87e-05 sec ]
+ [ GrB_eWiseAdd dense C+=A+B 
+   0.0521 sec ]
+ [ GrB_Vector_extractTuples (A full) 
+   0.062 sec ]
+ [ GrB_extract (C full) (A full) 
+   0.0854 sec ]
+ [ GrB_eWiseMult dense C=A+B 
+   0.03 sec ]
+ [ GrB_reduce (A full) 
+   0.00407 sec ]
+SV7     0.370901 ( 9.4%) init
+SV7     3.143998 (80.1%) total sampling:
+SV7            0.031411 ( 0.8%) setup T
+SV7            0.229217 ( 5.8%) create T
+SV7            2.713797 (69.1%) fastsv sample
+SV7            0.000084 ( 0.0%) hash
+SV7            0.169490 ( 4.3%) prune
+SV7     0.410854 (10.5%) total final
+SV6:      nthreads: 32 trial:  0 time:     3.9258 sec
+Avg: CC threads  32:      3.926 sec, graph: ../../../GAP/GAP-kron/GAP-kron.grb

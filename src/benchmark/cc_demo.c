@@ -132,7 +132,7 @@ int main (int argc, char **argv)
     // warmup
     LAGRAPH_TRY (LAGr_ConnectedComponents (&components, G, msg)) ;
     GrB_Index nCC = countCC (components, n) ;
-    printf ("nCC: %llu\n", nCC) ;
+    printf ("nCC: %llu\n", (long long unsigned int) nCC) ;
 
 #if 0 & LG_CHECK_RESULT
     double tcheck = LAGraph_WallClockTime ( ) ;
