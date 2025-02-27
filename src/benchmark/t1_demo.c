@@ -37,8 +37,8 @@
 // #include "GB_Global.h"
 void GB_Global_hack_set (int k, int64_t hack) ;
 
+// to run just once, with p = omp_get_max_threads() threads
 #define NTHREAD_LIST 1
-// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
