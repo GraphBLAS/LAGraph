@@ -39,3 +39,4 @@ echo "=====================================GAP matrices=========================
 ../../build/experimental/benchmark/coloring_MIS_demo /raid/GAP/GAP-road.grb
 ../../build/experimental/benchmark/coloring_IS_demo /raid/GAP/GAP-twitter.grb
 ../../build/experimental/benchmark/coloring_MIS_demo /raid/GAP/GAP-twitter.grb
+

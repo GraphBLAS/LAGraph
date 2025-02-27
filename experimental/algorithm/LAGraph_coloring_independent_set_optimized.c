@@ -73,6 +73,10 @@ int LAGraph_coloring_independent_set_optimized
 
         /* select - select all entries in in_curr_subset that are true, and delete falses */
         GRB_TRY(GrB_select(in_curr_subset, GrB_NULL, GrB_NULL, GrB_VALUEEQ_BOOL, in_curr_subset, true, GrB_NULL));
+        GrB_Index nvals_local_color;
+        GRB_TRY(GrB_Vector_nvals(&nvals_local_color, local_color));
+        printf ("colored: %ld of %ld\n", nvals_local_color, n) ;
+        fflush (stdout) ;
 
         /* check if in_curr_subset is empty then break */
         GrB_Index nvals_in_curr_subset;
