@@ -5600,3 +5600,2190 @@ sssp15:  threads:  8 trial: 40 source    100962918 time:    21.6628 sec
 sssp15:  threads:  8 trial: 41 source     41823215 time:    20.0284 sec
 sssp15:  threads:  8 trial: 42 source     22631240 time:    19.1304 sec
 sssp15:  threads:  8 trial: 43 source     42848461 time:    19.6583 sec
+sssp15:  threads:  8 trial: 44 source     79485148 time:    19.3409 sec
+sssp15:  threads:  8 trial: 45 source    106818742 time:    20.1130 sec
+sssp15:  threads:  8 trial: 46 source     73347974 time:    19.6604 sec
+sssp15:  threads:  8 trial: 47 source     78848445 time:    19.4438 sec
+sssp15:  threads:  8 trial: 48 source    109920510 time:    20.7885 sec
+sssp15:  threads:  8 trial: 49 source    121492133 time:    19.9329 sec
+sssp15:  threads:  8 trial: 50 source    101037296 time:    20.1582 sec
+sssp15:  threads:  8 trial: 51 source     15438600 time:    20.6666 sec
+sssp15:  threads:  8 trial: 52 source      4584784 time:    20.0523 sec
+sssp15:  threads:  8 trial: 53 source    124503845 time:    20.4642 sec
+sssp15:  threads:  8 trial: 54 source     87241743 time:    19.6739 sec
+sssp15:  threads:  8 trial: 55 source    108297008 time:    19.7348 sec
+sssp15:  threads:  8 trial: 56 source     33955082 time:    20.1169 sec
+sssp15:  threads:  8 trial: 57 source     79934823 time:    19.9086 sec
+sssp15:  threads:  8 trial: 58 source      8608481 time:    19.5834 sec
+sssp15:  threads:  8 trial: 59 source     82435063 time:    20.1771 sec
+sssp15:  threads:  8 trial: 60 source     46579271 time:    19.8222 sec
+sssp15:  threads:  8 trial: 61 source       515421 time:    22.2104 sec
+sssp15:  threads:  8 trial: 62 source    121530467 time:    19.7812 sec
+sssp15:  threads:  8 trial: 63 source    127978736 time:    20.4214 sec
+
+Avg: SSSP threads   8:     20.242 sec (delta: 29), graph: ../../../GAP/GAP-kron/GAP-kron.grb
+sssp15:  threads:  4 trial:  0 source      2338012 time:    31.1211 sec
+sssp15:  threads:  4 trial:  1 source     31997659 time:    30.8048 sec
+sssp15:  threads:  4 trial:  2 source     23590940 time:    29.5185 sec
+sssp15:  threads:  4 trial:  3 source     43400604 time:    30.5006 sec
+sssp15:  threads:  4 trial:  4 source     75337937 time:    31.2970 sec
+sssp15:  threads:  4 trial:  5 source       169867 time:    30.6805 sec
+sssp15:  threads:  4 trial:  6 source    104041220 time:    31.0929 sec
+sssp15:  threads:  4 trial:  7 source     94177942 time:    31.0193 sec
+sssp15:  threads:  4 trial:  8 source     32871357 time:    32.5555 sec
+sssp15:  threads:  4 trial:  9 source     56230002 time:    31.4154 sec
+sssp15:  threads:  4 trial: 10 source     69883037 time:    31.4384 sec
+sssp15:  threads:  4 trial: 11 source      9346345 time:    30.2771 sec
+sssp15:  threads:  4 trial: 12 source     48915358 time:    29.7202 sec
+sssp15:  threads:  4 trial: 13 source    122571173 time:    30.1580 sec
+sssp15:  threads:  4 trial: 14 source      6183279 time:    30.0702 sec
+sssp15:  threads:  4 trial: 15 source     86323663 time:    29.9993 sec
+sssp15:  threads:  4 trial: 16 source    106725780 time:    30.0944 sec
+sssp15:  threads:  4 trial: 17 source     92389938 time:    34.4866 sec
+sssp15:  threads:  4 trial: 18 source     16210738 time:    32.9500 sec
+sssp15:  threads:  4 trial: 19 source     59816700 time:    30.6355 sec
+sssp15:  threads:  4 trial: 20 source    111669929 time:    29.2467 sec
+sssp15:  threads:  4 trial: 21 source    102831411 time:    32.0962 sec
+sssp15:  threads:  4 trial: 22 source    113384800 time:    30.2510 sec
+sssp15:  threads:  4 trial: 23 source     43872564 time:    31.2532 sec
+sssp15:  threads:  4 trial: 24 source     80508827 time:    30.2224 sec
+sssp15:  threads:  4 trial: 25 source     26105648 time:    32.2391 sec
+sssp15:  threads:  4 trial: 26 source      8807516 time:    29.4637 sec
+sssp15:  threads:  4 trial: 27 source    118452455 time:    31.4338 sec
+sssp15:  threads:  4 trial: 28 source    121818859 time:    32.3321 sec
+sssp15:  threads:  4 trial: 29 source     42361928 time:    29.5812 sec
+sssp15:  threads:  4 trial: 30 source     29493053 time:    30.3083 sec
+sssp15:  threads:  4 trial: 31 source     98461503 time:    31.1776 sec
+sssp15:  threads:  4 trial: 32 source     71931337 time:    30.1998 sec
+sssp15:  threads:  4 trial: 33 source    103808468 time:    32.4762 sec
+sssp15:  threads:  4 trial: 34 source      4092345 time:    32.4281 sec
+sssp15:  threads:  4 trial: 35 source    115276241 time:    30.7810 sec
+sssp15:  threads:  4 trial: 36 source      4649343 time:    31.1968 sec
+sssp15:  threads:  4 trial: 37 source     76656189 time:    29.5564 sec
+sssp15:  threads:  4 trial: 38 source     31312001 time:    32.1424 sec
+sssp15:  threads:  4 trial: 39 source    111334127 time:    32.4305 sec
+sssp15:  threads:  4 trial: 40 source    100962918 time:    32.7625 sec
+sssp15:  threads:  4 trial: 41 source     41823215 time:    32.1973 sec
+sssp15:  threads:  4 trial: 42 source     22631240 time:    29.7622 sec
+sssp15:  threads:  4 trial: 43 source     42848461 time:    31.7370 sec
+sssp15:  threads:  4 trial: 44 source     79485148 time:    30.5336 sec
+sssp15:  threads:  4 trial: 45 source    106818742 time:    31.6207 sec
+sssp15:  threads:  4 trial: 46 source     73347974 time:    30.8756 sec
+sssp15:  threads:  4 trial: 47 source     78848445 time:    30.4654 sec
+sssp15:  threads:  4 trial: 48 source    109920510 time:    31.4197 sec
+sssp15:  threads:  4 trial: 49 source    121492133 time:    30.1023 sec
+sssp15:  threads:  4 trial: 50 source    101037296 time:    31.7515 sec
+sssp15:  threads:  4 trial: 51 source     15438600 time:    32.7826 sec
+sssp15:  threads:  4 trial: 52 source      4584784 time:    31.2479 sec
+sssp15:  threads:  4 trial: 53 source    124503845 time:    30.7712 sec
+sssp15:  threads:  4 trial: 54 source     87241743 time:    29.7038 sec
+sssp15:  threads:  4 trial: 55 source    108297008 time:    30.4202 sec
+sssp15:  threads:  4 trial: 56 source     33955082 time:    30.2994 sec
+sssp15:  threads:  4 trial: 57 source     79934823 time:    30.2426 sec
+sssp15:  threads:  4 trial: 58 source      8608481 time:    30.0058 sec
+sssp15:  threads:  4 trial: 59 source     82435063 time:    31.7245 sec
+sssp15:  threads:  4 trial: 60 source     46579271 time:    31.5766 sec
+sssp15:  threads:  4 trial: 61 source       515421 time:    33.3588 sec
+sssp15:  threads:  4 trial: 62 source    121530467 time:    29.7177 sec
+sssp15:  threads:  4 trial: 63 source    127978736 time:    30.7066 sec
+
+Avg: SSSP threads   4:     31.038 sec (delta: 29), graph: ../../../GAP/GAP-kron/GAP-kron.grb
+sssp15:  threads:  2 trial:  0 source      2338012 time:    57.0581 sec
+sssp15:  threads:  2 trial:  1 source     31997659 time:    56.3336 sec
+sssp15:  threads:  2 trial:  2 source     23590940 time:    54.3885 sec
+sssp15:  threads:  2 trial:  3 source     43400604 time:    53.4150 sec
+sssp15:  threads:  2 trial:  4 source     75337937 time:    55.2457 sec
+sssp15:  threads:  2 trial:  5 source       169867 time:    56.5335 sec
+sssp15:  threads:  2 trial:  6 source    104041220 time:    56.7981 sec
+sssp15:  threads:  2 trial:  7 source     94177942 time:    56.8686 sec
+sssp15:  threads:  2 trial:  8 source     32871357 time:    56.2667 sec
+sssp15:  threads:  2 trial:  9 source     56230002 time:    58.4855 sec
+sssp15:  threads:  2 trial: 10 source     69883037 time:    57.5993 sec
+sssp15:  threads:  2 trial: 11 source      9346345 time:    53.0342 sec
+sssp15:  threads:  2 trial: 12 source     48915358 time:    58.8390 sec
+sssp15:  threads:  2 trial: 13 source    122571173 time:    53.1458 sec
+sssp15:  threads:  2 trial: 14 source      6183279 time:    53.1389 sec
+sssp15:  threads:  2 trial: 15 source     86323663 time:    54.7874 sec
+sssp15:  threads:  2 trial: 16 source    106725780 time:    54.8503 sec
+sssp15:  threads:  2 trial: 17 source     92389938 time:    59.6393 sec
+sssp15:  threads:  2 trial: 18 source     16210738 time:    55.9803 sec
+sssp15:  threads:  2 trial: 19 source     59816700 time:    55.8002 sec
+sssp15:  threads:  2 trial: 20 source    111669929 time:    53.5868 sec
+sssp15:  threads:  2 trial: 21 source    102831411 time:    58.5637 sec
+sssp15:  threads:  2 trial: 22 source    113384800 time:    52.9222 sec
+sssp15:  threads:  2 trial: 23 source     43872564 time:    57.4000 sec
+sssp15:  threads:  2 trial: 24 source     80508827 time:    55.8458 sec
+sssp15:  threads:  2 trial: 25 source     26105648 time:    55.5784 sec
+sssp15:  threads:  2 trial: 26 source      8807516 time:    53.9503 sec
+sssp15:  threads:  2 trial: 27 source    118452455 time:    54.5582 sec
+sssp15:  threads:  2 trial: 28 source    121818859 time:    56.1626 sec
+sssp15:  threads:  2 trial: 29 source     42361928 time:    58.5778 sec
+sssp15:  threads:  2 trial: 30 source     29493053 time:    55.2897 sec
+sssp15:  threads:  2 trial: 31 source     98461503 time:    54.8170 sec
+sssp15:  threads:  2 trial: 32 source     71931337 time:    53.7727 sec
+sssp15:  threads:  2 trial: 33 source    103808468 time:    56.3447 sec
+sssp15:  threads:  2 trial: 34 source      4092345 time:    57.1689 sec
+sssp15:  threads:  2 trial: 35 source    115276241 time:    56.6189 sec
+sssp15:  threads:  2 trial: 36 source      4649343 time:    57.1102 sec
+sssp15:  threads:  2 trial: 37 source     76656189 time:    54.2386 sec
+sssp15:  threads:  2 trial: 38 source     31312001 time:    55.7233 sec
+sssp15:  threads:  2 trial: 39 source    111334127 time:    55.9540 sec
+sssp15:  threads:  2 trial: 40 source    100962918 time:    59.7032 sec
+sssp15:  threads:  2 trial: 41 source     41823215 time:    55.1746 sec
+sssp15:  threads:  2 trial: 42 source     22631240 time:    52.6261 sec
+sssp15:  threads:  2 trial: 43 source     42848461 time:    54.8375 sec
+sssp15:  threads:  2 trial: 44 source     79485148 time:    53.6610 sec
+sssp15:  threads:  2 trial: 45 source    106818742 time:    55.0828 sec
+sssp15:  threads:  2 trial: 46 source     73347974 time:    53.7253 sec
+sssp15:  threads:  2 trial: 47 source     78848445 time:    53.2445 sec
+sssp15:  threads:  2 trial: 48 source    109920510 time:    57.3576 sec
+sssp15:  threads:  2 trial: 49 source    121492133 time:    55.2605 sec
+sssp15:  threads:  2 trial: 50 source    101037296 time:    55.7266 sec
+sssp15:  threads:  2 trial: 51 source     15438600 time:    56.5310 sec
+sssp15:  threads:  2 trial: 52 source      4584784 time:    54.7145 sec
+sssp15:  threads:  2 trial: 53 source    124503845 time:    56.4086 sec
+sssp15:  threads:  2 trial: 54 source     87241743 time:    54.4798 sec
+sssp15:  threads:  2 trial: 55 source    108297008 time:    53.7296 sec
+sssp15:  threads:  2 trial: 56 source     33955082 time:    55.3878 sec
+sssp15:  threads:  2 trial: 57 source     79934823 time:    55.4384 sec
+sssp15:  threads:  2 trial: 58 source      8608481 time:    53.0865 sec
+sssp15:  threads:  2 trial: 59 source     82435063 time:    55.4946 sec
+sssp15:  threads:  2 trial: 60 source     46579271 time:    54.6124 sec
+sssp15:  threads:  2 trial: 61 source       515421 time:    61.6419 sec
+sssp15:  threads:  2 trial: 62 source    121530467 time:    54.4423 sec
+sssp15:  threads:  2 trial: 63 source    127978736 time:    55.9319 sec
+
+Avg: SSSP threads   2:     55.636 sec (delta: 29), graph: ../../../GAP/GAP-kron/GAP-kron.grb
+sssp15:  threads:  1 trial:  0 source      2338012 time:   130.1187 sec
+sssp15:  threads:  1 trial:  1 source     31997659 time:   127.5673 sec
+sssp15:  threads:  1 trial:  2 source     23590940 time:   124.5725 sec
+sssp15:  threads:  1 trial:  3 source     43400604 time:   121.2350 sec
+sssp15:  threads:  1 trial:  4 source     75337937 time:   124.7021 sec
+sssp15:  threads:  1 trial:  5 source       169867 time:   119.7638 sec
+sssp15:  threads:  1 trial:  6 source    104041220 time:   129.5964 sec
+sssp15:  threads:  1 trial:  7 source     94177942 time:   128.6011 sec
+sssp15:  threads:  1 trial:  8 source     32871357 time:   127.2492 sec
+sssp15:  threads:  1 trial:  9 source     56230002 time:   131.6042 sec
+sssp15:  threads:  1 trial: 10 source     69883037 time:   131.4397 sec
+sssp15:  threads:  1 trial: 11 source      9346345 time:   120.5887 sec
+sssp15:  threads:  1 trial: 12 source     48915358 time:   122.7793 sec
+sssp15:  threads:  1 trial: 13 source    122571173 time:   120.9938 sec
+sssp15:  threads:  1 trial: 14 source      6183279 time:   120.7069 sec
+sssp15:  threads:  1 trial: 15 source     86323663 time:   124.4420 sec
+sssp15:  threads:  1 trial: 16 source    106725780 time:   125.4777 sec
+sssp15:  threads:  1 trial: 17 source     92389938 time:   137.0507 sec
+sssp15:  threads:  1 trial: 18 source     16210738 time:   128.8183 sec
+sssp15:  threads:  1 trial: 19 source     59816700 time:   127.0366 sec
+sssp15:  threads:  1 trial: 20 source    111669929 time:   121.3994 sec
+sssp15:  threads:  1 trial: 21 source    102831411 time:   135.2623 sec
+sssp15:  threads:  1 trial: 22 source    113384800 time:   119.1346 sec
+sssp15:  threads:  1 trial: 23 source     43872564 time:   130.9726 sec
+sssp15:  threads:  1 trial: 24 source     80508827 time:   126.8984 sec
+sssp15:  threads:  1 trial: 25 source     26105648 time:   127.2476 sec
+sssp15:  threads:  1 trial: 26 source      8807516 time:   123.6313 sec
+sssp15:  threads:  1 trial: 27 source    118452455 time:   123.0318 sec
+sssp15:  threads:  1 trial: 28 source    121818859 time:   127.7959 sec
+sssp15:  threads:  1 trial: 29 source     42361928 time:   122.6633 sec
+sssp15:  threads:  1 trial: 30 source     29493053 time:   125.3612 sec
+sssp15:  threads:  1 trial: 31 source     98461503 time:   124.1450 sec
+sssp15:  threads:  1 trial: 32 source     71931337 time:   120.4804 sec
+sssp15:  threads:  1 trial: 33 source    103808468 time:   128.9317 sec
+sssp15:  threads:  1 trial: 34 source      4092345 time:   129.8095 sec
+sssp15:  threads:  1 trial: 35 source    115276241 time:   128.4599 sec
+sssp15:  threads:  1 trial: 36 source      4649343 time:   127.6483 sec
+sssp15:  threads:  1 trial: 37 source     76656189 time:   124.1298 sec
+sssp15:  threads:  1 trial: 38 source     31312001 time:   127.2040 sec
+sssp15:  threads:  1 trial: 39 source    111334127 time:   127.7861 sec
+sssp15:  threads:  1 trial: 40 source    100962918 time:   136.3670 sec
+sssp15:  threads:  1 trial: 41 source     41823215 time:   125.4216 sec
+sssp15:  threads:  1 trial: 42 source     22631240 time:   119.6334 sec
+sssp15:  threads:  1 trial: 43 source     42848461 time:   124.2720 sec
+sssp15:  threads:  1 trial: 44 source     79485148 time:   119.5755 sec
+sssp15:  threads:  1 trial: 45 source    106818742 time:   125.8389 sec
+sssp15:  threads:  1 trial: 46 source     73347974 time:   121.7253 sec
+sssp15:  threads:  1 trial: 47 source     78848445 time:   120.2833 sec
+sssp15:  threads:  1 trial: 48 source    109920510 time:   129.9481 sec
+sssp15:  threads:  1 trial: 49 source    121492133 time:   126.5937 sec
+sssp15:  threads:  1 trial: 50 source    101037296 time:   126.7061 sec
+sssp15:  threads:  1 trial: 51 source     15438600 time:   130.1895 sec
+sssp15:  threads:  1 trial: 52 source      4584784 time:   123.1842 sec
+sssp15:  threads:  1 trial: 53 source    124503845 time:   127.3999 sec
+sssp15:  threads:  1 trial: 54 source     87241743 time:   124.2397 sec
+sssp15:  threads:  1 trial: 55 source    108297008 time:   120.6739 sec
+sssp15:  threads:  1 trial: 56 source     33955082 time:   125.5706 sec
+sssp15:  threads:  1 trial: 57 source     79934823 time:   125.2591 sec
+sssp15:  threads:  1 trial: 58 source      8608481 time:   118.2140 sec
+sssp15:  threads:  1 trial: 59 source     82435063 time:   126.8760 sec
+sssp15:  threads:  1 trial: 60 source     46579271 time:   124.3650 sec
+sssp15:  threads:  1 trial: 61 source       515421 time:   141.1446 sec
+sssp15:  threads:  1 trial: 62 source    121530467 time:   124.9389 sec
+sssp15:  threads:  1 trial: 63 source    127978736 time:   127.3200 sec
+
+Avg: SSSP threads   1:    125.970 sec (delta: 29), graph: ../../../GAP/GAP-kron/GAP-kron.grb
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+threads to test:  32 24 16 8 4 2 1
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+sources: ../../../GAP/GAP-twitter/GAP-twitter_sources.mtx
+A converted to 32-bit
+read time: 28.3282
+delta: 51
+warmup: 6.23314 sec
+sssp15:  threads: 32 trial:  0 source     12441072 time:     6.2793 sec
+sssp15:  threads: 32 trial:  1 source     54488257 time:     7.2493 sec
+sssp15:  threads: 32 trial:  2 source     25451915 time:     7.6487 sec
+sssp15:  threads: 32 trial:  3 source     57714473 time:     7.4305 sec
+sssp15:  threads: 32 trial:  4 source     14839494 time:     7.3470 sec
+sssp15:  threads: 32 trial:  5 source     32081104 time:     6.6504 sec
+sssp15:  threads: 32 trial:  6 source     52957357 time:     7.3369 sec
+sssp15:  threads: 32 trial:  7 source     50444380 time:     7.2907 sec
+sssp15:  threads: 32 trial:  8 source     49590701 time:     6.6435 sec
+sssp15:  threads: 32 trial:  9 source     20127816 time:     6.4197 sec
+sssp15:  threads: 32 trial: 10 source     34939333 time:     7.4186 sec
+sssp15:  threads: 32 trial: 11 source     48251001 time:     7.5941 sec
+sssp15:  threads: 32 trial: 12 source     19524253 time:     6.3461 sec
+sssp15:  threads: 32 trial: 13 source     43676726 time:     7.4866 sec
+sssp15:  threads: 32 trial: 14 source     33055508 time:     6.8632 sec
+sssp15:  threads: 32 trial: 15 source     15244687 time:     6.5775 sec
+sssp15:  threads: 32 trial: 16 source     24946738 time:     8.0501 sec
+sssp15:  threads: 32 trial: 17 source      6479472 time:     7.1400 sec
+sssp15:  threads: 32 trial: 18 source     26077682 time:     7.0659 sec
+sssp15:  threads: 32 trial: 19 source     22023875 time:     7.2887 sec
+sssp15:  threads: 32 trial: 20 source     22081915 time:     7.5188 sec
+sssp15:  threads: 32 trial: 21 source     40034162 time:     6.2573 sec
+sssp15:  threads: 32 trial: 22 source     49496014 time:     7.3051 sec
+sssp15:  threads: 32 trial: 23 source     42847507 time:     8.6005 sec
+sssp15:  threads: 32 trial: 24 source     52409557 time:     7.1947 sec
+sssp15:  threads: 32 trial: 25 source     55445388 time:     6.1151 sec
+sssp15:  threads: 32 trial: 26 source     22028097 time:     6.8914 sec
+sssp15:  threads: 32 trial: 27 source     48766648 time:     7.3529 sec
+sssp15:  threads: 32 trial: 28 source     44521241 time:     6.8950 sec
+sssp15:  threads: 32 trial: 29 source     60135542 time:     6.3258 sec
+sssp15:  threads: 32 trial: 30 source     28528671 time:     6.1165 sec
+sssp15:  threads: 32 trial: 31 source      9678012 time:     7.3859 sec
+sssp15:  threads: 32 trial: 32 source     40020306 time:     7.3436 sec
+sssp15:  threads: 32 trial: 33 source     31625735 time:     7.3184 sec
+sssp15:  threads: 32 trial: 34 source     37446892 time:     7.3724 sec
+sssp15:  threads: 32 trial: 35 source     51788952 time:     7.0277 sec
+sssp15:  threads: 32 trial: 36 source     52584255 time:     6.8611 sec
+sssp15:  threads: 32 trial: 37 source     20346696 time:     7.1420 sec
+sssp15:  threads: 32 trial: 38 source     48387909 time:     6.6992 sec
+sssp15:  threads: 32 trial: 39 source     37337427 time:     6.2632 sec
+sssp15:  threads: 32 trial: 40 source     50501084 time:     6.7082 sec
+sssp15:  threads: 32 trial: 41 source     30130061 time:     7.1030 sec
+sssp15:  threads: 32 trial: 42 source     41185893 time:     7.4387 sec
+sssp15:  threads: 32 trial: 43 source     56495703 time:     6.6096 sec
+sssp15:  threads: 32 trial: 44 source     45663305 time:     6.9508 sec
+sssp15:  threads: 32 trial: 45 source     33359460 time:     6.6820 sec
+sssp15:  threads: 32 trial: 46 source     48143058 time:     6.7644 sec
+sssp15:  threads: 32 trial: 47 source     33291513 time:     6.1481 sec
+sssp15:  threads: 32 trial: 48 source     53461445 time:     7.1367 sec
+sssp15:  threads: 32 trial: 49 source     29340610 time:     6.5678 sec
+sssp15:  threads: 32 trial: 50 source     34148498 time:     6.8549 sec
+sssp15:  threads: 32 trial: 51 source     49171806 time:     6.9618 sec
+sssp15:  threads: 32 trial: 52 source     35550696 time:     7.1344 sec
+sssp15:  threads: 32 trial: 53 source     14521507 time:     7.2246 sec
+sssp15:  threads: 32 trial: 54 source     51633218 time:     7.5132 sec
+sssp15:  threads: 32 trial: 55 source     46823382 time:     6.8298 sec
+sssp15:  threads: 32 trial: 56 source     19396273 time:     7.8571 sec
+sssp15:  threads: 32 trial: 57 source     19871750 time:     7.3815 sec
+sssp15:  threads: 32 trial: 58 source     36862677 time:     8.0156 sec
+sssp15:  threads: 32 trial: 59 source     49539126 time:     7.4683 sec
+sssp15:  threads: 32 trial: 60 source     34016452 time:     6.4333 sec
+sssp15:  threads: 32 trial: 61 source     36567395 time:     6.7613 sec
+sssp15:  threads: 32 trial: 62 source     55487793 time:     6.7387 sec
+sssp15:  threads: 32 trial: 63 source     14391370 time:     7.8955 sec
+
+Avg: SSSP threads  32:      7.051 sec (delta: 51), graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+sssp15:  threads: 24 trial:  0 source     12441072 time:     6.3258 sec
+sssp15:  threads: 24 trial:  1 source     54488257 time:     7.3226 sec
+sssp15:  threads: 24 trial:  2 source     25451915 time:     7.8661 sec
+sssp15:  threads: 24 trial:  3 source     57714473 time:     7.6840 sec
+sssp15:  threads: 24 trial:  4 source     14839494 time:     7.5504 sec
+sssp15:  threads: 24 trial:  5 source     32081104 time:     6.8963 sec
+sssp15:  threads: 24 trial:  6 source     52957357 time:     7.2541 sec
+sssp15:  threads: 24 trial:  7 source     50444380 time:     7.5214 sec
+sssp15:  threads: 24 trial:  8 source     49590701 time:     6.8884 sec
+sssp15:  threads: 24 trial:  9 source     20127816 time:     6.6450 sec
+sssp15:  threads: 24 trial: 10 source     34939333 time:     7.7248 sec
+sssp15:  threads: 24 trial: 11 source     48251001 time:     7.8471 sec
+sssp15:  threads: 24 trial: 12 source     19524253 time:     6.5767 sec
+sssp15:  threads: 24 trial: 13 source     43676726 time:     7.7033 sec
+sssp15:  threads: 24 trial: 14 source     33055508 time:     7.0895 sec
+sssp15:  threads: 24 trial: 15 source     15244687 time:     6.8086 sec
+sssp15:  threads: 24 trial: 16 source     24946738 time:     8.3550 sec
+sssp15:  threads: 24 trial: 17 source      6479472 time:     7.3955 sec
+sssp15:  threads: 24 trial: 18 source     26077682 time:     7.1462 sec
+sssp15:  threads: 24 trial: 19 source     22023875 time:     7.3680 sec
+sssp15:  threads: 24 trial: 20 source     22081915 time:     7.6403 sec
+sssp15:  threads: 24 trial: 21 source     40034162 time:     6.3982 sec
+sssp15:  threads: 24 trial: 22 source     49496014 time:     7.3710 sec
+sssp15:  threads: 24 trial: 23 source     42847507 time:     8.7260 sec
+sssp15:  threads: 24 trial: 24 source     52409557 time:     7.2400 sec
+sssp15:  threads: 24 trial: 25 source     55445388 time:     6.2514 sec
+sssp15:  threads: 24 trial: 26 source     22028097 time:     7.0299 sec
+sssp15:  threads: 24 trial: 27 source     48766648 time:     7.7675 sec
+sssp15:  threads: 24 trial: 28 source     44521241 time:     7.0398 sec
+sssp15:  threads: 24 trial: 29 source     60135542 time:     6.4067 sec
+sssp15:  threads: 24 trial: 30 source     28528671 time:     6.2545 sec
+sssp15:  threads: 24 trial: 31 source      9678012 time:     7.4941 sec
+sssp15:  threads: 24 trial: 32 source     40020306 time:     7.5835 sec
+sssp15:  threads: 24 trial: 33 source     31625735 time:     7.4338 sec
+sssp15:  threads: 24 trial: 34 source     37446892 time:     7.4705 sec
+sssp15:  threads: 24 trial: 35 source     51788952 time:     7.1482 sec
+sssp15:  threads: 24 trial: 36 source     52584255 time:     6.9638 sec
+sssp15:  threads: 24 trial: 37 source     20346696 time:     7.1862 sec
+sssp15:  threads: 24 trial: 38 source     48387909 time:     6.7644 sec
+sssp15:  threads: 24 trial: 39 source     37337427 time:     6.4414 sec
+sssp15:  threads: 24 trial: 40 source     50501084 time:     6.8127 sec
+sssp15:  threads: 24 trial: 41 source     30130061 time:     7.1851 sec
+sssp15:  threads: 24 trial: 42 source     41185893 time:     7.4935 sec
+sssp15:  threads: 24 trial: 43 source     56495703 time:     6.7247 sec
+sssp15:  threads: 24 trial: 44 source     45663305 time:     7.0489 sec
+sssp15:  threads: 24 trial: 45 source     33359460 time:     6.7554 sec
+sssp15:  threads: 24 trial: 46 source     48143058 time:     6.8227 sec
+sssp15:  threads: 24 trial: 47 source     33291513 time:     6.3150 sec
+sssp15:  threads: 24 trial: 48 source     53461445 time:     7.2858 sec
+sssp15:  threads: 24 trial: 49 source     29340610 time:     6.6936 sec
+sssp15:  threads: 24 trial: 50 source     34148498 time:     6.9358 sec
+sssp15:  threads: 24 trial: 51 source     49171806 time:     7.0710 sec
+sssp15:  threads: 24 trial: 52 source     35550696 time:     7.2128 sec
+sssp15:  threads: 24 trial: 53 source     14521507 time:     7.3244 sec
+sssp15:  threads: 24 trial: 54 source     51633218 time:     7.6164 sec
+sssp15:  threads: 24 trial: 55 source     46823382 time:     6.9730 sec
+sssp15:  threads: 24 trial: 56 source     19396273 time:     7.9690 sec
+sssp15:  threads: 24 trial: 57 source     19871750 time:     7.4788 sec
+sssp15:  threads: 24 trial: 58 source     36862677 time:     8.0500 sec
+sssp15:  threads: 24 trial: 59 source     49539126 time:     7.6179 sec
+sssp15:  threads: 24 trial: 60 source     34016452 time:     6.5937 sec
+sssp15:  threads: 24 trial: 61 source     36567395 time:     6.9306 sec
+sssp15:  threads: 24 trial: 62 source     55487793 time:     6.8467 sec
+sssp15:  threads: 24 trial: 63 source     14391370 time:     7.9507 sec
+
+Avg: SSSP threads  24:      7.192 sec (delta: 51), graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+sssp15:  threads: 16 trial:  0 source     12441072 time:     6.7097 sec
+sssp15:  threads: 16 trial:  1 source     54488257 time:     7.6528 sec
+sssp15:  threads: 16 trial:  2 source     25451915 time:     8.0571 sec
+sssp15:  threads: 16 trial:  3 source     57714473 time:     7.8298 sec
+sssp15:  threads: 16 trial:  4 source     14839494 time:     7.6642 sec
+sssp15:  threads: 16 trial:  5 source     32081104 time:     7.0197 sec
+sssp15:  threads: 16 trial:  6 source     52957357 time:     7.3269 sec
+sssp15:  threads: 16 trial:  7 source     50444380 time:     7.6703 sec
+sssp15:  threads: 16 trial:  8 source     49590701 time:     7.0305 sec
+sssp15:  threads: 16 trial:  9 source     20127816 time:     6.8928 sec
+sssp15:  threads: 16 trial: 10 source     34939333 time:     7.8077 sec
+sssp15:  threads: 16 trial: 11 source     48251001 time:     8.0111 sec
+sssp15:  threads: 16 trial: 12 source     19524253 time:     6.7994 sec
+sssp15:  threads: 16 trial: 13 source     43676726 time:     7.8871 sec
+sssp15:  threads: 16 trial: 14 source     33055508 time:     7.2708 sec
+sssp15:  threads: 16 trial: 15 source     15244687 time:     6.9504 sec
+sssp15:  threads: 16 trial: 16 source     24946738 time:     8.5156 sec
+sssp15:  threads: 16 trial: 17 source      6479472 time:     7.5311 sec
+sssp15:  threads: 16 trial: 18 source     26077682 time:     7.4824 sec
+sssp15:  threads: 16 trial: 19 source     22023875 time:     7.6807 sec
+sssp15:  threads: 16 trial: 20 source     22081915 time:     7.8899 sec
+sssp15:  threads: 16 trial: 21 source     40034162 time:     6.7477 sec
+sssp15:  threads: 16 trial: 22 source     49496014 time:     7.7153 sec
+sssp15:  threads: 16 trial: 23 source     42847507 time:     9.1034 sec
+sssp15:  threads: 16 trial: 24 source     52409557 time:     7.5467 sec
+sssp15:  threads: 16 trial: 25 source     55445388 time:     6.5319 sec
+sssp15:  threads: 16 trial: 26 source     22028097 time:     7.2683 sec
+sssp15:  threads: 16 trial: 27 source     48766648 time:     7.7390 sec
+sssp15:  threads: 16 trial: 28 source     44521241 time:     7.2842 sec
+sssp15:  threads: 16 trial: 29 source     60135542 time:     6.7366 sec
+sssp15:  threads: 16 trial: 30 source     28528671 time:     6.5591 sec
+sssp15:  threads: 16 trial: 31 source      9678012 time:     7.7817 sec
+sssp15:  threads: 16 trial: 32 source     40020306 time:     7.8660 sec
+sssp15:  threads: 16 trial: 33 source     31625735 time:     7.7120 sec
+sssp15:  threads: 16 trial: 34 source     37446892 time:     7.7349 sec
+sssp15:  threads: 16 trial: 35 source     51788952 time:     7.3973 sec
+sssp15:  threads: 16 trial: 36 source     52584255 time:     7.2679 sec
+sssp15:  threads: 16 trial: 37 source     20346696 time:     7.5043 sec
+sssp15:  threads: 16 trial: 38 source     48387909 time:     7.0832 sec
+sssp15:  threads: 16 trial: 39 source     37337427 time:     6.7878 sec
+sssp15:  threads: 16 trial: 40 source     50501084 time:     7.0911 sec
+sssp15:  threads: 16 trial: 41 source     30130061 time:     7.5066 sec
+sssp15:  threads: 16 trial: 42 source     41185893 time:     7.8478 sec
+sssp15:  threads: 16 trial: 43 source     56495703 time:     6.9887 sec
+sssp15:  threads: 16 trial: 44 source     45663305 time:     7.3125 sec
+sssp15:  threads: 16 trial: 45 source     33359460 time:     7.0568 sec
+sssp15:  threads: 16 trial: 46 source     48143058 time:     7.1758 sec
+sssp15:  threads: 16 trial: 47 source     33291513 time:     6.8782 sec
+sssp15:  threads: 16 trial: 48 source     53461445 time:     7.5574 sec
+sssp15:  threads: 16 trial: 49 source     29340610 time:     7.0365 sec
+sssp15:  threads: 16 trial: 50 source     34148498 time:     7.2087 sec
+sssp15:  threads: 16 trial: 51 source     49171806 time:     7.3938 sec
+sssp15:  threads: 16 trial: 52 source     35550696 time:     7.5206 sec
+sssp15:  threads: 16 trial: 53 source     14521507 time:     7.5891 sec
+sssp15:  threads: 16 trial: 54 source     51633218 time:     7.8679 sec
+sssp15:  threads: 16 trial: 55 source     46823382 time:     7.2459 sec
+sssp15:  threads: 16 trial: 56 source     19396273 time:     8.2288 sec
+sssp15:  threads: 16 trial: 57 source     19871750 time:     7.7768 sec
+sssp15:  threads: 16 trial: 58 source     36862677 time:     8.4278 sec
+sssp15:  threads: 16 trial: 59 source     49539126 time:     7.9235 sec
+sssp15:  threads: 16 trial: 60 source     34016452 time:     6.8392 sec
+sssp15:  threads: 16 trial: 61 source     36567395 time:     7.1732 sec
+sssp15:  threads: 16 trial: 62 source     55487793 time:     7.1178 sec
+sssp15:  threads: 16 trial: 63 source     14391370 time:     8.3269 sec
+
+Avg: SSSP threads  16:      7.455 sec (delta: 51), graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+sssp15:  threads:  8 trial:  0 source     12441072 time:     8.0904 sec
+sssp15:  threads:  8 trial:  1 source     54488257 time:     9.2067 sec
+sssp15:  threads:  8 trial:  2 source     25451915 time:     9.7516 sec
+sssp15:  threads:  8 trial:  3 source     57714473 time:     9.4023 sec
+sssp15:  threads:  8 trial:  4 source     14839494 time:     9.2059 sec
+sssp15:  threads:  8 trial:  5 source     32081104 time:     8.4186 sec
+sssp15:  threads:  8 trial:  6 source     52957357 time:     8.8436 sec
+sssp15:  threads:  8 trial:  7 source     50444380 time:     9.1503 sec
+sssp15:  threads:  8 trial:  8 source     49590701 time:     8.4198 sec
+sssp15:  threads:  8 trial:  9 source     20127816 time:     8.3019 sec
+sssp15:  threads:  8 trial: 10 source     34939333 time:     9.4190 sec
+sssp15:  threads:  8 trial: 11 source     48251001 time:     9.6265 sec
+sssp15:  threads:  8 trial: 12 source     19524253 time:     8.2007 sec
+sssp15:  threads:  8 trial: 13 source     43676726 time:     9.4854 sec
+sssp15:  threads:  8 trial: 14 source     33055508 time:     8.6310 sec
+sssp15:  threads:  8 trial: 15 source     15244687 time:     8.3010 sec
+sssp15:  threads:  8 trial: 16 source     24946738 time:    10.2605 sec
+sssp15:  threads:  8 trial: 17 source      6479472 time:     9.0656 sec
+sssp15:  threads:  8 trial: 18 source     26077682 time:     8.9885 sec
+sssp15:  threads:  8 trial: 19 source     22023875 time:     9.2324 sec
+sssp15:  threads:  8 trial: 20 source     22081915 time:     9.4825 sec
+sssp15:  threads:  8 trial: 21 source     40034162 time:     8.1314 sec
+sssp15:  threads:  8 trial: 22 source     49496014 time:     9.2990 sec
+sssp15:  threads:  8 trial: 23 source     42847507 time:    11.0170 sec
+sssp15:  threads:  8 trial: 24 source     52409557 time:     9.0319 sec
+sssp15:  threads:  8 trial: 25 source     55445388 time:     7.8064 sec
+sssp15:  threads:  8 trial: 26 source     22028097 time:     8.7313 sec
+sssp15:  threads:  8 trial: 27 source     48766648 time:     9.3373 sec
+sssp15:  threads:  8 trial: 28 source     44521241 time:     8.7335 sec
+sssp15:  threads:  8 trial: 29 source     60135542 time:     7.9591 sec
+sssp15:  threads:  8 trial: 30 source     28528671 time:     7.9504 sec
+sssp15:  threads:  8 trial: 31 source      9678012 time:     9.2294 sec
+sssp15:  threads:  8 trial: 32 source     40020306 time:     9.3208 sec
+sssp15:  threads:  8 trial: 33 source     31625735 time:     9.2341 sec
+sssp15:  threads:  8 trial: 34 source     37446892 time:     9.3592 sec
+sssp15:  threads:  8 trial: 35 source     51788952 time:     8.9289 sec
+sssp15:  threads:  8 trial: 36 source     52584255 time:     8.6571 sec
+sssp15:  threads:  8 trial: 37 source     20346696 time:     9.0333 sec
+sssp15:  threads:  8 trial: 38 source     48387909 time:     8.5051 sec
+sssp15:  threads:  8 trial: 39 source     37337427 time:     8.1497 sec
+sssp15:  threads:  8 trial: 40 source     50501084 time:     8.3829 sec
+sssp15:  threads:  8 trial: 41 source     30130061 time:     8.9714 sec
+sssp15:  threads:  8 trial: 42 source     41185893 time:     9.4373 sec
+sssp15:  threads:  8 trial: 43 source     56495703 time:     8.4386 sec
+sssp15:  threads:  8 trial: 44 source     45663305 time:     8.7194 sec
+sssp15:  threads:  8 trial: 45 source     33359460 time:     8.4495 sec
+sssp15:  threads:  8 trial: 46 source     48143058 time:     8.4738 sec
+sssp15:  threads:  8 trial: 47 source     33291513 time:     7.8552 sec
+sssp15:  threads:  8 trial: 48 source     53461445 time:     9.0797 sec
+sssp15:  threads:  8 trial: 49 source     29340610 time:     8.3632 sec
+sssp15:  threads:  8 trial: 50 source     34148498 time:     8.5644 sec
+sssp15:  threads:  8 trial: 51 source     49171806 time:     8.7605 sec
+sssp15:  threads:  8 trial: 52 source     35550696 time:     9.0444 sec
+sssp15:  threads:  8 trial: 53 source     14521507 time:     9.0604 sec
+sssp15:  threads:  8 trial: 54 source     51633218 time:     9.6483 sec
+sssp15:  threads:  8 trial: 55 source     46823382 time:     8.7216 sec
+sssp15:  threads:  8 trial: 56 source     19396273 time:     9.8738 sec
+sssp15:  threads:  8 trial: 57 source     19871750 time:     9.3546 sec
+sssp15:  threads:  8 trial: 58 source     36862677 time:    10.1981 sec
+sssp15:  threads:  8 trial: 59 source     49539126 time:     9.5029 sec
+sssp15:  threads:  8 trial: 60 source     34016452 time:     8.1385 sec
+sssp15:  threads:  8 trial: 61 source     36567395 time:     8.5561 sec
+sssp15:  threads:  8 trial: 62 source     55487793 time:     8.4421 sec
+sssp15:  threads:  8 trial: 63 source     14391370 time:     9.9680 sec
+
+Avg: SSSP threads   8:      8.936 sec (delta: 51), graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+sssp15:  threads:  4 trial:  0 source     12441072 time:    11.5457 sec
+sssp15:  threads:  4 trial:  1 source     54488257 time:    13.7216 sec
+sssp15:  threads:  4 trial:  2 source     25451915 time:    14.2788 sec
+sssp15:  threads:  4 trial:  3 source     57714473 time:    13.8557 sec
+sssp15:  threads:  4 trial:  4 source     14839494 time:    13.5195 sec
+sssp15:  threads:  4 trial:  5 source     32081104 time:    12.2112 sec
+sssp15:  threads:  4 trial:  6 source     52957357 time:    13.1420 sec
+sssp15:  threads:  4 trial:  7 source     50444380 time:    13.7943 sec
+sssp15:  threads:  4 trial:  8 source     49590701 time:    12.6840 sec
+sssp15:  threads:  4 trial:  9 source     20127816 time:    12.0692 sec
+sssp15:  threads:  4 trial: 10 source     34939333 time:    14.3035 sec
+sssp15:  threads:  4 trial: 11 source     48251001 time:    14.2059 sec
+sssp15:  threads:  4 trial: 12 source     19524253 time:    11.8133 sec
+sssp15:  threads:  4 trial: 13 source     43676726 time:    13.9187 sec
+sssp15:  threads:  4 trial: 14 source     33055508 time:    13.0367 sec
+sssp15:  threads:  4 trial: 15 source     15244687 time:    12.3105 sec
+sssp15:  threads:  4 trial: 16 source     24946738 time:    15.5164 sec
+sssp15:  threads:  4 trial: 17 source      6479472 time:    13.4798 sec
+sssp15:  threads:  4 trial: 18 source     26077682 time:    13.5851 sec
+sssp15:  threads:  4 trial: 19 source     22023875 time:    13.9908 sec
+sssp15:  threads:  4 trial: 20 source     22081915 time:    13.8911 sec
+sssp15:  threads:  4 trial: 21 source     40034162 time:    11.6074 sec
+sssp15:  threads:  4 trial: 22 source     49496014 time:    14.0215 sec
+sssp15:  threads:  4 trial: 23 source     42847507 time:    16.7311 sec
+sssp15:  threads:  4 trial: 24 source     52409557 time:    13.2945 sec
+sssp15:  threads:  4 trial: 25 source     55445388 time:    11.4888 sec
+sssp15:  threads:  4 trial: 26 source     22028097 time:    13.1479 sec
+sssp15:  threads:  4 trial: 27 source     48766648 time:    13.7244 sec
+sssp15:  threads:  4 trial: 28 source     44521241 time:    13.1607 sec
+sssp15:  threads:  4 trial: 29 source     60135542 time:    11.8600 sec
+sssp15:  threads:  4 trial: 30 source     28528671 time:    11.6181 sec
+sssp15:  threads:  4 trial: 31 source      9678012 time:    13.6830 sec
+sssp15:  threads:  4 trial: 32 source     40020306 time:    14.0900 sec
+sssp15:  threads:  4 trial: 33 source     31625735 time:    13.5960 sec
+sssp15:  threads:  4 trial: 34 source     37446892 time:    13.8940 sec
+sssp15:  threads:  4 trial: 35 source     51788952 time:    13.6606 sec
+sssp15:  threads:  4 trial: 36 source     52584255 time:    13.2174 sec
+sssp15:  threads:  4 trial: 37 source     20346696 time:    13.5359 sec
+sssp15:  threads:  4 trial: 38 source     48387909 time:    12.6425 sec
+sssp15:  threads:  4 trial: 39 source     37337427 time:    11.9533 sec
+sssp15:  threads:  4 trial: 40 source     50501084 time:    12.6964 sec
+sssp15:  threads:  4 trial: 41 source     30130061 time:    13.5600 sec
+sssp15:  threads:  4 trial: 42 source     41185893 time:    13.9236 sec
+sssp15:  threads:  4 trial: 43 source     56495703 time:    12.4374 sec
+sssp15:  threads:  4 trial: 44 source     45663305 time:    13.0642 sec
+sssp15:  threads:  4 trial: 45 source     33359460 time:    12.6394 sec
+sssp15:  threads:  4 trial: 46 source     48143058 time:    12.5324 sec
+sssp15:  threads:  4 trial: 47 source     33291513 time:    11.5970 sec
+sssp15:  threads:  4 trial: 48 source     53461445 time:    13.3169 sec
+sssp15:  threads:  4 trial: 49 source     29340610 time:    12.4771 sec
+sssp15:  threads:  4 trial: 50 source     34148498 time:    12.8755 sec
+sssp15:  threads:  4 trial: 51 source     49171806 time:    13.2610 sec
+sssp15:  threads:  4 trial: 52 source     35550696 time:    13.5052 sec
+sssp15:  threads:  4 trial: 53 source     14521507 time:    13.7205 sec
+sssp15:  threads:  4 trial: 54 source     51633218 time:    13.9096 sec
+sssp15:  threads:  4 trial: 55 source     46823382 time:    13.0853 sec
+sssp15:  threads:  4 trial: 56 source     19396273 time:    14.5394 sec
+sssp15:  threads:  4 trial: 57 source     19871750 time:    13.7160 sec
+sssp15:  threads:  4 trial: 58 source     36862677 time:    15.2512 sec
+sssp15:  threads:  4 trial: 59 source     49539126 time:    14.3344 sec
+sssp15:  threads:  4 trial: 60 source     34016452 time:    12.1540 sec
+sssp15:  threads:  4 trial: 61 source     36567395 time:    12.6747 sec
+sssp15:  threads:  4 trial: 62 source     55487793 time:    12.8066 sec
+sssp15:  threads:  4 trial: 63 source     14391370 time:    15.0053 sec
+
+Avg: SSSP threads   4:     13.295 sec (delta: 51), graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+sssp15:  threads:  2 trial:  0 source     12441072 time:    20.3499 sec
+sssp15:  threads:  2 trial:  1 source     54488257 time:    23.5858 sec
+sssp15:  threads:  2 trial:  2 source     25451915 time:    24.8810 sec
+sssp15:  threads:  2 trial:  3 source     57714473 time:    24.1762 sec
+sssp15:  threads:  2 trial:  4 source     14839494 time:    23.5632 sec
+sssp15:  threads:  2 trial:  5 source     32081104 time:    21.3571 sec
+sssp15:  threads:  2 trial:  6 source     52957357 time:    22.4041 sec
+sssp15:  threads:  2 trial:  7 source     50444380 time:    23.6101 sec
+sssp15:  threads:  2 trial:  8 source     49590701 time:    21.5660 sec
+sssp15:  threads:  2 trial:  9 source     20127816 time:    21.0483 sec
+sssp15:  threads:  2 trial: 10 source     34939333 time:    24.4324 sec
+sssp15:  threads:  2 trial: 11 source     48251001 time:    24.6917 sec
+sssp15:  threads:  2 trial: 12 source     19524253 time:    20.8406 sec
+sssp15:  threads:  2 trial: 13 source     43676726 time:    24.0605 sec
+sssp15:  threads:  2 trial: 14 source     33055508 time:    22.2152 sec
+sssp15:  threads:  2 trial: 15 source     15244687 time:    21.0215 sec
+sssp15:  threads:  2 trial: 16 source     24946738 time:    26.5275 sec
+sssp15:  threads:  2 trial: 17 source      6479472 time:    23.0945 sec
+sssp15:  threads:  2 trial: 18 source     26077682 time:    23.3064 sec
+sssp15:  threads:  2 trial: 19 source     22023875 time:    23.7069 sec
+sssp15:  threads:  2 trial: 20 source     22081915 time:    24.1597 sec
+sssp15:  threads:  2 trial: 21 source     40034162 time:    20.4822 sec
+sssp15:  threads:  2 trial: 22 source     49496014 time:    24.1495 sec
+sssp15:  threads:  2 trial: 23 source     42847507 time:    28.7807 sec
+sssp15:  threads:  2 trial: 24 source     52409557 time:    22.9651 sec
+sssp15:  threads:  2 trial: 25 source     55445388 time:    20.1970 sec
+sssp15:  threads:  2 trial: 26 source     22028097 time:    22.3749 sec
+sssp15:  threads:  2 trial: 27 source     48766648 time:    23.8339 sec
+sssp15:  threads:  2 trial: 28 source     44521241 time:    22.6574 sec
+sssp15:  threads:  2 trial: 29 source     60135542 time:    20.0027 sec
+sssp15:  threads:  2 trial: 30 source     28528671 time:    20.0659 sec
+sssp15:  threads:  2 trial: 31 source      9678012 time:    23.6352 sec
+sssp15:  threads:  2 trial: 32 source     40020306 time:    24.1855 sec
+sssp15:  threads:  2 trial: 33 source     31625735 time:    23.5103 sec
+sssp15:  threads:  2 trial: 34 source     37446892 time:    23.8593 sec
+sssp15:  threads:  2 trial: 35 source     51788952 time:    22.9609 sec
+sssp15:  threads:  2 trial: 36 source     52584255 time:    21.8994 sec
+sssp15:  threads:  2 trial: 37 source     20346696 time:    23.1303 sec
+sssp15:  threads:  2 trial: 38 source     48387909 time:    21.6070 sec
+sssp15:  threads:  2 trial: 39 source     37337427 time:    20.8150 sec
+sssp15:  threads:  2 trial: 40 source     50501084 time:    21.6091 sec
+sssp15:  threads:  2 trial: 41 source     30130061 time:    23.1431 sec
+sssp15:  threads:  2 trial: 42 source     41185893 time:    24.3060 sec
+sssp15:  threads:  2 trial: 43 source     56495703 time:    21.3219 sec
+sssp15:  threads:  2 trial: 44 source     45663305 time:    22.1160 sec
+sssp15:  threads:  2 trial: 45 source     33359460 time:    21.5312 sec
+sssp15:  threads:  2 trial: 46 source     48143058 time:    21.0454 sec
+sssp15:  threads:  2 trial: 47 source     33291513 time:    19.8663 sec
+sssp15:  threads:  2 trial: 48 source     53461445 time:    23.1514 sec
+sssp15:  threads:  2 trial: 49 source     29340610 time:    21.1168 sec
+sssp15:  threads:  2 trial: 50 source     34148498 time:    22.1515 sec
+sssp15:  threads:  2 trial: 51 source     49171806 time:    22.7224 sec
+sssp15:  threads:  2 trial: 52 source     35550696 time:    23.1126 sec
+sssp15:  threads:  2 trial: 53 source     14521507 time:    23.3949 sec
+sssp15:  threads:  2 trial: 54 source     51633218 time:    24.2434 sec
+sssp15:  threads:  2 trial: 55 source     46823382 time:    22.4409 sec
+sssp15:  threads:  2 trial: 56 source     19396273 time:    25.0885 sec
+sssp15:  threads:  2 trial: 57 source     19871750 time:    23.8247 sec
+sssp15:  threads:  2 trial: 58 source     36862677 time:    26.0565 sec
+sssp15:  threads:  2 trial: 59 source     49539126 time:    24.2426 sec
+sssp15:  threads:  2 trial: 60 source     34016452 time:    20.5114 sec
+sssp15:  threads:  2 trial: 61 source     36567395 time:    21.6800 sec
+sssp15:  threads:  2 trial: 62 source     55487793 time:    21.7418 sec
+sssp15:  threads:  2 trial: 63 source     14391370 time:    25.7049 sec
+
+Avg: SSSP threads   2:     22.841 sec (delta: 51), graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+sssp15:  threads:  1 trial:  0 source     12441072 time:    45.1707 sec
+sssp15:  threads:  1 trial:  1 source     54488257 time:    52.4102 sec
+sssp15:  threads:  1 trial:  2 source     25451915 time:    55.9965 sec
+sssp15:  threads:  1 trial:  3 source     57714473 time:    54.8405 sec
+sssp15:  threads:  1 trial:  4 source     14839494 time:    52.6663 sec
+sssp15:  threads:  1 trial:  5 source     32081104 time:    47.4326 sec
+sssp15:  threads:  1 trial:  6 source     52957357 time:    49.7541 sec
+sssp15:  threads:  1 trial:  7 source     50444380 time:    52.6264 sec
+sssp15:  threads:  1 trial:  8 source     49590701 time:    48.1824 sec
+sssp15:  threads:  1 trial:  9 source     20127816 time:    46.8114 sec
+sssp15:  threads:  1 trial: 10 source     34939333 time:    55.1219 sec
+sssp15:  threads:  1 trial: 11 source     48251001 time:    55.2138 sec
+sssp15:  threads:  1 trial: 12 source     19524253 time:    45.8902 sec
+sssp15:  threads:  1 trial: 13 source     43676726 time:    53.7966 sec
+sssp15:  threads:  1 trial: 14 source     33055508 time:    49.4653 sec
+sssp15:  threads:  1 trial: 15 source     15244687 time:    46.6165 sec
+sssp15:  threads:  1 trial: 16 source     24946738 time:    59.9195 sec
+sssp15:  threads:  1 trial: 17 source      6479472 time:    51.1641 sec
+sssp15:  threads:  1 trial: 18 source     26077682 time:    52.2700 sec
+sssp15:  threads:  1 trial: 19 source     22023875 time:    53.1963 sec
+sssp15:  threads:  1 trial: 20 source     22081915 time:    54.4162 sec
+sssp15:  threads:  1 trial: 21 source     40034162 time:    44.8168 sec
+sssp15:  threads:  1 trial: 22 source     49496014 time:    54.5209 sec
+sssp15:  threads:  1 trial: 23 source     42847507 time:    64.8576 sec
+sssp15:  threads:  1 trial: 24 source     52409557 time:    52.0043 sec
+sssp15:  threads:  1 trial: 25 source     55445388 time:    44.6472 sec
+sssp15:  threads:  1 trial: 26 source     22028097 time:    50.3383 sec
+sssp15:  threads:  1 trial: 27 source     48766648 time:    53.5969 sec
+sssp15:  threads:  1 trial: 28 source     44521241 time:    50.7094 sec
+sssp15:  threads:  1 trial: 29 source     60135542 time:    44.7229 sec
+sssp15:  threads:  1 trial: 30 source     28528671 time:    44.3121 sec
+sssp15:  threads:  1 trial: 31 source      9678012 time:    52.8421 sec
+sssp15:  threads:  1 trial: 32 source     40020306 time:    53.7543 sec
+sssp15:  threads:  1 trial: 33 source     31625735 time:    52.5831 sec
+sssp15:  threads:  1 trial: 34 source     37446892 time:    53.6757 sec
+sssp15:  threads:  1 trial: 35 source     51788952 time:    51.7426 sec
+sssp15:  threads:  1 trial: 36 source     52584255 time:    48.8029 sec
+sssp15:  threads:  1 trial: 37 source     20346696 time:    51.4211 sec
+sssp15:  threads:  1 trial: 38 source     48387909 time:    48.0636 sec
+sssp15:  threads:  1 trial: 39 source     37337427 time:    46.5359 sec
+sssp15:  threads:  1 trial: 40 source     50501084 time:    48.2444 sec
+sssp15:  threads:  1 trial: 41 source     30130061 time:    52.2592 sec
+sssp15:  threads:  1 trial: 42 source     41185893 time:    54.5025 sec
+sssp15:  threads:  1 trial: 43 source     56495703 time:    47.5806 sec
+sssp15:  threads:  1 trial: 44 source     45663305 time:    49.1699 sec
+sssp15:  threads:  1 trial: 45 source     33359460 time:    47.7637 sec
+sssp15:  threads:  1 trial: 46 source     48143058 time:    46.4382 sec
+sssp15:  threads:  1 trial: 47 source     33291513 time:    43.8000 sec
+sssp15:  threads:  1 trial: 48 source     53461445 time:    52.1338 sec
+sssp15:  threads:  1 trial: 49 source     29340610 time:    47.0640 sec
+sssp15:  threads:  1 trial: 50 source     34148498 time:    49.3736 sec
+sssp15:  threads:  1 trial: 51 source     49171806 time:    50.4717 sec
+sssp15:  threads:  1 trial: 52 source     35550696 time:    51.4788 sec
+sssp15:  threads:  1 trial: 53 source     14521507 time:    52.5683 sec
+sssp15:  threads:  1 trial: 54 source     51633218 time:    54.7090 sec
+sssp15:  threads:  1 trial: 55 source     46823382 time:    49.9962 sec
+sssp15:  threads:  1 trial: 56 source     19396273 time:    56.2536 sec
+sssp15:  threads:  1 trial: 57 source     19871750 time:    53.1813 sec
+sssp15:  threads:  1 trial: 58 source     36862677 time:    58.7347 sec
+sssp15:  threads:  1 trial: 59 source     49539126 time:    54.1049 sec
+sssp15:  threads:  1 trial: 60 source     34016452 time:    45.7721 sec
+sssp15:  threads:  1 trial: 61 source     36567395 time:    47.9303 sec
+sssp15:  threads:  1 trial: 62 source     55487793 time:    49.2614 sec
+sssp15:  threads:  1 trial: 63 source     14391370 time:    57.5814 sec
+
+Avg: SSSP threads   1:     51.051 sec (delta: 51), graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+threads to test:  32 24 16 8 4 2 1
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+sources: ../../../GAP/GAP-web/GAP-web_sources.mtx
+A converted to 32-bit
+read time: 18.3417
+delta: 140
+warmup: 6.77943 sec
+sssp15:  threads: 32 trial:  0 source     10219452 time:     6.7858 sec
+sssp15:  threads: 32 trial:  1 source     44758211 time:     6.8073 sec
+sssp15:  threads: 32 trial:  2 source       890671 time:     6.7939 sec
+sssp15:  threads: 32 trial:  3 source     13843756 time:     1.7990 sec
+sssp15:  threads: 32 trial:  4 source     14168062 time:     6.8587 sec
+sssp15:  threads: 32 trial:  5 source     20906930 time:     6.7067 sec
+sssp15:  threads: 32 trial:  6 source     12189584 time:     6.7443 sec
+sssp15:  threads: 32 trial:  7 source     26352335 time:     1.7755 sec
+sssp15:  threads: 32 trial:  8 source     43500686 time:     6.6760 sec
+sssp15:  threads: 32 trial:  9 source      8987024 time:     6.7813 sec
+sssp15:  threads: 32 trial: 10 source      5699762 time:     1.7918 sec
+sssp15:  threads: 32 trial: 11 source     41436455 time:     6.6845 sec
+sssp15:  threads: 32 trial: 12 source      5030727 time:     6.9435 sec
+sssp15:  threads: 32 trial: 13 source     40735218 time:     6.6209 sec
+sssp15:  threads: 32 trial: 14 source     16533563 time:     6.7089 sec
+sssp15:  threads: 32 trial: 15 source     28700166 time:     6.9098 sec
+sssp15:  threads: 32 trial: 16 source        64711 time:     6.7448 sec
+sssp15:  threads: 32 trial: 17 source     39634750 time:     6.7450 sec
+sssp15:  threads: 32 trial: 18 source     16037779 time:     6.7142 sec
+sssp15:  threads: 32 trial: 19 source     27152739 time:     6.8080 sec
+sssp15:  threads: 32 trial: 20 source     16404061 time:     6.6902 sec
+sssp15:  threads: 32 trial: 21 source     20491963 time:     6.7288 sec
+sssp15:  threads: 32 trial: 22 source      5322423 time:     6.7595 sec
+sssp15:  threads: 32 trial: 23 source     21420953 time:     6.6905 sec
+sssp15:  threads: 32 trial: 24 source     26622109 time:     6.7451 sec
+sssp15:  threads: 32 trial: 25 source      5882875 time:     6.8336 sec
+sssp15:  threads: 32 trial: 26 source     18091040 time:     6.8247 sec
+sssp15:  threads: 32 trial: 27 source     10665896 time:     1.8666 sec
+sssp15:  threads: 32 trial: 28 source     18634422 time:     6.6075 sec
+sssp15:  threads: 32 trial: 29 source     18138715 time:     6.7013 sec
+sssp15:  threads: 32 trial: 30 source      2355535 time:     6.9034 sec
+sssp15:  threads: 32 trial: 31 source     32885205 time:     1.8162 sec
+sssp15:  threads: 32 trial: 32 source     40657440 time:     6.6796 sec
+sssp15:  threads: 32 trial: 33 source     35196167 time:     6.7452 sec
+sssp15:  threads: 32 trial: 34 source     45544426 time:     6.9223 sec
+sssp15:  threads: 32 trial: 35 source      6175519 time:     1.7663 sec
+sssp15:  threads: 32 trial: 36 source     40058318 time:     6.9332 sec
+sssp15:  threads: 32 trial: 37 source     50626230 time:     6.8385 sec
+sssp15:  threads: 32 trial: 38 source     36571019 time:     6.7497 sec
+sssp15:  threads: 32 trial: 39 source     49397052 time:     6.5883 sec
+sssp15:  threads: 32 trial: 40 source     23434265 time:     6.8110 sec
+sssp15:  threads: 32 trial: 41 source      2299444 time:     6.6933 sec
+sssp15:  threads: 32 trial: 42 source     32873823 time:     1.8058 sec
+sssp15:  threads: 32 trial: 43 source     25978282 time:     6.7224 sec
+sssp15:  threads: 32 trial: 44 source      2461715 time:     1.8598 sec
+sssp15:  threads: 32 trial: 45 source     22787314 time:     6.7275 sec
+sssp15:  threads: 32 trial: 46 source     30759947 time:     6.7118 sec
+sssp15:  threads: 32 trial: 47 source      7428894 time:     1.7635 sec
+sssp15:  threads: 32 trial: 48 source     39173870 time:     1.7581 sec
+sssp15:  threads: 32 trial: 49 source     43194209 time:     1.7598 sec
+sssp15:  threads: 32 trial: 50 source     26361509 time:     1.7837 sec
+sssp15:  threads: 32 trial: 51 source     39747211 time:     1.7651 sec
+sssp15:  threads: 32 trial: 52 source     30670029 time:     6.7545 sec
+sssp15:  threads: 32 trial: 53 source     41483033 time:     6.7001 sec
+sssp15:  threads: 32 trial: 54 source      9358666 time:     6.7036 sec
+sssp15:  threads: 32 trial: 55 source      9945008 time:     6.6517 sec
+sssp15:  threads: 32 trial: 56 source      3355244 time:     6.6613 sec
+sssp15:  threads: 32 trial: 57 source     33831269 time:     6.6885 sec
+sssp15:  threads: 32 trial: 58 source     45124744 time:     6.9990 sec
+sssp15:  threads: 32 trial: 59 source     16137877 time:     1.8043 sec
+sssp15:  threads: 32 trial: 60 source     11235448 time:     6.6789 sec
+sssp15:  threads: 32 trial: 61 source     37509144 time:     6.9071 sec
+sssp15:  threads: 32 trial: 62 source     27402414 time:     6.6186 sec
+sssp15:  threads: 32 trial: 63 source     39546083 time:     6.9888 sec
+
+Avg: SSSP threads  32:      5.674 sec (delta: 140), graph: ../../../GAP/GAP-web/GAP-web.grb
+sssp15:  threads: 24 trial:  0 source     10219452 time:     6.8533 sec
+sssp15:  threads: 24 trial:  1 source     44758211 time:     6.8331 sec
+sssp15:  threads: 24 trial:  2 source       890671 time:     6.8278 sec
+sssp15:  threads: 24 trial:  3 source     13843756 time:     1.7872 sec
+sssp15:  threads: 24 trial:  4 source     14168062 time:     6.9333 sec
+sssp15:  threads: 24 trial:  5 source     20906930 time:     6.7637 sec
+sssp15:  threads: 24 trial:  6 source     12189584 time:     6.7983 sec
+sssp15:  threads: 24 trial:  7 source     26352335 time:     1.8065 sec
+sssp15:  threads: 24 trial:  8 source     43500686 time:     6.9366 sec
+sssp15:  threads: 24 trial:  9 source      8987024 time:     6.8261 sec
+sssp15:  threads: 24 trial: 10 source      5699762 time:     1.7864 sec
+sssp15:  threads: 24 trial: 11 source     41436455 time:     6.7479 sec
+sssp15:  threads: 24 trial: 12 source      5030727 time:     6.9693 sec
+sssp15:  threads: 24 trial: 13 source     40735218 time:     6.6747 sec
+sssp15:  threads: 24 trial: 14 source     16533563 time:     6.7729 sec
+sssp15:  threads: 24 trial: 15 source     28700166 time:     6.9545 sec
+sssp15:  threads: 24 trial: 16 source        64711 time:     6.7824 sec
+sssp15:  threads: 24 trial: 17 source     39634750 time:     6.8146 sec
+sssp15:  threads: 24 trial: 18 source     16037779 time:     6.7730 sec
+sssp15:  threads: 24 trial: 19 source     27152739 time:     6.8572 sec
+sssp15:  threads: 24 trial: 20 source     16404061 time:     6.7749 sec
+sssp15:  threads: 24 trial: 21 source     20491963 time:     6.7661 sec
+sssp15:  threads: 24 trial: 22 source      5322423 time:     6.8134 sec
+sssp15:  threads: 24 trial: 23 source     21420953 time:     6.7429 sec
+sssp15:  threads: 24 trial: 24 source     26622109 time:     6.8030 sec
+sssp15:  threads: 24 trial: 25 source      5882875 time:     6.8478 sec
+sssp15:  threads: 24 trial: 26 source     18091040 time:     6.9056 sec
+sssp15:  threads: 24 trial: 27 source     10665896 time:     1.8502 sec
+sssp15:  threads: 24 trial: 28 source     18634422 time:     6.6725 sec
+sssp15:  threads: 24 trial: 29 source     18138715 time:     6.7553 sec
+sssp15:  threads: 24 trial: 30 source      2355535 time:     6.9471 sec
+sssp15:  threads: 24 trial: 31 source     32885205 time:     1.8063 sec
+sssp15:  threads: 24 trial: 32 source     40657440 time:     6.7510 sec
+sssp15:  threads: 24 trial: 33 source     35196167 time:     6.8086 sec
+sssp15:  threads: 24 trial: 34 source     45544426 time:     6.9643 sec
+sssp15:  threads: 24 trial: 35 source      6175519 time:     1.7622 sec
+sssp15:  threads: 24 trial: 36 source     40058318 time:     6.9690 sec
+sssp15:  threads: 24 trial: 37 source     50626230 time:     6.9022 sec
+sssp15:  threads: 24 trial: 38 source     36571019 time:     6.8131 sec
+sssp15:  threads: 24 trial: 39 source     49397052 time:     6.6331 sec
+sssp15:  threads: 24 trial: 40 source     23434265 time:     6.8805 sec
+sssp15:  threads: 24 trial: 41 source      2299444 time:     6.7351 sec
+sssp15:  threads: 24 trial: 42 source     32873823 time:     1.8091 sec
+sssp15:  threads: 24 trial: 43 source     25978282 time:     6.7775 sec
+sssp15:  threads: 24 trial: 44 source      2461715 time:     1.8447 sec
+sssp15:  threads: 24 trial: 45 source     22787314 time:     6.7545 sec
+sssp15:  threads: 24 trial: 46 source     30759947 time:     6.7723 sec
+sssp15:  threads: 24 trial: 47 source      7428894 time:     1.7574 sec
+sssp15:  threads: 24 trial: 48 source     39173870 time:     1.7476 sec
+sssp15:  threads: 24 trial: 49 source     43194209 time:     1.7692 sec
+sssp15:  threads: 24 trial: 50 source     26361509 time:     1.7874 sec
+sssp15:  threads: 24 trial: 51 source     39747211 time:     1.7523 sec
+sssp15:  threads: 24 trial: 52 source     30670029 time:     6.7827 sec
+sssp15:  threads: 24 trial: 53 source     41483033 time:     6.8071 sec
+sssp15:  threads: 24 trial: 54 source      9358666 time:     6.9129 sec
+sssp15:  threads: 24 trial: 55 source      9945008 time:     6.8375 sec
+sssp15:  threads: 24 trial: 56 source      3355244 time:     6.8759 sec
+sssp15:  threads: 24 trial: 57 source     33831269 time:     6.9416 sec
+sssp15:  threads: 24 trial: 58 source     45124744 time:     7.2324 sec
+sssp15:  threads: 24 trial: 59 source     16137877 time:     1.8510 sec
+sssp15:  threads: 24 trial: 60 source     11235448 time:     6.8906 sec
+sssp15:  threads: 24 trial: 61 source     37509144 time:     7.1488 sec
+sssp15:  threads: 24 trial: 62 source     27402414 time:     6.8498 sec
+sssp15:  threads: 24 trial: 63 source     39546083 time:     7.1978 sec
+
+Avg: SSSP threads  24:      5.742 sec (delta: 140), graph: ../../../GAP/GAP-web/GAP-web.grb
+sssp15:  threads: 16 trial:  0 source     10219452 time:     7.2180 sec
+sssp15:  threads: 16 trial:  1 source     44758211 time:     7.1633 sec
+sssp15:  threads: 16 trial:  2 source       890671 time:     7.1551 sec
+sssp15:  threads: 16 trial:  3 source     13843756 time:     1.8866 sec
+sssp15:  threads: 16 trial:  4 source     14168062 time:     7.2296 sec
+sssp15:  threads: 16 trial:  5 source     20906930 time:     7.0800 sec
+sssp15:  threads: 16 trial:  6 source     12189584 time:     7.0712 sec
+sssp15:  threads: 16 trial:  7 source     26352335 time:     1.8812 sec
+sssp15:  threads: 16 trial:  8 source     43500686 time:     7.0410 sec
+sssp15:  threads: 16 trial:  9 source      8987024 time:     7.1603 sec
+sssp15:  threads: 16 trial: 10 source      5699762 time:     1.8806 sec
+sssp15:  threads: 16 trial: 11 source     41436455 time:     7.0756 sec
+sssp15:  threads: 16 trial: 12 source      5030727 time:     7.2689 sec
+sssp15:  threads: 16 trial: 13 source     40735218 time:     6.9884 sec
+sssp15:  threads: 16 trial: 14 source     16533563 time:     7.0858 sec
+sssp15:  threads: 16 trial: 15 source     28700166 time:     7.2597 sec
+sssp15:  threads: 16 trial: 16 source        64711 time:     7.0867 sec
+sssp15:  threads: 16 trial: 17 source     39634750 time:     7.1254 sec
+sssp15:  threads: 16 trial: 18 source     16037779 time:     7.0934 sec
+sssp15:  threads: 16 trial: 19 source     27152739 time:     7.1664 sec
+sssp15:  threads: 16 trial: 20 source     16404061 time:     7.0875 sec
+sssp15:  threads: 16 trial: 21 source     20491963 time:     7.0545 sec
+sssp15:  threads: 16 trial: 22 source      5322423 time:     7.1377 sec
+sssp15:  threads: 16 trial: 23 source     21420953 time:     7.0628 sec
+sssp15:  threads: 16 trial: 24 source     26622109 time:     7.1403 sec
+sssp15:  threads: 16 trial: 25 source      5882875 time:     7.1684 sec
+sssp15:  threads: 16 trial: 26 source     18091040 time:     7.1739 sec
+sssp15:  threads: 16 trial: 27 source     10665896 time:     1.9425 sec
+sssp15:  threads: 16 trial: 28 source     18634422 time:     6.9945 sec
+sssp15:  threads: 16 trial: 29 source     18138715 time:     7.0871 sec
+sssp15:  threads: 16 trial: 30 source      2355535 time:     7.2381 sec
+sssp15:  threads: 16 trial: 31 source     32885205 time:     1.9065 sec
+sssp15:  threads: 16 trial: 32 source     40657440 time:     7.0569 sec
+sssp15:  threads: 16 trial: 33 source     35196167 time:     7.1335 sec
+sssp15:  threads: 16 trial: 34 source     45544426 time:     7.2850 sec
+sssp15:  threads: 16 trial: 35 source      6175519 time:     1.8529 sec
+sssp15:  threads: 16 trial: 36 source     40058318 time:     7.2814 sec
+sssp15:  threads: 16 trial: 37 source     50626230 time:     7.2113 sec
+sssp15:  threads: 16 trial: 38 source     36571019 time:     7.1198 sec
+sssp15:  threads: 16 trial: 39 source     49397052 time:     6.9708 sec
+sssp15:  threads: 16 trial: 40 source     23434265 time:     7.2230 sec
+sssp15:  threads: 16 trial: 41 source      2299444 time:     7.0576 sec
+sssp15:  threads: 16 trial: 42 source     32873823 time:     1.8932 sec
+sssp15:  threads: 16 trial: 43 source     25978282 time:     7.0848 sec
+sssp15:  threads: 16 trial: 44 source      2461715 time:     1.9483 sec
+sssp15:  threads: 16 trial: 45 source     22787314 time:     7.0778 sec
+sssp15:  threads: 16 trial: 46 source     30759947 time:     7.3324 sec
+sssp15:  threads: 16 trial: 47 source      7428894 time:     1.8503 sec
+sssp15:  threads: 16 trial: 48 source     39173870 time:     1.8407 sec
+sssp15:  threads: 16 trial: 49 source     43194209 time:     1.8647 sec
+sssp15:  threads: 16 trial: 50 source     26361509 time:     1.8788 sec
+sssp15:  threads: 16 trial: 51 source     39747211 time:     1.8451 sec
+sssp15:  threads: 16 trial: 52 source     30670029 time:     7.1041 sec
+sssp15:  threads: 16 trial: 53 source     41483033 time:     7.0690 sec
+sssp15:  threads: 16 trial: 54 source      9358666 time:     7.0740 sec
+sssp15:  threads: 16 trial: 55 source      9945008 time:     7.0563 sec
+sssp15:  threads: 16 trial: 56 source      3355244 time:     7.0280 sec
+sssp15:  threads: 16 trial: 57 source     33831269 time:     7.0372 sec
+sssp15:  threads: 16 trial: 58 source     45124744 time:     7.3675 sec
+sssp15:  threads: 16 trial: 59 source     16137877 time:     1.8882 sec
+sssp15:  threads: 16 trial: 60 source     11235448 time:     7.0498 sec
+sssp15:  threads: 16 trial: 61 source     37509144 time:     7.2627 sec
+sssp15:  threads: 16 trial: 62 source     27402414 time:     6.9856 sec
+sssp15:  threads: 16 trial: 63 source     39546083 time:     7.3315 sec
+
+Avg: SSSP threads  16:      5.984 sec (delta: 140), graph: ../../../GAP/GAP-web/GAP-web.grb
+sssp15:  threads:  8 trial:  0 source     10219452 time:     8.2259 sec
+sssp15:  threads:  8 trial:  1 source     44758211 time:     8.2045 sec
+sssp15:  threads:  8 trial:  2 source       890671 time:     8.2066 sec
+sssp15:  threads:  8 trial:  3 source     13843756 time:     2.1998 sec
+sssp15:  threads:  8 trial:  4 source     14168062 time:     8.2548 sec
+sssp15:  threads:  8 trial:  5 source     20906930 time:     8.0955 sec
+sssp15:  threads:  8 trial:  6 source     12189584 time:     8.1190 sec
+sssp15:  threads:  8 trial:  7 source     26352335 time:     2.1854 sec
+sssp15:  threads:  8 trial:  8 source     43500686 time:     8.0768 sec
+sssp15:  threads:  8 trial:  9 source      8987024 time:     8.1876 sec
+sssp15:  threads:  8 trial: 10 source      5699762 time:     2.1820 sec
+sssp15:  threads:  8 trial: 11 source     41436455 time:     8.0975 sec
+sssp15:  threads:  8 trial: 12 source      5030727 time:     8.3116 sec
+sssp15:  threads:  8 trial: 13 source     40735218 time:     8.0367 sec
+sssp15:  threads:  8 trial: 14 source     16533563 time:     8.1061 sec
+sssp15:  threads:  8 trial: 15 source     28700166 time:     8.2693 sec
+sssp15:  threads:  8 trial: 16 source        64711 time:     8.1349 sec
+sssp15:  threads:  8 trial: 17 source     39634750 time:     8.1497 sec
+sssp15:  threads:  8 trial: 18 source     16037779 time:     8.1463 sec
+sssp15:  threads:  8 trial: 19 source     27152739 time:     8.2193 sec
+sssp15:  threads:  8 trial: 20 source     16404061 time:     8.0888 sec
+sssp15:  threads:  8 trial: 21 source     20491963 time:     8.0928 sec
+sssp15:  threads:  8 trial: 22 source      5322423 time:     8.2002 sec
+sssp15:  threads:  8 trial: 23 source     21420953 time:     8.0999 sec
+sssp15:  threads:  8 trial: 24 source     26622109 time:     8.1537 sec
+sssp15:  threads:  8 trial: 25 source      5882875 time:     8.2253 sec
+sssp15:  threads:  8 trial: 26 source     18091040 time:     8.2185 sec
+sssp15:  threads:  8 trial: 27 source     10665896 time:     2.2558 sec
+sssp15:  threads:  8 trial: 28 source     18634422 time:     8.0184 sec
+sssp15:  threads:  8 trial: 29 source     18138715 time:     8.1040 sec
+sssp15:  threads:  8 trial: 30 source      2355535 time:     8.2870 sec
+sssp15:  threads:  8 trial: 31 source     32885205 time:     2.2119 sec
+sssp15:  threads:  8 trial: 32 source     40657440 time:     8.0819 sec
+sssp15:  threads:  8 trial: 33 source     35196167 time:     8.1738 sec
+sssp15:  threads:  8 trial: 34 source     45544426 time:     8.3107 sec
+sssp15:  threads:  8 trial: 35 source      6175519 time:     2.1665 sec
+sssp15:  threads:  8 trial: 36 source     40058318 time:     8.3236 sec
+sssp15:  threads:  8 trial: 37 source     50626230 time:     8.2610 sec
+sssp15:  threads:  8 trial: 38 source     36571019 time:     8.1851 sec
+sssp15:  threads:  8 trial: 39 source     49397052 time:     8.0082 sec
+sssp15:  threads:  8 trial: 40 source     23434265 time:     8.2368 sec
+sssp15:  threads:  8 trial: 41 source      2299444 time:     8.0862 sec
+sssp15:  threads:  8 trial: 42 source     32873823 time:     2.2134 sec
+sssp15:  threads:  8 trial: 43 source     25978282 time:     8.1336 sec
+sssp15:  threads:  8 trial: 44 source      2461715 time:     2.2539 sec
+sssp15:  threads:  8 trial: 45 source     22787314 time:     8.1073 sec
+sssp15:  threads:  8 trial: 46 source     30759947 time:     8.1106 sec
+sssp15:  threads:  8 trial: 47 source      7428894 time:     2.1521 sec
+sssp15:  threads:  8 trial: 48 source     39173870 time:     2.1470 sec
+sssp15:  threads:  8 trial: 49 source     43194209 time:     2.1637 sec
+sssp15:  threads:  8 trial: 50 source     26361509 time:     2.1954 sec
+sssp15:  threads:  8 trial: 51 source     39747211 time:     2.1504 sec
+sssp15:  threads:  8 trial: 52 source     30670029 time:     8.1339 sec
+sssp15:  threads:  8 trial: 53 source     41483033 time:     8.1158 sec
+sssp15:  threads:  8 trial: 54 source      9358666 time:     8.1333 sec
+sssp15:  threads:  8 trial: 55 source      9945008 time:     8.1024 sec
+sssp15:  threads:  8 trial: 56 source      3355244 time:     8.0800 sec
+sssp15:  threads:  8 trial: 57 source     33831269 time:     8.0816 sec
+sssp15:  threads:  8 trial: 58 source     45124744 time:     8.3969 sec
+sssp15:  threads:  8 trial: 59 source     16137877 time:     2.2065 sec
+sssp15:  threads:  8 trial: 60 source     11235448 time:     8.0969 sec
+sssp15:  threads:  8 trial: 61 source     37509144 time:     8.2989 sec
+sssp15:  threads:  8 trial: 62 source     27402414 time:     8.0518 sec
+sssp15:  threads:  8 trial: 63 source     39546083 time:     8.3718 sec
+
+Avg: SSSP threads   8:      6.858 sec (delta: 140), graph: ../../../GAP/GAP-web/GAP-web.grb
+sssp15:  threads:  4 trial:  0 source     10219452 time:    11.5164 sec
+sssp15:  threads:  4 trial:  1 source     44758211 time:    11.5549 sec
+sssp15:  threads:  4 trial:  2 source       890671 time:    11.5358 sec
+sssp15:  threads:  4 trial:  3 source     13843756 time:     3.5685 sec
+sssp15:  threads:  4 trial:  4 source     14168062 time:    11.5933 sec
+sssp15:  threads:  4 trial:  5 source     20906930 time:    11.4626 sec
+sssp15:  threads:  4 trial:  6 source     12189584 time:    11.4847 sec
+sssp15:  threads:  4 trial:  7 source     26352335 time:     3.6975 sec
+sssp15:  threads:  4 trial:  8 source     43500686 time:    11.4112 sec
+sssp15:  threads:  4 trial:  9 source      8987024 time:    11.5525 sec
+sssp15:  threads:  4 trial: 10 source      5699762 time:     3.5450 sec
+sssp15:  threads:  4 trial: 11 source     41436455 time:    11.4647 sec
+sssp15:  threads:  4 trial: 12 source      5030727 time:    11.6632 sec
+sssp15:  threads:  4 trial: 13 source     40735218 time:    11.3976 sec
+sssp15:  threads:  4 trial: 14 source     16533563 time:    11.4630 sec
+sssp15:  threads:  4 trial: 15 source     28700166 time:    11.6041 sec
+sssp15:  threads:  4 trial: 16 source        64711 time:    11.5359 sec
+sssp15:  threads:  4 trial: 17 source     39634750 time:    11.4807 sec
+sssp15:  threads:  4 trial: 18 source     16037779 time:    11.4763 sec
+sssp15:  threads:  4 trial: 19 source     27152739 time:    11.6028 sec
+sssp15:  threads:  4 trial: 20 source     16404061 time:    11.4514 sec
+sssp15:  threads:  4 trial: 21 source     20491963 time:    11.4425 sec
+sssp15:  threads:  4 trial: 22 source      5322423 time:    11.5225 sec
+sssp15:  threads:  4 trial: 23 source     21420953 time:    11.4752 sec
+sssp15:  threads:  4 trial: 24 source     26622109 time:    11.5455 sec
+sssp15:  threads:  4 trial: 25 source      5882875 time:    11.5779 sec
+sssp15:  threads:  4 trial: 26 source     18091040 time:    11.6092 sec
+sssp15:  threads:  4 trial: 27 source     10665896 time:     3.6306 sec
+sssp15:  threads:  4 trial: 28 source     18634422 time:    11.3302 sec
+sssp15:  threads:  4 trial: 29 source     18138715 time:    11.4254 sec
+sssp15:  threads:  4 trial: 30 source      2355535 time:    11.6158 sec
+sssp15:  threads:  4 trial: 31 source     32885205 time:     3.6032 sec
+sssp15:  threads:  4 trial: 32 source     40657440 time:    11.4314 sec
+sssp15:  threads:  4 trial: 33 source     35196167 time:    11.5109 sec
+sssp15:  threads:  4 trial: 34 source     45544426 time:    11.6743 sec
+sssp15:  threads:  4 trial: 35 source      6175519 time:     3.5499 sec
+sssp15:  threads:  4 trial: 36 source     40058318 time:    11.6549 sec
+sssp15:  threads:  4 trial: 37 source     50626230 time:    11.6013 sec
+sssp15:  threads:  4 trial: 38 source     36571019 time:    11.4941 sec
+sssp15:  threads:  4 trial: 39 source     49397052 time:    11.3286 sec
+sssp15:  threads:  4 trial: 40 source     23434265 time:    11.6000 sec
+sssp15:  threads:  4 trial: 41 source      2299444 time:    11.4554 sec
+sssp15:  threads:  4 trial: 42 source     32873823 time:     3.5996 sec
+sssp15:  threads:  4 trial: 43 source     25978282 time:    11.4579 sec
+sssp15:  threads:  4 trial: 44 source      2461715 time:     3.6310 sec
+sssp15:  threads:  4 trial: 45 source     22787314 time:    11.4524 sec
+sssp15:  threads:  4 trial: 46 source     30759947 time:    11.4355 sec
+sssp15:  threads:  4 trial: 47 source      7428894 time:     3.5193 sec
+sssp15:  threads:  4 trial: 48 source     39173870 time:     3.5081 sec
+sssp15:  threads:  4 trial: 49 source     43194209 time:     3.5298 sec
+sssp15:  threads:  4 trial: 50 source     26361509 time:     3.5656 sec
+sssp15:  threads:  4 trial: 51 source     39747211 time:     3.5106 sec
+sssp15:  threads:  4 trial: 52 source     30670029 time:    11.4803 sec
+sssp15:  threads:  4 trial: 53 source     41483033 time:    11.4716 sec
+sssp15:  threads:  4 trial: 54 source      9358666 time:    11.4909 sec
+sssp15:  threads:  4 trial: 55 source      9945008 time:    11.4390 sec
+sssp15:  threads:  4 trial: 56 source      3355244 time:    11.4436 sec
+sssp15:  threads:  4 trial: 57 source     33831269 time:    11.4415 sec
+sssp15:  threads:  4 trial: 58 source     45124744 time:    11.7210 sec
+sssp15:  threads:  4 trial: 59 source     16137877 time:     3.5780 sec
+sssp15:  threads:  4 trial: 60 source     11235448 time:    11.4175 sec
+sssp15:  threads:  4 trial: 61 source     37509144 time:    11.6564 sec
+sssp15:  threads:  4 trial: 62 source     27402414 time:    11.3849 sec
+sssp15:  threads:  4 trial: 63 source     39546083 time:    11.7177 sec
+
+Avg: SSSP threads   4:      9.775 sec (delta: 140), graph: ../../../GAP/GAP-web/GAP-web.grb
+sssp15:  threads:  2 trial:  0 source     10219452 time:    19.6965 sec
+sssp15:  threads:  2 trial:  1 source     44758211 time:    19.7850 sec
+sssp15:  threads:  2 trial:  2 source       890671 time:    19.6978 sec
+sssp15:  threads:  2 trial:  3 source     13843756 time:     7.0038 sec
+sssp15:  threads:  2 trial:  4 source     14168062 time:    19.7550 sec
+sssp15:  threads:  2 trial:  5 source     20906930 time:    19.5690 sec
+sssp15:  threads:  2 trial:  6 source     12189584 time:    19.5777 sec
+sssp15:  threads:  2 trial:  7 source     26352335 time:     6.9682 sec
+sssp15:  threads:  2 trial:  8 source     43500686 time:    19.5264 sec
+sssp15:  threads:  2 trial:  9 source      8987024 time:    19.7306 sec
+sssp15:  threads:  2 trial: 10 source      5699762 time:     6.9198 sec
+sssp15:  threads:  2 trial: 11 source     41436455 time:    19.5939 sec
+sssp15:  threads:  2 trial: 12 source      5030727 time:    19.7829 sec
+sssp15:  threads:  2 trial: 13 source     40735218 time:    19.5378 sec
+sssp15:  threads:  2 trial: 14 source     16533563 time:    19.5825 sec
+sssp15:  threads:  2 trial: 15 source     28700166 time:    19.6964 sec
+sssp15:  threads:  2 trial: 16 source        64711 time:    19.7252 sec
+sssp15:  threads:  2 trial: 17 source     39634750 time:    19.5903 sec
+sssp15:  threads:  2 trial: 18 source     16037779 time:    19.6643 sec
+sssp15:  threads:  2 trial: 19 source     27152739 time:    19.7861 sec
+sssp15:  threads:  2 trial: 20 source     16404061 time:    19.5723 sec
+sssp15:  threads:  2 trial: 21 source     20491963 time:    19.5774 sec
+sssp15:  threads:  2 trial: 22 source      5322423 time:    19.6553 sec
+sssp15:  threads:  2 trial: 23 source     21420953 time:    19.6028 sec
+sssp15:  threads:  2 trial: 24 source     26622109 time:    19.7925 sec
+sssp15:  threads:  2 trial: 25 source      5882875 time:    19.9641 sec
+sssp15:  threads:  2 trial: 26 source     18091040 time:    19.8771 sec
+sssp15:  threads:  2 trial: 27 source     10665896 time:     7.0457 sec
+sssp15:  threads:  2 trial: 28 source     18634422 time:    19.4440 sec
+sssp15:  threads:  2 trial: 29 source     18138715 time:    19.5534 sec
+sssp15:  threads:  2 trial: 30 source      2355535 time:    19.7845 sec
+sssp15:  threads:  2 trial: 31 source     32885205 time:     7.0046 sec
+sssp15:  threads:  2 trial: 32 source     40657440 time:    19.4819 sec
+sssp15:  threads:  2 trial: 33 source     35196167 time:    19.6176 sec
+sssp15:  threads:  2 trial: 34 source     45544426 time:    19.8344 sec
+sssp15:  threads:  2 trial: 35 source      6175519 time:     6.9323 sec
+sssp15:  threads:  2 trial: 36 source     40058318 time:    19.8178 sec
+sssp15:  threads:  2 trial: 37 source     50626230 time:    19.9479 sec
+sssp15:  threads:  2 trial: 38 source     36571019 time:    19.6242 sec
+sssp15:  threads:  2 trial: 39 source     49397052 time:    19.4506 sec
+sssp15:  threads:  2 trial: 40 source     23434265 time:    19.7517 sec
+sssp15:  threads:  2 trial: 41 source      2299444 time:    19.5299 sec
+sssp15:  threads:  2 trial: 42 source     32873823 time:     6.9908 sec
+sssp15:  threads:  2 trial: 43 source     25978282 time:    19.6314 sec
+sssp15:  threads:  2 trial: 44 source      2461715 time:     7.0411 sec
+sssp15:  threads:  2 trial: 45 source     22787314 time:    19.5875 sec
+sssp15:  threads:  2 trial: 46 source     30759947 time:    19.6313 sec
+sssp15:  threads:  2 trial: 47 source      7428894 time:     6.8883 sec
+sssp15:  threads:  2 trial: 48 source     39173870 time:     6.8663 sec
+sssp15:  threads:  2 trial: 49 source     43194209 time:     6.9062 sec
+sssp15:  threads:  2 trial: 50 source     26361509 time:     6.9640 sec
+sssp15:  threads:  2 trial: 51 source     39747211 time:     6.8592 sec
+sssp15:  threads:  2 trial: 52 source     30670029 time:    19.6772 sec
+sssp15:  threads:  2 trial: 53 source     41483033 time:    19.6320 sec
+sssp15:  threads:  2 trial: 54 source      9358666 time:    19.6141 sec
+sssp15:  threads:  2 trial: 55 source      9945008 time:    19.5493 sec
+sssp15:  threads:  2 trial: 56 source      3355244 time:    19.5319 sec
+sssp15:  threads:  2 trial: 57 source     33831269 time:    19.5671 sec
+sssp15:  threads:  2 trial: 58 source     45124744 time:    19.8592 sec
+sssp15:  threads:  2 trial: 59 source     16137877 time:     6.9824 sec
+sssp15:  threads:  2 trial: 60 source     11235448 time:    19.5134 sec
+sssp15:  threads:  2 trial: 61 source     37509144 time:    19.7938 sec
+sssp15:  threads:  2 trial: 62 source     27402414 time:    19.5169 sec
+sssp15:  threads:  2 trial: 63 source     39546083 time:    19.8381 sec
+
+Avg: SSSP threads   2:     16.883 sec (delta: 140), graph: ../../../GAP/GAP-web/GAP-web.grb
+sssp15:  threads:  1 trial:  0 source     10219452 time:    40.3479 sec
+sssp15:  threads:  1 trial:  1 source     44758211 time:    40.6304 sec
+sssp15:  threads:  1 trial:  2 source       890671 time:    40.2729 sec
+sssp15:  threads:  1 trial:  3 source     13843756 time:    11.8269 sec
+sssp15:  threads:  1 trial:  4 source     14168062 time:    40.3312 sec
+sssp15:  threads:  1 trial:  5 source     20906930 time:    40.3572 sec
+sssp15:  threads:  1 trial:  6 source     12189584 time:    40.2716 sec
+sssp15:  threads:  1 trial:  7 source     26352335 time:    11.8760 sec
+sssp15:  threads:  1 trial:  8 source     43500686 time:    40.1381 sec
+sssp15:  threads:  1 trial:  9 source      8987024 time:    40.2895 sec
+sssp15:  threads:  1 trial: 10 source      5699762 time:    11.7226 sec
+sssp15:  threads:  1 trial: 11 source     41436455 time:    39.9467 sec
+sssp15:  threads:  1 trial: 12 source      5030727 time:    40.2334 sec
+sssp15:  threads:  1 trial: 13 source     40735218 time:    40.2621 sec
+sssp15:  threads:  1 trial: 14 source     16533563 time:    40.0847 sec
+sssp15:  threads:  1 trial: 15 source     28700166 time:    40.2697 sec
+sssp15:  threads:  1 trial: 16 source        64711 time:    40.5917 sec
+sssp15:  threads:  1 trial: 17 source     39634750 time:    40.2757 sec
+sssp15:  threads:  1 trial: 18 source     16037779 time:    40.3979 sec
+sssp15:  threads:  1 trial: 19 source     27152739 time:    40.6539 sec
+sssp15:  threads:  1 trial: 20 source     16404061 time:    40.4879 sec
+sssp15:  threads:  1 trial: 21 source     20491963 time:    40.5399 sec
+sssp15:  threads:  1 trial: 22 source      5322423 time:    40.4490 sec
+sssp15:  threads:  1 trial: 23 source     21420953 time:    40.2749 sec
+sssp15:  threads:  1 trial: 24 source     26622109 time:    40.2646 sec
+sssp15:  threads:  1 trial: 25 source      5882875 time:    40.3614 sec
+sssp15:  threads:  1 trial: 26 source     18091040 time:    40.7437 sec
+sssp15:  threads:  1 trial: 27 source     10665896 time:    11.9521 sec
+sssp15:  threads:  1 trial: 28 source     18634422 time:    39.6600 sec
+sssp15:  threads:  1 trial: 29 source     18138715 time:    40.4569 sec
+sssp15:  threads:  1 trial: 30 source      2355535 time:    40.4846 sec
+sssp15:  threads:  1 trial: 31 source     32885205 time:    11.9531 sec
+sssp15:  threads:  1 trial: 32 source     40657440 time:    40.0893 sec
+sssp15:  threads:  1 trial: 33 source     35196167 time:    40.2292 sec
+sssp15:  threads:  1 trial: 34 source     45544426 time:    40.5297 sec
+sssp15:  threads:  1 trial: 35 source      6175519 time:    11.8074 sec
+sssp15:  threads:  1 trial: 36 source     40058318 time:    40.6644 sec
+sssp15:  threads:  1 trial: 37 source     50626230 time:    40.4311 sec
+sssp15:  threads:  1 trial: 38 source     36571019 time:    40.4864 sec
+sssp15:  threads:  1 trial: 39 source     49397052 time:    40.4139 sec
+sssp15:  threads:  1 trial: 40 source     23434265 time:    40.1718 sec
+sssp15:  threads:  1 trial: 41 source      2299444 time:    40.0348 sec
+sssp15:  threads:  1 trial: 42 source     32873823 time:    11.9228 sec
+sssp15:  threads:  1 trial: 43 source     25978282 time:    40.5898 sec
+sssp15:  threads:  1 trial: 44 source      2461715 time:    11.9477 sec
+sssp15:  threads:  1 trial: 45 source     22787314 time:    40.2334 sec
+sssp15:  threads:  1 trial: 46 source     30759947 time:    40.5760 sec
+sssp15:  threads:  1 trial: 47 source      7428894 time:    11.6936 sec
+sssp15:  threads:  1 trial: 48 source     39173870 time:    11.6346 sec
+sssp15:  threads:  1 trial: 49 source     43194209 time:    11.7246 sec
+sssp15:  threads:  1 trial: 50 source     26361509 time:    11.8736 sec
+sssp15:  threads:  1 trial: 51 source     39747211 time:    11.6355 sec
+sssp15:  threads:  1 trial: 52 source     30670029 time:    40.6772 sec
+sssp15:  threads:  1 trial: 53 source     41483033 time:    40.0699 sec
+sssp15:  threads:  1 trial: 54 source      9358666 time:    40.2826 sec
+sssp15:  threads:  1 trial: 55 source      9945008 time:    40.3559 sec
+sssp15:  threads:  1 trial: 56 source      3355244 time:    40.4910 sec
+sssp15:  threads:  1 trial: 57 source     33831269 time:    40.5099 sec
+sssp15:  threads:  1 trial: 58 source     45124744 time:    40.3754 sec
+sssp15:  threads:  1 trial: 59 source     16137877 time:    11.8997 sec
+sssp15:  threads:  1 trial: 60 source     11235448 time:    40.0925 sec
+sssp15:  threads:  1 trial: 61 source     37509144 time:    40.6489 sec
+sssp15:  threads:  1 trial: 62 source     27402414 time:    40.1324 sec
+sssp15:  threads:  1 trial: 63 source     39546083 time:    40.1006 sec
+
+Avg: SSSP threads   1:     34.105 sec (delta: 140), graph: ../../../GAP/GAP-web/GAP-web.grb
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+threads to test:  32 24 16 8 4 2 1
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+sources: ../../../GAP/GAP-road/GAP-road_sources.mtx
+A converted to 32-bit
+read time: 0.859601
+delta: 50000
+warmup: 12.7827 sec
+sssp15:  threads: 32 trial:  0 source      4795720 time:    12.5271 sec
+sssp15:  threads: 32 trial:  1 source     21003853 time:    12.3266 sec
+sssp15:  threads: 32 trial:  2 source       417968 time:    12.4482 sec
+sssp15:  threads: 32 trial:  3 source      6496511 time:    12.5361 sec
+sssp15:  threads: 32 trial:  4 source      6648699 time:    12.3556 sec
+sssp15:  threads: 32 trial:  5 source      9811073 time:    12.4739 sec
+sssp15:  threads: 32 trial:  6 source     22247478 time:    12.4409 sec
+sssp15:  threads: 32 trial:  7 source      5720252 time:    12.3936 sec
+sssp15:  threads: 32 trial:  8 source     12366459 time:    12.4417 sec
+sssp15:  threads: 32 trial:  9 source     20413729 time:    12.4292 sec
+sssp15:  threads: 32 trial: 10 source      4217374 time:    12.5279 sec
+sssp15:  threads: 32 trial: 11 source      2674749 time:    12.4974 sec
+sssp15:  threads: 32 trial: 12 source     22085557 time:    12.4232 sec
+sssp15:  threads: 32 trial: 13 source     19445040 time:    12.6269 sec
+sssp15:  threads: 32 trial: 14 source      2360788 time:    12.4684 sec
+sssp15:  threads: 32 trial: 15 source     19115968 time:    12.5299 sec
+sssp15:  threads: 32 trial: 16 source      7758767 time:    12.5868 sec
+sssp15:  threads: 32 trial: 17 source     13468234 time:    12.5072 sec
+sssp15:  threads: 32 trial: 18 source        30367 time:    12.6048 sec
+sssp15:  threads: 32 trial: 19 source     18599547 time:    12.5254 sec
+sssp15:  threads: 32 trial: 20 source      7526108 time:    12.5489 sec
+sssp15:  threads: 32 trial: 21 source     16836280 time:    12.4588 sec
+sssp15:  threads: 32 trial: 22 source     12742067 time:    12.5364 sec
+sssp15:  threads: 32 trial: 23 source      7697995 time:    12.3493 sec
+sssp15:  threads: 32 trial: 24 source      5876443 time:    12.6245 sec
+sssp15:  threads: 32 trial: 25 source      9616340 time:    12.5943 sec
+sssp15:  threads: 32 trial: 26 source      2497673 time:    12.5332 sec
+sssp15:  threads: 32 trial: 27 source     10052290 time:    12.4500 sec
+sssp15:  threads: 32 trial: 28 source     12493057 time:    12.5266 sec
+sssp15:  threads: 32 trial: 29 source      1670855 time:    12.4744 sec
+sssp15:  threads: 32 trial: 30 source      2760679 time:    12.4666 sec
+sssp15:  threads: 32 trial: 31 source      2460941 time:    12.5022 sec
+sssp15:  threads: 32 trial: 32 source      8489650 time:    12.4408 sec
+sssp15:  threads: 32 trial: 33 source      5005225 time:    12.5054 sec
+sssp15:  threads: 32 trial: 34 source      8744645 time:    12.6116 sec
+sssp15:  threads: 32 trial: 35 source      8512023 time:    12.6814 sec
+sssp15:  threads: 32 trial: 36 source     21912165 time:    12.5819 sec
+sssp15:  threads: 32 trial: 37 source      1105390 time:    12.5748 sec
+sssp15:  threads: 32 trial: 38 source     15432163 time:    12.4954 sec
+sssp15:  threads: 32 trial: 39 source      1600177 time:    12.4581 sec
+sssp15:  threads: 32 trial: 40 source     19079469 time:    12.5642 sec
+sssp15:  threads: 32 trial: 41 source     16516637 time:    12.5372 sec
+sssp15:  threads: 32 trial: 42 source     20202566 time:    12.4105 sec
+sssp15:  threads: 32 trial: 43 source     21372803 time:    12.4447 sec
+sssp15:  threads: 32 trial: 44 source      2898009 time:    12.6429 sec
+sssp15:  threads: 32 trial: 45 source      8491277 time:    12.5255 sec
+sssp15:  threads: 32 trial: 46 source     18798317 time:    12.4378 sec
+sssp15:  threads: 32 trial: 47 source     23757560 time:    12.5377 sec
+sssp15:  threads: 32 trial: 48 source     17161819 time:    12.3731 sec
+sssp15:  threads: 32 trial: 49 source     23180739 time:    12.5651 sec
+sssp15:  threads: 32 trial: 50 source     10997085 time:    12.6082 sec
+sssp15:  threads: 32 trial: 51 source      3730630 time:    12.7512 sec
+sssp15:  threads: 32 trial: 52 source      1079068 time:    12.6307 sec
+sssp15:  threads: 32 trial: 53 source     15426822 time:    12.4419 sec
+sssp15:  threads: 32 trial: 54 source     12190925 time:    12.6533 sec
+sssp15:  threads: 32 trial: 55 source      1155218 time:    12.5674 sec
+sssp15:  threads: 32 trial: 56 source     10693488 time:    12.4020 sec
+sssp15:  threads: 32 trial: 57 source     14434835 time:    12.4859 sec
+sssp15:  threads: 32 trial: 58 source     19963339 time:    12.4482 sec
+sssp15:  threads: 32 trial: 59 source      3486185 time:    12.4445 sec
+sssp15:  threads: 32 trial: 60 source     18383269 time:    12.5818 sec
+sssp15:  threads: 32 trial: 61 source     20269908 time:    12.4089 sec
+sssp15:  threads: 32 trial: 62 source     12370764 time:    12.5182 sec
+sssp15:  threads: 32 trial: 63 source      7843140 time:    12.6678 sec
+
+Avg: SSSP threads  32:     12.511 sec (delta: 50000), graph: ../../../GAP/GAP-road/GAP-road.grb
+sssp15:  threads: 24 trial:  0 source      4795720 time:    12.6378 sec
+sssp15:  threads: 24 trial:  1 source     21003853 time:    12.3599 sec
+sssp15:  threads: 24 trial:  2 source       417968 time:    12.4564 sec
+sssp15:  threads: 24 trial:  3 source      6496511 time:    12.5342 sec
+sssp15:  threads: 24 trial:  4 source      6648699 time:    12.3775 sec
+sssp15:  threads: 24 trial:  5 source      9811073 time:    12.4959 sec
+sssp15:  threads: 24 trial:  6 source     22247478 time:    12.4632 sec
+sssp15:  threads: 24 trial:  7 source      5720252 time:    12.4461 sec
+sssp15:  threads: 24 trial:  8 source     12366459 time:    12.4665 sec
+sssp15:  threads: 24 trial:  9 source     20413729 time:    12.4491 sec
+sssp15:  threads: 24 trial: 10 source      4217374 time:    12.5503 sec
+sssp15:  threads: 24 trial: 11 source      2674749 time:    12.5304 sec
+sssp15:  threads: 24 trial: 12 source     22085557 time:    12.4544 sec
+sssp15:  threads: 24 trial: 13 source     19445040 time:    12.6028 sec
+sssp15:  threads: 24 trial: 14 source      2360788 time:    12.4839 sec
+sssp15:  threads: 24 trial: 15 source     19115968 time:    12.5121 sec
+sssp15:  threads: 24 trial: 16 source      7758767 time:    12.5508 sec
+sssp15:  threads: 24 trial: 17 source     13468234 time:    12.4579 sec
+sssp15:  threads: 24 trial: 18 source        30367 time:    12.5643 sec
+sssp15:  threads: 24 trial: 19 source     18599547 time:    12.5021 sec
+sssp15:  threads: 24 trial: 20 source      7526108 time:    12.7398 sec
+sssp15:  threads: 24 trial: 21 source     16836280 time:    12.4362 sec
+sssp15:  threads: 24 trial: 22 source     12742067 time:    12.5065 sec
+sssp15:  threads: 24 trial: 23 source      7697995 time:    12.3554 sec
+sssp15:  threads: 24 trial: 24 source      5876443 time:    12.5779 sec
+sssp15:  threads: 24 trial: 25 source      9616340 time:    12.5165 sec
+sssp15:  threads: 24 trial: 26 source      2497673 time:    12.4894 sec
+sssp15:  threads: 24 trial: 27 source     10052290 time:    12.3947 sec
+sssp15:  threads: 24 trial: 28 source     12493057 time:    12.4799 sec
+sssp15:  threads: 24 trial: 29 source      1670855 time:    12.4759 sec
+sssp15:  threads: 24 trial: 30 source      2760679 time:    12.4667 sec
+sssp15:  threads: 24 trial: 31 source      2460941 time:    12.7415 sec
+sssp15:  threads: 24 trial: 32 source      8489650 time:    12.6609 sec
+sssp15:  threads: 24 trial: 33 source      5005225 time:    12.6755 sec
+sssp15:  threads: 24 trial: 34 source      8744645 time:    12.5440 sec
+sssp15:  threads: 24 trial: 35 source      8512023 time:    12.3871 sec
+sssp15:  threads: 24 trial: 36 source     21912165 time:    12.5914 sec
+sssp15:  threads: 24 trial: 37 source      1105390 time:    12.5448 sec
+sssp15:  threads: 24 trial: 38 source     15432163 time:    12.4201 sec
+sssp15:  threads: 24 trial: 39 source      1600177 time:    12.5602 sec
+sssp15:  threads: 24 trial: 40 source     19079469 time:    12.5184 sec
+sssp15:  threads: 24 trial: 41 source     16516637 time:    12.5231 sec
+sssp15:  threads: 24 trial: 42 source     20202566 time:    12.3763 sec
+sssp15:  threads: 24 trial: 43 source     21372803 time:    12.4049 sec
+sssp15:  threads: 24 trial: 44 source      2898009 time:    12.5885 sec
+sssp15:  threads: 24 trial: 45 source      8491277 time:    12.4315 sec
+sssp15:  threads: 24 trial: 46 source     18798317 time:    12.3947 sec
+sssp15:  threads: 24 trial: 47 source     23757560 time:    12.4993 sec
+sssp15:  threads: 24 trial: 48 source     17161819 time:    12.3714 sec
+sssp15:  threads: 24 trial: 49 source     23180739 time:    12.5238 sec
+sssp15:  threads: 24 trial: 50 source     10997085 time:    12.5413 sec
+sssp15:  threads: 24 trial: 51 source      3730630 time:    12.6564 sec
+sssp15:  threads: 24 trial: 52 source      1079068 time:    12.5546 sec
+sssp15:  threads: 24 trial: 53 source     15426822 time:    12.3815 sec
+sssp15:  threads: 24 trial: 54 source     12190925 time:    12.5357 sec
+sssp15:  threads: 24 trial: 55 source      1155218 time:    12.5181 sec
+sssp15:  threads: 24 trial: 56 source     10693488 time:    12.3571 sec
+sssp15:  threads: 24 trial: 57 source     14434835 time:    12.4352 sec
+sssp15:  threads: 24 trial: 58 source     19963339 time:    12.4279 sec
+sssp15:  threads: 24 trial: 59 source      3486185 time:    12.4230 sec
+sssp15:  threads: 24 trial: 60 source     18383269 time:    12.5889 sec
+sssp15:  threads: 24 trial: 61 source     20269908 time:    12.4224 sec
+sssp15:  threads: 24 trial: 62 source     12370764 time:    12.5139 sec
+sssp15:  threads: 24 trial: 63 source      7843140 time:    12.6078 sec
+
+Avg: SSSP threads  24:     12.501 sec (delta: 50000), graph: ../../../GAP/GAP-road/GAP-road.grb
+sssp15:  threads: 16 trial:  0 source      4795720 time:    12.7362 sec
+sssp15:  threads: 16 trial:  1 source     21003853 time:    12.4506 sec
+sssp15:  threads: 16 trial:  2 source       417968 time:    12.5568 sec
+sssp15:  threads: 16 trial:  3 source      6496511 time:    12.6607 sec
+sssp15:  threads: 16 trial:  4 source      6648699 time:    12.7453 sec
+sssp15:  threads: 16 trial:  5 source      9811073 time:    12.6146 sec
+sssp15:  threads: 16 trial:  6 source     22247478 time:    12.5393 sec
+sssp15:  threads: 16 trial:  7 source      5720252 time:    12.5542 sec
+sssp15:  threads: 16 trial:  8 source     12366459 time:    12.5471 sec
+sssp15:  threads: 16 trial:  9 source     20413729 time:    12.5080 sec
+sssp15:  threads: 16 trial: 10 source      4217374 time:    12.5839 sec
+sssp15:  threads: 16 trial: 11 source      2674749 time:    12.5917 sec
+sssp15:  threads: 16 trial: 12 source     22085557 time:    12.5120 sec
+sssp15:  threads: 16 trial: 13 source     19445040 time:    12.6278 sec
+sssp15:  threads: 16 trial: 14 source      2360788 time:    12.6687 sec
+sssp15:  threads: 16 trial: 15 source     19115968 time:    12.6458 sec
+sssp15:  threads: 16 trial: 16 source      7758767 time:    12.6649 sec
+sssp15:  threads: 16 trial: 17 source     13468234 time:    12.6137 sec
+sssp15:  threads: 16 trial: 18 source        30367 time:    12.6619 sec
+sssp15:  threads: 16 trial: 19 source     18599547 time:    12.6183 sec
+sssp15:  threads: 16 trial: 20 source      7526108 time:    12.6068 sec
+sssp15:  threads: 16 trial: 21 source     16836280 time:    12.5936 sec
+sssp15:  threads: 16 trial: 22 source     12742067 time:    12.6589 sec
+sssp15:  threads: 16 trial: 23 source      7697995 time:    12.4696 sec
+sssp15:  threads: 16 trial: 24 source      5876443 time:    12.6857 sec
+sssp15:  threads: 16 trial: 25 source      9616340 time:    12.6523 sec
+sssp15:  threads: 16 trial: 26 source      2497673 time:    12.6621 sec
+sssp15:  threads: 16 trial: 27 source     10052290 time:    12.5276 sec
+sssp15:  threads: 16 trial: 28 source     12493057 time:    12.6425 sec
+sssp15:  threads: 16 trial: 29 source      1670855 time:    12.6051 sec
+sssp15:  threads: 16 trial: 30 source      2760679 time:    12.5645 sec
+sssp15:  threads: 16 trial: 31 source      2460941 time:    12.6642 sec
+sssp15:  threads: 16 trial: 32 source      8489650 time:    12.5193 sec
+sssp15:  threads: 16 trial: 33 source      5005225 time:    12.6695 sec
+sssp15:  threads: 16 trial: 34 source      8744645 time:    12.6762 sec
+sssp15:  threads: 16 trial: 35 source      8512023 time:    12.5139 sec
+sssp15:  threads: 16 trial: 36 source     21912165 time:    12.7382 sec
+sssp15:  threads: 16 trial: 37 source      1105390 time:    12.6502 sec
+sssp15:  threads: 16 trial: 38 source     15432163 time:    12.5417 sec
+sssp15:  threads: 16 trial: 39 source      1600177 time:    12.6147 sec
+sssp15:  threads: 16 trial: 40 source     19079469 time:    12.6907 sec
+sssp15:  threads: 16 trial: 41 source     16516637 time:    12.6170 sec
+sssp15:  threads: 16 trial: 42 source     20202566 time:    12.4346 sec
+sssp15:  threads: 16 trial: 43 source     21372803 time:    12.4812 sec
+sssp15:  threads: 16 trial: 44 source      2898009 time:    12.7233 sec
+sssp15:  threads: 16 trial: 45 source      8491277 time:    12.5500 sec
+sssp15:  threads: 16 trial: 46 source     18798317 time:    12.5193 sec
+sssp15:  threads: 16 trial: 47 source     23757560 time:    12.6325 sec
+sssp15:  threads: 16 trial: 48 source     17161819 time:    12.4440 sec
+sssp15:  threads: 16 trial: 49 source     23180739 time:    12.6893 sec
+sssp15:  threads: 16 trial: 50 source     10997085 time:    12.6455 sec
+sssp15:  threads: 16 trial: 51 source      3730630 time:    12.8239 sec
+sssp15:  threads: 16 trial: 52 source      1079068 time:    12.6908 sec
+sssp15:  threads: 16 trial: 53 source     15426822 time:    12.6778 sec
+sssp15:  threads: 16 trial: 54 source     12190925 time:    12.6749 sec
+sssp15:  threads: 16 trial: 55 source      1155218 time:    12.5770 sec
+sssp15:  threads: 16 trial: 56 source     10693488 time:    12.4422 sec
+sssp15:  threads: 16 trial: 57 source     14434835 time:    12.5979 sec
+sssp15:  threads: 16 trial: 58 source     19963339 time:    12.5505 sec
+sssp15:  threads: 16 trial: 59 source      3486185 time:    12.5587 sec
+sssp15:  threads: 16 trial: 60 source     18383269 time:    12.6747 sec
+sssp15:  threads: 16 trial: 61 source     20269908 time:    12.4673 sec
+sssp15:  threads: 16 trial: 62 source     12370764 time:    12.5571 sec
+sssp15:  threads: 16 trial: 63 source      7843140 time:    12.6432 sec
+
+Avg: SSSP threads  16:     12.605 sec (delta: 50000), graph: ../../../GAP/GAP-road/GAP-road.grb
+sssp15:  threads:  8 trial:  0 source      4795720 time:    13.1936 sec
+sssp15:  threads:  8 trial:  1 source     21003853 time:    12.8242 sec
+sssp15:  threads:  8 trial:  2 source       417968 time:    12.9137 sec
+sssp15:  threads:  8 trial:  3 source      6496511 time:    13.1174 sec
+sssp15:  threads:  8 trial:  4 source      6648699 time:    12.7790 sec
+sssp15:  threads:  8 trial:  5 source      9811073 time:    13.1263 sec
+sssp15:  threads:  8 trial:  6 source     22247478 time:    12.9548 sec
+sssp15:  threads:  8 trial:  7 source      5720252 time:    12.9664 sec
+sssp15:  threads:  8 trial:  8 source     12366459 time:    12.9182 sec
+sssp15:  threads:  8 trial:  9 source     20413729 time:    12.8544 sec
+sssp15:  threads:  8 trial: 10 source      4217374 time:    13.1189 sec
+sssp15:  threads:  8 trial: 11 source      2674749 time:    13.1535 sec
+sssp15:  threads:  8 trial: 12 source     22085557 time:    12.8948 sec
+sssp15:  threads:  8 trial: 13 source     19445040 time:    13.1147 sec
+sssp15:  threads:  8 trial: 14 source      2360788 time:    13.1063 sec
+sssp15:  threads:  8 trial: 15 source     19115968 time:    13.0739 sec
+sssp15:  threads:  8 trial: 16 source      7758767 time:    13.0161 sec
+sssp15:  threads:  8 trial: 17 source     13468234 time:    13.0458 sec
+sssp15:  threads:  8 trial: 18 source        30367 time:    13.0568 sec
+sssp15:  threads:  8 trial: 19 source     18599547 time:    12.9962 sec
+sssp15:  threads:  8 trial: 20 source      7526108 time:    12.9165 sec
+sssp15:  threads:  8 trial: 21 source     16836280 time:    13.0949 sec
+sssp15:  threads:  8 trial: 22 source     12742067 time:    13.1380 sec
+sssp15:  threads:  8 trial: 23 source      7697995 time:    12.7736 sec
+sssp15:  threads:  8 trial: 24 source      5876443 time:    13.0866 sec
+sssp15:  threads:  8 trial: 25 source      9616340 time:    13.0708 sec
+sssp15:  threads:  8 trial: 26 source      2497673 time:    13.1746 sec
+sssp15:  threads:  8 trial: 27 source     10052290 time:    12.9200 sec
+sssp15:  threads:  8 trial: 28 source     12493057 time:    13.1356 sec
+sssp15:  threads:  8 trial: 29 source      1670855 time:    13.0587 sec
+sssp15:  threads:  8 trial: 30 source      2760679 time:    12.9566 sec
+sssp15:  threads:  8 trial: 31 source      2460941 time:    13.1659 sec
+sssp15:  threads:  8 trial: 32 source      8489650 time:    12.8354 sec
+sssp15:  threads:  8 trial: 33 source      5005225 time:    13.1274 sec
+sssp15:  threads:  8 trial: 34 source      8744645 time:    13.0941 sec
+sssp15:  threads:  8 trial: 35 source      8512023 time:    12.8588 sec
+sssp15:  threads:  8 trial: 36 source     21912165 time:    13.4921 sec
+sssp15:  threads:  8 trial: 37 source      1105390 time:    13.1121 sec
+sssp15:  threads:  8 trial: 38 source     15432163 time:    12.9233 sec
+sssp15:  threads:  8 trial: 39 source      1600177 time:    13.0967 sec
+sssp15:  threads:  8 trial: 40 source     19079469 time:    13.1738 sec
+sssp15:  threads:  8 trial: 41 source     16516637 time:    13.2315 sec
+sssp15:  threads:  8 trial: 42 source     20202566 time:    12.8862 sec
+sssp15:  threads:  8 trial: 43 source     21372803 time:    12.8691 sec
+sssp15:  threads:  8 trial: 44 source      2898009 time:    13.1748 sec
+sssp15:  threads:  8 trial: 45 source      8491277 time:    12.8989 sec
+sssp15:  threads:  8 trial: 46 source     18798317 time:    12.8628 sec
+sssp15:  threads:  8 trial: 47 source     23757560 time:    13.0121 sec
+sssp15:  threads:  8 trial: 48 source     17161819 time:    12.7472 sec
+sssp15:  threads:  8 trial: 49 source     23180739 time:    13.1354 sec
+sssp15:  threads:  8 trial: 50 source     10997085 time:    12.9486 sec
+sssp15:  threads:  8 trial: 51 source      3730630 time:    13.2957 sec
+sssp15:  threads:  8 trial: 52 source      1079068 time:    13.0592 sec
+sssp15:  threads:  8 trial: 53 source     15426822 time:    12.7869 sec
+sssp15:  threads:  8 trial: 54 source     12190925 time:    13.0687 sec
+sssp15:  threads:  8 trial: 55 source      1155218 time:    13.2419 sec
+sssp15:  threads:  8 trial: 56 source     10693488 time:    12.9097 sec
+sssp15:  threads:  8 trial: 57 source     14434835 time:    13.1381 sec
+sssp15:  threads:  8 trial: 58 source     19963339 time:    12.9495 sec
+sssp15:  threads:  8 trial: 59 source      3486185 time:    12.9745 sec
+sssp15:  threads:  8 trial: 60 source     18383269 time:    13.1101 sec
+sssp15:  threads:  8 trial: 61 source     20269908 time:    12.7955 sec
+sssp15:  threads:  8 trial: 62 source     12370764 time:    13.0268 sec
+sssp15:  threads:  8 trial: 63 source      7843140 time:    13.0735 sec
+
+Avg: SSSP threads   8:     13.025 sec (delta: 50000), graph: ../../../GAP/GAP-road/GAP-road.grb
+sssp15:  threads:  4 trial:  0 source      4795720 time:    14.4613 sec
+sssp15:  threads:  4 trial:  1 source     21003853 time:    13.8687 sec
+sssp15:  threads:  4 trial:  2 source       417968 time:    13.9485 sec
+sssp15:  threads:  4 trial:  3 source      6496511 time:    14.3821 sec
+sssp15:  threads:  4 trial:  4 source      6648699 time:    13.6424 sec
+sssp15:  threads:  4 trial:  5 source      9811073 time:    14.3975 sec
+sssp15:  threads:  4 trial:  6 source     22247478 time:    13.9919 sec
+sssp15:  threads:  4 trial:  7 source      5720252 time:    14.2258 sec
+sssp15:  threads:  4 trial:  8 source     12366459 time:    14.0145 sec
+sssp15:  threads:  4 trial:  9 source     20413729 time:    13.9487 sec
+sssp15:  threads:  4 trial: 10 source      4217374 time:    14.5275 sec
+sssp15:  threads:  4 trial: 11 source      2674749 time:    14.5782 sec
+sssp15:  threads:  4 trial: 12 source     22085557 time:    14.0349 sec
+sssp15:  threads:  4 trial: 13 source     19445040 time:    14.2533 sec
+sssp15:  threads:  4 trial: 14 source      2360788 time:    14.3835 sec
+sssp15:  threads:  4 trial: 15 source     19115968 time:    14.3667 sec
+sssp15:  threads:  4 trial: 16 source      7758767 time:    14.1768 sec
+sssp15:  threads:  4 trial: 17 source     13468234 time:    14.5859 sec
+sssp15:  threads:  4 trial: 18 source        30367 time:    14.2861 sec
+sssp15:  threads:  4 trial: 19 source     18599547 time:    14.1869 sec
+sssp15:  threads:  4 trial: 20 source      7526108 time:    13.9402 sec
+sssp15:  threads:  4 trial: 21 source     16836280 time:    14.3702 sec
+sssp15:  threads:  4 trial: 22 source     12742067 time:    14.4154 sec
+sssp15:  threads:  4 trial: 23 source      7697995 time:    13.7302 sec
+sssp15:  threads:  4 trial: 24 source      5876443 time:    14.1378 sec
+sssp15:  threads:  4 trial: 25 source      9616340 time:    14.2451 sec
+sssp15:  threads:  4 trial: 26 source      2497673 time:    14.6020 sec
+sssp15:  threads:  4 trial: 27 source     10052290 time:    13.9530 sec
+sssp15:  threads:  4 trial: 28 source     12493057 time:    14.3952 sec
+sssp15:  threads:  4 trial: 29 source      1670855 time:    14.3328 sec
+sssp15:  threads:  4 trial: 30 source      2760679 time:    14.0749 sec
+sssp15:  threads:  4 trial: 31 source      2460941 time:    14.5261 sec
+sssp15:  threads:  4 trial: 32 source      8489650 time:    13.7910 sec
+sssp15:  threads:  4 trial: 33 source      5005225 time:    14.3875 sec
+sssp15:  threads:  4 trial: 34 source      8744645 time:    14.2514 sec
+sssp15:  threads:  4 trial: 35 source      8512023 time:    13.7869 sec
+sssp15:  threads:  4 trial: 36 source     21912165 time:    14.7389 sec
+sssp15:  threads:  4 trial: 37 source      1105390 time:    14.2545 sec
+sssp15:  threads:  4 trial: 38 source     15432163 time:    13.9775 sec
+sssp15:  threads:  4 trial: 39 source      1600177 time:    14.4088 sec
+sssp15:  threads:  4 trial: 40 source     19079469 time:    14.4919 sec
+sssp15:  threads:  4 trial: 41 source     16516637 time:    14.6139 sec
+sssp15:  threads:  4 trial: 42 source     20202566 time:    13.9292 sec
+sssp15:  threads:  4 trial: 43 source     21372803 time:    14.0196 sec
+sssp15:  threads:  4 trial: 44 source      2898009 time:    14.5079 sec
+sssp15:  threads:  4 trial: 45 source      8491277 time:    13.8096 sec
+sssp15:  threads:  4 trial: 46 source     18798317 time:    13.9902 sec
+sssp15:  threads:  4 trial: 47 source     23757560 time:    14.2468 sec
+sssp15:  threads:  4 trial: 48 source     17161819 time:    13.7848 sec
+sssp15:  threads:  4 trial: 49 source     23180739 time:    14.5925 sec
+sssp15:  threads:  4 trial: 50 source     10997085 time:    14.0140 sec
+sssp15:  threads:  4 trial: 51 source      3730630 time:    14.7509 sec
+sssp15:  threads:  4 trial: 52 source      1079068 time:    14.2968 sec
+sssp15:  threads:  4 trial: 53 source     15426822 time:    13.8081 sec
+sssp15:  threads:  4 trial: 54 source     12190925 time:    14.2378 sec
+sssp15:  threads:  4 trial: 55 source      1155218 time:    14.2582 sec
+sssp15:  threads:  4 trial: 56 source     10693488 time:    13.6895 sec
+sssp15:  threads:  4 trial: 57 source     14434835 time:    14.3447 sec
+sssp15:  threads:  4 trial: 58 source     19963339 time:    14.2413 sec
+sssp15:  threads:  4 trial: 59 source      3486185 time:    14.1711 sec
+sssp15:  threads:  4 trial: 60 source     18383269 time:    14.4507 sec
+sssp15:  threads:  4 trial: 61 source     20269908 time:    13.8823 sec
+sssp15:  threads:  4 trial: 62 source     12370764 time:    14.3441 sec
+sssp15:  threads:  4 trial: 63 source      7843140 time:    14.2917 sec
+
+Avg: SSSP threads   4:     14.209 sec (delta: 50000), graph: ../../../GAP/GAP-road/GAP-road.grb
+sssp15:  threads:  2 trial:  0 source      4795720 time:    17.7889 sec
+sssp15:  threads:  2 trial:  1 source     21003853 time:    16.5711 sec
+sssp15:  threads:  2 trial:  2 source       417968 time:    16.6505 sec
+sssp15:  threads:  2 trial:  3 source      6496511 time:    17.6649 sec
+sssp15:  threads:  2 trial:  4 source      6648699 time:    16.0718 sec
+sssp15:  threads:  2 trial:  5 source      9811073 time:    17.8276 sec
+sssp15:  threads:  2 trial:  6 source     22247478 time:    16.8653 sec
+sssp15:  threads:  2 trial:  7 source      5720252 time:    17.4763 sec
+sssp15:  threads:  2 trial:  8 source     12366459 time:    16.8321 sec
+sssp15:  threads:  2 trial:  9 source     20413729 time:    16.7259 sec
+sssp15:  threads:  2 trial: 10 source      4217374 time:    18.1259 sec
+sssp15:  threads:  2 trial: 11 source      2674749 time:    18.2656 sec
+sssp15:  threads:  2 trial: 12 source     22085557 time:    16.9379 sec
+sssp15:  threads:  2 trial: 13 source     19445040 time:    17.3050 sec
+sssp15:  threads:  2 trial: 14 source      2360788 time:    17.7033 sec
+sssp15:  threads:  2 trial: 15 source     19115968 time:    17.6739 sec
+sssp15:  threads:  2 trial: 16 source      7758767 time:    17.1657 sec
+sssp15:  threads:  2 trial: 17 source     13468234 time:    17.7132 sec
+sssp15:  threads:  2 trial: 18 source        30367 time:    17.4542 sec
+sssp15:  threads:  2 trial: 19 source     18599547 time:    17.1862 sec
+sssp15:  threads:  2 trial: 20 source      7526108 time:    16.5438 sec
+sssp15:  threads:  2 trial: 21 source     16836280 time:    17.7402 sec
+sssp15:  threads:  2 trial: 22 source     12742067 time:    17.7269 sec
+sssp15:  threads:  2 trial: 23 source      7697995 time:    16.2219 sec
+sssp15:  threads:  2 trial: 24 source      5876443 time:    16.9481 sec
+sssp15:  threads:  2 trial: 25 source      9616340 time:    17.2751 sec
+sssp15:  threads:  2 trial: 26 source      2497673 time:    18.1691 sec
+sssp15:  threads:  2 trial: 27 source     10052290 time:    16.7618 sec
+sssp15:  threads:  2 trial: 28 source     12493057 time:    17.8059 sec
+sssp15:  threads:  2 trial: 29 source      1670855 time:    17.6865 sec
+sssp15:  threads:  2 trial: 30 source      2760679 time:    16.9834 sec
+sssp15:  threads:  2 trial: 31 source      2460941 time:    18.1615 sec
+sssp15:  threads:  2 trial: 32 source      8489650 time:    16.5042 sec
+sssp15:  threads:  2 trial: 33 source      5005225 time:    17.7236 sec
+sssp15:  threads:  2 trial: 34 source      8744645 time:    17.3091 sec
+sssp15:  threads:  2 trial: 35 source      8512023 time:    16.3010 sec
+sssp15:  threads:  2 trial: 36 source     21912165 time:    18.5539 sec
+sssp15:  threads:  2 trial: 37 source      1105390 time:    17.3563 sec
+sssp15:  threads:  2 trial: 38 source     15432163 time:    16.6856 sec
+sssp15:  threads:  2 trial: 39 source      1600177 time:    17.7224 sec
+sssp15:  threads:  2 trial: 40 source     19079469 time:    17.8570 sec
+sssp15:  threads:  2 trial: 41 source     16516637 time:    18.3693 sec
+sssp15:  threads:  2 trial: 42 source     20202566 time:    16.7463 sec
+sssp15:  threads:  2 trial: 43 source     21372803 time:    16.8777 sec
+sssp15:  threads:  2 trial: 44 source      2898009 time:    17.9782 sec
+sssp15:  threads:  2 trial: 45 source      8491277 time:    16.3377 sec
+sssp15:  threads:  2 trial: 46 source     18798317 time:    16.9145 sec
+sssp15:  threads:  2 trial: 47 source     23757560 time:    17.3629 sec
+sssp15:  threads:  2 trial: 48 source     17161819 time:    16.5966 sec
+sssp15:  threads:  2 trial: 49 source     23180739 time:    18.4359 sec
+sssp15:  threads:  2 trial: 50 source     10997085 time:    16.7246 sec
+sssp15:  threads:  2 trial: 51 source      3730630 time:    18.4902 sec
+sssp15:  threads:  2 trial: 52 source      1079068 time:    17.4779 sec
+sssp15:  threads:  2 trial: 53 source     15426822 time:    16.4084 sec
+sssp15:  threads:  2 trial: 54 source     12190925 time:    17.2708 sec
+sssp15:  threads:  2 trial: 55 source      1155218 time:    17.3547 sec
+sssp15:  threads:  2 trial: 56 source     10693488 time:    16.0581 sec
+sssp15:  threads:  2 trial: 57 source     14434835 time:    17.6629 sec
+sssp15:  threads:  2 trial: 58 source     19963339 time:    17.4619 sec
+sssp15:  threads:  2 trial: 59 source      3486185 time:    17.1681 sec
+sssp15:  threads:  2 trial: 60 source     18383269 time:    17.4572 sec
+sssp15:  threads:  2 trial: 61 source     20269908 time:    16.5478 sec
+sssp15:  threads:  2 trial: 62 source     12370764 time:    17.6434 sec
+sssp15:  threads:  2 trial: 63 source      7843140 time:    17.3995 sec
+
+Avg: SSSP threads   2:     17.294 sec (delta: 50000), graph: ../../../GAP/GAP-road/GAP-road.grb
+sssp15:  threads:  1 trial:  0 source      4795720 time:    24.2755 sec
+sssp15:  threads:  1 trial:  1 source     21003853 time:    21.2244 sec
+sssp15:  threads:  1 trial:  2 source       417968 time:    21.3334 sec
+sssp15:  threads:  1 trial:  3 source      6496511 time:    23.8792 sec
+sssp15:  threads:  1 trial:  4 source      6648699 time:    20.0462 sec
+sssp15:  threads:  1 trial:  5 source      9811073 time:    24.7027 sec
+sssp15:  threads:  1 trial:  6 source     22247478 time:    22.0337 sec
+sssp15:  threads:  1 trial:  7 source      5720252 time:    23.4742 sec
+sssp15:  threads:  1 trial:  8 source     12366459 time:    21.8860 sec
+sssp15:  threads:  1 trial:  9 source     20413729 time:    21.5451 sec
+sssp15:  threads:  1 trial: 10 source      4217374 time:    25.3314 sec
+sssp15:  threads:  1 trial: 11 source      2674749 time:    25.7452 sec
+sssp15:  threads:  1 trial: 12 source     22085557 time:    22.1903 sec
+sssp15:  threads:  1 trial: 13 source     19445040 time:    22.8577 sec
+sssp15:  threads:  1 trial: 14 source      2360788 time:    24.2266 sec
+sssp15:  threads:  1 trial: 15 source     19115968 time:    24.0517 sec
+sssp15:  threads:  1 trial: 16 source      7758767 time:    22.6277 sec
+sssp15:  threads:  1 trial: 17 source     13468234 time:    24.4246 sec
+sssp15:  threads:  1 trial: 18 source        30367 time:    23.2250 sec
+sssp15:  threads:  1 trial: 19 source     18599547 time:    23.0518 sec
+sssp15:  threads:  1 trial: 20 source      7526108 time:    21.2743 sec
+sssp15:  threads:  1 trial: 21 source     16836280 time:    24.6123 sec
+sssp15:  threads:  1 trial: 22 source     12742067 time:    24.3947 sec
+sssp15:  threads:  1 trial: 23 source      7697995 time:    20.2334 sec
+sssp15:  threads:  1 trial: 24 source      5876443 time:    21.9944 sec
+sssp15:  threads:  1 trial: 25 source      9616340 time:    22.9467 sec
+sssp15:  threads:  1 trial: 26 source      2497673 time:    25.5329 sec
+sssp15:  threads:  1 trial: 27 source     10052290 time:    22.0513 sec
+sssp15:  threads:  1 trial: 28 source     12493057 time:    24.5560 sec
+sssp15:  threads:  1 trial: 29 source      1670855 time:    24.2852 sec
+sssp15:  threads:  1 trial: 30 source      2760679 time:    22.2766 sec
+sssp15:  threads:  1 trial: 31 source      2460941 time:    25.4665 sec
+sssp15:  threads:  1 trial: 32 source      8489650 time:    20.5952 sec
+sssp15:  threads:  1 trial: 33 source      5005225 time:    24.1856 sec
+sssp15:  threads:  1 trial: 34 source      8744645 time:    23.0097 sec
+sssp15:  threads:  1 trial: 35 source      8512023 time:    20.5175 sec
+sssp15:  threads:  1 trial: 36 source     21912165 time:    26.1800 sec
+sssp15:  threads:  1 trial: 37 source      1105390 time:    23.0704 sec
+sssp15:  threads:  1 trial: 38 source     15432163 time:    21.4295 sec
+sssp15:  threads:  1 trial: 39 source      1600177 time:    24.2307 sec
+sssp15:  threads:  1 trial: 40 source     19079469 time:    24.5057 sec
+sssp15:  threads:  1 trial: 41 source     16516637 time:    25.7764 sec
+sssp15:  threads:  1 trial: 42 source     20202566 time:    21.7927 sec
+sssp15:  threads:  1 trial: 43 source     21372803 time:    21.9479 sec
+sssp15:  threads:  1 trial: 44 source      2898009 time:    24.8382 sec
+sssp15:  threads:  1 trial: 45 source      8491277 time:    20.5216 sec
+sssp15:  threads:  1 trial: 46 source     18798317 time:    22.2141 sec
+sssp15:  threads:  1 trial: 47 source     23757560 time:    23.3046 sec
+sssp15:  threads:  1 trial: 48 source     17161819 time:    20.9039 sec
+sssp15:  threads:  1 trial: 49 source     23180739 time:    25.5056 sec
+sssp15:  threads:  1 trial: 50 source     10997085 time:    21.5196 sec
+sssp15:  threads:  1 trial: 51 source      3730630 time:    25.9930 sec
+sssp15:  threads:  1 trial: 52 source      1079068 time:    23.2292 sec
+sssp15:  threads:  1 trial: 53 source     15426822 time:    20.6328 sec
+sssp15:  threads:  1 trial: 54 source     12190925 time:    22.9189 sec
+sssp15:  threads:  1 trial: 55 source      1155218 time:    23.3779 sec
+sssp15:  threads:  1 trial: 56 source     10693488 time:    20.2777 sec
+sssp15:  threads:  1 trial: 57 source     14434835 time:    24.1419 sec
+sssp15:  threads:  1 trial: 58 source     19963339 time:    23.7930 sec
+sssp15:  threads:  1 trial: 59 source      3486185 time:    22.7303 sec
+sssp15:  threads:  1 trial: 60 source     18383269 time:    23.2108 sec
+sssp15:  threads:  1 trial: 61 source     20269908 time:    21.1674 sec
+sssp15:  threads:  1 trial: 62 source     12370764 time:    23.8939 sec
+sssp15:  threads:  1 trial: 63 source      7843140 time:    23.1161 sec
+
+Avg: SSSP threads   1:     23.067 sec (delta: 50000), graph: ../../../GAP/GAP-road/GAP-road.grb
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Triangle Counting
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+# of trials: 3
+threads to test:  32 24 16 8 4 2 1
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+A converted to 32-bit
+read time: 34.5372
+Graph: kind: undirected, nodes: 1.34218e+08 entries: 4.29497e+09 type: bool
+  structural symmetry: symmetric  self-edges: 0
+  adjacency matrix: GrB_BOOL matrix: 134217728-by-134217728 entries: 4294966740
+    (0, 8291853)   1
+    (0, 9845139)   1
+    (0, 14571172)   1
+    (0, 16459757)   1
+    (0, 27302127)   1
+    (0, 27726180)   1
+    (0, 30303523)   1
+    (0, 32640525)   1
+    (0, 33360373)   1
+    (0, 40782998)   1
+    (0, 41057943)   1
+    (0, 43348321)   1
+    (0, 50206206)   1
+    (0, 52510658)   1
+    (0, 53390371)   1
+    (0, 53579654)   1
+    (0, 54622695)   1
+    (0, 57696071)   1
+    (0, 59385788)   1
+    (0, 60365539)   1
+    (0, 64764501)   1
+    (0, 64889445)   1
+    (0, 72706136)   1
+    (0, 77394182)   1
+    (0, 82101150)   1
+    (0, 86364056)   1
+    (0, 86790574)   1
+    (0, 90287459)   1
+    (0, 104674459)   1
+    (0, 109716228)   1
+    (0, 120042750)   1
+    (0, 125093057)   1
+    ...
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+# of triangles: 5378
+Sandia_ULT: sum ((U*L') .* U)   sort: none
+nthreads:  32 time:    41.401757 rate: 103.74 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+trial  0:    29.500255 sec rate 145.59  # triangles: 5378
+trial  1:    29.362182 sec rate 146.28  # triangles: 5378
+trial  2:    29.856362 sec rate 143.85  # triangles: 5378
+nthreads:  32 time:    29.572933 rate: 145.23   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LL: sum ((L*L) .* L)     auto-sort) threads  32:     29.573 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:    30.754018 sec rate 139.66  # triangles: 5378
+trial  1:    30.377168 sec rate 141.39  # triangles: 5378
+trial  2:    29.998240 sec rate 143.17  # triangles: 5378
+nthreads:  24 time:    30.376475 rate: 141.39   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LL: sum ((L*L) .* L)     auto-sort) threads  24:     30.376 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:    40.334702 sec rate 106.48  # triangles: 5378
+trial  1:    40.354236 sec rate 106.43  # triangles: 5378
+trial  2:    40.340167 sec rate 106.47  # triangles: 5378
+nthreads:  16 time:    40.343035 rate: 106.46   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LL: sum ((L*L) .* L)     auto-sort) threads  16:     40.343 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:    70.064855 sec rate  61.30  # triangles: 5378
+trial  1:    69.829547 sec rate  61.51  # triangles: 5378
+trial  2:    69.823016 sec rate  61.51  # triangles: 5378
+nthreads:   8 time:    69.905806 rate:  61.44   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LL: sum ((L*L) .* L)     auto-sort) threads   8:     69.906 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:   125.279466 sec rate  34.28  # triangles: 5378
+trial  1:   125.261516 sec rate  34.29  # triangles: 5378
+trial  2:   125.287433 sec rate  34.28  # triangles: 5378
+nthreads:   4 time:   125.276138 rate:  34.28   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LL: sum ((L*L) .* L)     auto-sort) threads   4:    125.276 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:   237.180667 sec rate  18.11  # triangles: 5378
+trial  1:   237.034713 sec rate  18.12  # triangles: 5378
+trial  2:   237.099192 sec rate  18.11  # triangles: 5378
+nthreads:   2 time:   237.104857 rate:  18.11   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LL: sum ((L*L) .* L)     auto-sort) threads   2:    237.105 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:   355.030390 sec rate  12.10  # triangles: 5378
+trial  1:   357.718903 sec rate  12.01  # triangles: 5378
+trial  2:   355.439631 sec rate  12.08  # triangles: 5378
+nthreads:   1 time:   356.062975 rate:  12.06   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LL: sum ((L*L) .* L)     auto-sort) threads   1:    356.063 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+trial  0:    29.003723 sec rate 148.08  # triangles: 5378
+trial  1:    28.938956 sec rate 148.41  # triangles: 5378
+trial  2:    28.914042 sec rate 148.54  # triangles: 5378
+nthreads:  32 time:    28.952240 rate: 148.35   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_UU: sum ((U*U) .* U)     auto-sort) threads  32:     28.952 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:    36.857863 sec rate 116.53  # triangles: 5378
+trial  1:    36.739258 sec rate 116.90  # triangles: 5378
+trial  2:    36.708442 sec rate 117.00  # triangles: 5378
+nthreads:  24 time:    36.768521 rate: 116.81   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_UU: sum ((U*U) .* U)     auto-sort) threads  24:     36.769 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:    48.756466 sec rate  88.09  # triangles: 5378
+trial  1:    48.771881 sec rate  88.06  # triangles: 5378
+trial  2:    48.820103 sec rate  87.98  # triangles: 5378
+nthreads:  16 time:    48.782816 rate:  88.04   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_UU: sum ((U*U) .* U)     auto-sort) threads  16:     48.783 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:    86.080336 sec rate  49.89  # triangles: 5378
+trial  1:    86.120647 sec rate  49.87  # triangles: 5378
+trial  2:    86.068592 sec rate  49.90  # triangles: 5378
+nthreads:   8 time:    86.089858 rate:  49.89   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_UU: sum ((U*U) .* U)     auto-sort) threads   8:     86.090 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:   155.705636 sec rate  27.58  # triangles: 5378
+trial  1:   155.586168 sec rate  27.61  # triangles: 5378
+trial  2:   155.657965 sec rate  27.59  # triangles: 5378
+nthreads:   4 time:   155.649923 rate:  27.59   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_UU: sum ((U*U) .* U)     auto-sort) threads   4:    155.650 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:   279.883115 sec rate  15.35  # triangles: 5378
+trial  1:   281.476971 sec rate  15.26  # triangles: 5378
+trial  2:   279.673579 sec rate  15.36  # triangles: 5378
+nthreads:   2 time:   280.344555 rate:  15.32   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_UU: sum ((U*U) .* U)     auto-sort) threads   2:    280.345 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:   375.749008 sec rate  11.43  # triangles: 5378
+trial  1:   375.897738 sec rate  11.43  # triangles: 5378
+trial  2:   375.517024 sec rate  11.44  # triangles: 5378
+nthreads:   1 time:   375.721257 rate:  11.43   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_UU: sum ((U*U) .* U)     auto-sort) threads   1:    375.721 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:    34.937968 sec rate 122.93  # triangles: 5378
+trial  1:    35.033511 sec rate 122.60  # triangles: 5378
+trial  2:    35.019120 sec rate 122.65  # triangles: 5378
+nthreads:  32 time:    34.996866 rate: 122.72   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  32:     34.997 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:    37.522597 sec rate 114.46  # triangles: 5378
+trial  1:    37.371810 sec rate 114.93  # triangles: 5378
+trial  2:    37.548457 sec rate 114.38  # triangles: 5378
+nthreads:  24 time:    37.480955 rate: 114.59   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  24:     37.481 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:    49.385970 sec rate  86.97  # triangles: 5378
+trial  1:    48.367332 sec rate  88.80  # triangles: 5378
+trial  2:    48.318622 sec rate  88.89  # triangles: 5378
+nthreads:  16 time:    48.690641 rate:  88.21   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  16:     48.691 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:    81.079046 sec rate  52.97  # triangles: 5378
+trial  1:    81.097362 sec rate  52.96  # triangles: 5378
+trial  2:    81.535302 sec rate  52.68  # triangles: 5378
+nthreads:   8 time:    81.237236 rate:  52.87   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   8:     81.237 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:   145.661970 sec rate  29.49  # triangles: 5378
+trial  1:   145.452297 sec rate  29.53  # triangles: 5378
+trial  2:   145.864172 sec rate  29.44  # triangles: 5378
+nthreads:   4 time:   145.659480 rate:  29.49   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   4:    145.659 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:   280.110966 sec rate  15.33  # triangles: 5378
+trial  1:   280.484164 sec rate  15.31  # triangles: 5378
+trial  2:   280.390808 sec rate  15.32  # triangles: 5378
+nthreads:   2 time:   280.328646 rate:  15.32   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   2:    280.329 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+trial  0:   500.239803 sec rate   8.59  # triangles: 5378
+trial  1:   497.947479 sec rate   8.63  # triangles: 5378
+trial  2:   498.074054 sec rate   8.62  # triangles: 5378
+nthreads:   1 time:   498.753778 rate:   8.61   # of triangles: 5378 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   1:    498.754 sec, graph: ../../../GAP/GAP-urand/GAP-urand.grb
+
+Best method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+nthreads:  32 time:    28.952240 rate: 148.35
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+# of trials: 3
+threads to test:  32 24 16 8 4 2 1
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+A converted to 32-bit
+read time: 32.2698
+Graph: kind: undirected, nodes: 1.34218e+08 entries: 4.22326e+09 type: bool
+  structural symmetry: symmetric  self-edges: 0
+  adjacency matrix: GrB_BOOL matrix: 134217726-by-134217726 entries: 4223264644
+    (1, 83111928)   1
+    (2, 113772338)   1
+    (9, 26920261)   1
+    (9, 33335674)   1
+    (9, 90905511)   1
+    (9, 92964069)   1
+    (9, 126874301)   1
+    (11, 3075467)   1
+    (11, 11283179)   1
+    (11, 14136330)   1
+    (11, 18241662)   1
+    (11, 21256905)   1
+    (11, 26197037)   1
+    (11, 34992956)   1
+    (11, 49762924)   1
+    (11, 54231301)   1
+    (11, 55275316)   1
+    (11, 55896288)   1
+    (11, 56613538)   1
+    (11, 69378808)   1
+    (11, 76391974)   1
+    (11, 77970070)   1
+    (11, 80121717)   1
+    (11, 113872174)   1
+    (11, 115829864)   1
+    (11, 125066355)   1
+    (11, 129708509)   1
+    (11, 131285585)   1
+    (11, 132549336)   1
+    (14, 11049596)   1
+    (14, 11455408)   1
+    (14, 19942609)   1
+    ...
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+# of triangles: 106873365648
+Sandia_ULT: sum ((U*L') .* U)   sort: descending degree
+nthreads:  32 time:   555.147814 rate:   7.61 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+kron fails on method 3; skipped
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+kron fails on method 4; skipped
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:   555.300928 sec rate   7.61  # triangles: 1.06873e+11
+trial  1:   544.663367 sec rate   7.75  # triangles: 1.06873e+11
+trial  2:   546.253535 sec rate   7.73  # triangles: 1.06873e+11
+nthreads:  32 time:   548.739277 rate:   7.70   # of triangles: 106873365648 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  32:    548.739 sec, graph: ../../../GAP/GAP-kron/GAP-kron.grb
+trial  0:   671.927629 sec rate   6.29  # triangles: 1.06873e+11
+trial  1:   669.518238 sec rate   6.31  # triangles: 1.06873e+11
+trial  2:   655.033162 sec rate   6.45  # triangles: 1.06873e+11
+nthreads:  24 time:   665.493010 rate:   6.35   # of triangles: 106873365648 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  24:    665.493 sec, graph: ../../../GAP/GAP-kron/GAP-kron.grb
+trial  0:   929.749777 sec rate   4.54  # triangles: 1.06873e+11
+trial  1:   927.638984 sec rate   4.55  # triangles: 1.06873e+11
+trial  2:   927.651427 sec rate   4.55  # triangles: 1.06873e+11
+nthreads:  16 time:   928.346729 rate:   4.55   # of triangles: 106873365648 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  16:    928.347 sec, graph: ../../../GAP/GAP-kron/GAP-kron.grb
+trial  0:  1752.252147 sec rate   2.41  # triangles: 1.06873e+11
+trial  1:  1743.978162 sec rate   2.42  # triangles: 1.06873e+11
+trial  2:  1743.060165 sec rate   2.42  # triangles: 1.06873e+11
+nthreads:   8 time:  1746.430158 rate:   2.42   # of triangles: 106873365648 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   8:   1746.430 sec, graph: ../../../GAP/GAP-kron/GAP-kron.grb
+trial  0:  3177.979046 sec rate   1.33  # triangles: 1.06873e+11
+trial  1:  3173.694874 sec rate   1.33  # triangles: 1.06873e+11
+trial  2:  3177.782751 sec rate   1.33  # triangles: 1.06873e+11
+nthreads:   4 time:  3176.485557 rate:   1.33   # of triangles: 106873365648 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   4:   3176.486 sec, graph: ../../../GAP/GAP-kron/GAP-kron.grb
+trial  0:  6368.432535 sec rate   0.66  # triangles: 1.06873e+11
+trial  1:  6367.918023 sec rate   0.66  # triangles: 1.06873e+11
+trial  2:  6367.763508 sec rate   0.66  # triangles: 1.06873e+11
+nthreads:   2 time:  6368.038022 rate:   0.66   # of triangles: 106873365648 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   2:   6368.038 sec, graph: ../../../GAP/GAP-kron/GAP-kron.grb
+trial  0: 10808.228533 sec rate   0.39  # triangles: 1.06873e+11
+trial  1: 10810.717789 sec rate   0.39  # triangles: 1.06873e+11
+trial  2: 10909.280756 sec rate   0.39  # triangles: 1.06873e+11
+nthreads:   1 time: 10842.742359 rate:   0.39   # of triangles: 106873365648 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   1:  10842.742 sec, graph: ../../../GAP/GAP-kron/GAP-kron.grb
+
+Best method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+nthreads:  32 time:   548.739277 rate:   7.70
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+# of trials: 3
+threads to test:  32 24 16 8 4 2 1
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+A converted to 32-bit
+forcing G-> to be symmetric (via A = A+A')
+read time: 25.115
+Graph: kind: undirected, nodes: 6.15784e+07 entries: 2.40503e+09 type: bool
+  structural symmetry: symmetric  self-edges: 0
+  adjacency matrix: GrB_BOOL matrix: 61578415-by-61578415 entries: 2405026092
+    (12, 13)   1
+    (12, 14)   1
+    (12, 15)   1
+    (12, 16)   1
+    (12, 17)   1
+    (12, 18)   1
+    (12, 20)   1
+    (12, 21)   1
+    (12, 22)   1
+    (12, 23)   1
+    (12, 24)   1
+    (12, 31)   1
+    (12, 38)   1
+    (12, 41)   1
+    (12, 47)   1
+    (12, 52)   1
+    (12, 53)   1
+    (12, 56)   1
+    (12, 57)   1
+    (12, 58)   1
+    (12, 59)   1
+    (12, 60)   1
+    (12, 61)   1
+    (12, 62)   1
+    (12, 64)   1
+    (12, 67)   1
+    (12, 69)   1
+    (12, 70)   1
+    (12, 76)   1
+    (12, 87)   1
+    (12, 89)   1
+    (12, 92)   1
+    ...
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+# of triangles: 34824916864
+Sandia_ULT: sum ((U*L') .* U)   sort: descending degree
+nthreads:  32 time:   137.877916 rate:  17.44 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:   142.432848 sec rate  16.89  # triangles: 3.48249e+10
+trial  1:   139.614787 sec rate  17.23  # triangles: 3.48249e+10
+trial  2:   138.019072 sec rate  17.43  # triangles: 3.48249e+10
+nthreads:  32 time:   140.022236 rate:  17.18   # of triangles: 34824916864 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  32:    140.022 sec, graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+trial  0:   162.674401 sec rate  14.78  # triangles: 3.48249e+10
+trial  1:   162.121199 sec rate  14.83  # triangles: 3.48249e+10
+trial  2:   162.145289 sec rate  14.83  # triangles: 3.48249e+10
+nthreads:  24 time:   162.313629 rate:  14.82   # of triangles: 34824916864 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  24:    162.314 sec, graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+trial  0:   232.454958 sec rate  10.35  # triangles: 3.48249e+10
+trial  1:   231.658406 sec rate  10.38  # triangles: 3.48249e+10
+trial  2:   223.562008 sec rate  10.76  # triangles: 3.48249e+10
+nthreads:  16 time:   229.225124 rate:  10.49   # of triangles: 34824916864 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  16:    229.225 sec, graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+trial  0:   417.930045 sec rate   5.75  # triangles: 3.48249e+10
+trial  1:   416.144898 sec rate   5.78  # triangles: 3.48249e+10
+trial  2:   416.535692 sec rate   5.77  # triangles: 3.48249e+10
+nthreads:   8 time:   416.870212 rate:   5.77   # of triangles: 34824916864 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   8:    416.870 sec, graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+trial  0:   786.402555 sec rate   3.06  # triangles: 3.48249e+10
+trial  1:   797.413460 sec rate   3.02  # triangles: 3.48249e+10
+trial  2:   782.170123 sec rate   3.07  # triangles: 3.48249e+10
+nthreads:   4 time:   788.662046 rate:   3.05   # of triangles: 34824916864 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   4:    788.662 sec, graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+trial  0:  1580.791085 sec rate   1.52  # triangles: 3.48249e+10
+trial  1:  1573.481791 sec rate   1.53  # triangles: 3.48249e+10
+trial  2:  1573.664028 sec rate   1.53  # triangles: 3.48249e+10
+nthreads:   2 time:  1575.978968 rate:   1.53   # of triangles: 34824916864 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   2:   1575.979 sec, graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+trial  0:  2629.437396 sec rate   0.91  # triangles: 3.48249e+10
+trial  1:  2628.965601 sec rate   0.91  # triangles: 3.48249e+10
+trial  2:  2630.735840 sec rate   0.91  # triangles: 3.48249e+10
+nthreads:   1 time:  2629.712946 rate:   0.91   # of triangles: 34824916864 presort: 1
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   1:   2629.713 sec, graph: ../../../GAP/GAP-twitter/GAP-twitter.grb
+
+Best method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+nthreads:  32 time:   140.022236 rate:  17.18
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+# of trials: 3
+threads to test:  32 24 16 8 4 2 1
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+A converted to 32-bit
+forcing G-> to be symmetric (via A = A+A')
+read time: 19.4603
+Graph: kind: undirected, nodes: 5.06362e+07 entries: 3.62013e+09 type: bool
+  structural symmetry: symmetric  self-edges: 0
+  adjacency matrix: GrB_BOOL matrix: 50636151-by-50636151 entries: 3620126660
+    (0, 50395004)   1
+    (1, 50395004)   1
+    (2, 50395004)   1
+    (3, 50395004)   1
+    (4, 50395004)   1
+    (5, 50395004)   1
+    (6, 50395004)   1
+    (7, 50395004)   1
+    (8, 50395004)   1
+    (9, 50395004)   1
+    (10, 11)   1
+    (10, 49817219)   1
+    (10, 49824797)   1
+    (10, 49824842)   1
+    (10, 49824843)   1
+    (10, 49824846)   1
+    (10, 49826026)   1
+    (10, 49826027)   1
+    (10, 49826709)   1
+    (10, 49826710)   1
+    (10, 49826711)   1
+    (10, 49826712)   1
+    (10, 49826713)   1
+    (10, 49826714)   1
+    (10, 49826715)   1
+    (10, 49826716)   1
+    (10, 49826717)   1
+    (10, 49826719)   1
+    (10, 49827761)   1
+    (10, 49853332)   1
+    (10, 49853570)   1
+    (10, 49853571)   1
+    ...
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+# of triangles: 84907041475
+Sandia_ULT: sum ((U*L') .* U)   sort: none
+nthreads:  32 time:    23.174290 rate: 156.21 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:    19.526945 sec rate 185.39  # triangles: 8.4907e+10
+trial  1:    19.364664 sec rate 186.94  # triangles: 8.4907e+10
+trial  2:    19.423117 sec rate 186.38  # triangles: 8.4907e+10
+nthreads:  32 time:    19.438242 rate: 186.24   # of triangles: 84907041475 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  32:     19.438 sec, graph: ../../../GAP/GAP-web/GAP-web.grb
+trial  0:    21.272025 sec rate 170.18  # triangles: 8.4907e+10
+trial  1:    21.413905 sec rate 169.05  # triangles: 8.4907e+10
+trial  2:    21.465718 sec rate 168.65  # triangles: 8.4907e+10
+nthreads:  24 time:    21.383882 rate: 169.29   # of triangles: 84907041475 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  24:     21.384 sec, graph: ../../../GAP/GAP-web/GAP-web.grb
+trial  0:    28.880510 sec rate 125.35  # triangles: 8.4907e+10
+trial  1:    29.063208 sec rate 124.56  # triangles: 8.4907e+10
+trial  2:    29.128254 sec rate 124.28  # triangles: 8.4907e+10
+nthreads:  16 time:    29.023991 rate: 124.73   # of triangles: 84907041475 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  16:     29.024 sec, graph: ../../../GAP/GAP-web/GAP-web.grb
+trial  0:    48.921373 sec rate  74.00  # triangles: 8.4907e+10
+trial  1:    49.095891 sec rate  73.74  # triangles: 8.4907e+10
+trial  2:    49.275141 sec rate  73.47  # triangles: 8.4907e+10
+nthreads:   8 time:    49.097468 rate:  73.73   # of triangles: 84907041475 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   8:     49.097 sec, graph: ../../../GAP/GAP-web/GAP-web.grb
+trial  0:    85.527780 sec rate  42.33  # triangles: 8.4907e+10
+trial  1:    85.055497 sec rate  42.56  # triangles: 8.4907e+10
+trial  2:    85.099697 sec rate  42.54  # triangles: 8.4907e+10
+nthreads:   4 time:    85.227658 rate:  42.48   # of triangles: 84907041475 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   4:     85.228 sec, graph: ../../../GAP/GAP-web/GAP-web.grb
+trial  0:   163.397427 sec rate  22.16  # triangles: 8.4907e+10
+trial  1:   163.411532 sec rate  22.15  # triangles: 8.4907e+10
+trial  2:   163.558273 sec rate  22.13  # triangles: 8.4907e+10
+nthreads:   2 time:   163.455744 rate:  22.15   # of triangles: 84907041475 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   2:    163.456 sec, graph: ../../../GAP/GAP-web/GAP-web.grb
+trial  0:   264.482893 sec rate  13.69  # triangles: 8.4907e+10
+trial  1:   264.560077 sec rate  13.68  # triangles: 8.4907e+10
+trial  2:   264.656461 sec rate  13.68  # triangles: 8.4907e+10
+nthreads:   1 time:   264.566477 rate:  13.68   # of triangles: 84907041475 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   1:    264.566 sec, graph: ../../../GAP/GAP-web/GAP-web.grb
+
+Best method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+nthreads:  32 time:    19.438242 rate: 186.24
+library: SuiteSparse:GraphBLAS v10.0.0 [Mar 1, 2025]
+# of trials: 3
+threads to test:  32 24 16 8 4 2 1
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+A converted to 32-bit
+read time: 0.827795
+Graph: kind: undirected, nodes: 2.39473e+07 entries: 5.77086e+07 type: bool
+  structural symmetry: symmetric  self-edges: 0
+  adjacency matrix: GrB_BOOL matrix: 23947347-by-23947347 entries: 57708624
+    (0, 1)   1
+    (0, 709)   1
+    (0, 1049673)   1
+    (1, 0)   1
+    (1, 2097154)   1
+    (2, 9)   1
+    (2, 2097152)   1
+    (2, 2097156)   1
+    (3, 1903)   1
+    (3, 1048578)   1
+    (4, 5)   1
+    (4, 2097153)   1
+    (5, 4)   1
+    (5, 11)   1
+    (5, 1048579)   1
+    (6, 7)   1
+    (6, 1048580)   1
+    (6, 1048582)   1
+    (7, 6)   1
+    (8, 33976)   1
+    (8, 1048581)   1
+    (9, 2)   1
+    (9, 10)   1
+    (9, 2097155)   1
+    (10, 9)   1
+    (10, 11)   1
+    (10, 2097152)   1
+    (11, 5)   1
+    (11, 10)   1
+    (11, 2097155)   1
+    (12, 1048586)   1
+    (12, 1049686)   1
+    ...
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+# of triangles: 438804
+Sandia_ULT: sum ((U*L') .* U)   sort: none
+nthreads:  32 time:     0.135303 rate: 426.51 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:     0.129186 sec rate 446.71  # triangles: 438804
+trial  1:     0.128066 sec rate 450.62  # triangles: 438804
+trial  2:     0.127524 sec rate 452.53  # triangles: 438804
+nthreads:  32 time:     0.128259 rate: 449.94   # of triangles: 438804 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  32:      0.128 sec, graph: ../../../GAP/GAP-road/GAP-road.grb
+trial  0:     0.132686 sec rate 434.93  # triangles: 438804
+trial  1:     0.132013 sec rate 437.14  # triangles: 438804
+trial  2:     0.131647 sec rate 438.36  # triangles: 438804
+nthreads:  24 time:     0.132115 rate: 436.80   # of triangles: 438804 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  24:      0.132 sec, graph: ../../../GAP/GAP-road/GAP-road.grb
+trial  0:     0.140483 sec rate 410.79  # triangles: 438804
+trial  1:     0.141181 sec rate 408.76  # triangles: 438804
+trial  2:     0.143413 sec rate 402.39  # triangles: 438804
+nthreads:  16 time:     0.141692 rate: 407.28   # of triangles: 438804 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads  16:      0.142 sec, graph: ../../../GAP/GAP-road/GAP-road.grb
+trial  0:     0.175270 sec rate 329.26  # triangles: 438804
+trial  1:     0.175267 sec rate 329.26  # triangles: 438804
+trial  2:     0.175194 sec rate 329.40  # triangles: 438804
+nthreads:   8 time:     0.175244 rate: 329.30   # of triangles: 438804 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   8:      0.175 sec, graph: ../../../GAP/GAP-road/GAP-road.grb
+trial  0:     0.301182 sec rate 191.61  # triangles: 438804
+trial  1:     0.300689 sec rate 191.92  # triangles: 438804
+trial  2:     0.300256 sec rate 192.20  # triangles: 438804
+nthreads:   4 time:     0.300709 rate: 191.91   # of triangles: 438804 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   4:      0.301 sec, graph: ../../../GAP/GAP-road/GAP-road.grb
+trial  0:     0.575721 sec rate 100.24  # triangles: 438804
+trial  1:     0.576341 sec rate 100.13  # triangles: 438804
+trial  2:     0.574947 sec rate 100.37  # triangles: 438804
+nthreads:   2 time:     0.575670 rate: 100.25   # of triangles: 438804 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   2:      0.576 sec, graph: ../../../GAP/GAP-road/GAP-road.grb
+trial  0:     0.921061 sec rate  62.65  # triangles: 438804
+trial  1:     0.922269 sec rate  62.57  # triangles: 438804
+trial  2:     0.920771 sec rate  62.67  # triangles: 438804
+nthreads:   1 time:     0.921367 rate:  62.63   # of triangles: 438804 presort: 2
+Avg: TC (Sandia_LUT: sum ((L*U') .* L)   auto-sort) threads   1:      0.921 sec, graph: ../../../GAP/GAP-road/GAP-road.grb
+
+Best method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+nthreads:  32 time:     0.128259 rate: 449.94

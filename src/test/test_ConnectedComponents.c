@@ -96,6 +96,7 @@ void test_cc_matrices (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
+        GxB_print (A, 2) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
         GrB_Index n ;
@@ -108,15 +109,17 @@ void test_cc_matrices (void)
         for (int trial = 0 ; trial <= 1 ; trial++)
         {
             // find the connected components
-            printf ("\n--- CC: FastSV6 if SuiteSparse, Boruvka if vanilla:\n") ;
+            printf ("\n--- CC: FastSV6/7 if SuiteSparse, Boruvka vanilla:\n") ;
             OK (LAGr_ConnectedComponents (&C, G, msg)) ;
+
+            printf ("\nSV6/7 test result, parent vector:\n") ;
             OK (LAGraph_Vector_Print (C, 2, stdout, msg)) ;
 
             // count the # of connected components
             int ncomponents = count_connected_components (C) ;
             printf ("# components: %6u Matrix: %s\n", ncomponents, aname) ;
             TEST_CHECK (ncomponents == ncomp) ;
-            GrB_Index cnvals ;
+            GrB_Index cnvals = 0 ;
             OK (GrB_Vector_nvals (&cnvals, C)) ;
             TEST_CHECK (cnvals == n) ;
 
@@ -256,9 +259,10 @@ void test_cc_brutal (void)
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
 
     // find the connected components
-    printf ("\n--- CC: FastSV6 if SuiteSparse, Boruvka if vanilla:\n") ;
+    printf ("\n--- CC: FastSV6/7 if SuiteSparse, Boruvka if vanilla:\n") ;
     LG_BRUTAL_BURBLE (LAGr_ConnectedComponents (&C, G, msg)) ;
-    LG_BRUTAL_BURBLE (LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg)) ;
+//  printf ("\nSV6/7 test result, parent vector:\n") ;
+//  LG_BRUTAL_BURBLE (LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg)) ;
 
     // count the # of connected components
     int ncomponents = count_connected_components (C) ;

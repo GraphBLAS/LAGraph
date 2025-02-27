@@ -18,11 +18,16 @@
 
 #include "LAGraph_demo.h"
 
-// #define NTHREAD_LIST 1
+// to run just once, with p = omp_get_max_threads() threads
+#define NTHREAD_LIST 1
+#define THREAD_LIST 0
+
+// to run with p and p/2 threads, if p = omp_get_max_threads()
+// #define NTHREAD_LIST 2
 // #define THREAD_LIST 0
 
-#define NTHREAD_LIST 7
-#define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
+// #define NTHREAD_LIST 7
+// #define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
 
 // #define NTHREAD_LIST 4
 // #define THREAD_LIST 32, 24, 16, 8

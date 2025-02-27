@@ -1,0 +1,14 @@
+csce-4cs2q54.engr.tamu.edu
+OMP_PLACES=cores
+OMP_PROC_BIND=spread
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Breadth First Search
+======================================================================
+csce-4cs2q54.engr.tamu.edu
+OMP_PLACES=cores
+OMP_PROC_BIND=spread
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
