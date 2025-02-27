@@ -216,14 +216,14 @@ static inline GrB_Info fastsv
 static void print_timings (double timings [16])
 {
     double total = timings [0] + timings [1] + timings [2] ;
-    printf ("SV7 %12.6f (%4.1f%%) init\n", timings [0], 100. * timings [0] / total) ;
-    printf ("SV7 %12.6f (%4.1f%%) total sampling:\n", timings [1], 100. * timings [1] / total) ;
-    printf ("SV7        %12.6f (%4.1f%%) setup T\n", timings [3], 100. * timings [3] / total) ;
-    printf ("SV7        %12.6f (%4.1f%%) create T\n", timings [4], 100. * timings [4] / total) ;
-    printf ("SV7        %12.6f (%4.1f%%) fastsv sample\n", timings [5], 100 * timings [5] / total) ;
-    printf ("SV7        %12.6f (%4.1f%%) hash\n", timings [6], 100. * timings [6] / total) ;
-    printf ("SV7        %12.6f (%4.1f%%) prune\n", timings [7], 100. * timings [7] / total) ;
-    printf ("SV7 %12.6f (%4.1f%%) total final\n", timings [2], 100. * timings [2] / total) ;
+    printf ("SV6 %12.6f (%4.1f%%) init\n", timings [0], 100. * timings [0] / total) ;
+    printf ("SV6 %12.6f (%4.1f%%) total sampling:\n", timings [1], 100. * timings [1] / total) ;
+    printf ("SV6        %12.6f (%4.1f%%) setup T\n", timings [3], 100. * timings [3] / total) ;
+    printf ("SV6        %12.6f (%4.1f%%) create T\n", timings [4], 100. * timings [4] / total) ;
+    printf ("SV6        %12.6f (%4.1f%%) fastsv sample\n", timings [5], 100 * timings [5] / total) ;
+    printf ("SV6        %12.6f (%4.1f%%) hash\n", timings [6], 100. * timings [6] / total) ;
+    printf ("SV6        %12.6f (%4.1f%%) prune\n", timings [7], 100. * timings [7] / total) ;
+    printf ("SV6 %12.6f (%4.1f%%) total final\n", timings [2], 100. * timings [2] / total) ;
 }
 #endif
 
