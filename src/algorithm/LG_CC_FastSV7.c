@@ -46,7 +46,7 @@
 // G->A will then become a truly read-only object (assuming GrB_wait (G->A)
 // has been done first).
 
-#define TIMINGS
+// #define TIMINGS
 
 #define __STDC_WANT_LIB_EXT1__ 1
 #include <string.h>
@@ -91,16 +91,16 @@ static inline GrB_Info fastsv
     GrB_Vector parent = Parent_Container->i ;
     bool done = false ;
 
-    #ifdef TIMINGS
-    int pass = 0 ;
-    #endif
+//  #ifdef TIMINGS
+//  int pass = 0 ;
+//  #endif
 
     while (true)
     {
-        #ifdef TIMINGS
-        printf ("\n-------------------------------------------fastsv: %d\n",
-            ++pass) ;
-        #endif
+//      #ifdef TIMINGS
+//      printf ("\n-------------------------------------------fastsv: %d\n",
+//          ++pass) ;
+//      #endif
 
         //----------------------------------------------------------------------
         // hooking & shortcutting
@@ -268,7 +268,7 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
     double timings [16] ;
     for (int kk = 0 ; kk < 16 ; kk++) timings [kk] = 0 ;
     double tic = LAGraph_WallClockTime ( ) ;
-    LG_SET_BURBLE (true) ;
+    LG_SET_BURBLE (false) ;
     #endif
 
     int64_t *range = NULL ;
@@ -321,10 +321,10 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         Uint = GrB_UINT64 ;
         Int  = GrB_INT64  ;
         ramp = GrB_ROWINDEX_INT64 ;
-        min  = GrB_MIN_UINT64 ;
+        min  = GrB_MIN_INT64 ;
         imin = GrB_MIN_INT64 ;
-        eq   = GrB_EQ_UINT64 ;
-        min_2nd  = GrB_MIN_SECOND_SEMIRING_UINT64 ;
+        eq   = GrB_EQ_INT64 ;
+        min_2nd  = GrB_MIN_SECOND_SEMIRING_INT64 ;
         min_2ndi = GxB_MIN_SECONDI_INT64 ;
     }
     else
@@ -333,10 +333,10 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         Uint = GrB_UINT32 ;
         Int  = GrB_INT32  ;
         ramp = GrB_ROWINDEX_INT32 ;
-        min  = GrB_MIN_UINT32 ;
+        min  = GrB_MIN_INT32 ;
         imin = GrB_MIN_INT32 ;
-        eq   = GrB_EQ_UINT32 ;
-        min_2nd  = GrB_MIN_SECOND_SEMIRING_UINT32 ;
+        eq   = GrB_EQ_INT32 ;
+        min_2nd  = GrB_MIN_SECOND_SEMIRING_INT32 ;
         min_2ndi = GxB_MIN_SECONDI_INT32 ;
     }
 
@@ -401,7 +401,7 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
 
     // the GrB_Vector parent is identical to Parent_Container->i
     GRB_TRY (GrB_Vector_free (&(Parent_Container->i))) ;
-    GRB_TRY (GrB_Vector_new (&(Parent_Container->i), Uint, n)) ;
+    GRB_TRY (GrB_Vector_new (&(Parent_Container->i), Int, n)) ;
     parent = Parent_Container->i ;
 
     GRB_TRY (GxB_Container_new (&A_Container)) ;
@@ -417,7 +417,7 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
     // is the minimum index j, so only the first entry in A(i,:) needs to be
     // considered for each row i.
 
-    GRB_TRY (GrB_Vector_new (&t, Uint, n)) ;
+    GRB_TRY (GrB_Vector_new (&t, GrB_BOOL, n)) ;
     GRB_TRY (GrB_assign (t, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
     GRB_TRY (GrB_assign (parent, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
     GRB_TRY (GrB_apply (parent, NULL, NULL, ramp, parent, 0, NULL)) ;
@@ -429,9 +429,9 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
     GRB_TRY (GrB_Vector_dup (&mngp, parent)) ;
 
     // allocate workspace vectors
-    GRB_TRY (GrB_Vector_new (&gp_new, Uint, n)) ;
+    GRB_TRY (GrB_Vector_new (&gp_new, Int, n)) ;
     GRB_TRY (GrB_Vector_new (&t, GrB_BOOL, n)) ;
-    GRB_TRY (GrB_Vector_new (&parent2, Uint, n)) ;
+    GRB_TRY (GrB_Vector_new (&parent2, Int, n)) ;
 
     #ifdef TIMINGS
     double toc = LAGraph_WallClockTime ( ) ;
@@ -496,10 +496,12 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         GRB_TRY (GxB_Vector_unload (A_Container->i, &Aj, &Aj_type, &Aj_len,
             &Aj_size, &Aj_handling, NULL)) ;
 
-        const uint32_t *Ap32 = (Ap_type == GrB_UINT32) ? Ap : NULL ;
-        const uint64_t *Ap64 = (Ap_type == GrB_UINT32) ? NULL : Ap ;
-        const uint32_t *Aj32 = (Aj_type == GrB_UINT32) ? Aj : NULL ;
-        const uint64_t *Aj64 = (Aj_type == GrB_UINT32) ? NULL : Aj ;
+        bool Ap_is_32 = (Ap_type == GrB_UINT32 || Ap_type == GrB_INT32) ;
+        bool Aj_is_32 = (Aj_type == GrB_UINT32 || Aj_type == GrB_INT32) ;
+        const uint32_t *Ap32 = Ap_is_32 ? Ap : NULL ;
+        const uint64_t *Ap64 = Ap_is_32 ? NULL : Ap ;
+        const uint32_t *Aj32 = Aj_is_32 ? Aj : NULL ;
+        const uint64_t *Aj64 = Aj_is_32 ? NULL : Aj ;
 
         //----------------------------------------------------------------------
         // allocate workspace, including space to construct T
@@ -655,8 +657,9 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         GrB_Type type = NULL ;
         GRB_TRY (GxB_Vector_unload (parent, &Px, &type, &n, &Px_size,
             &handling, NULL)) ;
-        uint32_t *Px32 = (type == GrB_UINT32) ? Px : NULL ;
-        uint64_t *Px64 = (type == GrB_UINT32) ? NULL : Px ;
+        bool Px_is_32 = (type == GrB_UINT32 || type == GrB_INT32) ;
+        uint32_t *Px32 = Px_is_32 ? Px : NULL ;
+        uint64_t *Px64 = Px_is_32 ? NULL : Px ;
 
         // At this point, both the parent vector and Parent matrix are empty,
         // and the Px array holds the content of parent vector.
@@ -750,8 +753,8 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
             &Tj_size, &ignore, NULL)) ;
 
         // these are likely to be unchanged since the last load of T
-        Tp_is_32 = (Tp_type == GrB_UINT32) ;
-        Tj_is_32 = (Tj_type == GrB_UINT32) ;
+        Tp_is_32 = (Tp_type == GrB_UINT32 || Tp_type == GrB_INT32) ;
+        Tj_is_32 = (Tj_type == GrB_UINT32 || Tj_type == GrB_INT32) ;
         Tp32 = Tp_is_32 ? Tp : NULL ;
         Tp64 = Tp_is_32 ? NULL : Tp ;
         Tj32 = Tj_is_32 ? Tj : NULL ;
@@ -849,6 +852,8 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         GRB_TRY (GxB_Vector_load (T_Container->i, &Tj, Tj_type, Tj_len,
             Tj_size, GrB_DEFAULT, NULL)) ;
 
+        T_Container->nrows_nonempty = -1 ;
+        T_Container->ncols_nonempty = -1 ;
         T_Container->jumbled = true ;
         T_Container->nvals = nvals ;
 

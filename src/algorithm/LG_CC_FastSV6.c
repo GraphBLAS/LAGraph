@@ -47,7 +47,7 @@
 // G->A will then become a truly read-only object (assuming GrB_wait (G->A)
 // has been done first).
 
-#define TIMINGS
+// #define TIMINGS
 
 #define __STDC_WANT_LIB_EXT1__ 1
 #include <string.h>
@@ -86,16 +86,16 @@ static inline GrB_Info fastsv
     GrB_Index Cx_size = sizeof (bool) ;
     bool iso = true, jumbled = false, done = false ;
 
-    #ifdef TIMINGS
-    int pass = 0 ;
-    #endif
+//  #ifdef TIMINGS
+//  int pass = 0 ;
+//  #endif
 
     while (true)
     {
-        #ifdef TIMINGS
-        printf ("\n-------------------------------------------fastsv: %d\n",
-            ++pass) ;
-        #endif
+//      #ifdef TIMINGS
+//      printf ("\n-------------------------------------------fastsv: %d\n",
+//          ++pass) ;
+//      #endif
 
         //----------------------------------------------------------------------
         // hooking & shortcutting
@@ -168,8 +168,6 @@ static inline GrB_Info fastsv
 
         // swap gp and gp_new
         GrB_Vector s = (*gp) ; (*gp) = (*gp_new) ; (*gp_new) = s ;
-
-//      printf ("\n========================== fastsv6: parent\n") ; GxB_print (parent, 5) ;
     }
     return (GrB_SUCCESS) ;
 }
@@ -253,7 +251,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     double timings [16] ;
     for (int kk = 0 ; kk < 16 ; kk++) timings [kk] = 0 ;
     double tic = LAGraph_WallClockTime ( ) ;
-    LG_SET_BURBLE (true) ;
+    LG_SET_BURBLE (false) ;
     #endif
 
     int64_t *range = NULL ;
@@ -274,8 +272,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         G->is_symmetric_structure == LAGraph_TRUE)),
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
-
-//  printf ("input graph6:\n") ; GxB_print (G->A, 2) ;
 
     //--------------------------------------------------------------------------
     // initializations
@@ -383,8 +379,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     GRB_TRY (GrB_Vector_dup (&mngp, parent)) ;
     GRB_TRY (GrB_Vector_new (&gp_new, Uint, n)) ;
     GRB_TRY (GrB_Vector_new (&t, GrB_BOOL, n)) ;
-
-//  printf ("\n========================== init6: parent\n") ; GxB_print (parent, 5) ;
 
     #ifdef TIMINGS
     double toc = LAGraph_WallClockTime ( ) ;

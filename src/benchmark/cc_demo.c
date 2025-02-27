@@ -146,8 +146,8 @@ int main (int argc, char **argv)
     printf ("LG_check_cc passed, time: %g\n", tcheck) ;
 #endif
 
-    // #define NTRIALS 16
-    #define NTRIALS 1
+    #define NTRIALS 16
+    // #define NTRIALS 1
     printf ("# of trials: %d\n\n", NTRIALS) ;
     fflush (stdout) ; fflush (stderr) ;
 
