@@ -31,9 +31,8 @@ char filename [LEN+1] ;
 const char* tests [ ] =
 {
     "random_unweighted_general1.mtx",
-// HACK
-//  "random_unweighted_general2.mtx",
-//  "bcsstk13.mtx",
+    "random_unweighted_general2.mtx",
+    "bcsstk13.mtx",
     ""
 } ;
 void test_SwapEdges (void)
