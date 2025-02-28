@@ -294,7 +294,7 @@ int LAGraph_Incidence_Matrix
 ) ;
 
 LAGRAPHX_PUBLIC
-int LAGraph_FastAssign
+int LAGraph_FastAssign_Monoid
 (
     // output
     // Vector to be built (or assigned): initialized with correct dimensions.
@@ -309,6 +309,31 @@ int LAGraph_FastAssign
     const GrB_Monoid dup, // Applied to duplicates
     char *msg
 ) ;
+
+LAGRAPHX_PUBLIC
+int LAGraph_FastAssign_Semiring
+(
+    // output
+    // Vector to be built (or assigned): initialized with correct dimensions.
+    GrB_Vector c, 
+    // inputs
+    const GrB_Vector mask,
+    const GrB_BinaryOp accum, 
+    const GrB_Vector i, // Indecies  (duplicates allowed)
+    const GrB_Vector x, // Values
+    // Optional (Give me a ramp with size > x.size for faster calculations) 
+    const GrB_Vector ramp, 
+    // monoid is applied to duplicates. Binary op should be SECOND.
+    const GrB_Semiring dup, 
+    char *msg
+) ;
+#define LAGraph_FastAssign(c, mask, accum, i, x, ramp, dup, msg)            \
+    _Generic((dup),                                                         \
+    GrB_Monoid:                                                             \
+        LAGraph_FastAssign_Monoid,                                          \
+    GrB_Semiring:                                                           \
+        LAGraph_FastAssign_Semiring)                                        \
+    (c, mask, accum, i, x, ramp, dup, msg)
 //****************************************************************************
 // Algorithms
 //****************************************************************************
@@ -1415,14 +1440,14 @@ int LAGraph_SwapEdges
     char *msg
 ) ;
 
-int LG_CC_FastSV6_SSGrB10 // SuiteSparse:GraphBLAS method, with GxB extensions
+int LG_CC_FastSV7_FA // SuiteSparse:GraphBLAS method, with GxB extensions
 (
     // output:
     GrB_Vector *component,  // component(i)=r if node is in the component r
     // input:
     LAGraph_Graph G,        // input graph (modified then restored)
     char *msg
-);
+) ;
 
 #if defined ( __cplusplus )
 }

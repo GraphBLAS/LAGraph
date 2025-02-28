@@ -136,8 +136,8 @@ void test_cc_matrices (void)
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
             #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
-            printf ("\n------ CC_FastSV6_SSGrB_v10:\n") ;
-            OK (LG_CC_FastSV6_SSGrB10 (&C2, G, msg)) ;
+            printf ("\n------ LG_CC_FastSV7_FA:\n") ;
+            OK (LG_CC_FastSV7_FA (&C2, G, msg)) ;
             ncomponents = count_connected_components (C2) ;
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
@@ -201,7 +201,7 @@ void test_cc_errors (void)
     result = LG_CC_FastSV6 (NULL, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
     #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
-    result = LG_CC_FastSV6_SSGrB10 (NULL, NULL, msg) ;
+    result = LG_CC_FastSV7_FA (NULL, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
     #endif
     #endif
@@ -225,7 +225,7 @@ void test_cc_errors (void)
     TEST_CHECK (result == -1001) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
     #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
-    result = LG_CC_FastSV6_SSGrB10 (&C, G, msg) ;
+    result = LG_CC_FastSV7_FA (&C, G, msg) ;
     TEST_CHECK (result == -1001) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
     #endif

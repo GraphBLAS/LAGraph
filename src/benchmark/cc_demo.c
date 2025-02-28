@@ -333,7 +333,7 @@ int main (int argc, char **argv)
 #endif
 
     //--------------------------------------------------------------------------
-    // LG_CC_FastSV6_SSGrB10
+    // LG_CC_FastSV7_FA
     //--------------------------------------------------------------------------
 #if 0
     for (int trial = 1 ; trial <= nt ; trial++)
@@ -347,7 +347,7 @@ int main (int argc, char **argv)
         {
             GrB_free (&components2) ;
             double ttrial = LAGraph_WallClockTime ( ) ;
-            LAGRAPH_TRY (LG_CC_FastSV6_SSGrB10 (&components2, G, msg)) ;
+            LAGRAPH_TRY (LG_CC_FastSV7_FA (&components2, G, msg)) ;
             ttrial = LAGraph_WallClockTime ( ) - ttrial ;
             ttt += ttrial ;
             printf ("SV6_v10:     nthreads: %2d trial: %2d time: %10.4f sec\n",
