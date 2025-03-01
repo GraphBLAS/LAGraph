@@ -260,7 +260,7 @@ void test_cc_brutal (void)
 
     // find the connected components
     printf ("\n--- CC: FastSV6/7 if SuiteSparse, Boruvka if vanilla:\n") ;
-    LG_BRUTAL_BURBLE (LG_CC_FastSV7_FA (&C, G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGr_ConnectedComponents (&C, G, msg)) ;
 
     #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
     OK (GrB_free (&C)) ;
