@@ -44,7 +44,7 @@ int main (int argc, char ** argv){
   T = strtoul(argv[3], &end2, 10);
   if(argc > 4){
     int num_threads = atoi(argv[4]);
-    LAGRAPH_TRY(LAGraph_SetNumThreads(num_threads, num_threads, msg)); 
+    LAGRAPH_TRY(LAGraph_SetNumThreads(1, num_threads, msg)); 
   }
 
   if(end1 == 0 || end2 == 0){
