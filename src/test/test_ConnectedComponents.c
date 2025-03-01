@@ -262,9 +262,9 @@ void test_cc_brutal (void)
     printf ("\n--- CC: FastSV6/7 if SuiteSparse, Boruvka if vanilla:\n") ;
     LG_BRUTAL_BURBLE (LG_CC_FastSV7_FA (&C, G, msg)) ;
 
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
     OK (GrB_free (&C)) ;
     printf ("\n--- CC: FastSV7_FA\n") ;
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
     LG_BRUTAL_BURBLE (LG_CC_FastSV7_FA (&C, G, msg)) ;
     #endif
     //  printf ("\nSV6/7 test result, parent vector:\n") ;
