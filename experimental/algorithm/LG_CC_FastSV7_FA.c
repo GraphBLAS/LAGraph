@@ -34,6 +34,9 @@
 // Changed to use GxB load/unload.  Converted to use the LAGraph_Graph object.
 // Exploiting iso status for the temporary matrices Parent and T.
 
+// Modified by Gabriel Gomez, Texas A&M University: moved Parent matrix trick 
+// out to LAGraph_FastAssign.
+
 // The input graph G must be undirected, or directed and with an adjacency
 // matrix that has a symmetric structure.  Self-edges (diagonal entries) are
 // OK, and are ignored.  The values and type of A are ignored; just its
@@ -182,7 +185,7 @@ static inline GrB_Info fastsv
     GrB_free (&mngp) ;                          \
     GrB_free (&gp_new) ;                        \
     GrB_free (&parent2) ;                       \
-    GrB_free (&ramp_v) ;                          \
+    GrB_free (&ramp_v) ;                        \
     GrB_free (&A_Container) ;                   \
     GrB_free (&T_Container) ;                   \
 }
@@ -190,6 +193,7 @@ static inline GrB_Info fastsv
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL                             \
 {                                               \
+    GrB_free (&parent) ;                        \
     LG_FREE_WORK ;                              \
 }
 
@@ -857,6 +861,7 @@ int LG_CC_FastSV7_FA         // SuiteSparse:GraphBLAS method, with GraphBLAS v10
     //--------------------------------------------------------------------------
 
     (*component) = parent ;
+    parent = NULL ;
     LG_FREE_WORK ;
     #ifdef TIMINGS
     toc = LAGraph_WallClockTime ( ) ;

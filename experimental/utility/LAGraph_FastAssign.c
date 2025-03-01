@@ -66,6 +66,7 @@
     GrB_free(&P);                                             \
     GrB_free(&con);                                           \
     LAGraph_Free(&ramp_a, msg);                               \
+    LAGraph_Free(&i_a, msg);                                  \
 }                                                     
 
 int LAGraph_FastAssign_Monoid
@@ -85,15 +86,20 @@ int LAGraph_FastAssign_Monoid
     char *msg
 )
 {
-    // TODO: put data from ALL input vectors into a GxB_IS_READONLY vector
-    // to be sure it remains completely unchanged? 
-    // TODO: take a descriptor for the mask and also to get i by value or 
-    // by index. Ditto for X_vec.
+    // TODO: Change this from a reduce to an mxv: requires a finding the 
+    // appropriate second biop, but will give user flexibility to make X_vec
+    // not full, and use Transpose descriptor.
+
+    // TODO: Let indicies be specified by value of by index in I_vec via 
+    // descriptor (although build or assign would be better if I_vec is by 
+    // index since it is sorted and has no dups). By value could be useful if 
+    // I_vec is not full.
+    // TODO: Ditto for X_vec
     
     GrB_Matrix P = NULL;
     int64_t n, nrows;
     GxB_Container con = NULL;
-    void *ramp_a = NULL, *i_a;
+    void *ramp_a = NULL, *i_a = NULL;
     int ramp_h = 0, trsp = 0, i_h = 0;
     int64_t ramp_n = 0, ramp_size = 0, i_n = 0, i_size= 0;
     GrB_Type x_type = NULL, i_type = NULL, ramp_type = NULL;
@@ -128,8 +134,9 @@ int LAGraph_FastAssign_Monoid
     //----------------------------------------------------------------------
     GRB_TRY (GrB_Matrix_new(&P, x_type, nrows, n));
     GRB_TRY (GxB_Container_new(&con));
-    if(ramp == NULL)
+    if(ramp == NULL) 
     {
+        //TODO: maybe let user input a size 0 ramp and build it for them?
         GRB_TRY (GrB_free(&(con->p))) ;
         ramp_type = (n + 1 <= INT32_MAX)? GrB_UINT32: GrB_UINT64;
         GrB_IndexUnaryOp idxnum = (n + 1 <= INT32_MAX)? 
@@ -138,7 +145,7 @@ int LAGraph_FastAssign_Monoid
         GRB_TRY (GrB_assign (con->p, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
         GRB_TRY (GrB_apply (con->p, NULL, NULL, idxnum, con->p, 0, NULL)) ;
     }
-    else
+    else 
     {
         GRB_TRY (GxB_Vector_unload(
             ramp, &ramp_a, &ramp_type, &ramp_n, &ramp_size, &ramp_h, NULL)) ;
@@ -154,6 +161,7 @@ int LAGraph_FastAssign_Monoid
     }
     if (c == I_vec)
     {
+        GRB_TRY (GrB_free(&(con->i))) ;
         GRB_TRY (GrB_Vector_dup(&con->i, I_vec)) ;
     }
     else
@@ -169,6 +177,7 @@ int LAGraph_FastAssign_Monoid
             I_vec, &i_a, i_type, i_n, i_size, i_h, NULL)) ;
         i_a = NULL;
     }
+    GRB_TRY (GrB_free(&(con->x))) ;
     con->x = X_vec;
     con->format = GxB_SPARSE;
     con->orientation = GrB_COLMAJOR;
@@ -216,14 +225,16 @@ int LAGraph_FastAssign_Semiring
     char *msg
 )
 {
-    // TODO: put data from ALL input vectors into a GxB_IS_READONLY vector
-    // to be sure it remains completely unchanged? 
-    // TODO: take a descriptor for the mask and also to get I_vec by value or 
-    // by index. Ditto for X_vec.
+    // TODO: Let indicies be specified by value of by index in I_vec via 
+    // descriptor (although build or assign would be better if I_vec is by 
+    // index since it is sorted and has no dups). By value could be useful if 
+    // I_vec is not full.
+    // TODO: Ditto for X_vec
+
     GrB_Matrix P = NULL;
     int64_t n, nrows;
     GxB_Container con = NULL;
-    void *ramp_a = NULL, *i_a;
+    void *ramp_a = NULL, *i_a =NULL;
     int ramp_h = 0, trsp = 0, i_h = 0;
     int64_t ramp_n = 0, ramp_size = 0, i_n = 0, i_size= 0;
     GrB_Type x_type = NULL, i_type = NULL, ramp_type = NULL;
@@ -231,7 +242,7 @@ int LAGraph_FastAssign_Semiring
     //----------------------------------------------------------------------
     // Check inputs
     //----------------------------------------------------------------------
-    //TODO: assert inputs are full or desc says to use by value
+    //TODO: assert inputs are full or desc says to use by value etc.
     LG_ASSERT (c != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (I_vec != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (X_vec != NULL, GrB_NULL_POINTER) ;
@@ -271,6 +282,7 @@ int LAGraph_FastAssign_Semiring
 
     if(ramp == NULL)
     {
+        //TODO: maybe let user input a size 0 ramp and build it for them?
         GRB_TRY (GrB_free(&(con->p))) ;
         ramp_type = (n + 1 <= INT32_MAX)? GrB_UINT32: GrB_UINT64;
         GrB_IndexUnaryOp idxnum = (n + 1 <= INT32_MAX)? 
@@ -332,7 +344,8 @@ int LAGraph_FastAssign_Semiring
     GRB_TRY (GxB_load_Matrix_from_Container(P, con, NULL));
     GRB_TRY (GrB_mxv(c, mask, accum, dup, P, X_vec, desc));
     //----------------------------------------------------------------------
-    // Free work.
+    // Free work. 
+    // Note: this does not free inputs since they are marked GxB_IS_READONLY
     //----------------------------------------------------------------------
     GrB_free(&P) ;
     GrB_free(&con) ;

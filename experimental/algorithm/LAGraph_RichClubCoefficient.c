@@ -31,10 +31,6 @@
 // rich-club phenomenon across complex network hierarchies”, Applied Physics 
 // Letters Vol 91 Issue 8, August 2007. https://arxiv.org/abs/physics/0701290
 
-// R. Milo, N. Kashtan, S. Itzkovitz, M. E. J. Newman, U. Alon, “Uniform 
-// generation of random graphs with arbitrary degree sequences”, 2006. 
-// https://arxiv.org/abs/cond-mat/0312028
-
 #define LG_FREE_WORK                                    \
 {                                                       \
     /* free any workspace used here */                  \
@@ -360,7 +356,6 @@ int LAGraph_RichClubCoefficient
         GRB_TRY (GrB_Vector_extractTuples_INT64(NULL, ones, &deg_vec_size, ones_v)) ;
         GRB_TRY (GrB_Vector_build (
             verts_per_deg, deg_arr, ones, deg_vec_size, GrB_PLUS_INT64)) ;
-        GRB_TRY (GrB_Vector_nvals(&edge_vec_nvals, edges_per_deg)) ;
     #endif
 
     /**
@@ -374,10 +369,12 @@ int LAGraph_RichClubCoefficient
      * Mask can be A, then returns a matrix with the same pattern.
      * [., ., 1, 1, 1, 1, ., ., 1] --> [., ., 1, 2, 3, 4, ., ., 5]
      * 
-     * Should we be able to sum in the opposite direction?
+     * Should we be able to sum in the opposite direction? 
+     *  Yes since not all monoids have inverse operations. 
      * 
      * If plus biop is not a monoid, this method should still work?
      */
+    GRB_TRY (GrB_Vector_nvals(&edge_vec_nvals, edges_per_deg)) ;
     LG_TRY (LAGraph_Malloc(
         &array_space, edge_vec_nvals * 4, sizeof(int64_t), NULL)) ;
     epd_index = array_space ;
@@ -388,10 +385,10 @@ int LAGraph_RichClubCoefficient
         epd_index, edges_per_deg_arr, &edge_vec_nvals, edges_per_deg
     )) ;
     GRB_TRY (GrB_Vector_extractTuples_INT64(
-        vpd_index, deg_vertex_count, &deg_vec_size, verts_per_deg
+        vpd_index, deg_vertex_count, &edge_vec_nvals, verts_per_deg
     )) ;
     //run a cummulative sum (backwards) on deg_vertex_count
-    for(GrB_Index i = deg_vec_size - 1; i > 0; --i)
+    for(GrB_Index i = edge_vec_nvals - 1; i > 0; --i)
     {
         deg_vertex_count[i-1] += deg_vertex_count[i] ;
         edges_per_deg_arr[i-1] += edges_per_deg_arr[i] ;
@@ -402,7 +399,7 @@ int LAGraph_RichClubCoefficient
         edges_per_deg, epd_index, edges_per_deg_arr, edge_vec_nvals, NULL
     )) ;
     GRB_TRY (GrB_Vector_build_INT64(
-        verts_per_deg, vpd_index, deg_vertex_count, deg_vec_size, NULL
+        verts_per_deg, vpd_index, deg_vertex_count, edge_vec_nvals, NULL
     )) ;
 
     //Computes the RCC of a matrix

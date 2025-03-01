@@ -260,8 +260,14 @@ void test_cc_brutal (void)
 
     // find the connected components
     printf ("\n--- CC: FastSV6/7 if SuiteSparse, Boruvka if vanilla:\n") ;
-    LG_BRUTAL_BURBLE (LAGr_ConnectedComponents (&C, G, msg)) ;
-//  printf ("\nSV6/7 test result, parent vector:\n") ;
+    LG_BRUTAL_BURBLE (LG_CC_FastSV7_FA (&C, G, msg)) ;
+
+    OK (GrB_free (&C)) ;
+    printf ("\n--- CC: FastSV7_FA\n") ;
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    LG_BRUTAL_BURBLE (LG_CC_FastSV7_FA (&C, G, msg)) ;
+    #endif
+    //  printf ("\nSV6/7 test result, parent vector:\n") ;
 //  LG_BRUTAL_BURBLE (LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg)) ;
 
     // count the # of connected components
