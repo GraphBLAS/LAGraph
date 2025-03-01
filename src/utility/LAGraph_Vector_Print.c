@@ -85,21 +85,21 @@ int LG_Vector_Print_ ## suffix                                              \
     return (GrB_SUCCESS) ;                                                  \
 }
 
-LG_VECTOR_PRINT (BOOL  , bool    , GrB_BOOL  , "%d"  , "%d"    ) ;
-LG_VECTOR_PRINT (INT8  , int8_t  , GrB_INT8  , "%d"  , "%d"    ) ;
-LG_VECTOR_PRINT (INT16 , int16_t , GrB_INT16 , "%d"  , "%d"    ) ;
-LG_VECTOR_PRINT (INT32 , int32_t , GrB_INT32 , "%" PRId32, "%" PRId32  ) ;
-LG_VECTOR_PRINT (INT64 , int64_t , GrB_INT64 , "%" PRId64, "%" PRId64  ) ;
-LG_VECTOR_PRINT (UINT8 , uint8_t , GrB_UINT8 , "%d"  , "%d"    ) ;
-LG_VECTOR_PRINT (UINT16, uint16_t, GrB_UINT16, "%d"  , "%d"    ) ;
-LG_VECTOR_PRINT (UINT32, uint32_t, GrB_UINT32, "%" PRIu32, "%" PRIu32  ) ;
-LG_VECTOR_PRINT (UINT64, uint64_t, GrB_UINT64, "%" PRIu64, "%" PRIu64  ) ;
-LG_VECTOR_PRINT (FP32  , float   , GrB_FP32  , "%g"  , "%0.7g" ) ;
-LG_VECTOR_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g") ;
+LG_VECTOR_PRINT (BOOL  , bool    , GrB_BOOL  , "%d"  , "%d"    )
+LG_VECTOR_PRINT (INT8  , int8_t  , GrB_INT8  , "%d"  , "%d"    )
+LG_VECTOR_PRINT (INT16 , int16_t , GrB_INT16 , "%d"  , "%d"    )
+LG_VECTOR_PRINT (INT32 , int32_t , GrB_INT32 , "%" PRId32, "%" PRId32  )
+LG_VECTOR_PRINT (INT64 , int64_t , GrB_INT64 , "%" PRId64, "%" PRId64  )
+LG_VECTOR_PRINT (UINT8 , uint8_t , GrB_UINT8 , "%d"  , "%d"    )
+LG_VECTOR_PRINT (UINT16, uint16_t, GrB_UINT16, "%d"  , "%d"    )
+LG_VECTOR_PRINT (UINT32, uint32_t, GrB_UINT32, "%" PRIu32, "%" PRIu32  )
+LG_VECTOR_PRINT (UINT64, uint64_t, GrB_UINT64, "%" PRIu64, "%" PRIu64  )
+LG_VECTOR_PRINT (FP32  , float   , GrB_FP32  , "%g"  , "%0.7g" )
+LG_VECTOR_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g")
 #if 0
 // would need to pass in an iscomplex flag to print creal(x) and cimag(x)
-LG_VECTOR_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...) ;
-LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
+LG_VECTOR_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...)
+LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...)
 #endif
 
 #undef  LG_FREE_WORK
