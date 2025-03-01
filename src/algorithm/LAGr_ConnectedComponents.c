@@ -32,7 +32,7 @@ int LAGr_ConnectedComponents
     char *msg
 )
 {
-    
+
     #if LAGRAPH_SUITESPARSE
         #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
         return (LG_CC_FastSV7 (component, G, msg)) ;
