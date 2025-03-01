@@ -64,6 +64,13 @@
   GrB_free(&GrB_InvariantCheck);\
   GrB_free(&check);\
   GrB_free(&GrB_extractYJ);\
+  GrB_free(&Jmap);\
+  GrB_free(&Imap);\
+  GrB_free(&Vmap);\
+  GrB_free(&J_i);\
+  GrB_free(&Jdelta);\
+  GrB_free(&Idelta);\
+  GrB_free(&Vdelta);\
 }
 
 #define LG_FREE_ALL \
@@ -676,6 +683,9 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GrB_Scalar check;
   bool check_raw;
 
+  //for vector extraction and matrix building
+  GrB_Vector Jmap, Imap, Vmap, J_i, Vdelta, Idelta, Jdelta;
+
   //do input checks
   if(*f){
     (*f) = 0;
@@ -803,15 +813,14 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
   int iter = 0;
 
-  //Create C arrays
-    GrB_Index *Jmap = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    GrB_Index *Imap = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    GrB_Index *Jvec_value = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    GrB_Index *deltaJi = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    GrB_Index *Idelta = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    GrB_Index *Jdelta = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    MF_compareTuple *yd_value = (MF_compareTuple*) malloc(sizeof(MF_compareTuple) * n);
-    double *delta_raw = (double*) malloc(sizeof(double) * n);
+  //Create extract arrays
+  GRB_TRY(GrB_Vector_new(&Jmap, GrB_INT8, n));
+  GRB_TRY(GrB_Vector_new(&Imap, GrB_INT8, n));
+  GRB_TRY(GrB_Vector_new(&Vmap, GrB_INT8, n));
+  GRB_TRY(GrB_Vector_new(&Jdelta, GrB_INT8, n));
+  GRB_TRY(GrB_Vector_new(&Idelta, GrB_INT8, n));
+  GRB_TRY(GrB_Vector_new(&Vdelta, GrB_INT8, n));
+  GRB_TRY(GrB_Vector_new(&J_i, GrB_INT8, n));
   
   while(n_active > 0 && iter < 90){
 
@@ -821,33 +830,26 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     }
 
     printf("******iter: %d\n\n", iter); 
-    /* GxB_print(e, 5); */
-    /* GxB_print(d, 5); */
-
-    /* printf("---R matrix-----\n"); */
-    /* print_flowMtx(R); */
     
-    //y<e, struct> = R x d
     GRB_TRY(GrB_mxv(y, e, NULL, GrB_RxdSemiring, R, d, GrB_DESC_RS));
-    /* printf("---y---\n\n"); */
-    /* print_resultVec(y); */
     GRB_TRY(GrB_Vector_dup(&y_dup, y));
     GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y_dup, -1, GrB_DESC_R));
 
     //create yd vector of type compare tuple
     GRB_TRY(GrB_eWiseMult(yd, NULL, NULL, GrB_CreateCompareVec, y,  d, GrB_DESC_R));
-    //printf("\n------yd------\n");
-    //print_compareVec(yd);
 
     //create map matrix from yd
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractJ, yd, GrB_DESC_R));
     //GxB_print(Jvec, 5);
-    GrB_Index JVec_n, yd_n;
-    GRB_TRY(GrB_Vector_nvals(&JVec_n, Jvec));
-    GRB_TRY(GrB_Vector_nvals(&yd_n, yd));
-    GRB_TRY(GrB_Vector_extractTuples(Jmap, Jvec_value, &JVec_n, Jvec));
-    GRB_TRY(GrB_Vector_extractTuples(Imap, (void*)yd_value, &yd_n, yd));
-    GRB_TRY(GrB_Matrix_build(map, Imap, Jvec_value, (void*)yd_value, yd_n, GxB_IGNORE_DUP));
+    //GrB_Index JVec_n, yd_n;
+    //GRB_TRY(GrB_Vector_nvals(&JVec_n, Jvec));
+    //GRB_TRY(GrB_Vector_nvals(&yd_n, yd));
+    //GRB_TRY(GrB_Vector_extractTuples(Jmap, Jvec_value, &JVec_n, Jvec));
+    GRB_TRY(GrB_Vector_extractTuples(J_i, Jmap, Jvec, NULL));
+    //GRB_TRY(GrB_Vector_extractTuples(Imap, (void*)yd_value, &yd_n, yd));
+    GRB_TRY(GrB_Vector_extractTuples(Imap, Vmap, yd, NULL));
+    //GRB_TRY(GrB_Matrix_build(map, Imap, Jvec_value, (void*)yd_value, yd_n, GxB_IGNORE_DUP));
+    GRB_TRY(GrB_Matrix_build(map, Imap, Jmap, Vmap, GxB_IGNORE_DUP, NULL));
     //GxB_print(map, 5);
     
     //make e dense for map computation
@@ -868,33 +870,31 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GrB_Index y_nvals;
     GRB_TRY(GrB_Vector_nvals(&y_nvals, y));
     if(y_nvals == 0){
-      free(Jmap);
-      free(Imap);
-      free(Jvec_value);
-      free(deltaJi);
-      free(Idelta);
-      free(Jdelta);
-      free(yd_value);
-      free(delta_raw);
+      /* free(Jmap); */
+      /* free(Imap); */
+      /* free(Jvec_value); */
+      /* free(deltaJi); */
+      /* free(Idelta); */
+      /* free(Jdelta); */
+      /* free(yd_value); */
+      /* free(delta_raw); */
 
       LG_FREE_ALL;
       return GrB_SUCCESS;
     }
 
     //relable, update heights
-    // add alpha and beta scalars
     GRB_TRY(GrB_Vector_dup(&d_dup, d));
     GRB_TRY(GrB_eWiseMult(d, y, NULL, GrB_UpdateHeight, d_dup, y, GrB_DESC_S));
-    //GxB_print(d, 5);
 
     #ifdef DBG
     //assert correct labels
         GRB_TRY(GrB_eWiseMult(invariant, y, NULL, GrB_InvariantCheck, d, y, GrB_DESC_RS));
 	GRB_TRY(GrB_reduce(check, NULL, GrB_LAND_MONOID_BOOL, invariant, GrB_DESC_R));
 	GRB_TRY(GrB_Scalar_extractElement(&check_raw, check));
-	//GxB_print(d, 5);
-	//printf("\n");
-	//print_resultVec(y);
+	GxB_print(d, 5);
+	printf("\n");
+	print_resultVec(y);
 	GxB_print(invariant, 5);
 	ASSERT(check_raw == true);
     #endif
@@ -910,13 +910,16 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     //GxB_print(delta_vec, 5);
 
     //create delta matrix from delta vector
-    GrB_Index delta_vec_n, delta_jn;
-    GRB_TRY(GrB_Vector_nvals(&delta_vec_n, delta_vec));
-    GRB_TRY(GrB_Vector_extractTuples(Idelta, delta_raw, &delta_vec_n, delta_vec));
-    GRB_TRY(GrB_Vector_nvals(&delta_jn, y));
+    //GrB_Index delta_vec_n, delta_jn;
+    //GRB_TRY(GrB_Vector_nvals(&delta_vec_n, delta_vec));
+    //GRB_TRY(GrB_Vector_extractTuples(Idelta, delta_raw, &delta_vec_n, delta_vec));
+    GRB_TRY(GrB_Vector_extractTuples(Idelta, Vdelta, delta_vec, NULL));
+    //GRB_TRY(GrB_Vector_nvals(&delta_jn, y));
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractYJ, y, GrB_DESC_R));
-    GRB_TRY(GrB_Vector_extractTuples(deltaJi, Jdelta, &delta_jn, Jvec));
-    GRB_TRY(GrB_Matrix_build(delta, Idelta, Jdelta, delta_raw, delta_vec_n, GxB_IGNORE_DUP));
+    //GRB_TRY(GrB_Vector_extractTuples(deltaJi, Jdelta, &delta_jn, Jvec));
+    GRB_TRY(GrB_Vector_extractTuples(J_i, Jdelta, Jvec, NULL));
+    //GRB_TRY(GrB_Matrix_build(delta, Idelta, Jdelta, delta_raw, delta_vec_n, GxB_IGNORE_DUP));
+    GRB_TRY(GrB_Matrix_build(delta, Idelta, Jdelta, Vdelta, GxB_IGNORE_DUP, NULL));
     //GxB_print(delta, 5);
 
     //make delta anti-symmetric
@@ -927,23 +930,13 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GRB_TRY(GrB_Matrix_dup(&R_dup, R));
     GRB_TRY(GrB_eWiseMult(R, delta_mat, NULL, GrB_UpdateFlows, R_dup, delta_mat, GrB_DESC_S));
 
-    //printf("---New R---\n");
-    //print_flowMtx(R);
-
     //reduce delat_mat to delta_vec
     GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, delta_mat, GrB_DESC_RT0));
     //GxB_print(delta_vec, 5);
 
     //add to e
-    //add alpha and beta scalars
     GRB_TRY(GrB_Vector_dup(&e_dup, e));
     GRB_TRY(GxB_eWiseUnion(e, NULL, NULL, GrB_PLUS_FP64, e_dup, zero_fp32, delta_vec, zero_fp32, NULL));
-    //GxB_print(e, 5);
-
-    //TO-DO:
-    //backwards BFS periodically, if can't find src: give up
-    //add checks for d vector 
-    //
     
     //extract active nodes
     GRB_TRY(GrB_Vector_extractElement(&f_T, e, T));
@@ -951,45 +944,29 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GRB_TRY(GrB_select(active_set, mask_vector, NULL, GrB_VALUEGT_FP64, e, 0, GrB_DESC_RSC));
     GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_R));
     GRB_TRY(GrB_Vector_nvals(&n_active, active_set));
-    //GxB_print(active_set, 5);
     //printf("max flow in alg iter is: %f\n", *f);
 
     //clear map and delta
     GRB_TRY(GrB_Matrix_clear(map));
     GRB_TRY(GrB_Matrix_clear(delta));
 
-    /* GRB_TRY(GrB_Vector_clear(d_dup)); */
-    /* GRB_TRY(GrB_Vector_clear(y_dup)); */
-    /* GRB_TRY(GrB_Vector_clear(e_dup)); */
-    /* GRB_TRY(GrB_Matrix_clear(R_dup)); */
-
     GRB_TRY(GrB_free(&d_dup));
     GRB_TRY(GrB_free(&y_dup));
     GRB_TRY(GrB_free(&e_dup));
     GRB_TRY(GrB_free(&R_dup));
     
-    //free C arrays
-    /* LAGraph_Free((void*)Jmap, msg); */
-    /* LAGraph_Free((void*)Imap, msg); */
-    /* LAGraph_Free((void*)Jvec_value, msg); */
-    /* LAGraph_Free((void*)deltaJi, msg); */
-    /* LAGraph_Free((void*)yd_value, msg); */
-    /* LAGraph_Free((void*)Idelta, msg); */
-    /* LAGraph_Free((void*)Jdelta, msg); */
-    /* LAGraph_Free((void*)delta_raw, msg); */
-
     ++iter;
     
   }
 
-  free(Jmap);
-    free(Imap);
-    free(Jvec_value);
-    free(deltaJi);
-    free(Idelta);
-    free(Jdelta);
-    free(yd_value);
-    free(delta_raw);
+  /* free(Jmap); */
+  /*   free(Imap); */
+  /*   free(Jvec_value); */
+  /*   free(deltaJi); */
+  /*   free(Idelta); */
+  /*   free(Jdelta); */
+  /*   free(yd_value); */
+  /*   free(delta_raw); */
 
 
   //print_flowMtx(R);
