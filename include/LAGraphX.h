@@ -302,11 +302,12 @@ int LAGraph_FastAssign_Monoid
     // inputs
     const GrB_Vector mask,
     const GrB_BinaryOp accum, 
-    const GrB_Vector i, // Indecies  (duplicates allowed)
-    const GrB_Vector x, // Values
+    const GrB_Vector I_vec, // Indecies  (duplicates allowed)
+    const GrB_Vector X_vec, // Values
     // Optional (Give me a ramp with size > x.size for faster calculations) 
     const GrB_Vector ramp, 
     const GrB_Monoid dup, // Applied to duplicates
+    const GrB_Descriptor desc,
     char *msg
 ) ;
 
@@ -319,21 +320,22 @@ int LAGraph_FastAssign_Semiring
     // inputs
     const GrB_Vector mask,
     const GrB_BinaryOp accum, 
-    const GrB_Vector i, // Indecies  (duplicates allowed)
-    const GrB_Vector x, // Values
+    const GrB_Vector I_vec, // Indecies  (duplicates allowed)
+    const GrB_Vector X_vec, // Values
     // Optional (Give me a ramp with size > x.size for faster calculations) 
     const GrB_Vector ramp, 
     // monoid is applied to duplicates. Binary op should be SECOND.
     const GrB_Semiring dup, 
+    const GrB_Descriptor desc,
     char *msg
 ) ;
-#define LAGraph_FastAssign(c, mask, accum, i, x, ramp, dup, msg)            \
-    _Generic((dup),                                                         \
-    GrB_Monoid:                                                             \
-        LAGraph_FastAssign_Monoid,                                          \
-    GrB_Semiring:                                                           \
-        LAGraph_FastAssign_Semiring)                                        \
-    (c, mask, accum, i, x, ramp, dup, msg)
+#define LAGraph_FastAssign(c, mask, accum, I_vec, X_vec, ramp, dup, desc, msg)  \
+    _Generic((dup),                                                             \
+    GrB_Monoid:                                                                 \
+        LAGraph_FastAssign_Monoid,                                              \
+    GrB_Semiring:                                                               \
+        LAGraph_FastAssign_Semiring)                                            \
+    (c, mask, accum, I_vec, X_vec, ramp, dup, desc, msg)
 //****************************************************************************
 // Algorithms
 //****************************************************************************
