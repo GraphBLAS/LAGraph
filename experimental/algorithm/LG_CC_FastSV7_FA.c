@@ -83,7 +83,7 @@ static inline GrB_Info fastsv
     GrB_BinaryOp min,       // GrB_MIN_(integer type)
     GrB_Semiring min_2nd,   // GrB_MIN_SECOND_(integer type)
     GrB_Vector parent,      // parent
-    GrB_Vector ramp,        // [0:n] use to speed up FastAssign
+    GrB_Vector ramp,        // [0:n] used to speed up FastAssign
     char *msg
 )
 {
@@ -110,17 +110,12 @@ static inline GrB_Info fastsv
         // parent2 = min (mngp, gp)
         //----------------------------------------------------------------------
 
-        // The parent vector is Parent_Container->i, and thus no longer exists
-        // when the Parent matrix exists.  So the accumulation is done in a
-        // workspace vector, parent2.
+        // The parent vector should not be allised into FastAssign, so the 
+        // accumulation is done in a workspace vector, parent2.
 
         GRB_TRY (GrB_eWiseAdd (parent2, NULL, NULL, min, mngp, *gp, NULL)) ;
 
-        //----------------------------------------------------------------------
-        // parent2 = min (parent2, Parent*mngp) using the MIN_SECOND semiring
-        //----------------------------------------------------------------------
-
-        // Reduce_assign: This function computes the following, which
+        // LAGraph_FastAssign: This function computes the following, which
         // is done explicitly in the Reduce_assign function in LG_CC_Boruvka:
         //
         //      for (j = 0 ; j < n ; j++)
@@ -129,22 +124,12 @@ static inline GrB_Info fastsv
         //          parent2 [i] = min (parent2 [i], mngp [j]) ;
         //      }
         //
-        // If Parent(i,j) is present where i == parent (j), then this can be
-        // written as:
-        //
-        //      parent2 = min (parent2, Parent*mngp)
-        //
-        // when using the min_2nd semiring.  This can be done efficiently
-        // because Parent can be constructed in O(1) time and O(1) additional
-        // space when using the SuiteSparse load/unload move constructors.  The
-        // min_2nd semiring ignores the values of Parent and operates only on
-        // the structure, so its values are not relevant.  Parent_Container->x
-        // is thus chosen as a GrB_BOOL array of size 1 where x [0] = false, so
-        // all entries present in Parent are equal to false.
+        // LAGraph_FastAssign does this by building a matrix. 
+        // (See LAGraph_FastAssign.c) Giving it a full ramp vector speeds up the 
+        // function
 
-        // load the parent vector into its matrix form, Parent
         LG_TRY (LAGraph_FastAssign(
-            parent2, NULL, min, parent, mngp, ramp, min_2nd, msg));
+            parent2, NULL, min, parent, mngp, ramp, min_2nd, NULL, msg));
 
         //----------------------------------------------------------------------
         // parent = min (parent, parent2)

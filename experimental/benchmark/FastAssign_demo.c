@@ -132,7 +132,7 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Vector_clear(assign_s)) ;
     t = LAGraph_WallClockTime ( ) ;
     LG_TRY (LAGraph_FastAssign(
-        assign_s, NULL, NULL, rand_v, x, NULL, GxB_ANY_BOOL_MONOID, msg
+        assign_s, NULL, NULL, rand_v, x, NULL, GxB_ANY_BOOL_MONOID, NULL, msg
     ));
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGraph_FastAssign: %g sec\n", t) ;
