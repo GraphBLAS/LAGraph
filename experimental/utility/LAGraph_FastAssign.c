@@ -124,10 +124,7 @@ int LAGraph_FastAssign_Monoid
     GRB_TRY (GrB_Vector_size(&nrows, c)) ;
     GRB_TRY (GrB_Vector_get_INT32(X_vec, (int32_t *) &iso, GxB_ISO));
 
-    char typename[LAGRAPH_MAX_NAME_LEN];
-    LG_TRY (LAGraph_Vector_TypeName(typename, X_vec, msg));
-    LG_TRY (LAGraph_TypeFromName (&x_type, typename, msg)) ;
-
+    GRB_TRY (GxB_Vector_type(&x_type, X_vec));
     
     //----------------------------------------------------------------------
     // Load up containers
@@ -270,9 +267,7 @@ int LAGraph_FastAssign_Semiring
     }
     GRB_TRY (GrB_Vector_get_INT32(X_vec, (int32_t *) &iso, GxB_ISO)) ;
 
-    char typename[LAGRAPH_MAX_NAME_LEN];
-    LG_TRY (LAGraph_Vector_TypeName(typename, X_vec, msg));
-    LG_TRY (LAGraph_TypeFromName (&x_type, typename, msg)) ;
+    GRB_TRY (GxB_Vector_type(&x_type, X_vec));
 
     //----------------------------------------------------------------------
     // Load up containers
