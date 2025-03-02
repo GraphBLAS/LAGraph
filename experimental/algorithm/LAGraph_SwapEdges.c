@@ -14,7 +14,7 @@
 // Contributed by Gabriel Gomez, Texas A&M University
 
 //------------------------------------------------------------------------------
-#if 0
+
 #define FREE_LOOP                               \
 {                                               \
     GrB_free (&M) ;                             \
@@ -73,6 +73,7 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
+#if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
 
 void shift_and 
     (uint16_t *z, const uint16_t *x)

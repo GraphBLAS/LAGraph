@@ -41,7 +41,6 @@ gmon.out
 cmake-build-debug*
 CMakeFiles*
 *~
-.vscode/
 
 */build/*
 **/.venv/*

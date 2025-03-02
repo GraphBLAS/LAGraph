@@ -101,7 +101,11 @@ void test_SwapEdges (void)
         //----------------------------------------------------------------------
 
         GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+        #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
+        OK(LAGraph_SwapEdges( &A_new, G, (GrB_Index) 100, msg));
+        #else
         OK(LAGraph_SwapEdgesV2( &A_new, G, (GrB_Index) 100, msg));
+        #endif
         GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
         printf ("Test ends:\n") ;
 
