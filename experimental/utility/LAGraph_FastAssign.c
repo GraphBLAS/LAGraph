@@ -100,16 +100,23 @@ int LAGraph_FastAssign_Monoid
     int64_t n, nrows;
     GxB_Container con = NULL;
     void *ramp_a = NULL, *i_a = NULL;
-    int ramp_h = 0, trsp = 0, i_h = 0;
+    int ramp_h = 0, trsp = 0, i_h = 0, x_sparsity = 0;
     int64_t ramp_n = 0, ramp_size = 0, i_n = 0, i_size= 0;
     GrB_Type x_type = NULL, i_type = NULL, ramp_type = NULL;
     bool iso = false;
 
+    GRB_TRY (GrB_get(X_vec, &x_sparsity, GxB_SPARSITY_STATUS));
     //TODO: assert inputs are full or desc say to use by value or by index.
-    LG_ASSERT (c != NULL, GrB_NULL_POINTER);
-    LG_ASSERT (I_vec != NULL, GrB_NULL_POINTER);
-    LG_ASSERT (X_vec != NULL, GrB_NULL_POINTER);
-    LG_ASSERT_MSG (c != X_vec, GrB_NOT_IMPLEMENTED, "c cannot be aliased with X_vec.");   
+    LG_ASSERT (c != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (I_vec != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (X_vec != NULL, GrB_NULL_POINTER) ;
+
+    // TODO: implement this.
+    LG_ASSERT_MSG (x_sparsity == GxB_FULL, GrB_NOT_IMPLEMENTED, 
+        "X_vec must be full if dup is a monoid. Pass in the dup_second semiring"\
+        " if you want to use a sparse X_vec.") ;
+    LG_ASSERT_MSG (c != X_vec, GrB_NOT_IMPLEMENTED, 
+        "c cannot be aliased with X_vec.") ;   
     //----------------------------------------------------------------------
     // Find dimensions and type
     //----------------------------------------------------------------------
@@ -272,7 +279,7 @@ int LAGraph_FastAssign_Semiring
     //----------------------------------------------------------------------
     // Load up containers
     //----------------------------------------------------------------------
-    GRB_TRY (GrB_Matrix_new(&P, x_type, nrows, n));
+    GRB_TRY (GrB_Matrix_new(&P, GrB_BOOL, nrows, n));
     GRB_TRY (GxB_Container_new(&con));
 
     if(ramp == NULL)
