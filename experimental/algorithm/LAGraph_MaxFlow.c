@@ -64,13 +64,8 @@
   GrB_free(&GrB_InvariantCheck);\
   GrB_free(&check);\
   GrB_free(&GrB_extractYJ);\
-  GrB_free(&Jmap);\
-  GrB_free(&Imap);\
-  GrB_free(&Vmap);\
-  GrB_free(&J_i);\
-  GrB_free(&Jdelta);\
-  GrB_free(&Idelta);\
-  GrB_free(&Vdelta);\
+  GrB_free(&delta_container);\
+  GrB_free(&map_container);\
 }
 
 #define LG_FREE_ALL \
@@ -662,8 +657,10 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GrB_Scalar check;
   bool check_raw;
 
-  //for vector extraction and matrix building
-  GrB_Vector Jmap, Imap, Vmap, J_i, Vdelta, Idelta, Jdelta;
+  //containers for extraction and matrix building
+  GxB_Container delta_container, map_container;
+
+  GrB_Descriptor extract_dec;
 
   //do input checks
   if(*f){
@@ -786,13 +783,10 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   int iter = 0;
 
   //Create extract arrays
-  GRB_TRY(GrB_Vector_new(&Jmap, GrB_INT8, n));
-  GRB_TRY(GrB_Vector_new(&Imap, GrB_INT8, n));
-  GRB_TRY(GrB_Vector_new(&Vmap, GrB_INT8, n));
-  GRB_TRY(GrB_Vector_new(&Jdelta, GrB_INT8, n));
-  GRB_TRY(GrB_Vector_new(&Idelta, GrB_INT8, n));
-  GRB_TRY(GrB_Vector_new(&Vdelta, GrB_INT8, n));
-  GRB_TRY(GrB_Vector_new(&J_i, GrB_INT8, n));
+  GRB_TRY(GrB_Descriptor_new(&extract_desc));
+  //GRB_TRY(GrB_set(extract_desc, GxB_COLINDEX_LIST 
+  GRB_TRY(GxB_Container_new(&map_container));
+  GRB_TRY(GxB_Container_new(&delta_container));
   
   while(n_active > 0){
 
@@ -811,9 +805,10 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     //create map matrix from yd
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractJ, yd, GrB_DESC_R));
-    GRB_TRY(GrB_Vector_extractTuples(J_i, Jmap, Jvec, NULL));
-    GRB_TRY(GrB_Vector_extractTuples(Imap, Vmap, yd, NULL));
-    GRB_TRY(GrB_Matrix_build(map, Imap, Jmap, Vmap, GxB_IGNORE_DUP, NULL));
+    GxB_print(yd, 5);
+    GRB_TRY(GxB_unload_Vector_into_Container(yd, map_container, NULL));
+    GxB_print(map_container->b, 5);
+    GRB_TRY(GxB_Matrix_build_Vector(map, map_container, Jvec, map_container->x, GxB_IGNORE_DUP, NULL));
     
     //make e dense for map computation
     GRB_TRY(GrB_assign(e, e, NULL, 0, GrB_ALL, n, GrB_DESC_SC));
@@ -850,10 +845,9 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     //.min(flow_vec and e)
     GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, residual_vec, e, GrB_DESC_R));
-    GRB_TRY(GrB_Vector_extractTuples(Idelta, Vdelta, delta_vec, NULL));
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractYJ, y, GrB_DESC_R));
-    GRB_TRY(GrB_Vector_extractTuples(J_i, Jdelta, Jvec, NULL));
-    GRB_TRY(GrB_Matrix_build(delta, Idelta, Jdelta, Vdelta, GxB_IGNORE_DUP, NULL));
+    GRB_TRY(GxB_unload_Vector_into_Container(delta_vec, delta_container, NULL));
+    GRB_TRY(GxB_Matrix_build_Vector(delta, delta_container->i, Jvec, delta_container->x, GxB_IGNORE_DUP, NULL));
 
     //make delta anti-symmetric
     GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64, delta, zero_fp32, delta, zero_fp32, GrB_DESC_RT1));
@@ -890,7 +884,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   }
 
   //print_flowMtx(R);
-  //GxB_print(d, 5);
+  printf("DBG: number of active = %d\n", n_active);
   
   LG_FREE_ALL;
   return GrB_SUCCESS;
