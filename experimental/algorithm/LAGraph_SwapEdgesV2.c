@@ -24,6 +24,7 @@
 {                                               \
     GrB_free (&M) ;                             \
     GrB_free (&M_thin) ;                        \
+    GrB_free (&M_con) ;                         \
     GrB_free(&dup_swaps_v);                     \
     GrB_free(&bad_swaps);                       \
     GrB_free(&new_hashed_edges);                \
@@ -41,6 +42,7 @@
     GrB_free (&ramp_v) ;                        \
     GrB_free (&hramp_v) ;                       \
     GrB_free (&swapVals) ;                      \
+    GrB_free (&E_temp) ;                        \
     GrB_free (&r_60) ;                          \
     GrB_free(&exists);                          \
     GrB_free (&E_vec) ;                         \
@@ -195,6 +197,7 @@ void add_term
 void edge2
     (edge_type *z, const void *x, const edge_type *y)
 {
+    //if(y->a == 0 && y->b == 0) return;
     z->a = y->a;
     z->b = y->b;
 }
@@ -202,9 +205,23 @@ void edge2
 "void edge2                                                                   \n"\
 "(edge_type *z, const void *x, const edge_type *y)                            \n"\
 "{                                                                            \n"\
+"    //if(y->a == 0 && y->b == 0) return;                                     \n"\
 "    z->a = y->a;                                                             \n"\
 "    z->b = y->b;                                                             \n"\
 "}"
+// void edge2b
+//     (edge_type *z, const void *x, const edge_type *y)
+// {
+//     z->a = y->a;
+//     z->b = y->b;
+// }
+// #define EDGE2B                                                                   \
+// "void edge2b                                                                   \n"\
+// "(edge_type *z, const void *x, const edge_type *y)                            \n"\
+// "{                                                                            \n"\
+// "    z->a = y->a;                                                             \n"\
+// "    z->b = y->b;                                                             \n"\
+// "}"
 
 int LAGraph_SwapEdgesV2
 (
@@ -216,6 +233,7 @@ int LAGraph_SwapEdgesV2
     char *msg
 )
 {
+    // TODO: Remove all instances of GxB_(un)pack!
     //--------------------------------------------------------------------------
     // Declorations
     //--------------------------------------------------------------------------
@@ -223,13 +241,13 @@ int LAGraph_SwapEdgesV2
 
     // e x 2 with entries corresponding to verticies of an edge
     GrB_Matrix E = NULL, E_t = NULL;
-    GrB_Vector E_vec = NULL; 
+    GrB_Vector E_vec = NULL, E_temp = NULL; 
 
     // swaps x 4
     // Each row contains 4 entries corresponding to the verticies 
     // that are involved in the swap.
-    GrB_Vector M = NULL, M_thin = NULL, M_picked = NULL;
-    // GxB_Container M_con = NULL; 
+    GrB_Vector M = NULL, M_thin = NULL;
+    GxB_Container M_con = NULL; 
 
     // n = |V| e = |E|
     GrB_Index n = 0, e = 0;
@@ -399,6 +417,9 @@ int LAGraph_SwapEdgesV2
     GRB_TRY (GxB_Monoid_terminal_new_UINT8(
         &add_term_monoid, add_term_biop, (uint8_t) 0, (uint8_t) 2
     ));
+
+    // This isn't actually a monoid but since it's never applied as one it 
+    // shouldn't be a problem? FORESHADOWING
     edge_type iden_second = {0,0};
     GRB_TRY (GrB_Monoid_new_UDT(
         &second_edge_monoid, second_edge, (void *) &iden_second
@@ -453,10 +474,8 @@ int LAGraph_SwapEdgesV2
     GRB_TRY (GrB_Scalar_setElement_UINT8 (zero8, 0)) ;
     GRB_TRY (GrB_Scalar_setElement_UINT8 (one8, 1)) ;
     GRB_TRY (GrB_Scalar_setElement_UINT64 (one64, 1ull)) ;
-    // GRB_TRY (GxB_Container_new (&M_con));
-
-    GRB_TRY (GrB_Vector_new(&x, GrB_BOOL, e));
-
+    GRB_TRY (GrB_Vector_new (&x, GrB_BOOL, e)) ;
+    GRB_TRY (GxB_Container_new (&M_con));
     LG_TRY (LAGraph_Malloc ((void**)(&val_of_P), 1, sizeof(bool), msg)) ;
     val_of_P[0] = (bool) 1;
 
@@ -509,7 +528,7 @@ int LAGraph_SwapEdgesV2
         GRB_TRY (GrB_Vector_resize(edge_perm, swaps_per_loop * 2));
         
         // GxB_fprint(r_permute, GxB_SHORT, stdout);
-        GRB_TRY (GrB_Vector_new(&M_thin, lg_edge, swaps_per_loop * 2));
+        GRB_TRY (GrB_Vector_new(&M_thin, lg_edge, swaps_per_loop * 2)) ;
         GRB_TRY (GxB_Vector_extract_Vector(
             M_thin, NULL, NULL, E_vec, edge_perm, NULL
         )) ;
@@ -549,9 +568,8 @@ int LAGraph_SwapEdgesV2
         // Build Hash Buckets
         //----------------------------------------------------------------------
 
-        // Making the hash set for existing edges via a pack CSC trick.
+        // Making the hash set for existing edges via Fast Assign
         GRB_TRY(GrB_Vector_new(&dup_swaps_v, GrB_INT8, swaps_per_loop * 2)) ;
-        GRB_TRY (GrB_set (dup_swaps_v, GxB_BITMAP, GxB_SPARSITY_CONTROL)) ;
         GRB_TRY (GrB_Vector_new(&bad_swaps, GrB_INT16, swaps_per_loop)) ;
         GrB_Index hvn_size;
         
@@ -614,23 +632,32 @@ int LAGraph_SwapEdgesV2
         )) ;
         GRB_TRY (GrB_Vector_clear(exists)) ;
         // GRB_TRY (GrB_Vector_clear(new_edges_h)) ;
-        // Swap Good Edges -----------------------------------------------------
+        // ---------------------------------------------------------------------
+        // Place Good Swaps back into E_vec
+        // ---------------------------------------------------------------------
 
-        // GRB_TRY(GrB_Vector_assign_BOOL(
-        //     dup_swaps_v, dup_swaps_v, NULL, true, GrB_ALL, 0, GrB_DESC_R));
-        // GRB_TRY (GxB_Vector_subassign_Vector(
-        //     E_vec, dup_swaps_v, NULL, M_thin, edge_perm, NULL));
-        // GRB_TRY (GxB_unload_Vector_into_Container(M_thin, M_con, NULL));
-        // GRB_TRY (GrB_free(&(M_con->b))) ;
-        // M_con->b = dup_swaps_v;
-        // GRB_TRY (GxB_load_Vector_from_Container(M_thin, M_con, NULL));
-        GRB_TRY (GrB_Vector_assign(
-            M_thin, dup_swaps_v, NULL, M_thin, GrB_ALL, 0, GrB_DESC_R)) ;
+        GRB_TRY (GxB_Container_new(&M_con)) ;
+        GRB_TRY (GxB_unload_Vector_into_Container(M_thin, M_con, NULL));
+        GRB_TRY (GrB_free(&(M_con->b))) ;
+        M_con->b = dup_swaps_v;
+        M_con->nvals = n_keep;
+        M_con->format = GxB_BITMAP;
+        GRB_TRY (GxB_load_Vector_from_Container(M_thin, M_con, NULL));
+        GRB_TRY (GrB_Vector_new(&E_temp, lg_edge, e)) ;
+
+        // EVIL segfault
+        // GRB_TRY (LAGraph_FastAssign(
+        //     E_vec, NULL, second_edge, edge_perm, M_thin, ramp_v, 
+        //     second_second_edge, NULL, msg));
+
+        // Temporary fix for the above:
         GRB_TRY (LAGraph_FastAssign(
-            E_vec, NULL, second_edge, edge_perm, M_thin, ramp_v, 
+            E_temp, NULL, NULL, edge_perm, M_thin, ramp_v, 
             second_second_edge, NULL, msg));
+        GRB_TRY (GrB_eWiseAdd(
+            E_vec, NULL, NULL, second_edge, E_vec, E_temp, NULL)) ;
+        GrB_free(&E_temp);
 
-        GRB_TRY(GrB_Vector_nvals(&n_keep, M_thin));
         n_keep /= 2;
 
         FREE_LOOP ; // Free Matricies that have to be rebuilt
