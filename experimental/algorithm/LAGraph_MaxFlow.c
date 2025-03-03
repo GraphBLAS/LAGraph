@@ -11,62 +11,62 @@
 #undef LG_FREE_WORK
 #undef LG_FREE_ALL
 
-#define LG_FREE_WORK                    \
-{                                      \
-  GrB_free(&GrB_FlowEdge);             \
-  GrB_free(&GrB_CompareTuple);         \
-  GrB_free(&GrB_ResultTuple);          \
-  GrB_free(&e); \
-  GrB_free(&d);\
-  GrB_free(&theta);\
-  GrB_free(&R);\
-  GrB_free(&delta);\
-  GrB_free(&e_dup);\
-  GrB_free(&A);	   \
-  GrB_free(&d_dup);\
-  GrB_free(&delta);\
-  GrB_free(&delta_vec); \
-  GrB_free(&delta_mat); \
-  GrB_free(&R_temp1);\
-  GrB_free(&R_temp2);\
-  GrB_free(&active_set);\
-  GrB_free(&map);\
-  GrB_free(&y);\
-  GrB_free(&yd);\
-  GrB_free(&mask_vector);\
-  GrB_free(&Jvec);\
-  GrB_free(&GrB_Prune);\
-  GrB_free(&R_dup);\
-  GrB_free(&e_dup);\
-  GrB_free(&GrB_UpdateFlows);\
-  GrB_free(&GrB_UpdateHeight);\
-  GrB_free(&GrB_extractFlows);\
-  GrB_free(&GrB_MxeIndexMult);\
-  GrB_free(&GrB_MxeMult);\
-  GrB_free(&GrB_MxeAdd);\
-  GrB_free(&GrB_MxeAddMonoid);\
-  GrB_free(&GrB_MxeSemiring);\
-  GrB_free(&GrB_extractJ);\
-  GrB_free(&GrB_CreateCompareVec);\
-  GrB_free(&GrB_RxdSemiring);\
-  GrB_free(&GrB_RxdAdd);\
-  GrB_free(&GrB_RxdAddMonoid);\
-  GrB_free(&GrB_RxdIndexMult);\
-  GrB_free(&GrB_RxdMult);\
-  GrB_free(&GrB_InitForwardFlows);\
-  GrB_free(&GrB_InitBackwardFlows);\
-  GrB_free(&GrB_CreateResidualForward);\
-  GrB_free(&GrB_CreateResidualBackward);\
-  GrB_free(&zero_int32);\
-  GrB_free(&zero_fp32);\
-  GrB_free(&Re);\
-  GrB_free(&invariant);\
-  GrB_free(&GrB_InvariantCheck);\
-  GrB_free(&check);\
-  GrB_free(&GrB_extractYJ);\
-  GrB_free(&delta_container);\
-  GrB_free(&map_container);\
-}
+#define LG_FREE_WORK                                                           \
+  {                                                                            \
+    GrB_free(&GrB_FlowEdge);                                                   \
+    GrB_free(&GrB_CompareTuple);                                               \
+    GrB_free(&GrB_ResultTuple);                                                \
+    GrB_free(&e);                                                              \
+    GrB_free(&d);                                                              \
+    GrB_free(&theta);                                                          \
+    GrB_free(&R);                                                              \
+    GrB_free(&delta);                                                          \
+    GrB_free(&e_dup);                                                          \
+    GrB_free(&A);                                                              \
+    GrB_free(&d_dup);                                                          \
+    GrB_free(&delta);                                                          \
+    GrB_free(&delta_vec);                                                      \
+    GrB_free(&delta_mat);                                                      \
+    GrB_free(&R_temp1);                                                        \
+    GrB_free(&R_temp2);                                                        \
+    GrB_free(&active_set);                                                     \
+    GrB_free(&map);                                                            \
+    GrB_free(&y);                                                              \
+    GrB_free(&yd);                                                             \
+    GrB_free(&mask_vector);                                                    \
+    GrB_free(&Jvec);                                                           \
+    GrB_free(&GrB_Prune);                                                      \
+    GrB_free(&R_dup);                                                          \
+    GrB_free(&e_dup);                                                          \
+    GrB_free(&GrB_UpdateFlows);                                                \
+    GrB_free(&GrB_UpdateHeight);                                               \
+    GrB_free(&GrB_extractFlows);                                               \
+    GrB_free(&GrB_MxeIndexMult);                                               \
+    GrB_free(&GrB_MxeMult);                                                    \
+    GrB_free(&GrB_MxeAdd);                                                     \
+    GrB_free(&GrB_MxeAddMonoid);                                               \
+    GrB_free(&GrB_MxeSemiring);                                                \
+    GrB_free(&GrB_extractJ);                                                   \
+    GrB_free(&GrB_CreateCompareVec);                                           \
+    GrB_free(&GrB_RxdSemiring);                                                \
+    GrB_free(&GrB_RxdAdd);                                                     \
+    GrB_free(&GrB_RxdAddMonoid);                                               \
+    GrB_free(&GrB_RxdIndexMult);                                               \
+    GrB_free(&GrB_RxdMult);                                                    \
+    GrB_free(&GrB_InitForwardFlows);                                           \
+    GrB_free(&GrB_InitBackwardFlows);                                          \
+    GrB_free(&GrB_CreateResidualForward);                                      \
+    GrB_free(&GrB_CreateResidualBackward);                                     \
+    GrB_free(&zero_int32);                                                     \
+    GrB_free(&zero_fp32);                                                      \
+    GrB_free(&Re);                                                             \
+    GrB_free(&invariant);                                                      \
+    GrB_free(&GrB_InvariantCheck);                                             \
+    GrB_free(&check);                                                          \
+    GrB_free(&GrB_extractYJ);                                                  \
+    GrB_free(&extract_desc);                                                   \
+  }
+
 
 #define LG_FREE_ALL \
 { \
@@ -658,9 +658,9 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   bool check_raw;
 
   //containers for extraction and matrix building
-  GxB_Container delta_container, map_container;
+  GxB_Container delta_container;//, map_container;
 
-  GrB_Descriptor extract_dec;
+  GrB_Descriptor extract_desc;
 
   //do input checks
   if(*f){
@@ -784,9 +784,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
   //Create extract arrays
   GRB_TRY(GrB_Descriptor_new(&extract_desc));
-  //GRB_TRY(GrB_set(extract_desc, GxB_COLINDEX_LIST 
-  GRB_TRY(GxB_Container_new(&map_container));
-  GRB_TRY(GxB_Container_new(&delta_container));
+  GRB_TRY(GrB_set(extract_desc, GxB_USE_INDICES, GxB_ROWINDEX_LIST)); 
   
   while(n_active > 0){
 
@@ -806,9 +804,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     //create map matrix from yd
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractJ, yd, GrB_DESC_R));
     GxB_print(yd, 5);
-    GRB_TRY(GxB_unload_Vector_into_Container(yd, map_container, NULL));
-    GxB_print(map_container->b, 5);
-    GRB_TRY(GxB_Matrix_build_Vector(map, map_container, Jvec, map_container->x, GxB_IGNORE_DUP, NULL));
+    GRB_TRY(GrB_Matrix_build(map, yd, Jvec, yd, GxB_IGNORE_DUP, extract_desc));
     
     //make e dense for map computation
     GRB_TRY(GrB_assign(e, e, NULL, 0, GrB_ALL, n, GrB_DESC_SC));
@@ -846,8 +842,8 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     //.min(flow_vec and e)
     GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, residual_vec, e, GrB_DESC_R));
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractYJ, y, GrB_DESC_R));
-    GRB_TRY(GxB_unload_Vector_into_Container(delta_vec, delta_container, NULL));
-    GRB_TRY(GxB_Matrix_build_Vector(delta, delta_container->i, Jvec, delta_container->x, GxB_IGNORE_DUP, NULL));
+    GxB_print(delta_vec, 5);
+    GRB_TRY(GxB_Matrix_build_Vector(delta, delta_vec, Jvec, delta_vec, GxB_IGNORE_DUP, extract_desc));
 
     //make delta anti-symmetric
     GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64, delta, zero_fp32, delta, zero_fp32, GrB_DESC_RT1));
@@ -884,7 +880,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   }
 
   //print_flowMtx(R);
-  printf("DBG: number of active = %d\n", n_active);
+  printf("DBG: number of active = %ld\n", n_active);
   
   LG_FREE_ALL;
   return GrB_SUCCESS;
