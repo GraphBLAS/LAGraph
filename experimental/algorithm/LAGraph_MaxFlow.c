@@ -545,8 +545,8 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
     GrB_assign(d, lvl, NULL, lvl, GrB_ALL, n, GrB_DESC_S);                    \
     GrB_assign(d, lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC);                      \
     GrB_Vector_dup(&e_dup, e);						\
-    GrB_assign(e_dup, lvl, NULL, 0, GrB_ALL, n, GrB_DESC_SC);		\
-    GrB_select(e, NULL, NULL, GrB_VALUEGT_FP64, e_dup, 0, NULL);		\
+    GrB_assign(e_dup, lvl, NULL, -1, GrB_ALL, n, GrB_DESC_SC);		\
+    GrB_select(e, NULL, NULL, GrB_VALUEGT_FP64, e_dup, -1, NULL);		\
     GrB_free(&e_dup);							\
     GrB_free(&parent);                                                         \
     GrB_free(&lvl);                                                            \
@@ -838,10 +838,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
         GRB_TRY(GrB_eWiseMult(invariant, y, NULL, GrB_InvariantCheck, d, y, GrB_DESC_RS));
 	GRB_TRY(GrB_reduce(check, NULL, GrB_LAND_MONOID_BOOL, invariant, GrB_DESC_R));
 	GRB_TRY(GrB_Scalar_extractElement(&check_raw, check));
-	GxB_print(d, 5);
-	printf("\n");
-	print_resultVec(y);
-	GxB_print(invariant, 5);
 	ASSERT(check_raw == true);
     #endif
 
