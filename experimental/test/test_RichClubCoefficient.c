@@ -24,6 +24,9 @@
 #include <LG_test.h>
 
 char msg [LAGRAPH_MSG_LEN] ;
+
+GrB_Matrix A = NULL, C = NULL;
+GrB_Vector rcc = NULL;
 LAGraph_Graph G = NULL ;
 
 #define LEN 512
@@ -81,7 +84,6 @@ double rcc3[] = {0.020418922066450775, 0.020418922066450775,
 0.16666666666666666, 1.0} ;
 double rcc4[] = {0.0016506547800326698, 0.0017226315730560155, 
     0.0034201182512489416, 0.0037033309852068028, 0.05405405405405406};
-// TODO: add singleton test
 const matrix_info tests [ ] =
 {
     {rcc1, sizeof(rcc1) / sizeof(rcc1[0]), "random_unweighted_general1.mtx"},
@@ -97,9 +99,7 @@ void test_RichClubCoefficient (void)
     // start LAGraph
     //--------------------------------------------------------------------------
     OK (LAGraph_Init (msg)) ;
-    GrB_Matrix A = NULL, C = NULL;
-    GrB_Vector rcc = NULL;
-    LAGraph_Graph G = NULL ;
+    
 
     for (int k = 0 ; ; k++)
     {
@@ -181,10 +181,105 @@ void test_RichClubCoefficient (void)
     //--------------------------------------------------------------------------
     // free everything and finalize LAGraph
     //--------------------------------------------------------------------------
-
-
     LAGraph_Finalize (msg) ;
 }
+
+//------------------------------------------------------------------------------
+// test_RCC_brutal:
+//------------------------------------------------------------------------------
+
+#if LAGRAPH_SUITESPARSE
+void test_rcc_brutal (void)
+{
+    //--------------------------------------------------------------------------
+    // start LAGraph
+    //--------------------------------------------------------------------------
+    OK (LG_brutal_setup (msg)) ;
+    
+
+    for (int k = 0 ; ; k++)
+    {
+        //The following code taken from MIS tester
+        // load the matrix as A
+        const char *aname = tests [k].name;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of valued matrix failed") ;
+        printf ("\nMatrix: %s\n", aname) ;
+        const double *ans = tests [k].rcc;
+        const uint64_t n_ans = tests [k].n;
+
+        // C = structure of A
+        OK (LAGraph_Matrix_Structure (&C, A, msg)) ;
+        OK (GrB_free (&A)) ;
+
+        // construct a directed graph G with adjacency matrix C
+        OK (LAGraph_New (&G, &C, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (C == NULL) ;
+
+        // check if the pattern is symmetric
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+
+        if (G->is_symmetric_structure == LAGraph_FALSE)
+        {
+            // make the adjacency matrix symmetric
+            OK (LAGraph_Cached_AT (G, msg)) ;
+            OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_LOR, G->A, G->AT, NULL)) ;
+            G->is_symmetric_structure = LAGraph_TRUE ;
+        }
+        G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+
+        // check for self-edges
+        OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+        if (G->nself_edges != 0)
+        {
+            // remove self-edges
+            printf ("graph has %g self edges\n", (double) G->nself_edges) ;
+            OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+            printf ("now has %g self edges\n", (double) G->nself_edges) ;
+            TEST_CHECK (G->nself_edges == 0) ;
+        }
+
+        // compute the row degree
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
+
+        LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
+        //----------------------------------------------------------------------
+        // test the algorithm
+        //----------------------------------------------------------------------
+
+        printf ("RCC computation begins:\n") ;
+        // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+        LG_BRUTAL_BURBLE (LAGraph_RichClubCoefficient( &rcc, G, msg));
+        printf("%s\n", msg);
+        // GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
+        printf ("RCC computation ends:\n") ;
+
+        //----------------------------------------------------------------------
+        // check results
+        //----------------------------------------------------------------------
+        double comp_val = 0;
+        for(int64_t i = n_ans - 1; i >= 0; --i)
+        {
+            GrB_Vector_extractElement(&comp_val, rcc, i) ;
+            TEST_CHECK (
+                comp_val - ans[i] <= 1e-10 && ans[i] - comp_val <= 1e-10) ;
+        }
+        OK (GrB_free (&rcc)) ;
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    //--------------------------------------------------------------------------
+    // free everything and finalize LAGraph
+    //--------------------------------------------------------------------------
+    OK(LG_brutal_teardown(msg)) ;
+}
+#endif
 
 //----------------------------------------------------------------------------
 // the make program is created by acutest, and it runs a list of tests:
@@ -193,5 +288,6 @@ void test_RichClubCoefficient (void)
 TEST_LIST =
 {
     {"RichClubCoefficient", test_RichClubCoefficient},
+    {"rcc_brutal", test_rcc_brutal},
     {NULL, NULL}
 } ;
