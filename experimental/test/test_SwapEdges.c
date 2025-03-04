@@ -23,8 +23,8 @@
 #include <LG_test.h>
 
 char msg [LAGRAPH_MSG_LEN] ;
-LAGraph_Graph G = NULL ;
-
+LAGraph_Graph G = NULL, G_new = NULL;
+GrB_Matrix A = NULL, C = NULL, A_new = NULL, C_new = NULL; 
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -42,8 +42,7 @@ void test_SwapEdges (void)
     //--------------------------------------------------------------------------
     OK (LAGraph_Init (msg)) ;
     OK (LAGraph_Random_Init(msg)) ;
-    GrB_Matrix A = NULL, C = NULL, A_new = NULL, C_new = NULL;
-    LAGraph_Graph G = NULL, G_new = NULL;
+    
 
     for (int k = 0 ; ; k++)
     {
