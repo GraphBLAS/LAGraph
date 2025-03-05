@@ -45,7 +45,6 @@ int main(int argc,char** argv){
     GrB_Index n, nvals ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-    GrB_Matrix S = NULL; // change to pointer
     double t1 = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads_max, msg)) ;
     LAGRAPH_TRY (LAGraph_Louvain (S,G,msg)) ;
