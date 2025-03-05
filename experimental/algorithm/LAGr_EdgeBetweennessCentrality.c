@@ -11,13 +11,13 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
-// Contributed by Casey and Tim Davis, Texas A&M University;
+// Contributed by Casey Pei and Tim Davis, Texas A&M University;
 // Adapted and revised from GraphBLAS C API Spec, Appendix B.4.
 
 //------------------------------------------------------------------------------
 
-// LAGr_EdgeBetweennessCentrality: Batch algorithm for computing
-// betweeness centrality, using push-pull optimization.
+// LAGr_EdgeBetweennessCentrality: Exact algorithm for computing
+// betweeness centrality.
 
 // This is an Advanced algorithm (G->AT is required).
 
@@ -223,6 +223,7 @@ int LAGr_EdgeBetweennessCentrality
     int64_t depth, root ;
     for (root = 0 ; root < n ; root++)
     {
+        printf("----\n");
         printf("root: %ld \n", root) ;
         depth = 0 ;
 //      GrB_free (&(S [0])) ;
@@ -235,9 +236,11 @@ int LAGr_EdgeBetweennessCentrality
 
         GRB_TRY (GrB_Vector_clear (v)) ;
 
-        // Extract row root from A into frontier vector: frontier = A(root,:)
-        GRB_TRY (GrB_Col_extract (frontier, NULL, NULL, A, GrB_ALL, n, root,
-            GrB_DESC_T0)) ;
+        // Extract row root from A into frontier vector: frontier = AT(root,:)
+        // GRB_TRY (GrB_Col_extract (frontier, NULL, NULL, A, GrB_ALL, n, root,
+        //     GrB_DESC_T0)) ;
+        GRB_TRY (GrB_Col_extract (frontier, NULL, NULL, AT, GrB_ALL, n, root,
+            NULL)) ;
         GRB_TRY (GrB_Vector_nvals (&frontier_size, frontier)) ;
 
         GxB_print(frontier, 5) ;
@@ -276,84 +279,116 @@ int LAGr_EdgeBetweennessCentrality
             GRB_TRY (GrB_Vector_nvals (&frontier_size, frontier)) ;
         }
 
-        printf ("depth: %ld\n", depth) ;
-        for (int64_t d = 1 ; d <= depth ; d++)
-        {
-            printf ("------------------- S [%ld]\n", d) ;
-            GxB_print (S [d], 5) ;
+        // printf ("depth: %ld\n", depth) ;
+        // for (int64_t d = 1 ; d <= depth ; d++)
+        // {
+        //     printf ("------------------- S [%ld]\n", d) ;
+        //     GxB_print (S [d], 5) ;
+        // }
+   
+        // printf("  after:\n") ;
+        // GxB_print(frontier, 5) ;
+
+        // GRB_TRY (GrB_free (&frontier)) ;
+
+
+        // =========================================================================
+        // === Betweenness centrality computation phase ============================
+        // =========================================================================
+
+        // bc_update = ones (n, n) ; a full matrix (and stays full)
+        GRB_TRY (GrB_Vector_new (&bc_update, GrB_FP64, n)) ;
+        GRB_TRY (GrB_assign(bc_update, NULL, NULL, 0.0, GrB_ALL, n, NULL)) ;
+        // // W: empty n-by-n array, as workspace
+        // GRB_TRY (GrB_Matrix_new (&W, GrB_FP64, n, n)) ;
+
+        // GxB_print (bc_update, 5) ;
+
+
+        GRB_TRY (GrB_Vector_new(&J_vec, GrB_FP64, n)) ;
+        GRB_TRY (GrB_Vector_new (&I_vec, GrB_FP64, n)) ;
+        GRB_TRY (GrB_Matrix_new (&Fd1A, GrB_FP64, n, n)) ;
+        GRB_TRY (GrB_Vector_new(&temp_update, GrB_FP64, n)) ; // Create a temporary vector
+
+        // Backtrack through the BFS and compute centrality updates for each vertex
+        // GrB_Index fd1_size;
+        while (depth >= 1)
+        {        
+            printf ("backtrack depth %ld\n", depth) ;
+            GrB_Vector f_d = S[depth] ;
+            GrB_Vector f_d1 = S[depth - 1] ;
+
+            // GRB_TRY (GrB_Vector_nvals (&fd1_size, f_d1)) ;
+            if (f_d1 == NULL) {
+                GRB_TRY (GrB_Vector_new(&f_d1, GrB_FP64, n)) ;
+                GRB_TRY (GrB_Vector_setElement_FP64(f_d1, 0, 0)) ;
+            }
+
+            printf("#####################################\n") ;
+            printf("predecessors (frontier):\n") ;
+            GxB_print (f_d, 5) ;
+            GxB_print (f_d1, 5) ;
+
+            // 18 w = S(d, :) ÷ p × v + S(d, :)
+            // 19 U = A .× w
+            // 20 w = S(d − 1, :) × p
+            // 21 U = w .× U
+
+            // make J Matrix
+            GRB_TRY (GrB_eWiseMult(J_vec, f_d, NULL, Add_One_Divide, bc_update, paths, GrB_DESC_RS)) ;
+            // GRB_TRY (GrB_eWiseMult(J_vec, f_d, NULL, GrB_PLUS_FP64, bc_update, paths, GrB_DESC_RS)) ;
+            GRB_TRY (GrB_Matrix_diag(&J_matrix, J_vec, 0)) ;
+
+            // make I matrix
+            GRB_TRY (GrB_Vector_extract (I_vec, f_d1, NULL, paths, GrB_ALL, n, GrB_DESC_RS)) ;
+            GRB_TRY (GrB_Matrix_diag(&I_matrix, I_vec, 0)) ;
+
+            // combine
+
+            // intermediate matrix for Fd1 * A
+            // GRB_TRY (GrB_eWiseMult(Fd1A, NULL, NULL, GrB_TIMES_FP64, I_matrix, AT, NULL)) ;
+            GRB_TRY(GrB_mxm(Fd1A, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP32,
+                I_matrix, A, NULL)) ;
+            // GxB_print (Fd1A, 5) ;
+
+            // GRB_TRY (GrB_eWiseMult(U, NULL, NULL, GrB_TIMES_FP64, Fd1A, J_matrix, NULL)) ;
+            GRB_TRY(GrB_mxm(U, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP32,
+                Fd1A, J_matrix, NULL)) ;
+            GxB_print (U, 5) ;
+            
+
+            // GxB_print (centrality_temp, 5) ;
+
+            // 22 B = B + U
+            // GRB_TRY (GrB_assign(centrality_temp, centrality_temp, GrB_PLUS_FP64, U, GrB_ALL, n, GrB_ALL, n, NULL)) ;
+            GRB_TRY (GrB_eWiseAdd (centrality_temp, NULL, NULL, GrB_PLUS_FP64, centrality_temp, U, NULL)) ;
+
+
+            // 23 v = U +.
+
+            // Reduce "update" matrix to a vector (sum each column)
+            GRB_TRY (GrB_reduce(temp_update, NULL, NULL, GrB_PLUS_MONOID_FP64, U, NULL)) ;
+            // GRB_TRY (GrB_reduce(temp_update, NULL, NULL, GxB_ANY_FP64_MONOID, U, NULL)) ;
+            GRB_TRY (GrB_eWiseAdd(bc_update, NULL, NULL, GrB_PLUS_FP64, bc_update, temp_update, NULL)) ;
+
+            printf("#####################################\n sigma:\n") ;
+            GxB_print (paths, 5) ;
+            printf("delta:\n") ;
+            GxB_print (bc_update, 5) ;
+            printf("betweenness:\n") ;
+            GxB_print (centrality_temp, 5) ;
+            printf("#####################################\n") ;
+
+            // Grb_reduce_monoid
+
+            // 24 d = d − 1
+            depth-- ;
         }
+
+   
     }
 
-    printf("  after:\n") ;
-    GxB_print(frontier, 5) ;
-
-    GRB_TRY (GrB_free (&frontier)) ;
-
-    // =========================================================================
-    // === Betweenness centrality computation phase ============================
-    // =========================================================================
-
-    // bc_update = ones (n, n) ; a full matrix (and stays full)
-    // GRB_TRY (GrB_Matrix_new (&bc_update, GrB_FP64, n, n)) ;
-    // GRB_TRY (GrB_assign (bc_update, NULL, NULL, 1, GrB_ALL, n, GrB_ALL, n,
-    //     NULL)) ;
-    // // W: empty n-by-n array, as workspace
-    // GRB_TRY (GrB_Matrix_new (&W, GrB_FP64, n, n)) ;
-
-    GRB_TRY (GrB_Vector_new(&J_vec, GrB_FP64, n)) ;
-    GRB_TRY (GrB_Vector_new (&I_vec, GrB_FP64, n)) ;
-    GRB_TRY (GrB_Matrix_new (&Fd1A, GrB_FP64, n, n)) ;
-    GRB_TRY (GrB_Vector_new(&temp_update, GrB_FP64, n)) ; // Create a temporary vector
-
-    // Backtrack through the BFS and compute centrality updates for each vertex
-    while (depth >= 2)
-    {        
-        printf ("backtrack depth %ld\n", depth) ;
-        GrB_Vector f_d = S[depth] ;
-        GrB_Vector f_d1 = S[depth - 1] ;
-
-        // 18 w = S(d, :) ÷ p × v + S(d, :)
-        // 19 U = A .× w
-        // 20 w = S(d − 1, :) × p
-        // 21 U = w .× U
-
-        // make J Matrix
-
-        GRB_TRY (GrB_eWiseMult(J_vec, f_d, NULL, Add_One_Divide, bc_update, paths, GrB_DESC_RS)) ;
-
-        GRB_TRY (GrB_Matrix_diag(&J_matrix, J_vec, 0)) ;
-        GxB_print (J_matrix, 5) ;
-
-        // make I matrix
-
-        GRB_TRY (GrB_Vector_extract (I_vec, f_d1, NULL, paths, GrB_ALL, n, GrB_DESC_RS)) ;
-
-        GRB_TRY (GrB_Matrix_diag(&I_matrix, I_vec, 0)) ;
-        GxB_print (J_matrix, 5) ;
-
-        // combine
-
-        // intermediate matrix for Fd1 * A
-        GRB_TRY (GrB_eWiseMult(Fd1A, NULL, NULL, GrB_TIMES_FP64, J_matrix, A, NULL)) ;
-
-        GRB_TRY (GrB_eWiseMult(U, NULL, NULL, GrB_TIMES_FP64, Fd1A, I_matrix, NULL)) ;
-
-        // 22 B = B + U
-        GRB_TRY (GrB_assign(centrality_temp, centrality_temp, GrB_PLUS_FP64, U, GrB_ALL, n, GrB_ALL, n, NULL)) ;
-        //  GRB_TRY (GrB_eWiseAdd (*centrality_temp, NULL, GrB_PLUS_FP64, U, *centrality, NULL)) ;
-
-
-        // 23 v = U +.
-
-        // Reduce "update" matrix to a vector (sum each column)
-        GRB_TRY (GrB_reduce(temp_update, NULL, NULL, GrB_PLUS_MONOID_FP64, U, NULL)) ;
-        GRB_TRY (GrB_eWiseAdd(bc_update, NULL, NULL, GrB_PLUS_FP64, bc_update, temp_update, NULL)) ;
-
-        // Grb_reduce_monoid
-
-        // 24 d = d − 1
-    }
-
+    
     // =========================================================================
     // === finalize the centrality =============================================
     // =========================================================================
