@@ -42,6 +42,7 @@
         GrB_free (&BS) ;                \
         GrB_free (&S_BS) ;              \
     }
+#undef LG_FREE_ALL
 #define LG_FREE_ALL                     \
     {                                   \
         LG_FREE_MOD;                   \
@@ -96,7 +97,7 @@ int LAGr_Modularity2(
     GRB_TRY(GrB_Matrix_reduce_FP64(&m,plusf64,plusmon,A,NULL));
     m/=2;
     // printf("m:%f\n",m);
-    // GxB_print(S,5);
+    GxB_print(S,5);
     // GxB_print(A,5);
     GRB_TRY(GrB_Matrix_reduce_Monoid ((GrB_Vector)k_,NULL,NULL,plusmon,A, GrB_DESC_T0));
     // GxB_print(k_,3);

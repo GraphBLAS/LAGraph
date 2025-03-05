@@ -47,7 +47,10 @@ data/comments*.mtx
 */build/*
 **/.venv/*
 .vscode
+<<<<<<< HEAD
 mypaper/
+=======
+>>>>>>> 49da79e1 (GAP test)
 # Do not ignore this file
 !.gitignore
 

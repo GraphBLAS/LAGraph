@@ -17,5 +17,8 @@ int LAGraph_LouvainMIS(
     GrB_BinaryOp timesf64 = GrB_TIMES_FP64;
 
     GrB_Semiring stdmxm = GrB_PLUS_TIMES_SEMIRING_FP64;
+<<<<<<< HEAD
     
+=======
+>>>>>>> 49da79e1 (GAP test)
 }

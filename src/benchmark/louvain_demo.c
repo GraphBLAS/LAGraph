@@ -45,6 +45,10 @@ int main(int argc,char** argv){
     GrB_Index n, nvals ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+<<<<<<< HEAD
+=======
+    GrB_Matrix S = NULL; // change to pointer
+>>>>>>> 49da79e1 (GAP test)
     double t1 = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads_max, msg)) ;
     LAGRAPH_TRY (LAGraph_Louvain (S,G,msg)) ;
@@ -67,7 +71,11 @@ int main(int argc,char** argv){
         {
             GrB_free (&S) ;
             double t1 = LAGraph_WallClockTime ( ) ;
+<<<<<<< HEAD
             LAGRAPH_TRY (LAGraph_Louvain(&S,G,msg)) ;
+=======
+            LAGRAPH_TRY (LAGraph_Louvain (S,G,msg)) ;
+>>>>>>> 49da79e1 (GAP test)
             t1 = LAGraph_WallClockTime ( ) - t1 ;
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
             total_time += t1 ;
