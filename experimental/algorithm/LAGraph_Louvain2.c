@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+// #include <iostream>
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                     \
     {                                   \
@@ -45,6 +46,10 @@
         GrB_free (&temp) ;              \
         GrB_free (&y_rand) ;            \
         GrB_free (&max_q1) ;            \
+        LAGraph_Free ((void *) &Sp, NULL) ;     \
+        LAGraph_Free ((void *) &Sj, NULL) ;     \
+        LAGraph_Free ((void *) &dSp, NULL) ;     \
+        LAGraph_Free ((void *) &dSj, NULL) ;     \
     }
 #define DEBUG 0
 // uint64_t seed = 213;
@@ -59,7 +64,8 @@ void make_fp64(tuple_fp64 *z,
                const void *theta)
 {
     z->k = (int64_t)jx;
-    z->v = (*x) + rd();
+    z->v = (*x) + (((*y) ^ (jy) << iy));
+    printf("z->k:%ld, %f\t",z->k,z->v);
 }
 void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
     if (x->v > y->v ){
@@ -88,7 +94,8 @@ void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
 "               const void *theta)                           \n" \
 "{                                                           \n" \
 "    z->k = (int64_t)jx;                                     \n" \
-"    z->v = (*x) + (*y)*10e-3;                               \n" \
+"    z->v = (*x) + (((*y) ^ (jy) << iy));                    \n" \
+"       printf(\"z->k:%ld, %f\t\",z->k,z->v);                 \n" \    
 "}"
 
 
@@ -138,7 +145,7 @@ int LAGraph_Louvain2(
     GrB_Vector temp = NULL ;
     GrB_Vector y_rand = NULL ;
     GrB_Vector max_q1 = NULL ;
-    GzB_IndexBinaryOp Iop = NULL ;
+    GxB_IndexBinaryOp Iop = NULL ;
     GrB_BinaryOp Bop = NULL, MonOp = NULL ;
     GrB_Scalar Theta = NULL ;
     GrB_Type Tuple = NULL ;
@@ -146,7 +153,9 @@ int LAGraph_Louvain2(
     double *dSx = NULL ; 
     GrB_Index *dSp = NULL, *dSj = NULL, dSp_size, dSj_size, dSx_size ;
     bool dS_jumbled = false, dS_iso = false ;
+    GrB_Index q1_size;
     tuple_fp64 o;
+    double o1;
     double k_i = 0;
     // FIXME: add check to see if S_result is NULL
 
@@ -161,13 +170,13 @@ int LAGraph_Louvain2(
     GRB_TRY(GrB_Scalar_new(&Theta, GrB_BOOL));
     GRB_TRY(GrB_Scalar_setElement_BOOL(Theta, 0));
     GRB_TRY(GxB_Type_new(&Tuple, sizeof(tuple_fp64), "tuple_fp64", FP64_K));
-    GRB_TRY(GzB_IndexBinaryOp_new (&Iop, (GzB_index_binary_function) make_fp64, Tuple, GrB_FP64, GrB_UINT64, GrB_BOOL,"make_fp64", MAKE_FP64));
-    GRB_TRY(GzB_BinaryOp_new_IndexOp(&Bop, Iop, Theta));
+    GRB_TRY(GxB_IndexBinaryOp_new(&Iop,(GxB_index_binary_function)make_fp64, Tuple, GrB_FP64, GrB_UINT64, GrB_BOOL,"make_fp64", MAKE_FP64));
+    GRB_TRY(GxB_BinaryOp_new_IndexOp(&Bop, Iop, Theta));
     tuple_fp64 id;
     memset(&id, 0, sizeof(tuple_fp64));
     id.k = INT64_MAX;
     id.v = (double)(-INFINITY);
-    GRB_TRY(GxB_BinaryOp_new(&MonOp, (GxB_binary_function)max_fp64, Tuple, Tuple, Tuple, "max_fp64", MAX_FP64));
+    GRB_TRY(GxB_BinaryOp_new(&MonOp,(GxB_binary_function)max_fp64, Tuple, Tuple, Tuple, "max_fp64", MAX_FP64));
     GRB_TRY(GrB_Monoid_new_UDT(&Mon, MonOp, &id));
     GRB_TRY(GrB_Semiring_new(&Semiring, Mon, Bop));
 //------------------------------------------------------------------------------------------------------------------
@@ -211,12 +220,12 @@ int LAGraph_Louvain2(
     GRB_TRY(GrB_Vector_new(&y_rand, GrB_UINT64,n));
     GRB_TRY(GrB_Vector_new(&sr, GrB_FP64,n));
     GRB_TRY(GrB_Vector_new(&srxq, GrB_FP64,n));
-    GRB_TRY (GrB_assign (y_rand, NULL, NULL, 1, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_assign (y_rand, NULL, NULL, 1, GrB_ALL, n, NULL));
 
     bool changed = true;
     int max_iter = 20;
     int iter =0;
-    uint64_t seed = 213;
+    uint64_t seed = 210;
     GRB_TRY(GrB_mxv(z,NULL,NULL,stdmxm,S,k,NULL));
     while(changed && iter < max_iter){
         changed = false;
@@ -270,23 +279,38 @@ int LAGraph_Louvain2(
             
 ///////////////////////////////////////////////////////////
 //-------------Index Binary OP Rand_argminmax -----------//
-            // seed++ ;
+            GRB_TRY(GrB_Vector_nvals(&q1_size,q1));
+            GxB_print(q1,5);
+            printf("Size of q1: %ld\n",q1_size);
+
+            seed++;
             // GRB_TRY(LAGraph_Random_Seed(y_rand,seed,msg));
             // GRB_TRY(GrB_Vector_setElement_UINT64(y_rand,seed,0));
+            GRB_TRY (GrB_assign (y_rand, NULL, NULL, seed, GrB_ALL, n, NULL));
             // GxB_print(y_rand,5);
-            // GxB_print(q1,5);
+            // GxB_print(q1,5); 
             GRB_TRY(GrB_mxv(max_q1,NULL,NULL,Semiring,(GrB_Matrix)q1,y_rand,GrB_DESC_T0));
 
-///////////////////////////////////////////////////////////
-
             GRB_TRY(GrB_Vector_extractElement_UDT((void*)&o,max_q1,0));
-            // printf("k:%ld\n",(long)o.k);
+            printf("choice:%ld\n",(long)o.k);
             GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Sj, (void ** )&Sx,
                 &Sp_size, &Sj_size, &Sx_size, NULL, &S_jumbled, NULL)) ;
             Sj[i] = o.k;
             Sx[i] = true;
             GRB_TRY (GxB_Matrix_pack_CSR (S, &Sp, &Sj, (void**)&Sx,
                 Sp_size, Sj_size, Sx_size, false, S_jumbled, NULL));
+            // }else{
+            //     GRB_TRY(GrB_Vector_extractElement_FP64(&o1,q1,0));
+            //     printf("Monochoice:%f\n",o1);
+            //     GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Sj, (void ** )&Sx,
+            //         &Sp_size, &Sj_size, &Sx_size, NULL, &S_jumbled, NULL)) ;
+            //     Sj[i] = o1;
+            //     Sx[i] = true;
+            //     GRB_TRY (GxB_Matrix_pack_CSR (S, &Sp, &Sj, (void**)&Sx,
+            //         Sp_size, Sj_size, Sx_size, false, S_jumbled, NULL));
+            // }
+//////////////////////////////////////////////////////////
+
             // GxB_print(sr,5);
             GRB_TRY(GrB_Vector_eWiseMult_BinaryOp(srxq,NULL,NULL,timesf64,sr,q1,NULL));
             GRB_TRY(GrB_Vector_nvals(&vals_srxq,srxq));
