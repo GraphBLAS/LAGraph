@@ -163,15 +163,15 @@ void hash_edge
 "}"
 
 void add_term
-    (uint8_t *z, const uint8_t *x, const uint8_t *y)
+    (int8_t *z, const int8_t *x, const int8_t *y)
 {
-    (*z) = (*x) | (*y) + ((uint8_t)1 & (*x) & (*y)) ;
+    (*z) = (*x) | (*y) + ((int8_t)1 & (*x) & (*y)) ;
 }
 #define ADD_TERM                                                               \
 "void add_term                                                                \n"\
-"(uint8_t *z, const uint8_t *x, const uint8_t *y)                             \n"\
+"(int8_t *z, const int8_t *x, const int8_t *y)                             \n"\
 "{                                                                            \n"\
-"    (*z) = (*x) | (*y) + ((uint8_t)1 & (*x) & (*y)) ;                         \n"\
+"    (*z) = (*x) | (*y) + ((int8_t)1 & (*x) & (*y)) ;                         \n"\
 "}"
 void edge2
     (edge_type *z, const void *x, const edge_type *y)
@@ -356,7 +356,7 @@ int LAGraph_SwapEdgesV2
     )) ;
     GRB_TRY(GxB_BinaryOp_new(
         &add_term_biop, (GxB_binary_function) (&add_term), 
-        GrB_UINT8, GrB_UINT8, GrB_UINT8, "add_term", ADD_TERM
+        GrB_INT8, GrB_INT8, GrB_INT8, "add_term", ADD_TERM
     )) ;
     GRB_TRY(GxB_BinaryOp_new(
         &second_edge, (GxB_binary_function) (&edge2), 
@@ -367,8 +367,8 @@ int LAGraph_SwapEdgesV2
         lg_edge, GrB_BOOL, lg_edge, "edge2", EDGE2
     )) ;
 
-    GRB_TRY (GxB_Monoid_terminal_new_UINT8(
-        &add_term_monoid, add_term_biop, (uint8_t) 0, (uint8_t) 2
+    GRB_TRY (GxB_Monoid_terminal_new_INT8(
+        &add_term_monoid, add_term_biop, (int8_t) 0, (int8_t) 2
     )) ;
 
     // This isn't actually a monoid but since it's never applied as one it 
@@ -380,7 +380,7 @@ int LAGraph_SwapEdgesV2
 
     // Now working with the built-in ONEB binary op
     GRB_TRY(GrB_Semiring_new(
-        &plus_term_one, add_term_monoid, GrB_ONEB_UINT8
+        &plus_term_one, add_term_monoid, GrB_ONEB_INT8
     )) ;
     GRB_TRY(GrB_Semiring_new(
         &second_second_edge, second_edge_monoid, second_bool_edge
@@ -402,7 +402,7 @@ int LAGraph_SwapEdgesV2
     uint64_t ehash_size = (1ull << (67-shift_e)) ;
     // if(ehash_size > 6*e) ehash_size/=2;
     printf("Hash Size: %ld", ehash_size);
-    GRB_TRY (GrB_Vector_new(&exists, GrB_UINT8, ehash_size)) ;
+    GRB_TRY (GrB_Vector_new(&exists, GrB_INT8, ehash_size)) ;
     
     // GxB_Matrix_fprint(E, "E", GxB_SHORT, stdout);
     // Init Ramps --------------------------------------------------------------
@@ -423,7 +423,6 @@ int LAGraph_SwapEdgesV2
     GRB_TRY (GrB_Vector_new(&r_permute, GrB_UINT64, 1ull << (64-shift_e))) ;
     GRB_TRY(GrB_set (r_permute, GxB_BITMAP, GxB_SPARSITY_CONTROL)) ;
     GRB_TRY(GrB_set (exists, GxB_BITMAP | GxB_FULL, GxB_SPARSITY_CONTROL)) ;
-    // GRB_TRY (GrB_Vector_new(&r_permute, GrB_UINT64, e)) ;
     GRB_TRY (GrB_Vector_assign_UINT64 (
         random_v, NULL, NULL, 0, GrB_ALL, e, NULL)) ;
     //TODO: Change seed
@@ -535,7 +534,8 @@ int LAGraph_SwapEdgesV2
         exists = con->b;
         con->b = NULL;
         GRB_TRY (GrB_free(&con)) ;
-        GRB_TRY(GrB_set (exists, GxB_BITMAP | GxB_FULL, GxB_SPARSITY_CONTROL)) ;
+        // exist has to be full at this point - confirmed by fprint
+        // GxB_print(exists, GxB_SUMMARY);
 
         // "Count" all of the edges that fit into each bucket. Stop counting at 
         // 2 since we will have to throw that whole bucket away anyway.
@@ -543,10 +543,10 @@ int LAGraph_SwapEdgesV2
             exists, NULL, add_term_biop, new_hashed_edges, x, ramp_v, 
             plus_term_one, NULL, msg
         )) ;
-
+        GRB_TRY(GrB_set (exists, GxB_BITMAP | GxB_FULL, GxB_SPARSITY_CONTROL)) ;
         // Select buckets with only one corresponding value
-        GRB_TRY (GrB_Vector_select_UINT8(
-            exists, NULL, NULL, GrB_VALUEEQ_UINT8, exists, (uint8_t) 1,
+        GRB_TRY (GrB_Vector_select_INT8(
+            exists, NULL, NULL, GrB_VALUEEQ_UINT8, exists, (int8_t) 1,
             NULL
         )) ;
 
@@ -584,6 +584,7 @@ int LAGraph_SwapEdgesV2
         // Place Good Swaps back into E_vec
         // ---------------------------------------------------------------------
 
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,1)
         GRB_TRY (GxB_Container_new(&con)) ;
         GRB_TRY (GxB_unload_Vector_into_Container(M, con, NULL)) ;
         GRB_TRY (GrB_free(&(con->b))) ;
@@ -593,21 +594,14 @@ int LAGraph_SwapEdgesV2
         dup_swaps_v = NULL;
         GRB_TRY (GxB_load_Vector_from_Container(M, con, NULL)) ;
         GRB_TRY (GrB_free(&con)) ;
-        GRB_TRY (GrB_Vector_new(&E_temp, lg_edge, e)) ;
-
-        // Want to place edges of M into E_vec inplace BUT:
-        // EVIL segfault
-        // GRB_TRY (LAGraph_FastAssign(
-        //     E_vec, NULL, second_edge, edge_perm, M, ramp_v, 
-        //     second_second_edge, NULL, msg)) ;
-
-        // Temporary fix for the above:
         GRB_TRY (LAGraph_FastAssign(
-            E_temp, NULL, NULL, edge_perm, M, ramp_v, 
+            E_vec, NULL, second_edge, edge_perm, M, ramp_v, 
             second_second_edge, NULL, msg)) ;
-        GRB_TRY (GrB_eWiseAdd(
-            E_vec, NULL, NULL, second_edge, E_vec, E_temp, NULL)) ;
-        GrB_free (&E_temp) ;
+        #else // Fix for old saxpy4 bug
+        GRB_TRY(GxB_Vector_subassign_Vector(
+            E_vec, dup_swaps_v, NULL, M, edge_perm, NULL));
+        #endif
+        
 
         n_keep /= 2;
 
