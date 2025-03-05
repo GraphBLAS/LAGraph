@@ -46,9 +46,12 @@ int main(int argc,char** argv){
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     GrB_Matrix S = NULL; // change to pointer
 >>>>>>> 49da79e1 (GAP test)
+=======
+>>>>>>> 9ccf260a (testing)
     double t1 = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads_max, msg)) ;
     LAGRAPH_TRY (LAGraph_Louvain (S,G,msg)) ;
