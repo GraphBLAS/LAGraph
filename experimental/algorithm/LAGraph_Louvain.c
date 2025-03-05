@@ -23,8 +23,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-
-#define LG_FREE_LOUV                    \
+#undef LG_FREE_ALL
+#define LG_FREE_ALL                   \
     {                                   \
         GrB_free (&A) ;                 \
         GrB_free (&k) ;                 \
@@ -38,10 +38,7 @@
         GrB_free (&srxt) ;              \
         GrB_free (&t_q) ;               \
     }
-#define LG_FREE_ALL                     \
-    {                                   \
-        LG_FREE_LOUV;                   \
-    }
+
 
 double rd() {
     uint64_t r53 = ((uint64_t)(rand()) << 21) ^ (rand() >> 2);
