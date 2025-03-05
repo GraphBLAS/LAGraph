@@ -48,6 +48,7 @@ jobs:
         single-commit: true
     - name: Save output
       uses: actions/upload-artifact@v4.6.0
+      if: matrix.config.deployit
       with:
         name: test_coverage
         path: build/test_coverage/
