@@ -95,7 +95,7 @@ void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
 "{                                                           \n" \
 "    z->k = (int64_t)jx;                                     \n" \
 "    z->v = (*x) + (((*y) ^ (jy) << iy));                    \n" \
-"       printf(\"z->k:%ld, %f\t\",z->k,z->v);                 \n" \    
+"       printf(\"z->k:%ld, %f\t \",z->k,z->v);                \n" \   
 "}"
 
 
@@ -254,6 +254,7 @@ int LAGraph_Louvain2(
 
             double alpha = -k_i/m;
             //compute dS
+            //if version 10 
              GRB_TRY (GxB_Matrix_unpack_CSR (dS, &dSp, &dSj, (void ** )&dSx,
                 &dSp_size, &dSj_size, &dSx_size, NULL, NULL, NULL)) ;
             dSx[i] = -1;
