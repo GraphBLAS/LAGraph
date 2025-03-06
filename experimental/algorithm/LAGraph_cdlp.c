@@ -55,12 +55,12 @@
 {                                                                       \
     GrB_free (&S) ;                                                     \
     GrB_free (&T) ;                                                     \
-    LAGraph_Free ((void *) &Sp, NULL) ;                                 \
-    LAGraph_Free ((void *) &Si, NULL) ;                                 \
-    LAGraph_Free ((void *) &Tp, NULL) ;                                 \
-    LAGraph_Free ((void *) &Ti, NULL) ;                                 \
-    free (L) ; L = NULL ;                                               \
-    free (L_next) ; L = NULL ;                                          \
+    LAGraph_Free ((void **) &Sp, NULL) ;                                \
+    LAGraph_Free ((void **) &Si, NULL) ;                                \
+    LAGraph_Free ((void **) &Tp, NULL) ;                                \
+    LAGraph_Free ((void **) &Ti, NULL) ;                                \
+    LAGraph_Free ((void **) &L, NULL) ;                                 \
+    LAGraph_Free ((void **) &L_next, NULL) ;                            \
     ptable_pool_free (counts_pool, max_threads) ; counts_pool = NULL ;  \
     GrB_free (&CDLP) ;                                                  \
 }
@@ -257,11 +257,14 @@ int LAGraph_cdlp
         GRB_TRY (GrB_free (&S)) ;
     }
 
-    L = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
+//  L = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &L, n, sizeof (GrB_Index), msg)) ;
+
     for (GrB_Index i = 0; i < n; i++) {
         L[i] = i ;
     }
-    L_next = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
+//  L_next = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &L_next, n, sizeof (GrB_Index), msg)) ;
 
     counts_pool = calloc(max_threads, sizeof(ptable));
 
