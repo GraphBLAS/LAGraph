@@ -75,10 +75,14 @@ int main(int argc,char** argv){
             GrB_free (&S) ;
             double t1 = LAGraph_WallClockTime ( ) ;
 <<<<<<< HEAD
+<<<<<<< HEAD
             LAGRAPH_TRY (LAGraph_Louvain(&S,G,msg)) ;
 =======
             LAGRAPH_TRY (LAGraph_Louvain (S,G,msg)) ;
 >>>>>>> 49da79e1 (GAP test)
+=======
+            LAGRAPH_TRY (LAGraph_Louvain (&S,G,msg)) ;
+>>>>>>> a1682ded (fixed louvain_demo call)
             t1 = LAGraph_WallClockTime ( ) - t1 ;
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
             total_time += t1 ;
