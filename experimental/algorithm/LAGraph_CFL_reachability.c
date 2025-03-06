@@ -13,13 +13,17 @@
 //  * Rustam Azimov, Semyon Grigorev, "Context-Free Path Querying Using Linear Algebra"
 //  * URL: https://disser.spbu.ru/files/2022/disser_azimov.pdf
 
+
+// FIXED: "free" cannot be combined with LAGraph_Malloc.  The latter may not
+// use 'malloc', but a different memory allocator.
+
 #define LG_FREE_WORK                                                                     \
     {                                                                                    \
-        free(nnzs);                                                                       \
+        LAGraph_Free ((void **) &nnzs, msg) ;   \
         GrB_free(&true_scalar);                                                          \
         GrB_free(&identity_matrix);                                                      \
-        free(T);                                                                         \
-        free(indexes);                                                                   \
+        LAGraph_Free ((void **) &T, msg);       \
+        LAGraph_Free ((void **) &indexes, msg); \
     }
 
 #define LG_FREE_ALL                                                                      \
