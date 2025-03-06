@@ -41,6 +41,7 @@
         GrB_free (&kk_) ;               \
         GrB_free (&BS) ;                \
         GrB_free (&S_BS) ;              \
+        GrB_free (&Diag) ;              \
     }
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                     \
@@ -62,6 +63,11 @@ int LAGr_Modularity2(
     char* msg
 )
 {
+    LG_CLEAR_MSG ;
+
+    char MATRIX_TYPE[LAGRAPH_MSG_LEN];
+    if (DEBUG)
+        GrB_set (GrB_GLOBAL, true, GxB_BURBLE);
     //------------------------------------------------------------------------------
     // Declare Monoids, Brinary Operations, Semirings,(for easier reference) and Matrices
     //------------------------------------------------------------------------------
@@ -79,6 +85,7 @@ int LAGr_Modularity2(
     GrB_Matrix B =    NULL; // B = A - (kk^t/2m)
     GrB_Matrix BS =   NULL; // BS
     GrB_Matrix S_BS = NULL; // S_BS
+    GrB_Matrix Diag = NULL;
 
     GRB_TRY(GrB_Matrix_nrows(&n, A));
     // GRB_TRY(GrB_Matrix_new(&S_, GrB_FP64, n, n));
@@ -120,13 +127,14 @@ int LAGr_Modularity2(
     //------------------------------------------------------------------------------
     // Final Computation of Modularity Q
     //------------------------------------------------------------------------------
-    GrB_Matrix Diag;
     GRB_TRY(GrB_Matrix_new(&Diag,GrB_FP64,n,n));
     GRB_TRY(GrB_select(Diag,NULL,NULL,GrB_DIAG,S_BS,0,NULL));
     // GxB_print(Diag,5);
-    // double *Q_;
-    GRB_TRY(GrB_Matrix_reduce_FP64(Q,NULL,plusmon,Diag,NULL));
-    *Q *= -inv_m;
+    double Q_;
+    printf("here");
+    GRB_TRY(GrB_Matrix_reduce_FP64(&Q_,NULL,plusmon,Diag,NULL));
+    Q_ *= -inv_m;
+    *Q = Q_;
     LG_FREE_ALL;
     return 0;
 }
