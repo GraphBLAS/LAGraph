@@ -101,7 +101,7 @@ void test_Vector_Structure (void)
 // test_Vector_Structure_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_Vector_Structure_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -180,7 +180,7 @@ TEST_LIST =
 {
     { "Vector_Structure", test_Vector_Structure },
     { "Vector_Structure_failures", test_Vector_Structure_failures },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "Vector_Structure_brutal", test_Vector_Structure_brutal },
     #endif
     { NULL, NULL }

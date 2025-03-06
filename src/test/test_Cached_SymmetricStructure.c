@@ -198,7 +198,7 @@ void test_Cached_Symmetric_Structure (void)
 // test_Cached_Symmetric_Structure_brutal
 //-----------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_Cached_Symmetric_Structure_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -280,7 +280,7 @@ void test_Cached_Symmetric_Structure_brutal (void)
 TEST_LIST =
 {
     { "test_Symmetric_Structure", test_Cached_Symmetric_Structure },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "test_Symmetric_Structure_brutal",
         test_Cached_Symmetric_Structure_brutal },
     #endif

@@ -138,7 +138,7 @@ void test_export (void)
 // test_export_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_export_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -208,7 +208,7 @@ void test_export_brutal (void)
 //****************************************************************************
 TEST_LIST = {
     {"test_export", test_export },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"test_export_brutal", test_export_brutal },
     #endif
     {NULL, NULL}

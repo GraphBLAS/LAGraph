@@ -39,11 +39,10 @@
 
 //      int64_t kmax ;
 //      GrB_Matrix_nrows (&n, A) ;
-//      int64_t n4 = (n > 4) ? n : 4 ;
-//      GrB_Matrix *Cset = LAGraph_malloc (n4, sizeof (GrB_Matrix)) ;
-//      int64_t *ntris   = LAGraph_malloc (n4, sizeof (int64_t)) ;
-//      int64_t *nedges  = LAGraph_malloc (n4, sizeof (int64_t)) ;
-//      int64_t *nstepss = LAGraph_malloc (n4, sizeof (int64_t)) ;
+//      GrB_Matrix *Cset = array of size max(n,4)
+//      int64_t *ntris   = array of size max(n,4)
+//      int64_t *nedges  = array of size max(n,4)
+//      int64_t *nstepss = array of size max(n,4)
 //      int result = LAGraph_AllKTruss (&Cset, &kmax, ntris, nedges,
 //          nstepss, G, msg) ;
 

@@ -351,7 +351,7 @@ void test_SingleSourceShortestPath_failure (void)
 // test_SingleSourceShortestPath_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_SingleSourceShortestPath_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -450,7 +450,7 @@ TEST_LIST = {
     {"SSSP", test_SingleSourceShortestPath},
     {"SSSP_types", test_SingleSourceShortestPath_types},
     {"SSSP_failure", test_SingleSourceShortestPath_failure},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"SSSP_brutal", test_SingleSourceShortestPath_brutal },
     #endif
     {NULL, NULL}

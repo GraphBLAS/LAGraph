@@ -101,7 +101,9 @@ int main (int argc, char **argv)
     }
     printf ("\n") ;
 
-    double *tt = malloc ((nthreads_max+1) *sizeof (double));
+    double *tt = NULL ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &tt, nthreads_max+1,
+        sizeof (double), msg)) ;
 
     //--------------------------------------------------------------------------
     // read in the graph
@@ -216,8 +218,8 @@ for (int nrepeat = 0 ; nrepeat <= 1 ; nrepeat++)
     }
     fflush (stdout) ; fflush (stderr) ;
 
-    free ((void *) tt);
-    LG_FREE_ALL;
+    LAGraph_Free ((void **) &tt, msg) ;
+    LG_FREE_ALL ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

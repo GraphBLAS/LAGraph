@@ -55,12 +55,12 @@
 {                                                                       \
     GrB_free (&S) ;                                                     \
     GrB_free (&T) ;                                                     \
-    LAGraph_Free ((void *) &Sp, NULL) ;                                 \
-    LAGraph_Free ((void *) &Si, NULL) ;                                 \
-    LAGraph_Free ((void *) &Tp, NULL) ;                                 \
-    LAGraph_Free ((void *) &Ti, NULL) ;                                 \
-    free (L) ; L = NULL ;                                               \
-    free (L_next) ; L = NULL ;                                          \
+    LAGraph_Free ((void **) &Sp, NULL) ;                                \
+    LAGraph_Free ((void **) &Si, NULL) ;                                \
+    LAGraph_Free ((void **) &Tp, NULL) ;                                \
+    LAGraph_Free ((void **) &Ti, NULL) ;                                \
+    LAGraph_Free ((void **) &L, NULL) ;                                 \
+    LAGraph_Free ((void **) &L_next, NULL) ;                            \
     ptable_pool_free (counts_pool, max_threads) ; counts_pool = NULL ;  \
     GrB_free (&CDLP) ;                                                  \
 }
@@ -78,7 +78,7 @@ typedef struct {
 } plist;
 
 void plist_free(plist *list) {
-    free(list->entries);
+    LAGraph_Free ((void **) &(list->entries), NULL) ;
 }
 
 void plist_clear(plist *list) {
@@ -87,8 +87,10 @@ void plist_clear(plist *list) {
 
 void plist_append(plist* list, GrB_Index key, GrB_Index value) {
     if (list->len == list->cap) {
+        size_t old_size = list->cap ;
         size_t new_size = list->cap == 0 ? 16 : 2*list->cap;
-        list->entries = (GrB_Index*)realloc(list->entries, new_size * sizeof(GrB_Index));
+        LAGraph_Realloc ((void **) &(list->entries), new_size, old_size,
+            sizeof (GrB_Index), NULL) ;
         list->cap = new_size;
     }
     list->entries[list->len] = key;
@@ -152,7 +154,7 @@ void ptable_pool_free(ptable* table, size_t n) {
     for (size_t i = 0; i < n; i++) {
         ptable_free(&table[i]);
     }
-    free(table);
+    LAGraph_Free ((void **) &table, NULL);
 }
 
 void ptable_clear(ptable* table) {
@@ -257,13 +259,15 @@ int LAGraph_cdlp
         GRB_TRY (GrB_free (&S)) ;
     }
 
-    L = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &L, n, sizeof (GrB_Index), msg)) ;
+
     for (GrB_Index i = 0; i < n; i++) {
         L[i] = i ;
     }
-    L_next = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
 
-    counts_pool = calloc(max_threads, sizeof(ptable));
+    LG_TRY (LAGraph_Malloc ((void **) &L_next, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Calloc ((void **) &counts_pool, max_threads,
+        sizeof (ptable), msg)) ;
 
     for (int iteration = 0; iteration < itermax; iteration++) {
 

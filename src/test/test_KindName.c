@@ -74,7 +74,7 @@ void test_KindName (void)
 // strictly necessary, but it's simple to include here.  It serves as a very
 // simple use-case of the brutal testing mechanism.
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_KindName_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -91,7 +91,7 @@ void test_KindName_brutal (void)
 TEST_LIST =
 {
     { "KindName", test_KindName },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "KindName_brutal", test_KindName_brutal },
     #endif
     { NULL, NULL }

@@ -140,7 +140,7 @@ void test_DeleteCached (void)
 
 //-----------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_del_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -194,7 +194,7 @@ void test_del_brutal (void)
 TEST_LIST =
 {
     { "test_DeleteCached", test_DeleteCached },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "test_DeleteCached_brutal", test_del_brutal },
     #endif
     { NULL, NULL }
