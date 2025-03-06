@@ -80,11 +80,13 @@ void test_cdlp (void)
 
         // compute the communities with LAGraph_cdlp
         OK (LAGraph_cdlp (&c, G, 100, msg)) ;
-
         GrB_Index n ;
         OK (GrB_Vector_size (&n, c)) ;
         LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
+        printf ("\ncdlp (computed result):\n") ;
+        OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
 
+        // compute with another method
         GrB_Vector cgood = NULL ;
         OK (LAGraph_cdlp_withsort(&cgood, G, 100, msg)) ;
         OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;

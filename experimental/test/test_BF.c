@@ -151,15 +151,15 @@ void test_BF (void)
         OK (GrB_Matrix_new (&AT, GrB_FP64, ncols, nrows)) ;
         OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
         double transpose_time = LAGraph_WallClockTime ( ) - tt ;
-        fprintf (stderr, "transpose     time: %g\n", transpose_time) ;
+//      fprintf (stderr, "transpose     time: %g\n", transpose_time) ;
 
         //----------------------------------------------------------------------
         // get the source node
         //----------------------------------------------------------------------
 
         GrB_Index s = 0 ;
-        fprintf (stderr, "\n==========input graph: nodes: %g edges: %g "
-            "source node: %g\n", (double) n, (double) nvals, (double) s) ;
+//      fprintf (stderr, "\n==========input graph: nodes: %g edges: %g "
+//          "source node: %g\n", (double) n, (double) nvals, (double) s) ;
 
         //----------------------------------------------------------------------
         // run 1 or 2 trials (2 negative weight cycles)
@@ -192,8 +192,8 @@ void test_BF (void)
             // stop the timer
             t5 = LAGraph_WallClockTime ( ) - t5 ;
             t5 = t5 / ntrials;
-            fprintf (stderr, "BF_full1      time: %12.6e (sec), rate:"
-                " %g (1e6 edges/sec)\n", t5, 1e-6*((double) nvals) / t5) ;
+//          fprintf (stderr, "BF_full1      time: %12.6e (sec), rate:"
+//              " %g (1e6 edges/sec)\n", t5, 1e-6*((double) nvals) / t5) ;
 
             //------------------------------------------------------------------
             // run LAGraph_BF_full1a before setting the diagonal to 0
@@ -214,8 +214,8 @@ void test_BF (void)
             // stop the timer
             t5a = LAGraph_WallClockTime ( ) - t5a ;
             t5a = t5a / ntrials;
-            fprintf (stderr, "BF_full1a     time: %12.6e (sec), rate:"
-                " %g (1e6 edges/sec)\n", t5a, 1e-6*((double) nvals) / t5a) ;
+//          fprintf (stderr, "BF_full1a     time: %12.6e (sec), rate:"
+//              " %g (1e6 edges/sec)\n", t5a, 1e-6*((double) nvals) / t5a) ;
 
             //------------------------------------------------------------------
             // run LAGraph_BF_full2 before setting the diagonal to 0
@@ -236,8 +236,8 @@ void test_BF (void)
             // stop the timer
             t6 = LAGraph_WallClockTime ( ) - t6 ;
             t6 = t6 / ntrials;
-            fprintf (stderr, "BF_full2      time: %12.6e (sec), rate:"
-                " %g (1e6 edges/sec)\n", t6, 1e-6*((double) nvals) / t6) ;
+//          fprintf (stderr, "BF_full2      time: %12.6e (sec), rate:"
+//              " %g (1e6 edges/sec)\n", t6, 1e-6*((double) nvals) / t6) ;
 
             //------------------------------------------------------------------
             // run the LAGraph_BF_full on node s
@@ -259,9 +259,9 @@ void test_BF (void)
             // stop the timer
             t1 = LAGraph_WallClockTime ( ) - t1 ;
             t1 = t1 / ntrials;
-            fprintf (stderr, "BF_full       time: %12.6e (sec), rate:"
-                " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
-            fprintf (stderr, "t(BF_full1) / t(BF_full):      %g\n", t5/t1) ;
+//          fprintf (stderr, "BF_full       time: %12.6e (sec), rate:"
+//              " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
+//          fprintf (stderr, "t(BF_full1) / t(BF_full):      %g\n", t5/t1) ;
 
             //------------------------------------------------------------------
             // run the BF on node s with LAGraph_BF_basic
@@ -280,9 +280,9 @@ void test_BF (void)
             // stop the timer
             t2 = LAGraph_WallClockTime ( ) - t2 ;
             t2 = t2 / ntrials;
-            fprintf (stderr, "BF_basic      time: %12.6e (sec), rate:"
-                " %g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t2) ;
-            fprintf (stderr, "speedup of BF_basic:       %g\n", t1/t2) ;
+//          fprintf (stderr, "BF_basic      time: %12.6e (sec), rate:"
+//              " %g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t2) ;
+//          fprintf (stderr, "speedup of BF_basic:       %g\n", t1/t2) ;
 
             //------------------------------------------------------------------
             // run the BF on node s with LAGraph_pure_c
@@ -303,9 +303,9 @@ void test_BF (void)
             // stop the timer
             t3 = LAGraph_WallClockTime ( ) - t3 ;
             t3 = t3 / ntrials;
-            fprintf (stderr, "BF_pure_c_double  : %12.6e (sec), rate:"
-                " %g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
-            fprintf (stderr, "speedup of BF_pure_c:      %g\n", t1/t3) ;
+//          fprintf (stderr, "BF_pure_c_double  : %12.6e (sec), rate:"
+//              " %g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+//          fprintf (stderr, "speedup of BF_pure_c:      %g\n", t1/t3) ;
 
             if (has_integer_weights)
             {
@@ -337,9 +337,9 @@ void test_BF (void)
             // stop the timer
             t4 = LAGraph_WallClockTime ( ) - t4 ;
             t4 = t4 / ntrials;
-            fprintf (stderr, "BF_full_mxv   time: %12.6e (sec), rate:"
-                " %g (1e6 edges/sec)\n", t4, 1e-6*((double) nvals) / t4) ;
-            fprintf (stderr, "speedup of BF_full_mxv:    %g\n", t1/t4) ;
+//          fprintf (stderr, "BF_full_mxv   time: %12.6e (sec), rate:"
+//              " %g (1e6 edges/sec)\n", t4, 1e-6*((double) nvals) / t4) ;
+//          fprintf (stderr, "speedup of BF_full_mxv:    %g\n", t1/t4) ;
 
             //------------------------------------------------------------------
             // run the BF on node s with LAGraph_BF_basic_mxv
@@ -358,9 +358,9 @@ void test_BF (void)
             // stop the timer
             t7 = LAGraph_WallClockTime ( ) - t7 ;
             t7 = t7 / ntrials;
-            fprintf (stderr, "BF_basic_mxv  time: %12.6e (sec), rate:"
-                " %g (1e6 edges/sec)\n", t7, 1e-6*((double) nvals) / t7) ;
-            fprintf (stderr, "speedup of BF_basic_mxv:   %g\n", t1/t7) ;
+//          fprintf (stderr, "BF_basic_mxv  time: %12.6e (sec), rate:"
+//              " %g (1e6 edges/sec)\n", t7, 1e-6*((double) nvals) / t7) ;
+//          fprintf (stderr, "speedup of BF_basic_mxv:   %g\n", t1/t7) ;
 
             //------------------------------------------------------------------
             // run the BF on node s with LAGraph_BF_basic_pushpull
