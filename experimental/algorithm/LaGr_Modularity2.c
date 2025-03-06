@@ -104,7 +104,7 @@ int LAGr_Modularity2(
     GRB_TRY(GrB_Matrix_reduce_FP64(&m,plusf64,plusmon,A,NULL));
     m/=2;
     // printf("m:%f\n",m);
-    GxB_print(S,5);
+    // GxB_print(S,5);
     // GxB_print(A,5);
     GRB_TRY(GrB_Matrix_reduce_Monoid ((GrB_Vector)k_,NULL,NULL,plusmon,A, GrB_DESC_T0));
     // GxB_print(k_,3);
@@ -131,7 +131,7 @@ int LAGr_Modularity2(
     GRB_TRY(GrB_select(Diag,NULL,NULL,GrB_DIAG,S_BS,0,NULL));
     // GxB_print(Diag,5);
     double Q_;
-    printf("here");
+    // printf("here");
     GRB_TRY(GrB_Matrix_reduce_FP64(&Q_,NULL,plusmon,Diag,NULL));
     Q_ *= -inv_m;
     *Q = Q_;
