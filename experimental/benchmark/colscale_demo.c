@@ -22,6 +22,7 @@ int main(int argc, char **argv)
     GrB_Matrix D = NULL ;
     GrB_Matrix A = NULL ;
     GrB_Matrix Res = NULL ;
+    GrB_Scalar s = NULL ;
 
     bool burble = false ; 
     demo_init (burble) ;
@@ -39,7 +40,6 @@ int main(int argc, char **argv)
         GRB_TRY (GxB_set (D, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
         GRB_TRY (GxB_set (A, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
 
-        GrB_Scalar s ;
         GRB_TRY (GrB_Scalar_new (&s, GrB_FP64)) ;
         GRB_TRY (GrB_Scalar_setElement_UINT64 (s, 2.0)) ;
 

@@ -24,6 +24,7 @@ int main(int argc, char **argv)
     LAGraph_Graph G = NULL ;
     GrB_Matrix A = NULL ;
     GrB_Matrix Res = NULL ;
+    GrB_Scalar s = NULL ;
 
     bool burble = false ; 
     demo_init (burble) ;
@@ -45,7 +46,6 @@ int main(int argc, char **argv)
         GRB_TRY (GrB_Matrix_nvals (&A_nvals, A)) ;
         printf ("nvals: A: %ld\n", A_nvals) ;
 
-        GrB_Scalar s ;
         GRB_TRY (GrB_Scalar_new (&s, GrB_UINT64)) ;
         
         GRB_TRY (GrB_Matrix_new (&Res, GrB_BOOL, n, n)) ;
