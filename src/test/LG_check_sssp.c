@@ -337,9 +337,6 @@ int LG_check_sssp
         }
         else
         {
-            if (!strcmp(mat_name, "LFAT5_hypersparse.mtx") || !strcmp(mat_name, "LFAT5.mtx")) {
-                printf("[VIDITH]: For %ld, path_length is: %0.7f, distance is: %0.7f\n", i, path_length_in [i], distance [i]) ;
-            }
             err = fabs (path_length_in [i] - distance [i]) ;
             double d = LAGRAPH_MAX (path_length_in [i], distance [i]) ;
             if (err > 0) err = err / d ;
