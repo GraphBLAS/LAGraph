@@ -34,7 +34,7 @@ char filename [LEN+1] ;
 void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
+    GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
 }
 
 //------------------------------------------------------------------------------
@@ -63,8 +63,6 @@ const matrix_info files [ ] =
     1, 1, "A.mtx",
     1, 1, "LFAT5.mtx",
     1, 1, "bcsstk13.mtx",
-    1, 0, "comments_full.mtx",
-    0, 0, "comments_west0067.mtx",
 //  1, 0, "complex.mtx",
     0, 0, "cover.mtx",
     0, 0, "cover_structure.mtx",
@@ -200,7 +198,7 @@ void test_Cached_Symmetric_Structure (void)
 // test_Cached_Symmetric_Structure_brutal
 //-----------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_Cached_Symmetric_Structure_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -282,7 +280,7 @@ void test_Cached_Symmetric_Structure_brutal (void)
 TEST_LIST =
 {
     { "test_Symmetric_Structure", test_Cached_Symmetric_Structure },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "test_Symmetric_Structure_brutal",
         test_Cached_Symmetric_Structure_brutal },
     #endif

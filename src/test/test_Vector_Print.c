@@ -117,7 +117,7 @@ void test_print (void)
 // test_print_brutal
 //-----------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_print_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -211,7 +211,7 @@ void test_print_brutal (void)
 
 TEST_LIST = {
     {"test_print", test_print},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"test_print_brutal", test_print_brutal},
     #endif
     {NULL, NULL}

@@ -116,6 +116,8 @@ int main (int argc, char** argv)
     GRB_TRY (GrB_Vector_new (&weight, GrB_FP64, num_edges)) ;
     
     GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
+    // set to row major incase Incidence_Matrix gave col_major
+    GRB_TRY (GrB_set(E, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
 
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ;
 

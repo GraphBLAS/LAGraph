@@ -279,7 +279,7 @@ void test_bc (void)
 // test_bc_brutal: test BetweenessCentraliy with brutal malloc debugging
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_bc_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -319,7 +319,7 @@ void test_bc_brutal (void)
 
 TEST_LIST = {
     {"test_bc", test_bc},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"test_bc_brutal", test_bc_brutal },
     #endif
     {NULL, NULL}

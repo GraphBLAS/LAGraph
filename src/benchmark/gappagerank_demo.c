@@ -18,9 +18,19 @@
 
 #include "LAGraph_demo.h"
 
+// to run just once, with p = omp_get_max_threads() threads
 #define NTHREAD_LIST 1
-// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
+
+// to run with p and p/2 threads, if p = omp_get_max_threads()
+// #define NTHREAD_LIST 2
+// #define THREAD_LIST 0
+
+// #define NTHREAD_LIST 7
+// #define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
+
+// #define NTHREAD_LIST 4
+// #define THREAD_LIST 32, 24, 16, 8
 
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
@@ -93,6 +103,7 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Vector_nvals (&nvals, G->out_degree)) ;
     nsinks = n - nvals ;
     printf ("nsinks: %" PRIu64 "\n", nsinks) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // warmup
@@ -108,6 +119,7 @@ int main (int argc, char **argv)
                 damping, tol, itermax, msg)) ;
     t1 = LAGraph_WallClockTime ( ) - t1 ;
     printf ("warmup: %10.4f sec\n", t1) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // compute the GAP pagerank
@@ -134,6 +146,7 @@ int main (int argc, char **argv)
                 damping, tol, itermax, msg)) ;
             t1 = LAGraph_WallClockTime ( ) - t1 ;
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
+            fflush (stdout) ; fflush (stderr) ;
             total_time += t1 ;
         }
 
@@ -141,12 +154,12 @@ int main (int argc, char **argv)
         GRB_TRY (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, PR, NULL)) ;
 
         double t = total_time / ntrials ;
-        printf ("GAP: %3d: avg time: %10.3f (sec), "
-                "rate: %10.3f iters: %d rsum: %e\n", nthreads,
-                t, 1e-6*((double) nvals) * iters / t, iters, rsum) ;
-        fprintf (stderr, "GAP: Avg: PR %3d: %10.3f sec: %s rsum: %e\n",
-             nthreads, t, matrix_name, rsum) ;
 
+        printf (         "Avg: PR(gap) threads %3d: %10.3f sec (%2d iters), graph: %s\n",
+            nthreads, t, iters, matrix_name) ;
+        fprintf (stderr, "Avg: PR(gap) threads %3d: %10.3f sec (%2d iters), graph: %s\n",
+            nthreads, t, iters, matrix_name) ;
+        fflush (stdout) ; fflush (stderr) ;
     }
 
     //--------------------------------------------------------------------------
