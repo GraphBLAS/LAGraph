@@ -62,6 +62,7 @@ void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
     OK (LAGraph_Random_Init (msg)) ;
+    GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;    // FIXME
 }
 
 //------------------------------------------------------------------------------
