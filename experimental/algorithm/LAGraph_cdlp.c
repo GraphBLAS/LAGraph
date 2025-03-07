@@ -18,6 +18,11 @@
 
 // Modified by Pascal Costanza, Intel, Belgium
 
+// NOTE: the malloc/calloc/free below must be thread-safe,
+// so it cannot use LAGraph_Malloc/LAGraph_Free (which can use
+// the Rapids Memory Manager methods when using CUDA, and those
+// methods are not yet thread-safe).
+
 //------------------------------------------------------------------------------
 
 // ## Background
