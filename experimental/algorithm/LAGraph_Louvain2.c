@@ -65,7 +65,6 @@ void make_fp64(tuple_fp64 *z,
 {
     z->k = (int64_t)jx;
     z->v = (*x) + (((*y) ^ (jy) << iy));
-    printf("z->k:%ld, %f\t",z->k,z->v);
 }
 void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
     if (x->v > y->v ){
@@ -94,8 +93,7 @@ void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
 "               const void *theta)                           \n" \
 "{                                                           \n" \
 "    z->k = (int64_t)jx;                                     \n" \
-"    z->v = (*x) + (((*y) ^ (jy) << iy));                    \n" \
-"       printf(\"z->k:%ld, %f\t \",z->k,z->v);                \n" \   
+"    z->v = (*x) + (((*y) ^ (jy) << iy));                    \n" \ 
 "}"
 
 
@@ -281,8 +279,8 @@ int LAGraph_Louvain2(
 ///////////////////////////////////////////////////////////
 //-------------Index Binary OP Rand_argminmax -----------//
             GRB_TRY(GrB_Vector_nvals(&q1_size,q1));
-            GxB_print(q1,5);
-            printf("Size of q1: %ld\n",q1_size);
+            // GxB_print(q1,5);
+            // printf("Size of q1: %ld\n",q1_size);
 
             seed++;
             // GRB_TRY(LAGraph_Random_Seed(y_rand,seed,msg));
@@ -293,7 +291,7 @@ int LAGraph_Louvain2(
             GRB_TRY(GrB_mxv(max_q1,NULL,NULL,Semiring,(GrB_Matrix)q1,y_rand,GrB_DESC_T0));
 
             GRB_TRY(GrB_Vector_extractElement_UDT((void*)&o,max_q1,0));
-            printf("choice:%ld\n",(long)o.k);
+            // printf("choice:%ld\n",(long)o.k);
             GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Sj, (void ** )&Sx,
                 &Sp_size, &Sj_size, &Sx_size, NULL, &S_jumbled, NULL)) ;
             Sj[i] = o.k;
