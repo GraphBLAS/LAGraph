@@ -1059,7 +1059,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // generate 64 random source nodes, if requested but not provided on input
     //--------------------------------------------------------------------------
 
-    #define NSOURCES 4
+    #define NSOURCES 64
 
     if (src_nodes != NULL && (*src_nodes == NULL))
     {

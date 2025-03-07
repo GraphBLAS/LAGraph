@@ -145,7 +145,7 @@ void test_SingleSourceShortestPath(void)
                 OK (GrB_Scalar_setElement (Delta, delta)) ;
                 OK (LAGr_SingleSourceShortestPath (&path_length, G,
                     src, Delta, msg)) ;
-                int res = LG_check_sssp (path_length, G, src, aname, msg) ;
+                int res = LG_check_sssp (path_length, G, src, msg) ;
                 if (res != GrB_SUCCESS) printf ("res: %d msg: %s\n", res, msg) ;
                 OK (res) ;
                 OK (GrB_free(&path_length)) ;
@@ -292,7 +292,7 @@ void test_SingleSourceShortestPath_types (void)
                 OK (GrB_Scalar_setElement (Delta, delta)) ;
                 OK (LAGr_SingleSourceShortestPath (&path_length, G, src,
                     Delta, msg)) ;
-                int res = LG_check_sssp (path_length, G, src, aname, msg) ;
+                int res = LG_check_sssp (path_length, G, src, msg) ;
                 if (res != GrB_SUCCESS) printf ("res: %d msg: %s\n", res, msg) ;
                 OK (res) ;
                 OK (GrB_free(&path_length)) ;
@@ -350,7 +350,6 @@ void test_SingleSourceShortestPath_failure (void)
 //------------------------------------------------------------------------------
 // test_SingleSourceShortestPath_brutal
 //------------------------------------------------------------------------------
-
 
 #if LAGRAPH_SUITESPARSE
 void test_SingleSourceShortestPath_brutal (void)
@@ -421,7 +420,7 @@ void test_SingleSourceShortestPath_brutal (void)
         OK (GrB_Scalar_setElement (Delta, delta)) ;
         LG_BRUTAL (LAGr_SingleSourceShortestPath (&path_length, G, src,
             Delta, msg)) ;
-        int rr = (LG_check_sssp (path_length, G, src, aname, msg)) ;
+        int rr = (LG_check_sssp (path_length, G, src, msg)) ;
         printf ("rr %d msg %s\n", rr, msg) ;
         OK (rr) ;
         OK (GrB_free(&path_length)) ;

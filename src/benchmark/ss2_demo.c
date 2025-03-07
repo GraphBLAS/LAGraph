@@ -189,7 +189,7 @@ int main (int argc, char **argv)
                 // all trials can be checked, but this is slow so do just
                 // for the first trial
                 double tcheck = LAGraph_WallClockTime ( ) ;
-                int result = LG_check_sssp (pathlen, G, src, NULL, msg) ;
+                int result = LG_check_sssp (pathlen, G, src, msg) ;
                 if (result != GrB_SUCCESS)
                 {
                     fprintf (stderr, "ERROR: %d %s\n", result, msg) ;
