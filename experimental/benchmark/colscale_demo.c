@@ -11,6 +11,7 @@
     GrB_Matrix_free (&A) ;     \
     GrB_Matrix_free (&D) ;     \
     GrB_Matrix_free (&Res) ;   \
+    GrB_Scalar_free (&s) ;     \
 }
 
 int main(int argc, char **argv)
@@ -70,6 +71,7 @@ int main(int argc, char **argv)
         GrB_Matrix_free (&A) ;
         GrB_Matrix_free (&D) ;
         GrB_Matrix_free (&Res) ;
+        GrB_Scalar_free (&s) ;
     }
     LG_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
