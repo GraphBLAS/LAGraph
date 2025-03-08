@@ -542,7 +542,7 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
     res_graph->AT = modified_res_mat;					\
     LAGraph_Cached_OutDegree(res_graph, msg);                              \
     LAGr_BreadthFirstSearch(&lvl, &parent, res_graph, T, msg);             \
-    GrB_assign(d, mask_vector, NULL, lvl, GrB_ALL, n, GrB_DESC_S);                    \
+    GrB_assign(d, mask_vector, NULL, lvl, GrB_ALL, n, GrB_DESC_SC);                    \
     GrB_assign(d, lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC);                      \
     if(iter == 0){							\
       GrB_Vector_dup(&e_dup, e);					\
