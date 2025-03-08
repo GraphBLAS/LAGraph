@@ -544,12 +544,10 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
     LAGr_BreadthFirstSearch(&lvl, &parent, res_graph, T, msg);             \
     GrB_assign(d, mask_vector, NULL, lvl, GrB_ALL, n, GrB_DESC_SC);                    \
     GrB_assign(d, lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC);                      \
-    if(iter == 0){							\
-      GrB_Vector_dup(&e_dup, e);					\
-      GrB_assign(e_dup, lvl, NULL, -1, GrB_ALL, n, GrB_DESC_SC);	\
-      GrB_select(e, NULL, NULL, GrB_VALUEGT_FP64, e_dup, -1, NULL);	\
-      GrB_free(&e_dup);							\
-    }									\
+    GrB_Vector_dup(&e_dup, e);					\
+    GrB_assign(e_dup, lvl, NULL, -1, GrB_ALL, n, GrB_DESC_SC);	\
+    GrB_select(e, NULL, NULL, GrB_VALUEGT_FP64, e_dup, -1, NULL);	\
+    GrB_free(&e_dup);							\
     GrB_free(&parent);                                                         \
     GrB_free(&lvl);                                                            \
     GrB_free(&GrB_GetResidual);                                                \
