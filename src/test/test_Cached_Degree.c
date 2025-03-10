@@ -302,7 +302,7 @@ void test_Cached_Degree (void)
 // test_Cached_Degree_brutal
 //-----------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_Cached_Degree_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -362,7 +362,7 @@ void test_Cached_Degree_brutal (void)
 TEST_LIST =
 {
     { "test_Degree", test_Cached_Degree },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "test_Degree_brutal", test_Cached_Degree_brutal },
     #endif
     { NULL, NULL }

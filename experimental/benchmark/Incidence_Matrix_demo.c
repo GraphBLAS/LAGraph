@@ -45,7 +45,7 @@ int main (int argc, char **argv)
     GrB_Index nrows, ncols;
 
     // start GraphBLAS and LAGraph
-    bool burble = true ;               // set true for diagnostic outputs
+    bool burble = false ;               // set true for diagnostic outputs
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------

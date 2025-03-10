@@ -32,11 +32,16 @@
     GrB_free (&components2) ;       \
 }
 
-// #define NTHREAD_LIST 1
+// to run just once, with p = omp_get_max_threads() threads
+#define NTHREAD_LIST 1
+#define THREAD_LIST 0
+
+// to run with p and p/2 threads, if p = omp_get_max_threads()
+// #define NTHREAD_LIST 2
 // #define THREAD_LIST 0
 
-#define NTHREAD_LIST 7
-#define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
+// #define NTHREAD_LIST 7
+// #define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
 
 // #define NTHREAD_LIST 4
 // #define THREAD_LIST 32, 24, 16, 8
@@ -132,7 +137,7 @@ int main (int argc, char **argv)
     // warmup
     LAGRAPH_TRY (LAGr_ConnectedComponents (&components, G, msg)) ;
     GrB_Index nCC = countCC (components, n) ;
-    printf ("nCC: %20.0g\n", (double) nCC) ;
+    printf ("nCC: %llu\n", (long long unsigned int) nCC) ;
 
 #if 0 & LG_CHECK_RESULT
     double tcheck = LAGraph_WallClockTime ( ) ;
@@ -169,7 +174,12 @@ int main (int argc, char **argv)
             LAGRAPH_TRY (LAGr_ConnectedComponents (&components2, G, msg)) ;
             ttrial = LAGraph_WallClockTime ( ) - ttrial ;
             ttt += ttrial ;
-            printf ("SV6:      nthreads: %2d trial: %2d time: %10.4f sec\n",
+            #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+            printf ("SV7") ;
+            #else
+            printf ("SV6") ;
+            #endif
+            printf (":      nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
             GrB_Index nCC2 = countCC (components2, n) ;
             if (nCC != nCC2) printf ("failure! %g %g diff %g\n",
@@ -292,7 +302,7 @@ int main (int argc, char **argv)
     // LAGraph_cc_lacc
     //--------------------------------------------------------------------------
 
-#if 0
+#if 1
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;

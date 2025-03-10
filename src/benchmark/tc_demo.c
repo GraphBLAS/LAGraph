@@ -29,11 +29,15 @@
 #include "LAGraph_demo.h"
 
 // to run just once, with p = omp_get_max_threads() threads
-// #define NTHREAD_LIST 1
+#define NTHREAD_LIST 1
+#define THREAD_LIST 0
+
+// to run with p and p/2 threads, if p = omp_get_max_threads()
+// #define NTHREAD_LIST 2
 // #define THREAD_LIST 0
 
-#define NTHREAD_LIST 7
-#define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
+// #define NTHREAD_LIST 7
+// #define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
 
 // #define NTHREAD_LIST 4
 // #define THREAD_LIST 32, 24, 16, 8
@@ -128,7 +132,7 @@ int main (int argc, char **argv)
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     LAGRAPH_TRY (readproblem (&G, NULL,
         true, true, true, NULL, false, argc, argv)) ;
-    LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
+//  LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
 
     // determine the cached out degree property
     LAGRAPH_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
@@ -154,18 +158,24 @@ int main (int argc, char **argv)
 #endif
 
     // warmup for more accurate timing, and also print # of triangles
+
+    // warmup method: ULT
+    // LAGr_TriangleCount_Sandia_ULT: sum (sum ((U * L') .* U))
+//  LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_ULT ;
+
+    // warmup method: LUT (method 5)
+    // LAGr_TriangleCount_Sandia_LUT: sum (sum ((L * U') .* L))
+    LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_LUT ;
+
     double ttot = LAGraph_WallClockTime ( ) ;
     printf ("\nwarmup method: ") ;
     LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
-    print_method (stdout, 6, presort) ;
+    print_method (stdout, method, presort) ;
     fflush (stdout) ; fflush (stderr) ;
 
-    // warmup method:
-    // LAGr_TriangleCount_Sandia_ULT: sum (sum ((U * L') .* U))
-    LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_ULT ;
     LAGRAPH_TRY (LAGr_TriangleCount (&ntriangles, G, &method, &presort, msg)) ;
     printf ("# of triangles: %" PRIu64 "\n", ntriangles) ;
-    print_method (stdout, 6, presort) ;
+    print_method (stdout, method, presort) ;
     ttot = LAGraph_WallClockTime ( ) - ttot ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (Sandia_ULT, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
@@ -192,7 +202,10 @@ int main (int argc, char **argv)
     // for (int method = 5 ; method <= 6 ; method++)
 
     // try all methods 3 to 5
-    for (int method = 3 ; method <= 5 ; method++)
+    // for (int method = 3 ; method <= 5 ; method++)
+
+    // just method 5
+    for (int method = 5 ; method <= 5 ; method++)
     {
         // for (int sorting = -1 ; sorting <= 2 ; sorting++)
 

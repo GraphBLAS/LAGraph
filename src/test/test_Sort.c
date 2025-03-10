@@ -180,7 +180,7 @@ void test_sort3 (void)
 // test_sort1_brutal
 //-----------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_sort1_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -229,7 +229,7 @@ void test_sort1_brutal (void)
 // test_sort2_brutal
 //-----------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_sort2_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -281,6 +281,7 @@ void test_sort2_brutal (void)
 // test_sort3_brutal
 //-----------------------------------------------------------------------------
 
+#if LG_BRUTAL_TESTS
 void test_sort3_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -335,6 +336,7 @@ void test_sort3_brutal (void)
 
     OK (LG_brutal_teardown (msg)) ;
 }
+#endif
 
 
 //-----------------------------------------------------------------------------
@@ -345,7 +347,7 @@ TEST_LIST = {
     {"test_sort1", test_sort1},
     {"test_sort2", test_sort2},
     {"test_sort3", test_sort3},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"test_sort1_brutal", test_sort1_brutal},
     {"test_sort2_brutal", test_sort2_brutal},
     {"test_sort3_brutal", test_sort3_brutal},
