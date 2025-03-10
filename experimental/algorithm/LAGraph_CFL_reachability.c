@@ -264,7 +264,7 @@ GrB_Info LAGraph_CFL_reachability
         }
         if (invalid_err.count > 0) {
             ADD_TO_MSG("[Variable -> _ B] type of rule is not acceptable. ");
-            ADD_TO_MSG("Indexes of invalid rules: %s\n", invalid_err.indexes_str)
+            ADD_TO_MSG("Indexes of invalid rules: %.120s\n", invalid_err.indexes_str)
         }
 
         LG_FREE_ALL;
