@@ -45,6 +45,7 @@ CMakeFiles*
 */build/*
 **/.venv/*
 .vscode
+mypaper/
 # Do not ignore this file
 !.gitignore
 
