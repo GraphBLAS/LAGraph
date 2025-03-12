@@ -18,6 +18,8 @@
 // This main program makes use of supporting utilities in
 // src/benchmark/LAGraph_demo.h and src/utility/LG_internal.h.
 
+// GraphBLAS v10 is required for this demo.
+
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LAGraphX.h"
 #include "LG_internal.h"
@@ -38,6 +40,7 @@
 
 int main (int argc, char **argv)
 {
+#if USING_GRAPHBLAS_V10
 
     //--------------------------------------------------------------------------
     // startup LAGraph and GraphBLAS
@@ -276,6 +279,7 @@ int main (int argc, char **argv)
 
     LG_FREE_ALL ;
     LG_TRY (LAGraph_Finalize (msg)) ;
+#endif
     return (GrB_SUCCESS) ;
 }
 
