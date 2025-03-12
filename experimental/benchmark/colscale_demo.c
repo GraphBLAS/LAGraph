@@ -55,7 +55,7 @@ int main(int argc, char **argv)
         GrB_Index D_nvals, A_nvals ;
         GRB_TRY (GrB_Matrix_nvals (&A_nvals, A)) ;
         GRB_TRY (GrB_Matrix_nvals (&D_nvals, D)) ;
-        printf ("nvals: A: %ld, D: %ld\n", A_nvals, D_nvals) ;
+        printf ("nvals: A: %" PRIu64 ", D: %" PRIu64 "\n", A_nvals, D_nvals) ;
 
         GRB_TRY (GrB_Matrix_new (&Res, GrB_FP64, n, n)) ;
         GrB_Scalar_free (&s) ;
