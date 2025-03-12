@@ -48,9 +48,13 @@ data/comments*.mtx
 **/.venv/*
 .vscode
 <<<<<<< HEAD
+<<<<<<< HEAD
 mypaper/
 =======
 >>>>>>> 49da79e1 (GAP test)
+=======
+mypaper/
+>>>>>>> 525ecae1 (Added benchmark for modified Louvain)
 # Do not ignore this file
 !.gitignore
 

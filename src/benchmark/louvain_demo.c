@@ -76,6 +76,7 @@ int main(int argc,char** argv){
             double t1 = LAGraph_WallClockTime ( ) ;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             LAGRAPH_TRY (LAGraph_Louvain(&S,G,msg)) ;
 =======
             LAGRAPH_TRY (LAGraph_Louvain (S,G,msg)) ;
@@ -83,6 +84,9 @@ int main(int argc,char** argv){
 =======
             LAGRAPH_TRY (LAGraph_Louvain (&S,G,msg)) ;
 >>>>>>> a1682ded (fixed louvain_demo call)
+=======
+            LAGRAPH_TRY (LAGraph_Louvain(&S,G,msg)) ;
+>>>>>>> 525ecae1 (Added benchmark for modified Louvain)
             t1 = LAGraph_WallClockTime ( ) - t1 ;
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
             total_time += t1 ;
