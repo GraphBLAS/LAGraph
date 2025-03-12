@@ -47,6 +47,7 @@ data/comments*.mtx
 */build/*
 **/.venv/*
 .vscode
+mypaper/
 # Do not ignore this file
 !.gitignore
 
