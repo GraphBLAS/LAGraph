@@ -81,8 +81,9 @@ char *output_to_str(size_t nonterm) {
 
     result_str[0] = '\0';
     for (size_t i = 0; i < nnz; i++) {
-        sprintf(result_str + strlen(result_str), i == 0 ? "(%ld, %ld)" : " (%ld, %ld)",
-                row[i], col[i]);
+        sprintf(result_str + strlen(result_str), i == 0 ?
+            "(%" PRIu64 ", %" PRIu64 ")" : " (%" PRIu64 ", %" PRIu64 ")",
+            row[i], col[i]);
     }
 
     LAGraph_Free ((void **) &row, msg);
