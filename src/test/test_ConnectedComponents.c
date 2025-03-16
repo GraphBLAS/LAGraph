@@ -238,7 +238,7 @@ void test_cc_errors (void)
 // test_CC_brutal:
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_cc_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -286,7 +286,7 @@ void test_cc_brutal (void)
 //****************************************************************************
 TEST_LIST = {
     {"cc", test_cc_matrices},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"cc_brutal", test_cc_brutal},
     #endif
     {"cc_errors", test_cc_errors},

@@ -78,7 +78,7 @@ void test_Xinit (void)
 // test_Xinit_brutal:  test LAGr_Init with brutal memory debug
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_Xinit_brutal (void)
 {
     // no brutal memory failures, but test LG_brutal_malloc/calloc/realloc/free
@@ -179,7 +179,7 @@ void test_Xinit_brutal (void)
 TEST_LIST =
 {
     { "Xinit", test_Xinit },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "Xinit_brutal", test_Xinit_brutal },
     #endif
     { NULL, NULL }

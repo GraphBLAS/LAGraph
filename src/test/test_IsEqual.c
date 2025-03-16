@@ -207,7 +207,7 @@ void test_IsEqual (void)
 // test_IsEqual_brutal:
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_IsEqual_brutal (void)
 {
 
@@ -445,7 +445,7 @@ TEST_LIST =
     { "IsEqual", test_IsEqual },
     { "Vector_IsEqual", test_Vector_IsEqual },
     { "IsEqual_failures", test_IsEqual_failures },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "IsEqual_brutal", test_IsEqual_brutal },
     #endif
     { NULL, NULL }

@@ -146,6 +146,11 @@ int LG_check_export
 //  (4) Some GrB* methods leave their output matrix in an invalid state, with
 //      all entries cleared, if an out-of-memory failure occurs (GrB_assign
 //      in particular).  See src/test/test_vector for an example.
+//
+// If CUDA is enabled in GraphBLAS, the brutal tests will not yet be
+// guaranteed to work, since the use of CUDA overrides the use of the
+// LG_brutal_malloc family of functions, and uses the Rapids Memory
+// Manager methods instead.
 
 LG_TEST_PUBLIC int LG_brutal_setup (char *msg) ;
 LG_TEST_PUBLIC int LG_brutal_teardown (char *msg) ;

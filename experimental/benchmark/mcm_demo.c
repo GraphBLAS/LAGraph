@@ -204,9 +204,9 @@ int main(int argc, char **argv)
         LAGr_MaximumMatching(&mateC, NULL, A, AT, mateC_init, true, msg));
     t = LAGraph_WallClockTime() - t;
     LAGRAPH_TRY(check_matching(A, mateC, msg));
-    unsigned long sprank = 0;
+    uint64_t sprank = 0;
     GRB_TRY(GrB_Vector_nvals(&sprank, mateC));
-    printf("number of matches: %lu\n", sprank);
+    printf("number of matches: %" PRIu64 "\n", sprank);
     fflush(stdout);
     GRB_TRY(GrB_free(&mateC));
 #ifdef VERBOSE

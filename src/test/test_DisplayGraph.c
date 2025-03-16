@@ -220,7 +220,7 @@ void test_Graph_Print_failures (void)
 // test_Graph_Print_brutal
 //-----------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_Graph_Print_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -292,7 +292,7 @@ void test_Graph_Print_brutal (void)
 TEST_LIST =
 {
     { "Graph_Print", test_Graph_Print },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "Graph_Print_brutal", test_Graph_Print_brutal },
     #endif
     { "Graph_Print_failures", test_Graph_Print_failures },
