@@ -181,7 +181,7 @@ void test_RichClubCoefficient (void)
     //--------------------------------------------------------------------------
     // free everything and finalize LAGraph
     //--------------------------------------------------------------------------
-    LAGraph_Finalize (msg) ;
+    OK (LAGraph_Finalize (msg)) ;
 }
 
 //------------------------------------------------------------------------------
@@ -199,7 +199,6 @@ void test_rcc_brutal (void)
 
     for (int k = 0 ; ; k++)
     {
-        //The following code taken from MIS tester
         // load the matrix as A
         const char *aname = tests [k].name;
         if (strlen (aname) == 0) break;
@@ -288,6 +287,8 @@ void test_rcc_brutal (void)
 TEST_LIST =
 {
     {"RichClubCoefficient", test_RichClubCoefficient},
+    #if LAGRAPH_SUITESPARSE
     {"rcc_brutal", test_rcc_brutal},
+    #endif
     {NULL, NULL}
 } ;
