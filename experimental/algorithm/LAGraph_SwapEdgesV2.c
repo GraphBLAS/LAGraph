@@ -551,10 +551,12 @@ int LAGraph_SwapEdgesV2
         )) ;
 
         // Find each hashed edge's bucket, dup_swaps_v is 1 if exists[edge] = 1
-        LG_TRY (LAGraph_FastAssign(
-            dup_swaps_v, NULL, NULL, new_hashed_edges, exists, ramp_v, 
-            GxB_ANY_PAIR_INT8, GrB_DESC_T0, msg
-        )) ;
+        // LG_TRY (LAGraph_FastAssign(
+        //     dup_swaps_v, NULL, NULL, new_hashed_edges, exists, ramp_v, 
+        //     GxB_ANY_PAIR_INT8, GrB_DESC_T0, msg
+        // )) ;
+        GRB_TRY (GxB_Vector_extract_Vector(
+            dup_swaps_v, NULL, NULL, exists, new_hashed_edges, NULL)) ;
 
         // Fill out dup_swaps_v in O(1) time.
         GRB_TRY (GxB_Container_new(&con)) ;
