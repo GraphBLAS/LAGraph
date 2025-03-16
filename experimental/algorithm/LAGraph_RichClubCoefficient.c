@@ -151,8 +151,7 @@ int LAGraph_RichClubCoefficient
     GrB_Matrix P = NULL;
 
     GrB_Index n ;
-    GrB_Index vi_size ;
-    GrB_Index vx_size ;
+    
     GrB_Index edge_vec_nvals;
     GrB_Index deg_vec_size;
     GrB_Index max_deg;
@@ -251,12 +250,14 @@ int LAGraph_RichClubCoefficient
     GRB_TRY (GrB_Vector_nvals (&edge_vec_nvals, node_edges)) ;
     #if LAGRAPH_SUITESPARSE
         #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
+        GrB_Index vi_size ;
+        GrB_Index vx_size ;
         if(n == edge_vec_nvals)
         {
             GRB_TRY (GxB_Vector_unpack_Full (
                 node_edges, (void **)&node_edges_arr, &vx_size, &iso, NULL)) ;
             GRB_TRY (GxB_Vector_unpack_Full (
-                degrees, (void **)&deg_arr, &vx_size, &iso, NULL)) ;
+                degrees, (void **)&deg_arr, &vi_size, &iso, NULL)) ;
         }
         else
         {
@@ -267,11 +268,13 @@ int LAGraph_RichClubCoefficient
             LG_TRY(LAGraph_Malloc(
                 (void **) &node_edges_arr, edge_vec_nvals, sizeof(int64_t), NULL)) ;
             GRB_TRY (GrB_Vector_extractTuples_INT64(
-                NULL, deg_arr, &deg_vec_size, degrees
+                NULL, deg_arr, &edge_vec_nvals, degrees
             )) ;
             GRB_TRY (GrB_Vector_extractTuples_INT64(
                 NULL, node_edges_arr, &edge_vec_nvals, node_edges
             )) ;
+            vi_size = edge_vec_nvals * sizeof(int64_t);
+            vx_size = edge_vec_nvals * sizeof(int64_t);
         }
         GRB_TRY (GrB_Vector_new(&ones_v, GrB_INT64, edge_vec_nvals)) ;
         LG_TRY (LAGraph_Malloc(
@@ -285,7 +288,7 @@ int LAGraph_RichClubCoefficient
         GRB_TRY (GxB_Matrix_pack_CSC(
             P, (GrB_Index **)&ramp, (GrB_Index **)&deg_arr, 
             (void **) &node_edges_arr, (edge_vec_nvals + 1) * sizeof(int64_t), 
-            vx_size, vx_size, false, false, NULL
+            vi_size, vx_size, false, false, NULL
         )) ;
         GRB_TRY (GrB_mxv(
             edges_per_deg, NULL, NULL, GxB_PLUS_FIRST_INT64, P, ones_v, NULL)) ;
@@ -295,7 +298,9 @@ int LAGraph_RichClubCoefficient
         if(n == edge_vec_nvals)
         {
             deg_x = degrees;
+            degrees = NULL;
             node_edges_x = node_edges;
+            node_edges = NULL;
             deg_vec_size = n;
         }
         else
@@ -337,25 +342,23 @@ int LAGraph_RichClubCoefficient
         LG_TRY(LAGraph_Malloc(
             (void **) &node_edges_arr, edge_vec_nvals, sizeof(int64_t), NULL)) ;
         GRB_TRY (GrB_Vector_extractTuples_INT64(
-            NULL, deg_arr, &deg_vec_size, degrees
+            NULL, deg_arr, &edge_vec_nvals, degrees
         )) ;
         GRB_TRY (GrB_Vector_extractTuples_INT64(
             NULL, node_edges_arr, &edge_vec_nvals, node_edges
         )) ;
         // Build with degrees as indecies and handle duplicates via adition
-        GRB_TRY (GrB_Vector_build (
-            edges_per_deg, deg_arr, node_edges_arr, deg_vec_size, 
+        GRB_TRY (GrB_Vector_build_INT64 (
+            edges_per_deg, deg_arr, node_edges_arr, edge_vec_nvals, 
             GrB_PLUS_INT64)) ;
-
-        //Hack to make an array of ones
-        GRB_TRY (GrB_Vector_new(&ones_v, GrB_INT64, edge_vec_nvals)) ;
         LG_TRY (
-            LAGraph_Malloc((void **) &ones, deg_vec_size, sizeof(int64_t), NULL)) ;
-        GRB_TRY (GrB_Vector_assign_INT64(
-            ones_v, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL)) ;
-        GRB_TRY (GrB_Vector_extractTuples_INT64(NULL, ones, &deg_vec_size, ones_v)) ;
-        GRB_TRY (GrB_Vector_build (
-            verts_per_deg, deg_arr, ones, deg_vec_size, GrB_PLUS_INT64)) ;
+            LAGraph_Malloc((void **) &ones, edge_vec_nvals, sizeof(int64_t), NULL)) ;
+        for(uint64_t i = 0; i < edge_vec_nvals; ++i)
+        {
+            ones[i] = 1ll;
+        }
+        GRB_TRY (GrB_Vector_build_INT64 (
+            verts_per_deg, deg_arr, ones, edge_vec_nvals, GrB_PLUS_INT64)) ;
     #endif
 
     /**

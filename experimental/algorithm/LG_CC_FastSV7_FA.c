@@ -128,8 +128,8 @@ static inline GrB_Info fastsv
         //      }
         //
         // LAGraph_FastAssign does this by building a matrix. 
-        // (See LAGraph_FastAssign.c) Giving it a full ramp vector speeds up the 
-        // function
+        // (See LAGraph_FastAssign.c) 
+        // Giving it a full ramp vector speeds up the function
 
         LG_TRY (LAGraph_FastAssign(
             parent2, NULL, min, parent, mngp, ramp, min_2nd, NULL, msg));
@@ -596,8 +596,7 @@ int LG_CC_FastSV7_FA         // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         uint32_t *Px32 = Px_is_32 ? Px : NULL ;
         uint64_t *Px64 = Px_is_32 ? NULL : Px ;
 
-        // At this point, both the parent vector and Parent matrix are empty,
-        // and the Px array holds the content of parent vector.
+        // At this point, the Px array holds the content of parent vector.
 
         //----------------------------------------------------------------------
         // use sampling to estimate the largest connected component in T
