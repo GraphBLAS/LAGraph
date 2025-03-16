@@ -72,6 +72,17 @@
     {                                                                   \
         for (int i = 0; i < tile_cnt; ++i) GrB_free (&C_Tiles [i]) ;    \
     }                                                                   \
+    LAGraph_Free ((void **) &neighbors, msg) ;      \
+    LAGraph_Free ((void **) &k4cmn, msg) ;          \
+    LAGraph_Free ((void **) &f15, msg) ;            \
+    LAGraph_Free ((void **) &I, msg) ;              \
+    LAGraph_Free ((void **) &isNeighbor, msg) ;     \
+    LAGraph_Free ((void **) &J, msg) ;              \
+    LAGraph_Free ((void **) &vals, msg) ;           \
+    LAGraph_Free ((void **) &A_Tiles, msg) ;        \
+    LAGraph_Free ((void **) &D_Tiles, msg) ;        \
+    LAGraph_Free ((void **) &C_Tiles, msg) ;        \
+    LAGraph_Free ((void **) &Tile_nrows, msg) ;     \
 }
 
 #define LG_FREE_ALL                 \
@@ -111,6 +122,14 @@ int LAGraph_FastGraphletTransform
     GrB_Matrix *C_Tiles = NULL ;
     GrB_Index *Tile_nrows = NULL ;
     GrB_Matrix T = NULL ;
+
+    GrB_Index *neighbors = NULL ;
+    GrB_Index *k4cmn = NULL ;
+    int64_t *f15 = NULL ;
+    GrB_Index *I = NULL ;
+    int *isNeighbor = NULL ;
+    GrB_Index *J = NULL ;
+    int64_t *vals = NULL ;
 
     GrB_Matrix C_3 = NULL,
 	       A = NULL,
@@ -325,11 +344,16 @@ int LAGraph_FastGraphletTransform
 
     const GrB_Index entries_per_tile = 1000;
     GrB_Index ntiles = (nvals + entries_per_tile - 1) / entries_per_tile ;
-    // FIXME: use LAGraph_Calloc here, and check if out of memory:
-    A_Tiles = calloc (ntiles , sizeof (GrB_Matrix)) ;
-    D_Tiles = calloc (ntiles , sizeof (GrB_Matrix)) ;
-    C_Tiles = calloc (ntiles , sizeof (GrB_Matrix)) ;
-    Tile_nrows = calloc (ntiles , sizeof (GrB_Index)) ;
+
+    LG_TRY (LAGraph_Calloc ((void **) &A_Tiles, ntiles, sizeof (GrB_Matrix),
+        msg)) ;
+    LG_TRY (LAGraph_Calloc ((void **) &D_Tiles, ntiles, sizeof (GrB_Matrix),
+        msg)) ;
+    LG_TRY (LAGraph_Calloc ((void **) &C_Tiles, ntiles, sizeof (GrB_Matrix),
+        msg)) ;
+    LG_TRY (LAGraph_Calloc ((void **) &Tile_nrows, ntiles, sizeof (GrB_Index),
+        msg)) ;
+
     GrB_Index Tile_ncols [1] = {n} ;
 
     int64_t tot_deg = 0 ;
@@ -398,11 +422,10 @@ int LAGraph_FastGraphletTransform
 
     GRB_TRY (GxB_Matrix_concat (C_4, C_Tiles, tile_cnt, 1, NULL)) ;
 
-    // FIXME: use LAGraph_Free
-    free ((void *) Tile_nrows) ;    Tile_nrows = NULL ;
-    free ((void *) A_Tiles) ;       A_Tiles = NULL ;
-    free ((void *) D_Tiles) ;       D_Tiles = NULL ;
-    free ((void *) C_Tiles) ;       C_Tiles = NULL ;
+    LAGraph_Free ((void **) &Tile_nrows, msg) ;
+    LAGraph_Free ((void **) &A_Tiles, msg) ;
+    LAGraph_Free ((void **) &D_Tiles, msg) ;
+    LAGraph_Free ((void **) &C_Tiles, msg) ;
 
     // d_12 = sum (C_4)
     GRB_TRY (GrB_reduce (d_12, NULL, NULL, GrB_PLUS_MONOID_INT64, C_4, NULL)) ;
@@ -460,13 +483,18 @@ int LAGraph_FastGraphletTransform
 //#pragma omp parallel for num_threads(nthreads)
         //for (int tid = 0 ; tid < nthreads ; tid++)
         {
-            // FIXME: use LAGraph_Malloc
-            GrB_Index *neighbors = (GrB_Index*) malloc(n * sizeof(GrB_Index));
-            GrB_Index *k4cmn = (GrB_Index*) malloc(n * sizeof(GrB_Index));
-            int64_t *f15 = (int64_t*) malloc(n * sizeof(int64_t));
-            GrB_Index *I = (GrB_Index *) malloc(n * sizeof(GrB_Index));
-            int *isNeighbor = (int*) malloc(n * sizeof(int));
-            // FIXME: check for out-of-memory
+
+            // allocate workspcae
+            LG_TRY (LAGraph_Malloc ((void **) &neighbors, n,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &k4cmn, n,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &f15, n,
+                sizeof (int64_t), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &I, n,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &isNeighbor, n,
+                sizeof (int), msg)) ;
 
             for (int i = 0; i < n; ++i) {
                 neighbors [i] = k4cmn [i] = f15 [i] = isNeighbor [i] = 0 ;
@@ -553,12 +581,12 @@ int LAGraph_FastGraphletTransform
             GrB_free (&T) ;
             GRB_TRY (GrB_Vector_build (d_15, I, f15, n, NULL)) ;
 
-            // FIXME: use LAGraph_Free
-            free (neighbors) ;
-            free (k4cmn) ;
-            free (f15) ;
-            free (I) ;
-            free (isNeighbor) ;
+            // free workspace
+            LAGraph_Free ((void **) &neighbors, msg) ;
+            LAGraph_Free ((void **) &k4cmn, msg) ;
+            LAGraph_Free ((void **) &f15, msg) ;
+            LAGraph_Free ((void **) &I, msg) ;
+            LAGraph_Free ((void **) &isNeighbor, msg) ;
         }
     }
 
@@ -574,19 +602,19 @@ int LAGraph_FastGraphletTransform
     {
         GRB_TRY (GrB_Vector_nvals (&nvals, d[i]));
 
-        // FIXME: use LAGraph_Malloc
-        GrB_Index *J = (GrB_Index*) malloc (nvals*sizeof(GrB_Index)) ;
-        int64_t *vals = (int64_t*) malloc (nvals*sizeof(int64_t)) ;
-        // FIXME: check for out-of-memory
+        // allocate workspace
+        LG_TRY (LAGraph_Malloc ((void **) &J, nvals, sizeof (GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void **) &vals, nvals, sizeof (int64_t),
+            msg)) ;
 
         GRB_TRY (GrB_Vector_extractTuples (J, vals, &nvals, d[i])) ;
         for (int j = 0; j < nvals; ++j) {
             GRB_TRY (GrB_Matrix_setElement (F_raw, vals[j], i, J[j])) ;
         }
 
-        // FIXME: use LAGraph_Free
-        free (J) ;
-        free (vals) ;
+        // free workspace
+        LAGraph_Free ((void **) &J, msg) ;
+        LAGraph_Free ((void **) &vals, msg) ;
     }
 
     //--------------------------------------------------------------------------

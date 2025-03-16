@@ -23,7 +23,7 @@ void test_MCM(void)
 {
     LAGraph_Init(msg);
 
-    OK(LG_SET_BURBLE(1));
+//  OK(LG_SET_BURBLE(1));
 
     for (uint8_t jit = 0; jit < 2; jit++)
     {
@@ -140,3 +140,4 @@ void test_MCM(void)
 
 TEST_LIST = {{"MaximumMatching", test_MCM}, // just one test in this example
              {NULL, NULL}};
+

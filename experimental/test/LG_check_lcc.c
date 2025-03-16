@@ -147,10 +147,7 @@ int LG_check_lcc(
         Ti = Si; Ti_size = Si_size;
     }
 
-    // vb = calloc(n, sizeof(int8_t)) ;
     LAGraph_Calloc ((void **) &vb, n, sizeof (int8_t), msg) ;
-
-    // vx = malloc(n*sizeof(double)) ;
     LAGraph_Malloc ((void **) &vx, n, sizeof (double), msg) ;
 
     GrB_Index i, nvals = 0 ;

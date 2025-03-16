@@ -20,29 +20,7 @@
  */
 
 // FIXME: is this ready for src?  It uses global values, so not yet ready.
-// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
-
-#define LG_FREE_ALL                                  \
-{                                                    \
-    GrB_free (&S);                                   \
-    GrB_free (&T);                                   \
-    free(I); free(V);                                \
-    free(SI); free(SJ); free(SX);                    \
-    free(parent); free(partner); free(weight);       \
-    GrB_free (&f);                      \
-    GrB_free (&i);                      \
-    GrB_free (&t);                      \
-    GrB_free (&edge);                   \
-    GrB_free (&cedge);                  \
-    GrB_free (&mask);                   \
-    GrB_free (&index);                  \
-    GrB_free (&comb);                   \
-    GrB_free (&combMin);                \
-    GrB_free (&fst);                    \
-    GrB_free (&snd);                    \
-    GrB_free (&s1);                     \
-    GrB_free (&s2);                     \
-}
+// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6/7.
 
 #include "LG_internal.h"
 #include <LAGraph.h>
@@ -65,23 +43,27 @@ static void get_snd (void *y, const void *x)
     *(uint64_t*)y = (*(uint64_t*)x) & INT_MAX;
 }
 
+//****************************************************************************
 // FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
 
-//****************************************************************************
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL LAGraph_Free ((void **) &mem, msg) ;
+
 // w[index[i]] = min(w[index[i]], s[i]) for i in [0..n-1]
 static GrB_Info Reduce_assign (GrB_Vector w,
-        GrB_Vector s, GrB_Index *index, GrB_Index n)
+        GrB_Vector s, GrB_Index *index, GrB_Index n, char *msg)
 {
-    GrB_Index *mem = (GrB_Index*) malloc(sizeof(GrB_Index) * n * 3);
+    GrB_Index *mem = NULL ;
+    LG_TRY (LAGraph_Malloc ((void **) &mem, n*3, sizeof (GrB_Index), msg)) ;
     GrB_Index *ind = mem, *sval = mem + n, *wval = sval + n;
-    GrB_Vector_extractTuples(ind, wval, &n, w);
-    GrB_Vector_extractTuples(ind, sval, &n, s);
+    LG_TRY (GrB_Vector_extractTuples(ind, wval, &n, w));
+    LG_TRY (GrB_Vector_extractTuples(ind, sval, &n, s));
     for (GrB_Index i = 0; i < n; i++)
         if (sval[i] < wval[index[i]])
             wval[index[i]] = sval[i];
-    GrB_Vector_clear(w);
-    GrB_Vector_build(w, ind, wval, n, GrB_PLUS_UINT64);
-    free(mem);
+    LG_TRY (GrB_Vector_clear(w));
+    LG_TRY (GrB_Vector_build(w, ind, wval, n, GrB_PLUS_UINT64));
+    LG_FREE_ALL ;
     return GrB_SUCCESS;
 }
 
@@ -109,6 +91,35 @@ void f2 (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
 }
 
 //****************************************************************************
+
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL                             \
+{                                               \
+    GrB_free (&S);                              \
+    GrB_free (&T);                              \
+    LAGraph_Free ((void **) &I, msg);           \
+    LAGraph_Free ((void **) &V, msg);           \
+    LAGraph_Free ((void **) &SI, msg);          \
+    LAGraph_Free ((void **) &SJ, msg);          \
+    LAGraph_Free ((void **) &SX, msg);          \
+    LAGraph_Free ((void **) &parent, msg);      \
+    LAGraph_Free ((void **) &partner, msg);     \
+    LAGraph_Free ((void **) &weight, msg);      \
+    GrB_free (&f);                      \
+    GrB_free (&i);                      \
+    GrB_free (&t);                      \
+    GrB_free (&edge);                   \
+    GrB_free (&cedge);                  \
+    GrB_free (&mask);                   \
+    GrB_free (&index);                  \
+    GrB_free (&comb);                   \
+    GrB_free (&combMin);                \
+    GrB_free (&fst);                    \
+    GrB_free (&snd);                    \
+    GrB_free (&s1);                     \
+    GrB_free (&s2);                     \
+}
+
 //****************************************************************************
 int LAGraph_msf
 (
@@ -167,16 +178,16 @@ int LAGraph_msf
     GRB_TRY (GrB_Vector_new (&index, GrB_UINT64, n));
 
     // temporary arrays
-    I = malloc (sizeof(GrB_Index) * n);
-    V = malloc (sizeof(GrB_Index) * n);
-    SI = malloc (sizeof(GrB_Index) * n * 2);
-    SJ = malloc (sizeof(GrB_Index) * n * 2);
-    SX = malloc (sizeof(GrB_Index) * n * 2);
+    LG_TRY (LAGraph_Malloc ((void **) &I, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &V, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &SI, 2*n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &SJ, 2*n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &SX, 2*n, sizeof (GrB_Index), msg)) ;
 
     // global arrays
-    parent = malloc (sizeof(GrB_Index) * n);
-    weight = malloc (sizeof(GrB_Index) * n);
-    partner = malloc (sizeof(GrB_Index) * n);
+    LG_TRY (LAGraph_Malloc ((void **) &parent, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &weight, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &partner, n, sizeof (GrB_Index), msg)) ;
 
     // prepare vectors
     for (GrB_Index i = 0; i < n; i++)
@@ -208,7 +219,7 @@ int LAGraph_msf
         //          = (INT_MAX, u)             | otherwise
         GRB_TRY (GrB_assign (t, 0, 0, (uint64_t) INT_MAX, GrB_ALL, 0, 0));
         GRB_TRY (GrB_eWiseMult (cedge, 0, 0, comb, t, i, 0));
-        LG_TRY (Reduce_assign (cedge, edge, parent, n));
+        LG_TRY (Reduce_assign (cedge, edge, parent, n, msg));
         // if (f[u] == u) f[u] := snd(cedge[u])  -- the index part of the edge
         GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, f, i, 0));
         GRB_TRY (GrB_apply (f, mask, GrB_SECOND_UINT64, snd, cedge, 0));
@@ -233,7 +244,7 @@ int LAGraph_msf
         GRB_TRY (GrB_assign (index, 0, 0, n, GrB_ALL, 0, 0));
         GRB_TRY (GrB_assign (index, mask, 0, i, GrB_ALL, 0, 0));
         GRB_TRY (GrB_assign (t, 0, 0, n, GrB_ALL, 0, 0));
-        LG_TRY (Reduce_assign (t, index, parent, n));
+        LG_TRY (Reduce_assign (t, index, parent, n, msg));
         GRB_TRY (GrB_extract (index, 0, 0, t, parent, n, 0));
         GRB_TRY (GrB_eWiseMult (mask ,0, 0, GrB_EQ_UINT64, i, index, 0));
 

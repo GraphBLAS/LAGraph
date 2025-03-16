@@ -302,7 +302,7 @@ int main (int argc, char **argv)
     // LAGraph_cc_lacc
     //--------------------------------------------------------------------------
 
-#if 0
+#if 1
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
