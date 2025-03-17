@@ -60,6 +60,7 @@ int main (int argc, char **argv)
     double t = LAGraph_WallClockTime ( ) ;
     GrB_Index swaps = (argc > 2) ? atoi(argv [2]): 100;
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
+    FILE *f = (argc > 3) ? fopen (argv[3], "w"): NULL;
     LG_TRY (readproblem (
         &G,         // the graph that is read from stdin or a file
         NULL,       // source nodes (none, if NULL)
@@ -118,7 +119,10 @@ int main (int argc, char **argv)
 
     printf ("\n===============================The result matrix:\n") ;
     LG_TRY (LAGraph_Matrix_Print (G_new -> A, LAGraph_SHORT, stdout, msg)) ;
-
+    if(f)
+    {
+        LG_TRY (binwrite(&(G_new -> A), f, NULL)) ;
+    }
     //--------------------------------------------------------------------------
     // free everyting and finish
     //--------------------------------------------------------------------------
