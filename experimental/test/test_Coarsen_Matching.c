@@ -88,8 +88,8 @@ char msg [LAGRAPH_MSG_LEN] ;
 void test_Coarsen_Matching () {
 
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
     OK (LAGraph_Random_Init (msg)) ;
+//  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
 
 #if LAGRAPH_SUITESPARSE
     for (int k = 0 ; ; k++)

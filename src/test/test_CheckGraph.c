@@ -250,7 +250,7 @@ void test_CheckGraph_failures (void)
 // test_CheckGraph_brutal:
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_CheckGraph_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -290,7 +290,7 @@ TEST_LIST =
 {
     { "CheckGraph", test_CheckGraph },
     { "CheckGraph_failures", test_CheckGraph_failures },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "CheckGraph_brutal", test_CheckGraph_brutal },
     #endif
     { NULL, NULL }

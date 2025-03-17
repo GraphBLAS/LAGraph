@@ -54,7 +54,7 @@ void test_vector (void)
 // test_vector_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_vector_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -104,7 +104,7 @@ void test_vector_brutal (void)
 TEST_LIST =
 {
     { "vector", test_vector },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "vector_brutal", test_vector_brutal },
     #endif
     { NULL, NULL }

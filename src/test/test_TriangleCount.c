@@ -403,7 +403,7 @@ void test_TriangleCount_autosort (void)
 // test_TriangleCount_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_TriangleCount_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -483,7 +483,7 @@ TEST_LIST = {
     {"TriangleCount"         , test_TriangleCount},
     {"TriangleCount_many"    , test_TriangleCount_many},
     {"TriangleCount_autosort", test_TriangleCount_autosort},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"TriangleCount_brutal"  , test_TriangleCount_brutal},
     #endif
     {NULL, NULL}
