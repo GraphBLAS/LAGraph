@@ -113,6 +113,7 @@ int LAGraph_FastAssign_Monoid
     LG_TRY (LAGraph_FastAssign_Semiring 
         (c, mask, accum, I_vec, X_vec, ramp, sem, desc, msg)) ;
     LG_FREE_ALL ;
+    return (GrB_SUCCESS);
 }
 
 #undef LG_FREE_ALL
@@ -164,7 +165,8 @@ int LAGraph_FastAssign_Semiring
     LG_ASSERT (c != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (I_vec != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (X_vec != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT_MSG (c != X_vec, GrB_NOT_IMPLEMENTED, "c cannot be aliased with X_vec.") ; 
+    LG_ASSERT_MSG (c != X_vec, GrB_NOT_IMPLEMENTED, 
+        "c cannot be aliased with X_vec.") ; 
 
     //----------------------------------------------------------------------
     // Find dimensions and type
@@ -265,5 +267,6 @@ int LAGraph_FastAssign_Semiring
     //----------------------------------------------------------------------
     GrB_free(&P) ;
     GrB_free(&con) ;
+    return (GrB_SUCCESS) ;
 }
 #endif
