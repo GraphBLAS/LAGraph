@@ -326,13 +326,13 @@ int LAGraph_RichClubCoefficient
             ramp_v, NULL, NULL, GrB_ROWINDEX_INT64, ramp_v, 0, NULL)) ;
         LG_TRY (LAGraph_FastAssign (
             edges_per_deg, NULL, NULL, deg_x, node_edges_x, ramp_v,
-            GxB_PLUS_SECOND_INT64, NULL, msg
+            GrB_PLUS_MONOID_INT64, NULL, msg
         )) ;
         GRB_TRY (GrB_Vector_assign_INT64(
             ones_v, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL)) ;
         GRB_TRY (LAGraph_FastAssign (
             verts_per_deg, NULL, NULL, deg_x, ones_v, ramp_v,
-            GxB_PLUS_PAIR_INT64, NULL, msg
+            GrB_PLUS_MONOID_INT64, NULL, msg
         )) ;
         #endif
     #else

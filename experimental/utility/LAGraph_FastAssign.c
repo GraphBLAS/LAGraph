@@ -63,10 +63,7 @@
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                                           \
 {                                                             \
-    GrB_free(&P);                                             \
-    GrB_free(&con);                                           \
-    LAGraph_Free(&ramp_a, msg);                               \
-    LAGraph_Free(&i_a, msg);                                  \
+    GrB_free(&sem);                                           \
 }                                                     
 
 int LAGraph_FastAssign_Monoid
@@ -86,129 +83,46 @@ int LAGraph_FastAssign_Monoid
     char *msg
 )
 {
-    // TODO: Change this from a reduce to an mxv: requires a finding the 
-    // appropriate second biop, but will give user flexibility to make X_vec
-    // not full, and use Transpose descriptor.
-
-    // TODO: Let indicies be specified by value of by index in I_vec via 
-    // descriptor (although build or assign would be better if I_vec is by 
-    // index since it is sorted and has no dups). By value could be useful if 
-    // I_vec is not full.
-    // TODO: Ditto for X_vec
-    
-    GrB_Matrix P = NULL;
-    int64_t n, nrows;
-    GxB_Container con = NULL;
-    void *ramp_a = NULL, *i_a = NULL;
-    int ramp_h = 0, trsp = 0, i_h = 0, x_sparsity = 0;
-    int64_t ramp_n = 0, ramp_size = 0, i_n = 0, i_size= 0;
-    GrB_Type x_type = NULL, i_type = NULL, ramp_type = NULL;
-    bool iso = false;
-
-    GRB_TRY (GrB_get(X_vec, &x_sparsity, GxB_SPARSITY_STATUS));
-    //TODO: assert inputs are full or desc say to use by value or by index.
-    LG_ASSERT (c != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (I_vec != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (X_vec != NULL, GrB_NULL_POINTER) ;
-
-    // TODO: implement this.
-    LG_ASSERT_MSG (x_sparsity == GxB_FULL, GrB_NOT_IMPLEMENTED, 
-        "X_vec must be full if dup is a monoid. Pass in the dup_second semiring"\
-        " if you want to use a sparse X_vec.") ;
-    LG_ASSERT_MSG (c != X_vec, GrB_NOT_IMPLEMENTED, 
-        "c cannot be aliased with X_vec.") ;   
-    //----------------------------------------------------------------------
-    // Find dimensions and type
-    //----------------------------------------------------------------------
-    GRB_TRY (GrB_Vector_size(&n, I_vec)) ;
-    if(desc != NULL)
+    GrB_BinaryOp op = NULL;
+    GrB_Semiring sem = NULL;
+    int code = 0;
+    GrB_get(X_vec, &code, GrB_EL_TYPE_CODE);
+    switch (code)
     {
-        GRB_TRY (GrB_get(desc, &trsp, GrB_INP0)) ;
-        LG_ASSERT_MSG (trsp == GrB_DEFAULT, GrB_NOT_IMPLEMENTED, 
-            "Transpose can only be used with a semiring."\
-            "Pass dup_second for this to work.") ;
+        case GrB_BOOL_CODE   : op = GrB_SECOND_BOOL   ; break ;
+        case GrB_INT8_CODE   : op = GrB_SECOND_INT8   ; break ;
+        case GrB_INT16_CODE  : op = GrB_SECOND_INT16  ; break ;
+        case GrB_INT32_CODE  : op = GrB_SECOND_INT32  ; break ;
+        case GrB_INT64_CODE  : op = GrB_SECOND_INT64  ; break ;
+        case GrB_UINT8_CODE  : op = GrB_SECOND_UINT8  ; break ;
+        case GrB_UINT16_CODE : op = GrB_SECOND_UINT16 ; break ;
+        case GrB_UINT32_CODE : op = GrB_SECOND_UINT32 ; break ;
+        case GrB_UINT64_CODE : op = GrB_SECOND_UINT64 ; break ;
+        case GrB_FP32_CODE   : op = GrB_SECOND_FP32   ; break ;
+        case GrB_FP64_CODE   : op = GrB_SECOND_FP64   ; break ;
+        case GxB_FC32_CODE   : op = GxB_SECOND_FC32   ; break ;
+        case GxB_FC64_CODE   : op = GxB_SECOND_FC64   ; break ;
+        default : 
+            LG_ERROR_MSG("LAGraph failed (file %s, line %d):" \
+            " LAGraph_FastAssign_Monoid not implemented for UDTs", 
+            __FILE__, __LINE__);
+            break ;
     }
-    GRB_TRY (GrB_Vector_size(&nrows, c)) ;
-    GRB_TRY (GrB_Vector_get_INT32(X_vec, (int32_t *) &iso, GxB_ISO));
-
-    GRB_TRY (GxB_Vector_type(&x_type, X_vec));
-    
-    //----------------------------------------------------------------------
-    // Load up containers
-    //----------------------------------------------------------------------
-    GRB_TRY (GrB_Matrix_new(&P, x_type, nrows, n));
-    GRB_TRY (GxB_Container_new(&con));
-    if(ramp == NULL) 
-    {
-        //TODO: maybe let user input a size 0 ramp and build it for them?
-        GRB_TRY (GrB_free(&(con->p))) ;
-        ramp_type = (n + 1 <= INT32_MAX)? GrB_UINT32: GrB_UINT64;
-        GrB_IndexUnaryOp idxnum = (n + 1 <= INT32_MAX)? 
-                GrB_ROWINDEX_INT32: GrB_ROWINDEX_INT64;
-        GRB_TRY (GrB_Vector_new(&(con->p), ramp_type, n + 1));
-        GRB_TRY (GrB_assign (con->p, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
-        GRB_TRY (GrB_apply (con->p, NULL, NULL, idxnum, con->p, 0, NULL)) ;
-    }
-    else 
-    {
-        GRB_TRY (GxB_Vector_unload(
-            ramp, &ramp_a, &ramp_type, &ramp_n, &ramp_size, &ramp_h, NULL)) ;
-        LG_ASSERT_MSG (ramp_n > n, GrB_DIMENSION_MISMATCH, "Ramp too small!");
-        GRB_TRY (GxB_Vector_load(
-            con->p, &ramp_a, ramp_type, n + 1, (n + 1) * (ramp_size / ramp_n),
-            GxB_IS_READONLY, NULL)) ;
-        // Since con->p won't free this array I should be safe to load it back 
-        // into ramp.
-        GRB_TRY (GxB_Vector_load(
-            ramp, &ramp_a, ramp_type, ramp_n, ramp_size, ramp_h, NULL)) ;
-        ramp_a = NULL;
-    }
-    if (c == I_vec)
-    {
-        GRB_TRY (GrB_free(&(con->i))) ;
-        GRB_TRY (GrB_Vector_dup(&con->i, I_vec)) ;
-    }
-    else
-    {
-        // con->i = I_vec
-        GRB_TRY (GxB_Vector_unload(
-            I_vec, &i_a, &i_type, &i_n, &i_size, &i_h, NULL)) ;
-        GRB_TRY (GxB_Vector_load(
-            con->i, &i_a, i_type, i_n, i_size, GxB_IS_READONLY, NULL)) ;
-        // Since con->i won't free this array I should be safe to load it back 
-        // into I_vec.
-        GRB_TRY (GxB_Vector_load(
-            I_vec, &i_a, i_type, i_n, i_size, i_h, NULL)) ;
-        i_a = NULL;
-    }
-    GRB_TRY (GrB_free(&(con->x))) ;
-    con->x = X_vec;
-    con->format = GxB_SPARSE;
-    con->orientation = GrB_COLMAJOR;
-    con->nrows = nrows;
-    con->ncols = n ;
-    con->nvals = n ;
-    con->nrows_nonempty = -1 ;
-    con->ncols_nonempty = n ;
-    con->jumbled = false ;
-    con->format = GxB_SPARSE ;
-    con->orientation = GrB_COLMAJOR ;
-    con->Y = NULL ;
-    //----------------------------------------------------------------------
-    // Load P and do reduce.
-    //----------------------------------------------------------------------
-    GRB_TRY (GxB_load_Matrix_from_Container(P, con, NULL));
-    GRB_TRY (GrB_reduce(
-        c, mask, accum, dup, P, desc)) ;
-    GRB_TRY (GxB_unload_Matrix_into_Container(P, con, NULL));
-    // Don't let inputs get freed
-    con->x = NULL;
-    //----------------------------------------------------------------------
-    // Free work.
-    //----------------------------------------------------------------------
-    GrB_free(&P) ;
-    GrB_free(&con) ;
+    GRB_TRY (GrB_Semiring_new(&sem, dup, op)) ;
+    // GxB_print(sem, stdout) ;
+    LG_TRY (LAGraph_FastAssign_Semiring 
+        (c, mask, accum, I_vec, X_vec, ramp, sem, desc, msg)) ;
+    LG_FREE_ALL ;
 }
+
+#undef LG_FREE_ALL
+#define LG_FREE_ALL                                           \
+{                                                             \
+    GrB_free(&P);                                             \
+    GrB_free(&con);                                           \
+    LAGraph_Free(&ramp_a, msg);                               \
+    LAGraph_Free(&i_a, msg);                                  \
+}                                                     
 
 // This method can be faster if given a builtin semiring. 
 int LAGraph_FastAssign_Semiring
