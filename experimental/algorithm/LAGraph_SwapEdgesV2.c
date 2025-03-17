@@ -188,19 +188,6 @@ void edge2
 "    z->a = y->a;                                                             \n"\
 "    z->b = y->b;                                                             \n"\
 "}"
-// void edge2b
-//     (edge_type *z, const void *x, const edge_type *y)
-// {
-//     z->a = y->a;
-//     z->b = y->b;
-// }
-// #define EDGE2B                                                                   \
-// "void edge2b                                                                   \n"\
-// "(edge_type *z, const void *x, const edge_type *y)                            \n"\
-// "{                                                                            \n"\
-// "    z->a = y->a;                                                             \n"\
-// "    z->b = y->b;                                                             \n"\
-// "}"
 
 int LAGraph_SwapEdgesV2
 (
@@ -212,7 +199,6 @@ int LAGraph_SwapEdgesV2
     char *msg
 )
 {
-    // TODO: Remove all instances of GxB_(un)pack!
     //--------------------------------------------------------------------------
     // Declorations
     //--------------------------------------------------------------------------
@@ -394,17 +380,34 @@ int LAGraph_SwapEdgesV2
     GRB_TRY (
         GrB_Matrix_extractTuples_BOOL (indices, indices + e, NULL, &e, A_tril)
         ) ;
-    GRB_TRY (GxB_Matrix_pack_FullC (
-        E, (void **)&indices, 2ull * e * sizeof(GrB_Index), false, NULL
-    )) ;
+    ind_size = 2ull * e * sizeof(GrB_Index);
+    GRB_TRY (GxB_Container_new(&E_con)) ;
+    GRB_TRY (GxB_Vector_load(
+        E_con->x, (void **) &indices, GrB_INT64, e * 2, 
+        ind_size, GrB_DEFAULT, NULL
+    ));
+    E_con->nrows_nonempty = E_con->nrows = e;
+    E_con->nvals = e * 2;
+    E_con->ncols_nonempty = E_con->ncols = 2;
+    E_con->iso = false;
+    E_con->jumbled = false;
+    E_con->format = GxB_FULL;
+    E_con->orientation = GrB_COLMAJOR;
+    GRB_TRY (GxB_load_Matrix_from_Container(E, E_con, NULL));
     GRB_TRY (GrB_set(E, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
+    GRB_TRY (GxB_unload_Matrix_into_Container(E, E_con, NULL));
+    GRB_TRY (GxB_Vector_unload(
+        E_con->x, (void **) &indices, &E_type, &e, &ind_size, &E_hand, NULL));
+    e /= 2;
+    GRB_TRY (GxB_Vector_load(
+        E_vec, (void **) &indices, lg_edge, e, ind_size, E_hand, NULL));
+    
+    // Find Hash Size ----------------------------------------------------------
     int shift_e = __builtin_clzl(e);
     uint64_t ehash_size = (1ull << (67-shift_e)) ;
-    // if(ehash_size > 6*e) ehash_size/=2;
     printf("Hash Size: %ld", ehash_size);
     GRB_TRY (GrB_Vector_new(&exists, GrB_INT8, ehash_size)) ;
     
-    // GxB_Matrix_fprint(E, "E", GxB_SHORT, stdout);
     // Init Ramps --------------------------------------------------------------
     GRB_TRY (GrB_Vector_new(&ramp_v, GrB_UINT64, e + 1)) ;
     GRB_TRY (GrB_Vector_assign_UINT64 (ramp_v, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
@@ -428,13 +431,7 @@ int LAGraph_SwapEdgesV2
     //TODO: Change seed
     LG_TRY(
         LAGraph_Random_Seed(random_v, 1548945616ul, msg)) ;
-    GRB_TRY (GxB_Container_new(&E_con)) ;
-    GRB_TRY (GxB_unload_Matrix_into_Container(E, E_con, NULL));
-    GRB_TRY (GxB_Vector_unload(
-        E_con->x, (void **) &indices, &E_type, &e, &ind_size, &E_hand, NULL));
-    e /= 2;
-    GRB_TRY (GxB_Vector_load(
-        E_vec, (void **) &indices, lg_edge, e, ind_size, E_hand, NULL));
+    
     printf("Entering loop, Good Luck:\n") ;
     while(num_swaps < e * Q && num_attempts < e * Q * 5)
     {
