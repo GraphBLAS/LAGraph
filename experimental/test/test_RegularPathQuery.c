@@ -126,8 +126,10 @@ void test_RegularPathQueryBasic (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
 
-        while (fscanf(f, "%ld", &s) != EOF)
+        while (fscanf(f, "%" PRIu64, &s) != EOF)
+        {
             S[ns++] = s - 1 ;
+        }
 
         OK (fclose(f)) ;
 
@@ -141,10 +143,12 @@ void test_RegularPathQueryBasic (void)
         f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
 
-        TEST_CHECK (fscanf(f, "%ld", &nqs) != EOF) ;
+        uint64_t nqs64 = 0 ;
+        TEST_CHECK (fscanf(f, "%" PRIu64, &nqs64) != EOF) ;
+        nqs = (size_t) nqs64 ;
 
         for (uint64_t i = 0; i < nqs; i++) {
-            TEST_CHECK (fscanf(f, "%ld", &qs) != EOF) ;
+            TEST_CHECK (fscanf(f, "%" PRIu64, &qs) != EOF) ;
             QS[i] = qs - 1 ;
         }
 
@@ -152,11 +156,13 @@ void test_RegularPathQueryBasic (void)
         uint64_t qf ;
         uint64_t QF[16] ;
         size_t nqf = 0 ;
+        uint64_t  nqf64 = 0 ;
 
-        TEST_CHECK (fscanf(f, "%ld", &nqf) != EOF) ;
+        TEST_CHECK (fscanf(f, "%" PRIu64, &nqf64) != EOF) ;
+        nqf = (size_t) nqf64 ;
 
         for (uint64_t i = 0; i < nqf; i++) {
-            TEST_CHECK (fscanf(f, "%ld", &qf) != EOF) ;
+            TEST_CHECK (fscanf(f, "%" PRIu64, &qf) != EOF) ;
             QF[i] = qf - 1 ;
         }
 
