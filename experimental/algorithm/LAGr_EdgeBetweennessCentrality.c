@@ -19,7 +19,7 @@
 // LAGr_EdgeBetweennessCentrality: Exact algorithm for computing
 // betweeness centrality.
 
-// This is an Advanced algorithm (G->AT is required).
+// This is an Advanced algorithm (no self edges allowed)
 
 
 //------------------------------------------------------------------------------
@@ -82,19 +82,19 @@
 // (1+x)/y function for double: z = (1 + x) / y
 //------------------------------------------------------------------------------
 
-void add_one_divide_function (void *z, const void *x, const void *y)
+void add_one_divide_function (double *z, const double *x, const double *y)
 {
-    double a = (*((double *) x)) ;
-    double b = (*((double *) y)) ;
-    (*((double *) z)) = (1 + a) / b ;
+    double a = (*(x)) ;
+    double b = (*(y)) ;
+    (*(z)) = (1 + a) / b ;
 }
 
 #define ADD_ONE_DIVIDE_FUNCTION_DEFN                                           \
-"void add_one_divide_function (void *z, const void *x, const void *y)      \n" \
+"void add_one_divide_function (double *z, const double *x, const double *y)\n" \
 "{                                                                         \n" \
-"    double a = (*((double *) x)) ;                                        \n" \
-"    double b = (*((double *) y)) ;                                        \n" \
-"    (*((double *) z)) = (1 + a) / b ;                                     \n" \
+"    double a = (*(x)) ;                                                   \n" \
+"    double b = (*(y)) ;                                                   \n" \
+"    (*(z)) = (1 + a) / b ;                                                \n" \
 "}"
 
 //------------------------------------------------------------------------------
@@ -154,6 +154,7 @@ int LAGr_EdgeBetweennessCentrality
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     GrB_Matrix A = G->A ;
+    #if 0
     GrB_Matrix AT ;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
         G->is_symmetric_structure == LAGraph_TRUE)
@@ -167,12 +168,14 @@ int LAGr_EdgeBetweennessCentrality
         AT = G->AT ;
         LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
     }
+    #endif
 
     // =========================================================================
     // === initialization =====================================================
     // =========================================================================
 
-    GRB_TRY (GxB_BinaryOp_new (&Add_One_Divide, add_one_divide_function,
+    GRB_TRY (GxB_BinaryOp_new (&Add_One_Divide,
+        (GxB_binary_function) add_one_divide_function,
         GrB_FP64, GrB_FP64, GrB_FP64,
         "add_one_divide_function", ADD_ONE_DIVIDE_FUNCTION_DEFN)) ;
 
@@ -214,10 +217,12 @@ int LAGr_EdgeBetweennessCentrality
 
         GRB_TRY (GrB_Matrix_clear (Update)) ;
 
-        // Extract row root from A into frontier vector: frontier = AT(root,:)
-        GRB_TRY (GrB_Col_extract (frontier, NULL, NULL, AT, GrB_ALL, n, root,
-            NULL)) ;
+        // Extract row root from A into frontier vector: frontier = A(root,:)
+        GRB_TRY (GrB_Col_extract (frontier, NULL, NULL, A, GrB_ALL, n, root,
+            GrB_DESC_T0)) ;
+
         GRB_TRY (GrB_Vector_nvals (&frontier_size, frontier)) ;
+        GRB_TRY (GrB_assign (frontier, frontier, NULL, 1.0, GrB_ALL, n, GrB_DESC_S)) ;
 
         while (frontier_size != 0)
         {
@@ -242,7 +247,8 @@ int LAGr_EdgeBetweennessCentrality
             //----------------------------------------------------------------------
             
             GRB_TRY (LG_SET_FORMAT_HINT (frontier, LG_SPARSE)) ;
-            GRB_TRY (GrB_vxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP64, frontier, 
+            GRB_TRY (GrB_vxm (frontier, paths, NULL, /* LAGraph_plus_first_fp64 */
+                GxB_PLUS_FIRST_FP64, frontier, 
                 A, GrB_DESC_RSC )) ;
 
             //----------------------------------------------------------------------
@@ -269,8 +275,12 @@ int LAGr_EdgeBetweennessCentrality
 
         // Backtrack through the BFS and compute centrality updates for each vertex
         // GrB_Index fd1_size;
+
+        printf ("\n----------------------------- backtrack:\n") ;
+
         while (depth >= 1)
         {        
+            printf ("\n----------------------------- backtrack depth : %" PRId64 "\n", depth) ;
             GrB_Vector f_d = Search [depth] ;
             GrB_Vector f_d1 = Search [depth - 1] ;
 
@@ -291,20 +301,20 @@ int LAGr_EdgeBetweennessCentrality
             // combine
 
             // intermediate matrix for Fd1 * A
-            // GRB_TRY (GrB_eWiseMult(Fd1A, NULL, NULL, GrB_TIMES_FP64, I_matrix, AT, NULL)) ;
-            GRB_TRY(GrB_mxm(Fd1A, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64,
+            GRB_TRY(GrB_mxm(Fd1A, NULL, NULL, LAGraph_plus_first_fp64,
                 I_matrix, A, NULL)) ;
 
-            // GRB_TRY (GrB_eWiseMult(U, NULL, NULL, GrB_TIMES_FP64, Fd1A, J_matrix, NULL)) ;
             GRB_TRY(GrB_mxm(Update, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64,
                 Fd1A, J_matrix, NULL)) ;
 
-
-            // 22 centrality = centrality + Update
-            // GRB_TRY (GrB_assign(centrality, centrality, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n, 
-            // GrB_DESC_S)) ;
+            #if 1
+            // 22 centrality{A} += Update, using assign
+            GRB_TRY (GrB_assign(*centrality, A, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n, 
+            GrB_DESC_S)) ;
+            #else
+            // 22 centrality = centrality + Update using eWiseAdd
             GRB_TRY (GrB_eWiseAdd (*centrality, NULL, NULL, GrB_PLUS_FP64, *centrality, Update, NULL)) ;
-
+            #endif
 
             // 23 v = Update +.
 

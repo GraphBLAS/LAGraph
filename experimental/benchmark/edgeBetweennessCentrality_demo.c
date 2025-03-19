@@ -1,43 +1,35 @@
+
+#define LG_FREE_ALL                             \
+    printf ("done here: %d\n", __LINE__) ;      \
+    printf ("msg: [%s]\n", msg) ;               \
+    GrB_free (&centrality) ;                    \
+    GrB_free (&A) ;                             \
+    LAGraph_Delete (&G, msg) ;                  \
+
 #include "LAGraphX.h"
 #include "LG_internal.h"
 #include <stdio.h>
 
-#define LAGRAPH_CATCH(info)                     \
-{                                               \
-    GrB_free (&centrality) ;                    \
-    GrB_free (&A) ;                             \
-    LAGraph_Delete (&G, msg) ;                  \
-    return (info) ;                             \
-}
-
 int main (int argc, char **argv)
 {
-    double difference(GrB_Matrix bc, double* gap_result, GrB_Index rows, GrB_Index cols) ;
+//  double difference(GrB_Matrix bc, double* gap_result, GrB_Index rows, GrB_Index cols) ;
 
-    double difference(GrB_Matrix bc, double* gap_result, GrB_Index rows, GrB_Index cols)
+    double difference(GrB_Matrix bc, GrB_Matrix reference_bc)
     {
-        // GrB_Matrix diff = NULL;
-        GrB_Matrix diff = NULL, gap_bc = NULL;
-        OK(GrB_Matrix_new(&gap_bc, GrB_FP64, rows, cols));
+        GrB_Matrix diff = NULL ;
 
-        // Populate gap_bc with values from gap_result
-        for (GrB_Index i = 0; i < rows; i++) {
-            for (GrB_Index j = 0; j < cols; j++) {
-                // if (*(gap_result + i * cols + j) != 0) printf("    (%ld, %ld)    %g\n", i, j, *(gap_result + i * cols + j));
-                OK(GrB_Matrix_setElement_FP64(gap_bc, *(gap_result + i * cols + j), i, j));
-            }
-        }
+        uint64_t n ;
+        GrB_Matrix_nrows (&n, bc) ;
 
-        // Compute diff = max(abs(gap_bc - bc))
-        OK(GrB_Matrix_new(&diff, GrB_FP64, rows, cols));
-        OK(GrB_eWiseAdd(diff, NULL, NULL, GrB_MINUS_FP64, gap_bc, bc, NULL));
-        OK(GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL));
+        // Compute diff = max(abs(reference_bc - bc))
+        GrB_Matrix_new(&diff, GrB_FP64, n, n);
+        GrB_eWiseAdd(diff, NULL, NULL, GrB_MINUS_FP64, reference_bc, bc, NULL);
+        GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL);
 
-        double err = 0;
-        OK(GrB_reduce(&err, NULL, GrB_MAX_MONOID_FP64, diff, NULL));
+        double err = 1;
+        GrB_reduce(&err, NULL, GrB_MAX_MONOID_FP64, diff, NULL);
 
-        OK(GrB_free(&diff));
-        OK(GrB_free(&gap_bc));
+        GrB_free(&diff);
 
         return err;
     }
@@ -49,6 +41,7 @@ int main (int argc, char **argv)
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
     LAGraph_Graph G = NULL ;
     GrB_Matrix centrality = NULL, A = NULL ;
+    GrB_Info info ;
 
     // start GraphBLAS and LAGraph
     LAGRAPH_TRY (LAGraph_Init (msg)) ;
@@ -73,7 +66,13 @@ int main (int argc, char **argv)
     double t = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGraph_MMRead (&A, f, msg)) ;
     fclose(f);
+    uint64_t n ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
+//  GRB_TRY (GrB_assign (A, A, NULL, 1.0, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+
     LAGRAPH_TRY (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    LAGRAPH_TRY (LAGraph_DeleteSelfEdges (G, msg)) ;
+    LAGRAPH_TRY (LAGraph_Cached_AT (G, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time to read the graph:      %g sec\n", t) ;
 
@@ -84,10 +83,14 @@ int main (int argc, char **argv)
     // compute edge betweenness centrality
     //--------------------------------------------------------------------------
 
+    LG_SET_BURBLE (true) ;
+
     t = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+
+    LG_SET_BURBLE (false) ;
 
     //--------------------------------------------------------------------------
     // check the results using LG_check_edgeBetweennessCentrality
@@ -96,7 +99,7 @@ int main (int argc, char **argv)
     GrB_Matrix reference_centrality = NULL;
     LAGRAPH_TRY (LG_check_edgeBetweennessCentrality(&reference_centrality, G, msg)) ;
 
-    double err = difference(centrality, reference_centrality, G->n, G->n) ;
+    double err = difference(centrality, reference_centrality) ;
     printf ("Error between computed and reference centrality: %e\n", err) ;
     if (err < 1e-4)
     {
