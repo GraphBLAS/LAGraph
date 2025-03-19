@@ -19,10 +19,10 @@
 #define LG_FREE_WORK                                \
 {                                                   \
     LAGraph_Free ((void **) &queue, NULL) ;         \
-    LAGraph_Free ((void **) &d, NULL) ;             \
-    LAGraph_Free ((void **) &delta, NULL) ;         \
+    LAGraph_Free ((void **) &depth, NULL) ;             \
+    LAGraph_Free ((void **) &bc_vertex_flow, NULL) ;         \
     LAGraph_Free ((void **) &S, NULL) ;             \
-    LAGraph_Free ((void **) &sigma, NULL) ;         \
+    LAGraph_Free ((void **) &paths, NULL) ;         \
     LAGraph_Free ((void **) &Pj, NULL) ;            \
     LAGraph_Free ((void **) &Ptail, NULL) ;         \
 }
@@ -63,10 +63,10 @@ int LG_check_edgeBetweennessCentrality
     double* result ; 
 
     // Holds the distances (depth levels) from the source vertex.
-    int64_t *d = NULL ;
+    int64_t *depth = NULL ;
 
-    // Stores dependency scores for each vertex.
-    double *delta = NULL ;
+    // Stores the betweenness centrality for each vertex.
+    double *bc_vertex_flow = NULL ;
 
     // Stack used for backtracking phase
     int64_t *S = NULL ;
@@ -78,7 +78,8 @@ int LG_check_edgeBetweennessCentrality
     GrB_Index *Ptail = NULL ;
     GrB_Index *Phead = NULL ;
 
-    double *sigma = NULL ;
+    // Holds the number of shortest paths for current node
+    double *paths = NULL ;
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -123,9 +124,9 @@ int LG_check_edgeBetweennessCentrality
     // allocate workspace
     //--------------------------------------------------------------------------
 
-    LG_TRY(LAGraph_Malloc((void **)&d, n, sizeof(int64_t), msg));
+    LG_TRY(LAGraph_Malloc((void **)&depth, n, sizeof(int64_t), msg));
 
-    LG_TRY(LAGraph_Calloc((void **)&delta, n, sizeof(double), msg));
+    LG_TRY(LAGraph_Calloc((void **)&bc_vertex_flow, n, sizeof(double), msg));
 
     LG_TRY(LAGraph_Malloc((void **)&S, n, sizeof(int64_t), msg));
 
@@ -172,7 +173,7 @@ int LG_check_edgeBetweennessCentrality
     LG_TRY(LAGraph_Malloc((void **)&Pj, nvals, sizeof(GrB_Index), msg));
     LG_TRY(LAGraph_Malloc((void **)&Ptail, n, sizeof(GrB_Index), msg)); // might need to be + 1
 
-    LAGraph_Calloc ((void **) &sigma, n, sizeof (double), msg) ;
+    LAGraph_Calloc ((void **) &paths, n, sizeof (double), msg) ;
 
     // 2. for ∀s ∈ V
     for (int64_t s = 0; s < n; s++) {
@@ -183,19 +184,19 @@ int LG_check_edgeBetweennessCentrality
         // 5. P [w] ← empty queue, ∀w ∈ V
         memcpy (Ptail, ATp, n * sizeof (GrB_Index)) ;
 
-        // Initialize sigma[t], d[t] for all t
+        // Initialize paths[t], d[t] for all t
         // 6. σ[t] ← 0, ∀t ∈ V , σ[s] ← 1
         // Keeps track of the number of shortest paths for each vertex.
         for (int64_t i = 0; i < n; i++) {
-            sigma [i] = 0 ;
+            paths [i] = 0 ;
         }
-        sigma [s] = 1 ;
+        paths [s] = 1 ;
 
         // 7. d[t] ← −1, ∀t ∈ V , d[s] ← 0
         for (size_t t = 0; t < n; t++) {
-            d [t] = -1;
+            depth [t] = -1;
         }
-        d [s] = 0;
+        depth [s] = 0;
 
         // Initialize queue and enqueue starting node s
         // 8. Q ← empty queue
@@ -218,19 +219,19 @@ int LG_check_edgeBetweennessCentrality
                 int64_t w = Aj [p] ;
                 
                 // 16. if d[w] < 0
-                if (d [w] < 0) {
+                if (depth [w] < 0) {
                     // Update depth and enqueue
                     // 18. enqueue(Q, w)
                     queue [qt++] = w ;
                     // 19. d[w] ← d[v] + 1
-                    d [w] = d [v] + 1 ;
+                    depth [w] = depth [v] + 1 ;
                 }
 
                 // 20. if d[w] = d[v] + 1
-                if (d [w] == d [v] + 1) {
+                if (depth [w] == depth [v] + 1) {
                     // Update shortest path count and add predecessor
                     // 22. σ[w] ← σ[w] + σ[v]
-                    sigma [w] = sigma [w] + sigma [v] ;
+                    paths [w] = paths [w] + paths [v] ;
                     // 23. append(P [w], v)
                     if (Ptail [w] >= Phead [w+1] || Ptail [w] < Phead [w])
                     {
@@ -246,7 +247,7 @@ int LG_check_edgeBetweennessCentrality
         // Set dependency score δ[v] ← 0
         // 24. δ[v] ← 0, ∀v ∈ V
         for (size_t v = 0; v < n; v++) {
-            delta [v] = 0 ;
+            bc_vertex_flow [v] = 0 ;
         }
 
         // Process stack S
@@ -267,8 +268,8 @@ int LG_check_edgeBetweennessCentrality
                     continue;
                 }
 
-                double centrality = sigma [v] * ((delta [w] + 1) / sigma [w]) ;
-                delta [v] += centrality ;
+                double centrality = paths [v] * ((bc_vertex_flow [w] + 1) / paths [w]) ;
+                bc_vertex_flow [v] += centrality ;
 
                 // 31. result [(v, w)] ← result [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
                 result [INDEX (v,w)] += centrality;
