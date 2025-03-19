@@ -861,8 +861,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, delta_mat, GrB_DESC_RT0));
 
     //add to e
-    GRB_TRY(GrB_Vector_dup(&e_dup, e));
-    GRB_TRY(GxB_eWiseUnion(e, NULL, NULL, GrB_PLUS_FP64, e_dup, zero_fp32, delta_vec, zero_fp32, NULL));
+    GRB_TRY(GrB_assign(e, delta_vec, GrB_PLUS_FP64, delta_vec, GrB_ALL, n, GrB_DESC_S));
     
     //extract active nodes
     GRB_TRY(GrB_Vector_extractElement(&f_T, e, T));
@@ -877,7 +876,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     GRB_TRY(GrB_free(&d_dup));
     GRB_TRY(GrB_free(&y_dup));
-    GRB_TRY(GrB_free(&e_dup));
     GRB_TRY(GrB_free(&R_dup));
     
     ++iter;
