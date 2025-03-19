@@ -276,11 +276,11 @@ int LAGr_EdgeBetweennessCentrality
         // Backtrack through the BFS and compute centrality updates for each vertex
         // GrB_Index fd1_size;
 
-        printf ("\n----------------------------- backtrack:\n") ;
+        // printf ("\n----------------------------- backtrack:\n") ;
 
         while (depth >= 1)
         {        
-            printf ("\n----------------------------- backtrack depth : %" PRId64 "\n", depth) ;
+            // printf ("\n----------------------------- backtrack depth : %" PRId64 "\n", depth) ;
             GrB_Vector f_d = Search [depth] ;
             GrB_Vector f_d1 = Search [depth - 1] ;
 

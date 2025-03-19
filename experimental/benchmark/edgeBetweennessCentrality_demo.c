@@ -12,7 +12,6 @@
 
 int main (int argc, char **argv)
 {
-//  double difference(GrB_Matrix bc, double* gap_result, GrB_Index rows, GrB_Index cols) ;
 
     double difference(GrB_Matrix bc, GrB_Matrix reference_bc)
     {
@@ -22,16 +21,16 @@ int main (int argc, char **argv)
         GrB_Matrix_nrows (&n, bc) ;
 
         // Compute diff = max(abs(reference_bc - bc))
-        GrB_Matrix_new(&diff, GrB_FP64, n, n);
-        GrB_eWiseAdd(diff, NULL, NULL, GrB_MINUS_FP64, reference_bc, bc, NULL);
-        GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL);
+        GrB_Matrix_new(&diff, GrB_FP64, n, n) ;
+        GrB_eWiseAdd(diff, NULL, NULL, GrB_MINUS_FP64, reference_bc, bc, NULL) ;
+        GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL) ;
 
-        double err = 1;
-        GrB_reduce(&err, NULL, GrB_MAX_MONOID_FP64, diff, NULL);
+        double err = 1 ;
+        GrB_reduce(&err, NULL, GrB_MAX_MONOID_FP64, diff, NULL) ;
 
-        GrB_free(&diff);
+        GrB_free(&diff) ;
 
-        return err;
+        return err ;
     }
 
     //--------------------------------------------------------------------------
@@ -68,7 +67,6 @@ int main (int argc, char **argv)
     fclose(f);
     uint64_t n ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
-//  GRB_TRY (GrB_assign (A, A, NULL, 1.0, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
 
     LAGRAPH_TRY (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     LAGRAPH_TRY (LAGraph_DeleteSelfEdges (G, msg)) ;
