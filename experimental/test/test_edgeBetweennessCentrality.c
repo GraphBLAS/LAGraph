@@ -47,13 +47,9 @@ double difference(GrB_Matrix bc, double* gap_result, GrB_Index rows, GrB_Index c
         }
     }
 
-    // GxB_print (bc, 5) ;
-    // GxB_print (gap_bc, 5) ;
-
     // Compute diff = max(abs(gap_bc - bc))
     OK(GrB_Matrix_new(&diff, GrB_FP64, rows, cols));
     OK(GrB_eWiseAdd(diff, NULL, NULL, GrB_MINUS_FP64, gap_bc, bc, NULL));
-    // GxB_print (diff, 5) ;
     OK(GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL));
 
     double err = 0;
