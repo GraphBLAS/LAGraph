@@ -41,6 +41,8 @@ int LAGraph_coloring_independent_set_optimized
     GRB_TRY(GrB_Vector_new(&local_color, Int, n));
 
     // lg_set_format_hint -> bitmap
+    GRB_TRY (GxB_set (local_color, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+    GxB_print (local_color, 2) ;
 
     /* weights initialized randomly
     *  seed of 20 was chosen arbitrarily */   
@@ -57,6 +59,9 @@ int LAGraph_coloring_independent_set_optimized
     GRB_TRY(GrB_Vector_new(&in_curr_subset, GrB_BOOL, n));
 
     GRB_TRY(GrB_Vector_new(&max_weights, GrB_UINT64, n));
+    double tlast = LAGraph_WallClockTime ( ) ;
+    double tnow = 0 ;
+    LG_SET_BURBLE(true) ;
 
     /* algorithm start */
     // printf("starting algorithm\n");
@@ -73,6 +78,14 @@ int LAGraph_coloring_independent_set_optimized
 
         /* select - select all entries in in_curr_subset that are true, and delete falses */
         GRB_TRY(GrB_select(in_curr_subset, GrB_NULL, GrB_NULL, GrB_VALUEEQ_BOOL, in_curr_subset, true, GrB_NULL));
+        tnow = LAGraph_WallClockTime ( ) ;
+        double tthis = tnow - tlast ;
+        tlast = tnow ;
+
+        GrB_Index nvals_local_color;
+        GRB_TRY(GrB_Vector_nvals(&nvals_local_color, local_color));
+        printf ("colored: %ld of %ld: %g\n", nvals_local_color, n, tthis) ;
+        fflush (stdout) ;
 
         /* check if in_curr_subset is empty then break */
         GrB_Index nvals_in_curr_subset;
@@ -96,6 +109,8 @@ int LAGraph_coloring_independent_set_optimized
         GRB_TRY(GrB_assign(weight, in_curr_subset, GrB_NULL, 0, GrB_ALL, n, GrB_DESC_S));
     }
     
+    LG_SET_BURBLE(false) ;
+
     // printf("finished algorithm\n");
     (*num_colors) = curr_color - 1;
     (*color) = local_color;
