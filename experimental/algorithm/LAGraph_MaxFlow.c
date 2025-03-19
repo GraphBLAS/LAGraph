@@ -522,11 +522,10 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
 
 #define GLOBAL_RELABEL                                                         \
   {                                                                            \
-    GrB_Vector parent, lvl;                                                    \
+    GrB_Vector lvl;                                                    \
     GrB_UnaryOp GrB_GetResidual;                                               \
     GrB_Matrix res_mat, modified_res_mat, modified_res_matT;				\
     LAGraph_Graph res_graph;                                                   \
-    GrB_Vector_new(&parent, GrB_INT64, n);				\
     GrB_Vector_new(&lvl, GrB_INT64, n);					\
     GrB_Matrix_new(&res_mat, GrB_FP64, n, n);				\
     GxB_UnaryOp_new(&GrB_GetResidual, F_UNARY(MF_getResidual), GrB_FP64,       \
@@ -541,14 +540,13 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
                    msg);                                                      \
     res_graph->AT = modified_res_mat;					\
     LAGraph_Cached_OutDegree(res_graph, msg);                              \
-    LAGr_BreadthFirstSearch(&lvl, &parent, res_graph, T, msg);             \
+    LAGr_BreadthFirstSearch(&lvl, NULL, res_graph, T, msg);             \
     GrB_assign(d, mask_vector, NULL, lvl, GrB_ALL, n, GrB_DESC_SC);                    \
     GrB_assign(d, lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC);                      \
     GrB_Vector_dup(&e_dup, e);					\
     GrB_assign(e_dup, lvl, NULL, -1, GrB_ALL, n, GrB_DESC_SC);	\
     GrB_select(e, NULL, NULL, GrB_VALUEGT_FP64, e_dup, -1, NULL);	\
     GrB_free(&e_dup);							\
-    GrB_free(&parent);                                                         \
     GrB_free(&lvl);                                                            \
     GrB_free(&GrB_GetResidual);                                                \
     GrB_free(&res_mat);                                                        \
