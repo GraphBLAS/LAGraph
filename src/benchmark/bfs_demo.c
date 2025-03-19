@@ -118,6 +118,7 @@ int main (int argc, char **argv)
 
     int64_t src ;
     GRB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, 0, 0)) ;
+    src-- ; // convert from 1-based to 0-based
     double twarmup = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGr_BreadthFirstSearch (NULL, &parent, G, src, msg)) ;
     GrB_free (&parent) ;

@@ -1,8 +1,10 @@
-Aug 20, 2024: version 1.1.4
+Version 1.2.0:  in progress
 
-    * fix MMWrite when matrix is dense
+    * v2.1 C API: using the new GrB_get/set methods in the C API;
+        LAGraph can now use a "vanilla" GraphBLAS that supports the v2.1
+        C API.  If SuiteSparse:GraphBLAS is used, v9.0.0 is required.
 
-Mar 22, 2024: version 1.1.3
+Feb XX, 2024: version 1.1.3
 
     * minor updates to build system
 

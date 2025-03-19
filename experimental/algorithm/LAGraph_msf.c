@@ -19,6 +19,9 @@
  * Code is based on Boruvka's minimum spanning forest algorithm
  */
 
+// FIXME: is this ready for src?  It uses global values, so not yet ready.
+// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
+
 #define LG_FREE_ALL                                  \
 {                                                    \
     GrB_free (&S);                                   \
@@ -62,6 +65,8 @@ static void get_snd (void *y, const void *x)
     *(uint64_t*)y = (*(uint64_t*)x) & INT_MAX;
 }
 
+// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
+
 //****************************************************************************
 // w[index[i]] = min(w[index[i]], s[i]) for i in [0..n-1]
 static GrB_Info Reduce_assign (GrB_Vector w,
@@ -81,13 +86,14 @@ static GrB_Info Reduce_assign (GrB_Vector w,
 }
 
 //****************************************************************************
-// global C arrays (for implementing various GxB_SelectOp)
+// global C arrays (for implementing various GrB_IndexUnaryOps)
 static GrB_Index *weight = NULL, *parent = NULL, *partner = NULL;
 
 // generate solution:
 // for each element A(i, j), it is selected if
 //   1. weight[i] == A(i, j)    -- where weight[i] stores i's minimum edge weight
 //   2. parent[j] == partner[i] -- j belongs to the specified connected component
+
 void f1 (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
 {
     uint64_t *aij = (uint64_t*) x;
@@ -96,6 +102,7 @@ void f1 (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
 
 // edge removal:
 // A(i, j) is removed when parent[i] == parent[j]
+
 void f2 (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
 {
     (*z) = (parent[i] != parent[j]);
@@ -184,7 +191,7 @@ int LAGraph_msf
     GRB_TRY (GrB_UnaryOp_new (&fst, get_fst, GrB_UINT64, GrB_UINT64));
     GRB_TRY (GrB_UnaryOp_new (&snd, get_snd, GrB_UINT64, GrB_UINT64));
 
-    // GrB_SelectOp
+    // ops for GrB_select
     GrB_IndexUnaryOp_new (&s1, (void *) f1, GrB_BOOL, GrB_UINT64, GrB_UINT64);
     GrB_IndexUnaryOp_new (&s2, (void *) f2, GrB_BOOL, GrB_UINT64, GrB_UINT64);
 

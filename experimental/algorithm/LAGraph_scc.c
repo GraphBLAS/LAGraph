@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: not ready for src; uses global variables
+
 /**
  * Code is based on the Min-Label algorithm described in the following paper:
  * D. Yan, J. Cheng, K. Xin, Y. Lu, W. Ng, Y. Bu, "Pregel Algorithms for Graph
@@ -143,11 +145,11 @@ int LAGraph_scc
     GRB_TRY (GrB_transpose (BW, 0, 0, A, 0));     // BW = A'
 
     // check format
-    GxB_Format_Value A_format, AT_format;
-    GRB_TRY (GxB_get (FW, GxB_FORMAT, &A_format));
-    GRB_TRY (GxB_get (BW, GxB_FORMAT, &AT_format));
+    int32_t A_format, AT_format;
+    GRB_TRY (GrB_get (FW, &A_format , GrB_STORAGE_ORIENTATION_HINT));
+    GRB_TRY (GrB_get (BW, &AT_format, GrB_STORAGE_ORIENTATION_HINT));
 
-    bool is_csr = (A_format == GxB_BY_ROW && AT_format == GxB_BY_ROW);
+    bool is_csr = (A_format == GrB_ROWMAJOR && AT_format == GrB_ROWMAJOR);
     if (!is_csr) return (GrB_INVALID_VALUE) ;
 
     I = (GrB_Index*) malloc(sizeof(GrB_Index) * n);

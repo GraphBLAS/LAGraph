@@ -15,9 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_Matrix_Print:  pretty-print a matrix.  The type is either derived
-// from GxB_Matrix_type (if available) or assumed to be GrB_FP64 otherwise,
-// or passed in as a parameter.
+// LAGraph_Matrix_Print:  pretty-print a matrix.
 
 #include "LG_internal.h"
 
@@ -99,10 +97,8 @@ LG_MATRIX_PRINT (UINT32, uint32_t, GrB_UINT32, "%" PRIu32, "%" PRIu32  ) ;
 LG_MATRIX_PRINT (UINT64, uint64_t, GrB_UINT64, "%" PRIu64, "%" PRIu64  ) ;
 LG_MATRIX_PRINT (FP32  , float   , GrB_FP32  , "%g"  , "%0.7g" ) ;
 LG_MATRIX_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g") ;
-#if 0
-LG_MATRIX_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...) ;
-LG_MATRIX_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
-#endif
+// LG_MATRIX_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...) ;
+// LG_MATRIX_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
 
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK ;
@@ -135,73 +131,32 @@ int LAGraph_Matrix_Print
     // determine the type
     //--------------------------------------------------------------------------
 
-    GrB_Type type ;
-    char typename [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_Matrix_TypeName (typename, A, msg)) ;
-    LG_TRY (LAGraph_TypeFromName (&type, typename, msg)) ;
+    int32_t typecode ;
+    GRB_TRY (GrB_get (A, &typecode, GrB_EL_TYPE_CODE)) ;
 
     //--------------------------------------------------------------------------
     // print the matrix
     //--------------------------------------------------------------------------
 
-    if (type == GrB_BOOL)
+    switch (typecode)
     {
-        return (LG_Matrix_Print_BOOL (A, pr, f, msg)) ;
-    }
-    else if (type == GrB_INT8)
-    {
-        return (LG_Matrix_Print_INT8 (A, pr, f, msg)) ;
-    }
-    else if (type == GrB_INT16)
-    {
-        return (LG_Matrix_Print_INT16 (A, pr, f, msg)) ;
-    }
-    else if (type == GrB_INT32)
-    {
-        return (LG_Matrix_Print_INT32 (A, pr, f, msg)) ;
-    }
-    else if (type == GrB_INT64)
-    {
-        return (LG_Matrix_Print_INT64 (A, pr, f, msg)) ;
-    }
-    else if (type == GrB_UINT8)
-    {
-        return (LG_Matrix_Print_UINT8 (A, pr, f, msg)) ;
-    }
-    else if (type == GrB_UINT16)
-    {
-        return (LG_Matrix_Print_UINT16 (A, pr, f, msg)) ;
-    }
-    else if (type == GrB_UINT32)
-    {
-        return (LG_Matrix_Print_UINT32 (A, pr, f, msg)) ;
-    }
-    else if (type == GrB_UINT64)
-    {
-        return (LG_Matrix_Print_UINT64 (A, pr, f, msg)) ;
-    }
-    else if (type == GrB_FP32)
-    {
-        return (LG_Matrix_Print_FP32 (A, pr, f, msg)) ;
-    }
-    else if (type == GrB_FP64)
-    {
-        return (LG_Matrix_Print_FP64 (A, pr, f, msg)) ;
-    }
-    #if 0
-    else if (type == GxB_FC32)
-    {
-        return (LG_Matrix_Print_FC32 (A, pr, f, msg)) ;
-    }
-    else if (type == GxB_FC32)
-    {
-        return (LG_Matrix_Print_FC64 (A, pr, f, msg)) ;
-    }
-    #endif
-    else
-    {
-        LG_ASSERT_MSG (false,
-            GrB_NOT_IMPLEMENTED, "user-defined types not supported") ;
-        return (GrB_SUCCESS) ;
+        case GrB_BOOL_CODE   : return (LG_Matrix_Print_BOOL (A, pr, f, msg)) ;
+        case GrB_INT8_CODE   : return (LG_Matrix_Print_INT8 (A, pr, f, msg)) ;
+        case GrB_INT16_CODE  : return (LG_Matrix_Print_INT16 (A, pr, f, msg)) ;
+        case GrB_INT32_CODE  : return (LG_Matrix_Print_INT32 (A, pr, f, msg)) ;
+        case GrB_INT64_CODE  : return (LG_Matrix_Print_INT64 (A, pr, f, msg)) ;
+        case GrB_UINT8_CODE  : return (LG_Matrix_Print_UINT8 (A, pr, f, msg)) ;
+        case GrB_UINT16_CODE : return (LG_Matrix_Print_UINT16 (A, pr, f, msg)) ;
+        case GrB_UINT32_CODE : return (LG_Matrix_Print_UINT32 (A, pr, f, msg)) ;
+        case GrB_UINT64_CODE : return (LG_Matrix_Print_UINT64 (A, pr, f, msg)) ;
+        case GrB_FP32_CODE   : return (LG_Matrix_Print_FP32 (A, pr, f, msg)) ;
+        case GrB_FP64_CODE   : return (LG_Matrix_Print_FP64 (A, pr, f, msg)) ;
+//      case GxB_FC32_CODE   : return (LG_Matrix_Print_FC32 (A, pr, f, msg)) ;
+//      case GxB_FC64_CODE   : return (LG_Matrix_Print_FC64 (A, pr, f, msg)) ;
+        default              :
+            LG_ASSERT_MSG (false,
+                GrB_NOT_IMPLEMENTED, "user-defined types not supported") ;
+            return (GrB_NOT_IMPLEMENTED) ;
     }
 }
+

@@ -35,7 +35,7 @@
     GrB_free (&Rows) ;                          \
     GrB_free (&Cols) ;                          \
     GrB_free (&Values) ;                        \
-    GrB_free (&Seed) ;                          \
+    GrB_free (&State) ;                         \
     GrB_free (&T) ;                             \
 }
 
@@ -63,6 +63,14 @@ void mod_function (void *z, const void *x, const void *y)
     (*((uint64_t *) z)) = a % b ;
 }
 
+#define MOD_FUNCTION_DEFN                                           \
+"void mod_function (void *z, const void *x, const void *y)      \n" \
+"{                                                              \n" \
+"    uint64_t a = (*((uint64_t *) x)) ;                         \n" \
+"    uint64_t b = (*((uint64_t *) y)) ;                         \n" \
+"    (*((uint64_t *) z)) = a % b ;                              \n" \
+"}"
+
 //------------------------------------------------------------------------------
 // LAGraph_Random_Matrix
 //------------------------------------------------------------------------------
@@ -89,7 +97,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
 
     LG_CLEAR_MSG ;
     GrB_BinaryOp Mod = NULL ;
-    GrB_Vector Rows = NULL, Cols = NULL, Values = NULL, Seed = NULL ;
+    GrB_Vector Rows = NULL, Cols = NULL, Values = NULL, State = NULL ;
     GrB_Matrix T = NULL ;
     GrB_Index *I = NULL, *J = NULL, *ignore = NULL ;
     GrB_Index I_size = 0, J_size = 0, X_size = 0 ;
@@ -115,8 +123,14 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     // create the Mod operator
     //--------------------------------------------------------------------------
 
+    #if LAGRAPH_SUITESPARSE
+    GRB_TRY (GxB_BinaryOp_new (&Mod, mod_function,
+        GrB_UINT64, GrB_UINT64, GrB_UINT64,
+        "mod_function", MOD_FUNCTION_DEFN)) ;
+    #else
     GRB_TRY (GrB_BinaryOp_new (&Mod, mod_function,
         GrB_UINT64, GrB_UINT64, GrB_UINT64)) ;
+    #endif
 
     //--------------------------------------------------------------------------
     // determine the number of entries to generate
@@ -156,12 +170,12 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     #endif
 
     //--------------------------------------------------------------------------
-    // construct the random Seed vector
+    // construct the random dense State vector of size nvals
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GrB_Vector_new (&Seed, GrB_UINT64, nvals)) ;
-    GRB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, nvals, NULL)) ;
-    LG_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
+    GRB_TRY (GrB_Vector_new (&State, GrB_UINT64, nvals)) ;
+    GRB_TRY (GrB_assign (State, NULL, NULL, 0, GrB_ALL, nvals, NULL)) ;
+    LG_TRY (LAGraph_Random_Seed (State, seed, msg)) ;
 
     //--------------------------------------------------------------------------
     // construct the random indices if A is sparse, or all indices if full
@@ -174,19 +188,19 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
         // construct random indices for a sparse matrix
         //----------------------------------------------------------------------
 
-        // Rows = mod (Seed, nrows) ;
+        // Rows = mod (State, nrows) ;
         GRB_TRY (GrB_Vector_new (&Rows, GrB_UINT64, nvals)) ;
-        GRB_TRY (GrB_apply (Rows, NULL, NULL, Mod, Seed, nrows, NULL)) ;
+        GRB_TRY (GrB_apply (Rows, NULL, NULL, Mod, State, nrows, NULL)) ;
 
-        // Seed = next (Seed)
-        LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
+        // State = next (State)
+        LG_TRY (LAGraph_Random_Next (State, msg)) ;
 
-        // Cols = mod (Seed, ncols) ;
+        // Cols = mod (State, ncols) ;
         GRB_TRY (GrB_Vector_new (&Cols, GrB_UINT64, nvals)) ;
-        GRB_TRY (GrB_apply (Cols, NULL, NULL, Mod, Seed, ncols, NULL)) ;
+        GRB_TRY (GrB_apply (Cols, NULL, NULL, Mod, State, ncols, NULL)) ;
 
-        // Seed = next (Seed)
-        LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
+        // State = next (State)
+        LG_TRY (LAGraph_Random_Next (State, msg)) ;
 
         //----------------------------------------------------------------------
         // extract the indices
@@ -241,25 +255,25 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
 
     if (type == GrB_BOOL)
     {
-        // Values = (Seed < UINT64_MAX / 2)
+        // Values = (State < UINT64_MAX / 2)
         GRB_TRY (GrB_Vector_new (&Values, GrB_BOOL, nvals)) ;
         GRB_TRY (GrB_apply (Values, NULL, NULL,
-            GrB_LT_UINT64, Seed, UINT64_MAX / 2, NULL)) ;
+            GrB_LT_UINT64, State, UINT64_MAX / 2, NULL)) ;
     }
     else if (type == GrB_UINT64)
     {
-        // no need to allocate the Values vector; just use the Seed itself
-        Values = Seed ;
-        Seed = NULL ;
+        // no need to allocate the Values vector; just use the State itself
+        Values = State ;
+        State = NULL ;
     }
     else
     {
-        // Values = (type) Seed
+        // Values = (type) State
         GRB_TRY (GrB_Vector_new (&Values, type, nvals)) ;
-        GRB_TRY (GrB_assign (Values, NULL, NULL, Seed, GrB_ALL, nvals,
+        GRB_TRY (GrB_assign (Values, NULL, NULL, State, GrB_ALL, nvals,
             NULL)) ;
     }
-    GrB_free (&Seed) ;
+    GrB_free (&State) ;
 
     // scale the values to the range [0,1], if floating-point
     if (type == GrB_FP32)

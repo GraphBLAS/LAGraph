@@ -16,6 +16,7 @@
 //------------------------------------------------------------------------------
 
 #include "LAGraph_test.h"
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // global variables
@@ -32,15 +33,20 @@ void test_Init (void)
 
     int status = LAGraph_Init (msg) ;
     OK (status) ;
-    int ver [3] ;
+    int32_t ver [3] ;
+    char library [256], date [256] ;
+
+    OK (GrB_get (GrB_GLOBAL, library, GrB_NAME)) ;
+    OK (GrB_get (GrB_GLOBAL, &(ver [0]), GrB_LIBRARY_VER_MAJOR)) ;
+    OK (GrB_get (GrB_GLOBAL, &(ver [1]), GrB_LIBRARY_VER_MINOR)) ;
+    OK (GrB_get (GrB_GLOBAL, &(ver [2]), GrB_LIBRARY_VER_PATCH)) ;
+    date [0] = '\0' ;
+    OK (LG_GET_LIBRARY_DATE (date)) ;
+
+    printf ("\nlibrary: %s %d.%d.%d (%s)\n", library, ver [0], ver [1], ver [2],
+        date) ;
 
     #if LAGRAPH_SUITESPARSE
-    const char *name, *date ;
-    OK (GxB_Global_Option_get (GxB_LIBRARY_NAME, &name)) ;
-    OK (GxB_Global_Option_get (GxB_LIBRARY_DATE, &date)) ;
-    OK (GxB_Global_Option_get (GxB_LIBRARY_VERSION, ver)) ;
-    printf ("\nlibrary: %s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2],
-        date) ;
     printf (  "include: %s %d.%d.%d (%s)\n", GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR, GxB_IMPLEMENTATION_MINOR,
         GxB_IMPLEMENTATION_SUB, GxB_IMPLEMENTATION_DATE) ;
@@ -49,18 +55,16 @@ void test_Init (void)
     TEST_CHECK (ver [1] == GxB_IMPLEMENTATION_MINOR) ;
     TEST_CHECK (ver [2] == GxB_IMPLEMENTATION_SUB) ;
     OK (strcmp (date, GxB_IMPLEMENTATION_DATE)) ;
-
-    #if ( GxB_IMPLEMENTATION_MAJOR >= 7 )
-    char *compiler ;
-    int compiler_version [3] ;
-    OK (GxB_Global_Option_get (GxB_COMPILER_NAME, &compiler)) ;
-    OK (GxB_Global_Option_get (GxB_COMPILER_VERSION, compiler_version)) ;
-    printf ("GraphBLAS compiled with: %s v%d.%d.%d\n", compiler,
-        compiler_version [0], compiler_version [1], compiler_version [2]) ;
     #endif
 
-    #else
-    printf ("\nVanilla GraphBLAS: no GxB* extensions\n") ;
+    #if LAGRAPH_SUITESPARSE
+    char compiler [1024] ;
+    int compiler_version [3] ;
+    OK (GrB_Global_get_String (GrB_GLOBAL, compiler, GxB_COMPILER_NAME)) ;
+    OK (GrB_Global_get_VOID   (GrB_GLOBAL, (void *) compiler_version,
+        GxB_COMPILER_VERSION)) ;
+    printf ("GraphBLAS compiled with: %s v%d.%d.%d\n", compiler,
+        compiler_version [0], compiler_version [1], compiler_version [2]) ;
     #endif
 
     // check the LAGraph version using both LAGraph.h and LAGraph_Version

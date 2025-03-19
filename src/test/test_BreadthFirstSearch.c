@@ -191,6 +191,7 @@ bool check_karate_levels30(GrB_Vector levels)
 void setup(void)
 {
     LAGraph_Init(msg);
+//  GxB_Global_Option_set (GxB_BURBLE, true) ;
     int retval;
     GrB_Matrix A = NULL;
 
@@ -470,6 +471,7 @@ void test_BreadthFirstSearch_both(void)
 void test_BreadthFirstSearch_many(void)
 {
     LAGraph_Init(msg);
+//  GxB_Global_Option_set (GxB_BURBLE, true) ;
     GrB_Matrix A = NULL ;
 
     for (int k = 0 ; ; k++)
@@ -504,13 +506,14 @@ void test_BreadthFirstSearch_many(void)
                 GrB_Vector parent = NULL ;
                 GrB_Vector level = NULL ;
 
-                int64_t maxlevel ;
+                int64_t maxlevel = -9999 ;
                 GrB_Index nvisited ;
 
                 OK (LAGr_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
                 OK (LG_check_bfs (level, parent, G, src, msg)) ;
                 OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
                     level, NULL)) ;
+                TEST_CHECK (maxlevel != -9999) ;
                 OK (GrB_Vector_nvals (&nvisited, level)) ;
                 {
                     printf ("src %g n: %g max level: %g nvisited: %g\n",

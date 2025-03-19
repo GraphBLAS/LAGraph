@@ -196,13 +196,11 @@ void test_Graph_Print_failures (void)
     OK (GrB_free (&G->AT)) ;
     OK (GrB_Matrix_new (&(G->AT), GrB_FP32, 5, 5)) ;
 
-    #if LAGRAPH_SUITESPARSE
     // G->AT must be held by row, not by column
-    OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
+    OK (GrB_set (G->AT, GrB_COLMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
     result = LAGraph_Graph_Print (G, pr, stdout, msg) ;
-    printf ("result: %d, msg: %s\n", result, msg) ;
+    printf ("result: %d, msg (AT colmajor): %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
-    #endif
 
     // G->A and G->AT must have the same types
     OK (GrB_free (&G->AT)) ;

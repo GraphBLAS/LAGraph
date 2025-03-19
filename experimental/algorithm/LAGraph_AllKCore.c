@@ -15,6 +15,10 @@
 
 //------------------------------------------------------------------------------
 
+// The input is an undirected graph, or a directed graph with a symmetric
+// adjacency matrix.  Edge weights are ignored.  On output, decomp(i) = k if
+// node i is in the 1-cores to k-core, but is not present in the (k+1)-core.
+
 #define LG_FREE_WORK                \
 {                                   \
     GrB_free (&deg) ;               \
@@ -31,6 +35,9 @@
 
 #include "LG_internal.h"
 
+// FIXME: need both basic and expert methods; this is mixed
+// FIXME: match filename to function name (this name is OK)
+// vanilla OK: no GxB used here
 
 int LAGraph_KCore_All
 (
@@ -49,7 +56,9 @@ int LAGraph_KCore_All
     GrB_Vector deg = NULL, q = NULL, done = NULL, delta = NULL;
 
     LG_ASSERT (decomp != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (kmax != NULL, GrB_NULL_POINTER) ;
     (*decomp) = NULL ;
+    (*kmax) = 0 ;
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
@@ -66,6 +75,7 @@ int LAGraph_KCore_All
         LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
     }
 
+    // FIXME: in basic: compute it, this is Advanced:
     // no self edges can be present
     LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
 
@@ -74,6 +84,7 @@ int LAGraph_KCore_All
     GrB_Index n, todo, nvals, maxDeg ;
     GRB_TRY (GrB_Matrix_nrows(&n, A)) ;
 
+    // FIXME: do not call Cached in an advanced algorithm, this is Basic:
     //create deg vector using out_degree property
     LG_TRY (LAGraph_Cached_OutDegree(G, msg)) ;
 
@@ -93,7 +104,9 @@ int LAGraph_KCore_All
     GRB_TRY (GrB_Vector_new(decomp, int_type, n)) ;
 
     //change deg vector to int32 if needed
-    if(int_type == GrB_INT32){
+    if (int_type == GrB_INT32)
+    {
+        // FIXME: deg is freed; it should never have been constructed above
         GrB_free (&deg) ;
         GRB_TRY (GrB_Vector_new(&deg, int_type, n)) ;
         GRB_TRY (GrB_assign (deg, G->out_degree, NULL, G->out_degree, GrB_ALL, n, NULL)) ;
@@ -105,17 +118,15 @@ int LAGraph_KCore_All
     GrB_BinaryOp minus_op = (maxDeg > INT32_MAX) ? GrB_MINUS_INT64 : GrB_MINUS_INT32 ;
     GrB_Semiring semiring = (maxDeg > INT32_MAX) ? LAGraph_plus_one_int64 : LAGraph_plus_one_int32 ;
 
-#if LG_SUITESPARSE
-    GRB_TRY (GxB_set (done, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;    // try this
-    //GRB_TRY (GxB_set (*decomp, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ; // try this ... likely not needed...
-#endif
+    GRB_TRY (LG_SET_FORMAT_HINT (done, LG_BITMAP + LG_FULL)) ;
 
     //printf ("\n================================== COMPUTING GrB_KCORE: ==================================\n") ;
-    while(todo > 0){
-        //printf("Level: %ld, todo: %ld\n", level, todo) ;
+    while (todo > 0)
+    {
         level++;
         // Creating q
-        GRB_TRY (GrB_select (q, GrB_NULL, GrB_NULL, valueEQ, deg, level, GrB_NULL)) ; // get all nodes with degree = level
+        // get all nodes with degree = level
+        GRB_TRY (GrB_select (q, GrB_NULL, GrB_NULL, valueEQ, deg, level, GrB_NULL)) ;
         GRB_TRY (GrB_Vector_nvals(&nvals, q));
 
         //Assign values of deg into decomp (output)

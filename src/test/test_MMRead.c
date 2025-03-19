@@ -26,8 +26,8 @@ int status ;
 GrB_Info info ;
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL, B = NULL ;
-const char *name, *date ;
-int ver [3] ;
+char library [256], date [256] ;
+int32_t ver [3] ;
 GrB_Index nrows, ncols, nvals ;
 #define LEN 512
 char filename [LEN+1] ;
@@ -114,11 +114,12 @@ void setup (void)
     printf ("\nsetup: %s\n", __FILE__) ;
     printf ("data is in [%s]\n", LG_DATA_DIR) ;
     OK (LAGraph_Init (msg)) ;
-    #if LAGRAPH_SUITESPARSE
-    OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
-    OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
-    OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
-    #endif
+    OK (GrB_get (GrB_GLOBAL, library, GrB_NAME)) ;
+    OK (GrB_get (GrB_GLOBAL, &(ver [0]), GrB_LIBRARY_VER_MAJOR)) ;
+    OK (GrB_get (GrB_GLOBAL, &(ver [1]), GrB_LIBRARY_VER_MINOR)) ;
+    OK (GrB_get (GrB_GLOBAL, &(ver [2]), GrB_LIBRARY_VER_PATCH)) ;
+    date [0] = '\0' ;
+    OK (LG_GET_LIBRARY_DATE (date)) ;
 }
 
 //------------------------------------------------------------------------------
@@ -127,9 +128,7 @@ void setup (void)
 
 void teardown (void)
 {
-    #if LAGRAPH_SUITESPARSE
-    printf ("\n%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
-    #endif
+    printf ("\n%s %d.%d.%d (%s)\n", library, ver [0], ver [1], ver [2], date) ;
     OK (GrB_free (&A)) ;
     OK (GrB_free (&B)) ;
     TEST_CHECK (A == NULL) ;

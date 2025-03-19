@@ -73,6 +73,7 @@ const matrix_info files [ ] =
 void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
+//  GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
 }
 
 //------------------------------------------------------------------------------
@@ -216,7 +217,6 @@ void test_IsEqual_brutal (void)
 
     OK (LG_brutal_setup (msg)) ;
     printf ("\nTesting IsEqual:\n") ;
-    GxB_set (GxB_BURBLE, false) ;
 
     for (int k = 0 ; ; k++)
     {

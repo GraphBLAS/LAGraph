@@ -1,0 +1,113 @@
+LAGraph TODO:
+
+Aug 21, 2024:
+
+    (1) LAGraph 1.1.4 release, with latest GraphBLAS compiled in CI, not
+        from conda.  But see comment in PR first.
+
+    LAGraph v1.2:
+    (3) doesn't compile for vanilla GraphBLAS; add vanilla case to CI
+    (4) new algorithms, many ready for src, many need a little work.
+    (5) FIXMEs in src: use GrB_get instead of GxB*
+    (6) MaximalMatching and CoarsenMatching tests pass with the new
+        random number generator, but they require LAGraph_Incidence_Matrix,
+        which needs work to be ready for src
+
+May 29, 2024:
+
+    since last meeting:  added better random number generator, and argmin/argmax
+    agenda: see May 15:
+        (1) many FIXMEs
+        (2) need latest GraphBLAS (at least 9.1.0)
+        (3) test coverage
+        (4) fix MaximalMatching and CoarsenMatching (change in random number
+            generator broke their tests)
+
+May 15, 2024:
+
+    agenda:
+        need to start moving algorithms from experimental to src;
+            see all the FIXMEs.
+        need conda forge with GraphBLAS 9.1.x for github CI
+    discussion: on random number generation
+
+May 1, 2024:
+
+    discussed random number generation.
+    See commit to v1.2 branch.  We also need a more robust
+    method (Tim Mattson is working on it).
+
+Apr 3, 2024:
+
+    candidates for moving experimental into src:
+
+        Need a good set of random # generators:
+            both quick and "dirty", and slow and good.
+
+        experimental/algorithm/LAGraph_AllKCore.c
+        experimental/algorithm/LAGraph_AllKTruss.c
+        experimental/algorithm/LAGraph_Coarsen_Matching.c
+        experimental/algorithm/LAGraph_EstimateDiameter.c
+        experimental/algorithm/LAGraph_ExactDiameter.c
+        experimental/algorithm/LAGraph_FastGraphletTransform.c
+        experimental/algorithm/LAGraph_HITS.c
+        experimental/algorithm/LAGraph_Hdip_Fiedler.c
+        experimental/algorithm/LAGraph_KCore.c
+        experimental/algorithm/LAGraph_KCoreDecompose.c
+        experimental/algorithm/LAGraph_KTruss.c
+        experimental/algorithm/LAGraph_MaximalIndependentSet.c
+        experimental/algorithm/LAGraph_MaximalMatching.c
+        experimental/algorithm/LAGraph_MultiSourceBFS.c
+        experimental/algorithm/LAGraph_SquareClustering.c
+        experimental/algorithm/LAGraph_VertexCentrality_Triangle.c
+        experimental/algorithm/LAGraph_lcc.c
+        experimental/algorithm/LAGraph_scc.c
+        experimental/utility/LAGraph_Incidence_Matrix.c
+
+Notes from LAGraph meeting, Mar 20, 2024:
+
+    v1.2:
+        * now using v2.1 C API, but requires a recent SS:GraphBLAS
+            (add v8.3.x and latest v9.0.3 to CI)?
+        * test coverage of new experimental methods
+        * any polished algorithms to move from experimental -> src?
+
+    Future:
+        * add support for complex data types in LAGraph? GrB?
+            see sparse BLAS effort; they need complex
+
+Notes from LAGraph meeting, June 14, 2023:
+
+    For LAGraph 1.2:
+
+        * move algorithms from experimental to src
+        * use v2.1 C API spec
+
+        * test coverage of new experimental methods
+        * need faster MM reader/writer
+
+
+    LDBC: updates, in src, and experimental <<<<
+    polished experimental --> to src
+
+        
+document promotion from experimental to src
+    (checklist)
+
+    (1) doxygen comments in LAGraphX.h -> LAGraph.h
+    (2) match error codes, msg usage
+    (3) unit test, experimental/test/test_HelloWorld
+        kinds of tests
+        (a) reimplement algo in C, compare w LAGraph
+        (b) check validity after getting LAGraph result
+        (c) bespoke sample results from other packages
+            for specific graph test cases
+        (d) smoke test ... need more than this
+    (4) experimental/benchmark/hello_demo.c
+    (5) performance OK? compared to what baseline?
+        time and memory
+
+    (6) How GraphBLASy is it?
+    (7) GxB or vanilla?
+
+

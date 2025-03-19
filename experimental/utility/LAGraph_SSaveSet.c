@@ -32,7 +32,6 @@
 {                                                   \
     fclose (f) ;                                    \
     f = NULL ;                                      \
-    GrB_free (&desc) ;                              \
     LAGraph_SFreeContents (&Contents, nmatrices) ;  \
 }
 
@@ -67,15 +66,9 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     FILE *f = NULL ;
 
     LAGraph_Contents *Contents = NULL ;
-    GrB_Descriptor desc = NULL ;
 
     LG_ASSERT (filename != NULL && Set != NULL && collection != NULL,
         GrB_NULL_POINTER) ;
-
-    #if LAGRAPH_SUITESPARSE
-    GRB_TRY (GrB_Descriptor_new (&desc)) ;
-    GRB_TRY (GxB_set (desc, GxB_COMPRESSION, GxB_COMPRESSION_LZ4HC + 9)) ;
-    #endif
 
     f = fopen (filename, "wb") ;
     LG_ASSERT_MSG (f != NULL, -1001, "unable to create output file") ;
@@ -93,7 +86,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
         #if LAGRAPH_SUITESPARSE
         {
             GRB_TRY (GxB_Matrix_serialize (&(Contents [i].blob),
-                (GrB_Index *)&(Contents [i].blob_size), Set [i], desc)) ;
+                (GrB_Index *)&(Contents [i].blob_size), Set [i], NULL)) ;
         }
         #else
         {
@@ -118,7 +111,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     LG_TRY (LAGraph_SWrite_HeaderStart (f, collection, msg)) ;
     for (GrB_Index i = 0 ; i < nmatrices ; i++)
     {
-        char typename [GxB_MAX_NAME_LEN] ;
+        char typename [LAGRAPH_MAX_NAME_LEN+1] ;
         LG_TRY (LAGraph_Matrix_TypeName (typename, Set [i], msg)) ;
         char matrix_name [256] ;
         snprintf (matrix_name, 256, "A_%" PRIu64, i) ;

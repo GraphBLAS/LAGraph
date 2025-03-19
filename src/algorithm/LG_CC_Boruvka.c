@@ -266,6 +266,9 @@ int LG_CC_Boruvka
         // large matrices.
         GRB_TRY (GrB_Matrix_select_UDT (S, NULL, NULL, select_op, S,
             (void *) (&Parent), NULL)) ;
+        // Ensure S is finished, since it depends on Parent, which contains
+        // the Px array.  S must be computed before Px changes.
+        GRB_TRY (GrB_wait (S, GrB_MATERIALIZE)) ;
         GRB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
     }
 
@@ -273,6 +276,9 @@ int LG_CC_Boruvka
     // free workspace and return result
     //--------------------------------------------------------------------------
 
+    // parent depends on the Px array, which GraphBLAS does not know about, so
+    // parent must be computed before Px is freed.
+    GRB_TRY (GrB_wait (parent, GrB_MATERIALIZE)) ;
     (*component) = parent ;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;

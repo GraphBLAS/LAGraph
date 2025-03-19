@@ -130,6 +130,12 @@ int main (int argc, char **argv)
 
     int ntrials = 0 ;
 
+for (int nrepeat = 0 ; nrepeat <= 1 ; nrepeat++)
+{
+    // nrepeat == 0 is a warmup with just one nthreads setting
+    memset (tt, 0, (nthreads_max+1) * sizeof (double)) ;
+    ntrials = 0 ;
+
     for (int64_t kstart = 0 ; kstart < nsource ; kstart += batch_size)
     {
 
@@ -148,7 +154,7 @@ int main (int argc, char **argv)
                 k + kstart, 0)) ;
             // subtract one to convert from 1-based to 0-based
             source-- ;
-            vertex_list [k] = source ;
+            vertex_list [k] = source  ;
             printf (" %"PRId64, source) ;
         }
         printf (" ]\n") ;
@@ -173,6 +179,7 @@ int main (int argc, char **argv)
             fflush (stdout) ;
             tt [t] += t2 ;
 
+            if (nrepeat == 0) break ;
         }
 
         GrB_free (&centrality) ;
@@ -180,6 +187,11 @@ int main (int argc, char **argv)
         // if burble is on, just do the first batch
         if (burble) break ;
     }
+    if (nrepeat == 0)
+    {
+        printf ("warmup average: %g sec\n", tt [1] / ntrials) ;
+    }
+}
 
     //--------------------------------------------------------------------------
     // free all workspace and finish

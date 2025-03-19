@@ -79,11 +79,19 @@ void test_TypeName  (void)
     name [0] = '\0' ;
     OK (GrB_Type_new (&type, sizeof (myint))) ;
     int result = LAGraph_NameOfType (name, type, msg) ;
-    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
-    printf ("\nmsg: %s\n", msg) ;
+    TEST_CHECK (result == GrB_SUCCESS) ;
+    printf ("\ntype name not yet set: [%s]\n", name) ;
+    OK (strcmp (name, "")) ;
 
+    OK (GrB_set (type, "myinteger", GrB_NAME)) ;
+    result = LAGraph_NameOfType (name, type, msg) ;
+    TEST_CHECK (result == GrB_SUCCESS) ;
+    printf ("\ntype name: [%s]\n", name) ;
+    OK (strcmp (name, "myinteger")) ;
+
+    printf ("\nthree expected error messages:\n") ;
     TEST_CHECK (LAGraph_NameOfType (NULL, NULL, msg) == GrB_NULL_POINTER) ;
-    printf ("\nmsg: %s\n", msg) ;
+    printf ("msg: %s\n", msg) ;
 
     TEST_CHECK (LAGraph_NameOfType (name, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
@@ -152,17 +160,13 @@ void test_TypeSize (void)
     size = 0 ;
     OK (GrB_Type_new (&type, sizeof (myint))) ;
     int result = LAGraph_SizeOfType (&size, type, msg) ;
-    #if LAGRAPH_SUITESPARSE
-    printf ("\nSuiteSparse knows the type size: [%g]\n", (double) size) ;
+    printf ("\ntype size: [%g]\n", (double) size) ;
     TEST_CHECK (result == GrB_SUCCESS) ;
     TEST_CHECK (size == sizeof (myint)) ;
-    #else
-    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
-    printf ("\nmsg: %s\n", msg) ;
-    #endif
 
+    printf ("\nthree expected error messages:\n") ;
     TEST_CHECK (LAGraph_SizeOfType (NULL, NULL, msg) == GrB_NULL_POINTER) ;
-    printf ("\nmsg: %s\n", msg) ;
+    printf ("msg: %s\n", msg) ;
 
     TEST_CHECK (LAGraph_SizeOfType (&size, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;

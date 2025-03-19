@@ -56,6 +56,11 @@
 // selected and cause the method to stall.  To avoid this case they are removed
 // from the candidate set at the begining, and added to the independent set.
 
+// FIXME: rename LAGr_MaximalIndependentSet (this is expert)
+// FIXME: add a basic method
+// FIXME: need random numbers, vectors, matrices for LAGraph
+// vanilla OK: no GxB used
+
 int LAGraph_MaximalIndependentSet       // maximal independent set
 (
     // outputs:
@@ -238,6 +243,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             score, neighbor_max, NULL)) ;
 
         // drop explicit zeros from new_members
+        // in particular, this replaces all 0s with empty
         GRB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL,
             new_members, (bool) true, NULL)) ;
 

@@ -181,12 +181,10 @@ void test_CheckGraph_failures (void)
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    #if LAGRAPH_SUITESPARSE
     // G->AT must be by-row
-    OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
+    OK (GrB_set (G->AT, GrB_COLMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
-    printf ("msg: %s\n", msg) ;
-    #endif
+    printf ("msg (AT colmajor): %s\n", msg) ;
 
     G->AT = NULL ;
 
@@ -214,12 +212,10 @@ void test_CheckGraph_failures (void)
 
     G->in_degree = NULL ;
 
-    #if LAGRAPH_SUITESPARSE
     // G->A must be by-row
-    OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
+    OK (GrB_set (G->A, GrB_COLMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
-    printf ("msg: %s\n", msg) ;
-    #endif
+    printf ("msg (A colmajor): %s\n", msg) ;
 
     GrB_free (&d_bool) ;
     GrB_free (&d_int64) ;

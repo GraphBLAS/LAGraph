@@ -25,12 +25,6 @@ int LG_brutal_setup (char *msg)
     int result = LAGr_Init (GrB_NONBLOCKING,
         LG_brutal_malloc, LG_brutal_calloc,
         LG_brutal_realloc, LG_brutal_free, msg) ;
-    if (result != 0) return (result) ;
-    #if LAGRAPH_SUITESPARSE
-    // disable the SuiteSparse:GraphBLAS memory pool
-    int64_t free_pool_limit [64] ;
-    memset (free_pool_limit, 0, 64 * sizeof (int64_t)) ;
-    result = GxB_set (GxB_MEMORY_POOL, free_pool_limit) ;
-    #endif
     return (result) ;
 }
+

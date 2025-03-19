@@ -112,7 +112,6 @@ void test_export (void)
             &Ax_len, &typesize, msg)) ;
 
         #if LAGRAPH_SUITESPARSE
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (6,0,2)
         printf ("reimport and check result\n") ;
         OK (GxB_Matrix_import_CSR (&C, atype, nrows, ncols, &Ap, &Aj, &Ax,
             Ap_len * sizeof (GrB_Index),
@@ -124,7 +123,6 @@ void test_export (void)
         OK (LAGraph_Matrix_IsEqual (&ok, G->A, C, msg)) ;
         TEST_CHECK (ok) ;
         OK (GrB_free (&C)) ;
-        #endif
         #endif
 
         LAGraph_Free ((void **) &Ap, NULL) ;
@@ -182,7 +180,6 @@ void test_export_brutal (void)
         LG_BRUTAL_BURBLE (LG_check_export (G, &Ap, &Aj, &Ax, &Ap_len, &Aj_len,
             &Ax_len, &typesize, msg)) ;
 
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (6,0,2)
         printf ("reimport and check result\n") ;
         OK (GxB_Matrix_import_CSR (&C, atype, nrows, ncols, &Ap, &Aj, &Ax,
             Ap_len * sizeof (GrB_Index),
@@ -196,7 +193,6 @@ void test_export_brutal (void)
         LG_BRUTAL_BURBLE (LAGraph_Matrix_IsEqual (&ok, G->A, C, msg)) ;
         TEST_CHECK (ok) ;
         OK (GrB_free (&C)) ;
-        #endif
 
         LAGraph_Free ((void **) &Ap, NULL) ;
         LAGraph_Free ((void **) &Aj, NULL) ;

@@ -95,6 +95,19 @@ if ( LAGRAPH_HAS_OPENMP )
 endif ( )
 
 #-------------------------------------------------------------------------------
+# libm
+#-------------------------------------------------------------------------------
+
+if ( NOT ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") ) )
+    if ( BUILD_SHARED_LIBS )
+        target_link_libraries ( LAGraphX PRIVATE m )
+    endif ( )
+    if ( BUILD_STATIC_LIBS )
+        target_link_libraries ( LAGraphX_static PUBLIC m )
+    endif ( )
+endif ( )
+
+#-------------------------------------------------------------------------------
 # applications
 #-------------------------------------------------------------------------------
 

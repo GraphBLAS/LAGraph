@@ -64,10 +64,12 @@ int LAGraph_Vector_IsEqual
     // compare the type of A and B
     //--------------------------------------------------------------------------
 
+    GrB_Type atype ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     char btype_name [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_Vector_TypeName (atype_name, A, msg)) ;
     LG_TRY (LAGraph_Vector_TypeName (btype_name, B, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
     if (!MATCHNAME (atype_name, btype_name))
     {
         // types differ
@@ -107,25 +109,21 @@ int LAGraph_Vector_IsEqual
     // get the GrB_EQ_type operator
     //--------------------------------------------------------------------------
 
-    GrB_Type type ;
-    LG_TRY (LAGraph_TypeFromName (&type, atype_name, msg)) ;
     GrB_BinaryOp op = NULL ;
     // select the comparator operator
-    if      (type == GrB_BOOL  ) op = GrB_EQ_BOOL   ;
-    else if (type == GrB_INT8  ) op = GrB_EQ_INT8   ;
-    else if (type == GrB_INT16 ) op = GrB_EQ_INT16  ;
-    else if (type == GrB_INT32 ) op = GrB_EQ_INT32  ;
-    else if (type == GrB_INT64 ) op = GrB_EQ_INT64  ;
-    else if (type == GrB_UINT8 ) op = GrB_EQ_UINT8  ;
-    else if (type == GrB_UINT16) op = GrB_EQ_UINT16 ;
-    else if (type == GrB_UINT32) op = GrB_EQ_UINT32 ;
-    else if (type == GrB_UINT64) op = GrB_EQ_UINT64 ;
-    else if (type == GrB_FP32  ) op = GrB_EQ_FP32   ;
-    else if (type == GrB_FP64  ) op = GrB_EQ_FP64   ;
-    #if 0
-    else if (type == GxB_FC32  ) op = GxB_EQ_FC32   ;
-    else if (type == GxB_FC64  ) op = GxB_EQ_FC64   ;
-    #endif
+    if      (atype == GrB_BOOL  ) op = GrB_EQ_BOOL   ;
+    else if (atype == GrB_INT8  ) op = GrB_EQ_INT8   ;
+    else if (atype == GrB_INT16 ) op = GrB_EQ_INT16  ;
+    else if (atype == GrB_INT32 ) op = GrB_EQ_INT32  ;
+    else if (atype == GrB_INT64 ) op = GrB_EQ_INT64  ;
+    else if (atype == GrB_UINT8 ) op = GrB_EQ_UINT8  ;
+    else if (atype == GrB_UINT16) op = GrB_EQ_UINT16 ;
+    else if (atype == GrB_UINT32) op = GrB_EQ_UINT32 ;
+    else if (atype == GrB_UINT64) op = GrB_EQ_UINT64 ;
+    else if (atype == GrB_FP32  ) op = GrB_EQ_FP32   ;
+    else if (atype == GrB_FP64  ) op = GrB_EQ_FP64   ;
+//  else if (atype == GxB_FC32  ) op = GxB_EQ_FC32   ;
+//  else if (atype == GxB_FC64  ) op = GxB_EQ_FC64   ;
 
     LG_ASSERT_MSG (op != NULL, GrB_NOT_IMPLEMENTED, "type not supported") ;
 

@@ -39,12 +39,8 @@ int LAGraph_SetNumThreads
     nthreads_outer = LAGRAPH_MAX (nthreads_outer, 1) ;
     nthreads_inner = LAGRAPH_MAX (nthreads_inner, 1) ;
 
-    #if LAGRAPH_SUITESPARSE
-    {
-        // SuiteSparse:GraphBLAS: set # of threads with global setting
-        GRB_TRY (GxB_set (GxB_NTHREADS, nthreads_inner)) ;
-    }
-    #endif
+    // set # of GraphBLAS threads
+    GRB_TRY (LG_SET_NTHREADS (nthreads_inner)) ;
 
     // set # of LAGraph threads
     LG_nthreads_outer = nthreads_outer ;    // for LAGraph itself, if nested

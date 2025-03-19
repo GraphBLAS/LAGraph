@@ -15,6 +15,10 @@
 
 //------------------------------------------------------------------------------
 
+// The input is an undirected graph, or a directed graph with a symmetric
+// adjacency matrix.  Edge weights are ignored.  On output, decomp(i) = k if
+// node i is in the k-core, or empty otherwise.
+
 #define LG_FREE_WORK                \
 {                                   \
     GrB_free (&deg) ;               \
@@ -31,14 +35,19 @@
 
 #include "LG_internal.h"
 
+// FIXME: revise and add to src
+// FIXME: need both basic and expert methods; this is mixed
+// vanilla OK: no GxB used here
 
-int LAGraph_KCore
+int LAGraph_KCore  // FIXME: LAGr_KCore (expert), cache is_symmetric_structure
+                   // FIXME: cache nself_edges
+                   // FIXME: cache out degree
 (
     // outputs:
     GrB_Vector *decomp,     // kcore decomposition
     // inputs:
     LAGraph_Graph G,        // input graph
-    uint64_t k,             //k level to compare to
+    uint64_t k,             // kcore to compute
     char *msg
 )
 {
@@ -91,7 +100,10 @@ int LAGraph_KCore
     GRB_TRY (GrB_Vector_new(decomp, int_type, n)) ;
 
     //change deg vector to int32 if needed
-    if(int_type == GrB_INT32){
+    if (int_type == GrB_INT32)
+    {
+        // FIXME: deg is freed; it should never have been constructed above
+        GrB_free (&deg) ;
         GRB_TRY (GrB_Vector_new(&deg, int_type, n)) ;
         GRB_TRY (GrB_assign (deg, G->out_degree, NULL, G->out_degree, GrB_ALL, n, NULL)) ;
     }
@@ -101,22 +113,21 @@ int LAGraph_KCore
     GrB_BinaryOp minus_op = (maxDeg > INT32_MAX) ? GrB_MINUS_INT64 : GrB_MINUS_INT32 ;
     GrB_Semiring semiring = (maxDeg > INT32_MAX) ? LAGraph_plus_one_int64 : LAGraph_plus_one_int32 ;
 
-
-#if LG_SUITESPARSE
-    GRB_TRY (GxB_set (done, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;    // try this
-    //GRB_TRY (GxB_set (*decomp, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ; // try this ... likely not needed
-#endif
+    GRB_TRY (LG_SET_FORMAT_HINT (done, LG_BITMAP + LG_FULL)) ;
 
     // Creating q
-    GRB_TRY (GrB_select (q, GrB_NULL, GrB_NULL, valueLT, deg, k, GrB_NULL)) ; // get all nodes with degree = level
+    // get all nodes with degree = level
+    GRB_TRY (GrB_select (q, GrB_NULL, GrB_NULL, valueLT, deg, k, GrB_NULL)) ;
     GRB_TRY (GrB_Vector_nvals(&qnvals, q));
 
     // while q not empty
     int round = 0;
-    while(qnvals > 0 && degnvals > 0){
+    while (qnvals > 0 && degnvals > 0)
+    {
         round++;
         //add anything in q as true into the done list
-        GRB_TRY (GrB_assign (done, q, NULL, (bool) true, GrB_ALL, n, GrB_DESC_S)) ; //structure to take care of 0-node cases
+        //structure to take care of 0-node cases
+        GRB_TRY (GrB_assign (done, q, NULL, (bool) true, GrB_ALL, n, GrB_DESC_S)) ;
 
         // Create delta (the nodes who lost friends, and how many they lost) (push version)
         GRB_TRY (GrB_vxm (delta, GrB_NULL, GrB_NULL, semiring, q, A, GrB_NULL));

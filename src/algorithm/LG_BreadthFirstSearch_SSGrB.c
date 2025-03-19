@@ -126,7 +126,7 @@ int LG_BreadthFirstSearch_SSGrB
 
         // create the parent vector.  pi(i) is the parent id of node i
         GRB_TRY (GrB_Vector_new (&pi, int_type, n)) ;
-        GRB_TRY (GxB_set (pi, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;
+        GRB_TRY (LG_SET_FORMAT_HINT (pi, LG_BITMAP + LG_FULL)) ;
         // pi (src) = src denotes the root of the BFS tree
         GRB_TRY (GrB_Vector_setElement (pi, src, src)) ;
 
@@ -149,7 +149,7 @@ int LG_BreadthFirstSearch_SSGrB
         // create the level vector. v(i) is the level of node i
         // v (src) = 0 denotes the source node
         GRB_TRY (GrB_Vector_new (&v, int_type, n)) ;
-        GRB_TRY (GxB_set (v, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;
+        GRB_TRY (LG_SET_FORMAT_HINT (v, LG_BITMAP + LG_FULL)) ;
         GRB_TRY (GrB_Vector_setElement (v, 0, src)) ;
     }
 
@@ -243,18 +243,17 @@ int LG_BreadthFirstSearch_SSGrB
         // q = kth level of the BFS
         //----------------------------------------------------------------------
 
-        int sparsity = do_push ? GxB_SPARSE : GxB_BITMAP ;
-        GRB_TRY (GxB_set (q, GxB_SPARSITY_CONTROL, sparsity)) ;
-
         // mask is pi if computing parent, v if computing just level
         if (do_push)
         {
             // push (saxpy-based vxm):  q'{!mask} = q'*A
+            GRB_TRY (LG_SET_FORMAT_HINT (q, LG_SPARSE)) ;
             GRB_TRY (GrB_vxm (q, mask, NULL, semiring, q, A, GrB_DESC_RSC)) ;
         }
         else
         {
             // pull (dot-product-based mxv):  q{!mask} = AT*q
+            GRB_TRY (LG_SET_FORMAT_HINT (q, LG_BITMAP)) ;
             GRB_TRY (GrB_mxv (q, mask, NULL, semiring, AT, q, GrB_DESC_RSC)) ;
         }
 

@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: ready for src
+
 // LAGraph_KTruss: k-truss subgraph.
 
 // Given a symmetric graph A with no-self edges, LAGraph_KTruss finds the

@@ -23,9 +23,6 @@
 #include "LAGraphX.h"
 #include "LG_alg_internal.h"
 
-#undef NDEBUG
-#include <assert.h>
-
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
 #define LEN 512
@@ -85,8 +82,7 @@ void test_cc_matrices (void)
 {
 
     OK (LAGraph_Init (msg)) ;
-    // OK (GxB_set (GxB_BURBLE, true)) ;
-
+//  GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
     for (int k = 0 ; ; k++)
     {
 
@@ -139,16 +135,14 @@ void test_cc_matrices (void)
             #endif
 
             // find the connected components with LG_CC_Boruvka
-            int result = GrB_SUCCESS ;
             printf ("\n------ CC_BORUVKA:\n") ;
-            result = LG_CC_Boruvka (&C2, G, msg) ;
-            OK (result) ;
+            OK (LG_CC_Boruvka (&C2, G, msg)) ;
             ncomponents = count_connected_components (C2) ;
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
 
-            result = LG_CC_Boruvka (NULL, G, msg) ;
+            int result = LG_CC_Boruvka (NULL, G, msg) ;
             TEST_CHECK (result == GrB_NULL_POINTER) ;
 
             if (trial == 0)
@@ -186,14 +180,12 @@ void test_cc_matrices (void)
 void test_cc_errors (void)
 {
     OK (LAGraph_Init (msg)) ;
+//  GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
     printf ("\n") ;
 
     // check for null pointers
-    int result = GrB_SUCCESS ;
-
-    result = LG_CC_Boruvka (NULL, NULL, msg) ;
+    int result = LG_CC_Boruvka (NULL, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
-
     #if LAGRAPH_SUITESPARSE
     result = LG_CC_FastSV6 (NULL, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
@@ -212,7 +204,6 @@ void test_cc_errors (void)
     result = LG_CC_Boruvka (&C, G, msg) ;
     TEST_CHECK (result == -1001) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
-
     #if LAGRAPH_SUITESPARSE
     result = LG_CC_FastSV6 (&C, G, msg) ;
     TEST_CHECK (result == -1001) ;

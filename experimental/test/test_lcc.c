@@ -15,14 +15,12 @@
 
 //-----------------------------------------------------------------------------
 
-// todo: write a simple lcc method, as LG_check_lcc, and compare its results
-// with LAGraph_lcc
-
 #include <stdio.h>
 #include <acutest.h>
 
 #include <LAGraphX.h>
 #include <LAGraph_test.h>
+#include "LG_Xtest.h"
 
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
@@ -32,95 +30,23 @@ char filename [LEN+1] ;
 
 typedef struct
 {
-    bool symmetric ;
     const char *name ;
 }
 matrix_info ;
 
-// this known solution is listed here in lower precision than double allows
-double lcc_west0067 [67] = {
-    0.0909091,
-    0.0238095,
-    0.0714286,
-    0.0238095,
-    0.125,
-    0.119048,
-    0.178571,
-    0.133333,
-    0.0952381,
-    0.0833333,
-    0.0666667,
-    0.1,
-    0.0892857,
-    0.0714286,
-    0.138889,
-    0.0555556,
-    0.0694444,
-    0.0555556,
-    0.0714286,
-    0.0769231,
-    0.0333333,
-    0.0666667,
-    0.0666667,
-    0.0333333,
-    0.0694444,
-    0.0444444,
-    0.0555556,
-    0.0777778,
-    0.0333333,
-            0,
-    0.0904762,
-    0.0535714,
-    0.0714286,
-    0.107143,
-    0.0892857,
-            0,
-    0.0681818,
-    0.0357143,
-    0.0178571,
-    0.0666667,
-    0.0555556,
-    0.0694444,
-    0.0666667,
-    0.111111,
-    0.0444444,
-    0.142857,
-    0.166667,
-    0.2,
-    0.0448718,
-    0.166667,
-    0.166667,
-    0.119048,
-    0.166667,
-    0.190476,
-    0.104167,
-    0.0333333,
-    0.0444444,
-    0.0444444,
-    0.0777778,
-    0.0416667,
-    0.0222222,
-    0.0972222,
-    0.142857,
-    0.0416667,
-    0.0555556,
-    0.196429,
-    0.155556
-} ;
-
 const matrix_info files [ ] =
 {
-    { 1, "A.mtx" },
-    { 1, "jagmesh7.mtx" },
-    { 0, "west0067.mtx" }, // unsymmetric
-    { 1, "bcsstk13.mtx" },
-    { 1, "karate.mtx" },
-    { 1, "ldbc-cdlp-undirected-example.mtx" },
-    { 1, "ldbc-undirected-example-bool.mtx" },
-    { 1, "ldbc-undirected-example-unweighted.mtx" },
-    { 1, "ldbc-undirected-example.mtx" },
-    { 1, "ldbc-wcc-example.mtx" },
-    { 0, "" },
+    { "A.mtx" },
+    { "jagmesh7.mtx" },
+    { "west0067.mtx" }, // unsymmetric
+    { "bcsstk13.mtx" },
+    { "karate.mtx" },
+    { "ldbc-cdlp-undirected-example.mtx" },
+    { "ldbc-undirected-example-bool.mtx" },
+    { "ldbc-undirected-example-unweighted.mtx" },
+    { "ldbc-undirected-example.mtx" },
+    { "ldbc-wcc-example.mtx" },
+    { "" },
 } ;
 
 //****************************************************************************
@@ -134,7 +60,6 @@ void test_lcc (void)
 
         // load the matrix as A
         const char *aname = files [k].name ;
-        bool symmetric = files [k].symmetric ;
         if (strlen (aname) == 0) break;
         printf ("\n================================== %s:\n", aname) ;
         TEST_CASE (aname) ;
@@ -148,42 +73,31 @@ void test_lcc (void)
         TEST_CHECK (A == NULL) ;
 
         // check for self-edges
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg));
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
-        bool sanitize = (G->nself_edges != 0) ;
 
         GrB_Vector c = NULL ;
-        double t [2] ;
 
         // compute the local clustering coefficient
-        OK (LAGraph_lcc (&c, G->A, symmetric, sanitize, t, msg)) ;
+        OK (LAGraph_lcc (&c, G, msg)) ;
 
         GrB_Index n ;
         OK (GrB_Vector_size (&n, c)) ;
         LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
-        // check result c for west0067
-        if (strcmp (aname, "west0067.mtx") == 0)
-        {
-            GrB_Vector cgood = NULL ;
-            OK (GrB_Vector_new (&cgood, GrB_FP64, n)) ;
-            for (int k = 0 ; k < n ; k++)
-            {
-                OK (GrB_Vector_setElement (cgood, lcc_west0067 [k], k)) ;
-            }
-            OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
-            printf ("\nlcc (known result, but with float precision):\n") ;
-            OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;
-            // cgood = abs (cgood - c)
-            OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
-                NULL)) ;
-            OK (GrB_apply (cgood, NULL, NULL, GrB_ABS_FP64, cgood, NULL)) ;
-            double err = 0 ;
-            // err = max (cgood)
-            OK (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP64, cgood, NULL)) ;
-            printf ("err: %g\n", err) ;
-            TEST_CHECK (err < 1e-6) ;
-            OK (GrB_free (&cgood)) ;
-        }
+        GrB_Vector cgood = NULL ;
+        OK (LG_check_lcc(&cgood, G, msg)) ;
+        OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
+        // cgood = abs (cgood - c)
+        OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
+            NULL)) ;
+        OK (GrB_apply (cgood, NULL, NULL, GrB_ABS_FP64, cgood, NULL)) ;
+        double err = 0 ;
+        // err = max (cgood)
+        OK (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP64, cgood, NULL)) ;
+        printf ("err: %g\n", err) ;
+        TEST_CHECK (err < 1e-6) ;
+        OK (GrB_free (&cgood)) ;
 
         printf ("\nlcc:\n") ;
         OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
@@ -217,22 +131,15 @@ void test_errors (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
+    OK (LAGraph_Cached_IsSymmetricStructure (G, msg));
     OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
 
     GrB_Vector c = NULL ;
-    double t [2] ;
 
     // c is NULL
-    int result = LAGraph_lcc (NULL, G->A, true, false, t, msg) ;
+    int result = LAGraph_lcc (NULL, G, msg) ;
     printf ("\nresult: %d\n", result) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
-
-    // G->A is held by column
-    OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
-    result = LAGraph_lcc (&c, G->A, true, true, t, msg) ;
-    printf ("\nresult: %d\n", result) ;
-    TEST_CHECK (result == GrB_INVALID_VALUE) ;
-    TEST_CHECK (c == NULL) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
     #else

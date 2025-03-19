@@ -2,7 +2,7 @@
 // LAGraph/src/benchmark/ss2_demo.c: Benchmark for LAGr_SingleSourceShortestPath
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -132,7 +132,6 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Vector_new (&SourceNodes, GrB_UINT64, nsource)) ;
     GRB_TRY (GrB_assign (SourceNodes, NULL, NULL, 1, GrB_ALL, nsource, NULL)) ;
     LAGRAPH_TRY (LAGraph_Random_Seed (SourceNodes, 1, msg)) ;
-    // GxB_print (SourceNodes, 3) ;
 
     //--------------------------------------------------------------------------
     // warmup
@@ -141,9 +140,7 @@ int main (int argc, char **argv)
     GrB_Index src ;
     GRB_TRY (GrB_Vector_extractElement (&src, SourceNodes, 0)) ;
     src = src % n ;
-//  GxB_set (GxB_BURBLE, true) ;
     LAGRAPH_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src, Delta, msg)) ;
-    GxB_set (GxB_BURBLE, false) ;
     GrB_free (&pathlen) ;
 
     //--------------------------------------------------------------------------

@@ -59,10 +59,8 @@ static inline const char *typename (GrB_Type type)
     else if (type == GrB_UINT64) return ("GrB_UINT64") ;
     else if (type == GrB_FP32  ) return ("GrB_FP32") ;
     else if (type == GrB_FP64  ) return ("GrB_FP64") ;
-    #if 0
-    else if (type == GxB_FC32  ) return ("GxB_FC32") ;
-    else if (type == GxB_FC64  ) return ("GxB_FC64") ;
-    #endif
+//  else if (type == GxB_FC32  ) return ("GxB_FC32") ;
+//  else if (type == GxB_FC64  ) return ("GxB_FC64") ;
     return (NULL) ;
 }
 

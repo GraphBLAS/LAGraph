@@ -619,4 +619,47 @@ int LG_KindName
 // # of entries to print for LAGraph_Matrix_Print and LAGraph_Vector_Print
 #define LG_SHORT_LEN 30
 
+//------------------------------------------------------------------------------
+// GrB_get/set for SuiteSparse extensions
+//------------------------------------------------------------------------------
+
+#if LAGRAPH_SUITESPARSE
+
+    // SuiteSparse:GraphBLAS v8.1 or later
+    #define LG_HYPERSPARSE GxB_HYPERSPARSE
+    #define LG_SPARSE      GxB_SPARSE
+    #define LG_BITMAP      GxB_BITMAP
+    #define LG_FULL        GxB_FULL
+    #define LG_SET_FORMAT_HINT(object,sparsity) \
+        GrB_set (object, (int32_t) (sparsity), GxB_SPARSITY_CONTROL)
+    #define LG_GET_FORMAT_HINT(A,status) \
+        GrB_get (A, (int32_t *) status, GxB_SPARSITY_STATUS)
+    #define LG_SET_NTHREADS(nthreads) \
+        GrB_set (GrB_GLOBAL, (int32_t) (nthreads), GxB_NTHREADS)
+    #define LG_SET_HYPER_SWITCH(A,hyper) \
+        GrB_set (A, hyper, GxB_HYPER_SWITCH)
+    #define LG_GET_HYPER_SWITCH(A,hyper) \
+        GrB_get (A, hyper, GxB_HYPER_SWITCH)
+    #define LG_SET_BURBLE(burble) \
+        GrB_set (GrB_GLOBAL, (int32_t) (burble), GxB_BURBLE)
+    #define LG_GET_LIBRARY_DATE(date) \
+        GrB_get (GrB_GLOBAL, (char *) date, GxB_LIBRARY_DATE)
+
+#else
+
+    // vanilla GraphBLAS
+    #define LG_HYPERSPARSE 1
+    #define LG_SPARSE      2
+    #define LG_BITMAP      4
+    #define LG_FULL        8
+    #define LG_SET_FORMAT_HINT(object,sparsity) GrB_SUCCESS
+    #define LG_SET_NTHREADS(nthreads) GrB_SUCCESS
+    #define LG_SET_HYPER_SWITCH(A,hyper) GrB_SUCCESS
+    #define LG_GET_HYPER_SWITCH(A,hyper) GrB_SUCCESS
+    #define LG_GET_FORMAT_HINT(A,status) GrB_SUCCESS
+    #define LG_SET_BURBLE(burble) GrB_SUCCESS
+    #define LG_GET_LIBRARY_DATE(date) GrB_SUCCESS
+
+#endif
+
 #endif

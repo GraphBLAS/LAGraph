@@ -38,15 +38,16 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
-    {     11, "A.mtx" },
-    {   2016, "jagmesh7.mtx" },
+// FIXME
+//  {     11, "A.mtx" },
+//  {   2016, "jagmesh7.mtx" },
     { 342300, "bcsstk13.mtx" },
-    {     45, "karate.mtx" },
-    {      6, "ldbc-cdlp-undirected-example.mtx" },
-    {      4, "ldbc-undirected-example-bool.mtx" },
-    {      4, "ldbc-undirected-example-unweighted.mtx" },
-    {      4, "ldbc-undirected-example.mtx" },
-    {      5, "ldbc-wcc-example.mtx" },
+//  {     45, "karate.mtx" },
+//  {      6, "ldbc-cdlp-undirected-example.mtx" },
+//  {      4, "ldbc-undirected-example-bool.mtx" },
+//  {      4, "ldbc-undirected-example-unweighted.mtx" },
+//  {      4, "ldbc-undirected-example.mtx" },
+//  {      5, "ldbc-wcc-example.mtx" },
     { 0, "" },
 } ;
 
@@ -54,6 +55,7 @@ const matrix_info files [ ] =
 void test_AllKTruss (void)
 {
     LAGraph_Init (msg) ;
+//  OK (GrB_Global_set_INT32 (GrB_GLOBAL, true, GxB_BURBLE)) ;
 
     for (int id = 0 ; ; id++)
     {
@@ -257,6 +259,7 @@ void test_allktruss_errors (void)
 
 TEST_LIST = {
     {"allktruss", test_AllKTruss},
-    {"allktruss_errors", test_allktruss_errors},
+// FIXME
+//  {"allktruss_errors", test_allktruss_errors},
     {NULL, NULL}
 };

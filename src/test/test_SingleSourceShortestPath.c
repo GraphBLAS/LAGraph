@@ -71,6 +71,7 @@ const matrix_info files [ ] =
 void test_SingleSourceShortestPath(void)
 {
     LAGraph_Init(msg);
+//  GrB_Global_set_INT32 (GrB_GLOBAL, true, GxB_BURBLE) ;
     GrB_Matrix A = NULL, T = NULL ;
     GrB_Scalar Delta = NULL ;
     OK (GrB_Scalar_new (&Delta, GrB_INT32)) ;
@@ -263,7 +264,7 @@ void test_SingleSourceShortestPath_types (void)
             // T = max (abs (double (A)), 0.1)
             OK (GrB_Matrix_new (&T, GrB_FP64, n, n)) ;
             OK (GrB_apply (T, NULL, NULL, GrB_ABS_FP64, A, NULL)) ;
-            OK (GrB_apply (T, NULL, NULL, GrB_MAX_FP64, A, 0.1, NULL)) ;
+            OK (GrB_apply (T, NULL, NULL, GrB_MAX_FP64, T, 0.1, NULL)) ;
             OK (GrB_free (&A)) ;
             A = T ;
         }

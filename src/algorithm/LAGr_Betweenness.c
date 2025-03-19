@@ -151,9 +151,8 @@ int LAGr_Betweenness
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Matrix_new (&paths,    GrB_FP64, ns, n)) ;
     GRB_TRY (GrB_Matrix_new (&frontier, GrB_FP64, ns, n)) ;
-    #if LAGRAPH_SUITESPARSE
-    GRB_TRY (GxB_set (paths, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;
-    #endif
+    GRB_TRY (LG_SET_FORMAT_HINT (paths, LG_BITMAP + LG_FULL)) ;
+
     for (GrB_Index i = 0 ; i < ns ; i++)
     {
         // paths (i,s(i)) = 1
@@ -211,18 +210,14 @@ int LAGr_Betweenness
         if (do_pull)
         {
             // frontier<!paths> = frontier*AT'
-            #if LAGRAPH_SUITESPARSE
-            GRB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
-            #endif
+            GRB_TRY (LG_SET_FORMAT_HINT (frontier, LG_BITMAP)) ;
             GRB_TRY (GrB_mxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
                 frontier, AT, GrB_DESC_RSCT1)) ;
         }
         else // push
         {
             // frontier<!paths> = frontier*A
-            #if LAGRAPH_SUITESPARSE
-            GRB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-            #endif
+            GRB_TRY (LG_SET_FORMAT_HINT (frontier, LG_SPARSE)) ;
             GRB_TRY (GrB_mxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
                 frontier, A, GrB_DESC_RSC)) ;
         }
@@ -278,18 +273,14 @@ int LAGr_Betweenness
         if (do_pull)
         {
             // W<S[i−1]> = W * A'
-            #if LAGRAPH_SUITESPARSE
-            GRB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
-            #endif
+            GRB_TRY (LG_SET_FORMAT_HINT (W, LG_BITMAP)) ;
             GRB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, A,
                 GrB_DESC_RST1)) ;
         }
         else // push
         {
             // W<S[i−1]> = W * AT
-            #if LAGRAPH_SUITESPARSE
-            GRB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-            #endif
+            GRB_TRY (LG_SET_FORMAT_HINT (W, LG_SPARSE)) ;
             GRB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, AT,
                 GrB_DESC_RS)) ;
         }
