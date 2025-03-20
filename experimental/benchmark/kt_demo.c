@@ -91,7 +91,7 @@ int main (int argc, char **argv)
     // call AllKTruss many times
     //--------------------------------------------------------------------------
 
-    #define NTRIALS 10000
+    #define NTRIALS 0
     printf ("AllKTruss: %d trials\n", NTRIALS) ;
 
     t = LAGraph_WallClockTime ( ) ;
