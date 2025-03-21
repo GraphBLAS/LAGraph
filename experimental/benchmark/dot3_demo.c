@@ -92,12 +92,14 @@ int main (int argc, char **argv)
         GRB_TRY (GrB_mxm (C, A, NULL, LAGraph_plus_one_uint32, A, A,
             GrB_DESC_RST1)) ;
         double tt = LAGraph_WallClockTime ( ) - t1 ;
+        #if 0
         if (tt > 3)
         {
             printf ("%d ok, %g sec\n", k, LAGraph_WallClockTime ( ) - t) ;
             fflush (stdout) ;
             t1 = LAGraph_WallClockTime ( ) ;
         }
+        #endif
         #ifndef GRAPHBLAS_HAS_CUDA
         // check the result
         GRB_TRY (GxB_Matrix_fprint (C, "C", 0, stdout)) ;
