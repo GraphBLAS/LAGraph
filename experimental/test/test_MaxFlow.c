@@ -55,7 +55,6 @@ void test_MaxFlow(void) {
     printf("flow is: %lf\n", flow);
 
     //free work
-    GrB_free(&A);
     OK(LAGraph_Delete(&G, msg));
   }
   LAGraph_Finalize(msg);

@@ -21,12 +21,11 @@
     GrB_free(&GrB_CompareTuple);                                               \
     GrB_free(&GrB_ResultTuple);                                                \
     GrB_free(&e);                                                              \
+    GrB_free(&e_dup);                                                              \
     GrB_free(&d);                                                              \
     GrB_free(&theta);                                                          \
     GrB_free(&R);                                                              \
     GrB_free(&delta);                                                          \
-    GrB_free(&e_dup);                                                          \
-    GrB_free(&A);                                                              \
     GrB_free(&delta);                                                          \
     GrB_free(&delta_vec);                                                      \
     GrB_free(&delta_mat);                                                      \
@@ -38,8 +37,7 @@
     GrB_free(&yd);                                                             \
     GrB_free(&mask_vector);                                                    \
     GrB_free(&Jvec);                                                           \
-    GrB_free(&GrB_Prune);                                                      \ 
-    GrB_free(&e_dup);                                                          \
+    GrB_free(&GrB_Prune);                                                      \
     GrB_free(&GrB_UpdateFlows);                                                \
     GrB_free(&GrB_UpdateHeight);                                               \
     GrB_free(&GrB_extractFlows);                                               \
@@ -114,25 +112,6 @@
   "double capacity;"\
 "} MF_flowEdge;"
 
-#define GRB_RESULTTUPLE_STR "typedef struct{"\
-  "double residual;"\
-  "int d;"\
-  "GrB_Index j;"\
-"} MF_resultTuple;"
-
-#define GRB_COMPARETUPLE_STR                                                   \
-  "typedef struct{"                                                            \
-  "double residual;"                                                            \
-  "int di;"                                                                    \
-  "int y_dmin;"                                                                \
-  "GrB_Index j;"                                                               \
-  "} MF_compareTuple;"
-
-#define GRB_CRF_STR "void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {"\
-  "z->flow = 0;"\
-  "z->capacity = (*y);"\
-"}"
-
 #define GRB_CRB_STR "void MF_CreateResidualBackward(MF_flowEdge *z, const double *y)"\
  "{"\
   "z->flow " \
@@ -154,9 +133,11 @@
 "}"
 
 
+// FIXME, no memcpy here:
 #define GRB_RXDADD_STR "void MF_RxdAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x) {"\
   "if(y->d < x->d){"\
-    "memcpy(z, y, sizeof(MF_resultTuple));"\
+    "/* memcpy(z, y, sizeof(MF_resultTuple)); */"\
+    "(*z) = (*y) ;"\
   "}"\
   "else if(y->d > x->d){"\
     "memcpy(z, x, sizeof(MF_resultTuple));"\
@@ -186,7 +167,7 @@
 
 #define GRB_INITFLOWB_STR "void MF_initBackwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){"\
   "z->flow = y->flow - x->flow;"\
-  "z->capacity = y->capacity;"\ 
+  "z->capacity = y->capacity;"\
 "}"
 
 #define GRB_CREATECOMPVEC_STR "void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int *x) {"\
@@ -275,21 +256,41 @@ typedef struct{
 
 typedef struct{
   double residual;
-  int d;
   GrB_Index j;
+  int64_t d;
 } MF_resultTuple;
+
+// FIXME: use 64-bit here
+#define GRB_RESULTTUPLE_STR "typedef struct{"\
+  "double residual;"\
+  "GrB_Index j;"\
+  "int64_t d;"\
+"} MF_resultTuple;"
 
 typedef struct{
   double residual;
-  int di;
-  int y_dmin;
+  int32_t di;
+  int32_t y_dmin;
   GrB_Index j;
 } MF_compareTuple;
- 
+
+#define GRB_COMPARETUPLE_STR                                                   \
+  "typedef struct{"                                                            \
+  "double residual;"                                                            \
+  "int32_t di;"                                                                    \
+  "int32_t y_dmin;"                                                                \
+  "GrB_Index j;"                                                               \
+  "} MF_compareTuple;"
+
 void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {
   z->flow = 0;
   z->capacity = (*y);
 }
+
+#define GRB_CRF_STR "void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {"\
+  "z->flow = 0;"\
+  "z->capacity = (*y);"\
+"}"
 
 void MF_CreateResidualBackward(MF_flowEdge *z, const double *y) {
   z->flow = 0;
@@ -312,7 +313,8 @@ void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index
 
 void MF_RxdAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x) {
   if(y->d < x->d){
-    memcpy(z, y, sizeof(MF_resultTuple));
+    /* memcpy(z, y, sizeof(MF_resultTuple));*/
+    (*z) = (*y) ;
   }
   else if(y->d > x->d){
     memcpy(z, x, sizeof(MF_resultTuple));
@@ -519,39 +521,36 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
   *z = y->capacity - y->flow;
 }
 
+// FIXME: look for _dup, and remove most of them
 
+// FIXME note: make this a function or put inline.  Check outputs
 #define GLOBAL_RELABEL                                                         \
   {                                                                            \
-    GrB_Vector lvl;                                                    \
+    GrB_Vector lvl = NULL ;                                                    \
     GrB_UnaryOp GrB_GetResidual;                                               \
-    GrB_Matrix res_mat, modified_res_mat, modified_res_matT;				\
+    GrB_Matrix res_mat, res_matT;				\
     LAGraph_Graph res_graph;                                                   \
-    GrB_Vector_new(&lvl, GrB_INT64, n);					\
     GrB_Matrix_new(&res_mat, GrB_FP64, n, n);				\
     GxB_UnaryOp_new(&GrB_GetResidual, F_UNARY(MF_getResidual), GrB_FP64,       \
                     GrB_FlowEdge, "MF_getResidual", GRB_GETRES_STR);           \
     GrB_apply(res_mat, NULL, NULL, GrB_GetResidual, R, NULL);                  \
-    GrB_Matrix_dup(&modified_res_mat, res_mat);                                \
-    GrB_select(modified_res_mat, NULL, NULL, GrB_VALUEGT_FP64, res_mat, 0,     \
+    GrB_select(res_mat, NULL, NULL, GrB_VALUEGT_FP64, res_mat, 0,     \
                GrB_DESC_R);                                                          \
-    GrB_Matrix_dup(&modified_res_matT, modified_res_mat); \
-    GrB_transpose(modified_res_matT, NULL, NULL, modified_res_mat, GrB_DESC_R);	\
-    LAGraph_New(&res_graph, &modified_res_matT, LAGraph_ADJACENCY_DIRECTED,  \
-                   msg);                                                      \
-    res_graph->AT = modified_res_mat;					\
+    GrB_Matrix_new(&res_matT, GrB_FP64, n, n);				\
+    GrB_transpose(res_matT, NULL, NULL, res_mat, GrB_DESC_R);	\
+    LAGraph_New(&res_graph, &res_matT, LAGraph_ADJACENCY_DIRECTED, msg);     \
+    res_graph->AT = res_mat;					\
+    res_mat = NULL ;                                            \
     LAGraph_Cached_OutDegree(res_graph, msg);                              \
     LAGr_BreadthFirstSearch(&lvl, NULL, res_graph, T, msg);             \
     GrB_assign(d, mask_vector, NULL, lvl, GrB_ALL, n, GrB_DESC_SC);                    \
     GrB_assign(d, lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC);                      \
-    GrB_Vector_dup(&e_dup, e);					\
-    GrB_assign(e_dup, lvl, NULL, -1, GrB_ALL, n, GrB_DESC_SC);	\
-    GrB_select(e, NULL, NULL, GrB_VALUEGT_FP64, e_dup, -1, NULL);	\
-    GrB_free(&e_dup);							\
+    GrB_Vector_dup(&e_dup, e);                                 \
+    GrB_assign(e_dup, lvl, NULL, -1, GrB_ALL, n, GrB_DESC_SC); \
+    GrB_select(e, NULL, NULL, GrB_VALUEGT_FP64, e_dup, -1, NULL);      \
+    GrB_free(&e_dup); \
     GrB_free(&lvl);                                                            \
     GrB_free(&GrB_GetResidual);                                                \
-    GrB_free(&res_mat);                                                        \
-    GrB_free(&modified_res_mat);                                               \
-    GrB_free(&modified_res_matT);                                               \
     LAGraph_Delete(&res_graph, msg);                                       \
   }
 
@@ -583,88 +582,84 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   // 14. set f to value of e(T)
 
   //types
-  GrB_Type GrB_FlowEdge;
-  GrB_Type GrB_ResultTuple;
-  GrB_Type GrB_CompareTuple;
+  GrB_Type GrB_FlowEdge = NULL ;
+  GrB_Type GrB_ResultTuple = NULL ;
+  GrB_Type GrB_CompareTuple = NULL ;
 
   //to create R
-  GrB_UnaryOp GrB_CreateResidualForward, GrB_CreateResidualBackward;
-  GrB_Matrix A = G->A;
+  GrB_UnaryOp GrB_CreateResidualForward = NULL , GrB_CreateResidualBackward = NULL ;
+  GrB_Matrix A = G->A;  /* FIXME, move below */
   GrB_Index n;
-  GrB_Matrix R_temp1, R_temp2, R;
+  GrB_Matrix R_temp1 = NULL, R_temp2 = NULL, R = NULL ;
   GrB_Matrix_nrows(&n, A);
 
   //to init R with initial saturated flows
-  GrB_Vector e, Re;
-  GrB_UnaryOp GrB_MakeFlow;
-  GrB_BinaryOp GrB_InitForwardFlows, GrB_InitBackwardFlows;
+  GrB_Vector e = NULL, Re = NULL, e_dup = NULL ;
+  GrB_UnaryOp GrB_MakeFlow = NULL ;
+  GrB_BinaryOp GrB_InitForwardFlows = NULL, GrB_InitBackwardFlows = NULL ;
 
   //create height vector
-  GrB_Vector d;
+  GrB_Vector d = NULL ;
  
 
   //active_set and n_active
-  GrB_Vector active_set;
-  GrB_Vector mask_vector;
-  GrB_Index n_active;
+  GrB_Vector active_set = NULL ;
+  GrB_Vector mask_vector = NULL ;
+  GrB_Index n_active ;
 
   //semiring and vectors for y<e, struct> = R x d
-  GrB_Vector y, y_dup;
-  GrB_IndexUnaryOp GrB_Prune;
-  GxB_IndexBinaryOp GrB_RxdIndexMult;
-  GrB_BinaryOp GrB_RxdAdd, GrB_RxdMult;
-  GrB_Monoid GrB_RxdAddMonoid;
-  GrB_Semiring GrB_RxdSemiring;
-  GrB_Scalar theta;
+  GrB_Vector y = NULL , y_dup = NULL ;
+  GrB_IndexUnaryOp GrB_Prune = NULL ;
+  GxB_IndexBinaryOp GrB_RxdIndexMult = NULL ;
+  GrB_BinaryOp GrB_RxdAdd = NULL, GrB_RxdMult = NULL ;
+  GrB_Monoid GrB_RxdAddMonoid = NULL ;
+  GrB_Semiring GrB_RxdSemiring = NULL ;
+  GrB_Scalar theta = NULL ;
  
   //binary op and yd
-  GrB_Vector yd;
-  GrB_BinaryOp GrB_CreateCompareVec;
+  GrB_Vector yd = NULL ;
+  GrB_BinaryOp GrB_CreateCompareVec = NULL ;
   
   //utility vectors, Matrix, and ops for mapping
-  GrB_Matrix map;
-  GrB_Vector Jvec;
-  GrB_UnaryOp GrB_extractJ, GrB_extractYJ;
+  GrB_Matrix map = NULL ;
+  GrB_Vector Jvec = NULL ;
+  GrB_UnaryOp GrB_extractJ = NULL, GrB_extractYJ = NULL ;
   
   //map x e semiring
-  GrB_Semiring GrB_MxeSemiring;
-  GrB_Monoid GrB_MxeAddMonoid;
-  GrB_BinaryOp GrB_MxeAdd, GrB_MxeMult;
-  GxB_IndexBinaryOp GrB_MxeIndexMult;
+  GrB_Semiring GrB_MxeSemiring = NULL ;
+  GrB_Monoid GrB_MxeAddMonoid = NULL ;
+  GrB_BinaryOp GrB_MxeAdd = NULL, GrB_MxeMult = NULL ;
+  GxB_IndexBinaryOp GrB_MxeIndexMult = NULL ;
 
   //residual flow vec
-  GrB_Vector residual_vec;
-  GrB_UnaryOp GrB_extractFlows;
+  GrB_Vector residual_vec = NULL ;
+  GrB_UnaryOp GrB_extractFlows = NULL ;
  
   //delta structures
-  GrB_Vector delta_vec;
-  GrB_Matrix delta, delta_mat;
+  GrB_Vector delta_vec = NULL ;
+  GrB_Matrix delta = NULL , delta_mat = NULL ;
  
   //relabel
-  GrB_Vector d_dup;
+  GrB_Vector d_dup = NULL ;
 
   //update height
-  GrB_BinaryOp GrB_UpdateHeight;
+  GrB_BinaryOp GrB_UpdateHeight = NULL ;
 
   //update R structure
-  GrB_Matrix R_dup;
-  GrB_BinaryOp GrB_UpdateFlows;
-
-  //update e
-  GrB_Vector e_dup;
+  GrB_BinaryOp GrB_UpdateFlows = NULL ;
 
   //scalars
-  GrB_Scalar zero_int32;
-  GrB_Scalar zero_fp32;
+  GrB_Scalar zero_int32 = NULL ;
+  GrB_Scalar zero_fp32 = NULL ;
 
   //invariant
-  GrB_Vector invariant;
-  GrB_BinaryOp GrB_InvariantCheck;
-  GrB_Scalar check;
+  GrB_Vector invariant = NULL ;
+  GrB_BinaryOp GrB_InvariantCheck = NULL ;
+  GrB_Scalar check = NULL ;
   bool check_raw;
 
   //descriptor and matrix building
-  GrB_Descriptor extract_desc;
+  GrB_Descriptor extract_desc = NULL ;
 
   //do input checks
   if(*f){
@@ -749,6 +744,10 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GxB_BinaryOp_new_IndexOp(&GrB_RxdMult, GrB_RxdIndexMult, theta));
   GRB_TRY(GxB_BinaryOp_new(&GrB_RxdAdd, F_BINARY(MF_RxdAdd), GrB_ResultTuple, GrB_ResultTuple, GrB_ResultTuple, "MF_RxdAdd", GRB_RXDADD_STR));
   MF_resultTuple id = {.d = INT32_MAX, .j = -1, .residual = 0};
+//id.d = INT32_MAX ;
+//id.j = -1 ;
+//id.residual = 0 ;
+
   GRB_TRY(GrB_Monoid_new_UDT(&GrB_RxdAddMonoid, GrB_RxdAdd, &id));
   GRB_TRY(GrB_Semiring_new(&GrB_RxdSemiring, GrB_RxdAddMonoid, GrB_RxdMult));
 
@@ -852,8 +851,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64, delta, zero_fp32, delta, zero_fp32, GrB_DESC_RT1));
 
     //update R
-    GRB_TRY(GrB_Matrix_dup(&R_dup, R));
-    GRB_TRY(GrB_eWiseMult(R, delta_mat, NULL, GrB_UpdateFlows, R_dup, delta_mat, GrB_DESC_S));
+    GRB_TRY(GrB_eWiseMult(R, delta_mat, NULL, GrB_UpdateFlows, R, delta_mat, GrB_DESC_S));
 
     //reduce delat_mat to delta_vec
     GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, delta_mat, GrB_DESC_RT0));
@@ -874,7 +872,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
     GRB_TRY(GrB_free(&d_dup));
     GRB_TRY(GrB_free(&y_dup));
-    GRB_TRY(GrB_free(&R_dup));
     
     ++iter;
     
