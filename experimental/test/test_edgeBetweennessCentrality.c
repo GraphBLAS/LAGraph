@@ -242,6 +242,7 @@ void test_many(void)
         "random_unweighted_bipartite2.mtx",
         "random_unweighted_general1.mtx",
         "random_unweighted_general2.mtx",
+        "dnn_data/n1024-l1.mtx",
         NULL
     };
 
@@ -257,8 +258,8 @@ void test_many(void)
         OK(LAGraph_MMRead(&A, f, msg));
         OK(fclose(f));
         OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
-        LAGRAPH_TRY (LAGraph_DeleteSelfEdges (G, msg)) ;
-        LAGRAPH_TRY (LAGraph_Cached_AT (G, msg)) ;
+        OK(LAGraph_DeleteSelfEdges (G, msg)) ;
+        OK(LAGraph_Cached_AT (G, msg)) ;
         TEST_CHECK(A == NULL); // A has been moved into G->A
 
         // compute its betweenness centrality (GraphBLAS version)

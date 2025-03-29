@@ -10,28 +10,28 @@
 #include "LG_internal.h"
 #include <stdio.h>
 
+double difference(GrB_Matrix bc, GrB_Matrix reference_bc)
+{
+    GrB_Matrix diff = NULL ;
+
+    uint64_t n ;
+    GrB_Matrix_nrows (&n, bc) ;
+
+    // Compute diff = max(abs(reference_bc - bc))
+    GrB_Matrix_new(&diff, GrB_FP64, n, n) ;
+    GrB_eWiseAdd(diff, NULL, NULL, GrB_MINUS_FP64, reference_bc, bc, NULL) ;
+    GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL) ;
+
+    double err = 1 ;
+    GrB_reduce(&err, NULL, GrB_MAX_MONOID_FP64, diff, NULL) ;
+
+    GrB_free(&diff) ;
+
+    return err ;
+} ;
+
 int main (int argc, char **argv)
 {
-
-    double difference(GrB_Matrix bc, GrB_Matrix reference_bc)
-    {
-        GrB_Matrix diff = NULL ;
-
-        uint64_t n ;
-        GrB_Matrix_nrows (&n, bc) ;
-
-        // Compute diff = max(abs(reference_bc - bc))
-        GrB_Matrix_new(&diff, GrB_FP64, n, n) ;
-        GrB_eWiseAdd(diff, NULL, NULL, GrB_MINUS_FP64, reference_bc, bc, NULL) ;
-        GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL) ;
-
-        double err = 1 ;
-        GrB_reduce(&err, NULL, GrB_MAX_MONOID_FP64, diff, NULL) ;
-
-        GrB_free(&diff) ;
-
-        return err ;
-    }
 
     //--------------------------------------------------------------------------
     // startup LAGraph and GraphBLAS
@@ -81,21 +81,25 @@ int main (int argc, char **argv)
     // compute edge betweenness centrality
     //--------------------------------------------------------------------------
 
-    LG_SET_BURBLE (true) ;
+    // LG_SET_BURBLE (true) ;
 
     t = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
 
-    LG_SET_BURBLE (false) ;
+    // LG_SET_BURBLE (false) ;
 
     //--------------------------------------------------------------------------
     // check the results using LG_check_edgeBetweennessCentrality
     //--------------------------------------------------------------------------
 
     GrB_Matrix reference_centrality = NULL;
+    t = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LG_check_edgeBetweennessCentrality(&reference_centrality, G, msg)) ;
+    t = LAGraph_WallClockTime ( ) - t ;
+    printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
+
 
     double err = difference(centrality, reference_centrality) ;
     printf ("Error between computed and reference centrality: %e\n", err) ;
