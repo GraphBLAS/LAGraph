@@ -801,13 +801,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GRB_TRY(GrB_mxv(y, NULL, NULL, GrB_MxeSemiring, map, e, GrB_DESC_R));
     GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y, -1, GrB_DESC_R));
    
-    GrB_Index y_nvals;
-    GRB_TRY(GrB_Vector_nvals(&y_nvals, y));
-    if(y_nvals == 0){
-      LG_FREE_ALL;
-      return GrB_SUCCESS;
-    }
-
     //relable, update heights
     GRB_TRY(GrB_eWiseMult(d, y, NULL, GrB_UpdateHeight, d, y, GrB_DESC_S));
 
