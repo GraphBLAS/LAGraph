@@ -31,40 +31,56 @@ LAGraph_Graph G = NULL ;
 // difference: compare the LAGraph and GAP results
 //------------------------------------------------------------------------------
 
-double difference(GrB_Matrix bc, double* gap_result, GrB_Index rows, GrB_Index cols) ;
+double difference(GrB_Matrix bc, double* reference_bc, GrB_Index rows, GrB_Index cols) ;
 
-double difference(GrB_Matrix bc, double* gap_result, GrB_Index rows, GrB_Index cols)
+double difference(GrB_Matrix bc, double* reference_bc, GrB_Index rows, GrB_Index cols)
 {
     // GrB_Matrix diff = NULL;
-    GrB_Matrix diff = NULL, gap_bc = NULL;
-    OK(GrB_Matrix_new(&gap_bc, GrB_FP64, rows, cols));
+    GrB_Matrix diff = NULL, reference_bc_matrix = NULL ;
+    OK(GrB_Matrix_new(&reference_bc_matrix, GrB_FP64, rows, cols)) ;
 
     // Populate gap_bc with values from gap_result
     for (GrB_Index i = 0; i < rows; i++) {
         for (GrB_Index j = 0; j < cols; j++) {
-            // if (*(gap_result + i * cols + j) != 0) printf("    (%ld, %ld)    %g\n", i, j, *(gap_result + i * cols + j));
-            OK(GrB_Matrix_setElement_FP64(gap_bc, *(gap_result + i * cols + j), i, j));
+            OK(GrB_Matrix_setElement_FP64(reference_bc_matrix, *(reference_bc + i * cols + j), i, j)) ;
         }
     }
 
-    // GxB_print (bc, 5) ;
-    // GxB_print (gap_bc, 5) ;
+    // Compute diff = max(abs(reference_bc_matrix - bc))
+    OK(GrB_Matrix_new(&diff, GrB_FP64, rows, cols)) ;
+    OK(GrB_eWiseAdd(diff, NULL, NULL, GrB_MINUS_FP64, reference_bc_matrix, bc, NULL)) ;
+    OK(GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL)) ;
 
-    // Compute diff = max(abs(gap_bc - bc))
-    OK(GrB_Matrix_new(&diff, GrB_FP64, rows, cols));
-    OK(GrB_eWiseAdd(diff, NULL, NULL, GrB_MINUS_FP64, gap_bc, bc, NULL));
-    // GxB_print (diff, 5) ;
-    OK(GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL));
+    double err = 0 ;
+    OK(GrB_reduce(&err, NULL, GrB_MAX_MONOID_FP64, diff, NULL)) ;
 
-    double err = 0;
-    OK(GrB_reduce(&err, NULL, GrB_MAX_MONOID_FP64, diff, NULL));
+    OK(GrB_free(&diff)) ;
+    OK(GrB_free(&reference_bc_matrix)) ;
 
-    OK(GrB_free(&diff));
-    OK(GrB_free(&gap_bc));
-
-    return err;
+    return err ;
 }
 
+double matrix_difference(GrB_Matrix bc, GrB_Matrix reference_bc) ;
+
+double matrix_difference(GrB_Matrix bc, GrB_Matrix reference_bc)
+{
+    GrB_Matrix diff = NULL ;
+
+    uint64_t n ;
+    GrB_Matrix_nrows (&n, bc) ;
+
+    // Compute diff = max(abs(reference_bc - bc))
+    GrB_Matrix_new(&diff, GrB_FP64, n, n) ;
+    GrB_eWiseAdd(diff, NULL, NULL, GrB_MINUS_FP64, reference_bc, bc, NULL) ;
+    GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL) ;
+
+    double err = 1 ;
+    GrB_reduce(&err, NULL, GrB_MAX_MONOID_FP64, diff, NULL) ;
+
+    GrB_free(&diff) ;
+
+    return err ;
+}
 
 //------------------------------------------------------------------------------
 // results for book graph
@@ -162,14 +178,14 @@ void test_diamonds_ebc (void)
     // compute its betweenness centrality with C version
     OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
     double err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
-    printf ("diamonds:   err: %e (C version)\n", err) ;
+    printf ("\n  diamonds:   err: %e (C version)", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
     // compute its betweenness centrality with GraphBLAS version
     OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
     err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
-    printf ("diamonds:   err: %e (pure GraphBLAS)\n", err) ;
+    printf ("\n  diamonds:   err: %e (pure GraphBLAS)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
@@ -200,14 +216,14 @@ void test_karate_ebc (void)
     // compute its betweenness centrality (C version)
     OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
     double err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
-    printf ("karate:   err: %e (C version)\n", err) ;
+    printf ("\n  karate:   err: %e (C version)", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
     // compute its betweenness centrality (GraphBLAS version)
     OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
     err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
-    printf ("karate:   err: %e (GraphBLAS version)\n", err) ;
+    printf ("\n  karate:   err: %e (GraphBLAS version)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
@@ -216,15 +232,64 @@ void test_karate_ebc (void)
 
 }
 
+// Function to test multiple matrix market files
+void test_many(void)
+{
+    LAGraph_Init(msg);
+
+    const char *files[] = {
+        "random_unweighted_bipartite1.mtx",
+        "random_unweighted_bipartite2.mtx",
+        "random_unweighted_general1.mtx",
+        "random_unweighted_general2.mtx",
+        "dnn_data/n1024-l1.mtx",
+        NULL
+    };
+
+    for (int i = 0; files[i] != NULL; i++)
+    {
+        GrB_Matrix A = NULL;
+        GrB_Matrix centrality = NULL;
+        GrB_Matrix reference_centrality = NULL;
+
+        snprintf(filename, LEN, LG_DATA_DIR "%s", files[i]);
+        FILE *f = fopen(filename, "r");
+        TEST_CHECK(f != NULL);
+        OK(LAGraph_MMRead(&A, f, msg));
+        OK(fclose(f));
+        OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
+        OK(LAGraph_DeleteSelfEdges (G, msg)) ;
+        OK(LAGraph_Cached_AT (G, msg)) ;
+        TEST_CHECK(A == NULL); // A has been moved into G->A
+
+        // compute its betweenness centrality (GraphBLAS version)
+        OK(LAGr_EdgeBetweennessCentrality(&centrality, G, msg));
+
+        // compute its betweenness centrality (C version)
+        OK(LG_check_edgeBetweennessCentrality(&reference_centrality, G, msg));
+
+        // Compare the results
+        double err = matrix_difference(centrality, reference_centrality);
+        printf("\n  %s: err: %e", files[i], err);
+        TEST_CHECK(err < 1e-4);
+
+        OK(GrB_free(&centrality));
+        OK(GrB_free(&reference_centrality));
+        OK(LAGraph_Delete(&G, msg));
+    }
+    printf("\n") ;
+
+    LAGraph_Finalize(msg);
+}
+
 //------------------------------------------------------------------------------
 // list of tests
 //------------------------------------------------------------------------------
 
-// FIXME: add more matrices
 
 TEST_LIST = {
     {"test_diamonds_ebc", test_diamonds_ebc},
     {"test_karate_ebc", test_karate_ebc},
-//  {"test_many", test_many},   FIXME ADD THIS
+    {"test_many", test_many},
     {NULL, NULL}
 };
