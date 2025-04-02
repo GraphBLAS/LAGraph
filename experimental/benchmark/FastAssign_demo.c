@@ -93,12 +93,12 @@ int main (int argc, char **argv)
         rand_v, (void **)&rand_a, &r_size, &iso, NULL
     )) ;
     // Baseline: Build
-    t = LAGraph_WallClockTime ( ) ;
-    GRB_TRY (GxB_Vector_build_Scalar (
-        build_v, rand_a, bool1, r_size)) ;
-    t = LAGraph_WallClockTime ( ) - t ;
-    printf ("Time for Build: %g sec\n", t) ;
-    t = LAGraph_WallClockTime ( ) ;
+    //t = LAGraph_WallClockTime ( ) ;
+    //GRB_TRY (GxB_Vector_build_Scalar (
+    //    build_v, rand_a, bool1, r_size)) ;
+    //t = LAGraph_WallClockTime ( ) - t ;
+    //printf ("Time for Build: %g sec\n", t) ;
+    //t = LAGraph_WallClockTime ( ) ;
 
 
     // Baseline: Single Threaded random access insert
