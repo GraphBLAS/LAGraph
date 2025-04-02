@@ -128,7 +128,7 @@ double karate_ebc [34][34] =
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 13.511111111111113, 19.488888888888887},
     {0.0, 0.0, 0.0, 0.0, 0.0, 16.5, 16.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
     {22.509523809523813, 10.490476190476187, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 13.511111111111113, 19.488888888888887},
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 13.511111111111111, 19.488888888888887},
     {25.770634920634926, 8.209523809523809, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 33.31349206349207},
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 13.511111111111113, 19.488888888888887},
     {22.50952380952381, 10.490476190476187, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
@@ -160,7 +160,7 @@ void test_diamonds_ebc (void)
     int niters = 0 ;
     LAGraph_Kind kind = LAGraph_ADJACENCY_DIRECTED ;
 
-    // create the karate graph
+    // create the diamonds graph
     snprintf (filename, LEN, LG_DATA_DIR "%s", "diamonds.mtx") ;
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
@@ -169,6 +169,12 @@ void test_diamonds_ebc (void)
     OK (LAGraph_New (&G, &A, kind, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
+    // Print graph statistics
+    uint64_t n, nedges ;
+    OK (GrB_Matrix_nrows(&n, G->A)) ;
+    OK (GrB_Matrix_nvals(&nedges, G->A)) ;
+    printf ("\n\nDiamonds graph (%" PRIu64 " nodes, %" PRIu64 " edges):\n", n, nedges) ;
+
     // check that AT is cached
     int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
         LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
@@ -176,16 +182,22 @@ void test_diamonds_ebc (void)
     TEST_CHECK (result == ok_result) ;
 
     // compute its betweenness centrality with C version
+    double t = LAGraph_WallClockTime() ;
     OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
+    t = LAGraph_WallClockTime() - t ;
     double err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
-    printf ("\n  diamonds:   err: %e (C version)", err) ;
+    printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
+    printf ("  diamonds:   err: %e (C version)", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
     // compute its betweenness centrality with GraphBLAS version
+    t = LAGraph_WallClockTime() ;
     OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
+    t = LAGraph_WallClockTime() - t ;
     err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
-    printf ("\n  diamonds:   err: %e (pure GraphBLAS)\n", err) ;
+    printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+    printf ("  diamonds:   err: %e (pure GraphBLAS)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
@@ -213,23 +225,34 @@ void test_karate_ebc (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
+    // Print graph statistics
+    uint64_t n, nedges ;
+    OK (GrB_Matrix_nrows(&n, G->A)) ;
+    OK (GrB_Matrix_nvals(&nedges, G->A)) ;
+    printf ("\n\nKarate graph (%" PRIu64 " nodes, %" PRIu64 " edges):\n", n, nedges) ;
+
     // compute its betweenness centrality (C version)
+    double t = LAGraph_WallClockTime() ;
     OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
+    t = LAGraph_WallClockTime() - t ;
     double err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
-    printf ("\n  karate:   err: %e (C version)", err) ;
+    printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
+    printf ("  karate:   err: %e (C version)", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
     // compute its betweenness centrality (GraphBLAS version)
+    t = LAGraph_WallClockTime() ;
     OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
+    t = LAGraph_WallClockTime() - t ;
     err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
-    printf ("\n  karate:   err: %e (GraphBLAS version)\n", err) ;
+    printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+    printf ("  karate:   err: %e (GraphBLAS version)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
     LAGraph_Finalize (msg) ;
-
 }
 
 // Function to test multiple matrix market files
@@ -238,11 +261,15 @@ void test_many(void)
     LAGraph_Init(msg);
 
     const char *files[] = {
-        "random_unweighted_bipartite1.mtx",
-        "random_unweighted_bipartite2.mtx",
         "random_unweighted_general1.mtx",
         "random_unweighted_general2.mtx",
+        "random_unweighted_bipartite1.mtx",
+        "random_unweighted_bipartite2.mtx",
+        "jagmesh7.mtx",
         "dnn_data/n1024-l1.mtx",
+        "bcsstk13.mtx",
+        // "pushpull.mtx",
+        // "cryg250.mtx",
         NULL
     };
 
@@ -262,15 +289,27 @@ void test_many(void)
         OK(LAGraph_Cached_AT (G, msg)) ;
         TEST_CHECK(A == NULL); // A has been moved into G->A
 
+        // Print graph statistics
+        uint64_t n, nedges ;
+        OK (GrB_Matrix_nrows(&n, G->A)) ;
+        OK (GrB_Matrix_nvals(&nedges, G->A)) ;
+        printf ("\n\n%s (%" PRIu64 " nodes, %" PRIu64 " edges)\n", files[i], n, nedges) ;
+
         // compute its betweenness centrality (GraphBLAS version)
+        double t = LAGraph_WallClockTime() ;
         OK(LAGr_EdgeBetweennessCentrality(&centrality, G, msg));
+        t = LAGraph_WallClockTime() - t ;
+        printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
 
         // compute its betweenness centrality (C version)
+        t = LAGraph_WallClockTime() ;
         OK(LG_check_edgeBetweennessCentrality(&reference_centrality, G, msg));
+        t = LAGraph_WallClockTime() - t ;
+        printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
 
         // Compare the results
         double err = matrix_difference(centrality, reference_centrality);
-        printf("\n  %s: err: %e", files[i], err);
+        printf("  %s: err: %e", files[i], err);
         TEST_CHECK(err < 1e-4);
 
         OK(GrB_free(&centrality));
