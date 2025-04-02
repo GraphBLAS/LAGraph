@@ -486,12 +486,6 @@ int LAGraph_SwapEdgesV2
     // Make E Matrix -----------------------------------------------------------
     GRB_TRY (GrB_Matrix_new(&E, Ai_type, e, 2)) ;
     GRB_TRY (GrB_Vector_new(&E_vec, Ai_type, 2 * e)) ;
-    // LG_TRY (LAGraph_Malloc (
-    //     (void**)(&indices), 2ull * e, sizeof(GrB_Index), msg)) ;
-    // GRB_TRY (
-    //     GrB_Matrix_extractTuples_BOOL (indices, indices + e, NULL, &e, A_tril)
-    //     ) ;
-    // ind_size = 2ull * e * sizeof(GrB_Index);
     
     // Shuffle i and j into E_vec.
     // Filling out E_vec helps assign be much quicker.
@@ -505,8 +499,6 @@ int LAGraph_SwapEdgesV2
     GRB_TRY (GrB_Vector_assign(
         E_vec, NULL, NULL, Ai, stride, GxB_STRIDE, NULL)) ;
 
-    GxB_fprint(E_vec, GxB_SHORT, stdout);
-    GxB_fprint(lg_edge, GxB_SHORT, stdout);
     GRB_TRY (GxB_Vector_unload(
         E_vec, &indices, &E_type, &e, &ind_size, &E_hand, NULL));
     e /= 2;
