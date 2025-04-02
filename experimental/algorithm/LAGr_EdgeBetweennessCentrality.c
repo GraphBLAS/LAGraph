@@ -335,8 +335,14 @@ int LAGr_EdgeBetweennessCentrality
             // Accumulate centrality values for edges
             //----------------------------------------------------------------------
 
+            #if 1
+            // centrality{A} += Update, using assign
             GRB_TRY (GrB_assign(*centrality, A, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n, 
             GrB_DESC_S)) ;
+            #else
+            // centrality = centrality + Update using eWiseAdd
+            GRB_TRY (GrB_eWiseAdd (*centrality, NULL, NULL, GrB_PLUS_FP64, *centrality, Update, NULL)) ;
+            #endif
 
             //----------------------------------------------------------------------
             // v = Update +.
