@@ -25,7 +25,6 @@
     GrB_free (&M) ;                             \
     GrB_free(&dup_swaps_v);                     \
     GrB_free(&new_hashed_edges);                \
-    GrB_free(&hashed_edges);                    \
     GrB_free(&edge_perm) ;                      \
 }
 
@@ -34,6 +33,8 @@
     /* free any workspace used here */          \
     GrB_free (&E) ;                             \
     GrB_free (&A_tril) ;                        \
+    GrB_free (&Ai) ;                            \
+    GrB_free (&Aj) ;                            \
     GrB_free (&random_v) ;                      \
     GrB_free (&r_permute) ;                     \
     GrB_free (&ramp_v) ;                        \
@@ -53,8 +54,8 @@
     GrB_free (&lg_shiftland) ;                  \
     GrB_free (&lg_edge) ;                       \
     GrB_free (&lg_swap) ;                       \
+    GrB_free (&hashed_edges) ;                  \
     GrB_free (&con) ;                           \
-    GrB_free (&E_con) ;                         \
     GrB_free (&one8) ;                          \
     GrB_free (&x) ;                             \
     LAGraph_Free((void**)&indices, msg) ;       \
@@ -91,8 +92,8 @@ void shift_and
 typedef struct {
     uint64_t a; 
     uint64_t b;
-} edge_type;
-#define EDGE_TYPE                                                               \
+} edge_type64;
+#define EDGE_TYPE64                                                             \
 "typedef struct { uint64_t a; uint64_t b; } edge_type;"
 
 typedef struct {
@@ -100,14 +101,32 @@ typedef struct {
     uint64_t b;
     uint64_t c; 
     uint64_t d;
-} swap_type;
-#define SWAP_TYPE                                                               \
+} swap_type64;
+#define SWAP_TYPE64                                                             \
 "typedef struct {                                                            \n"\
-"   uint64_t a; uint64_t b; uint64_t c; uint64_t d;                         \n" \
+"   uint64_t a; uint64_t b; uint64_t c; uint64_t d;                          \n"\
 "}swap_type;"
 
-void swap_bc
-(swap_type *z, const swap_type *x, GrB_Index I, GrB_Index J, const bool *y)
+typedef struct {
+    uint32_t a; 
+    uint32_t b;
+} edge_type32;
+#define EDGE_TYPE32                                                             \
+"typedef struct { uint32_t a; uint32_t b; } edge_type;"
+
+typedef struct {
+    uint32_t a; 
+    uint32_t b;
+    uint32_t c; 
+    uint32_t d;
+} swap_type32;
+#define SWAP_TYPE32                                                             \
+"typedef struct {                                                            \n"\
+"   uint32_t a; uint32_t b; uint32_t c; uint32_t d;                          \n"\
+"}swap_type;"
+
+void swap_bc64
+(swap_type64 *z, const swap_type64 *x, GrB_Index I, GrB_Index J, const bool *y)
 {
     memcpy(z, x, sizeof(*z)) ; //unnessesary when aliassed but done for safety.
     if(z->a == z->c || z->b == z->c || z->a == z->d || z->b == z->d ) return;
@@ -124,7 +143,25 @@ void swap_bc
         z->b = temp; 
     }    
 }
-#define SWAP_BC                                                                 \
+void swap_bc32
+(swap_type32 *z, const swap_type32 *x, GrB_Index I, GrB_Index J, const bool *y)
+{
+    memcpy(z, x, sizeof(*z)) ; //unnessesary when aliassed but done for safety.
+    if(z->a == z->c || z->b == z->c || z->a == z->d || z->b == z->d ) return;
+    if(I & 1)
+    {
+        uint32_t temp = z->d;
+        z->d = z->b;
+        z->b = temp; 
+    }
+    else
+    {
+        uint32_t temp = z->c;
+        z->c = z->b;
+        z->b = temp; 
+    }    
+}
+#define SWAP_BC64                                                                 \
 "void swap_bc                                                                   \n"\
 "(swap_type *z, const swap_type *x, GrB_Index I, GrB_Index J, const bool *y)    \n"\
 "{                                                                              \n"\
@@ -143,23 +180,67 @@ void swap_bc
 "        z->b = temp;                                                           \n"\
 "    }                                                                          \n"\
 "}"
+#define SWAP_BC32                                                                 \
+"void swap_bc                                                                   \n"\
+"(swap_type *z, const swap_type *x, GrB_Index I, GrB_Index J, const bool *y)    \n"\
+"{                                                                              \n"\
+"    memcpy(z, x, sizeof(*z)) ; //unnessesary when aliassed but done for safety. \n"\
+"    if(z->a == z->c || z->b == z->c || z->a == z->d || z->b == z->d ) return;  \n"\
+"   if(I & 1)                                                                   \n"\
+"    {                                                                          \n"\
+"        uint32_t temp = z->d;                                                  \n"\
+"        z->d = z->b;                                                           \n"\
+"        z->b = temp;                                                           \n"\
+"    }                                                                          \n"\
+"    else                                                                       \n"\
+"    {                                                                          \n"\
+"        uint32_t temp = z->c;                                                  \n"\
+"        z->c = z->b;                                                           \n"\
+"        z->b = temp;                                                           \n"\
+"    }                                                                          \n"\
+"}"
 
-
-//Simply making a cantor pairing then masking.
-void hash_edge 
-(uint64_t *z, const edge_type *x, const uint64_t *mask)
+// using xorshift, from https://en.wikipedia.org/wiki/Xorshift
+// with a state of uint64_t, or xorshift64star.
+void hash_edge64
+(uint64_t *z, const edge_type64 *x, const uint64_t *mask)
 {
-    (*z) = (((x->a + x->b + 1) * (x->a + x->b)) / 2) & (*mask) ;
-    (*z) += (x->a < x->b)? x->a: x->b;
+    (*z) = x->a ^ x->b;
+	(*z) ^= (*z) << 13;
+	(*z) ^= (*z) >> 7;
+	(*z) ^= (*z) << 17;
+    (*z) ^= (x->a < x->b)? x->a: x->b;
+    (*z) ^= (*z) << 13;
+	(*z) ^= (*z) >> 7;
+	(*z) ^= (*z) << 17;
+    (*z) &= (*mask);
+}
+void hash_edge32
+(uint64_t *z, const edge_type32 *x, const uint64_t *mask)
+{
+    (*z) = x->a ^ x->b;
+	(*z) ^= (*z) << 13;
+	(*z) ^= (*z) >> 7;
+	(*z) ^= (*z) << 17;
+    (*z) ^= (x->a < x->b)? x->a: x->b;
+    (*z) ^= (*z) << 13;
+	(*z) ^= (*z) >> 7;
+	(*z) ^= (*z) << 17;
     (*z) &= (*mask);
 }
 #define HASH_EDGE                                                                \
 "void hash_edge                                                               \n"\
 "(uint64_t *z, const edge_type *x, const uint64_t *mask)                      \n"\
 "{                                                                            \n"\
-"    (*z) = (((x->a + x->b + 1) * (x->a + x->b)) / 2) & (*mask) ;             \n"\
-"    (*z) += (x->a < x->b)? x->a: x->b;                                       \n"\
-"    (*z) &= (*mask);                                                         \n"\
+"   (*z) = x->a ^ x->b;                                                       \n"\
+"	(*z) ^= (*z) << 13;                                                       \n"\
+"	(*z) ^= (*z) >> 7;                                                        \n"\
+"	(*z) ^= (*z) << 17;                                                       \n"\
+"   (*z) ^= (x->a < x->b)? x->a: x->b;                                        \n"\
+"   (*z) ^= (*z) << 13;                                                       \n"\
+"	(*z) ^= (*z) >> 7;                                                        \n"\
+"	(*z) ^= (*z) << 17;                                                       \n"\
+"   (*z) &= (*mask);                                                          \n"\
 "}"
 
 void add_term
@@ -173,14 +254,20 @@ void add_term
 "{                                                                            \n"\
 "    (*z) = (*x) | (*y) + ((int8_t)1 & (*x) & (*y)) ;                         \n"\
 "}"
-void edge2
-    (edge_type *z, const void *x, const edge_type *y)
+
+void edge2nd64
+    (edge_type64 *z, const void *x, const edge_type64 *y)
 {
-    //if(y->a == 0 && y->b == 0) return;
     z->a = y->a;
     z->b = y->b;
 }
-#define EDGE2                                                                   \
+void edge2nd32
+    (edge_type32 *z, const void *x, const edge_type32 *y)
+{
+    z->a = y->a;
+    z->b = y->b;
+}
+#define EDGE2ND                                                                 \
 "void edge2                                                                   \n"\
 "(edge_type *z, const void *x, const edge_type *y)                            \n"\
 "{                                                                            \n"\
@@ -203,12 +290,12 @@ int LAGraph_SwapEdgesV2
     // Declorations
     //--------------------------------------------------------------------------
     GrB_Matrix A = NULL; // n x n Adjacency Matrix 
+    GrB_Vector Ai = NULL, Aj = NULL;
 
     // e x 2 with entries corresponding to verticies of an edge
     GrB_Matrix E = NULL;
     // e x 1 vector, each entry is an edge.
     GrB_Vector E_vec = NULL, E_temp = NULL; 
-    GxB_Container E_con = NULL;
 
     // swaps x 4
     // Each row contains 4 entries corresponding to the verticies 
@@ -227,7 +314,7 @@ int LAGraph_SwapEdgesV2
     GrB_Vector random_v = NULL, r_permute = NULL;
 
     // indicies for A
-    GrB_Index *indices = NULL;
+    void *indices = NULL;
 
     GrB_Vector ramp_v = NULL;
 
@@ -272,7 +359,7 @@ int LAGraph_SwapEdgesV2
     // Toople types
     GrB_Type lg_edge = NULL, lg_swap = NULL;
     // Unload types
-    GrB_Type M_type = NULL, E_type = NULL;
+    GrB_Type M_type = NULL, E_type = NULL, Ai_type = NULL;
     int M_hand = 0, E_hand = 0;
 
     int16_t *dup_swaps = NULL;
@@ -309,57 +396,89 @@ int LAGraph_SwapEdgesV2
     // Initializations
     //--------------------------------------------------------------------------
     A = G->A ;  
-
     // Types
-    GRB_TRY (GxB_Type_new(
-        &lg_edge, sizeof(edge_type), "edge_type", EDGE_TYPE)) ;
-    GRB_TRY (GxB_Type_new(
-        &lg_swap, sizeof(swap_type), "swap_type", SWAP_TYPE)) ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Matrix_new (&A_tril, GrB_BOOL, n, n)) ;
-
+    GRB_TRY (GrB_Vector_new(&Ai, GrB_BOOL, 0)) ;
+    GRB_TRY (GrB_Vector_new(&Aj, GrB_BOOL, 0)) ;
 
     // Extract lower triangular edges.
     GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
+    GxB_fprint(A_tril, GxB_SHORT, stdout) ;
+    GRB_TRY (GxB_Matrix_extractTuples_Vector(Ai, Aj, NULL, A_tril, NULL)) ;
+    GRB_TRY (GxB_Vector_type(&Ai_type, Ai));
+    int code;
+    GrB_get(Ai_type, &code, GrB_EL_TYPE_CODE);
     GRB_TRY (GrB_Matrix_nvals(&e, A_tril)) ;
-
     
-    GRB_TRY (GrB_Matrix_new(&E, GrB_UINT64, e, 2)) ;
-    GRB_TRY (GrB_Vector_new(&E_vec, lg_edge, e)) ;
-        
+    
+    
     //Init Operators -----------------------------------------------------------
+    if(code == GrB_UINT32_CODE)
+    {
+        GRB_TRY (GxB_Type_new(
+            &lg_edge, sizeof(edge_type32), "edge_type", EDGE_TYPE32)) ;
+        GRB_TRY (GxB_Type_new(
+            &lg_swap, sizeof(swap_type32), "swap_type", SWAP_TYPE32)) ;
+        GRB_TRY(GxB_BinaryOp_new(
+            &hash_seed_e, (GxB_binary_function) (&hash_edge32),
+            GrB_UINT64, lg_edge, GrB_UINT64, "hash_edge", HASH_EDGE
+        )) ;
+        GRB_TRY (GxB_IndexUnaryOp_new (
+            &swap_pair, (GxB_index_unary_function) (&swap_bc32),
+            lg_swap, lg_swap, GrB_BOOL, "swap_bc", SWAP_BC32
+        )) ;
+        GRB_TRY(GxB_BinaryOp_new(
+            &second_edge, (GxB_binary_function) (&edge2nd32), 
+            lg_edge, lg_edge, lg_edge, "edge2", EDGE2ND
+        )) ;
+        GRB_TRY(GxB_BinaryOp_new(
+            &second_bool_edge, (GxB_binary_function) (&edge2nd32), 
+            lg_edge, GrB_BOOL, lg_edge, "edge2", EDGE2ND
+        )) ;
+    }
+    else
+    {
+        GRB_TRY (GxB_Type_new(
+            &lg_edge, sizeof(edge_type64), "edge_type", EDGE_TYPE64)) ;
+        GRB_TRY (GxB_Type_new(
+            &lg_swap, sizeof(swap_type64), "swap_type", SWAP_TYPE64)) ;
+        GRB_TRY(GxB_BinaryOp_new(
+            &hash_seed_e, (GxB_binary_function) (&hash_edge64),
+            GrB_UINT64, lg_edge, GrB_UINT64, "hash_edge", HASH_EDGE
+        )) ;
+        GRB_TRY (GxB_IndexUnaryOp_new (
+            &swap_pair, (GxB_index_unary_function) (&swap_bc64),
+            lg_swap, lg_swap, GrB_BOOL, "swap_bc", SWAP_BC64
+        )) ;
+        GRB_TRY(GxB_BinaryOp_new(
+            &add_term_biop, (GxB_binary_function) (&add_term), 
+            GrB_INT8, GrB_INT8, GrB_INT8, "add_term", ADD_TERM
+        )) ;
+        GRB_TRY(GxB_BinaryOp_new(
+            &second_edge, (GxB_binary_function) (&edge2nd64), 
+            lg_edge, lg_edge, lg_edge, "edge2", EDGE2ND
+        )) ;
+        GRB_TRY(GxB_BinaryOp_new(
+            &second_bool_edge, (GxB_binary_function) (&edge2nd64), 
+            lg_edge, GrB_BOOL, lg_edge, "edge2", EDGE2ND
+        )) ;
+    }
+    
     GRB_TRY (GxB_UnaryOp_new (
         &lg_shiftland, (GxB_unary_function) (&shift_and),
         GrB_UINT16, GrB_UINT16, "shift_and", SHIFT_AND
     )) ;
     GRB_TRY(GxB_BinaryOp_new(
-        &hash_seed_e, (GxB_binary_function) (&hash_edge),
-        GrB_UINT64, lg_edge, GrB_UINT64, "hash_edge", HASH_EDGE
-    )) ;
-    GRB_TRY (GxB_IndexUnaryOp_new (
-        &swap_pair, (GxB_index_unary_function) (&swap_bc),
-        lg_swap, lg_swap, GrB_BOOL, "swap_bc", SWAP_BC
-    )) ;
-    GRB_TRY(GxB_BinaryOp_new(
         &add_term_biop, (GxB_binary_function) (&add_term), 
         GrB_INT8, GrB_INT8, GrB_INT8, "add_term", ADD_TERM
-    )) ;
-    GRB_TRY(GxB_BinaryOp_new(
-        &second_edge, (GxB_binary_function) (&edge2), 
-        lg_edge, lg_edge, lg_edge, "edge2", EDGE2
-    )) ;
-    GRB_TRY(GxB_BinaryOp_new(
-        &second_bool_edge, (GxB_binary_function) (&edge2), 
-        lg_edge, GrB_BOOL, lg_edge, "edge2", EDGE2
     )) ;
 
     GRB_TRY (GxB_Monoid_terminal_new_INT8(
         &add_term_monoid, add_term_biop, (int8_t) 0, (int8_t) 2
     )) ;
 
-    // This isn't actually a monoid but since it's never applied as one it 
-    // shouldn't be a problem? FORESHADOWING
-    edge_type iden_second = {0,0};
+    edge_type64 iden_second = {0,0};
     GRB_TRY (GrB_Monoid_new_UDT(
         &second_edge_monoid, second_edge, (void *) &iden_second
     )) ;
@@ -375,39 +494,47 @@ int LAGraph_SwapEdgesV2
     GrB_Index num_swaps = 0, num_attempts = 0, swaps_per_loop = e / 3 ;
 
     // Make E Matrix -----------------------------------------------------------
-    LG_TRY (LAGraph_Malloc (
-        (void**)(&indices), 2ull * e, sizeof(GrB_Index), msg)) ;
-    GRB_TRY (
-        GrB_Matrix_extractTuples_BOOL (indices, indices + e, NULL, &e, A_tril)
-        ) ;
-    ind_size = 2ull * e * sizeof(GrB_Index);
-    GRB_TRY (GxB_Container_new(&E_con)) ;
-    GRB_TRY (GxB_Vector_load(
-        E_con->x, (void **) &indices, GrB_INT64, e * 2, 
-        ind_size, GrB_DEFAULT, NULL
-    ));
-    E_con->nrows_nonempty = E_con->nrows = e;
-    E_con->nvals = e * 2;
-    E_con->ncols_nonempty = E_con->ncols = 2;
-    E_con->iso = false;
-    E_con->jumbled = false;
-    E_con->format = GxB_FULL;
-    E_con->orientation = GrB_COLMAJOR;
-    GRB_TRY (GxB_load_Matrix_from_Container(E, E_con, NULL));
-    GRB_TRY (GrB_set(E, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
-    GRB_TRY (GxB_unload_Matrix_into_Container(E, E_con, NULL));
+    GRB_TRY (GrB_Matrix_new(&E, Ai_type, e, 2)) ;
+    GRB_TRY (GrB_Vector_new(&E_vec, Ai_type, 2 * e)) ;
+    // LG_TRY (LAGraph_Malloc (
+    //     (void**)(&indices), 2ull * e, sizeof(GrB_Index), msg)) ;
+    // GRB_TRY (
+    //     GrB_Matrix_extractTuples_BOOL (indices, indices + e, NULL, &e, A_tril)
+    //     ) ;
+    // ind_size = 2ull * e * sizeof(GrB_Index);
+    
+    // Shuffle i and j into E_vec.
+    // Filling out E_vec helps assign be much quicker.
+    
+    GRB_TRY (GrB_assign(
+        E_vec, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL));
+    GrB_Index stride[] = {(GrB_Index) 0, e * 2 - 1, (GrB_Index) 2} ;
+    int ret = GrB_Vector_assign(
+        E_vec, NULL, NULL, Aj, stride, GxB_STRIDE, NULL);
+    printf("%d!!!\n", ret);
+    GRB_TRY (ret) ;
+    stride[GxB_BEGIN] = 1;
+    GRB_TRY (GrB_Vector_assign(
+        E_vec, NULL, NULL, Ai, stride, GxB_STRIDE, NULL)) ;
+
+    GxB_fprint(E_vec, GxB_SHORT, stdout);
+    GxB_fprint(lg_edge, GxB_SHORT, stdout);
     GRB_TRY (GxB_Vector_unload(
-        E_con->x, (void **) &indices, &E_type, &e, &ind_size, &E_hand, NULL));
+        E_vec, &indices, &E_type, &e, &ind_size, &E_hand, NULL));
     e /= 2;
-    GRB_TRY (GxB_Vector_load(
-        E_vec, (void **) &indices, lg_edge, e, ind_size, E_hand, NULL));
+    ret = GxB_Vector_load(
+        E_vec, &indices, lg_edge, e, ind_size, E_hand, NULL);
+    printf("%d!!!\n", ret);
+
+    GRB_TRY (ret);
     
     // Find Hash Size ----------------------------------------------------------
     int shift_e = __builtin_clzl(e);
     uint64_t ehash_size = (1ull << (67-shift_e)) ;
     printf("Hash Size: %ld", ehash_size);
     GRB_TRY (GrB_Vector_new(&exists, GrB_INT8, ehash_size)) ;
-    
+    GRB_TRY (GrB_Vector_new(&hashed_edges, GrB_UINT64, e)) ;
+
     // Init Ramps --------------------------------------------------------------
     GRB_TRY (GrB_Vector_new(&ramp_v, GrB_UINT64, e + 1)) ;
     GRB_TRY (GrB_Vector_assign_UINT64 (ramp_v, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
@@ -488,16 +615,15 @@ int LAGraph_SwapEdgesV2
         // Hash Edges ----------------------------------------------------------
         GRB_TRY (GrB_Vector_new(
             &new_hashed_edges, GrB_UINT64, swaps_per_loop * 2)) ;
-        GRB_TRY (GrB_Vector_new(&hashed_edges, GrB_UINT64, e)) ;
 
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64(
             new_hashed_edges, NULL, NULL, hash_seed_e, M, 
             ehash_size - 1ll, NULL
-        )) ;//0xFB21C651E98DF25ULL
+        )) ;
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64(
             hashed_edges, NULL, NULL, hash_seed_e, E_vec, 
             ehash_size - 1ll, NULL
-        )) ;        
+        )) ;
 
         //----------------------------------------------------------------------
         // Build Hash Buckets
@@ -614,25 +740,26 @@ int LAGraph_SwapEdgesV2
         swaps_per_loop = LAGRAPH_MIN(swaps_per_loop, e / 3) ;
 
         LG_TRY (LAGraph_Random_Next(random_v, msg)) ;
-        printf("#####Made %ld swaps. Total %ld out of %ld. Attempting %ld swaps next.#####\n\n", n_keep, num_swaps, e * Q, swaps_per_loop) ;
+        printf("#####Made %ld swaps. Total %ld out of %ld."\
+             "Attempting %ld swaps next.#####\n\n", 
+             n_keep, num_swaps, e * Q, swaps_per_loop) ;
     } 
     GRB_TRY (GxB_Vector_unload(
         E_vec, (void **) &indices, &lg_edge, &e, &ind_size, &E_hand, NULL));
     GRB_TRY (GxB_Vector_load(
-        E_con->x, (void **) &indices, E_type, e * 2, ind_size, E_hand, NULL));
-    GRB_TRY (GxB_load_Matrix_from_Container(E,E_con, NULL)) ;
-    GRB_TRY (GrB_set(E, GrB_COLMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
-    GRB_TRY (GxB_unload_Matrix_into_Container(E,E_con, NULL)) ;
-    GRB_TRY (GxB_Vector_unload(
-        E_con->x, (void **) &indices, &E_type, &e, &ind_size, &E_hand, NULL));
-    e /= 2;
-
+        E_vec, (void **) &indices, E_type, e * 2, ind_size, E_hand, NULL));
+    GRB_TRY (GrB_Vector_extract(
+        Aj, NULL, NULL, E_vec, stride, GxB_STRIDE, NULL));
+    stride[GxB_BEGIN] = 0;
+    GRB_TRY (GrB_Vector_extract(
+        Ai, NULL, NULL, E_vec, stride, GxB_STRIDE, NULL));
     // Build Output Matrix
     GRB_TRY(GrB_Matrix_new(A_new, GrB_BOOL, n, n)) ;
-    GRB_TRY (GxB_Matrix_build_Scalar(*A_new, indices, indices + e, one8, e)) ;
+    GRB_TRY (GxB_Matrix_build_Scalar_Vector(*A_new, Ai, Aj, one8, NULL)) ;
     GRB_TRY (GrB_eWiseAdd(
         *A_new, NULL, NULL, GrB_LOR_MONOID_BOOL, *A_new,*A_new, GrB_DESC_T0
     )) ;
+
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
