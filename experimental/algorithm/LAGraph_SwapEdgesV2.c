@@ -208,10 +208,7 @@ void hash_edge64
     (*z) = x->a ^ x->b;
 	(*z) ^= (*z) << 13;
 	(*z) ^= (*z) >> 7;
-	(*z) ^= (*z) << 17;
     (*z) ^= (x->a < x->b)? x->a: x->b;
-    (*z) ^= (*z) << 13;
-	(*z) ^= (*z) >> 7;
 	(*z) ^= (*z) << 17;
     (*z) &= (*mask);
 }
@@ -221,10 +218,7 @@ void hash_edge32
     (*z) = x->a ^ x->b;
 	(*z) ^= (*z) << 13;
 	(*z) ^= (*z) >> 7;
-	(*z) ^= (*z) << 17;
-    (*z) ^= (x->a < x->b)? x->a: x->b;
-    (*z) ^= (*z) << 13;
-	(*z) ^= (*z) >> 7;
+    (*z) ^= (uint64_t)((x->a < x->b)? x->a: x->b);
 	(*z) ^= (*z) << 17;
     (*z) &= (*mask);
 }
@@ -235,10 +229,7 @@ void hash_edge32
 "   (*z) = x->a ^ x->b;                                                       \n"\
 "	(*z) ^= (*z) << 13;                                                       \n"\
 "	(*z) ^= (*z) >> 7;                                                        \n"\
-"	(*z) ^= (*z) << 17;                                                       \n"\
-"   (*z) ^= (x->a < x->b)? x->a: x->b;                                        \n"\
-"   (*z) ^= (*z) << 13;                                                       \n"\
-"	(*z) ^= (*z) >> 7;                                                        \n"\
+"   (*z) ^= (uint64_t)((x->a < x->b)? x->a: x->b);                            \n"\
 "	(*z) ^= (*z) << 17;                                                       \n"\
 "   (*z) &= (*mask);                                                          \n"\
 "}"
@@ -404,7 +395,6 @@ int LAGraph_SwapEdgesV2
 
     // Extract lower triangular edges.
     GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
-    GxB_fprint(A_tril, GxB_SHORT, stdout) ;
     GRB_TRY (GxB_Matrix_extractTuples_Vector(Ai, Aj, NULL, A_tril, NULL)) ;
     GRB_TRY (GxB_Vector_type(&Ai_type, Ai));
     int code;
@@ -509,10 +499,8 @@ int LAGraph_SwapEdgesV2
     GRB_TRY (GrB_assign(
         E_vec, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL));
     GrB_Index stride[] = {(GrB_Index) 0, e * 2 - 1, (GrB_Index) 2} ;
-    int ret = GrB_Vector_assign(
-        E_vec, NULL, NULL, Aj, stride, GxB_STRIDE, NULL);
-    printf("%d!!!\n", ret);
-    GRB_TRY (ret) ;
+    GRB_TRY (GrB_Vector_assign(
+        E_vec, NULL, NULL, Aj, stride, GxB_STRIDE, NULL)) ;
     stride[GxB_BEGIN] = 1;
     GRB_TRY (GrB_Vector_assign(
         E_vec, NULL, NULL, Ai, stride, GxB_STRIDE, NULL)) ;
@@ -522,19 +510,16 @@ int LAGraph_SwapEdgesV2
     GRB_TRY (GxB_Vector_unload(
         E_vec, &indices, &E_type, &e, &ind_size, &E_hand, NULL));
     e /= 2;
-    ret = GxB_Vector_load(
-        E_vec, &indices, lg_edge, e, ind_size, E_hand, NULL);
-    printf("%d!!!\n", ret);
-
-    GRB_TRY (ret);
+    GRB_TRY (GxB_Vector_load(
+        E_vec, &indices, lg_edge, e, ind_size, E_hand, NULL));
     
     // Find Hash Size ----------------------------------------------------------
     int shift_e ;
     #if (!( defined ( __NVCC__) || defined ( __INTEL_CLANG_COMPILER) || \
-        defined ( __INTEL_COMPILER) ) && defined ( _MSC_VER )) || 1
+        defined ( __INTEL_COMPILER) ) && defined ( _MSC_VER ))
     // using the built-in Microsoft Windows compiler
     // use ceil, log2, etc
-    shift_e = 64 - (int) floor (log2 ((double) e)) ;
+    shift_e = 63 - (int) floor (log2 ((double) e)) ;
     #else
     shift_e = __builtin_clzl(e);
     #endif
