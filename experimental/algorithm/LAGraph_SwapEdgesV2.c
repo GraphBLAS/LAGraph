@@ -529,7 +529,15 @@ int LAGraph_SwapEdgesV2
     GRB_TRY (ret);
     
     // Find Hash Size ----------------------------------------------------------
-    int shift_e = __builtin_clzl(e);
+    int shift_e ;
+    #if (!( defined ( __NVCC__) || defined ( __INTEL_CLANG_COMPILER) || \
+        defined ( __INTEL_COMPILER) ) && defined ( _MSC_VER )) || 1
+    // using the built-in Microsoft Windows compiler
+    // use ceil, log2, etc
+    shift_e = 64 - (int) floor (log2 ((double) e)) ;
+    #else
+    shift_e = __builtin_clzl(e);
+    #endif
     uint64_t ehash_size = (1ull << (67-shift_e)) ;
     printf("Hash Size: %ld", ehash_size);
     GRB_TRY (GrB_Vector_new(&exists, GrB_INT8, ehash_size)) ;
