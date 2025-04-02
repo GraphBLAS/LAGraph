@@ -89,18 +89,19 @@ int main (int argc, char **argv)
     // try Methods of building a "set"
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GxB_Vector_unpack_Full (
-        rand_v, (void **)&rand_a, &r_size, &iso, NULL
-    )) ;
+    
     // Baseline: Build
     t = LAGraph_WallClockTime ( ) ;
-    GRB_TRY (GxB_Vector_build_Scalar (
-        build_v, rand_a, bool1, r_size)) ;
+    GRB_TRY (GxB_Vector_build_Scalar_Vector (
+        build_v, rand_v, bool1, NULL)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for Build: %g sec\n", t) ;
     t = LAGraph_WallClockTime ( ) ;
 
-
+    #if 0
+    GRB_TRY (GxB_Vector_unpack_Full (
+        rand_v, (void **)&rand_a, &r_size, &iso, NULL
+    )) ;
     // Baseline: Single Threaded random access insert
     LAGraph_Calloc((void **)&set_a, size_p2, sizeof(bool), msg);
     for(int64_t i = 0; i < size; ++i)
@@ -111,20 +112,21 @@ int main (int argc, char **argv)
     GRB_TRY (GxB_Vector_pack_Full (
         set_v, (void **)&set_a, 1ull << (64-shift_e), false, NULL
     )) ;
+     GRB_TRY (GxB_Vector_pack_Full (
+        rand_v, (void **)&rand_a, r_size, iso, NULL
+    )) ;
     printf ("Time for Single Thread Unpack: %g sec\n", t) ;
-    
+    #endif
 
 
 
     // Baseline: GrB_assign
     t = LAGraph_WallClockTime ( ) ;
-    GRB_TRY (GrB_Vector_assign_BOOL(
-        assign_s, NULL, NULL, 1, rand_a, size, NULL)) ;
+    GRB_TRY (GxB_Vector_assign_Scalar_Vector(
+        assign_s, NULL, NULL, bool1, rand_v, NULL)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for GraphBLAS Assign: %g sec\n", t) ;
-    GRB_TRY (GxB_Vector_pack_Full (
-        rand_v, (void **)&rand_a, r_size, iso, NULL
-    )) ;
+    
     #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0) 
     printf ("GraphBLAS version too low to test LAGraph_FastAssign\n") ;
     #else
@@ -155,7 +157,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     printf ("\n===============================The result set vector:\n") ;
-    GRB_TRY (GxB_fprint(set_v, GxB_SHORT, stdout)) ;
+    // GRB_TRY (GxB_fprint(set_v, GxB_SHORT, stdout)) ;
     // GRB_TRY (GxB_fprint(assign_s, GxB_SHORT, stdout)) ;
     //--------------------------------------------------------------------------
     // free everyting and finish
