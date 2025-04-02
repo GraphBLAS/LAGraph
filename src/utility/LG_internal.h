@@ -239,6 +239,12 @@ typedef unsigned char LG_void ;
 // code development settings
 //------------------------------------------------------------------------------
 
+#if LAGRAPH_SUITESPARSE && GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    #define USING_GRAPHBLAS_V10 1
+#else
+    #define USING_GRAPHBLAS_V10 0
+#endif
+
 // turn off debugging; do not edit these three lines
 #ifndef NDEBUG
 #define NDEBUG

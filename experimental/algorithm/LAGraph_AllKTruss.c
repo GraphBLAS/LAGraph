@@ -141,8 +141,25 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
     // find all k-trusses
     //--------------------------------------------------------------------------
 
+    #if 1
+    int mtx = 0 ;
+    #endif
+
     while (true)
     {
+        #if 1
+        // dump the matrix S to a file
+        uint64_t snvals ;
+        GRB_TRY (GrB_Matrix_nvals (&snvals, S)) ;
+        char filename [2000] ;
+        sprintf (filename, "mtx_%04d.mtx", mtx) ;
+        FILE *f = fopen (filename, "w") ;
+        printf ("%s: with %" PRId64 " values\n", filename, snvals) ;
+        LAGraph_MMWrite (S, f, NULL, msg) ;
+        fclose (f) ;
+        mtx++ ;
+        #endif
+
         // C{S} = S*S'
         GRB_TRY (GrB_mxm (C, S, NULL, LAGraph_plus_one_uint32, S, S,
             GrB_DESC_RST1)) ;
