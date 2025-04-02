@@ -30,6 +30,7 @@
     GrB_free (&fa_s) ;                             \
     GrB_free (&x) ;                             \
     GrB_free (&bool1) ;                             \
+    GrB_free (&ramp) ;                             \
     LAGraph_Free ((void **)&rand_a, msg);       \
 }
 
@@ -45,7 +46,7 @@ int main (int argc, char **argv)
     bool burble = false ;               // set true for diagnostic outputs
     demo_init (burble) ;
     GrB_Vector rand_v = NULL, build_v = NULL, set_v = NULL, assign_s = NULL, 
-        fa_s = NULL, x = NULL;
+        fa_s = NULL, x = NULL, ramp = NULL;
     GrB_Index *rand_a = NULL;
     GrB_Scalar bool1 = NULL;
     bool *set_a = NULL;
@@ -67,9 +68,12 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Vector_new(&fa_s, GrB_BOOL, size_p2)) ;
     GRB_TRY (GrB_Scalar_new(&bool1, GrB_BOOL));
 
-
-    LG_TRY (LAGraph_Malloc ((void**)(&val_of_P), 1, sizeof(bool), msg)) ;
-    val_of_P[0] = 1;
+    GrB_Type ramp_type = (size + 1 <= INT32_MAX)? GrB_UINT32: GrB_UINT64;
+    GrB_IndexUnaryOp idxnum = (size + 1 <= INT32_MAX)? 
+            GrB_ROWINDEX_INT32: GrB_ROWINDEX_INT64;
+    GRB_TRY (GrB_Vector_new(&ramp, ramp_type, size + 1));
+    GRB_TRY (GrB_assign (ramp, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
+    GRB_TRY (GrB_apply (ramp, NULL, NULL, idxnum, ramp, 0, NULL)) ;
 
     GRB_TRY (GrB_Vector_assign_UINT64(
         rand_v, NULL, NULL, 0ull, GrB_ALL, 0, NULL)) ;
@@ -94,6 +98,7 @@ int main (int argc, char **argv)
     t = LAGraph_WallClockTime ( ) ;
     GRB_TRY (GxB_Vector_build_Scalar_Vector (
         build_v, rand_v, bool1, NULL)) ;
+    GRB_TRY (GrB_wait(build_v, GrB_MATERIALIZE)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for Build: %g sec\n", t) ;
     t = LAGraph_WallClockTime ( ) ;
@@ -133,7 +138,7 @@ int main (int argc, char **argv)
     // FastAssign!
     t = LAGraph_WallClockTime ( ) ;
     LG_TRY (LAGraph_FastAssign(
-        fa_s, NULL, NULL, rand_v, x, NULL, GxB_ANY_BOOL_MONOID, NULL, msg
+        fa_s, NULL, NULL, rand_v, x, ramp, GxB_ANY_BOOL_MONOID, NULL, msg
     ));
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGraph_FastAssign: %g sec\n", t) ;
