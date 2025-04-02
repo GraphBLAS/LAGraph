@@ -187,7 +187,7 @@ void test_diamonds_ebc (void)
     t = LAGraph_WallClockTime() - t ;
     double err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
     printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
-    printf ("  diamonds:   err: %e (C version)", err) ;
+    printf ("  diamonds:   err: %e (C version)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
@@ -237,7 +237,7 @@ void test_karate_ebc (void)
     t = LAGraph_WallClockTime() - t ;
     double err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
     printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
-    printf ("  karate:   err: %e (C version)", err) ;
+    printf ("  karate:   err: %e (C version)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
