@@ -302,7 +302,8 @@ int LAGr_EdgeBetweennessCentrality
             GrB_Vector f_d1 = Search [depth - 1] ;
 
             //----------------------------------------------------------------------
-            // w = S(d, :) ÷ p × v + S(d, :)
+            // j<S(depth, :)> = (1 + v) / p
+            // J = diag(j)
             // Compute weighted contributions from current level
             //----------------------------------------------------------------------
 
@@ -310,7 +311,8 @@ int LAGr_EdgeBetweennessCentrality
             GRB_TRY (GrB_Matrix_diag(&J_matrix, J_vec, 0)) ;
 
             //----------------------------------------------------------------------
-            // w = S(d − 1, :) × p
+            // i<S(depth-1, :)> = p
+            // I = diag(i)
             // Compute weighted contributions from previous level
             //----------------------------------------------------------------------
 
@@ -318,7 +320,7 @@ int LAGr_EdgeBetweennessCentrality
             GRB_TRY (GrB_Matrix_diag(&I_matrix, I_vec, 0)) ;
 
             //----------------------------------------------------------------------
-            // Update = A .× w
+            // Update = I × A × J 
             // Compute edge updates based on current level weights
             //----------------------------------------------------------------------
 
@@ -329,7 +331,7 @@ int LAGr_EdgeBetweennessCentrality
                 Fd1A, J_matrix, NULL)) ;
 
             //----------------------------------------------------------------------
-            // centrality{A} += Update
+            // centrality<A> += Update
             // Accumulate centrality values for edges
             //----------------------------------------------------------------------
 
