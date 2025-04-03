@@ -8,6 +8,47 @@
 #include "LG_internal.h"
 #include <LAGraph.h>
 
+// FIXME: replace int with int64, and INT32 with INT64.
+// Consider two sets of data types and ops: 32/64 bit integers ...
+
+//------------------------------------------------------------------------------
+// LG_augment_maxflow
+//------------------------------------------------------------------------------
+
+// FIXME: describe me
+
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL ;
+
+static GrB_Info LG_augment_maxflow
+(
+    double *f,              // maxflow
+    GrB_Vector e,
+    GrB_Index T,            // sink node
+    GrB_Vector mask_vector,
+    GrB_Vector active_set,
+    GrB_Index *n_active,
+    GrB_Index n,
+    char *msg
+)
+{
+    // f_T = e (T)
+    double f_T = 0;
+    GrB_Info info = GrB_Vector_extractElement(&f_T, e, T); //if value at T
+    GRB_TRY (info) ;
+    if (info == GrB_SUCCESS)
+    {
+        // e(T) is present
+        (*f) += f_T;
+    }
+    GRB_TRY(GrB_select(active_set, mask_vector, NULL, GrB_VALUEGT_FP64, e, 0, GrB_DESC_RSC));
+    // e = active_set : FIXME do we need this?
+    GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_R));
+    GRB_TRY(GrB_Vector_nvals(n_active, active_set));
+}
+
+//------------------------------------------------------------------------------
+
 #undef LG_FREE_WORK
 #undef LG_FREE_ALL
 
@@ -24,8 +65,6 @@
     GrB_free(&delta);                                                          \
     GrB_free(&delta_vec);                                                      \
     GrB_free(&delta_mat);                                                      \
-    GrB_free(&R_temp1);                                                        \
-    GrB_free(&R_temp2);                                                        \
     GrB_free(&active_set);                                                     \
     GrB_free(&map);                                                            \
     GrB_free(&y);                                                              \
@@ -103,7 +142,6 @@ typedef struct{
   int64_t d;
 } MF_resultTuple;
 
-// FIXME: use 64-bit here
 #define GRB_RESULTTUPLE_STR "typedef struct{"\
   "double residual;"\
   "GrB_Index j;"\
@@ -156,7 +194,7 @@ void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index
   }
   else if(r==0){
     z->residual = 0;
-    z->d = INT32_MAX;
+    z->d = INT64_MAX;
     z->j = -1;
   }
 }
@@ -170,7 +208,7 @@ void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index
   "}"\
   "else{"\
     "z->residual = 0;"\
-    "z->d = INT32_MAX;"\
+    "z->d = INT64_MAX;"\
     "z->j = -1;"\
   "}"\
 "}"
@@ -304,13 +342,13 @@ void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB
       z->j = y->j;
     } //add else to populate with empty tuple, prune after.
     else{
-      z->d = INT32_MAX;
+      z->d = INT64_MAX;
       z->j = -1;
       z->residual = 0;
     }
   }
   else if(y->di == y->y_dmin - 1 && (*x) > 0){
-    z->d = INT32_MAX;
+    z->d = INT64_MAX;
     z->j = -1;
     z->residual = 0;
   }
@@ -320,7 +358,7 @@ void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB
     z->j = y->j;
   }
   else{ //change later to signify the removal of the node from the active set since flow cannot be pushed anywhere.
-    z->d = INT32_MAX;
+    z->d = INT64_MAX;
     z->residual = 0;
     z->j = -1;
   }
@@ -334,13 +372,13 @@ void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB
       "z->j = y->j;" \
     "}" \
     "else{"  \
-      "z->d = INT32_MAX;" \
+      "z->d = INT64_MAX;" \
       "z->j = -1;" \
       "z->residual = 0;" \
     "}" \
   "}" \
   "else if(y->di == y->y_dmin - 1 && (*x) > 0){" \
-    "z->d = INT32_MAX;" \
+    "z->d = INT64_MAX;" \
     "z->j = -1;" \
     "z->residual = 0;" \
   "}" \
@@ -350,7 +388,7 @@ void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB
     "z->j = y->j;" \
   "}" \
   "else{" \
-    "z->d = INT32_MAX;" \
+    "z->d = INT64_MAX;" \
     "z->residual = 0;" \
     "z->j = -1;" \
   "}" \
@@ -419,7 +457,7 @@ void MF_MakeFlow(MF_flowEdge * z, const double * y){
   "z->flow = (*y);"\
 "}"
 
-
+// FIXME: fix GraphBLAS so it can print user-defined types
 void print_flowMtx(const GrB_Matrix mtx) {
   GxB_Iterator iter;
   GxB_Iterator_new(&iter);
@@ -514,6 +552,10 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
   "*z = y->capacity - y->flow;" \
 "}"
   
+//------------------------------------------------------------------------------
+// LAGraph_MaxFlow
+//------------------------------------------------------------------------------
+
 int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *msg){
 
   //plan of ATTACK ****************************************
@@ -555,7 +597,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GrB_UnaryOp GrB_CreateResidualForward = NULL , GrB_CreateResidualBackward = NULL ;
   GrB_Matrix A = G->A;  /* FIXME, move below */
   GrB_Index n;
-  GrB_Matrix R_temp1 = NULL, R_temp2 = NULL, R = NULL ;
+  GrB_Matrix R = NULL ;
   GrB_Matrix_nrows(&n, A);
 
   //to init R with initial saturated flows
@@ -663,13 +705,10 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   //create R
   GRB_TRY(GxB_UnaryOp_new(&GrB_CreateResidualForward, F_UNARY(MF_CreateResidualForward), GrB_FlowEdge , GrB_FP64, "MF_CreateResidualForward", GRB_CRF_STR));
   GRB_TRY(GxB_UnaryOp_new(&GrB_CreateResidualBackward, F_UNARY(MF_CreateResidualBackward), GrB_FlowEdge , GrB_FP64, "MF_CreateResidualBackward", GRB_CRB_STR));
-  GRB_TRY(GrB_Matrix_new(&R_temp1, GrB_FlowEdge, n, n));
-  GRB_TRY(GrB_Matrix_new(&R_temp2, GrB_FlowEdge, n, n));
   GRB_TRY(GrB_Matrix_new(&R, GrB_FlowEdge, n, n));
-  GRB_TRY(GrB_apply(R_temp1, NULL, NULL, GrB_CreateResidualForward, A, NULL));
-  GRB_TRY(GrB_apply(R_temp2, NULL, NULL, GrB_CreateResidualBackward, A, GrB_DESC_T0));
-  GRB_TRY(GrB_assign(R, NULL, NULL, R_temp1, GrB_ALL, n, GrB_ALL, n, NULL));
-  GRB_TRY(GrB_assign(R, A, NULL, R_temp2, GrB_ALL, n, GrB_ALL, n, GrB_DESC_SC));
+  GRB_TRY(GrB_apply(R, NULL, NULL, GrB_CreateResidualForward, A, NULL));
+  //FIXME: rename to LAGr_MaxFlow, and use G->AT here:
+  GRB_TRY(GrB_apply(R, A, NULL, GrB_CreateResidualBackward, A, GrB_DESC_SCT0));
 
   //init R with initial saturated flows
   GRB_TRY(GxB_BinaryOp_new(&GrB_InitForwardFlows, F_BINARY(MF_initForwardFlows), GrB_FlowEdge, GrB_FlowEdge, GrB_FlowEdge, "MF_initForwardFlows", GRB_INITFLOWF_STR));
@@ -679,8 +718,8 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GrB_Vector_new(&e, GrB_FP64, n));
   GRB_TRY(GrB_extract(e, NULL, NULL, A, GrB_ALL, n, S, GrB_DESC_T0));
   GRB_TRY(GrB_apply(Re, NULL, NULL, GrB_MakeFlow, e, NULL));
-  GRB_TRY(GxB_subassign(R, NULL, GrB_InitForwardFlows, Re, S, GrB_ALL, n, NULL));
-  GRB_TRY(GxB_subassign(R, NULL, GrB_InitBackwardFlows, Re, GrB_ALL, n, S, NULL));
+  GRB_TRY(GrB_assign(R, NULL, GrB_InitForwardFlows, Re, S, GrB_ALL, n, NULL));
+  GRB_TRY(GrB_assign(R, NULL, GrB_InitBackwardFlows, Re, GrB_ALL, n, S, NULL));
   
   //create and init d vector
   GRB_TRY(GrB_Vector_new(&d, GrB_INT32, n));
@@ -690,16 +729,11 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   //extract n_active from e masking T and S then assign to e
   GRB_TRY(GrB_Vector_new(&active_set, GrB_FP64, n));
   GRB_TRY(GrB_Vector_new(&mask_vector, GrB_BOOL, n)); //keep as bool?
-  GRB_TRY(GrB_assign(mask_vector, NULL, NULL, true, &T, 1, NULL));
-  GRB_TRY(GrB_assign(mask_vector, NULL, NULL, true, &S, 1, NULL));
-  double f_T = 0;
-  GrB_Info info = GrB_Vector_extractElement(&f_T, e, T); //if value at T
-  if(info == GrB_SUCCESS){
-    (*f) += f_T;
-  }
-  GRB_TRY(GrB_select(active_set, mask_vector, NULL, GrB_VALUEGE_FP64, e, 0, GrB_DESC_RSC));
-  GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_R));
-  GRB_TRY(GrB_Vector_nvals(&n_active, active_set));
+  GRB_TRY (GrB_Vector_setElement (mask_vector, true, T)) ;
+  GRB_TRY (GrB_Vector_setElement (mask_vector, true, S)) ;
+
+  // augment maxflow if the edge (S,T) exists
+  LG_TRY (LG_augment_maxflow (f, e, T, mask_vector, active_set, &n_active, n, msg)) ;
 
   //create semiring and vectors for y<e, struct> = R x d
   GRB_TRY(GrB_Scalar_new(&theta, GrB_INT32));
@@ -708,8 +742,8 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GxB_IndexBinaryOp_new(&GrB_RxdIndexMult, F_INDEX_BINARY(MF_RxdMult), GrB_ResultTuple, GrB_FlowEdge, GrB_INT32, GrB_INT32, "MF_RxdMult", GRB_RXDMULT_STR));
   GRB_TRY(GxB_BinaryOp_new_IndexOp(&GrB_RxdMult, GrB_RxdIndexMult, theta));
   GRB_TRY(GxB_BinaryOp_new(&GrB_RxdAdd, F_BINARY(MF_RxdAdd), GrB_ResultTuple, GrB_ResultTuple, GrB_ResultTuple, "MF_RxdAdd", GRB_RXDADD_STR));
-  MF_resultTuple id = {.d = INT32_MAX, .j = -1, .residual = 0};
-//id.d = INT32_MAX ;
+  MF_resultTuple id = {.d = INT64_MAX, .j = -1, .residual = 0};
+//id.d = INT64_MAX ;
 //id.j = -1 ;
 //id.residual = 0 ;
 
@@ -756,12 +790,15 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   
   while(n_active > 0){
 
-    if(iter % 12 == 0){
+    // global relabeling, for the first iteration, and every 12 iterations
+    // after that
+    if(iter % 12 == 0)
+    {
       GRB_TRY(GrB_Matrix_new(&res_matT, GrB_FP64, n, n));
       GRB_TRY(GrB_Matrix_new(&res_mat, GrB_FP64, n, n));
-      GRB_TRY(GrB_apply(res_mat, NULL, NULL, GrB_GetResidual, R, GrB_DESC_R)) ;
-      GRB_TRY(GrB_select(res_mat, NULL, NULL, GrB_VALUEGT_FP64, res_mat, 0, GrB_DESC_R)) ;
-      GRB_TRY(GrB_transpose(res_matT, NULL, NULL, res_mat, GrB_DESC_R));
+      GRB_TRY(GrB_apply(res_mat, NULL, NULL, GrB_GetResidual, R, NULL)) ;
+      GRB_TRY(GrB_select(res_mat, NULL, NULL, GrB_VALUEGT_FP64, res_mat, 0, NULL)) ;
+      GRB_TRY(GrB_transpose(res_matT, NULL, NULL, res_mat, NULL));
       LG_TRY(LAGraph_New(&res_graph, &res_matT, LAGraph_ADJACENCY_DIRECTED, msg));
       res_graph->AT = res_mat;
       res_mat = NULL ;
@@ -773,11 +810,9 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
       GRB_TRY(GrB_select(e, NULL, NULL, GrB_VALUEGT_FP64, e, -1, NULL));
       GrB_free(&lvl);
       LG_TRY(LAGraph_Delete(&res_graph, msg));
-      res_graph = NULL ;
-      lvl = NULL;
       GRB_TRY(GrB_Vector_nvals(&n_active, e));
       if(n_active == 0){
-	printf("exited early!\n");
+	printf("exited early!\n");  // FIXME remove printfs
 	break;
       }
     }
@@ -785,21 +820,22 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     printf("******iter: %d\n\n", iter); 
     
     GRB_TRY(GrB_mxv(y, e, NULL, GrB_RxdSemiring, R, d, GrB_DESC_RS));
-    GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y, -1, GrB_DESC_R));
+    GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y, -1, NULL));
 
     //create yd vector of type compare tuple
-    GRB_TRY(GrB_eWiseMult(yd, NULL, NULL, GrB_CreateCompareVec, y,  d, GrB_DESC_R));
+    GRB_TRY(GrB_eWiseMult(yd, NULL, NULL, GrB_CreateCompareVec, y,  d, NULL));
 
     //create map matrix from yd
-    GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractJ, yd, GrB_DESC_R));
+    GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractJ, yd, NULL));
+    GRB_TRY(GrB_Matrix_clear(map));
     GRB_TRY(GrB_Matrix_build(map, yd, Jvec, yd, GxB_IGNORE_DUP, extract_desc));
     
     //make e dense for map computation
     GRB_TRY(GrB_assign(e, e, NULL, 0, GrB_ALL, n, GrB_DESC_SC));
 
     //y = map x e
-    GRB_TRY(GrB_mxv(y, NULL, NULL, GrB_MxeSemiring, map, e, GrB_DESC_R));
-    GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y, -1, GrB_DESC_R));
+    GRB_TRY(GrB_mxv(y, NULL, NULL, GrB_MxeSemiring, map, e, NULL));
+    GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y, -1, NULL));
    
     //relable, update heights
     GRB_TRY(GrB_eWiseMult(d, y, NULL, GrB_UpdateHeight, d, y, GrB_DESC_S));
@@ -807,42 +843,35 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     #ifdef DBG
     //assert correct labels
         GRB_TRY(GrB_eWiseMult(invariant, y, NULL, GrB_InvariantCheck, d, y, GrB_DESC_RS));
-	GRB_TRY(GrB_reduce(check, NULL, GrB_LAND_MONOID_BOOL, invariant, GrB_DESC_R));
+	GRB_TRY(GrB_reduce(check, NULL, GrB_LAND_MONOID_BOOL, invariant, NULL));
 	GRB_TRY(GrB_Scalar_extractElement(&check_raw, check));
 	ASSERT(check_raw == true);
     #endif
 
     //extract residual flows from y
-    GRB_TRY(GrB_apply(residual_vec, NULL, NULL, GrB_extractFlows, y, GrB_DESC_R));
+    GRB_TRY(GrB_apply(residual_vec, NULL, NULL, GrB_extractFlows, y, NULL));
 
     //.min(flow_vec and e)
-    GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, residual_vec, e, GrB_DESC_R));
-    GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractYJ, y, GrB_DESC_R));
+    GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, residual_vec, e, NULL));
+    GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractYJ, y, NULL));
+    GRB_TRY(GrB_Matrix_clear(delta));
     GRB_TRY(GxB_Matrix_build_Vector(delta, delta_vec, Jvec, delta_vec, GxB_IGNORE_DUP, extract_desc));
 
     //make delta anti-symmetric
-    GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64, delta, zero_fp32, delta, zero_fp32, GrB_DESC_RT1));
+    GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64, delta, zero_fp32, delta, zero_fp32, GrB_DESC_T1));
 
     //update R
     GRB_TRY(GrB_eWiseMult(R, delta_mat, NULL, GrB_UpdateFlows, R, delta_mat, GrB_DESC_S));
 
-    //reduce delat_mat to delta_vec
-    GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, delta_mat, GrB_DESC_RT0));
+    //reduce delta_mat to delta_vec
+    GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, delta_mat, GrB_DESC_T0));
 
     //add to e
     GRB_TRY(GrB_assign(e, delta_vec, GrB_PLUS_FP64, delta_vec, GrB_ALL, n, GrB_DESC_S));
     
-    //extract active nodes
-    GRB_TRY(GrB_Vector_extractElement(&f_T, e, T));
-    (*f) += f_T;
-    GRB_TRY(GrB_select(active_set, mask_vector, NULL, GrB_VALUEGT_FP64, e, 0, GrB_DESC_RSC));
-    GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_R));
-    GRB_TRY(GrB_Vector_nvals(&n_active, active_set));
-    //printf("max flow in alg iter is: %f\n", *f);
-    
-    GRB_TRY(GrB_Matrix_clear(map));
-    GRB_TRY(GrB_Matrix_clear(delta));
-    
+    // augment maxflow for all active nodes
+    LG_TRY (LG_augment_maxflow (f, e, T, mask_vector, active_set, &n_active, n, msg)) ;
+
     ++iter;
     
   }
