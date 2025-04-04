@@ -39,7 +39,7 @@ int main (int argc, char **argv)
     GrB_Matrix C = NULL, R = NULL ;
 
     // start GraphBLAS and LAGraph
-    bool burble = false ;               // set true for diagnostic outputs
+    bool burble = true ;               // set true for diagnostic outputs
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------

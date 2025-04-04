@@ -1,0 +1,10 @@
+GB_cuda_get_device_count: 0, cudaError_t: 35
+GB_cuda_init line 26
+error: /home/gridsan/tdavis/dev2/LAGraph/experimental/benchmark/../../src/benchmark/LAGraph_demo.h line: 1145, status: -7002
+matrix: data/bcsstk13.mtx
+[.mtx]
+Reading matrix market file: data/bcsstk13.mtx
+LAGraph_MMRead failed to read matrix: data/bcsstk13.mtx
+result: -102 msg: GraphBLAS failure (file /home/gridsan/tdavis/dev2/LAGraph/src/utility/LAGraph_MMRead.c, line 840): info: -102
+error: /home/gridsan/tdavis/dev2/LAGraph/experimental/benchmark/../../src/benchmark/LAGraph_demo.h line: 839, status: -102
+msg: GraphBLAS failure (file /home/gridsan/tdavis/dev2/LAGraph/src/utility/LAGraph_MMRead.c, line 840): info: -102
