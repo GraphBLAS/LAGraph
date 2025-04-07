@@ -676,7 +676,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GrB_Matrix_nrows(&nrows, G->A));
   LG_ASSERT_MSG(nrows == ncols, GrB_INVALID_VALUE, "Matrix must be square"); 
   LG_ASSERT_MSG(S < ncols && S >= 0 && T < ncols && T >= 0, GrB_INVALID_VALUE, "S and T must be a value between [0, n)");
-  LG_TRY(LAGraph_Cached_EMin(G, msg));
   LG_ASSERT_MSG(G->emin > 0, GrB_INVALID_VALUE, "the edge weights (capacities) must be greater than 0");
   
   //create types for computation
@@ -704,7 +703,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GrB_Matrix_new(&R, GrB_FlowEdge, n, n));
   GRB_TRY(GrB_apply(R, NULL, NULL, GrB_CreateResidualForward, A, NULL));
   //FIXME: rename to LAGr_MaxFlow, and use G->AT here:
-  GRB_TRY(GrB_apply(R, A, NULL, GrB_CreateResidualBackward, A, GrB_DESC_SCT0));
+  GRB_TRY(GrB_apply(R, A, NULL, GrB_CreateResidualBackward, G->AT, GrB_DESC_SC));
 
   //init R with initial saturated flows
   GRB_TRY(GxB_BinaryOp_new(&GrB_InitForwardFlows, F_BINARY(MF_initForwardFlows), GrB_FlowEdge, GrB_FlowEdge, GrB_FlowEdge, "MF_initForwardFlows", GRB_INITFLOWF_STR));
@@ -739,9 +738,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GxB_BinaryOp_new_IndexOp(&GrB_RxdMult, GrB_RxdIndexMult, theta));
   GRB_TRY(GxB_BinaryOp_new(&GrB_RxdAdd, F_BINARY(MF_RxdAdd), GrB_ResultTuple, GrB_ResultTuple, GrB_ResultTuple, "MF_RxdAdd", GRB_RXDADD_STR));
   MF_resultTuple id = {.d = INT64_MAX, .j = -1, .residual = 0};
-//id.d = INT64_MAX ;
-//id.j = -1 ;
-//id.residual = 0 ;
 
   GRB_TRY(GrB_Monoid_new_UDT(&GrB_RxdAddMonoid, GrB_RxdAdd, &id));
   GRB_TRY(GrB_Semiring_new(&GrB_RxdSemiring, GrB_RxdAddMonoid, GrB_RxdMult));
@@ -752,7 +748,8 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GxB_IndexUnaryOp_new(&GrB_Prune, (GxB_index_unary_function) MF_Prune, GrB_BOOL, GrB_ResultTuple, GrB_INT64, "MF_Prune", GRB_PRUNE_STR));
 
   //create utility vectors, Matrix, and ops for mapping
-  GRB_TRY(GrB_Vector_new(&Jvec, GrB_INT32, n)); //CAUSES PROBLEMS FOR INT64 !!! maybe has to do with GrB_Index casting??
+  GrB_Type JType = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32;
+  GRB_TRY(GrB_Vector_new(&Jvec, JType, n));
   GRB_TRY(GrB_Matrix_new(&map, GrB_CompareTuple, n,n));
   GRB_TRY(GxB_UnaryOp_new(&GrB_extractJ, F_UNARY(MF_extractJ), GrB_INT64, GrB_CompareTuple, "MF_extractJ", GRB_EXTRACTJ_STR));
   GRB_TRY(GxB_UnaryOp_new(&GrB_extractYJ, F_UNARY(MF_extractYJ), GrB_INT64, GrB_ResultTuple, "MF_extractYJ", GRB_EXTRACTYJ_STR));

@@ -38,7 +38,7 @@ void test_MaxFlow(void) {
   OK(LG_SET_BURBLE(1));
   OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, 4));
   for(uint8_t test = 0; test < NTESTS; test++){
-    GrB_Matrix A;
+    GrB_Matrix A=NULL;
     TEST_CASE(tests[test].filename);
     snprintf(filename, LEN, LG_DATA_DIR "%s", tests[test].filename);
     FILE* f = fopen(filename, "r");
@@ -46,6 +46,8 @@ void test_MaxFlow(void) {
     OK(LAGraph_MMRead(&A, f, msg));
     OK(fclose(f));
     OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
+    OK(LAGraph_Cached_AT(G, msg));
+    OK(LAGraph_Cached_EMin(G, msg));
 
     //begin test
     double flow = 0;

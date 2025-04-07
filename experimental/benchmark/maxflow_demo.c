@@ -30,6 +30,8 @@ int main (int argc, char ** argv){
   //char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
   
   LAGRAPH_TRY(readproblem(&G, NULL, false, true, false, NULL, true, argc, argv));
+  LAGRAPH_TRY(LAGraph_Cached_AT(G, msg));
+  LAGRAPH_TRY(LAGraph_Cached_EMin(G, msg));
   
   t = LAGraph_WallClockTime() - t;
   printf ("Time to read the graph:      %g sec\n", t) ;
