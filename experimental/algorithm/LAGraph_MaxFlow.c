@@ -299,15 +299,15 @@ void MF_updateHeight(int *z, const int *y, const MF_resultTuple *x) {
 "}"
 
 
-void MF_extractJ(int *z, const MF_compareTuple *y) { (*z) = y->j; }
+void MF_extractJ(int64_t *z, const MF_compareTuple *y) { (*z) = y->j; }
 
-#define GRB_EXTRACTJ_STR "void MF_extractJ(int *z, const MF_compareTuple *y) {(*z) = y->j;}"
+#define GRB_EXTRACTJ_STR "void MF_extractJ(int64_t *z, const MF_compareTuple *y) {(*z) = y->j;}"
 
-void MF_extractYJ(int *z, const MF_resultTuple *y) {
+void MF_extractYJ(int64_t *z, const MF_resultTuple *y) {
   (*z) = y->j;
 }
 
-#define GRB_EXTRACTYJ_STR "void MF_extractYJ(int *z, const MF_resultTuple *y) {" \
+#define GRB_EXTRACTYJ_STR "void MF_extractYJ(int64_t *z, const MF_resultTuple *y) {" \
   "(*z) = y->j;" \
 "}"
 
@@ -429,7 +429,7 @@ void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int 
 "}"
 
 
-void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int * theta){
+void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int64_t * theta){
   if(y->j != *theta){
     *z = true;
   }
@@ -438,7 +438,7 @@ void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, co
   }
 }
 
-#define GRB_PRUNE_STR "void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int * theta){"\
+#define GRB_PRUNE_STR "void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int64_t * theta){"\
   "if(y->j != *theta){"\
     "*z = true;" \
   "}" \
@@ -753,13 +753,13 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   //create binary op and yd
   GRB_TRY(GrB_Vector_new(&yd, GrB_CompareTuple, n));
   GRB_TRY(GxB_BinaryOp_new(&GrB_CreateCompareVec, F_BINARY(MF_CreateCompareVec), GrB_CompareTuple, GrB_ResultTuple, GrB_INT32, "MF_CreateCompareVec", GRB_CREATECOMPVEC_STR));
-  GRB_TRY(GxB_IndexUnaryOp_new(&GrB_Prune, (GxB_index_unary_function) MF_Prune, GrB_BOOL, GrB_ResultTuple, GrB_INT32, "MF_Prune", GRB_PRUNE_STR));
+  GRB_TRY(GxB_IndexUnaryOp_new(&GrB_Prune, (GxB_index_unary_function) MF_Prune, GrB_BOOL, GrB_ResultTuple, GrB_INT64, "MF_Prune", GRB_PRUNE_STR));
 
   //create utility vectors, Matrix, and ops for mapping
   GRB_TRY(GrB_Vector_new(&Jvec, GrB_INT32, n));
   GRB_TRY(GrB_Matrix_new(&map, GrB_CompareTuple, n,n));
-  GRB_TRY(GxB_UnaryOp_new(&GrB_extractJ, F_UNARY(MF_extractJ), GrB_INT32, GrB_CompareTuple, "MF_extractJ", GRB_EXTRACTJ_STR));
-  GRB_TRY(GxB_UnaryOp_new(&GrB_extractYJ, F_UNARY(MF_extractYJ), GrB_INT32, GrB_ResultTuple, "MF_extractYJ", GRB_EXTRACTYJ_STR));
+  GRB_TRY(GxB_UnaryOp_new(&GrB_extractJ, F_UNARY(MF_extractJ), GrB_INT64, GrB_CompareTuple, "MF_extractJ", GRB_EXTRACTJ_STR));
+  GRB_TRY(GxB_UnaryOp_new(&GrB_extractYJ, F_UNARY(MF_extractYJ), GrB_INT64, GrB_ResultTuple, "MF_extractYJ", GRB_EXTRACTYJ_STR));
 
   //create map x e semiring
   GRB_TRY(GxB_IndexBinaryOp_new(&GrB_MxeIndexMult, F_INDEX_BINARY(MF_MxeMult), GrB_ResultTuple, GrB_CompareTuple, GrB_FP64, GrB_INT32, "MF_MxeMult", GRB_MXEMULT_STR));
