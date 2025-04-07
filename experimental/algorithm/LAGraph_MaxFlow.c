@@ -91,8 +91,7 @@ static GrB_Info LG_augment_maxflow
     GrB_free(&GrB_InitBackwardFlows);                                          \
     GrB_free(&GrB_CreateResidualForward);                                      \
     GrB_free(&GrB_CreateResidualBackward);                                     \
-    GrB_free(&zero_int32);                                                     \
-    GrB_free(&zero_fp32);                                                      \
+    GrB_free(&zero_fp64);                                                      \
     GrB_free(&Re);                                                             \
     GrB_free(&invariant);                                                      \
     GrB_free(&GrB_InvariantCheck);                                             \
@@ -185,7 +184,7 @@ void MF_CreateResidualBackward(MF_flowEdge *z, const double *y) {
 "}"
 
 
-void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index jy, const int *x, GrB_Index ix, GrB_Index jx, const int* theta) {
+void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index jy, const int64_t *x, GrB_Index ix, GrB_Index jx, const int64_t* theta) {
   double r = y->capacity - y->flow;
   if(r > 0){
     z->residual = r;
@@ -199,7 +198,7 @@ void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index
   }
 }
 
-#define GRB_RXDMULT_STR "void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index jy, const int *x, GrB_Index ix, GrB_Index jx, const int* theta) {"\
+#define GRB_RXDMULT_STR "void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index jy, const int64_t *x, GrB_Index ix, GrB_Index jx, const int64_t* theta) {"\
   "double r = y->capacity - y->flow;"\
   "if(r > 0){"\
     "z->residual = r;"\
@@ -280,7 +279,7 @@ void MF_updateFlow(MF_flowEdge *z, const MF_flowEdge *y, const double *x) {
 "}"
 
 
-void MF_updateHeight(int *z, const int *y, const MF_resultTuple *x) {
+void MF_updateHeight(int64_t *z, const int64_t *y, const MF_resultTuple *x) {
   if((*y) < x->d+1){
     (*z) = x->d + 1;
   }
@@ -289,7 +288,7 @@ void MF_updateHeight(int *z, const int *y, const MF_resultTuple *x) {
   }
 }
 
-#define GRB_UPDATEHEIGHT_STR "void MF_updateHeight(int *z, const int *y, const MF_resultTuple *x) {"\
+#define GRB_UPDATEHEIGHT_STR "void MF_updateHeight(int64_t *z, const int64_t *y, const MF_resultTuple *x) {"\
   "if((*y) < x->d+1){"\
     "(*z) = x->d + 1;"\
   "}"\
@@ -334,7 +333,7 @@ void MF_initBackwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowE
 "}"
 
 
-void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int* theta){
+void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int64_t* theta){
   if(y->di == y->y_dmin && (*x) > 0){ //check this
     if(iy < jy){
       z->d = y->y_dmin;
@@ -364,7 +363,7 @@ void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB
   }
 }
 
-#define GRB_MXEMULT_STR "void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int* theta){" \
+#define GRB_MXEMULT_STR "void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int64_t* theta){" \
   "if(y->di == y->y_dmin && (*x) > 0){" \
     "if(iy < jy){" \
       "z->d = y->y_dmin;" \
@@ -414,14 +413,14 @@ void MF_MxeAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTupl
 "}"
 
 
-void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int *x) {
+void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int64_t *x) {
   z->di = (*x);
   z->j = y->j;
   z->residual = y->residual;
   z->y_dmin = y->d;
 }
 
-#define GRB_CREATECOMPVEC_STR "void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int *x) {"\
+#define GRB_CREATECOMPVEC_STR "void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int64_t *x) {"\
   "z->di = (*x);"\
   "z->j = y->j;"\
   "z->residual = y->residual;"\
@@ -653,8 +652,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GrB_BinaryOp GrB_UpdateFlows = NULL ;
 
   //scalars
-  GrB_Scalar zero_int32 = NULL ;
-  GrB_Scalar zero_fp32 = NULL ;
+  GrB_Scalar zero_fp64 = NULL ;
 
   //invariant
   GrB_Vector invariant = NULL ;
@@ -692,15 +690,13 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   
   //invariant check
   GRB_TRY(GrB_Vector_new(&invariant, GrB_BOOL, n));
-  GRB_TRY(GxB_BinaryOp_new(&GrB_InvariantCheck, F_BINARY(MF_CheckInvariant), GrB_BOOL, GrB_INT32, GrB_ResultTuple, "MF_CheckInvariant", GRB_INV_STR));
+  GRB_TRY(GxB_BinaryOp_new(&GrB_InvariantCheck, F_BINARY(MF_CheckInvariant), GrB_BOOL, GrB_INT64, GrB_ResultTuple, "MF_CheckInvariant", GRB_INV_STR));
   GRB_TRY(GrB_Scalar_new(&check, GrB_BOOL));
   GRB_TRY(GrB_Scalar_setElement(check, false));
   
   //create scalars
-  GRB_TRY(GrB_Scalar_new(&zero_int32, GrB_INT32));
-  GRB_TRY(GrB_Scalar_setElement(zero_int32, 0));
-  GRB_TRY(GrB_Scalar_new(&zero_fp32, GrB_INT32));
-  GRB_TRY(GrB_Scalar_setElement(zero_fp32, 0));
+  GRB_TRY(GrB_Scalar_new(&zero_fp64, GrB_FP64));
+  GRB_TRY(GrB_Scalar_setElement(zero_fp64, 0));
   
   //create R
   GRB_TRY(GxB_UnaryOp_new(&GrB_CreateResidualForward, F_UNARY(MF_CreateResidualForward), GrB_FlowEdge , GrB_FP64, "MF_CreateResidualForward", GRB_CRF_STR));
@@ -722,7 +718,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GrB_assign(R, NULL, GrB_InitBackwardFlows, Re, GrB_ALL, n, S, NULL));
   
   //create and init d vector
-  GRB_TRY(GrB_Vector_new(&d, GrB_INT32, n));
+  GRB_TRY(GrB_Vector_new(&d, GrB_INT64, n));
   GRB_TRY(GrB_assign(d, NULL, NULL, 0, GrB_ALL, n, NULL));
   GRB_TRY(GrB_assign(d, NULL, NULL, n, &S, 1, NULL));
 
@@ -737,9 +733,9 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
   //create semiring and vectors for y<e, struct> = R x d
   GRB_TRY(GrB_Scalar_new(&theta, GrB_INT32));
-  GRB_TRY(GrB_Scalar_setElement_INT32(theta, 0));
+  GRB_TRY(GrB_Scalar_setElement_INT64(theta, 0));
   GRB_TRY(GrB_Vector_new(&y, GrB_ResultTuple, n));
-  GRB_TRY(GxB_IndexBinaryOp_new(&GrB_RxdIndexMult, F_INDEX_BINARY(MF_RxdMult), GrB_ResultTuple, GrB_FlowEdge, GrB_INT32, GrB_INT32, "MF_RxdMult", GRB_RXDMULT_STR));
+  GRB_TRY(GxB_IndexBinaryOp_new(&GrB_RxdIndexMult, F_INDEX_BINARY(MF_RxdMult), GrB_ResultTuple, GrB_FlowEdge, GrB_INT64, GrB_INT64, "MF_RxdMult", GRB_RXDMULT_STR));
   GRB_TRY(GxB_BinaryOp_new_IndexOp(&GrB_RxdMult, GrB_RxdIndexMult, theta));
   GRB_TRY(GxB_BinaryOp_new(&GrB_RxdAdd, F_BINARY(MF_RxdAdd), GrB_ResultTuple, GrB_ResultTuple, GrB_ResultTuple, "MF_RxdAdd", GRB_RXDADD_STR));
   MF_resultTuple id = {.d = INT64_MAX, .j = -1, .residual = 0};
@@ -752,17 +748,17 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
   //create binary op and yd
   GRB_TRY(GrB_Vector_new(&yd, GrB_CompareTuple, n));
-  GRB_TRY(GxB_BinaryOp_new(&GrB_CreateCompareVec, F_BINARY(MF_CreateCompareVec), GrB_CompareTuple, GrB_ResultTuple, GrB_INT32, "MF_CreateCompareVec", GRB_CREATECOMPVEC_STR));
+  GRB_TRY(GxB_BinaryOp_new(&GrB_CreateCompareVec, F_BINARY(MF_CreateCompareVec), GrB_CompareTuple, GrB_ResultTuple, GrB_INT64, "MF_CreateCompareVec", GRB_CREATECOMPVEC_STR));
   GRB_TRY(GxB_IndexUnaryOp_new(&GrB_Prune, (GxB_index_unary_function) MF_Prune, GrB_BOOL, GrB_ResultTuple, GrB_INT64, "MF_Prune", GRB_PRUNE_STR));
 
   //create utility vectors, Matrix, and ops for mapping
-  GRB_TRY(GrB_Vector_new(&Jvec, GrB_INT32, n));
+  GRB_TRY(GrB_Vector_new(&Jvec, GrB_INT32, n)); //CAUSES PROBLEMS FOR INT64 !!! maybe has to do with GrB_Index casting??
   GRB_TRY(GrB_Matrix_new(&map, GrB_CompareTuple, n,n));
   GRB_TRY(GxB_UnaryOp_new(&GrB_extractJ, F_UNARY(MF_extractJ), GrB_INT64, GrB_CompareTuple, "MF_extractJ", GRB_EXTRACTJ_STR));
   GRB_TRY(GxB_UnaryOp_new(&GrB_extractYJ, F_UNARY(MF_extractYJ), GrB_INT64, GrB_ResultTuple, "MF_extractYJ", GRB_EXTRACTYJ_STR));
 
   //create map x e semiring
-  GRB_TRY(GxB_IndexBinaryOp_new(&GrB_MxeIndexMult, F_INDEX_BINARY(MF_MxeMult), GrB_ResultTuple, GrB_CompareTuple, GrB_FP64, GrB_INT32, "MF_MxeMult", GRB_MXEMULT_STR));
+  GRB_TRY(GxB_IndexBinaryOp_new(&GrB_MxeIndexMult, F_INDEX_BINARY(MF_MxeMult), GrB_ResultTuple, GrB_CompareTuple, GrB_FP64, GrB_INT64, "MF_MxeMult", GRB_MXEMULT_STR));
   GRB_TRY(GxB_BinaryOp_new_IndexOp(&GrB_MxeMult, GrB_MxeIndexMult, theta));
   GRB_TRY(GxB_BinaryOp_new(&GrB_MxeAdd, F_BINARY(MF_MxeAdd), GrB_ResultTuple, GrB_ResultTuple, GrB_ResultTuple, "MF_MxeAdd", GRB_MXEADD_STR));
   GRB_TRY(GrB_Monoid_new_UDT(&GrB_MxeAddMonoid, GrB_MxeAdd, &id));
@@ -777,12 +773,12 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GrB_Vector_new(&delta_vec, GrB_FP64, n));
 
   //update height binary op
-  GRB_TRY(GxB_BinaryOp_new(&GrB_UpdateHeight, F_BINARY(MF_updateHeight), GrB_INT32, GrB_INT32, GrB_ResultTuple, "MF_updateHeight", GRB_UPDATEHEIGHT_STR));
+  GRB_TRY(GxB_BinaryOp_new(&GrB_UpdateHeight, F_BINARY(MF_updateHeight), GrB_INT64, GrB_INT64, GrB_ResultTuple, "MF_updateHeight", GRB_UPDATEHEIGHT_STR));
 
   //update R structure
   GRB_TRY(GxB_BinaryOp_new(&GrB_UpdateFlows, F_BINARY(MF_updateFlow), GrB_FlowEdge, GrB_FlowEdge, GrB_FP64, "MF_updateFlow", GRB_UPDATEFLOWS_STR));
 
-  int iter = 0;
+  int64_t iter = 0;
 
   //Create extract arrays
   GRB_TRY(GrB_Descriptor_new(&extract_desc));
@@ -817,7 +813,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
       }
     }
 
-    printf("******iter: %d\n\n", iter); 
+    printf("******iter: %ld\n\n", iter); 
     
     GRB_TRY(GrB_mxv(y, e, NULL, GrB_RxdSemiring, R, d, GrB_DESC_RS));
     GRB_TRY(GrB_select(y, NULL, NULL, GrB_Prune, y, -1, NULL));
@@ -858,7 +854,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     GRB_TRY(GxB_Matrix_build_Vector(delta, delta_vec, Jvec, delta_vec, GxB_IGNORE_DUP, extract_desc));
 
     //make delta anti-symmetric
-    GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64, delta, zero_fp32, delta, zero_fp32, GrB_DESC_T1));
+    GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64, delta, zero_fp64, delta, zero_fp64, GrB_DESC_T1));
 
     //update R
     GRB_TRY(GrB_eWiseMult(R, delta_mat, NULL, GrB_UpdateFlows, R, delta_mat, GrB_DESC_S));
