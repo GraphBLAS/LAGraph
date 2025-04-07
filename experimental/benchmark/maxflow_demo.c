@@ -59,7 +59,7 @@ int main (int argc, char ** argv){
 
   //LG_SET_BURBLE(1);
   double time = LAGraph_WallClockTime();
-  LAGRAPH_TRY(LAGraph_MaxFlow(G, S, T, &flow, msg));
+  LAGRAPH_TRY(LAGr_MaxFlow(G, S, T, &flow, msg));
   time = LAGraph_WallClockTime() - time;
   
   printf("Time for LAGraph_MaxFlow: %g sec\n", time);

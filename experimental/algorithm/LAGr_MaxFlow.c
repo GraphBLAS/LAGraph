@@ -555,7 +555,7 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
 // LAGraph_MaxFlow
 //------------------------------------------------------------------------------
 
-int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *msg){
+int LAGr_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *msg){
 
   //plan of ATTACK ****************************************
   //1. Create R as an anti-symmetric graph of flow edges from Adj of G, using ewise union
@@ -594,10 +594,9 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
 
   //to create R
   GrB_UnaryOp GrB_CreateResidualForward = NULL , GrB_CreateResidualBackward = NULL ;
-  GrB_Matrix A = G->A;  /* FIXME, move below */
   GrB_Index n;
   GrB_Matrix R = NULL ;
-  GrB_Matrix_nrows(&n, A);
+  
 
   //to init R with initial saturated flows
   GrB_Vector e = NULL, Re = NULL ;
@@ -677,6 +676,11 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   LG_ASSERT_MSG(nrows == ncols, GrB_INVALID_VALUE, "Matrix must be square"); 
   LG_ASSERT_MSG(S < ncols && S >= 0 && T < ncols && T >= 0, GrB_INVALID_VALUE, "S and T must be a value between [0, n)");
   LG_ASSERT_MSG(G->emin > 0, GrB_INVALID_VALUE, "the edge weights (capacities) must be greater than 0");
+  LG_ASSERT_MSG(G->AT != NULL, GrB_INVALID_VALUE, "Must have the Adjacency Matrix cached");
+
+  //get rows and adjacency matrix
+  GrB_Matrix A = G->A; 
+  GRB_TRY(GrB_Matrix_nrows(&n, A));
   
   //create types for computation
   GRB_TRY(GxB_Type_new(&GrB_FlowEdge, sizeof(MF_flowEdge), "MF_flowEdge", GRB_FLOWEDGE_STR));
@@ -702,7 +706,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
   GRB_TRY(GxB_UnaryOp_new(&GrB_CreateResidualBackward, F_UNARY(MF_CreateResidualBackward), GrB_FlowEdge , GrB_FP64, "MF_CreateResidualBackward", GRB_CRB_STR));
   GRB_TRY(GrB_Matrix_new(&R, GrB_FlowEdge, n, n));
   GRB_TRY(GrB_apply(R, NULL, NULL, GrB_CreateResidualForward, A, NULL));
-  //FIXME: rename to LAGr_MaxFlow, and use G->AT here:
   GRB_TRY(GrB_apply(R, A, NULL, GrB_CreateResidualBackward, G->AT, GrB_DESC_SC));
 
   //init R with initial saturated flows
@@ -805,7 +808,6 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
       LG_TRY(LAGraph_Delete(&res_graph, msg));
       GRB_TRY(GrB_Vector_nvals(&n_active, e));
       if(n_active == 0){
-	printf("exited early!\n");  // FIXME remove printfs
 	break;
       }
     }
@@ -868,9 +870,7 @@ int LAGraph_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char 
     ++iter;
     
   }
-
-  //print_flowMtx(R);
-  printf("DBG: number of active = %ld\n", n_active);
+  
   LG_FREE_ALL;
   return GrB_SUCCESS;
 }

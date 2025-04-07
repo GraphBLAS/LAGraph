@@ -1492,7 +1492,7 @@ int LAGraph_coloring_MIS
     char *msg
 ) ;
 
-int LAGraph_MaxFlow(
+int LAGr_MaxFlow(
     //inputs
     LAGraph_Graph G,
     GrB_Index S, //source node index
