@@ -555,7 +555,6 @@ int LAGraph_RichClubCoefficient_SingleThreaded
     GRB_TRY (GxB_Vector_load(
         cont->i, &Ai, i_type, i_n, i_size, i_hand, NULL)) ;
     GRB_TRY (GxB_load_Matrix_from_Container(A, cont, NULL)) ;
-    GRB_TRY (GxB_fprint(G->A, GxB_SHORT, stdout));
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;    
 }

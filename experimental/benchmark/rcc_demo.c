@@ -23,13 +23,22 @@
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LAGraphX.h"
 #include "LG_internal.h"
-
+void iseq(bool *z, const double *x, const double *y)
+{
+    (*z) = fabs(*x - *y) < 1e-15 ;
+}
+#define ISEQ \
+"   void iseq(bool *z, const double *x, const double *y)                        \n"\
+"   {                                                                           \n"\
+"       (*z) = fabs(*x - *y) < 1e-15 ;                                          \n"\
+"   }"
 // LG_FREE_ALL is required by LG_TRY
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL                             \
 {                                               \
     GrB_free (&rcc1) ;                          \
     GrB_free (&rcc2) ;                          \
+    GrB_free (&iseqFP) ;                        \
     LAGraph_Delete (&G, msg) ;                  \
 }
 #define SINGLERCC 1
@@ -43,12 +52,15 @@ int main (int argc, char **argv)
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
     LAGraph_Graph G = NULL ;
     GrB_Vector rcc1 = NULL, rcc2 = NULL ;
+    GrB_BinaryOp iseqFP = NULL ;
 
     // start GraphBLAS and LAGraph
     bool burble = true ;               // set true for diagnostic outputs
     demo_init (burble) ;
-    LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
-
+    LG_TRY (LAGraph_Random_Init (msg)) ;
+    GRB_TRY (GxB_BinaryOp_new (
+        &iseqFP, (GxB_binary_function) iseq, 
+        GrB_BOOL, GrB_FP64, GrB_FP64, "iseq", ISEQ)) ;
     //--------------------------------------------------------------------------
     // read in the graph: this method is defined in LAGraph_demo.h
     //--------------------------------------------------------------------------
@@ -90,7 +102,7 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
     printf ("\n========================== Start RCC ==========================\n") ;
     t = LAGraph_WallClockTime ( ) ;
-    result = LAGraph_RichClubCoefficient (&rcc2, G, msg) ;
+    result = LAGraph_RichClubCoefficient_SingleThreaded (&rcc2, G, msg) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGraph_RichClubCoefficient: %g sec\n", t) ;
     #endif
@@ -104,7 +116,7 @@ int main (int argc, char **argv)
     if(result == GrB_SUCCESS)
     {
         bool flag;
-        LG_TRY (LAGraph_Vector_IsEqual(&flag, rcc1, rcc2, msg));
+        LG_TRY (LAGraph_Vector_IsEqualOp(&flag, rcc1, rcc2, iseqFP, msg)) ;
         if (flag)
             printf("TEST PASSED\n") ;
         else
