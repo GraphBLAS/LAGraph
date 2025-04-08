@@ -1428,6 +1428,15 @@ int LAGraph_RichClubCoefficient
     char *msg
 ) ;
 
+LAGRAPHX_PUBLIC
+int LAGraph_RichClubCoefficient_SingleThreaded
+(
+    GrB_Vector *rich_club_coefficents, //output
+    LAGraph_Graph G, //input graph
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
 int LG_CC_FastSV7_FA // SuiteSparse:GraphBLAS method, with GxB extensions
 (
     // output:

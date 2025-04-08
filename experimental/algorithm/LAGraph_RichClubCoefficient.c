@@ -392,3 +392,171 @@ int LAGraph_RichClubCoefficient
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
+#undef LG_FREE_WORK
+#undef LG_FREE_ALL
+#define LG_FREE_WORK                                    \
+{                                                       \
+    /* free any workspace used here */                  \
+    LAGraph_Free(&array_space, NULL) ;                  \
+    GrB_free (&cont) ;                                  \
+}
+
+
+#define LG_FREE_ALL                         \
+{                                           \
+    /* free any workspace used here */      \
+    LG_FREE_WORK ;                          \
+    /* free all the output variable(s) */   \
+    LAGraph_Free(&Ap, NULL) ;               \
+    LAGraph_Free(&Ai, NULL) ;               \
+    LAGraph_Free((void **)&rcc, NULL) ;     \
+    GrB_free (rccs) ;      \
+}
+
+#if USING_GRAPHBLAS_V10
+int LAGraph_RichClubCoefficient_SingleThreaded
+(
+    // output:
+    //rccs(i): rich club coefficent of i
+    GrB_Vector *rccs,    
+
+    // input: 
+    LAGraph_Graph G, //input graph
+    char *msg
+)
+{
+    GxB_Container cont = NULL;
+    GrB_Matrix A = G->A;
+    void  *Ap = NULL, *Ai = NULL, *array_space = NULL;
+    GrB_Type p_type = NULL, i_type = NULL;
+    int p_hand = 0, i_hand = 0;
+    uint64_t p_n = 0, i_n = 0, p_size = 0, i_size = 0, max_deg = 0;
+    uint64_t *epd = NULL, *vpd = NULL;
+    double *rcc = NULL;
+    //--------------------------------------------------------------------------
+    // Check inputs
+    //--------------------------------------------------------------------------
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
+    LG_ASSERT (rccs != NULL, GrB_NULL_POINTER);
+
+    LG_ASSERT_MSG(
+        G->kind == LAGraph_ADJACENCY_UNDIRECTED, GrB_INVALID_VALUE, 
+        "G->A must be symmetric") ;
+    LG_ASSERT_MSG(
+        G->is_symmetric_structure == LAGraph_TRUE, GrB_INVALID_VALUE, 
+        "G->A must be symmetric") ;
+    LG_ASSERT_MSG (G->out_degree != NULL, GrB_EMPTY_OBJECT,
+        "G->out_degree must be defined") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, GrB_INVALID_VALUE, 
+        "G->nself_edges must be zero") ; 
+    GRB_TRY(GxB_Container_new(&cont)) ;
+    GRB_TRY(GxB_unload_Matrix_into_Container(A, cont, NULL)) ;
+    LG_ASSERT_MSG(cont->format == GxB_SPARSE, GrB_NOT_IMPLEMENTED, 
+        "Matrix must be sparse") ;
+    GRB_TRY(GxB_Vector_unload(
+        cont->p, &Ap, &p_type, &p_n, &p_size, &p_hand, NULL)) ;
+    GRB_TRY(GxB_Vector_unload(
+        cont->i, &Ai, &i_type, &i_n, &i_size, &i_hand, NULL)) ;
+    GRB_TRY (GrB_Vector_reduce_INT64(
+        &max_deg, NULL, GrB_MAX_MONOID_INT64, G->out_degree, NULL)) ;
+
+    bool i32 = i_type == GrB_INT32 || i_type == GrB_UINT32;
+    bool p32 = p_type == GrB_INT32 || p_type == GrB_UINT32;
+    uint64_t ptr = 0, i = 0;
+
+    LG_TRY (LAGraph_Calloc(&array_space, max_deg * 2, sizeof(uint64_t), NULL)) ;
+    epd = array_space ;
+    vpd = array_space + max_deg * sizeof(uint64_t) ;
+    LG_TRY (LAGraph_Malloc((void **) &rcc, max_deg, sizeof(double), NULL)) ;
+
+    if (i32 && p32)
+    {
+        uint32_t *p_arr = Ap, *i_arr = Ai;
+        while(ptr < p_n - 1)
+        {
+            uint64_t dp = p_arr[ptr+1] - p_arr[ptr];
+            for(; p_arr[ptr + 1] > i; ++i)
+            {
+                uint64_t di = p_arr[i_arr[i]+1] - p_arr[i_arr[i]];
+                epd[dp - 1] += (dp < di) + (dp <= di);
+            }
+            if (dp > 0)
+                ++vpd[dp - 1];
+            ++ptr;
+        }
+    }
+    else if (i32)
+    {
+        uint64_t *p_arr = Ap; 
+        uint32_t *i_arr = Ai;
+        while(ptr < p_n - 1)
+        {
+            uint64_t dp = p_arr[ptr+1] - p_arr[ptr];
+            for(; p_arr[ptr + 1] > i; ++i)
+            {
+                uint64_t di = p_arr[i_arr[i]+1] - p_arr[i_arr[i]];
+                epd[dp - 1] += (dp < di) + (dp <= di);
+            }
+            if (dp > 0)
+                ++vpd[dp - 1];
+            ++ptr;
+        }
+    }
+    else if (p32)
+    {
+        uint32_t *p_arr = Ap; 
+        uint64_t *i_arr = Ai;
+        while(ptr < p_n - 1)
+        {
+            uint64_t dp = p_arr[ptr+1] - p_arr[ptr];
+            for(; p_arr[ptr + 1] > i; ++i)
+            {
+                uint64_t di = p_arr[i_arr[i]+1] - p_arr[i_arr[i]];
+                epd[dp - 1] += (dp < di) + (dp <= di);
+            }
+            if (dp > 0)
+                ++vpd[dp - 1];
+            ++ptr;
+        }
+    }
+    else
+    {
+        uint64_t *p_arr = Ap, *i_arr = Ai;
+        while(ptr < p_n - 1)
+        {
+            uint64_t dp = p_arr[ptr+1] - p_arr[ptr];
+            for(; p_arr[ptr + 1] > i; ++i)
+            {
+                uint64_t di = p_arr[i_arr[i]+1] - p_arr[i_arr[i]];
+                epd[dp - 1] += (dp < di) + (dp <= di);
+            }
+            if (dp > 0)
+                ++vpd[dp - 1];
+            ++ptr;
+        }
+    }
+    //run a cummulative sum (backwards)
+    for(i = max_deg - 1; i > 0; --i)
+    {
+        vpd[i-1] += vpd[i] ;
+        epd[i-1] += epd[i] ;
+    }
+    for(i = 0; i < max_deg; ++i)
+    {
+        rcc[i] = ((double)epd[i]) / ((double)vpd[i] * ((double) vpd[i] - 1.0)) ;
+    }
+    epd = vpd = NULL;
+    GRB_TRY (GrB_Vector_new(rccs, GrB_FP64, max_deg));
+    GRB_TRY (GxB_Vector_load(
+        *rccs, (void **) &rcc, GrB_FP64, max_deg, max_deg * sizeof(double), 
+        GrB_DEFAULT, NULL)) ;
+    GRB_TRY (GxB_Vector_load(
+        cont->p, &Ap, p_type, p_n, p_size, p_hand, NULL)) ;
+    GRB_TRY (GxB_Vector_load(
+        cont->i, &Ai, i_type, i_n, i_size, i_hand, NULL)) ;
+    GRB_TRY (GxB_load_Matrix_from_Container(A, cont, NULL)) ;
+    GRB_TRY (GxB_fprint(G->A, GxB_SHORT, stdout));
+    LG_FREE_WORK ;
+    return (GrB_SUCCESS) ;    
+}
+#endif

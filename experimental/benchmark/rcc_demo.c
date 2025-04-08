@@ -28,10 +28,11 @@
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL                             \
 {                                               \
-    GrB_free (&Y) ;                             \
+    GrB_free (&rcc1) ;                          \
+    GrB_free (&rcc2) ;                          \
     LAGraph_Delete (&G, msg) ;                  \
 }
-
+#define SINGLERCC 1
 int main (int argc, char **argv)
 {
 
@@ -41,7 +42,7 @@ int main (int argc, char **argv)
 
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
     LAGraph_Graph G = NULL ;
-    GrB_Vector Y = NULL ;
+    GrB_Vector rcc1 = NULL, rcc2 = NULL ;
 
     // start GraphBLAS and LAGraph
     bool burble = true ;               // set true for diagnostic outputs
@@ -80,16 +81,38 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
     printf ("\n========================== Start RCC ==========================\n") ;
     t = LAGraph_WallClockTime ( ) ;
-    LG_TRY (LAGraph_RichClubCoefficient (&Y, G, msg)) ;
+    LG_TRY (LAGraph_RichClubCoefficient (&rcc1, G, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGraph_RichClubCoefficient: %g sec\n", t) ;
     
+    #if SINGLERCC
+    int result;
+    LG_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
+    printf ("\n========================== Start RCC ==========================\n") ;
+    t = LAGraph_WallClockTime ( ) ;
+    result = LAGraph_RichClubCoefficient (&rcc2, G, msg) ;
+    t = LAGraph_WallClockTime ( ) - t ;
+    printf ("Time for LAGraph_RichClubCoefficient: %g sec\n", t) ;
+    #endif
+
     //--------------------------------------------------------------------------
     // check the results (make sure Y is a copy of G->A)
     //--------------------------------------------------------------------------
 
     t = LAGraph_WallClockTime ( ) ;
-    //TODO We can't really check this very well    
+    #if SINGLERCC
+    if(result == GrB_SUCCESS)
+    {
+        bool flag;
+        LG_TRY (LAGraph_Vector_IsEqual(&flag, rcc1, rcc2, msg));
+        if (flag)
+            printf("TEST PASSED\n") ;
+        else
+            printf("TEST FAILED\n") ;
+    }
+    else
+        printf("Test indeterminate. Single Thread exited with %d\n", result) ;
+    #endif
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time to check results:       %g sec\n", t) ;
 
@@ -98,7 +121,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     printf ("\n===============================The result matrix Y:\n") ;
-    GRB_TRY (GxB_Vector_fprint (Y, "rcc", GxB_SHORT, stdout));
+    GRB_TRY (GxB_Vector_fprint (rcc1, "rcc", GxB_SHORT, stdout));
 
     //--------------------------------------------------------------------------
     // free everyting and finish
