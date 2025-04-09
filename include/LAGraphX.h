@@ -1429,7 +1429,7 @@ int LAGraph_RichClubCoefficient
 ) ;
 
 LAGRAPHX_PUBLIC
-int LAGraph_RichClubCoefficient_SingleThreaded
+int LAGraph_RichClubCoefficient_NoGB
 (
     GrB_Vector *rich_club_coefficents, //output
     LAGraph_Graph G, //input graph

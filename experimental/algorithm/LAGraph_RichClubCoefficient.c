@@ -399,6 +399,8 @@ int LAGraph_RichClubCoefficient
     /* free any workspace used here */                  \
     LAGraph_Free(&array_space, NULL) ;                  \
     GrB_free (&cont) ;                                  \
+    LAGraph_Free((void **)&Ai, NULL) ;               \
+    LAGraph_Free((void **)&Ap, NULL) ;               \
 }
 
 
@@ -407,14 +409,44 @@ int LAGraph_RichClubCoefficient
     /* free any workspace used here */      \
     LG_FREE_WORK ;                          \
     /* free all the output variable(s) */   \
-    LAGraph_Free(&Ap, NULL) ;               \
-    LAGraph_Free(&Ai, NULL) ;               \
     LAGraph_Free((void **)&rcc, NULL) ;     \
     GrB_free (rccs) ;      \
 }
 
+//Taken from msort1.c
+static int64_t LG_binary_search    // return pleft
+(
+    const int64_t pivot,
+    const int64_t *LG_RESTRICT X_0,         // search in X [p_start..p_end_-1]
+    const int64_t p_start,
+    const int64_t p_end
+)
+{
+
+    //--------------------------------------------------------------------------
+    // find where the Pivot appears in X
+    //--------------------------------------------------------------------------
+
+    // binary search of X [p_start...p_end-1] for the Pivot
+    int64_t pleft = p_start ;
+    int64_t pright = p_end - 1 ;
+    while (pleft < pright)
+    {
+        int64_t pmiddle = (pleft + pright) >> 1 ;
+        bool less = (X_0 [pmiddle] < pivot) ;
+        pleft  = less ? (pmiddle+1) : pleft ;
+        pright = less ? pright : pmiddle ;
+    }
+
+    // binary search is narrowed down to a single item
+    // or it has found the list is empty:
+    ASSERT (pleft == pright || pleft == pright + 1) ;
+
+    return (pleft) ;
+}
+
 #if USING_GRAPHBLAS_V10
-int LAGraph_RichClubCoefficient_SingleThreaded
+int LAGraph_RichClubCoefficient_NoGB
 (
     // output:
     //rccs(i): rich club coefficent of i
@@ -427,7 +459,8 @@ int LAGraph_RichClubCoefficient_SingleThreaded
 {
     GxB_Container cont = NULL;
     GrB_Matrix A = G->A;
-    void  *Ap = NULL, *Ai = NULL, *array_space = NULL;
+    int64_t  *Ap = NULL, *Ai = NULL;
+    void *array_space = NULL;
     GrB_Type p_type = NULL, i_type = NULL;
     int p_hand = 0, i_hand = 0;
     uint64_t p_n = 0, i_n = 0, p_size = 0, i_size = 0, max_deg = 0;
@@ -452,88 +485,56 @@ int LAGraph_RichClubCoefficient_SingleThreaded
     GRB_TRY(GxB_Container_new(&cont)) ;
     GRB_TRY(GxB_unload_Matrix_into_Container(A, cont, NULL)) ;
     LG_ASSERT_MSG(cont->format == GxB_SPARSE, GrB_NOT_IMPLEMENTED, 
-        "Matrix must be sparse") ;
-    GRB_TRY(GxB_Vector_unload(
-        cont->p, &Ap, &p_type, &p_n, &p_size, &p_hand, NULL)) ;
-    GRB_TRY(GxB_Vector_unload(
-        cont->i, &Ai, &i_type, &i_n, &i_size, &i_hand, NULL)) ;
+        "Matrix must be sparse") ;    
+    LG_TRY (LAGraph_Malloc(
+        (void **) &Ap, cont->nvals, sizeof(uint64_t), NULL)) ;
+    LG_TRY (LAGraph_Malloc(
+        (void **) &Ai, cont->nvals + 1, sizeof(uint64_t), NULL)) ;
+    p_n = cont->nvals + 1; i_n = cont->nvals;
+    GRB_TRY (GrB_Vector_extractTuples_INT64(
+        NULL, Ap, &p_n, cont->p)) ;
+    GRB_TRY (GrB_Vector_extractTuples_INT64(
+        NULL, Ai, &i_n, cont->i)) ;
+    GRB_TRY (GxB_load_Matrix_from_Container(A, cont, NULL)) ;
     GRB_TRY (GrB_Vector_reduce_INT64(
         &max_deg, NULL, GrB_MAX_MONOID_INT64, G->out_degree, NULL)) ;
-
-    bool i32 = i_type == GrB_INT32 || i_type == GrB_UINT32;
-    bool p32 = p_type == GrB_INT32 || p_type == GrB_UINT32;
-    uint64_t ptr = 0, i = 0;
+    int64_t ptr = -1, i = 0, dp = 0;
 
     LG_TRY (LAGraph_Calloc(&array_space, max_deg * 2, sizeof(uint64_t), NULL)) ;
     epd = array_space ;
     vpd = array_space + max_deg * sizeof(uint64_t) ;
     LG_TRY (LAGraph_Malloc((void **) &rcc, max_deg, sizeof(double), NULL)) ;
-
-    if (i32 && p32)
+    // while(ptr < p_n - 1)
+    // {
+    //     uint64_t dp = Ap[ptr+1] - Ap[ptr];
+    //     for(; Ap[ptr + 1] > i; ++i)
+    //     {
+    //         uint64_t di = Ap[Ai[i]+1] - Ap[Ai[i]] ;
+    //         epd[dp - 1] += (dp < di) + (dp <= di) ;
+    //     }
+    //     if (dp > 0)
+    //         ++vpd[dp - 1] ;
+    //     ++ptr ;
+    // }
+    #pragma omp parrallel for schedule(static) 
+    for(i = 0; i < i_n; ++i)
     {
-        uint32_t *p_arr = Ap, *i_arr = Ai;
-        while(ptr < p_n - 1)
+        if(ptr == -1)
         {
-            uint64_t dp = p_arr[ptr+1] - p_arr[ptr];
-            for(; p_arr[ptr + 1] > i; ++i)
-            {
-                uint64_t di = p_arr[i_arr[i]+1] - p_arr[i_arr[i]];
-                epd[dp - 1] += (dp < di) + (dp <= di);
-            }
-            if (dp > 0)
+            ptr = LG_binary_search(i, Ap, 0, p_n - 1) ;
+            dp = Ap[ptr+1] - Ap[ptr];
+            if(dp > 0)
                 ++vpd[dp - 1];
-            ++ptr;
         }
-    }
-    else if (i32)
-    {
-        uint64_t *p_arr = Ap; 
-        uint32_t *i_arr = Ai;
-        while(ptr < p_n - 1)
+        if(Ap[ptr + 1] <= i)
         {
-            uint64_t dp = p_arr[ptr+1] - p_arr[ptr];
-            for(; p_arr[ptr + 1] > i; ++i)
-            {
-                uint64_t di = p_arr[i_arr[i]+1] - p_arr[i_arr[i]];
-                epd[dp - 1] += (dp < di) + (dp <= di);
-            }
-            if (dp > 0)
-                ++vpd[dp - 1];
-            ++ptr;
+            while(Ap[ptr + 1] <= i) ++ptr;
+            dp = Ap[ptr+1] - Ap[ptr];
+            LG_ASSERT(dp > 0, GrB_INVALID_VALUE) ;
+            ++vpd[dp - 1];
         }
-    }
-    else if (p32)
-    {
-        uint32_t *p_arr = Ap; 
-        uint64_t *i_arr = Ai;
-        while(ptr < p_n - 1)
-        {
-            uint64_t dp = p_arr[ptr+1] - p_arr[ptr];
-            for(; p_arr[ptr + 1] > i; ++i)
-            {
-                uint64_t di = p_arr[i_arr[i]+1] - p_arr[i_arr[i]];
-                epd[dp - 1] += (dp < di) + (dp <= di);
-            }
-            if (dp > 0)
-                ++vpd[dp - 1];
-            ++ptr;
-        }
-    }
-    else
-    {
-        uint64_t *p_arr = Ap, *i_arr = Ai;
-        while(ptr < p_n - 1)
-        {
-            uint64_t dp = p_arr[ptr+1] - p_arr[ptr];
-            for(; p_arr[ptr + 1] > i; ++i)
-            {
-                uint64_t di = p_arr[i_arr[i]+1] - p_arr[i_arr[i]];
-                epd[dp - 1] += (dp < di) + (dp <= di);
-            }
-            if (dp > 0)
-                ++vpd[dp - 1];
-            ++ptr;
-        }
+        uint64_t di = Ap[Ai[i]+1] - Ap[Ai[i]];
+        epd[dp - 1] += (dp < di) + (dp <= di);
     }
     //run a cummulative sum (backwards)
     for(i = max_deg - 1; i > 0; --i)
@@ -541,6 +542,7 @@ int LAGraph_RichClubCoefficient_SingleThreaded
         vpd[i-1] += vpd[i] ;
         epd[i-1] += epd[i] ;
     }
+    #pragma omp parrallel for schedule(static)
     for(i = 0; i < max_deg; ++i)
     {
         rcc[i] = ((double)epd[i]) / ((double)vpd[i] * ((double) vpd[i] - 1.0)) ;
@@ -550,11 +552,7 @@ int LAGraph_RichClubCoefficient_SingleThreaded
     GRB_TRY (GxB_Vector_load(
         *rccs, (void **) &rcc, GrB_FP64, max_deg, max_deg * sizeof(double), 
         GrB_DEFAULT, NULL)) ;
-    GRB_TRY (GxB_Vector_load(
-        cont->p, &Ap, p_type, p_n, p_size, p_hand, NULL)) ;
-    GRB_TRY (GxB_Vector_load(
-        cont->i, &Ai, i_type, i_n, i_size, i_hand, NULL)) ;
-    GRB_TRY (GxB_load_Matrix_from_Container(A, cont, NULL)) ;
+    
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;    
 }

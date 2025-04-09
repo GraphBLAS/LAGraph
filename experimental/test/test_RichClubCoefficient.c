@@ -158,7 +158,7 @@ void test_RichClubCoefficient (void)
 
         printf ("RCC computation begins:\n") ;
         GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-        OK(LAGraph_RichClubCoefficient( &rcc, G, msg));
+        OK(LAGraph_RichClubCoefficient_NoGB( &rcc, G, msg));
         printf("%s\n", msg);
         GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
         printf ("RCC computation ends:\n") ;
