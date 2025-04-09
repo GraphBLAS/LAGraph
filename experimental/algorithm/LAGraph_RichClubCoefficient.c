@@ -413,8 +413,8 @@ int LAGraph_RichClubCoefficient
     GrB_free (rccs) ;      \
 }
 
-//Taken from msort1.c
-static int64_t LG_binary_search    // return pleft
+//Scuffed upperbound function 
+static int64_t LG_binary_search    // returns upperbound - 1
 (
     const int64_t pivot,
     const int64_t *LG_RESTRICT X_0,         // search in X [p_start..p_end_-1]
@@ -429,20 +429,17 @@ static int64_t LG_binary_search    // return pleft
 
     // binary search of X [p_start...p_end-1] for the Pivot
     int64_t pleft = p_start ;
-    int64_t pright = p_end - 1 ;
+    int64_t pright = p_end - 1;
     while (pleft < pright)
     {
-        int64_t pmiddle = (pleft + pright) >> 1 ;
+        int64_t pmiddle = pleft + (pright - pleft) / 2 ;
         bool less = (X_0 [pmiddle] < pivot) ;
-        pleft  = less ? (pmiddle+1) : pleft ;
+        pleft  = less ? pmiddle + 1 : pleft ;
         pright = less ? pright : pmiddle ;
     }
-
-    // binary search is narrowed down to a single item
-    // or it has found the list is empty:
-    ASSERT (pleft == pright || pleft == pright + 1) ;
-
-    return (pleft) ;
+    if(X_0[pleft] <= pivot)
+        pleft++;
+    return (--pleft) ;
 }
 
 #if USING_GRAPHBLAS_V10
@@ -498,7 +495,7 @@ int LAGraph_RichClubCoefficient_NoGB
     GRB_TRY (GxB_load_Matrix_from_Container(A, cont, NULL)) ;
     GRB_TRY (GrB_Vector_reduce_INT64(
         &max_deg, NULL, GrB_MAX_MONOID_INT64, G->out_degree, NULL)) ;
-    int64_t ptr = -1, i = 0, dp = 0;
+    int64_t i = 0;
 
     LG_TRY (LAGraph_Calloc(&array_space, max_deg * 2, sizeof(uint64_t), NULL)) ;
     epd = array_space ;
@@ -516,33 +513,51 @@ int LAGraph_RichClubCoefficient_NoGB
     //         ++vpd[dp - 1] ;
     //     ++ptr ;
     // }
-    #pragma omp parrallel for schedule(static) 
+    #pragma omp parallel
+    {
+    int64_t dp = 0, ptr = -1, loc_sum = 0;
+    #pragma omp for schedule(static)
     for(i = 0; i < i_n; ++i)
     {
         if(ptr == -1)
         {
             ptr = LG_binary_search(i, Ap, 0, p_n - 1) ;
-            dp = Ap[ptr+1] - Ap[ptr];
-            if(dp > 0)
-                ++vpd[dp - 1];
+            while(Ap[ptr + 1] <= i) ++ptr;
+            dp = Ap[ptr + 1] - Ap[ptr];
         }
         if(Ap[ptr + 1] <= i)
         {
+            #pragma omp atomic
+                epd[dp - 1] += loc_sum ;
+            loc_sum = 0;
             while(Ap[ptr + 1] <= i) ++ptr;
-            dp = Ap[ptr+1] - Ap[ptr];
-            LG_ASSERT(dp > 0, GrB_INVALID_VALUE) ;
-            ++vpd[dp - 1];
+            dp = Ap[ptr + 1] - Ap[ptr];
         }
         uint64_t di = Ap[Ai[i]+1] - Ap[Ai[i]];
-        epd[dp - 1] += (dp < di) + (dp <= di);
+        int64_t temp = (dp < di) + (dp <= di);
+        loc_sum += temp;
     }
+    #pragma omp atomic
+        epd[dp - 1] += loc_sum ;
+    }
+    
+    #pragma omp parallel for schedule(static)
+    for(i = 0; i < p_n - 1; ++i)
+    {
+        int64_t dp = Ap[i + 1] - Ap[i] - 1;
+        if(dp >= 0)
+        {
+            #pragma omp atomic 
+                ++vpd[dp];
+        }
+    }   
     //run a cummulative sum (backwards)
     for(i = max_deg - 1; i > 0; --i)
     {
         vpd[i-1] += vpd[i] ;
         epd[i-1] += epd[i] ;
     }
-    #pragma omp parrallel for schedule(static)
+    #pragma omp parallel for schedule(static)
     for(i = 0; i < max_deg; ++i)
     {
         rcc[i] = ((double)epd[i]) / ((double)vpd[i] * ((double) vpd[i] - 1.0)) ;

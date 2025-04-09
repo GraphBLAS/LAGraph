@@ -25,12 +25,12 @@
 #include "LG_internal.h"
 void iseq(bool *z, const double *x, const double *y)
 {
-    (*z) = fabs(*x - *y) < 1e-15 ;
+    (*z) = (isnan(*x) && isnan(*y)) ||*x == *y ;
 }
 #define ISEQ \
 "   void iseq(bool *z, const double *x, const double *y)                        \n"\
 "   {                                                                           \n"\
-"       (*z) = fabs(*x - *y) < 1e-15 ;                                          \n"\
+"       (*z) = (isnan(*x) && isnan(*y)) || *x == *y ;                          \n"\
 "   }"
 // LG_FREE_ALL is required by LG_TRY
 #undef  LG_FREE_ALL
