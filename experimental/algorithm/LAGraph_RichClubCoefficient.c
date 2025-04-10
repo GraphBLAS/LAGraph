@@ -460,7 +460,7 @@ static int64_t LG_binary_search    // returns upperbound - 1
     return (--pleft) ;
 }
 
-#if USING_GRAPHBLAS_V10
+
 int LAGraph_RichClubCoefficient_NoGB
 (
     // output:
@@ -472,6 +472,7 @@ int LAGraph_RichClubCoefficient_NoGB
     char *msg
 )
 {
+    #if USING_GRAPHBLAS_V10
     GxB_Container cont = NULL;
     GrB_Matrix A = G->A;
     int64_t  *Ap = NULL, *Ai = NULL;
@@ -649,6 +650,9 @@ int LAGraph_RichClubCoefficient_NoGB
         GrB_DEFAULT, NULL)) ;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;    
+    #else
+    printf("LAGraph_RichClubCoefficient_NoGB needs GB v10\n") ;
+    return (GrB_NOT_IMPLEMENTED) ;
+    #endif
 }
-#endif
 #undef TIMINGS
