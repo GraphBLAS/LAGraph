@@ -1452,6 +1452,15 @@ int LAGraph_SwapEdgesV2
     char *msg
 ) ;
 
+LAGRAPHX_PUBLIC
+int LAGraph_RichClubCoefficient_NoGB
+(
+    GrB_Vector *rich_club_coefficents, //output
+    LAGraph_Graph G, //input graph
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
 int LG_CC_FastSV7_FA // SuiteSparse:GraphBLAS method, with GxB extensions
 (
     // output:
