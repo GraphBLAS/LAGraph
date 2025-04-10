@@ -36,7 +36,7 @@
 
 int main (int argc, char **argv)
 {
-
+    #if USING_GRAPHBLAS_V10
     //--------------------------------------------------------------------------
     // startup LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
@@ -172,4 +172,8 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Finalize (msg)) ;
     LG_TRY (LAGraph_Random_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
+    #else
+    printf ("GraphBLAS version too low to test LAGraph_FastAssign\n") ;
+    return (GrB_NOT_IMPLEMENTED) ;
+    #endif
 }
