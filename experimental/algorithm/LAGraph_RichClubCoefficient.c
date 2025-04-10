@@ -36,7 +36,7 @@
     /* free any workspace used here */                  \
     GrB_free(&D) ;                                      \
     GrB_free(&P) ;                                      \
-    GrB_free(&A_deg) ;                           \
+    GrB_free(&A_deg) ;                                  \
     GrB_free(&degrees) ;                                \
     GrB_free(&deg_x) ;                                  \
     GrB_free(&node_edges) ;                             \
@@ -48,11 +48,7 @@
     GrB_free(&plus_2le) ;                               \
     GrB_free(&rcCalculation) ;                          \
     GrB_free(&ramp_v) ;                                 \
-    LAGraph_Free((void **) &array_space, NULL) ;         \
-    LAGraph_Free((void **) &node_edges_arr, NULL);      \
-    LAGraph_Free((void **) &deg_arr, NULL);             \
-    LAGraph_Free((void **) &ramp, NULL);                \
-    LAGraph_Free((void **) &ones, NULL);                \
+    LAGraph_Free(&a_space, NULL) ;                      \
 }
 
 
@@ -156,7 +152,7 @@ int LAGraph_RichClubCoefficient
     GrB_Index max_deg;
     bool iso = false;
 
-    void *array_space = NULL;
+    void *a_space = NULL;
     
     int64_t *node_edges_arr = NULL, *deg_arr = NULL, 
         *epd_arr = NULL, *ones = NULL, 
@@ -165,7 +161,6 @@ int LAGraph_RichClubCoefficient
     int64_t epd_n = 0, vpd_n = 0, epd_size = 0, vpd_size = 0;
     int epd_h = 0, vpd_h = 0;
     GrB_Index *epd_index = NULL,  *vpd_index = NULL;
-    int64_t *ramp = NULL;
 
     //--------------------------------------------------------------------------
     // Check inputs
@@ -311,47 +306,55 @@ int LAGraph_RichClubCoefficient
             verts_per_deg, (void **) &vpd_arr, vpd_type,
             vpd_n, vpd_size, vpd_h, NULL)) ;
     #else
+        LG_TRY (LAGraph_Malloc(
+            &a_space, edge_vec_nvals * 3 + max_deg * 4, sizeof(int64_t), NULL
+        )) ;
+        int64_t *T = a_space;
+        deg_arr = T;            T += edge_vec_nvals;
+        node_edges_arr = T;     T += edge_vec_nvals;
+        ones = T;               T += edge_vec_nvals;
+        epd_arr = T;            T += max_deg;
+        vpd_arr = T;            T += max_deg;
+        epd_index = T;          T += max_deg;
+        vpd_index = T;          T += max_deg;
+
+        #pragma omp parallel for schedule(static)
+        for(uint64_t i = 0; i < edge_vec_nvals; ++i)
+        {
+            ones[i] = 1ll;
+        }
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(
             degrees, NULL, NULL, GrB_MINUS_INT64, G->out_degree, 1, NULL)) ;
-        LG_TRY(LAGraph_Malloc(
-            (void **) &deg_arr, edge_vec_nvals, sizeof(int64_t), NULL)) ;
-        LG_TRY(LAGraph_Malloc(
-            (void **) &node_edges_arr, edge_vec_nvals, sizeof(int64_t), NULL)) ;
+        //TODO: remove NULL for Vanilla GB
         GRB_TRY (GrB_Vector_extractTuples_INT64(
             NULL, deg_arr, &edge_vec_nvals, degrees
         )) ;
         GRB_TRY (GrB_Vector_extractTuples_INT64(
             NULL, node_edges_arr, &edge_vec_nvals, node_edges
         )) ;
+
         // Build with degrees as indecies and handle duplicates via adition
         GRB_TRY (GrB_Vector_build_INT64 (
             edges_per_deg, deg_arr, node_edges_arr, edge_vec_nvals, 
             GrB_PLUS_INT64)) ;
-        LG_TRY (LAGraph_Malloc(
-            (void **) &ones, edge_vec_nvals, sizeof(int64_t), NULL)) ;
-        for(uint64_t i = 0; i < edge_vec_nvals; ++i)
-        {
-            ones[i] = 1ll;
-        }
         GRB_TRY (GrB_Vector_build_INT64 (
             verts_per_deg, deg_arr, ones, edge_vec_nvals, GrB_PLUS_INT64)) ;
-
-        // TODO: FIX THIS (return a ful vector)
-        GRB_TRY (GrB_Vector_nvals(&edge_vec_nvals, edges_per_deg)) ;
-        LG_TRY (LAGraph_Malloc(
-            &array_space, edge_vec_nvals * 4, sizeof(int64_t), NULL)) ;
-        epd_index = array_space ;
-        epd_arr = array_space + edge_vec_nvals * sizeof(int64_t) ;
-        vpd_index = array_space + 2 * edge_vec_nvals * sizeof(int64_t) ;
-        vpd_arr = array_space + 3 * edge_vec_nvals * sizeof(int64_t) ;
+        GRB_TRY (GrB_Vector_assign_INT64(
+            edges_per_deg, edges_per_deg, NULL, (int64_t) 0, 
+            GrB_ALL, 0, GrB_DESC_SC)) ;
+        GRB_TRY (GrB_Vector_assign_INT64(
+            verts_per_deg, verts_per_deg, NULL, (int64_t) 0, 
+            GrB_ALL, 0, GrB_DESC_SC)) ;
+        
+        // Extract into arrays
         GRB_TRY (GrB_Vector_extractTuples_INT64(
-            epd_index, epd_arr, &edge_vec_nvals, edges_per_deg
+            epd_index, epd_arr, &max_deg, edges_per_deg
         )) ;
         GRB_TRY (GrB_Vector_extractTuples_INT64(
-            vpd_index, vpd_arr, &edge_vec_nvals, verts_per_deg
+            vpd_index, vpd_arr, &max_deg, verts_per_deg
         )) ;
         //run a cummulative sum (backwards) on vpd_arr
-        for(GrB_Index i = edge_vec_nvals - 1; i > 0; --i)
+        for(GrB_Index i = max_deg - 1; i > 0; --i)
         {
             vpd_arr[i-1] += vpd_arr[i] ;
             epd_arr[i-1] += epd_arr[i] ;
@@ -359,11 +362,13 @@ int LAGraph_RichClubCoefficient
         GRB_TRY (GrB_Vector_clear(edges_per_deg)) ;
         GRB_TRY (GrB_Vector_clear(verts_per_deg)) ;
         GRB_TRY (GrB_Vector_build_INT64(
-            edges_per_deg, epd_index, epd_arr, edge_vec_nvals, NULL
+            edges_per_deg, epd_index, epd_arr, max_deg, NULL
         )) ;
         GRB_TRY (GrB_Vector_build_INT64(
-            verts_per_deg, vpd_index, vpd_arr, edge_vec_nvals, NULL
+            verts_per_deg, vpd_index, vpd_arr, max_deg, NULL
         )) ;
+        T = deg_arr = node_edges_arr = ones = NULL ;
+        epd_index = vpd_index = epd_arr = vpd_arr = NULL ;
     #endif
 
     /**
@@ -397,10 +402,11 @@ int LAGraph_RichClubCoefficient
 #define LG_FREE_WORK                                    \
 {                                                       \
     /* free any workspace used here */                  \
-    LAGraph_Free(&array_space, NULL) ;                  \
+    LAGraph_Free(&a_space, NULL) ;                  \
     GrB_free (&cont) ;                                  \
     LAGraph_Free((void **)&Ai, NULL) ;               \
     LAGraph_Free((void **)&Ap, NULL) ;               \
+    LAGraph_Free((void **)&slice, NULL) ;               \
 }
 
 
@@ -412,6 +418,18 @@ int LAGraph_RichClubCoefficient
     LAGraph_Free((void **)&rcc, NULL) ;     \
     GrB_free (rccs) ;      \
 }
+#define TIMINGS
+#ifdef TIMINGS
+static void print_timings (const double timings [16])
+{
+    double total = timings [0] + timings [1] + timings [2] + timings [3] + timings [4];
+    printf ("RCC %12.6f (%4.1f%%) init\n", timings [0], 100. * timings [0] / total) ;
+    printf ("RCC %12.6f (%4.1f%%) counting edges\n", timings [1], 100. * timings [1] / total) ;
+    printf ("RCC %12.6f (%4.1f%%) counting nodes\n", timings [2], 100. * timings [2] / total) ;
+    printf ("RCC %12.6f (%4.1f%%) cumulative sum\n", timings [3], 100. * timings [3] / total) ;
+    printf ("RCC %12.6f (%4.1f%%) calculation\n", timings [4], 100. * timings [4] / total) ;
+}
+#endif
 
 //Scuffed upperbound function 
 static int64_t LG_binary_search    // returns upperbound - 1
@@ -429,7 +447,7 @@ static int64_t LG_binary_search    // returns upperbound - 1
 
     // binary search of X [p_start...p_end-1] for the Pivot
     int64_t pleft = p_start ;
-    int64_t pright = p_end - 1;
+    int64_t pright = p_end;
     while (pleft < pright)
     {
         int64_t pmiddle = pleft + (pright - pleft) / 2 ;
@@ -457,12 +475,21 @@ int LAGraph_RichClubCoefficient_NoGB
     GxB_Container cont = NULL;
     GrB_Matrix A = G->A;
     int64_t  *Ap = NULL, *Ai = NULL;
-    void *array_space = NULL;
+    void *a_space = NULL;
     GrB_Type p_type = NULL, i_type = NULL;
     int p_hand = 0, i_hand = 0;
+    int n_threads = LG_nthreads_outer * LG_nthreads_inner;
     uint64_t p_n = 0, i_n = 0, p_size = 0, i_size = 0, max_deg = 0;
     uint64_t *epd = NULL, *vpd = NULL;
+    int64_t *LG_RESTRICT slice  = NULL;
     double *rcc = NULL;
+    #ifdef TIMINGS
+    double timings [16] ;
+    memset(timings, 0, 16*sizeof(double)) ;
+    double tic = LAGraph_WallClockTime ( ) ;
+    LG_SET_BURBLE (false) ;
+    #endif
+
     //--------------------------------------------------------------------------
     // Check inputs
     //--------------------------------------------------------------------------
@@ -496,10 +523,13 @@ int LAGraph_RichClubCoefficient_NoGB
     GRB_TRY (GrB_Vector_reduce_INT64(
         &max_deg, NULL, GrB_MAX_MONOID_INT64, G->out_degree, NULL)) ;
     int64_t i = 0;
-
-    LG_TRY (LAGraph_Calloc(&array_space, max_deg * 2, sizeof(uint64_t), NULL)) ;
-    epd = array_space ;
-    vpd = array_space + max_deg * sizeof(uint64_t) ;
+    #ifdef TIMINGS
+    timings[0] = LAGraph_WallClockTime ( );
+    #endif
+    LG_TRY (LAGraph_Calloc(&a_space, max_deg * 2, sizeof(uint64_t), NULL)) ;
+    LG_TRY (LAGraph_Malloc((void **)&slice, n_threads + 1, sizeof(int64_t), NULL)) ;
+    epd = a_space ;
+    vpd = a_space + max_deg * sizeof(uint64_t) ;
     LG_TRY (LAGraph_Malloc((void **) &rcc, max_deg, sizeof(double), NULL)) ;
     // while(ptr < p_n - 1)
     // {
@@ -513,62 +543,112 @@ int LAGraph_RichClubCoefficient_NoGB
     //         ++vpd[dp - 1] ;
     //     ++ptr ;
     // }
+    LG_eslice (slice, i_n, n_threads) ;
+    #pragma omp parallel for num_threads(n_threads) schedule(static, 1) private(i)
+    for (int tid = 0 ; tid < n_threads ; tid++)
+    {
+        int64_t loc_sum = 0, dp = 0;
+        int64_t loc_arr[1024];
+        memset(loc_arr, 0, 1024 * sizeof(int64_t));
+        i = slice[tid];
+        int64_t ptr = LG_binary_search(i, Ap, 0, p_n - 1) ;
+        while(i < slice[tid + 1])
+        {
+            while(Ap[ptr + 1] <= i) ++ptr;
+            int64_t dp = Ap[ptr + 1] - Ap[ptr];
+            if(dp <= 1024)
+                for(; i < slice[tid + 1] && i < Ap[ptr + 1]; ++i)
+                {
+                    uint64_t di = Ap[Ai[i] + 1] - Ap[Ai[i]];
+                    loc_arr[dp - 1] += (dp < di) + (dp <= di);
+                }
+            else
+            {
+                loc_sum = 0;
+                for(; i < slice[tid + 1] && i < Ap[ptr + 1]; ++i)
+                {
+                    uint64_t di = Ap[Ai[i]+1] - Ap[Ai[i]];
+                    loc_sum += (dp < di) + (dp <= di);
+                }
+                #pragma omp atomic
+                    epd[dp - 1] += loc_sum ;
+            }
+        }
+        #pragma omp critical
+        {
+            for(int64_t j = 0; j < 1024 && j < max_deg; ++j)
+            {
+                epd[j] += loc_arr[j];
+            }
+        }
+    }
+    #ifdef TIMINGS
+    timings[1] = LAGraph_WallClockTime ( );
+    #endif
+    
     #pragma omp parallel
     {
-    int64_t dp = 0, ptr = -1, loc_sum = 0;
-    #pragma omp for schedule(static)
-    for(i = 0; i < i_n; ++i)
-    {
-        if(ptr == -1)
+        int64_t loc_arr[1024];
+        memset(loc_arr, 0, 1024 * sizeof(int64_t));
+        #pragma omp for schedule(static)
+        for(i = 0; i < p_n - 1; ++i)
         {
-            ptr = LG_binary_search(i, Ap, 0, p_n - 1) ;
-            while(Ap[ptr + 1] <= i) ++ptr;
-            dp = Ap[ptr + 1] - Ap[ptr];
-        }
-        if(Ap[ptr + 1] <= i)
+            int64_t dp = Ap[i + 1] - Ap[i] - 1;
+            if(dp < 0) continue;
+            if(dp < 1024)
+            {
+                ++loc_arr[dp];
+            }
+            else
+            {
+                #pragma omp atomic
+                    ++vpd[dp];
+            }
+        }  
+        #pragma omp critical
         {
-            #pragma omp atomic
-                epd[dp - 1] += loc_sum ;
-            loc_sum = 0;
-            while(Ap[ptr + 1] <= i) ++ptr;
-            dp = Ap[ptr + 1] - Ap[ptr];
+            for(int64_t j = 0; j < 1024 && j < max_deg; ++j)
+            {
+                vpd[j] += loc_arr[j];
+            }
         }
-        uint64_t di = Ap[Ai[i]+1] - Ap[Ai[i]];
-        int64_t temp = (dp < di) + (dp <= di);
-        loc_sum += temp;
-    }
-    #pragma omp atomic
-        epd[dp - 1] += loc_sum ;
     }
     
-    #pragma omp parallel for schedule(static)
-    for(i = 0; i < p_n - 1; ++i)
-    {
-        int64_t dp = Ap[i + 1] - Ap[i] - 1;
-        if(dp >= 0)
-        {
-            #pragma omp atomic 
-                ++vpd[dp];
-        }
-    }   
+    #ifdef TIMINGS
+    timings[2] = LAGraph_WallClockTime ( );
+    #endif
     //run a cummulative sum (backwards)
     for(i = max_deg - 1; i > 0; --i)
     {
         vpd[i-1] += vpd[i] ;
         epd[i-1] += epd[i] ;
     }
+    #ifdef TIMINGS
+    timings[3] = LAGraph_WallClockTime ( );
+    #endif
     #pragma omp parallel for schedule(static)
     for(i = 0; i < max_deg; ++i)
     {
         rcc[i] = ((double)epd[i]) / ((double)vpd[i] * ((double) vpd[i] - 1.0)) ;
     }
+    #ifdef TIMINGS
+    timings[4] = LAGraph_WallClockTime ( );
+    timings[4] -= timings[3];
+    timings[3] -= timings[2];
+    timings[2] -= timings[1];
+    timings[1] -= timings[0];
+    timings[0] -= tic;
+    
+    print_timings(timings);
+    LG_SET_BURBLE(false);
+    #endif
     epd = vpd = NULL;
     GRB_TRY (GrB_Vector_new(rccs, GrB_FP64, max_deg));
     GRB_TRY (GxB_Vector_load(
         *rccs, (void **) &rcc, GrB_FP64, max_deg, max_deg * sizeof(double), 
         GrB_DEFAULT, NULL)) ;
-    
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;    
 }
 #endif
+#undef TIMINGS
