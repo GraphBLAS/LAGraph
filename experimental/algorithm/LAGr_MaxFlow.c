@@ -109,7 +109,7 @@ static GrB_Info LG_augment_maxflow
   LG_FREE_WORK; \
 }
 
-//#define LEN INT16_MAX
+#define JIT_STR(f, var) char* var = #f; f
 
 //casting for unary ops
 #define F_UNARY(f) ((void (*)(void *, const void *))f)
@@ -123,98 +123,53 @@ static GrB_Info LG_augment_maxflow
 // casting for binary op
 #define F_BINARY(f) ((void (*)(void *, const void *, const void *)) f)
 
-//custom types
-typedef struct{
+// custom types
+JIT_STR(typedef struct{
   double flow;
   double capacity;
-} MF_flowEdge;
+  } MF_flowEdge;, GRB_FLOWEDGE_STR)
 
-#define GRB_FLOWEDGE_STR "typedef struct{"\
-  "double flow;"\
-  "double capacity;"\
-"} MF_flowEdge;"
-
-
-typedef struct{
+JIT_STR(typedef struct{
   double residual;
   GrB_Index j;
   int64_t d;
-} MF_resultTuple;
+  } MF_resultTuple;, GRB_RESULTTUPLE_STR)
 
-#define GRB_RESULTTUPLE_STR "typedef struct{"\
-  "double residual;"\
-  "GrB_Index j;"\
-  "int64_t d;"\
-"} MF_resultTuple;"
-
-typedef struct{
+JIT_STR(typedef struct{
   double residual;
   int64_t di;
   int64_t y_dmin;
   GrB_Index j;
-} MF_compareTuple;
+  } MF_compareTuple;, GRB_COMPARETUPLE_STR)
 
-#define GRB_COMPARETUPLE_STR                                                   \
-  "typedef struct{"                                                            \
-  "double residual;"                                                            \
-  "int64_t di;"                                                                    \
-  "int64_t y_dmin;"                                                                \
-  "GrB_Index j;"                                                               \
-  "} MF_compareTuple;"
-
-void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {
+JIT_STR(void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {
   z->flow = 0;
   z->capacity = (*y);
-}
+  }, GRB_CRF_STR)
 
-#define GRB_CRF_STR "void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {"\
-  "z->flow = 0;"\
-  "z->capacity = (*y);"\
-"}"
-
-void MF_CreateResidualBackward(MF_flowEdge *z, const double *y) {
+JIT_STR(void MF_CreateResidualBackward(MF_flowEdge *z, const double *y) {
   z->flow = 0;
   z->capacity = 0;
-}
-
-#define GRB_CRB_STR "void MF_CreateResidualBackward(MF_flowEdge *z, const double *y)"\
- "{"\
-  "z->flow " \
-  "= 0;\nz->capacity = 0;"\
-"}"
+  }, GRB_CRB_STR)
 
 
 // FIXME: z is undefined ...
-void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index jy, const int64_t *x, GrB_Index ix, GrB_Index jx, const int64_t* theta) {
+JIT_STR(void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index jy, const int64_t *x, GrB_Index ix, GrB_Index jx, const int64_t* theta) {
   double r = y->capacity - y->flow;
   if(r > 0){
     z->d = *x;
     z->residual = r;
     z->j = jy;
   }
-  else if(r==0){
+  else{
     z->d = INT64_MAX;
     z->residual = 0;
     z->j = -1;
   }
-}
-
-#define GRB_RXDMULT_STR "void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index jy, const int64_t *x, GrB_Index ix, GrB_Index jx, const int64_t* theta) {"\
-  "double r = y->capacity - y->flow;"\
-  "if(r > 0){"\
-    "z->d = *x;"\
-    "z->residual = r;"\
-    "z->j = jy;"\
-  "}"\
-  "else{"\
-    "z->d = INT64_MAX;"\
-    "z->residual = 0;"\
-    "z->j = -1;"\
-  "}"\
-"}"
+  }, GRB_RXDMULT_STR)
 
 
-void MF_RxdAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x) {
+JIT_STR(void MF_RxdAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x) {
   if(y->d < x->d){
     (*z) = (*y) ;
   }
@@ -237,106 +192,45 @@ void MF_RxdAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTupl
       }
     }
   }
-}
+  }, GRB_RXDADD_STR)
 
-#define GRB_RXDADD_STR "void MF_RxdAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x) {"\
-  "if(y->d < x->d){"\
-    "(*z) = (*y) ;"\
-  "}"\
-  "else if(y->d > x->d){"\
-    "(*z) = (*x) ;"\
-  "}"\
-  "else{"\
-    "if(y->residual > x->residual){"\
-      "(*z) = (*y) ;"\
-    "}"\
-    "else if(y->residual < x->residual){"\
-      "(*z) = (*x) ;"\
-    "}"\
-    "else{"\
-      "if(y->j > x->j){"\
-	"(*z) = (*y) ;"\
-      "}"\
-      "else{"\
-	"(*z) = (*x) ;"\
-      "}"\
-    "}"\
-  "}"\
-"}"
+JIT_STR(void MF_extractFlow(double *z, const MF_resultTuple *y) { (*z) = y->residual; }, GRB_EXTRACTFLOW_STR)
 
-
-void MF_extractFlow(double *z, const MF_resultTuple *y) { (*z) = y->residual; }
-
-#define GRB_EXTRACTFLOW_STR "void MF_extractFlow(double *z, const MF_resultTuple *y) {\n(*z) = y->residual;\n}"
-
-void MF_updateFlow(MF_flowEdge *z, const MF_flowEdge *y, const double *x) {
+JIT_STR(void MF_updateFlow(MF_flowEdge *z, const MF_flowEdge *y, const double *x) {
   z->capacity = y->capacity;
   z->flow = y->flow + (*x);
-}
-
-#define GRB_UPDATEFLOWS_STR "void MF_updateFlow(MF_flowEdge *z, const MF_flowEdge *y, const double *x) {"\
-  "z->capacity = y->capacity;"\
-  "z->flow = y->flow + (*x);"\
-"}"
+  }, GRB_UPDATEFLOWS_STR)
 
 // FIXME: z =f(x,y), throughout, or other names
-void MF_updateHeight(int64_t *z, const int64_t *x, const MF_resultTuple *y) {
+JIT_STR(void MF_updateHeight(int64_t *z, const int64_t *x, const MF_resultTuple *y) {
   if((*x) < y->d+1){
     (*z) = y->d + 1;
   }
   else {
     (*z) = (*x);
   }
-}
-
-#define GRB_UPDATEHEIGHT_STR \
-"void MF_updateHeight(int64_t *z, const int64_t *x, const MF_resultTuple *y) { \n" \
-" if((*x) < y->d+1){ \n" \
-"   (*z) = y->d + 1; \n" \
-" } \n" \
-" else { \n" \
-"   (*z) = (*x); \n" \
-" } \n" \
-"}"
+  }, GRB_UPDATEHEIGHT_STR)
 
 
-void MF_extractJ(int64_t *z, const MF_compareTuple *y) { (*z) = y->j; }
+JIT_STR(void MF_extractJ(int64_t *z, const MF_compareTuple *y) { (*z) = y->j; }, GRB_EXTRACTJ_STR) 
 
-#define GRB_EXTRACTJ_STR "void MF_extractJ(int64_t *z, const MF_compareTuple *y) {(*z) = y->j;}"
-
-void MF_extractYJ(int64_t *z, const MF_resultTuple *y) {
+JIT_STR(void MF_extractYJ(int64_t *z, const MF_resultTuple *y) {
   (*z) = y->j;
-}
+  }, GRB_EXTRACTYJ_STR)
 
-#define GRB_EXTRACTYJ_STR "void MF_extractYJ(int64_t *z, const MF_resultTuple *y) {" \
-  "(*z) = y->j;" \
-"}"
-
-
-void MF_initForwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){
+JIT_STR(void MF_initForwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){
   z->flow = x->flow + y->flow;
   z->capacity = y->capacity;
-}
-
-#define GRB_INITFLOWF_STR "void MF_initForwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){"\
-  "z->flow = x->flow + y->flow;"\
-  "z->capacity = y->capacity;"\
-"}"
+  }, GRB_INITFLOWF_STR)
 
 
-void MF_initBackwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){
+JIT_STR(void MF_initBackwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){
   z->flow = y->flow - x->flow;
   z->capacity = y->capacity;
-}
+  }, GRB_INITFLOWB_STR)
 
-#define GRB_INITFLOWB_STR "void MF_initBackwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){"\
-  "z->flow = y->flow - x->flow;"\
-  "z->capacity = y->capacity;"\
-"}"
-
-
-void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int64_t* theta){
-  if(y->di == y->y_dmin && (*x) > 0){ //check this
+JIT_STR(void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int64_t* theta){
+  if(y->di == y->y_dmin && (*x) > 0){ 
     if(iy < jy){
       z->d = y->y_dmin;
       z->residual = y->residual;
@@ -363,93 +257,34 @@ void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB
     z->residual = 0;
     z->j = -1;
   }
-}
-
-#define GRB_MXEMULT_STR "void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int64_t* theta){" \
-  "if(y->di == y->y_dmin && (*x) > 0){" \
-    "if(iy < jy){" \
-      "z->d = y->y_dmin;" \
-      "z->residual = y->residual;" \
-      "z->j = y->j;" \
-    "}" \
-    "else{"  \
-      "z->d = INT64_MAX;" \
-      "z->residual = 0;" \
-      "z->j = -1;" \
-    "}" \
-  "}" \
-  "else if(y->di == y->y_dmin - 1 && (*x) > 0){" \
-    "z->d = INT64_MAX;" \
-    "z->residual = 0;" \
-    "z->j = -1;" \
-  "}" \
-  "else if(y->di <= y->y_dmin-1 || y->di == y->y_dmin+1 || y->di == y->y_dmin){" \
-    "z->d = y->y_dmin;" \
-    "z->residual = y->residual;" \
-    "z->j = y->j;" \
-  "}" \
-  "else{" \
-    "z->d = INT64_MAX;" \
-    "z->residual = 0;" \
-    "z->j = -1;" \
-  "}" \
-"}"
+  }, GRB_MXEMULT_STR)
 
 
-void MF_MxeAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x){
+JIT_STR(void MF_MxeAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x){
   if(x != NULL){
     (*z) = (*x) ;
   }
   else{
     (*z) = (*y) ;
   }
-}
-
-#define GRB_MXEADD_STR \
-"void MF_MxeAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x){"\
-  "if(x != NULL){"\
-    "(*z) = (*x) ;"\
-  "}"\
-  "else{"\
-    "(*z) = (*y) ;"\
-  "}"\
-"}"
+  }, GRB_MXEADD_STR)
 
 
-void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int64_t *x) {
+JIT_STR(void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int64_t *x) {
   z->di = (*x);
   z->j = y->j;
   z->residual = y->residual;
   z->y_dmin = y->d;
-}
+  }, GRB_CREATECOMPVEC_STR)
 
-#define GRB_CREATECOMPVEC_STR \
-"void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int64_t *x) {"\
-  "z->di = (*x);"\
-  "z->j = y->j;"\
-  "z->residual = y->residual;"\
-  "z->y_dmin = y->d;"\
-"}"
-
-void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int64_t * theta){
+JIT_STR(void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int64_t * theta){
   *z = (y->j != *theta) ;
-}
+  }, GRB_PRUNE_STR)
 
-#define GRB_PRUNE_STR \
-"void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int64_t * theta){ " \
-"  *z = (y->j != *theta) ; " \
-"}"
-
-
-void MF_MakeFlow(MF_flowEdge * z, const double * y){
+JIT_STR(void MF_MakeFlow(MF_flowEdge * z, const double * y){
   z->capacity = 0;
   z->flow = (*y);
-}
-
-#define GRB_MAKEF_STR "void MF_MakeFlow(MF_flowEdge * z, const double * y){"\
-  "z->capacity = 0;"\
-  "z->flow = (*y);"\
-"}"
+  }, GRB_MAKEF_STR)
 
 // FIXME: fix GraphBLAS so it can print user-defined types
 void print_flowMtx(const GrB_Matrix mtx) {
@@ -529,22 +364,17 @@ void print_compareVec(const GrB_Vector vec) {
 }
 
 
-void MF_CheckInvariant(bool *z, const int *y, const MF_resultTuple *x) {
+JIT_STR(void MF_CheckInvariant(bool *z, const int32_t *y, const MF_resultTuple *x) {
   (*z) = ((*y) == x->d+1);
-}
+  }, GRB_INV_STR)
 
-#define GRB_INV_STR "void MF_CheckInvariant(bool *z, const int *y, const MF_resultTuple *x) {"\
-  "(*z) = ((*y) == x->d+1);"\
-"}"
+JIT_STR(void MF_getResidual(double * z, const MF_flowEdge * y){
+*z = y->capacity - y->flow;
+}, GRB_GETRES_STR)
 
 
-void MF_getResidual(double * z, const MF_flowEdge * y){
-  *z = y->capacity - y->flow;
-}
 
-#define GRB_GETRES_STR "void MF_getResidual(double * z, const MF_flowEdge * y){" \
-  "*z = y->capacity - y->flow;" \
-"}"
+  
   
 //------------------------------------------------------------------------------
 // LAGraph_MaxFlow
@@ -553,29 +383,6 @@ void MF_getResidual(double * z, const MF_flowEdge * y){
 // FIXME: (f, G, src, sink msg) ; // rename S to src, T to sink
 int LAGr_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *msg){
 
-  //plan of ATTACK ****************************************
-  //1. Create R as an anti-symmetric graph of flow edges from Adj of G, using ewise union
-  //
-  //2. initialize d and e, where d is dense and e contains the saturated flows of the first level of the graph, do select mxv for e
-  //
-  //
-  //3. do a column assign to place the saturated flows in the R matrix at columns index S, do a transpose iun descriptor
-  //
-  //
-  //4. begin execution loop, do y<e, struct> = Rxd
-  //5. take y and d to create vector yd of type compareTuple
-  //6. unpack the vector and create map matrix
-  //7. compute y = map * e, make sure e is a dense vector with explicit zeros
-  //8. update d from y
-  //9. compute delta from min(y.r, e)
-  //10. create antisymmetric delta matrix
-  //
-  //
-  //11. update R
-  //12. reduce delta matrix to df vector and add to e
-  //13. get number of active nodes from e through an extract op
-  //
-  // 14. set f to value of e(T)
 
   //types
   GrB_Type GrB_FlowEdge = NULL ;
