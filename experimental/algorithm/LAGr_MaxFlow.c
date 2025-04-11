@@ -154,12 +154,12 @@ JIT_STR(void MF_CreateResidualBackward(MF_flowEdge *z, const double *y) {
 
 
 // FIXME: z is undefined ...
-JIT_STR(void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, GrB_Index jy, const int64_t *x, GrB_Index ix, GrB_Index jx, const int64_t* theta) {
-  double r = y->capacity - y->flow;
+JIT_STR(void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *x, GrB_Index ix, GrB_Index jx, const int64_t *y, GrB_Index iy, GrB_Index jy, const int64_t* theta) {
+  double r = x->capacity - x->flow;
   if(r > 0){
-    z->d = *x;
+    z->d = *y;
     z->residual = r;
-    z->j = jy;
+    z->j = jx;
   }
   else{
     z->d = INT64_MAX;
@@ -169,36 +169,36 @@ JIT_STR(void MF_RxdMult(MF_resultTuple *z, const MF_flowEdge *y, GrB_Index iy, G
   }, GRB_RXDMULT_STR)
 
 
-JIT_STR(void MF_RxdAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x) {
-  if(y->d < x->d){
-    (*z) = (*y) ;
-  }
-  else if(y->d > x->d){
+JIT_STR(void MF_RxdAdd(MF_resultTuple * z, const MF_resultTuple * x, const MF_resultTuple * y) {
+  if(x->d < y->d){
     (*z) = (*x) ;
   }
+  else if(x->d > y->d){
+    (*z) = (*y) ;
+  }
   else{
-    if(y->residual > x->residual){
-      (*z) = (*y) ;
-    }
-    else if(y->residual < x->residual){
+    if(x->residual > y->residual){
       (*z) = (*x) ;
     }
+    else if(x->residual < y->residual){
+      (*z) = (*y) ;
+    }
     else{
-      if(y->j > x->j){
-	(*z) = (*y);
+      if(x->j > y->j){
+	(*z) = (*x);
       }
       else{
-	(*z) = (*x) ;
+	(*z) = (*y) ;
       }
     }
   }
   }, GRB_RXDADD_STR)
 
-JIT_STR(void MF_extractFlow(double *z, const MF_resultTuple *y) { (*z) = y->residual; }, GRB_EXTRACTFLOW_STR)
+JIT_STR(void MF_extractFlow(double *z, const MF_resultTuple *x) { (*z) = x->residual; }, GRB_EXTRACTFLOW_STR)
 
-JIT_STR(void MF_updateFlow(MF_flowEdge *z, const MF_flowEdge *y, const double *x) {
-  z->capacity = y->capacity;
-  z->flow = y->flow + (*x);
+JIT_STR(void MF_updateFlow(MF_flowEdge *z, const MF_flowEdge *x, const double *y) {
+  z->capacity = x->capacity;
+  z->flow = x->flow + (*y);
   }, GRB_UPDATEFLOWS_STR)
 
 // FIXME: z =f(x,y), throughout, or other names
@@ -212,29 +212,29 @@ JIT_STR(void MF_updateHeight(int64_t *z, const int64_t *x, const MF_resultTuple 
   }, GRB_UPDATEHEIGHT_STR)
 
 
-JIT_STR(void MF_extractJ(int64_t *z, const MF_compareTuple *y) { (*z) = y->j; }, GRB_EXTRACTJ_STR) 
+JIT_STR(void MF_extractJ(int64_t *z, const MF_compareTuple *x) { (*z) = x->j; }, GRB_EXTRACTJ_STR) 
 
-JIT_STR(void MF_extractYJ(int64_t *z, const MF_resultTuple *y) {
-  (*z) = y->j;
+JIT_STR(void MF_extractYJ(int64_t *z, const MF_resultTuple *x) {
+  (*z) = x->j;
   }, GRB_EXTRACTYJ_STR)
 
-JIT_STR(void MF_initForwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){
-  z->flow = x->flow + y->flow;
-  z->capacity = y->capacity;
+JIT_STR(void MF_initForwardFlows(MF_flowEdge * z, const MF_flowEdge * x, const MF_flowEdge * y){
+  z->flow = y->flow + x->flow;
+  z->capacity = x->capacity;
   }, GRB_INITFLOWF_STR)
 
 
-JIT_STR(void MF_initBackwardFlows(MF_flowEdge * z, const MF_flowEdge * y, const MF_flowEdge * x){
-  z->flow = y->flow - x->flow;
-  z->capacity = y->capacity;
+JIT_STR(void MF_initBackwardFlows(MF_flowEdge * z, const MF_flowEdge * x, const MF_flowEdge * y){
+  z->flow = x->flow - y->flow;
+  z->capacity = x->capacity;
   }, GRB_INITFLOWB_STR)
 
-JIT_STR(void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index iy, GrB_Index jy, const double * x, GrB_Index ix, GrB_Index jx, const int64_t* theta){
-  if(y->di == y->y_dmin && (*x) > 0){ 
-    if(iy < jy){
-      z->d = y->y_dmin;
-      z->residual = y->residual;
-      z->j = y->j;
+JIT_STR(void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * x, GrB_Index ix, GrB_Index jx, const double * y, GrB_Index iy, GrB_Index jy, const int64_t* theta){
+  if(x->di == x->y_dmin && (*y) > 0){ 
+    if(ix < jx){
+      z->d = x->y_dmin;
+      z->residual = x->residual;
+      z->j = x->j;
     } //add else to populate with empty tuple, prune after.
     else{
       z->d = INT64_MAX;
@@ -242,15 +242,15 @@ JIT_STR(void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index
       z->j = -1;
     }
   }
-  else if(y->di == y->y_dmin - 1 && (*x) > 0){
+  else if(x->di == x->y_dmin - 1 && (*y) > 0){
     z->d = INT64_MAX;
     z->residual = 0;
     z->j = -1;
   }
-  else if(y->di <= y->y_dmin-1 || y->di == y->y_dmin+1 || y->di == y->y_dmin){
-    z->d = y->y_dmin;
-    z->residual = y->residual;
-    z->j = y->j;
+  else if(x->di <= x->y_dmin-1 || x->di == x->y_dmin+1 || x->di == x->y_dmin){
+    z->d = x->y_dmin;
+    z->residual = x->residual;
+    z->j = x->j;
   }
   else{ //change later to signify the removal of the node from the active set since flow cannot be pushed anywhere.
     z->d = INT64_MAX;
@@ -260,30 +260,30 @@ JIT_STR(void MF_MxeMult(MF_resultTuple * z, const MF_compareTuple * y, GrB_Index
   }, GRB_MXEMULT_STR)
 
 
-JIT_STR(void MF_MxeAdd(MF_resultTuple * z, const MF_resultTuple * y, const MF_resultTuple * x){
+JIT_STR(void MF_MxeAdd(MF_resultTuple * z, const MF_resultTuple * x, const MF_resultTuple * y){
   if(x != NULL){
-    (*z) = (*x) ;
+    (*z) = (*y) ;
   }
   else{
-    (*z) = (*y) ;
+    (*z) = (*x) ;
   }
   }, GRB_MXEADD_STR)
 
 
-JIT_STR(void MF_CreateCompareVec(MF_compareTuple *z, const MF_resultTuple *y, const int64_t *x) {
-  z->di = (*x);
-  z->j = y->j;
-  z->residual = y->residual;
-  z->y_dmin = y->d;
+JIT_STR(void MF_CreateCompareVec(MF_compareTuple *comp, const MF_resultTuple *res, const int64_t *height) {
+  comp->di = (*height);
+  comp->j = res->j;
+  comp->residual = res->residual;
+  comp->y_dmin = res->d;
   }, GRB_CREATECOMPVEC_STR)
 
-JIT_STR(void MF_Prune(bool * z, const MF_resultTuple * y, GrB_Index iy, GrB_Index jy, const int64_t * theta){
-  *z = (y->j != *theta) ;
+JIT_STR(void MF_Prune(bool * z, const MF_resultTuple * x, GrB_Index ix, GrB_Index jx, const int64_t * theta){
+  *z = (x->j != *theta) ;
   }, GRB_PRUNE_STR)
 
-JIT_STR(void MF_MakeFlow(MF_flowEdge * z, const double * y){
-  z->capacity = 0;
-  z->flow = (*y);
+JIT_STR(void MF_MakeFlow(MF_flowEdge * flow_edge, const double * flow){
+  flow_edge->capacity = 0;
+  flow_edge->flow = (*flow);
   }, GRB_MAKEF_STR)
 
 // FIXME: fix GraphBLAS so it can print user-defined types
@@ -364,12 +364,12 @@ void print_compareVec(const GrB_Vector vec) {
 }
 
 
-JIT_STR(void MF_CheckInvariant(bool *z, const int32_t *y, const MF_resultTuple *x) {
-  (*z) = ((*y) == x->d+1);
+JIT_STR(void MF_CheckInvariant(bool *z, const int32_t *height, const MF_resultTuple *result) {
+  (*z) = ((*height) == result->d+1);
   }, GRB_INV_STR)
 
-JIT_STR(void MF_getResidual(double * z, const MF_flowEdge * y){
-*z = y->capacity - y->flow;
+JIT_STR(void MF_getResidual(double * res, const MF_flowEdge * flow_edge){
+    (*res) = flow_edge->capacity - flow_edge->flow;
 }, GRB_GETRES_STR)
 
 
@@ -380,7 +380,6 @@ JIT_STR(void MF_getResidual(double * z, const MF_flowEdge * y){
 // LAGraph_MaxFlow
 //------------------------------------------------------------------------------
 
-// FIXME: (f, G, src, sink msg) ; // rename S to src, T to sink
 int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char *msg){
 
 
