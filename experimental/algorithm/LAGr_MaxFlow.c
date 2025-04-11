@@ -24,7 +24,7 @@ static GrB_Info LG_augment_maxflow
 (
     double *f,              // maxflow
     GrB_Vector e,
-    GrB_Index T,            // sink node
+    GrB_Index sink,            // sink node
     GrB_Vector mask_vector,
     GrB_Vector active_set,
     GrB_Index *n_active,
@@ -34,7 +34,7 @@ static GrB_Info LG_augment_maxflow
 {
     // f_T = e (T)
     double f_T = 0;
-    GrB_Info info = GrB_Vector_extractElement(&f_T, e, T); //if value at T
+    GrB_Info info = GrB_Vector_extractElement(&f_T, e, sink); //if value at T
     GRB_TRY (info) ;
     if (info == GrB_SUCCESS)
     {
@@ -381,7 +381,7 @@ JIT_STR(void MF_getResidual(double * z, const MF_flowEdge * y){
 //------------------------------------------------------------------------------
 
 // FIXME: (f, G, src, sink msg) ; // rename S to src, T to sink
-int LAGr_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *msg){
+int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char *msg){
 
 
   //types
@@ -470,7 +470,7 @@ int LAGr_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *ms
   GRB_TRY(GrB_Matrix_ncols(&n, G->A));
   GRB_TRY(GrB_Matrix_nrows(&nrows, G->A));
   LG_ASSERT_MSG(nrows == n, GrB_INVALID_VALUE, "Matrix must be square"); 
-  LG_ASSERT_MSG(S < n && S >= 0 && T < n && T >= 0, GrB_INVALID_VALUE, "S and T must be a value between [0, n)");
+  LG_ASSERT_MSG(src < n && src >= 0 && sink < n && sink >= 0, GrB_INVALID_VALUE, "S and T must be a value between [0, n)");
   LG_ASSERT_MSG(G->emin > 0, GrB_INVALID_VALUE, "the edge weights (capacities) must be greater than 0");
 
   //get adjacency matrix and its transpose
@@ -519,24 +519,24 @@ int LAGr_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *ms
   GRB_TRY(GxB_UnaryOp_new(&GrB_MakeFlow, F_UNARY(MF_MakeFlow), GrB_FlowEdge, GrB_FP64, "MF_MakeFlow", GRB_MAKEF_STR));
   GRB_TRY(GrB_Vector_new(&Re, GrB_FlowEdge, n));
   GRB_TRY(GrB_Vector_new(&e, GrB_FP64, n));
-  GRB_TRY(GrB_extract(e, NULL, NULL, A, GrB_ALL, n, S, GrB_DESC_T0));
+  GRB_TRY(GrB_extract(e, NULL, NULL, A, GrB_ALL, n, src, GrB_DESC_T0));
   GRB_TRY(GrB_apply(Re, NULL, NULL, GrB_MakeFlow, e, NULL));
-  GRB_TRY(GrB_assign(R, NULL, GrB_InitForwardFlows, Re, S, GrB_ALL, n, NULL));
-  GRB_TRY(GrB_assign(R, NULL, GrB_InitBackwardFlows, Re, GrB_ALL, n, S, NULL));
+  GRB_TRY(GrB_assign(R, NULL, GrB_InitForwardFlows, Re, src, GrB_ALL, n, NULL));
+  GRB_TRY(GrB_assign(R, NULL, GrB_InitBackwardFlows, Re, GrB_ALL, n, src, NULL));
   
   //create and init d vector
   GRB_TRY(GrB_Vector_new(&d, GrB_INT64, n));
   GRB_TRY(GrB_assign(d, NULL, NULL, 0, GrB_ALL, n, NULL));
-  GRB_TRY(GrB_assign(d, NULL, NULL, n, &S, 1, NULL));
+  GRB_TRY(GrB_assign(d, NULL, NULL, n, &src, 1, NULL));
 
   //extract n_active from e masking T and S then assign to e
   GRB_TRY(GrB_Vector_new(&active_set, GrB_FP64, n));
   GRB_TRY(GrB_Vector_new(&mask_vector, GrB_BOOL, n)); //keep as bool?
-  GRB_TRY (GrB_Vector_setElement (mask_vector, true, T)) ;
-  GRB_TRY (GrB_Vector_setElement (mask_vector, true, S)) ;
+  GRB_TRY (GrB_Vector_setElement (mask_vector, true, sink)) ;
+  GRB_TRY (GrB_Vector_setElement (mask_vector, true, src)) ;
 
   // augment maxflow if the edge (S,T) exists
-  LG_TRY (LG_augment_maxflow (f, e, T, mask_vector, active_set, &n_active, n, msg)) ;
+  LG_TRY (LG_augment_maxflow (f, e, sink, mask_vector, active_set, &n_active, n, msg)) ;
 
   //create semiring and vectors for y<e, struct> = R x d
   GRB_TRY(GrB_Scalar_new(&theta, GrB_INT32));
@@ -606,7 +606,7 @@ int LAGr_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *ms
       res_graph->AT = res_mat;
       res_mat = NULL ;
       LG_TRY(LAGraph_Cached_OutDegree(res_graph, msg));
-      LG_TRY(LAGr_BreadthFirstSearch(&lvl, NULL, res_graph, T, msg));
+      LG_TRY(LAGr_BreadthFirstSearch(&lvl, NULL, res_graph, sink, msg));
       GRB_TRY(GrB_assign(d, mask_vector, NULL, lvl, GrB_ALL, n, GrB_DESC_SC));
       GRB_TRY(GrB_assign(d, lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC));
       GRB_TRY(GrB_assign(e, lvl, NULL, -1, GrB_ALL, n, GrB_DESC_SC));
@@ -676,7 +676,7 @@ int LAGr_MaxFlow(LAGraph_Graph G, GrB_Index S, GrB_Index T, double * f, char *ms
     GRB_TRY(GrB_assign(e, delta_vec, GrB_PLUS_FP64, delta_vec, GrB_ALL, n, GrB_DESC_S));
     
     // augment maxflow for all active nodes
-    LG_TRY (LG_augment_maxflow (f, e, T, mask_vector, active_set, &n_active, n, msg)) ;
+    LG_TRY (LG_augment_maxflow (f, e, sink, mask_vector, active_set, &n_active, n, msg)) ;
 
     ++iter;
     

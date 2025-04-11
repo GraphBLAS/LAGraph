@@ -51,7 +51,7 @@ void test_MaxFlow(void) {
 
     //begin test
     double flow = 0;
-    OK(LAGr_MaxFlow(G, tests[test].S, tests[test].T, &flow, msg));
+    OK(LAGr_MaxFlow(&flow, G, tests[test].S, tests[test].T, msg));
     printf("%s\n", msg);
     TEST_CHECK(flow == tests[test].F);
     printf("flow is: %lf\n", flow);

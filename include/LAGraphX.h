@@ -1493,12 +1493,12 @@ int LAGraph_coloring_MIS
 ) ;
 
 int LAGr_MaxFlow(
-    //inputs
-    LAGraph_Graph G,
-    GrB_Index S, //source node index
-    GrB_Index T, // sink node index
     //outputs
     double* f,
+    //inputs
+    LAGraph_Graph G,
+    GrB_Index src, //source node index
+    GrB_Index sink, // sink node index
     //inout
     char* msg
 );
