@@ -2,7 +2,6 @@
 // user defined typedefs are MF for Max Flow
 // when registered with GraphBLAS, replace MF with GrB
 // macros are all caps
-// op params will be z, y, x accordingly
 
 #include <LAGraphX.h>
 #include "LG_internal.h"
@@ -936,10 +935,6 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
     //create map matrix from yd
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractJ, yd, NULL));
     GRB_TRY(GrB_Matrix_clear(map));
-    GxB_print (map, 5) ;
-    GxB_print (yd, 5) ;
-    GxB_print (Jvec, 5) ;
-    GxB_print (extract_desc, 5) ;
     GRB_TRY(GrB_Matrix_build(map, yd,
 			     Jvec, yd, GxB_IGNORE_DUP, extract_desc));
     
