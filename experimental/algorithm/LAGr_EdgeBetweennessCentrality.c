@@ -21,8 +21,10 @@
 
 // This is an Advanced algorithm (no self edges allowed)
 
-
 //------------------------------------------------------------------------------
+
+#define useAssign
+#define debug
 
 #define LG_FREE_WORK                            \
 {                                               \
@@ -163,6 +165,10 @@ int LAGr_EdgeBetweennessCentrality
     GrB_Vector temp_update = NULL ;
 
     GrB_Index n = 0 ;                   // # nodes in the graph
+
+    double t1_total = 0;
+    double t2_total = 0;
+    double t3_total = 0;
 
     LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
     (*centrality) = NULL ;
@@ -324,24 +330,36 @@ int LAGr_EdgeBetweennessCentrality
             // Compute edge updates based on current level weights
             //----------------------------------------------------------------------
 
+            double t1 = LAGraph_WallClockTime();
             GRB_TRY(GrB_mxm(Fd1A, NULL, NULL, LAGraph_plus_first_fp64,
-                I_matrix, A, NULL)) ;
+                I_matrix, A, NULL));
+            t1 = LAGraph_WallClockTime() - t1;
+            t1_total += t1;
 
+            double t2 = LAGraph_WallClockTime();
             GRB_TRY(GrB_mxm(Update, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64,
-                Fd1A, J_matrix, NULL)) ;
+                Fd1A, J_matrix, NULL));
+            t2 = LAGraph_WallClockTime() - t2;
+            t2_total += t2;
 
             //----------------------------------------------------------------------
             // centrality<A> += Update
             // Accumulate centrality values for edges
             //----------------------------------------------------------------------
 
-            #if 1
-            // centrality{A} += Update, using assign
-            GRB_TRY (GrB_assign(*centrality, A, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n, 
-            GrB_DESC_S)) ;
+            #ifdef useAssign
+                // centrality{A} += Update, using assign
+                double t3 = LAGraph_WallClockTime();
+                GRB_TRY (GrB_assign(*centrality, A, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n, 
+                GrB_DESC_S));
+                t3 = LAGraph_WallClockTime() - t3;
+                t3_total += t3;
             #else
-            // centrality = centrality + Update using eWiseAdd
-            GRB_TRY (GrB_eWiseAdd (*centrality, NULL, NULL, GrB_PLUS_FP64, *centrality, Update, NULL)) ;
+                // centrality = centrality + Update using eWiseAdd
+                double t3 = LAGraph_WallClockTime();
+                GRB_TRY (GrB_eWiseAdd (*centrality, NULL, NULL, GrB_PLUS_FP64, *centrality, Update, NULL));
+                t3 = LAGraph_WallClockTime() - t3;
+                t3_total += t3;
             #endif
 
             //----------------------------------------------------------------------
@@ -359,7 +377,19 @@ int LAGr_EdgeBetweennessCentrality
    
     }
 
-    
+    #ifdef debug
+        printf("  I*A time: %g\n", t1_total);
+
+        printf("  (I*A)*J time: %g\n", t2_total);
+
+        #ifdef useAssign
+            printf("  Centrality update using assign time: %g\n", t3_total);
+        #else
+            printf("  Centrality update using eWiseAdd time: %g\n", t3_total);
+        #endif
+    #endif
+
+
     // =========================================================================
     // === finalize the centrality =============================================
     // =========================================================================
