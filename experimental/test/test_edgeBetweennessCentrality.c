@@ -236,7 +236,7 @@ void test_karate_ebc (void)
     OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
     t = LAGraph_WallClockTime() - t ;
     double err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
-    printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
+    printf ("  Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
     printf ("  karate:   err: %e (C version)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
@@ -246,7 +246,7 @@ void test_karate_ebc (void)
     OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
     t = LAGraph_WallClockTime() - t ;
     err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
-    printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+    printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
     printf ("  karate:   err: %e (GraphBLAS version)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
@@ -268,7 +268,7 @@ void test_many(void)
         "jagmesh7.mtx",
         "dnn_data/n1024-l1.mtx",
         "bcsstk13.mtx",
-        // "pushpull.mtx",
+        "pushpull.mtx",
         // "cryg250.mtx",
         NULL
     };
@@ -299,13 +299,13 @@ void test_many(void)
         double t = LAGraph_WallClockTime() ;
         OK(LAGr_EdgeBetweennessCentrality(&centrality, G, msg));
         t = LAGraph_WallClockTime() - t ;
-        printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+        printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
 
         // compute its betweenness centrality (C version)
         t = LAGraph_WallClockTime() ;
         OK(LG_check_edgeBetweennessCentrality(&reference_centrality, G, msg));
         t = LAGraph_WallClockTime() - t ;
-        printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
+        printf ("  Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
 
         // Compare the results
         double err = matrix_difference(centrality, reference_centrality);
