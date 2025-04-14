@@ -269,7 +269,7 @@ void test_many(void)
         "dnn_data/n1024-l1.mtx",
         "bcsstk13.mtx",
         "pushpull.mtx",
-        // "cryg250.mtx",
+        "cryg2500.mtx",
         NULL
     };
 
