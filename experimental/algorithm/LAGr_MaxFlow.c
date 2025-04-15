@@ -21,29 +21,48 @@
 
 static GrB_Info LG_augment_maxflow
 (
-    double *f,              // maxflow
-    GrB_Vector e,
-    GrB_Index sink,            // sink node
-    GrB_Vector mask_vector,
-    GrB_Vector active_set,
-    GrB_Index *n_active,
-    GrB_Index n,
+    double *f,                  // total maxflow from src to sink
+    GrB_Vector e,               // excess vector, of type double
+    GrB_Index sink,             // sink node
+    GrB_Vector src_and_sink,    // mask vector, with just [src sink]
+//  GrB_Vector active_set,
+    GrB_Index *n_active,        // # of active nodes
+//  GrB_Index n,
     char *msg
 )
 {
-    // f_T = e (T)
-    double f_T = 0;
-    GrB_Info info = GrB_Vector_extractElement(&f_T, e, sink); //if value at T
+    // e_sink = e (sink)
+    double e_sink = 0;
+    GrB_Info info = GrB_Vector_extractElement(&e_sink, e, sink); //if value at sink
     GRB_TRY (info) ;
     if (info == GrB_SUCCESS)
     {
-        // e(T) is present
-        (*f) += f_T;
+        // e(sink) is present
+        (*f) += e_sink;    /* FLOP */
     }
-    GRB_TRY(GrB_select(active_set, mask_vector, NULL, GrB_VALUEGT_FP64, e, 0, GrB_DESC_RSC));
+
+#if 0
+    // e<![src,sink]> = select e where (e > 0)
+    GRB_TRY(GrB_select(active_set, src_and_sink, NULL, GrB_VALUEGT_FP64, e, 0, GrB_DESC_RSC));   /* FLOP compare */
     // e = active_set : FIXME do we need this?
     GRB_TRY(GrB_assign(e, NULL, NULL, active_set, GrB_ALL, n, GrB_DESC_R));
     GRB_TRY(GrB_Vector_nvals(n_active, active_set));
+#else
+
+    // alternative:
+    // e (src) = -1
+    // e (sink) = -1
+    // then remove src_and_sink
+
+    // TODO: what if e is tiny?  Do we need a tol parameter,
+    // and replace all "e > 0" and "r > 0" comparisons with
+    // (e > tol), throughout the code?
+
+    // e<![src,sink]> = select e where (e > 0)
+    GRB_TRY(GrB_select(e, src_and_sink, NULL, GrB_VALUEGT_FP64, e, 0, GrB_DESC_RSC));   /* FLOP compare */
+    GRB_TRY(GrB_Vector_nvals(n_active, e));
+
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -61,14 +80,13 @@ static GrB_Info LG_augment_maxflow
     GrB_free(&theta);                                                          \
     GrB_free(&R);                                                              \
     GrB_free(&delta);                                                          \
-    GrB_free(&delta);                                                          \
     GrB_free(&delta_vec);                                                      \
     GrB_free(&delta_mat);                                                      \
-    GrB_free(&active_set);                                                     \
+    /* GrB_free(&active_set); */                                               \
     GrB_free(&map);                                                            \
     GrB_free(&y);                                                              \
     GrB_free(&yd);                                                             \
-    GrB_free(&mask_vector);                                                    \
+    GrB_free(&src_and_sink);                                                   \
     GrB_free(&Jvec);                                                           \
     GrB_free(&GrB_Prune);                                                      \
     GrB_free(&GrB_UpdateFlows);                                                \
@@ -90,16 +108,16 @@ static GrB_Info LG_augment_maxflow
     GrB_free(&GrB_InitBackwardFlows);                                          \
     GrB_free(&GrB_CreateResidualForward);                                      \
     GrB_free(&GrB_CreateResidualBackward);                                     \
-    GrB_free(&zero);                                                      \
+    GrB_free(&zero);                                                           \
     GrB_free(&Re);                                                             \
     GrB_free(&invariant);                                                      \
     GrB_free(&GrB_InvariantCheck);                                             \
     GrB_free(&check);                                                          \
     GrB_free(&GrB_extractYJ);                                                  \
     GrB_free(&extract_desc);                                                   \
-    GrB_free(&residual_vec);						\
-    GrB_free(&GrB_MakeFlow);						\
-    GrB_free(&GrB_GetResidual);				\
+    GrB_free(&residual_vec);						       \
+    GrB_free(&GrB_MakeFlow);						       \
+    GrB_free(&GrB_GetResidual);				                       \
   }
 
 
@@ -168,7 +186,7 @@ JIT_STR(void MF_CreateResidualBackward(MF_flowEdge *z, const double *y) {
 JIT_STR(void MF_RxdMult64(MF_resultTuple64 *z, const MF_flowEdge *x, GrB_Index ix,
 			GrB_Index jx, const int64_t *y,
 			GrB_Index iy, GrB_Index jy, const int64_t* theta) {
-  double r = x->capacity - x->flow;
+  double r = x->capacity - x->flow; /* FLOP */
   if(r > 0){
     z->d = *y;
     z->residual = r;
@@ -185,7 +203,7 @@ JIT_STR(void MF_RxdMult64(MF_resultTuple64 *z, const MF_flowEdge *x, GrB_Index i
 JIT_STR(void MF_RxdMult32(MF_resultTuple32 *z, const MF_flowEdge *x, GrB_Index ix,
 			GrB_Index jx, const int32_t *y,
 			GrB_Index iy, GrB_Index jy, const int32_t* theta) {
-  double r = x->capacity - x->flow;
+  double r = x->capacity - x->flow; /* FLOP */
   if(r > 0){
     z->d = *y;
     z->residual = r;
@@ -262,7 +280,7 @@ JIT_STR(void MF_extractFlow32(double *z, const MF_resultTuple32 *x)
 JIT_STR(void MF_updateFlow(MF_flowEdge *z,
 			   const MF_flowEdge *x, const double *y) {
   z->capacity = x->capacity;
-  z->flow = x->flow + (*y);
+  z->flow = x->flow + (*y); /* FLOP */
   }, GRB_UPDATEFLOWS_STR)
 
 
@@ -303,14 +321,14 @@ JIT_STR(void MF_extractYJ32(int32_t *z, const MF_resultTuple32 *x) {
 
 JIT_STR(void MF_initForwardFlows(MF_flowEdge * z,
 				 const MF_flowEdge * x, const MF_flowEdge * y){
-  z->flow = y->flow + x->flow;
+  z->flow = y->flow + x->flow;  /* FLOP */
   z->capacity = x->capacity;
   }, GRB_INITFLOWF_STR)
 
 
 JIT_STR(void MF_initBackwardFlows(MF_flowEdge * z,
 				  const MF_flowEdge * x, const MF_flowEdge * y){
-  z->flow = x->flow - y->flow;
+  z->flow = x->flow - y->flow;  /* FLOP */
   z->capacity = x->capacity;
   }, GRB_INITFLOWB_STR)
 
@@ -318,7 +336,7 @@ JIT_STR(void MF_MxeMult64(MF_resultTuple64 * z, const MF_compareTuple64 * x,
 			GrB_Index ix, GrB_Index jx,
 			const double * y, GrB_Index iy,
 			GrB_Index jy, const int64_t* theta){
-  if(x->di == x->y_dmin && (*y) > 0){ 
+  if(x->di == x->y_dmin && (*y) > 0){   /* FLOP compare */
     if(ix < jx){
       z->d = x->y_dmin;
       z->residual = x->residual;
@@ -330,7 +348,7 @@ JIT_STR(void MF_MxeMult64(MF_resultTuple64 * z, const MF_compareTuple64 * x,
       z->j = -1;
     }
   }
-  else if(x->di == x->y_dmin - 1 && (*y) > 0){
+  else if(x->di == x->y_dmin - 1 && (*y) > 0){  /* FLOP compare */
     z->d = INT64_MAX;
     z->residual = 0;
     z->j = -1;
@@ -351,7 +369,7 @@ JIT_STR(void MF_MxeMult32(MF_resultTuple32 * z, const MF_compareTuple32 * x,
 			GrB_Index ix, GrB_Index jx,
 			const double * y, GrB_Index iy,
 			GrB_Index jy, const int32_t* theta){
-  if(x->di == x->y_dmin && (*y) > 0){ 
+  if(x->di == x->y_dmin && (*y) > 0){   /* FLOP compare */
     if(ix < jx){
       z->d = x->y_dmin;
       z->residual = x->residual;
@@ -363,7 +381,7 @@ JIT_STR(void MF_MxeMult32(MF_resultTuple32 * z, const MF_compareTuple32 * x,
       z->j = -1;
     }
   }
-  else if(x->di == x->y_dmin - 1 && (*y) > 0){
+  else if(x->di == x->y_dmin - 1 && (*y) > 0){  /* FLOP compare */
     z->d = INT32_MAX;
     z->residual = 0;
     z->j = -1;
@@ -526,7 +544,7 @@ JIT_STR(void MF_CheckInvariant32(bool *z, const int32_t *height,
 
   
 JIT_STR(void MF_getResidual(double * res, const MF_flowEdge * flow_edge){
-    (*res) = flow_edge->capacity - flow_edge->flow;
+    (*res) = flow_edge->capacity - flow_edge->flow;     /* FLOP */
 }, GRB_GETRES_STR)
 
 
@@ -569,8 +587,8 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
   GrB_Vector d = NULL ;
 
   //active_set and n_active
-  GrB_Vector active_set = NULL ;
-  GrB_Vector mask_vector = NULL ;
+//GrB_Vector active_set = NULL ;
+  GrB_Vector src_and_sink = NULL ;
   GrB_Index n_active ;
 
   //semiring and vectors for y<e, struct> = R x d
@@ -632,7 +650,7 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
   GRB_TRY(GrB_Matrix_nrows(&nrows, G->A));
   LG_ASSERT_MSG(nrows == n, GrB_INVALID_VALUE, "Matrix must be square"); 
   LG_ASSERT_MSG(src < n && src >= 0 && sink < n && sink >= 0,
-		GrB_INVALID_VALUE, "S and T must be a value between [0, n)");
+		GrB_INVALID_VALUE, "src and sink must be a value between [0, n)");
   LG_ASSERT_MSG(G->emin > 0, GrB_INVALID_VALUE,
 		"the edge weights (capacities) must be greater than 0");
 
@@ -692,15 +710,15 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
   GRB_TRY(GrB_assign(R, NULL, GrB_InitForwardFlows, Re, src, GrB_ALL, n, NULL));
   GRB_TRY(GrB_assign(R, NULL, GrB_InitBackwardFlows, Re, GrB_ALL, n, src, NULL));
 
-  //extract n_active from e masking T and S then assign to e
-  GRB_TRY(GrB_Vector_new(&active_set, GrB_FP64, n));
-  GRB_TRY(GrB_Vector_new(&mask_vector, GrB_BOOL, n)); //keep as bool?
-  GRB_TRY (GrB_Vector_setElement (mask_vector, true, sink)) ;
-  GRB_TRY (GrB_Vector_setElement (mask_vector, true, src)) ;
+  //extract n_active from e masking sink and src then assign to e
+//GRB_TRY(GrB_Vector_new(&active_set, GrB_FP64, n));
+  GRB_TRY(GrB_Vector_new(&src_and_sink, GrB_BOOL, n));
+  GRB_TRY (GrB_Vector_setElement (src_and_sink, true, sink)) ;
+  GRB_TRY (GrB_Vector_setElement (src_and_sink, true, src)) ;
 
-  // augment maxflow if the edge (S,T) exists
-  LG_TRY (LG_augment_maxflow (f, e, sink, mask_vector,
-			      active_set, &n_active, n, msg)) ;
+  // augment maxflow if the edge (src,sink) exists
+  LG_TRY (LG_augment_maxflow (f, e, sink, src_and_sink,
+			      /* active_set, */ &n_active, /* n, */ msg)) ;
   //create flow vec
   GRB_TRY(GrB_Vector_new(&residual_vec, GrB_FP64, n));
 
@@ -901,9 +919,9 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
       GRB_TRY(GrB_Matrix_new(&res_matT, GrB_FP64, n, n));
       GRB_TRY(GrB_Matrix_new(&res_mat, GrB_FP64, n, n));
       GRB_TRY(GrB_apply(res_mat, NULL,
-			NULL, GrB_GetResidual, R, NULL)) ;
+			NULL, GrB_GetResidual, R, NULL)) ;  /* FLOP */
       GRB_TRY(GrB_select(res_mat, NULL,
-			 NULL, GrB_VALUEGT_FP64, res_mat, 0, NULL)) ;
+			 NULL, GrB_VALUEGT_FP64, res_mat, 0, NULL)) ;   /* FLOP */
       GRB_TRY(GrB_transpose(res_matT, NULL, NULL, res_mat, NULL));
       LG_TRY(LAGraph_New(&res_graph,
 			 &res_matT, LAGraph_ADJACENCY_DIRECTED, msg));
@@ -913,15 +931,25 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
       LG_TRY(LAGr_BreadthFirstSearch(&lvl,
 				     NULL,
 				     res_graph, sink, msg));
-      GRB_TRY(GrB_assign(d, mask_vector,
+
+      // FIXME: drop the src and sink
+      // src_and_sink = [src sink]
+      // d<![src,sink],struct> = lvl
+      GRB_TRY(GrB_assign(d, src_and_sink,
 			 NULL, lvl, GrB_ALL, n, GrB_DESC_SC));
+      // d<!lvl,struct> = n
       GRB_TRY(GrB_assign(d, lvl, NULL, n,
 			 GrB_ALL, n, GrB_DESC_SC));
+
+      // FIXME: simplify this to 1 call to GrB_assign [
+      // e<!lvl,struct> = empty
       GRB_TRY(GrB_assign(e, lvl, NULL,
 			 -1, GrB_ALL, n, GrB_DESC_SC));
       GRB_TRY(GrB_select(e, NULL,
-			 NULL, GrB_VALUEGT_FP64,
+			 NULL, GrB_VALUEGT_FP64,    /* FLOP */
 			 e, -1, NULL));
+      // ]
+
       GrB_free(&lvl);
       LG_TRY(LAGraph_Delete(&res_graph, msg));
       GRB_TRY(GrB_Vector_nvals(&n_active, e));
@@ -970,31 +998,34 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
 
     //.min(flow_vec and e)
     GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL,
-			  GrB_MIN_FP64, residual_vec, e, NULL));
+			  GrB_MIN_FP64, residual_vec, e, NULL));    /* FLOP */
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, GrB_extractYJ, y, NULL));
     GRB_TRY(GrB_Matrix_clear(delta));
     GRB_TRY(GxB_Matrix_build_Vector(delta, delta_vec,
 				    Jvec, delta_vec, GxB_IGNORE_DUP, extract_desc));
 
-    //make delta anti-symmetric
-    GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64,
+    //make delta anti-symmetric: delta_mat = (delta - delta')
+    GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64,   /* FLOP */
 			   delta, zero, delta, zero, GrB_DESC_T1));
 
     //update R
-    GRB_TRY(GrB_eWiseMult(R, delta_mat, NULL, GrB_UpdateFlows,
+    // R<delta_mat> = UpdateFlows (R, delta_mat) using eWiseMult
+    GRB_TRY(GrB_eWiseMult(R, delta_mat, NULL, GrB_UpdateFlows,  /* FLOP */
 			  R, delta_mat, GrB_DESC_S));
 
     //reduce delta_mat to delta_vec
+    // delta_vec = sum (delta_mat), summing up each row of delta_mat
     GRB_TRY(GrB_reduce(delta_vec, NULL, NULL,
-		       GrB_PLUS_FP64, delta_mat, GrB_DESC_T0));
+		       GrB_PLUS_FP64, delta_mat, GrB_DESC_T0)); /* FLOP */
 
     //add to e
-    GRB_TRY(GrB_assign(e, delta_vec, GrB_PLUS_FP64,
+    // e<delta_vec> += delta_vec
+    GRB_TRY(GrB_assign(e, delta_vec, GrB_PLUS_FP64, /* FLOP */
 		       delta_vec, GrB_ALL, n, GrB_DESC_S));
     
     // augment maxflow for all active nodes
-    LG_TRY (LG_augment_maxflow (f, e, sink, mask_vector,
-				active_set, &n_active, n, msg)) ;
+    LG_TRY (LG_augment_maxflow (f, e, sink, src_and_sink,
+				/* active_set, */ &n_active, /* n, */ msg)) ;
 
     ++iter;
     
