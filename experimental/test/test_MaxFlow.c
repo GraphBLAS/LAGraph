@@ -35,7 +35,8 @@ test_info tests[] = {
 
 void test_MaxFlow(void) {
   LAGraph_Init(msg);
-  OK(LG_SET_BURBLE(1));
+//OK(LG_SET_BURBLE(1));
+  OK(LG_SET_BURBLE(0));
   OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, 4));
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A=NULL;

@@ -123,19 +123,19 @@ static GrB_Info LG_augment_maxflow
 JIT_STR(typedef struct{
   double flow;
   double capacity;
-  } MF_flowEdge;, GRB_FLOWEDGE_STR)
+  } MF_flowEdge;, GRB_FLOWEDGE_STR) // 16 bytes: OK
 
 JIT_STR(typedef struct{
   double residual;
   int64_t j;
   int64_t d;
-  } MF_resultTuple64;, GRB_RESULTTUPLE_STR64)
+  } MF_resultTuple64;, GRB_RESULTTUPLE_STR64)   // 24 bytes: OK
 
 JIT_STR(typedef struct{
   double residual;
-  int64_t j;
+  int32_t j;
   int32_t d;
-  } MF_resultTuple32;, GRB_RESULTTUPLE_STR32)
+  } MF_resultTuple32;, GRB_RESULTTUPLE_STR32)   // 16 bytes: OK
 
 
 JIT_STR(typedef struct{
@@ -143,14 +143,15 @@ JIT_STR(typedef struct{
   int64_t di;
   int64_t y_dmin;
   int64_t j;
-  } MF_compareTuple64;, GRB_COMPARETUPLE_STR64)
+  } MF_compareTuple64;, GRB_COMPARETUPLE_STR64) // 32 bytes: OK
 
 JIT_STR(typedef struct{
   double residual;
   int32_t di;
   int32_t y_dmin;
-  int64_t j;
-  } MF_compareTuple32;, GRB_COMPARETUPLE_STR32)
+  int32_t j;
+  int32_t unused;   /* to pad the struct to 24 bytes */
+  } MF_compareTuple32;, GRB_COMPARETUPLE_STR32) // 24 bytes: padded
 
 
 JIT_STR(void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {
@@ -322,7 +323,7 @@ JIT_STR(void MF_MxeMult64(MF_resultTuple64 * z, const MF_compareTuple64 * x,
       z->d = x->y_dmin;
       z->residual = x->residual;
       z->j = x->j;
-    } //add else to populate with empty tuple, prune after.
+    } /* add else to populate with empty tuple, prune after. */
     else{
       z->d = INT64_MAX;
       z->residual = 0;
@@ -355,7 +356,7 @@ JIT_STR(void MF_MxeMult32(MF_resultTuple32 * z, const MF_compareTuple32 * x,
       z->d = x->y_dmin;
       z->residual = x->residual;
       z->j = x->j;
-    } //add else to populate with empty tuple, prune after.
+    } /*add else to populate with empty tuple, prune after. */
     else{
       z->d = INT32_MAX;
       z->residual = 0;
@@ -415,6 +416,7 @@ JIT_STR(void MF_CreateCompareVec32(MF_compareTuple32 *comp,
   comp->j = res->j;
   comp->residual = res->residual;
   comp->y_dmin = res->d;
+  comp->unused = 0 ;
   }, GRB_CREATECOMPVEC_STR32)
 
 
@@ -537,6 +539,11 @@ JIT_STR(void MF_getResidual(double * res, const MF_flowEdge * flow_edge){
 
 int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char *msg){
 
+//   printf ("sizeof (MF_flowEdge): %d\n", (int) sizeof (MF_flowEdge)) ;
+//   printf ("sizeof (MF_resultTuple64): %d\n", (int) sizeof (MF_resultTuple64)) ;
+//   printf ("sizeof (MF_resultTuple32): %d\n", (int) sizeof (MF_resultTuple32)) ;
+//   printf ("sizeof (MF_compareTuple64): %d\n", (int) sizeof (MF_compareTuple64)) ;
+//   printf ("sizeof (MF_compareTuple32): %d\n", (int) sizeof (MF_compareTuple32)) ;
 
   //types
   GrB_Type GrB_FlowEdge = NULL ;
@@ -923,7 +930,7 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
       }
     }
 
-    printf("******iter: %ld\n\n", iter); 
+    printf("******iter: %ld\n\n", iter);    // FIXME: remove this
     
     GRB_TRY(GrB_mxv(y, e, NULL,
 		    GrB_RxdSemiring, R, d, GrB_DESC_RS));
