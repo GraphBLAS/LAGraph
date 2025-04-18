@@ -21,8 +21,10 @@
 
 // This is an Advanced algorithm (no self edges allowed)
 
-
 //------------------------------------------------------------------------------
+
+#define useAssign
+#define debug
 
 #define LG_FREE_WORK                            \
 {                                               \
@@ -118,7 +120,7 @@ int LAGr_EdgeBetweennessCentrality
     LG_CLEAR_MSG ;
 
     // Array of BFS search matrices.
-    // Search [i] is a sparse matrix that stores the depth at which each vertex is
+    // Search[i] is a sparse matrix that stores the depth at which each vertex is
     // first seen thus far in each BFS at the current depth i. Each column
     // corresponds to a BFS traversal starting from a source node.
     GrB_Vector *Search = NULL ;
@@ -128,26 +130,45 @@ int LAGr_EdgeBetweennessCentrality
     GrB_Vector frontier = NULL ;
 
     // Paths matrix holds the number of shortest paths for each node and
-    // starting node discovered so far.  A dense matrix that is updated with
+    // starting node discovered so far. A dense vector that is updated with
     // sparse updates, and also used as a mask.
     GrB_Vector paths = NULL ;
 
-    // The betweenness centrality each vertex. A dense vector.
+    // The betweenness centrality for each vertex. A dense vector that
+    // accumulates flow values during backtracking.
     GrB_Vector bc_vertex_flow = NULL ;
 
-    // Update matrix for betweenness centrality for each edge. A sparse matrix.
+    // Update matrix for betweenness centrality for each edge. A sparse matrix
+    // that holds intermediate centrality updates.
     GrB_Matrix Update = NULL ;
 
+    // Binary operator for computing (1+x)/y in centrality calculations
     GrB_BinaryOp Add_One_Divide = NULL ;
 
-    GrB_Vector J_vec = NULL ;
-    GrB_Vector I_vec = NULL ;
-    GrB_Matrix I_matrix = NULL ;
-    GrB_Matrix J_matrix = NULL ;
-    GrB_Matrix Fd1A = NULL ;
-    GrB_Vector temp_update = NULL ; 
+    // Temporary vectors and matrices for intermediate calculations
+    // Diagonal values for J_matrix
+    GrB_Vector J_vec = NULL ;      
+
+    // Diagonal values for I_matrix
+    GrB_Vector I_vec = NULL ;      
+
+    // Matrix for previous level contributions
+    GrB_Matrix I_matrix = NULL ;   
+
+    // Matrix for current level contributions
+    GrB_Matrix J_matrix = NULL ;  
+    
+    // Intermediate product matrix
+    GrB_Matrix Fd1A = NULL ;       
+
+    // Temporary vector for centrality updates
+    GrB_Vector temp_update = NULL ;
 
     GrB_Index n = 0 ;                   // # nodes in the graph
+
+    double t1_total = 0;
+    double t2_total = 0;
+    double t3_total = 0;
 
     LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
     (*centrality) = NULL ;
@@ -229,21 +250,23 @@ int LAGr_EdgeBetweennessCentrality
             depth++ ;
 
             //----------------------------------------------------------------------
-            // Accumulate path counts: paths += frontier
+            // paths += frontier
+            // Accumulate path counts for vertices at current depth
             //----------------------------------------------------------------------
 
             GRB_TRY (GrB_assign (paths, NULL, GrB_PLUS_FP64, frontier, GrB_ALL, n,
                 NULL)) ;
 
             //----------------------------------------------------------------------
-            // Add frontier to S: S(depth, :) = frontier
+            // Search[depth] = structure(frontier)
+            // Record the frontier structure at current depth
             //----------------------------------------------------------------------
 
             GrB_free (&(Search [depth])) ;
             LG_TRY (LAGraph_Vector_Structure (&(Search [depth]), frontier, msg)) ;
 
             //----------------------------------------------------------------------
-            // Update frontier: frontier<!paths> = frontier*A
+            // frontier<!paths> = frontier * A
             //----------------------------------------------------------------------
             
             GRB_TRY (LG_SET_FORMAT_HINT (frontier, LG_SPARSE)) ;
@@ -284,43 +307,67 @@ int LAGr_EdgeBetweennessCentrality
             GrB_Vector f_d = Search [depth] ;
             GrB_Vector f_d1 = Search [depth - 1] ;
 
-            // 18 w = S(d, :) ÷ p × v + S(d, :)
-            // 19 Update = A .× w
-            // 20 w = S(d − 1, :) × p
-            // 21 Update = w .× U
+            //----------------------------------------------------------------------
+            // j<S(depth, :)> = (1 + v) / p
+            // J = diag(j)
+            // Compute weighted contributions from current level
+            //----------------------------------------------------------------------
 
-            // make J Matrix
             GRB_TRY (GrB_eWiseMult(J_vec, f_d, NULL, Add_One_Divide, bc_vertex_flow, paths, GrB_DESC_RS)) ;
-            // GRB_TRY (GrB_eWiseMult(J_vec, f_d, NULL, GrB_PLUS_FP64, bc_vertex_flow, paths, GrB_DESC_RS)) ;
             GRB_TRY (GrB_Matrix_diag(&J_matrix, J_vec, 0)) ;
 
-            // make I matrix
+            //----------------------------------------------------------------------
+            // i<S(depth-1, :)> = p
+            // I = diag(i)
+            // Compute weighted contributions from previous level
+            //----------------------------------------------------------------------
+
             GRB_TRY (GrB_Vector_extract (I_vec, f_d1, NULL, paths, GrB_ALL, n, GrB_DESC_RS)) ;
             GRB_TRY (GrB_Matrix_diag(&I_matrix, I_vec, 0)) ;
 
-            // combine
+            //----------------------------------------------------------------------
+            // Update = I × A × J 
+            // Compute edge updates based on current level weights
+            //----------------------------------------------------------------------
 
-            // intermediate matrix for Fd1 * A
+            double t1 = LAGraph_WallClockTime();
             GRB_TRY(GrB_mxm(Fd1A, NULL, NULL, LAGraph_plus_first_fp64,
-                I_matrix, A, NULL)) ;
+                I_matrix, A, NULL));
+            t1 = LAGraph_WallClockTime() - t1;
+            t1_total += t1;
 
+            double t2 = LAGraph_WallClockTime();
             GRB_TRY(GrB_mxm(Update, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64,
-                Fd1A, J_matrix, NULL)) ;
+                Fd1A, J_matrix, NULL));
+            t2 = LAGraph_WallClockTime() - t2;
+            t2_total += t2;
 
-            #if 1
-            // 22 centrality{A} += Update, using assign
-            GRB_TRY (GrB_assign(*centrality, A, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n, 
-            GrB_DESC_S)) ;
+            //----------------------------------------------------------------------
+            // centrality<A> += Update
+            // Accumulate centrality values for edges
+            //----------------------------------------------------------------------
+
+            #ifdef useAssign
+                // centrality{A} += Update, using assign
+                double t3 = LAGraph_WallClockTime();
+                GRB_TRY (GrB_assign(*centrality, A, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n, 
+                GrB_DESC_S));
+                t3 = LAGraph_WallClockTime() - t3;
+                t3_total += t3;
             #else
-            // 22 centrality = centrality + Update using eWiseAdd
-            GRB_TRY (GrB_eWiseAdd (*centrality, NULL, NULL, GrB_PLUS_FP64, *centrality, Update, NULL)) ;
+                // centrality = centrality + Update using eWiseAdd
+                double t3 = LAGraph_WallClockTime();
+                GRB_TRY (GrB_eWiseAdd (*centrality, NULL, NULL, GrB_PLUS_FP64, *centrality, Update, NULL));
+                t3 = LAGraph_WallClockTime() - t3;
+                t3_total += t3;
             #endif
 
-            // 23 v = Update +.
+            //----------------------------------------------------------------------
+            // v = Update +.
+            // Reduce update matrix to vector for next iteration
+            //----------------------------------------------------------------------
 
-            // Reduce "update" matrix to a vector (sum each column)
             GRB_TRY (GrB_reduce(temp_update, NULL, NULL, GrB_PLUS_MONOID_FP64, Update, NULL)) ;
-            // GRB_TRY (GrB_reduce(temp_update, NULL, NULL, GxB_ANY_FP64_MONOID, Update, NULL)) ;
             GRB_TRY (GrB_eWiseAdd(bc_vertex_flow, NULL, NULL, GrB_PLUS_FP64, bc_vertex_flow, temp_update, NULL)) ;
 
             // 24 d = d − 1
@@ -330,7 +377,19 @@ int LAGr_EdgeBetweennessCentrality
    
     }
 
-    
+    #ifdef debug
+        printf("  I*A time: %g\n", t1_total);
+
+        printf("  (I*A)*J time: %g\n", t2_total);
+
+        #ifdef useAssign
+            printf("  Centrality update using assign time: %g\n", t3_total);
+        #else
+            printf("  Centrality update using eWiseAdd time: %g\n", t3_total);
+        #endif
+    #endif
+
+
     // =========================================================================
     // === finalize the centrality =============================================
     // =========================================================================

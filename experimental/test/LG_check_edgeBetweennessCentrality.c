@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
-// LAGraph/experimental/test/test_edgeBetweennessCentrality: test for Edge
-// Betweenness Centrality
+// LG_check_edgeBetweennessCentrality: reference implementation for edge 
+// betweenness centrality
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -51,35 +51,38 @@ int LG_check_edgeBetweennessCentrality
     char *msg
 )
 {
-
     //--------------------------------------------------------------------------
-    // initialize workspace
+    // initialize workspace variables
     //--------------------------------------------------------------------------
 
     double tt = LAGraph_WallClockTime ( ) ;
-
     GrB_Info info ;
 
-    double* result ; 
-
-    // Holds the distances (depth levels) from the source vertex.
+    // Array storing shortest path distances from source to each vertex
     int64_t *depth = NULL ;
 
-    // Stores the betweenness centrality for each vertex.
+    // Array storing dependency scores during accumulation phase
     double *bc_vertex_flow = NULL ;
 
-    // Stack used for backtracking phase
+    // Stack used for backtracking phase in dependency accumulation
     int64_t *S = NULL ;
 
-    // Queue used for BFS phase
+    // Queue used for BFS traversal
     int64_t *queue = NULL ;
 
+    // Predecessor list components:
+    // Pj: array of predecessor vertices
+    // Ptail: end indices for each vertex's predecessor list
+    // Phead: start indices for each vertex's predecessor list
     GrB_Index *Pj = NULL ;
     GrB_Index *Ptail = NULL ;
     GrB_Index *Phead = NULL ;
 
-    // Holds the number of shortest paths for current node
+    // Array storing number of shortest paths to each vertex
     double *paths = NULL ;
+
+    // Temporary array for centrality results
+    double *result = NULL;
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -175,108 +178,92 @@ int LG_check_edgeBetweennessCentrality
 
     LAGraph_Calloc ((void **) &paths, n, sizeof (double), msg) ;
 
-    // 2. for ∀s ∈ V
+    // =========================================================================
+    // === Main computation loop ==============================================
+    // =========================================================================
+
+    // Process each vertex as a source
     for (int64_t s = 0; s < n; s++) {
-        // 4. S ← empty stack
-        size_t sp = 0;
+        
+        //----------------------------------------------------------------------
+        // Initialize data structures for current source
+        //----------------------------------------------------------------------
 
-        // Initialize predecessors list P[w] to empty
-        // 5. P [w] ← empty queue, ∀w ∈ V
-        memcpy (Ptail, ATp, n * sizeof (GrB_Index)) ;
+        size_t sp = 0;  // stack pointer
+        memcpy(Ptail, ATp, n * sizeof(GrB_Index));
 
-        // Initialize paths[t], d[t] for all t
-        // 6. σ[t] ← 0, ∀t ∈ V , σ[s] ← 1
-        // Keeps track of the number of shortest paths for each vertex.
+        // Initialize path counts
         for (int64_t i = 0; i < n; i++) {
-            paths [i] = 0 ;
+            paths[i] = 0;
         }
-        paths [s] = 1 ;
+        paths[s] = 1;
 
-        // 7. d[t] ← −1, ∀t ∈ V , d[s] ← 0
+        // Initialize distances
         for (size_t t = 0; t < n; t++) {
-            depth [t] = -1;
+            depth[t] = -1;
         }
-        depth [s] = 0;
+        depth[s] = 0;
 
-        // Initialize queue and enqueue starting node s
-        // 8. Q ← empty queue
-        int64_t qh = 0, qt = 0;
-        // 9. enqueue(Q, s)
-        queue [qt++] = s;
+        //----------------------------------------------------------------------
+        // BFS phase to compute shortest paths
+        //----------------------------------------------------------------------
 
-        // 10. while ¬empty(Q)
+        int64_t qh = 0, qt = 0;  // queue head and tail
+        queue[qt++] = s;         // enqueue source
+
         while (qh < qt) {
-            // Dequeue v from Q and push onto S
-            // 12. v ← dequeue(Q)
-            int64_t v = queue [qh++] ;
+            int64_t v = queue[qh++];
+            S[sp++] = v;
 
-            // 13. push(S, v)
-            S [sp++] = v;
-
-
-            // traverse all entries in A(v,:)
-            for (int64_t p = Ap [v] ; p < Ap [v+1] ; p++) {
-                int64_t w = Aj [p] ;
+            // Process neighbors of current vertex
+            for (int64_t p = Ap[v]; p < Ap[v+1]; p++) {
+                int64_t w = Aj[p];
                 
-                // 16. if d[w] < 0
-                if (depth [w] < 0) {
-                    // Update depth and enqueue
-                    // 18. enqueue(Q, w)
-                    queue [qt++] = w ;
-                    // 19. d[w] ← d[v] + 1
-                    depth [w] = depth [v] + 1 ;
+                // Handle unvisited vertices
+                if (depth[w] < 0) {
+                    queue[qt++] = w;
+                    depth[w] = depth[v] + 1;
                 }
 
-                // 20. if d[w] = d[v] + 1
-                if (depth [w] == depth [v] + 1) {
-                    // Update shortest path count and add predecessor
-                    // 22. σ[w] ← σ[w] + σ[v]
-                    paths [w] = paths [w] + paths [v] ;
-                    // 23. append(P [w], v)
+                // Update path counts for vertices at next level
+                if (depth[w] == depth[v] + 1) {
+                    paths[w] += paths[v];
+
                     if (Ptail [w] >= Phead [w+1] || Ptail [w] < Phead [w])
                     {
                         printf ("Ack! w=%ld Ptail [w]=%ld, Phead [w]=%ld Phead[w+1]=%ld\n", 
                             w, Ptail [w], Phead [w], Phead [w+1]) ;
                         fflush (stdout) ; abort ( ) ;
                     }
-                    Pj [Ptail [w]++] = v ;
+
+                    Pj[Ptail[w]++] = v;
                 }
             }   
         }
 
-        // Set dependency score δ[v] ← 0
-        // 24. δ[v] ← 0, ∀v ∈ V
+        //----------------------------------------------------------------------
+        // Dependency accumulation phase
+        //----------------------------------------------------------------------
+
+        // Initialize dependency scores
         for (size_t v = 0; v < n; v++) {
-            bc_vertex_flow [v] = 0 ;
+            bc_vertex_flow[v] = 0;
         }
 
-        // Process stack S
-        // 25. while ¬empty(S)
+        // Process vertices in reverse order of discovery
         while (sp > 0) {
-            // 27. w ← pop(S)
-            int64_t w = S [--sp] ;
+            int64_t w = S[--sp];
 
-            // 28. for v ∈ P [w]
-            for (int64_t p = Phead [w] ; p < Ptail [w] ; p++)
-            {
-                int64_t v = Pj [p] ;
+            // Update dependencies through predecessors
+            for (int64_t p = Phead[w]; p < Ptail[w]; p++) {
+                int64_t v = Pj[p];
                 
-                // Update dependency and centrality values
-                // 30. δ[v] ← δ[v] + σ[v] × ( δ[w]/σ[w] + 1)
-                if (v == w) { 
-                    printf ("  Ack!!\n") ; fflush (stdout) ; abort ( ) ;
-                    continue;
-                }
-
-                double centrality = paths [v] * ((bc_vertex_flow [w] + 1) / paths [w]) ;
-                bc_vertex_flow [v] += centrality ;
-
-                // 31. result [(v, w)] ← result [(v, w)] + σ[v] × ( δ[w]/σ[w] + 1)
-                result [INDEX (v,w)] += centrality;
+                // Compute and accumulate dependency
+                double centrality = paths[v] * ((bc_vertex_flow[w] + 1) / paths[w]);
+                bc_vertex_flow[v] += centrality;
+                result[INDEX(v,w)] += centrality;
             }
-
         }
-
     }
 
     if (print_timings)
