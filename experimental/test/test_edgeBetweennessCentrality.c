@@ -56,7 +56,7 @@ double difference(GrB_Matrix bc, double* gap_result, GrB_Index rows, GrB_Index c
     // GxB_print (diff, 5) ;
     OK(GrB_apply(diff, NULL, NULL, GrB_ABS_FP64, diff, NULL));
 
-    float err = 0;
+    double err = 0;
     OK(GrB_reduce(&err, NULL, GrB_MAX_MONOID_FP64, diff, NULL));
 
     OK(GrB_free(&diff));
@@ -139,8 +139,10 @@ void test_diamonds_ebc (void)
 {
     LAGraph_Init (msg) ;
     GrB_Matrix A = NULL ;
+    GrB_Matrix AT = NULL ;
     GrB_Matrix centrality = NULL ;
     int niters = 0 ;
+    LAGraph_Kind kind = LAGraph_ADJACENCY_DIRECTED ;
 
     // create the karate graph
     snprintf (filename, LEN, LG_DATA_DIR "%s", "diamonds.mtx") ;
@@ -148,21 +150,31 @@ void test_diamonds_ebc (void)
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
-    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, kind, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
-    // compute its betweenness centrality
-    OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
+    // check that AT is cached
+    int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+        LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+    int result = LAGraph_Cached_AT (G, msg) ;
+    TEST_CHECK (result == ok_result) ;
 
-    // compare with GAP:
+    // compute its betweenness centrality with C version
+    OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
     double err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
-    printf ("diamonds:   err: %e\n", err) ;
+    printf ("diamonds:   err: %e (C version)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
+
+    // compute its betweenness centrality with GraphBLAS version
+    OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
+    err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
+    printf ("diamonds:   err: %e (pure GraphBLAS)\n", err) ;
+    TEST_CHECK (err < 1e-4) ;
+    OK (GrB_free (&centrality)) ;
+
     OK (LAGraph_Delete (&G, msg)) ;
-
     LAGraph_Finalize (msg) ;
-
 }
 
 //------------------------------------------------------------------------------
@@ -185,16 +197,21 @@ void test_karate_ebc (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
-    // compute its betweenness centrality
+    // compute its betweenness centrality (C version)
     OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
-
-    // compare with GAP:
-    float err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
-    printf ("karate:   err: %e\n", err) ;
+    double err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
+    printf ("karate:   err: %e (C version)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
-    OK (LAGraph_Delete (&G, msg)) ;
 
+    // compute its betweenness centrality (GraphBLAS version)
+    OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
+    err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
+    printf ("karate:   err: %e (GraphBLAS version)\n", err) ;
+    TEST_CHECK (err < 1e-4) ;
+    OK (GrB_free (&centrality)) ;
+
+    OK (LAGraph_Delete (&G, msg)) ;
     LAGraph_Finalize (msg) ;
 
 }
@@ -203,8 +220,11 @@ void test_karate_ebc (void)
 // list of tests
 //------------------------------------------------------------------------------
 
+// FIXME: add more matrices
+
 TEST_LIST = {
     {"test_diamonds_ebc", test_diamonds_ebc},
     {"test_karate_ebc", test_karate_ebc},
+//  {"test_many", test_many},   FIXME ADD THIS
     {NULL, NULL}
 };
