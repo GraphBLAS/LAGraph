@@ -231,12 +231,21 @@ int LAGr_EdgeBetweennessCentrality
     {
         // Create a vector with all nodes as sources
         GRB_TRY (GrB_Vector_new (&internal_sources, GrB_INT64, n)) ;
-        
+
+        // internal_sources (0:n-1) = 0
+        GRB_TRY (GrB_assign (internal_sources, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+
+        // internal_sources (0:n-1) = 0:n-1
+        GRB_TRY (GrB_apply (internal_sources, NULL, NULL, GrB_ROWINDEX_INT64,
+            internal_sources, 0, NULL)) ;
+
+/*
         int64_t ns = n;
         for (GrB_Index i = 0; i < ns; i++)
         {
             GRB_TRY (GrB_Vector_setElement_INT64 (internal_sources, i, i)) ;
         }
+*/
 
         // Use this vector instead
         sources = internal_sources;
@@ -249,6 +258,7 @@ int LAGr_EdgeBetweennessCentrality
     
     if (nvals == 0)
     {
+        // FIXME: make this an error
         // If sources vector is empty, return an empty centrality matrix
         LG_FREE_WORK;
         if (created_sources) GrB_free(&internal_sources);
