@@ -864,6 +864,7 @@ int LG_check_edgeBetweennessCentrality
     GrB_Matrix *C,      // centrality matrix
     // input
     LAGraph_Graph G,
+    GrB_Vector sources,         // source vertices to compute shortest paths (if NULL or empty, use all vertices)
     char *msg
 ) ;
 
@@ -1287,6 +1288,7 @@ int LAGr_EdgeBetweennessCentrality
     GrB_Matrix *centrality,     // centrality(i): betweeness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
+    GrB_Vector sources,         // source vertices to compute shortest paths (if NULL or empty, use all vertices)
     char *msg
 );
 

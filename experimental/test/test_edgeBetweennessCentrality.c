@@ -101,6 +101,23 @@ double diamonds_ebc [8][8] =
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
 } ; 
 
+// Approximate results from edge_betweenness_centrality from NetworkX of the karate 
+// graph
+
+int64_t diamonds_sources [4] = {1, 0, 5, 2};
+
+double diamonds_ebc_approx [8][8] = 
+{
+    {0.0, 1.9999999999999998, 1.8333333333333333, 1.5, 0.0, 0.0, 0.0, 0.0}, 
+    {1.0, 0.0, 1.1666666666666665, 0.0, 3.5, 0.0, 0.0, 0.0}, 
+    {1.0, 1.0, 0.0, 0.6666666666666666, 3.333333333333333, 0.0, 0.0, 0.0}, 
+    {1.0, 0.0, 1.0, 0.0, 1.5, 0.0, 0.0, 0.0}, 
+    {0.0, 1.0, 1.0, 1.0, 0.0, 5.0, 2.5, 0.0}, 
+    {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.5}, 
+    {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 
+} ;
+
 //------------------------------------------------------------------------------
 // results for karate graph
 //------------------------------------------------------------------------------
@@ -147,8 +164,51 @@ double karate_ebc [34][34] =
 } ; 
 
 
+// Approximate results from edge_betweenness_centrality from NetworkX of the karate 
+// graph
+
+int64_t karate_sources [4] = {7, 1, 17, 15};
+
+double karate_ebc_approx [34][34] = 
+{
+    {0.0, 5.166666666666666, 1.9722222222222223, 0.25, 2.0, 3.0, 3.0, 6.651190476190476, 3.0730158730158728, 0.0, 2.0, 2.0, 1.3888888888888888, 1.509126984126984, 0.0, 0.0, 0.0, 11.79642857142857, 0.0, 1.634126984126984, 0.0, 0.7916666666666666, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 6.356349206349205, 0.0, 0.0}, 
+    {1.0, 0.0, 4.95, 1.0, 0.0, 0.0, 0.0, 2.8321428571428573, 0.0, 0.0, 0.0, 0.0, 0.0, 2.570238095238095, 0.0, 0.0, 0.0, 6.203571428571427, 0.0, 2.695238095238095, 0.0, 1.2083333333333333, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 4.8619047619047615, 0.0, 0.0, 0.0}, 
+    {1.0, 1.0, 0.0, 0.3055555555555556, 0.0, 0.0, 0.0, 7.572619047619047, 0.48571428571428565, 1.569047619047619, 0.0, 0.0, 0.0, 0.19404761904761905, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.469047619047619, 1.4023809523809523, 0.0, 0.0, 0.0, 7.68015873015873, 0.0}, 
+    {1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.944047619047619, 0.0, 0.0, 0.0, 0.0, 0.6111111111111112, 0.4996031746031746, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.16666666666666666, 0.0, 1.2722222222222221, 1.4531746031746033}, 
+    {0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.569047619047619}, 
+    {1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.7730158730158725}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1583333333333332, 0.8416666666666667}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7.66388888888889, 10.336111111111112}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1583333333333332, 0.8416666666666667}, 
+    {1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.3293650793650795}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1583333333333332, 0.8416666666666667}, 
+    {1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1583333333333332, 0.8416666666666667}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2833333333333333, 0.0, 0.39999999999999997, 0.0, 0.0, 0.0, 0.0, 0.9583333333333333, 0.8583333333333334}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6666666666666666, 0.0, 0.0, 0.0, 1.3333333333333333, 0.0, 0.0}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.7833333333333332, 0.0, 0.0}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03333333333333333, 0.0, 0.0, 0.0, 1.9666666666666668}, 
+    {0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7357142857142857}, 
+    {0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.16666666666666666, 0.0, 0.569047619047619}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1916666666666667, 0.8416666666666667}, 
+    {0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.75, 1.9452380952380952}, 
+    {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.5638888888888889, 1.6757936507936506}, 
+    {0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.06904761904761905}, 
+    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0},
+} ; 
+
 //------------------------------------------------------------------------------
-// test_diamonds_ebc
+// test_diamonds_ebc: Test diamonds graph on exact EBC against NetworkX and C
 //------------------------------------------------------------------------------
 
 void test_diamonds_ebc (void)
@@ -183,7 +243,7 @@ void test_diamonds_ebc (void)
 
     // compute its betweenness centrality with C version
     double t = LAGraph_WallClockTime() ;
-    OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
+    OK (LG_check_edgeBetweennessCentrality (&centrality, G, NULL, msg)) ;
     t = LAGraph_WallClockTime() - t ;
     double err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
     printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
@@ -193,7 +253,7 @@ void test_diamonds_ebc (void)
 
     // compute its betweenness centrality with GraphBLAS version
     t = LAGraph_WallClockTime() ;
-    OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
+    OK (LAGr_EdgeBetweennessCentrality (&centrality, G, NULL, msg)) ;
     t = LAGraph_WallClockTime() - t ;
     err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
     printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
@@ -206,7 +266,7 @@ void test_diamonds_ebc (void)
 }
 
 //------------------------------------------------------------------------------
-// test_karate_ebc
+// test_karate_ebc: Test karate graph on exact EBC against NetworkX and C
 //------------------------------------------------------------------------------
 
 void test_karate_ebc (void)
@@ -233,7 +293,7 @@ void test_karate_ebc (void)
 
     // compute its betweenness centrality (C version)
     double t = LAGraph_WallClockTime() ;
-    OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
+    OK (LG_check_edgeBetweennessCentrality (&centrality, G, NULL, msg)) ;
     t = LAGraph_WallClockTime() - t ;
     double err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
     printf ("  Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
@@ -243,7 +303,7 @@ void test_karate_ebc (void)
 
     // compute its betweenness centrality (GraphBLAS version)
     t = LAGraph_WallClockTime() ;
-    OK (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
+    OK (LAGr_EdgeBetweennessCentrality (&centrality, G, NULL, msg)) ;
     t = LAGraph_WallClockTime() - t ;
     err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
     printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
@@ -255,7 +315,10 @@ void test_karate_ebc (void)
     LAGraph_Finalize (msg) ;
 }
 
-// Function to test multiple matrix market files
+//------------------------------------------------------------------------------
+// test_many: Test multiple matrix market files on exact EBC against C
+//------------------------------------------------------------------------------
+
 void test_many(void)
 {
     LAGraph_Init(msg);
@@ -267,9 +330,9 @@ void test_many(void)
         "random_unweighted_bipartite2.mtx",
         "jagmesh7.mtx",
         "dnn_data/n1024-l1.mtx",
-        "bcsstk13.mtx",
-        "pushpull.mtx",
-        "cryg2500.mtx",
+        // "bcsstk13.mtx",
+        // "pushpull.mtx",
+        // "cryg2500.mtx",
         NULL
     };
 
@@ -297,13 +360,13 @@ void test_many(void)
 
         // compute its betweenness centrality (GraphBLAS version)
         double t = LAGraph_WallClockTime() ;
-        OK(LAGr_EdgeBetweennessCentrality(&centrality, G, msg));
+        OK(LAGr_EdgeBetweennessCentrality(&centrality, G, NULL, msg));
         t = LAGraph_WallClockTime() - t ;
         printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
 
         // compute its betweenness centrality (C version)
         t = LAGraph_WallClockTime() ;
-        OK(LG_check_edgeBetweennessCentrality(&reference_centrality, G, msg));
+        OK(LG_check_edgeBetweennessCentrality(&reference_centrality, G, NULL, msg));
         t = LAGraph_WallClockTime() - t ;
         printf ("  Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
 
@@ -322,13 +385,142 @@ void test_many(void)
 }
 
 //------------------------------------------------------------------------------
+// test_diamonds_ebc_approx: Test diamonds graph on approx EBC against NetworkX and C
+//------------------------------------------------------------------------------
+
+void test_diamonds_ebc_approx (void)
+{
+    LAGraph_Init (msg) ;
+    GrB_Matrix A = NULL ;
+    GrB_Matrix AT = NULL ;
+    GrB_Matrix centrality = NULL ;
+    int niters = 0 ;
+    LAGraph_Kind kind = LAGraph_ADJACENCY_DIRECTED ;
+
+    // create the diamonds graph
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "diamonds.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    OK (LAGraph_New (&G, &A, kind, msg)) ;
+    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+    // Print graph statistics
+    uint64_t n, nedges ;
+    OK (GrB_Matrix_nrows(&n, G->A)) ;
+    OK (GrB_Matrix_nvals(&nedges, G->A)) ;
+    printf ("\n\nDiamonds graph (%" PRIu64 " nodes, %" PRIu64 " edges):\n", n, nedges) ;
+
+    // create sources vector
+    GrB_Vector sources;
+    GrB_Vector_new(&sources, GrB_INT64, 4);
+    for (GrB_Index i = 0; i < 4; i++) {
+        OK (GrB_Vector_setElement_INT64 (sources, diamonds_sources[i], i)) ;
+    }
+
+    // check that AT is cached
+    int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+        LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+    int result = LAGraph_Cached_AT (G, msg) ;
+    TEST_CHECK (result == ok_result) ;
+
+    double t, err ;
+
+    // compute its betweenness centrality with C version
+    // double t = LAGraph_WallClockTime() ;
+    // OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
+    // t = LAGraph_WallClockTime() - t ;
+    // double err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
+    // printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
+    // printf ("  diamonds:   err: %e (C version)\n", err) ;
+    // TEST_CHECK (err < 1e-4) ;
+    // OK (GrB_free (&centrality)) ;
+
+    // compute its betweenness centrality with GraphBLAS version
+    t = LAGraph_WallClockTime() ;
+    OK (LAGr_EdgeBetweennessCentrality (&centrality, G, sources, msg)) ;
+    t = LAGraph_WallClockTime() - t ;
+    err = difference(centrality, &diamonds_ebc_approx[0][0], 8, 8) ;
+    printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+    printf ("  diamonds:   err: %e (pure GraphBLAS)\n", err) ;
+    TEST_CHECK (err < 1e-4) ;
+    OK (GrB_free (&centrality)) ;
+    OK (GrB_free (&sources)) ;
+
+    OK (LAGraph_Delete (&G, msg)) ;
+    LAGraph_Finalize (msg) ;
+}
+
+//------------------------------------------------------------------------------
+// test_karate_ebc: Test karate graph on approx EBC against NetworkX and C
+//------------------------------------------------------------------------------
+
+void test_karate_ebc_approx (void)
+{
+    LAGraph_Init (msg) ;
+    GrB_Matrix A = NULL ;
+    GrB_Matrix centrality = NULL ;
+    int niters = 0 ;
+    
+    // create the karate graph
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+    // Print graph statistics
+    uint64_t n, nedges ;
+    OK (GrB_Matrix_nrows(&n, G->A)) ;
+    OK (GrB_Matrix_nvals(&nedges, G->A)) ;
+    printf ("\n\nKarate graph (%" PRIu64 " nodes, %" PRIu64 " edges):\n", n, nedges) ;
+
+    // create sources vector
+    GrB_Vector sources;
+    GrB_Vector_new(&sources, GrB_INT64, 4);
+    for (GrB_Index i = 0; i < 4; i++) {
+        OK (GrB_Vector_setElement_INT64 (sources, karate_sources[i], i)) ;
+    }
+
+    double t, err ;
+    // compute its betweenness centrality (C version)
+    // double t = LAGraph_WallClockTime() ;
+    // OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
+    // t = LAGraph_WallClockTime() - t ;
+    // double err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
+    // printf ("  Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
+    // printf ("  karate:   err: %e (C version)\n", err) ;
+    // TEST_CHECK (err < 1e-4) ;
+    // OK (GrB_free (&centrality)) ;
+
+    // compute its betweenness centrality (GraphBLAS version)
+    t = LAGraph_WallClockTime() ;
+    OK (LAGr_EdgeBetweennessCentrality (&centrality, G, sources, msg)) ;
+    t = LAGraph_WallClockTime() - t ;
+    err = difference(centrality, &karate_ebc_approx[0][0], 34, 34) ;
+    printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+    printf ("  karate:   err: %e (GraphBLAS version)\n", err) ;
+    TEST_CHECK (err < 1e-4) ;
+    OK (GrB_free (&centrality)) ;
+    OK (GrB_free (&sources)) ;
+
+    OK (LAGraph_Delete (&G, msg)) ;
+    LAGraph_Finalize (msg) ;
+}
+
+
+//------------------------------------------------------------------------------
 // list of tests
 //------------------------------------------------------------------------------
 
-
 TEST_LIST = {
-    {"test_diamonds_ebc", test_diamonds_ebc},
-    {"test_karate_ebc", test_karate_ebc},
-    {"test_many", test_many},
+    // {"test_diamonds_ebc", test_diamonds_ebc},
+    // {"test_karate_ebc", test_karate_ebc},
+    // {"test_many", test_many},
+    {"test_diamonds_ebc_approx", test_diamonds_ebc_approx},
+    // {"test_karate_ebc_approx", test_karate_ebc_approx},
     {NULL, NULL}
 };

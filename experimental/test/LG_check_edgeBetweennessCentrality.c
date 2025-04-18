@@ -48,9 +48,13 @@ int LG_check_edgeBetweennessCentrality
     GrB_Matrix *C,      // centrality matrix
     // input
     LAGraph_Graph G,
+    GrB_Vector sources,         // source vertices to compute shortest paths (if NULL or empty, use all vertices)
     char *msg
 )
 {
+
+    GxB_print (sources, GxB_FULL) ;
+
     //--------------------------------------------------------------------------
     // initialize workspace variables
     //--------------------------------------------------------------------------

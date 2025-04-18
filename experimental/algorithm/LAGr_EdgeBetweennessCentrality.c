@@ -26,27 +26,27 @@
 #define useAssign
 #define debug
 
-#define LG_FREE_WORK                            \
-{                                               \
-    GrB_free (&frontier) ;                      \
-    GrB_free (&J_vec) ;                         \
-    GrB_free (&I_vec) ;                         \
-    GrB_free (&J_matrix) ;                      \
-    GrB_free (&I_matrix) ;                      \
-    GrB_free (&Fd1A) ;                          \
-    GrB_free (&paths) ;                         \
-    GrB_free (&bc_vertex_flow) ;                     \
-    GrB_free (&temp_update) ;                   \
-    GrB_free (&Add_One_Divide) ;                \
-    GrB_free (&Update) ;                     \
-    if (Search != NULL)                              \
-    {                                           \
-        for (int64_t i = 0 ; i < n ; i++)       \
-        {                                       \
-            GrB_free (&(Search [i])) ;               \
-        }                                       \
-        LAGraph_Free ((void **) &Search, NULL) ;     \
-    }                                           \
+#define LG_FREE_WORK                                \
+{                                                   \
+    GrB_free (&frontier) ;                          \
+    GrB_free (&J_vec) ;                             \
+    GrB_free (&I_vec) ;                             \
+    GrB_free (&J_matrix) ;                          \
+    GrB_free (&I_matrix) ;                          \
+    GrB_free (&Fd1A) ;                              \
+    GrB_free (&paths) ;                             \
+    GrB_free (&bc_vertex_flow) ;                    \
+    GrB_free (&temp_update) ;                       \
+    GrB_free (&Add_One_Divide) ;                    \
+    GrB_free (&Update) ;                            \
+    if (Search != NULL)                             \
+    {                                               \
+        for (int64_t i = 0 ; i < n ; i++)           \
+        {                                           \
+            GrB_free (&(Search [i])) ;              \
+        }                                           \
+        LAGraph_Free ((void **) &Search, NULL) ;    \
+    }                                               \
 }
 
 #define LG_FREE_ALL                 \
@@ -109,6 +109,7 @@ int LAGr_EdgeBetweennessCentrality
     GrB_Matrix *centrality,     // centrality(i): betweeness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
+    GrB_Vector sources,         // source vertices to compute shortest paths (if NULL or empty, use all vertices)
     char *msg
 )
 {
@@ -164,6 +165,10 @@ int LAGr_EdgeBetweennessCentrality
     // Temporary vector for centrality updates
     GrB_Vector temp_update = NULL ;
 
+    // Source nodes vector (will be created if NULL is passed)
+    GrB_Vector internal_sources = NULL;
+    bool created_sources = false;
+
     GrB_Index n = 0 ;                   // # nodes in the graph
 
     double t1_total = 0;
@@ -216,15 +221,63 @@ int LAGr_EdgeBetweennessCentrality
     LG_TRY (LAGraph_Calloc ((void **) &Search, n+1, sizeof (GrB_Vector), msg)) ;
 
     // =========================================================================
+    // === Process source nodes ================================================
+    // =========================================================================
+    
+    GxB_print(sources, GxB_FULL) ;
+
+    // If sources is NULL, create a dense vector with all vertices
+    if (sources == NULL)
+    {
+        // Create a vector with all nodes as sources
+        GRB_TRY (GrB_Vector_new (&internal_sources, GrB_INT64, n)) ;
+        
+        int64_t ns = n;
+        for (GrB_Index i = 0; i < ns; i++)
+        {
+            GRB_TRY (GrB_Vector_setElement_INT64 (internal_sources, i, i)) ;
+        }
+
+        // Use this vector instead
+        sources = internal_sources;
+        created_sources = true;
+    }
+
+    // Extract tuples from the sources vector
+    GrB_Index nvals;
+    GRB_TRY (GrB_Vector_nvals (&nvals, sources)) ;
+    
+    if (nvals == 0)
+    {
+        // If sources vector is empty, return an empty centrality matrix
+        LG_FREE_WORK;
+        if (created_sources) GrB_free(&internal_sources);
+        return (GrB_SUCCESS);
+    }
+
+    // =========================================================================
     // === Breadth-first search stage ==========================================
     // =========================================================================
 
     GrB_Index frontier_size, last_frontier_size = 0 ;
     GRB_TRY (GrB_Vector_nvals (&frontier_size, frontier)) ;
 
-    int64_t depth, root ;
-    for (root = 0 ; root < n ; root++)
+    int64_t depth;
+    GrB_Index root;
+    
+    // Iterate through source nodes
+    for (GrB_Index i = 0; i < nvals; i++)
     {
+        GRB_TRY (GrB_Vector_extractElement(&root, sources, i)) ;
+        
+        // Verify the root index is valid
+        if (root >= n)
+        {
+            // Skip invalid indices
+            continue;
+        }
+        printf("root %ld\n", root) ;
+    
         depth = 0 ;
 
         // root frontier: Search [0](root) = true
@@ -362,6 +415,9 @@ int LAGr_EdgeBetweennessCentrality
                 t3_total += t3;
             #endif
 
+            GxB_print(*centrality, GxB_FULL) ;
+            
+
             //----------------------------------------------------------------------
             // v = Update +.
             // Reduce update matrix to vector for next iteration
@@ -373,8 +429,7 @@ int LAGr_EdgeBetweennessCentrality
             // 24 d = d − 1
             depth-- ;
         }
-
-   
+        
     }
 
     #ifdef debug
@@ -387,6 +442,9 @@ int LAGr_EdgeBetweennessCentrality
         #else
             printf("  Centrality update using eWiseAdd time: %g\n", t3_total);
         #endif
+
+        GxB_print (*centrality, GxB_FULL) ;
+
     #endif
 
 

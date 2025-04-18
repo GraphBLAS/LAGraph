@@ -84,7 +84,7 @@ int main (int argc, char **argv)
     // LG_SET_BURBLE (true) ;
 
     t = LAGraph_WallClockTime ( ) ;
-    LAGRAPH_TRY (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
+    LAGRAPH_TRY (LAGr_EdgeBetweennessCentrality (&centrality, G, NULL, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
 
@@ -96,7 +96,7 @@ int main (int argc, char **argv)
 
     GrB_Matrix reference_centrality = NULL;
     t = LAGraph_WallClockTime ( ) ;
-    LAGRAPH_TRY (LG_check_edgeBetweennessCentrality(&reference_centrality, G, msg)) ;
+    LAGRAPH_TRY (LG_check_edgeBetweennessCentrality(&reference_centrality, G, NULL, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
 
