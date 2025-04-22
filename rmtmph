@@ -1,0 +1,2 @@
+#!/bin/bash
+find ~/.SuiteSparse/ -mindepth 3 -delete
