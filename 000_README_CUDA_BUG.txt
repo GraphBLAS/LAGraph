@@ -30,8 +30,12 @@ details:
     tail out_0010.txt
 
 
-to run all the matrices
+to run all the matrices, you first need to edit the file
+GraphBLAS/CUDA/template/GB_cuda_jit_AxB_dot3_phase2.cuh, and change the
+"#if 1" on line 320 to "#if 0".  Then recompile GraphBLAS as above.  Then come
+back to the LAGraph folder and run this:
 
+    make JOBS=32
     ./go156
 
 and look at all the out*.txt files:
