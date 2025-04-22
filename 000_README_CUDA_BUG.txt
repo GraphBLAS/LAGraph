@@ -29,3 +29,11 @@ details:
     ./go_10
     tail out_0010.txt
 
+
+to run all the matrices
+
+    ./go156
+
+and look at all the out*.txt files:
+
+    ack Abort out*txt

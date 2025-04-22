@@ -1,4 +1,4 @@
-rmtmph
+./rmtmph
 ./build/experimental/benchmark/dot3_demo mtx_0000.mtx > out_0000.txt
 ./build/experimental/benchmark/dot3_demo mtx_0001.mtx > out_0001.txt
 ./build/experimental/benchmark/dot3_demo mtx_0002.mtx > out_0002.txt
