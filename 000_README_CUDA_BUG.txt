@@ -41,3 +41,8 @@ back to the LAGraph folder and run this:
 and look at all the out*.txt files:
 
     ack Abort out*txt
+
+but ignore the results from the out*bad.txt files.  Those are files in the
+LAGraph repo from earlier tests, not the ones just done with the ./go156
+script.
+
