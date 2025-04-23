@@ -428,25 +428,25 @@ void test_diamonds_ebc_approx (void)
     double t, err ;
 
     // compute its betweenness centrality with C version
-    // double t = LAGraph_WallClockTime() ;
-    // OK (LG_check_edgeBetweennessCentrality (&centrality, G, msg)) ;
-    // t = LAGraph_WallClockTime() - t ;
-    // double err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
-    // printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
-    // printf ("  diamonds:   err: %e (C version)\n", err) ;
-    // TEST_CHECK (err < 1e-4) ;
-    // OK (GrB_free (&centrality)) ;
-
-    // compute its betweenness centrality with GraphBLAS version
     t = LAGraph_WallClockTime() ;
-    OK (LAGr_EdgeBetweennessCentrality (&centrality, G, sources, msg)) ;
+    OK (LG_check_edgeBetweennessCentrality (&centrality, G, sources, msg)) ;
     t = LAGraph_WallClockTime() - t ;
-    err = difference(centrality, &diamonds_ebc_approx[0][0], 8, 8) ;
-    printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
-    printf ("  diamonds:   err: %e (pure GraphBLAS)\n", err) ;
+    err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
+    printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
+    printf ("  diamonds:   err: %e (C version)\n", err) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
-    OK (GrB_free (&sources)) ;
+
+    // // compute its betweenness centrality with GraphBLAS version
+    // t = LAGraph_WallClockTime() ;
+    // OK (LAGr_EdgeBetweennessCentrality (&centrality, G, sources, msg)) ;
+    // t = LAGraph_WallClockTime() - t ;
+    // err = difference(centrality, &diamonds_ebc_approx[0][0], 8, 8) ;
+    // printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+    // printf ("  diamonds:   err: %e (pure GraphBLAS)\n", err) ;
+    // TEST_CHECK (err < 1e-4) ;
+    // OK (GrB_free (&centrality)) ;
+    // OK (GrB_free (&sources)) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
     LAGraph_Finalize (msg) ;

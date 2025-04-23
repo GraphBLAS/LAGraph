@@ -37,6 +37,8 @@
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
+#include "LG_Xtest.h"
+
 
 //------------------------------------------------------------------------------
 // test the results from a Edge Betweenness Centrality
@@ -87,6 +89,9 @@ int LG_check_edgeBetweennessCentrality
 
     // Temporary array for centrality results
     double *result = NULL;
+
+    GrB_Vector internal_sources = NULL;
+    bool created_sources = false;
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -182,13 +187,53 @@ int LG_check_edgeBetweennessCentrality
 
     LAGraph_Calloc ((void **) &paths, n, sizeof (double), msg) ;
 
+    if (sources == NULL)
+    {
+        // Create a vector with all nodes as sources
+        GRB_TRY (GrB_Vector_new (&internal_sources, GrB_INT64, n)) ;
+
+        // internal_sources (0:n-1) = 0
+        GRB_TRY (GrB_assign (internal_sources, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+
+        // internal_sources (0:n-1) = 0:n-1
+        GRB_TRY (GrB_apply (internal_sources, NULL, NULL, GrB_ROWINDEX_INT64,
+            internal_sources, 0, NULL)) ;
+        
+        // Use this vector instead
+        sources = internal_sources;
+        created_sources = true;
+    }
+    
+    // Extract number of source nodes
+    GrB_Index nvals_sources;
+    GRB_TRY (GrB_Vector_nvals (&nvals_sources, sources));
+    
+    if (nvals_sources == 0)
+    {
+        // If sources vector is empty, return an empty centrality matrix
+        // (Create an empty C matrix or set it to zeros as needed)
+        GRB_TRY (GrB_Matrix_new(C, GrB_FP64, n, n));
+        
+        // Clean up resources
+        if (created_sources) GRB_TRY (GrB_free(&internal_sources));
+        return (GrB_SUCCESS);
+    }
+
     // =========================================================================
     // === Main computation loop ==============================================
     // =========================================================================
 
-    // Process each vertex as a source
-    for (int64_t s = 0; s < n; s++) {
-        
+    GrB_Index s;
+
+    // Process each source vertex
+    for (GrB_Index i = 0; i < nvals_sources; i++) {
+        GRB_TRY (GrB_Vector_extractElement(&s, sources, i)) ;
+
+        // Skip invalid indices
+        if (s >= n) {
+            continue;
+        }
+            
         //----------------------------------------------------------------------
         // Initialize data structures for current source
         //----------------------------------------------------------------------
@@ -218,6 +263,7 @@ int LG_check_edgeBetweennessCentrality
         while (qh < qt) {
             int64_t v = queue[qh++];
             S[sp++] = v;
+            printf("%d -", v);
 
             // Process neighbors of current vertex
             for (int64_t p = Ap[v]; p < Ap[v+1]; p++) {
@@ -241,8 +287,11 @@ int LG_check_edgeBetweennessCentrality
                     }
 
                     Pj[Ptail[w]++] = v;
+
+                    printf(" %d", w);
                 }
             }   
+            printf("\n");
         }
 
         //----------------------------------------------------------------------
@@ -268,6 +317,7 @@ int LG_check_edgeBetweennessCentrality
                 result[INDEX(v,w)] += centrality;
             }
         }
+        printf("\n");
     }
 
     if (print_timings)
@@ -307,6 +357,12 @@ GrB_Info GxB_Matrix_pack_FullR  // pack a full matrix, held by row
     LG_TRY (GrB_assign(C_temp, A, NULL, C_temp, GrB_ALL, n, GrB_ALL, n, GrB_DESC_RS)) ;
 
     *C = C_temp;
+
+    GxB_print (*C, GxB_FULL) ;
+
+    if (created_sources) {
+        GRB_TRY (GrB_free(&internal_sources));
+    }
 
     //--------------------------------------------------------------------------
     // free workspace and return result
