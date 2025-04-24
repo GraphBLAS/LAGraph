@@ -94,9 +94,9 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
+    { LAGraph_ADJACENCY_UNDIRECTED, "jagmesh7.mtx" },
     { LAGraph_ADJACENCY_UNDIRECTED, "A.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "cover.mtx" },
-    { LAGraph_ADJACENCY_UNDIRECTED, "jagmesh7.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "ldbc-cdlp-directed-example.mtx" },
     { LAGraph_ADJACENCY_UNDIRECTED, "ldbc-cdlp-undirected-example.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx" },
