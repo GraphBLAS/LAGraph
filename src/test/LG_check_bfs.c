@@ -62,10 +62,10 @@ int LG_check_bfs
 
     double tt = LAGraph_WallClockTime ( ) ;
 
-    printf ("LG_check_bfs: src %ld\n", src) ;
-    GxB_print (G->A, 5) ;
-    if (Level != NULL) GxB_print (Level, 5) ;
-    if (Level != NULL) GxB_print (Parent, 5) ;
+//  printf ("LG_check_bfs: src %ld\n", src) ;
+//  GxB_print (G->A, 2) ;
+//  if (Level != NULL) GxB_print (Level, 2) ;
+//  if (Level != NULL) GxB_print (Parent, 2) ;
 
     GrB_Vector Row = NULL ;
     GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
