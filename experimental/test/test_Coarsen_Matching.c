@@ -256,23 +256,26 @@ void test_Coarsen_Matching_Errors() {
     OK (LAGraph_Init (msg)) ;
 
 #if LAGRAPH_SUITESPARSE
+    GrB_Matrix C = NULL ;
     OK (GrB_Matrix_new (&A, GrB_FP64, 5, 5)) ;
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
     G->kind = LAGraph_ADJACENCY_DIRECTED ;
 
     // directed graph
-    GrB_Info result = LAGraph_Coarsen_Matching (NULL, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
+    GrB_Info result = LAGraph_Coarsen_Matching (&C, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
+    TEST_CHECK (C == NULL) ;
 
     G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
     G->nself_edges = 1 ;
 
     // non-zero self-loops
-    result = LAGraph_Coarsen_Matching (NULL, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
+    result = LAGraph_Coarsen_Matching (&C, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
+    TEST_CHECK (C == NULL) ;
 
     G->nself_edges = 0;
 
@@ -281,6 +284,7 @@ void test_Coarsen_Matching_Errors() {
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
+    OK (LAGraph_Delete (&G, msg)) ;
 #endif
 
     OK (LAGraph_Finalize (msg)) ;
@@ -294,6 +298,7 @@ void test_Coarsen_Matching_NullInputs() {
 
 #if LAGRAPH_SUITESPARSE
 
+    GrB_Matrix C = NULL ;
     OK (GrB_Matrix_new (&A, GrB_FP64, 5, 5)) ;
 
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
@@ -301,13 +306,13 @@ void test_Coarsen_Matching_NullInputs() {
     OK (LAGraph_Cached_AT (G, msg) < 0) ; // warning is expected; check for error
 
     // do this to get full code coverage and catch any unexpected behavior
-    OK (LAGraph_Coarsen_Matching (&A_coarse_LAGraph, NULL, NULL, NULL, G, 0, 0, 1, 42, msg)) ;
+    OK (LAGraph_Coarsen_Matching (&C, NULL, NULL, NULL, G, 0, 0, 1, 42, msg)) ;
 
-    OK (GrB_free (&A_coarse_LAGraph)) ;
+    OK (GrB_free (&C)) ;
     // do it with parent, inv_newlabels NULL but newlabels not NULL
-    OK (LAGraph_Coarsen_Matching (&A_coarse_LAGraph, NULL, &newlabel, NULL, G, 0, 0, 1, 42, msg)) ;
+    OK (LAGraph_Coarsen_Matching (&C, NULL, &newlabel, NULL, G, 0, 0, 1, 42, msg)) ;
 
-    OK (GrB_free (&A_coarse_LAGraph)) ;
+    OK (GrB_free (&C)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
     TEST_CHECK (newlabel != NULL) ;

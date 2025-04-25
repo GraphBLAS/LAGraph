@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------
-// LAGraph_CFL_reachability.c: Context-Free Language Reachability Matrix-Based Algorithm
-//------------------------------------------------------------------------------
+// LAGraph_CFL_reachability.c: Context-Free Language Reachability Matrix-Based
+// Algorithm
+// ------------------------------------------------------------------------------
 //
 // LAGraph, (c) 2019-2024 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
@@ -9,59 +10,60 @@
 
 //------------------------------------------------------------------------------
 
-// Code is based on the "A matrix-based CFPQ algorithm" described in the following paper:
-//  * Rustam Azimov, Semyon Grigorev, "Context-Free Path Querying Using Linear Algebra"
-//  * URL: https://disser.spbu.ru/files/2022/disser_azimov.pdf
+// Code is based on the "A matrix-based CFPQ algorithm" described in the
+// following paper: * Rustam Azimov, Semyon Grigorev, "Context-Free Path
+// Querying Using Linear Algebra", URL:
+// https://disser.spbu.ru/files/2022/disser_azimov.pdf
 
-
-// FIXED: "free" cannot be combined with LAGraph_Malloc.  The latter may not
-// use 'malloc', but a different memory allocator.
-
-#define LG_FREE_WORK                                                                     \
-    {                                                                                    \
-        LAGraph_Free ((void **) &nnzs, msg) ;   \
-        GrB_free(&true_scalar);                                                          \
-        GrB_free(&identity_matrix);                                                      \
-        LAGraph_Free ((void **) &T, msg);       \
-        LAGraph_Free ((void **) &indexes, msg); \
+#define LG_FREE_WORK                                                        \
+    {                                                                       \
+        LAGraph_Free ((void **) &nnzs, msg) ;                               \
+        GrB_free(&true_scalar);                                             \
+        GrB_free(&identity_matrix);                                         \
+        LAGraph_Free ((void **) &T, msg);                                   \
+        LAGraph_Free ((void **) &indexes, msg);                             \
     }
 
-#define LG_FREE_ALL                                                                      \
-    {                                                                                    \
-        for (size_t i = 0; i < nonterms_count; i++) {                                            \
-            GrB_free(&T[i]);                                                             \
-        }                                                                                \
-                                                                                         \
-        LG_FREE_WORK;                                                                    \
+#define LG_FREE_ALL                                                         \
+    {                                                                       \
+        for (size_t i = 0; i < nonterms_count; i++) {                       \
+            GrB_free(&T[i]);                                                \
+        }                                                                   \
+                                                                            \
+        LG_FREE_WORK;                                                       \
     }
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
 
-#define ERROR_RULE(msg)                                                                  \
-    {                                                                                    \
-        LG_ASSERT_MSGF(false, GrB_INVALID_VALUE, "Rule with index %ld is invalid. " msg, \
-                       i);                                                               \
+#define ERROR_RULE(msg)                                                     \
+    {                                                                       \
+        LG_ASSERT_MSGF(false, GrB_INVALID_VALUE,                            \
+            "Rule with index %ld is invalid. " msg,                         \
+                       i);                                                  \
     }
 
-#define ADD_TO_MSG(...)                                                                  \
-    {                                                                                    \
-        if (msg_len == 0) {                                                              \
-            msg_len +=                                                                   \
-                snprintf(msg, LAGRAPH_MSG_LEN,                                           \
-                         "LAGraph failure (file %s, line %d): ", __FILE__, __LINE__);    \
-        }                                                                                \
-        if (msg_len < LAGRAPH_MSG_LEN) {                                                 \
-            msg_len += snprintf(msg + msg_len, LAGRAPH_MSG_LEN - msg_len, __VA_ARGS__);  \
-        }                                                                                \
+#define ADD_TO_MSG(...)                                                     \
+    {                                                                       \
+        if (msg_len == 0) {                                                 \
+            msg_len +=                                                      \
+                snprintf(msg, LAGRAPH_MSG_LEN,                              \
+                         "LAGraph failure (file %s, line %d): ",            \
+                        __FILE__, __LINE__);                                \
+        }                                                                   \
+        if (msg_len < LAGRAPH_MSG_LEN) {                                    \
+            msg_len += snprintf(msg + msg_len, LAGRAPH_MSG_LEN - msg_len,   \
+                __VA_ARGS__);                                               \
+        }                                                                   \
     }
 
-#define ADD_INDEX_TO_ERROR_RULE(rule, i)                                                 \
-    {                                                                                    \
-        rule.len_indexes_str += snprintf(rule.indexes_str + rule.len_indexes_str,        \
-                                         LAGRAPH_MSG_LEN - rule.len_indexes_str,         \
-                                         rule.count == 0 ? "%ld" : ", %ld", i);          \
-        rule.count++;                                                                    \
+#define ADD_INDEX_TO_ERROR_RULE(rule, i)                                    \
+    {                                                                       \
+        rule.len_indexes_str += snprintf(                                   \
+            rule.indexes_str + rule.len_indexes_str,                        \
+            LAGRAPH_MSG_LEN - rule.len_indexes_str,                         \
+            rule.count == 0 ? "%ld" : ", %ld", i);                          \
+        rule.count++;                                                       \
     }
 
 

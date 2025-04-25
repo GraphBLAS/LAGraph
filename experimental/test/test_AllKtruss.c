@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/experimental/test/test_AllKtest.c: test cases for all-k-truss
+// LAGraph/experimental/test/test_AllKtruss.c: test cases for all-k-truss
 // ----------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
