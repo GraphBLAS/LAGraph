@@ -31,7 +31,6 @@
 #define LG_FREE_WORK                            \
 {                                               \
     /* free any workspace used here */          \
-    GrB_free (&E) ;                             \
     GrB_free (&A_tril) ;                        \
     GrB_free (&Ai) ;                            \
     GrB_free (&Aj) ;                            \
@@ -74,7 +73,6 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
-#if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
 void shift_and 
     (uint16_t *z, const uint16_t *x)
     {
@@ -88,6 +86,9 @@ void shift_and
 "       (*z) = (*x) & ((*x) << 8);                                           \n"\
 "       (*z) |= (*z) >> 8;                                                   \n"\
 "   }"
+
+#define INTTYPE "int64_t"
+#define EDGE_TYPE "typedef struct { "INTTYPE" a; "INTTYPE" b; } edge_type;"
 
 typedef struct {
     uint64_t a; 
@@ -184,7 +185,7 @@ void swap_bc32
 "void swap_bc                                                                   \n"\
 "(swap_type *z, const swap_type *x, GrB_Index I, GrB_Index J, const bool *y)    \n"\
 "{                                                                              \n"\
-"    memcpy(z, x, sizeof(*z)) ; //unnessesary when aliassed but done for safety. \n"\
+"    memcpy(z, x, sizeof(*z)) ; //unnessesary when aliassed but done for safety.\n"\
 "    if(z->a == z->c || z->b == z->c || z->a == z->d || z->b == z->d ) return;  \n"\
 "   if(I & 1)                                                                   \n"\
 "    {                                                                          \n"\
@@ -246,21 +247,41 @@ void add_term
 "    (*z) = (*x) | (*y) + ((int8_t)1 & (*x) & (*y)) ;                         \n"\
 "}"
 
-void edge2nd64
-    (edge_type64 *z, const void *x, const edge_type64 *y)
+void edge2nd64_bool
+    (edge_type64 *z, const bool *x, const edge_type64 *y)
 {
     z->a = y->a;
     z->b = y->b;
 }
-void edge2nd32
-    (edge_type32 *z, const void *x, const edge_type32 *y)
+void edge2nd32_bool
+    (edge_type32 *z, const bool *x, const edge_type32 *y)
 {
     z->a = y->a;
     z->b = y->b;
 }
-#define EDGE2ND                                                                 \
+void edge2nd64_edge
+    (edge_type64 *z, const edge_type64 *x, const edge_type64 *y)
+{
+    z->a = y->a;
+    z->b = y->b;
+}
+void edge2nd32_edge
+    (edge_type32 *z, const edge_type32 *x, const edge_type32 *y)
+{
+    z->a = y->a;
+    z->b = y->b;
+}
+#define EDGE2ND_BOOL                                                            \
 "void edge2                                                                   \n"\
-"(edge_type *z, const void *x, const edge_type *y)                            \n"\
+"(edge_type *z, const bool *x, const edge_type *y)                            \n"\
+"{                                                                            \n"\
+"    //if(y->a == 0 && y->b == 0) return;                                     \n"\
+"    z->a = y->a;                                                             \n"\
+"    z->b = y->b;                                                             \n"\
+"}"
+#define EDGE2ND_EDGE                                                            \
+"void edge2                                                                   \n"\
+"(edge_type *z, const edge_type *x, const edge_type *y)                       \n"\
 "{                                                                            \n"\
 "    //if(y->a == 0 && y->b == 0) return;                                     \n"\
 "    z->a = y->a;                                                             \n"\
@@ -277,14 +298,12 @@ int LAGraph_SwapEdgesV2
     char *msg
 )
 {
+    #if USING_GRAPHBLAS_V10
     //--------------------------------------------------------------------------
     // Declorations
     //--------------------------------------------------------------------------
     GrB_Matrix A = NULL; // n x n Adjacency Matrix 
     GrB_Vector Ai = NULL, Aj = NULL;
-
-    // e x 2 with entries corresponding to verticies of an edge
-    GrB_Matrix E = NULL;
     // e x 1 vector, each entry is an edge.
     GrB_Vector E_vec = NULL, E_temp = NULL; 
 
@@ -350,7 +369,7 @@ int LAGraph_SwapEdgesV2
     // Toople types
     GrB_Type lg_edge = NULL, lg_swap = NULL;
     // Unload types
-    GrB_Type M_type = NULL, E_type = NULL, Ai_type = NULL;
+    GrB_Type M_type = NULL, E_type = NULL, Ai_type = NULL, Aj_type = NULL;
     int M_hand = 0, E_hand = 0;
 
     int16_t *dup_swaps = NULL;
@@ -359,6 +378,9 @@ int LAGraph_SwapEdgesV2
 
     GrB_Vector sort_h = NULL;
     GrB_Vector r_60 = NULL;
+
+    // count swaps 
+    GrB_Index num_swaps = 0, num_attempts = 0, swaps_per_loop = e / 3 ;
 
     // Constants ---------------------------------------------------------------
     GrB_Vector x = NULL;
@@ -387,24 +409,34 @@ int LAGraph_SwapEdgesV2
     // Initializations
     //--------------------------------------------------------------------------
     A = G->A ;  
-    // Types
+
+    //--------------------------------------------------------------------------
+    // Extract edges from A
+    //--------------------------------------------------------------------------
+
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Matrix_new (&A_tril, GrB_BOOL, n, n)) ;
     GRB_TRY (GrB_Vector_new(&Ai, GrB_BOOL, 0)) ;
     GRB_TRY (GrB_Vector_new(&Aj, GrB_BOOL, 0)) ;
 
-    // Extract lower triangular edges.
+    // Extract lower triangular edges
     GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
     GRB_TRY (GxB_Matrix_extractTuples_Vector(Ai, Aj, NULL, A_tril, NULL)) ;
-    GRB_TRY (GxB_Vector_type(&Ai_type, Ai));
-    int code;
-    GrB_get(Ai_type, &code, GrB_EL_TYPE_CODE);
+    int codei = 0, codej = 0;
+    GRB_TRY (GxB_Vector_type(&Ai_type, Ai)) ;
+    GrB_get(Ai, &codei, GrB_EL_TYPE_CODE);
+    GrB_get(Aj, &codej, GrB_EL_TYPE_CODE);
+
+    LG_ASSERT_MSG (
+        codei == codej, GrB_INVALID_VALUE,
+        "extractTuples_Vector returned different types for Ai and Aj"
+    ) ;
     GRB_TRY (GrB_Matrix_nvals(&e, A_tril)) ;
     
-    
-    
-    //Init Operators -----------------------------------------------------------
-    if(code == GrB_UINT32_CODE)
+    //--------------------------------------------------------------------------
+    // Initialize all operators and types
+    //--------------------------------------------------------------------------
+    if(codei == GrB_UINT32_CODE) // Use uint32 if possible 
     {
         GRB_TRY (GxB_Type_new(
             &lg_edge, sizeof(edge_type32), "edge_type", EDGE_TYPE32)) ;
@@ -419,15 +451,15 @@ int LAGraph_SwapEdgesV2
             lg_swap, lg_swap, GrB_BOOL, "swap_bc", SWAP_BC32
         )) ;
         GRB_TRY(GxB_BinaryOp_new(
-            &second_edge, (GxB_binary_function) (&edge2nd32), 
-            lg_edge, lg_edge, lg_edge, "edge2", EDGE2ND
+            &second_edge, (GxB_binary_function) (&edge2nd32_edge), 
+            lg_edge, lg_edge, lg_edge, "edge2", EDGE2ND_EDGE
         )) ;
         GRB_TRY(GxB_BinaryOp_new(
-            &second_bool_edge, (GxB_binary_function) (&edge2nd32), 
-            lg_edge, GrB_BOOL, lg_edge, "edge2", EDGE2ND
+            &second_bool_edge, (GxB_binary_function) (&edge2nd32_bool), 
+            lg_edge, GrB_BOOL, lg_edge, "edge2", EDGE2ND_BOOL
         )) ;
     }
-    else
+    else //uint64 types
     {
         GRB_TRY (GxB_Type_new(
             &lg_edge, sizeof(edge_type64), "edge_type", EDGE_TYPE64)) ;
@@ -446,12 +478,12 @@ int LAGraph_SwapEdgesV2
             GrB_INT8, GrB_INT8, GrB_INT8, "add_term", ADD_TERM
         )) ;
         GRB_TRY(GxB_BinaryOp_new(
-            &second_edge, (GxB_binary_function) (&edge2nd64), 
-            lg_edge, lg_edge, lg_edge, "edge2", EDGE2ND
+            &second_edge, (GxB_binary_function) (&edge2nd64_edge), 
+            lg_edge, lg_edge, lg_edge, "edge2", EDGE2ND_EDGE
         )) ;
         GRB_TRY(GxB_BinaryOp_new(
-            &second_bool_edge, (GxB_binary_function) (&edge2nd64), 
-            lg_edge, GrB_BOOL, lg_edge, "edge2", EDGE2ND
+            &second_bool_edge, (GxB_binary_function) (&edge2nd64_bool), 
+            lg_edge, GrB_BOOL, lg_edge, "edge2", EDGE2ND_BOOL
         )) ;
     }
     
@@ -473,39 +505,39 @@ int LAGraph_SwapEdgesV2
         &second_edge_monoid, second_edge, (void *) &iden_second
     )) ;
 
-    // Now working with the built-in ONEB binary op
     GRB_TRY(GrB_Semiring_new(
         &plus_term_one, add_term_monoid, GrB_ONEB_INT8
     )) ;
     GRB_TRY(GrB_Semiring_new(
         &second_second_edge, second_edge_monoid, second_bool_edge
     )) ;
-    // count swaps 
-    GrB_Index num_swaps = 0, num_attempts = 0, swaps_per_loop = e / 3 ;
 
-    // Make E Matrix -----------------------------------------------------------
-    GRB_TRY (GrB_Matrix_new(&E, Ai_type, e, 2)) ;
+    //--------------------------------------------------------------------------
+    // Make E Vector
+    //--------------------------------------------------------------------------
+
     GRB_TRY (GrB_Vector_new(&E_vec, Ai_type, 2 * e)) ;
     
-    // Shuffle i and j into E_vec.
     // Filling out E_vec helps assign be much quicker.
-    
     GRB_TRY (GrB_assign(
-        E_vec, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL));
+        E_vec, NULL, NULL, 0, GrB_ALL, 0, NULL));
     GrB_Index stride[] = {(GrB_Index) 0, e * 2 - 1, (GrB_Index) 2} ;
+
+    // Shuffle i and j into E_vec.
     GRB_TRY (GrB_Vector_assign(
         E_vec, NULL, NULL, Aj, stride, GxB_STRIDE, NULL)) ;
     stride[GxB_BEGIN] = 1;
     GRB_TRY (GrB_Vector_assign(
         E_vec, NULL, NULL, Ai, stride, GxB_STRIDE, NULL)) ;
 
+    // Reinterpret E_vec as a vector of tuples.
     GRB_TRY (GxB_Vector_unload(
         E_vec, &indices, &E_type, &e, &ind_size, &E_hand, NULL));
     e /= 2;
     GRB_TRY (GxB_Vector_load(
         E_vec, &indices, lg_edge, e, ind_size, E_hand, NULL));
     
-    // Find Hash Size ----------------------------------------------------------
+    // Find Hash Size 
     int shift_e ;
     #if (!( defined ( __NVCC__) || defined ( __INTEL_CLANG_COMPILER) || \
         defined ( __INTEL_COMPILER) ) && defined ( _MSC_VER ))
@@ -516,28 +548,34 @@ int LAGraph_SwapEdgesV2
     shift_e = __builtin_clzl(e);
     #endif
     uint64_t ehash_size = (1ull << (67-shift_e)) ;
-    printf("Hash Size: %ld", ehash_size);
+    printf("Hash Size: %ld\n", ehash_size);
+
+    //--------------------------------------------------------------------------
+    // Initialize the rest of the vectors
+    //--------------------------------------------------------------------------
+
+    // Hash values and buckets
     GRB_TRY (GrB_Vector_new(&exists, GrB_INT8, ehash_size)) ;
     GRB_TRY (GrB_Vector_new(&hashed_edges, GrB_UINT64, e)) ;
+    GRB_TRY(GrB_set (exists, GxB_BITMAP | GxB_FULL, GxB_SPARSITY_CONTROL)) ;
 
-    // Init Ramps --------------------------------------------------------------
+    // Ramp 
     GRB_TRY (GrB_Vector_new(&ramp_v, GrB_UINT64, e + 1)) ;
     GRB_TRY (GrB_Vector_assign_UINT64 (ramp_v, NULL, NULL, 0, GrB_ALL, 0, NULL)) ;
     GRB_TRY (GrB_Vector_apply_IndexOp_UINT64 (ramp_v, NULL, NULL,
         GrB_ROWINDEX_INT64, ramp_v, 0, NULL)) ;
     GrB_Index ramp_size;
 
-    // Init Constants ----------------------------------------------------------
+    // Constants
     GRB_TRY (GrB_Scalar_new (&one8, GrB_UINT8)) ;
     GRB_TRY (GrB_Scalar_setElement_UINT8 (one8, 1)) ;
     GRB_TRY (GrB_Vector_new (&x, GrB_BOOL, e)) ;
 
-    // Make Random -------------------------------------------------------------
+    // Random Vector
     GRB_TRY (GrB_Vector_new(&random_v, GrB_UINT64, e)) ;
     GRB_TRY (GrB_Vector_new(&r_60, GrB_UINT64, e)) ;
     GRB_TRY (GrB_Vector_new(&r_permute, GrB_UINT64, 1ull << (64-shift_e))) ;
     GRB_TRY(GrB_set (r_permute, GxB_BITMAP, GxB_SPARSITY_CONTROL)) ;
-    GRB_TRY(GrB_set (exists, GxB_BITMAP | GxB_FULL, GxB_SPARSITY_CONTROL)) ;
     GRB_TRY (GrB_Vector_assign_UINT64 (
         random_v, NULL, NULL, 0, GrB_ALL, e, NULL)) ;
     //TODO: Change seed
@@ -548,10 +586,8 @@ int LAGraph_SwapEdgesV2
     while(num_swaps < e * Q && num_attempts < e * Q * 5)
     {
         GrB_Index perm_size, arr_size, junk_size;
-        // Coming into the loop: 
-        // E must be the incidence matrix of the new graph. W/o self edges nor 
-        // parallel edges. Each row must have exactly two distinct values.
-        // random_v has a radom dense vector.
+        printf(EDGE_TYPE);
+        // r_60 has the random vector shifted by some amount.
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64(
             r_60, NULL, NULL, GxB_BSHIFT_UINT64, random_v, -(shift_e), NULL
         )) ;
@@ -747,5 +783,8 @@ int LAGraph_SwapEdgesV2
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+    #else
+    printf("LAGraph_SwapEdgesV2 Needs GB v10\n") ;
+    return (GrB_NOT_IMPLEMENTED) ;
+    #endif
 }
-#endif
