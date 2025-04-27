@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/experimental/test/test_AllKtest.c: test cases for all-k-truss
+// LAGraph/experimental/test/test_AllKtruss.c: test cases for all-k-truss
 // ----------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -55,7 +55,7 @@ const matrix_info files [ ] =
 void test_AllKTruss (void)
 {
     LAGraph_Init (msg) ;
-//  OK (GrB_Global_set_INT32 (GrB_GLOBAL, true, GxB_BURBLE)) ;
+    OK (GrB_Global_set_INT32 (GrB_GLOBAL, true, GxB_BURBLE)) ;
 
     for (int id = 0 ; ; id++)
     {

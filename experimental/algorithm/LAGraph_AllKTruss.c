@@ -141,13 +141,13 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
     // find all k-trusses
     //--------------------------------------------------------------------------
 
-    #if 1
+    #if 0
     int mtx = 0 ;
     #endif
 
     while (true)
     {
-        #if 1
+        #if 0
         // dump the matrix S to a file
         uint64_t snvals ;
         GRB_TRY (GrB_Matrix_nvals (&snvals, S)) ;
