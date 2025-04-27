@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <acutest.h>
 #include <LAGraphX.h>
+#include <LG_internal.h>
 #include <LAGraph_test.h>
 #include <LG_Xtest.h>
 #include <LG_test.h>
@@ -37,6 +38,7 @@ const char* tests [ ] =
 } ;
 void test_SwapEdges (void)
 {
+    #if USING_GRAPHBLAS_V10
     //--------------------------------------------------------------------------
     // start LAGraph
     //--------------------------------------------------------------------------
@@ -100,11 +102,7 @@ void test_SwapEdges (void)
         //----------------------------------------------------------------------
 
         GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-        #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
-        OK(LAGraph_SwapEdges( &A_new, G, (GrB_Index) 100, msg));
-        #else
         OK(LAGraph_SwapEdgesV2( &A_new, G, (GrB_Index) 100, msg));
-        #endif
         GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
         printf ("Test ends:\n") ;
 
@@ -144,6 +142,7 @@ void test_SwapEdges (void)
     //--------------------------------------------------------------------------
     LAGraph_Random_Finalize(msg);
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //----------------------------------------------------------------------------

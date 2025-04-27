@@ -1,6 +1,9 @@
 {
     "files.associations": {
         "lg_internal.h": "c",
-        "lagraphx.h": "c"
+        "lagraphx.h": "c",
+        "stdio.h": "c",
+        "lg_test.h": "c",
+        "acutest.h": "c"
     }
 }
