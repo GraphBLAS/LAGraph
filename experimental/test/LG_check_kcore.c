@@ -32,7 +32,6 @@
 
 #include "LG_internal.h"
 #include "LG_test.h"
-#include "LG_test.h"
 #include "LG_Xtest.h"
 
 int LG_check_kcore
