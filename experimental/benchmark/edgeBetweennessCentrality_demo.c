@@ -145,7 +145,7 @@ int main (int argc, char **argv)
 
     GrB_Matrix reference_centrality = NULL;
     t = LAGraph_WallClockTime ();
-    LAGRAPH_TRY (LG_check_edgeBetweennessCentrality(&reference_centrality, G, NULL, msg));
+    LAGRAPH_TRY (LG_check_edgeBetweennessCentrality(&reference_centrality, G, sources, msg));
     t = LAGraph_WallClockTime () - t;
     printf ("Time for LG_check_edgeBetweennessCentrality: %g sec\n", t);
 
