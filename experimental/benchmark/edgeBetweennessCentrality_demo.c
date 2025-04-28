@@ -52,7 +52,7 @@ int main (int argc, char **argv)
 
     if (argc < 2 || argc > 3)
     {
-        printf("Usage: %s <matrix-market-file> [num_sources]\n", argv[0]);
+        printf("Usage: %s <matrix-market-file> <num_sources>\n", argv[0]);
         return (GrB_INVALID_VALUE);
     }
 
@@ -157,7 +157,7 @@ int main (int argc, char **argv)
     }
     else
     {
-        printf ("Test passed with approximation. Error: %e\n", err);
+        printf ("Test passed with approximation.\n");
     }
 
     //--------------------------------------------------------------------------
