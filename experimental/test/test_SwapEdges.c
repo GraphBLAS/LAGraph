@@ -102,7 +102,7 @@ void test_SwapEdges (void)
         //----------------------------------------------------------------------
 
         GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-        OK(LAGraph_SwapEdgesV2( &A_new, G, (GrB_Index) 100, msg));
+        OK(LAGraph_SwapEdges( &A_new, G, (GrB_Index) 100, msg));
         GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
         printf ("Test ends:\n") ;
 

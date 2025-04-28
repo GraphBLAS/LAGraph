@@ -288,7 +288,7 @@ void edge2nd32_edge
 "    z->b = y->b;                                                             \n"\
 "}"
 
-int LAGraph_SwapEdgesV2
+int LAGraph_SwapEdges
 (
     // output
     GrB_Matrix *A_new, //The adjacency matrix of G with edges randomly swapped
@@ -784,7 +784,7 @@ int LAGraph_SwapEdgesV2
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
     #else
-    printf("LAGraph_SwapEdgesV2 Needs GB v10\n") ;
+    printf("LAGraph_SwapEdges Needs GB v10\n") ;
     return (GrB_NOT_IMPLEMENTED) ;
     #endif
 }
