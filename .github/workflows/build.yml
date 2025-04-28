@@ -78,7 +78,7 @@ jobs:
     - name: Build project
       run: |
         # adding an extra line to the CMakeLists.txt file to locate the libomp instance installed by brew
-        # echo 'include_directories("/usr/local/opt/libomp/include")' | cat - CMakeLists.txt
+        echo 'include_directories("/usr/local/opt/libomp/include")' | cat - CMakeLists.txt
         cd build
         cmake ..
         JOBS=2 make
