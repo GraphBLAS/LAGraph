@@ -1,5 +1,6 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Betweenness.c: test cases for BC (GAP method)
+// LAGraph/src/test/test_edgeBetweennessCentrality.c: test cases for EBC 
+//                                                    (GAP method)
 // -----------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -11,7 +12,7 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
-// Contributed by Timothy A. Davis, Texas A&M University
+// Contributed by Casey Pei and Timothy A. Davis, Texas A&M University
 
 //------------------------------------------------------------------------------
 
@@ -206,6 +207,9 @@ double karate_ebc_approx [34][34] =
     {0.0, 0.0, 7.68015873015873, 0.0, 0.0, 0.0, 0.0, 0.0, 1.2722222222222221, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1583333333333332, 7.66388888888889, 0.0, 0.0, 1.1583333333333332, 0.0, 1.1583333333333332, 0.0, 1.1583333333333332, 0.9583333333333333, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1916666666666667, 1.75, 1.5638888888888889, 0.0, 0.06904761904761905}, 
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.4531746031746033, 0.569047619047619, 0.0, 0.0, 0.0, 3.7730158730158725, 0.8416666666666667, 10.336111111111112, 0.0, 0.0, 0.8416666666666667, 3.3293650793650795, 0.8416666666666667, 0.0, 0.8416666666666667, 0.8583333333333334, 0.0, 0.0, 1.9666666666666668, 0.7357142857142857, 0.569047619047619, 0.8416666666666667, 1.9452380952380952, 1.6757936507936506, 0.06904761904761905, 0.0},     
 } ; 
+
+// test many approx
+int64_t approx_sources [4] = {0, 1, 2, 3};
 
 //------------------------------------------------------------------------------
 // test_diamonds_ebc: Test diamonds graph on exact EBC against NetworkX and C
@@ -518,6 +522,95 @@ void test_karate_ebc_approx (void)
     LAGraph_Finalize (msg) ;
 }
 
+//------------------------------------------------------------------------------
+// test_many_approx: Test multiple matrix market files on exact EBC against C
+//                    using 8 random indices
+//------------------------------------------------------------------------------
+
+void test_many_approx(void)
+{
+    LAGraph_Init(msg);
+
+    const char *files[] = {
+        "random_unweighted_general1.mtx",
+        "random_unweighted_general2.mtx",
+        "random_unweighted_bipartite1.mtx",
+        "random_unweighted_bipartite2.mtx",
+        "jagmesh7.mtx",
+        "dnn_data/n1024-l1.mtx",
+        // "bcsstk13.mtx",
+        // "pushpull.mtx",
+        // "cryg2500.mtx",
+        NULL
+    };
+
+    for (int i = 0; files[i] != NULL; i++)
+    {
+        GrB_Matrix A = NULL;
+        GrB_Matrix centrality = NULL;
+        GrB_Matrix reference_centrality = NULL;
+
+        snprintf(filename, LEN, LG_DATA_DIR "%s", files[i]);
+        FILE *f = fopen(filename, "r");
+        TEST_CHECK(f != NULL);
+        OK(LAGraph_MMRead(&A, f, msg));
+        OK(fclose(f));
+        OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
+        OK(LAGraph_DeleteSelfEdges (G, msg)) ;
+        OK(LAGraph_Cached_AT (G, msg)) ;
+        TEST_CHECK(A == NULL); // A has been moved into G->A
+
+        // Print graph statistics
+        uint64_t n, nedges ;
+        OK (GrB_Matrix_nrows(&n, G->A)) ;
+        OK (GrB_Matrix_nvals(&nedges, G->A)) ;
+        printf ("\n\n%s (%" PRIu64 " nodes, %" PRIu64 " edges)\n", files[i], n, nedges) ;
+
+        GrB_Vector randomSources;
+        GrB_Vector_new(&randomSources, GrB_UINT64, 8);
+
+        // For ensuring unique indices
+        bool* used = (bool*)calloc(n, sizeof(bool));
+        srand(time(NULL));
+
+        // Generate 8 unique random indices between 0 and n-1
+        int count = 0;
+        while (count < 8 && count < n) { 
+            GrB_Index random_idx = rand() % n;
+            if (!used[random_idx]) {
+                used[random_idx] = true;
+                GrB_Vector_setElement(randomSources, random_idx, count);
+                count++;
+            }
+        }
+        free(used);
+
+        // compute its betweenness centrality (GraphBLAS version)
+        double t = LAGraph_WallClockTime() ;
+        OK(LAGr_EdgeBetweennessCentrality(&centrality, G, randomSources, msg));
+        t = LAGraph_WallClockTime() - t ;
+        printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+
+        // compute its betweenness centrality (C version)
+        t = LAGraph_WallClockTime() ;
+        OK(LG_check_edgeBetweennessCentrality(&reference_centrality, G, randomSources, msg));
+        t = LAGraph_WallClockTime() - t ;
+        printf ("  Time for LG_check_edgeBetweennessCentrality: %g sec\n", t) ;
+
+        // Compare the results
+        double err = matrix_difference(centrality, reference_centrality);
+        printf("  %s: err: %e", files[i], err);
+        TEST_CHECK(err < 1e-4);
+
+        OK(GrB_free(&centrality));
+        OK(GrB_free(&reference_centrality));
+        OK(LAGraph_Delete(&G, msg));
+    }
+    printf("\n") ;
+
+    LAGraph_Finalize(msg);
+}
+
 
 //------------------------------------------------------------------------------
 // list of tests
@@ -529,5 +622,6 @@ TEST_LIST = {
     {"test_many", test_many},
     {"test_diamonds_ebc_approx", test_diamonds_ebc_approx},
     {"test_karate_ebc_approx", test_karate_ebc_approx},
+    {"test_many_approx", test_many_approx},
     {NULL, NULL}
 };
