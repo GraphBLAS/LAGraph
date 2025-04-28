@@ -22,6 +22,7 @@
 #include <LG_test.h>
 #include <acutest.h>
 #include <graph_zachary_karate.h>
+#include "LG_internal.h"
 
 #if LAGRAPH_SUITESPARSE
 // to allow tests to call GrB_init twice

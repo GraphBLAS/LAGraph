@@ -115,7 +115,7 @@ void test_MaximalMatching (void)
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
         OK (LAGraph_Cached_AT (G, msg)) ;
 
-        if (G->nself_edges != 0)
+//      if (G->nself_edges != 0)
         {
             // remove self-edges
             printf ("graph has %g self edges\n", (double) G->nself_edges) ;

@@ -170,9 +170,9 @@ int LAGr_EdgeBetweennessCentrality
 
     // Temporary matrices for doing updates on
     // approximate and undirected graphs
-    GrB_Matrix HalfUpdate;
-    GrB_Matrix HalfUpdateT;
-    GrB_Matrix SymmetricUpdate;
+    GrB_Matrix HalfUpdate = NULL ;
+    GrB_Matrix HalfUpdateT = NULL ;
+    GrB_Matrix SymmetricUpdate = NULL ;
 
     // Source nodes vector (will be created if NULL is passed)
     GrB_Vector internal_sources = NULL;
@@ -205,6 +205,18 @@ int LAGr_EdgeBetweennessCentrality
     }
     #endif
 
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GrB_Index nsources ;
+    if (sources == NULL)
+    {
+        nsources = n ;
+    }
+    else
+    {
+        GRB_TRY (GrB_Vector_nvals (&nsources, sources)) ;
+    }
+    LG_ASSERT (nsources > 0, GrB_INVALID_VALUE) ;
+
     // =========================================================================
     // === initialization =====================================================
     // =========================================================================
@@ -215,7 +227,6 @@ int LAGr_EdgeBetweennessCentrality
         "add_one_divide_function", ADD_ONE_DIVIDE_FUNCTION_DEFN)) ;
 
     // Initialize the frontier, paths, Update, and bc_vertex_flow
-    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Vector_new (&paths,    GrB_FP64, n)) ;
     GRB_TRY (GrB_Vector_new (&frontier, GrB_FP64, n)) ;
     GRB_TRY (GrB_Matrix_new (&Update, GrB_FP64, n, n)) ;
@@ -259,22 +270,6 @@ int LAGr_EdgeBetweennessCentrality
         created_sources = true;
     }
 
-    // Extract tuples from the sources vector
-    GrB_Index nvals;
-    GRB_TRY (GrB_Vector_nvals (&nvals, sources)) ;
-    
-    if (nvals == 0)
-    {
-        // FIXME: make this an error
-        // If sources vector is empty, return an empty centrality matrix
-        printf ("Ack! sources vector is empty\n") ;
-        
-        LG_FREE_WORK;
-        if (created_sources) GrB_free(&internal_sources);
-        fflush (stdout) ; abort ( ) ;
-        return (GrB_NO_VALUE);
-    }
-
     // =========================================================================
     // === Breadth-first search stage ==========================================
     // =========================================================================
@@ -286,7 +281,7 @@ int LAGr_EdgeBetweennessCentrality
     GrB_Index root;
     
     // Iterate through source nodes
-    for (GrB_Index i = 0; i < nvals; i++)
+    for (GrB_Index i = 0; i < nsources; i++)
     {
         GRB_TRY (GrB_Vector_extractElement(&root, sources, i)) ;
         

@@ -360,7 +360,6 @@ void test_SWrite_errors (void)
 
 TEST_LIST = {
     {"SWrite", test_SWrite},
-// FIXME
-//  {"SWrite_errors", test_SWrite_errors},
+    {"SWrite_errors", test_SWrite_errors},
     {NULL, NULL}
 };
