@@ -251,7 +251,6 @@ elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
     #endif ( )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "AppleClang" )
     # options for Apple Clang
-    # FIXME
 #    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -fsanitize=address" )
 #    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -fsanitize=thread" )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" AND NOT "${CMAKE_C_COMPILER_FRONTEND_VARIANT}" STREQUAL "MSVC" )
@@ -324,6 +323,29 @@ if ( BUILD_STATIC_LIBS )
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
 endif ( )
 
+#-------------------------------------------------------------------------------
+# LAGraph uses OpenMP by default
+#-------------------------------------------------------------------------------
+
+if ( LAGRAPH_HAS_OPENMP )
+    message ( STATUS "CMAKE OpenMP libraries:    ${OpenMP_C_LIBRARIES}" )
+    message ( STATUS "CMAKE OpenMP include:      ${OpenMP_C_INCLUDE_DIRS}" )
+    if ( BUILD_SHARED_LIBS )
+        target_link_libraries ( LAGraph PRIVATE OpenMP::OpenMP_C )
+    endif ( )
+    if ( BUILD_STATIC_LIBS )
+        target_link_libraries ( LAGraph_static PRIVATE OpenMP::OpenMP_C )
+    endif ( )
+    message ( STATUS "CMAKE OpenMP C flags:      ${OpenMP_C_FLAGS}" )
+else ( )
+    message ( WARNING
+    "WARNING:  OpenMP was not found (or was disabled with "
+    "LAGRAPH_USE_OPENMP; some LAGraph methods will be slow.)" )
+endif ( )
+
+#-------------------------------------------------------------------------------
+# LAGraph targets and package configuration
+#-------------------------------------------------------------------------------
 
 # create (temporary) export target file during build
 export ( EXPORT LAGraphTargets
@@ -431,3 +453,4 @@ if ( NOT MSVC )
         ${CMAKE_CURRENT_BINARY_DIR}/LAGraph.pc
         DESTINATION ${SUITESPARSE_PKGFILEDIR}/pkgconfig )
 endif ( )
+
