@@ -81,4 +81,14 @@ int LG_check_coarsen
     char *msg
 ) ;
 
+int LG_check_edgeBetweennessCentrality
+(
+    // output
+    GrB_Matrix *C,       // centrality matrix
+    // input
+    LAGraph_Graph G,
+    GrB_Vector sources,  // source vertices to compute shortest paths (if NULL or empty, use all vertices)
+    char *msg
+) ;
+
 #endif

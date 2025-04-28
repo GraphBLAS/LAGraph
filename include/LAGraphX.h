@@ -857,16 +857,6 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     char *msg
 ) ;
 
-LAGRAPHX_PUBLIC
-int LG_check_edgeBetweennessCentrality
-(
-    // output
-    GrB_Matrix *C,      // centrality matrix
-    // input
-    LAGraph_Graph G,
-    char *msg
-) ;
-
 //------------------------------------------------------------------------------
 // kcore algorithms
 //------------------------------------------------------------------------------
@@ -1287,6 +1277,7 @@ int LAGr_EdgeBetweennessCentrality
     GrB_Matrix *centrality,     // centrality(i): betweeness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
+    GrB_Vector sources,         // source vertices to compute shortest paths (if NULL or empty, use all vertices)
     char *msg
 );
 
