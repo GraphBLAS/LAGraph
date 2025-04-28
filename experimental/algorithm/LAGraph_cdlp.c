@@ -18,7 +18,7 @@
 
 // Modified by Pascal Costanza, Intel, Belgium
 
-// NOTE: the malloc/calloc/free below must be thread-safe,
+// NOTE: the calloc/free below must be thread-safe,
 // so it cannot use LAGraph_Malloc/LAGraph_Free (which can use
 // the Rapids Memory Manager methods when using CUDA, and those
 // methods are not yet thread-safe).
@@ -66,7 +66,8 @@
     LAGraph_Free ((void **) &Ti, NULL) ;                                \
     LAGraph_Free ((void **) &L, NULL) ;                                 \
     LAGraph_Free ((void **) &L_next, NULL) ;                            \
-    ptable_pool_free (counts_pool, max_threads) ; counts_pool = NULL ;  \
+    ptable_pool_free (counts_pool, max_threads) ;                       \
+    counts_pool = NULL ;                                                \
     GrB_free (&CDLP) ;                                                  \
 }
 
@@ -83,7 +84,7 @@ typedef struct {
 } plist;
 
 void plist_free(plist *list) {
-    free(list->entries);
+    free(list->entries);        // NOTE: cannot be LAGraph_Free
 }
 
 void plist_clear(plist *list) {
@@ -157,7 +158,7 @@ void ptable_pool_free(ptable* table, size_t n) {
     for (size_t i = 0; i < n; i++) {
         ptable_free(&table[i]);
     }
-    free(table);
+    free(table);        // NOTE: cannot be LAGraph_Free
 }
 
 void ptable_clear(ptable* table) {
@@ -262,13 +263,11 @@ int LAGraph_cdlp
         GRB_TRY (GrB_free (&S)) ;
     }
 
-//  L = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
     LG_TRY (LAGraph_Malloc ((void **) &L, n, sizeof (GrB_Index), msg)) ;
 
     for (GrB_Index i = 0; i < n; i++) {
         L[i] = i ;
     }
-//  L_next = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
     LG_TRY (LAGraph_Malloc ((void **) &L_next, n, sizeof (GrB_Index), msg)) ;
 
     counts_pool = calloc(max_threads, sizeof(ptable));

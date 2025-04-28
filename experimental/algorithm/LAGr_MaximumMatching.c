@@ -720,8 +720,8 @@ int LAGr_MaximumMatching(
     {
         GRB_TRY(GrB_Vector_clear(parentsR));
         // for every col j not matched, assign f(j) = VERTEX(j,j)
-        GRB_TRY(GrB_Vector_apply_IndexOp_UDT(
-            frontierC, mateC, NULL, initFrontierOp, I, &y, GrB_DESC_RSC));
+        GRB_TRY(GrB_Vector_apply_IndexOp_BOOL(
+            frontierC, mateC, NULL, initFrontierOp, I, true, GrB_DESC_RSC));
 
         uint64_t nfC = 0;
 
@@ -863,9 +863,9 @@ int LAGr_MaximumMatching(
                 // rootC)
                 //----------------------------------------------------------------------
                 GRB_TRY(GrB_Vector_clear(frontierC));
-                GRB_TRY(GrB_Vector_apply_IndexOp_UDT(frontierC, NULL, NULL,
+                GRB_TRY(GrB_Vector_apply_IndexOp_BOOL(frontierC, NULL, NULL,
                                                      buildfCTuplesOp,
-                                                     rootfRIndexes, &y, NULL));
+                                                     rootfRIndexes, true, NULL));
             }
             else
             {

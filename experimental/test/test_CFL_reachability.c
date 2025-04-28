@@ -54,7 +54,6 @@ void teardown(void) { LAGraph_Finalize(msg); }
 
 void init_outputs()
 {
-//  outputs = calloc(grammar.nonterms_count, sizeof(GrB_Matrix)) ;
     LAGraph_Calloc ((void **) &outputs, 
         grammar.nonterms_count, sizeof(GrB_Matrix), msg) ;
 }
@@ -62,9 +61,6 @@ void init_outputs()
 char *output_to_str(size_t nonterm) {
     GrB_Index nnz = 0;
     OK(GrB_Matrix_nvals(&nnz, outputs[nonterm]));
-//  GrB_Index *row = malloc(nnz * sizeof(GrB_Index));
-//  GrB_Index *col = malloc(nnz * sizeof(GrB_Index));
-//  bool *val = malloc(nnz * sizeof(GrB_Index));
     GrB_Index *row = NULL ;
     GrB_Index *col = NULL ;
     bool *val = NULL ;
@@ -75,7 +71,6 @@ char *output_to_str(size_t nonterm) {
     OK(GrB_Matrix_extractTuples(row, col, val, &nnz, outputs[nonterm]));
 
     // 11 - size of " (%ld, %ld)"
-//  char *result_str = malloc(11 * nnz * sizeof(char));
     char *result_str = NULL ;
     LAGraph_Malloc ((void **) &result_str, 11*nnz, sizeof (char), msg) ;
 
@@ -135,7 +130,6 @@ void free_workspace() {
 // A -> a  [1 0 -1 0]
 // B -> b  [2 1 -1 0]
 void init_grammar_aSb() {
-//  LAGraph_rule_WCNF *rules = calloc(5, sizeof(LAGraph_rule_WCNF));
     LAGraph_rule_WCNF *rules = NULL ;
     LAGraph_Calloc ((void **) &rules, 5, sizeof(LAGraph_rule_WCNF), msg);
 
@@ -156,7 +150,6 @@ void init_grammar_aSb() {
 // S -> SS [0 0 0 0]
 // S -> a  [0 0 -1 0]
 void init_grammar_aS() {
-//  LAGraph_rule_WCNF *rules = calloc(2, sizeof(LAGraph_rule_WCNF));
     LAGraph_rule_WCNF *rules = NULL ;
     LAGraph_Calloc ((void **) &rules, 2, sizeof(LAGraph_rule_WCNF), msg);
 
@@ -199,7 +192,6 @@ void init_grammar_aS() {
 // S23 -> b         [23 1 -1 0]
 // S24 -> b         [24 1 -1 0]
 void init_grammar_complex() {
-//  LAGraph_rule_WCNF *rules = calloc(26, sizeof(LAGraph_rule_WCNF));
     LAGraph_rule_WCNF *rules = NULL ;
     LAGraph_Calloc ((void **) &rules, 26, sizeof(LAGraph_rule_WCNF), msg);
 
@@ -246,7 +238,6 @@ void init_grammar_complex() {
 // 0 -b-> 3
 // 3 -b-> 0
 void init_graph_double_cycle() {
-//  adj_matrices = calloc(2, sizeof(GrB_Matrix));
     LAGraph_Calloc ((void **) &adj_matrices, 2, sizeof (GrB_Matrix), msg) ;
 
     GrB_Matrix adj_matrix_a, adj_matrix_b;
@@ -275,7 +266,6 @@ void init_graph_double_cycle() {
 // 5 -b-> 6
 // 6 -b-> 7
 void init_graph_1() {
-//  adj_matrices = calloc(2, sizeof(GrB_Matrix));
     LAGraph_Calloc ((void **) &adj_matrices, 2, sizeof (GrB_Matrix), msg) ;
 
     GrB_Matrix adj_matrix_a, adj_matrix_b;
@@ -311,7 +301,6 @@ void init_graph_1() {
 // 6 -b-> 2
 // 6 -b-> 5
 void init_graph_tree() {
-//  adj_matrices = calloc(2, sizeof(GrB_Matrix));
     LAGraph_Calloc ((void **) &adj_matrices, 2, sizeof (GrB_Matrix), msg) ;
 
     GrB_Matrix adj_matrix_a, adj_matrix_b;
@@ -342,7 +331,6 @@ void init_graph_tree() {
 // 1 -a-> 2
 // 2 -a-> 0
 void init_graph_one_cycle() {
-//  adj_matrices = calloc(1, sizeof(GrB_Matrix));
     LAGraph_Calloc ((void **) &adj_matrices, 1, sizeof (GrB_Matrix), msg) ;
 
     GrB_Matrix adj_matrix_a;
@@ -362,7 +350,6 @@ void init_graph_one_cycle() {
 // 2 -b-> 3
 // 3 -b-> 4
 void init_graph_line() {
-//  adj_matrices = calloc(2, sizeof(GrB_Matrix));
     LAGraph_Calloc ((void **) &adj_matrices, 2, sizeof (GrB_Matrix), msg) ;
 
     GrB_Matrix adj_matrix_a, adj_matrix_b;
@@ -385,7 +372,6 @@ void init_graph_line() {
 // 0 -b-> 1
 // 1 -c-> 2
 void init_graph_2() {
-//  adj_matrices = calloc(3, sizeof(GrB_Matrix));
     LAGraph_Calloc ((void **) &adj_matrices, 3, sizeof (GrB_Matrix), msg) ;
 
     GrB_Matrix adj_matrix_a, adj_matrix_b, adj_matrix_c;
@@ -408,7 +394,6 @@ void init_graph_2() {
 // 1 -a-> 0
 // 0 -b-> 0
 void init_graph_3() {
-//  adj_matrices = calloc(2, sizeof(GrB_Matrix));
     LAGraph_Calloc ((void **) &adj_matrices, 2, sizeof (GrB_Matrix), msg) ;
 
     GrB_Matrix adj_matrix_a, adj_matrix_b;

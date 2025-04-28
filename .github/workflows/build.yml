@@ -15,8 +15,8 @@ jobs:
         config:
         # if there are multiple items in this list, only use should
         # deployit=true for just one of them.
-         - {grb_version: 9.4.5, deployit: false}
-         - {grb_version: 10.0.2, deployit: true}
+#        - {grb_version: 9.4.5, deployit: false}
+         - {grb_version: 10.0.3, deployit: true}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -57,8 +57,8 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 9.4.5}
-         - {grb_version: 10.0.2}
+#        - {grb_version: 9.4.5}
+         - {grb_version: 10.0.3}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -77,11 +77,9 @@ jobs:
         cd ..
     - name: Build project
       run: |
-        export GRAPHBLAS_INCLUDE_DIR=`pwd`/GraphBLAS/include/suitesparse
-        export GRAPHBLAS_LIBRARY=`pwd`/GraphBLAS/lib/libgraphblas.dylib
         # adding an extra line to the CMakeLists.txt file to locate the libomp instance installed by brew
         echo 'include_directories("/usr/local/opt/libomp/include")' | cat - CMakeLists.txt
         cd build
-        CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
+        cmake ..
         JOBS=2 make
-        make test
+        ctest .
