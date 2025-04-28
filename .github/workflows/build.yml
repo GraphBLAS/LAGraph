@@ -65,8 +65,8 @@ jobs:
     - name: Install dependencies
       run: |
         brew tap-new libomp/cask
-        brew extract libomp libomp/cask
-        brew install libomp
+        brew extract --version=14.0.6 libomp libomp/cask
+        brew install libomp@14.0.6
     - name: Build GraphBLAS
       run: |
         git clone https://github.com/DrTimothyAldenDavis/GraphBLAS.git
