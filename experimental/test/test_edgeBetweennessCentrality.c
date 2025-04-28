@@ -571,7 +571,8 @@ void test_many_approx(void)
 
         // For ensuring unique indices
         bool* used = (bool*)calloc(n, sizeof(bool));
-        srand(time(NULL));
+        double t = LAGraph_WallClockTime() ;
+        srand((int) t);
 
         // Generate 8 unique random indices between 0 and n-1
         int count = 0;
@@ -586,7 +587,7 @@ void test_many_approx(void)
         free(used);
 
         // compute its betweenness centrality (GraphBLAS version)
-        double t = LAGraph_WallClockTime() ;
+        t = LAGraph_WallClockTime() ;
         OK(LAGr_EdgeBetweennessCentrality(&centrality, G, randomSources, msg));
         t = LAGraph_WallClockTime() - t ;
         printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
