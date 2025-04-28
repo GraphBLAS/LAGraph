@@ -324,6 +324,8 @@ int LAGraph_Coarsen_Matching
      LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #endif
 
+    LG_ASSERT (coarsened != NULL, GrB_NULL_POINTER) ;
+
     //----------------------------------------------------------------------------------------------------------------------------------------------------
     // check input graph, build local adjacency matrix to use for coarsening
     //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -395,10 +397,6 @@ int LAGraph_Coarsen_Matching
     }
     CHKPT("Done with building A");
     LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, "G->nself_edges must be zero") ;
-
-    if (coarsened == NULL) {
-        return GrB_NULL_POINTER ;
-    }
 
     // make new LAGraph_Graph to use for LAGraph_IncidenceMatrix and for useful functions (delete self-edges)
     LG_TRY (LAGraph_New (&G_cpy, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;

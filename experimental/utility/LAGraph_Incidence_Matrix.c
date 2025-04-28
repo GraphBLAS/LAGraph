@@ -45,6 +45,7 @@ Note that complex types are NOT supported.
    LAGraph_Free ((void**)(&col_indices), msg) ;               \
    LAGraph_Free ((void**)(&values), msg) ;                    \
    LAGraph_Free ((void**)(&ramp), msg) ;                      \
+   GrB_free (&con) ;                                          \
    GrB_free (&E_half) ;                                       \
    GrB_free (&A_tril) ;                                       \
    GrB_free (&x);                                             \
@@ -75,6 +76,11 @@ int LAGraph_Incidence_Matrix
     GrB_Index *row_indices = NULL ;
     GrB_Index *col_indices = NULL ;
     void *values = NULL ;
+    #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
+    GrB_Vector con = NULL;  // unused, except by LG_FREE_ALL above
+    #else
+    GxB_Container con = NULL;
+    #endif
 
     GrB_Index *ramp = NULL ;
 
@@ -185,7 +191,6 @@ int LAGraph_Incidence_Matrix
 
         // this load trick is quicker, but returns GrB_COLMAJOR
         #ifdef LOADTRICKIM
-        GxB_Container con = NULL;
         GRB_TRY (GrB_Vector_new(&Ep, GrB_INT64, num_edges + 1)) ;
         GrB_Type ij_type = NULL;
         int32_t iso;
@@ -201,11 +206,16 @@ int LAGraph_Incidence_Matrix
         GRB_TRY (GrB_assign(
             Ei, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL));
         GrB_Index stride[] = {(GrB_Index) 0, num_edges * 2 - 1, (GrB_Index) 2} ;
-        GRB_TRY (GrB_Vector_assign(
-            Ei, NULL, NULL, j, stride, GxB_STRIDE, NULL)) ;
-        stride[GxB_BEGIN] = 1;
-        GRB_TRY (GrB_Vector_assign(
-            Ei, NULL, NULL, i, stride, GxB_STRIDE, NULL)) ;
+//      printf ("num_edges: %lu\n", num_edges) ;
+//      printf ("stride: [%lu %lu %lu]\n", stride [0], stride [1], stride [2]) ;
+        if (num_edges > 0)
+        {
+            GRB_TRY (GrB_Vector_assign(
+                Ei, NULL, NULL, j, stride, GxB_STRIDE, NULL)) ;
+            stride[GxB_BEGIN] = 1;
+            GRB_TRY (GrB_Vector_assign(
+                Ei, NULL, NULL, i, stride, GxB_STRIDE, NULL)) ;
+        }
 
         // Ep = [0,2,4,...,2 * numedges]
         GRB_TRY (GrB_Vector_apply_IndexOp_INT64(
@@ -219,11 +229,14 @@ int LAGraph_Incidence_Matrix
             GRB_TRY (GrB_assign(
                 Ex, NULL, NULL, (int64_t) 1, GrB_ALL, 0, NULL));
             stride[GxB_BEGIN] = 0;
-            GRB_TRY (GrB_Vector_assign(
-                Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
-            stride[GxB_BEGIN] = 1;
-            GRB_TRY (GrB_Vector_assign(
-                Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
+            if (num_edges > 0)
+            {
+                GRB_TRY (GrB_Vector_assign(
+                    Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
+                stride[GxB_BEGIN] = 1;
+                GRB_TRY (GrB_Vector_assign(
+                    Ex, NULL, NULL, x, stride, GxB_STRIDE, NULL)) ;
+            }
         }
         else
         Ex = x;
@@ -232,9 +245,9 @@ int LAGraph_Incidence_Matrix
         GRB_TRY (GrB_free(&con->p));
         GRB_TRY (GrB_free(&con->i));
         GRB_TRY (GrB_free(&con->x));
-        con->p = Ep;
-        con->i = Ei;
-        con->x = Ex;
+        con->p = Ep; Ep = NULL ;
+        con->i = Ei; Ei = NULL ;
+        con->x = Ex; Ex = NULL ;
         con->format = GxB_SPARSE;
         con->orientation = GrB_COLMAJOR;
         con->nrows = num_nodes;

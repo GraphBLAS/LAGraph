@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/experimental/benchmark/dot3_demo.c: test GrB_mxm
+// LAGraph/experimental/benchmark/kt_demo.c: test AllKTruss many times
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.

@@ -127,6 +127,7 @@ endif ( )
 
 if ( SUITESPARSE_ROOT_CMAKELISTS )
 
+    message ( STATUS "Looking for GraphBLAS in SuiteSparse" )
     if ( TARGET GraphBLAS )
         add_library ( GraphBLAS::GraphBLAS ALIAS GraphBLAS )
     else ( )
@@ -153,6 +154,7 @@ else ( )
     # No package version is explicitly stated here; an arbitrary GraphBLAS
     # library can have any version number.  For SuiteSparse:GraphBLAS, LAGraph
     # requires v7.1.0 or later, which is checked in LAGraph.h.
+    message ( STATUS "Looking for GraphBLAS with FindGraphBLAS.cmake" )
     find_package ( GraphBLAS MODULE REQUIRED )
 
 endif ( )

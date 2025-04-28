@@ -66,6 +66,7 @@ This method requires O(e) space for an undirected graph with e edges
     GrB_free(&new_members_nodes) ;          \
     GrB_free(&new_members_node_degree) ;    \
     GrB_free(&empty) ;                      \
+    GrB_free(&weight) ;                     \
 }                                           \
 
 #define LG_FREE_ALL                         \

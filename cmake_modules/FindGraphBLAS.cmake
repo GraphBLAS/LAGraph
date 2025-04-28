@@ -69,7 +69,7 @@ CMake looks.
 
 #]=======================================================================]
 
-option ( LAGRAPH_DUMP "ON: display list of places to search. OFF (default): no debug output" OFF )
+option ( LAGRAPH_DUMP "ON: display list of places to search. OFF (default): no debug output" ON )
 
 # NB: this is built around assumptions about one particular GraphBLAS
 # installation (SuiteSparse:GraphBLAS). As other installations become available
@@ -338,7 +338,7 @@ endif ( )
 
 # Create target from information found
 
-if ( GRAPHBLAS_LIBRARY )
+if ( GRAPHBLAS_FOUND )
     message ( STATUS "Create target GraphBLAS::GraphBLAS" )
     # Get library name from filename of library
     # This might be something like:
