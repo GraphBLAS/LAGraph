@@ -138,7 +138,7 @@ void test_Cached_AT (void)
 // test_Cached_AT_brutal
 //-----------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_Cached_AT_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -207,7 +207,7 @@ void test_Cached_AT_brutal (void)
 TEST_LIST =
 {
     { "test_AT", test_Cached_AT },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "test_AT_brutal", test_Cached_AT_brutal },
     #endif
     { NULL, NULL }

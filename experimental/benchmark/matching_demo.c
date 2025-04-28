@@ -66,7 +66,7 @@ int main (int argc, char** argv)
     GrB_Vector best_matching = NULL ;
     GrB_Vector use_weights = NULL ;
 
-    bool burble = true ; 
+    bool burble = false ;
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------
@@ -100,7 +100,7 @@ int main (int argc, char** argv)
         }
     }
     force_stdin = ( strcmp (matrix_name, "stdin") == 0 ) ;
-		    
+
     LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
     LAGRAPH_TRY (readproblem (&G, NULL,
         true, true, false, GrB_FP64, false, force_stdin ? 1 : argc - quality, quality ? q_argv : argv)) ;
@@ -114,8 +114,10 @@ int main (int argc, char** argv)
 
     GRB_TRY (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, n)) ;
     GRB_TRY (GrB_Vector_new (&weight, GrB_FP64, num_edges)) ;
-    
+
     GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
+    // set to row major incase Incidence_Matrix gave col_major
+    GRB_TRY (GrB_set(E, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
 
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ;
 
@@ -132,7 +134,7 @@ int main (int argc, char** argv)
 
         for (int trial = 0 ; trial < ntrials ; trial++) {
             int64_t seed = trial * n + 1 ;
-            
+
             LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, E_t, matching_type, seed, msg)) ;
             double matching_value = 0 ;
             if (matching_type != 0) {
@@ -168,11 +170,11 @@ int main (int argc, char** argv)
         LAGRAPH_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
 
         LG_FREE_ALL ;
-        
+
         return (GrB_SUCCESS) ;
     }
     int nt = NTHREAD_LIST ;
-    
+
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max, nthreads_outer, nthreads_inner ;
     LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, NULL)) ;

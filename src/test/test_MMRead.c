@@ -588,7 +588,7 @@ void test_MMWrite_failures (void)
 // test_MMReadWrite_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_MMReadWrite_brutal (void)
 {
 
@@ -774,7 +774,7 @@ TEST_LIST =
     { "jumbled", test_jumbled },
     { "MMWrite", test_MMWrite },
     { "MMWrite_failures", test_MMWrite_failures },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "MMReadWrite_brutal", test_MMReadWrite_brutal },
     #endif
     { "array_pattern", test_array_pattern },

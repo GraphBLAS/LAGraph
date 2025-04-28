@@ -16,6 +16,12 @@ echo "======================================================================"
 echo "benchmarks using LAGraph+GraphBLAS: PageRank (HPEC'21 matrices)"
 echo "======================================================================"
 
+export OMP_PLACES=cores
+export OMP_PROC_BIND=spread
+# export OMP_DISPLAY_ENV=true
+hostname
+printenv | grep OMP
+
 ../../build/src/benchmark/gappagerank_demo /raid/matrices/com-Youtube/com-Youtube.grb
 ../../build/src/benchmark/gappagerank_demo /raid/matrices/as-Skitter/as-Skitter.grb
 ../../build/src/benchmark/gappagerank_demo /raid/matrices/com-LiveJournal/com-LiveJournal.grb

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/benchmark/tc_demo.c: benchmark for LAGr_TriangleCount_GPU
+// LAGraph/src/benchmark/tc_gpu_demo.c: benchmark for LAGr_TriangleCount_GPU
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -36,8 +36,8 @@
 // #include "GB_Global.h"
 void GB_Global_hack_set (int k, int64_t hack) ;
 
+// to run just once, with p = omp_get_max_threads() threads
 #define NTHREAD_LIST 1
-// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -95,7 +95,7 @@ int main (int argc, char **argv)
     LAGraph_Graph G = NULL ;
 
     // start GraphBLAS and LAGraph
-    bool burble = false ;
+    bool burble = true ;    // FIXME
     demo_init (burble) ;
 
     int ntrials = 5 ;

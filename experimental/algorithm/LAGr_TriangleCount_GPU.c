@@ -117,14 +117,18 @@ static int tricount_prep
     LAGraph_Free ((void **) &P, NULL) ;     \
 }
 
+// dump_matrix is for debugging only, so it doesn't check any error conditions
 void dump_matrix (GrB_Matrix C, char *filename) ;
 void dump_matrix (GrB_Matrix C, char *filename)
 {
     GrB_Index cnvals ;
     GrB_Matrix_nvals (&cnvals, C) ;
-    int64_t *I = malloc ((cnvals+1) * sizeof (int64_t)) ;
-    int64_t *J = malloc ((cnvals+1) * sizeof (int64_t)) ;
-    int64_t *X = malloc ((cnvals+1) * sizeof (int64_t)) ;
+    int64_t *I = NULL ;
+    int64_t *J = NULL ;
+    int64_t *X = NULL ;
+    LAGraph_Malloc ((void **) &I, cnvals+1, sizeof (int64_t), NULL) ;
+    LAGraph_Malloc ((void **) &J, cnvals+1, sizeof (int64_t), NULL) ;
+    LAGraph_Malloc ((void **) &X, cnvals+1, sizeof (int64_t), NULL) ;
     GrB_Matrix_extractTuples_INT64 ((GrB_Index *) I,(GrB_Index *) J,
         X, &cnvals, C) ;
     FILE *f = fopen (filename, "w") ;
@@ -132,9 +136,9 @@ void dump_matrix (GrB_Matrix C, char *filename)
     {
         fprintf (f, "%ld %ld %ld\n", (long) I [k], (long) J [k], (long) X [k]) ;
     }
-    free (I) ;
-    free (J) ;
-    free (X) ;
+    LAGraph_Free ((void **) &I, NULL) ;
+    LAGraph_Free ((void **) &J, NULL) ;
+    LAGraph_Free ((void **) &X, NULL) ;
     fclose (f) ;
 }
 

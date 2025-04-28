@@ -579,7 +579,7 @@ void test_BreadthFirstSearch_many(void)
 // test_bfs_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_bfs_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -673,7 +673,7 @@ TEST_LIST = {
     {"BreadthFirstSearch_level", test_BreadthFirstSearch_level},
     {"BreadthFirstSearch_both", test_BreadthFirstSearch_both},
     {"BreadthFirstSearch_many", test_BreadthFirstSearch_many},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"BreadthFirstSearch_brutal", test_bfs_brutal },
     #endif
     {NULL, NULL}

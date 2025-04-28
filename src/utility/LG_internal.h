@@ -645,6 +645,13 @@ int LG_KindName
     #define LG_GET_LIBRARY_DATE(date) \
         GrB_get (GrB_GLOBAL, (char *) date, GxB_LIBRARY_DATE)
 
+    #if defined ( GRAPHBLAS_HAS_CUDA )
+    // the LG_brutal_malloc family of methods.
+    #define LG_BRUTAL_TESTS 0
+    #else
+    #define LG_BRUTAL_TESTS 1
+    #endif
+
 #else
 
     // vanilla GraphBLAS
@@ -659,6 +666,7 @@ int LG_KindName
     #define LG_GET_FORMAT_HINT(A,status) GrB_SUCCESS
     #define LG_SET_BURBLE(burble) GrB_SUCCESS
     #define LG_GET_LIBRARY_DATE(date) GrB_SUCCESS
+    #define LG_BRUTAL_TESTS 0
 
 #endif
 

@@ -30,7 +30,7 @@
 
 #define LG_FREE_WORK                                \
 {                                                   \
-    fclose (f) ;                                    \
+    if (f != NULL) fclose (f) ;                     \
     f = NULL ;                                      \
     LAGraph_SFreeContents (&Contents, nmatrices) ;  \
 }

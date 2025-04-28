@@ -110,7 +110,7 @@ void test_New (void)
 // test_New_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_New_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -182,7 +182,7 @@ TEST_LIST =
 {
     { "New", test_New },
     { "New_failures", test_New_failures },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "New_brutal", test_New_brutal },
     #endif
     { NULL, NULL }

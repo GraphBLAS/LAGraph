@@ -30,14 +30,20 @@ echo "======================================================================"
 echo "GAP benchmarks using LAGraph+GraphBLAS: Connected Components"
 echo "======================================================================"
 
+export OMP_PLACES=cores
+export OMP_PROC_BIND=spread
+# export OMP_DISPLAY_ENV=true
+hostname
+printenv | grep OMP
+
 if [ -z "$1" ]; then KIND="mtx" ; else KIND=$1 ; fi
 echo "Matrix input file format: " $KIND
 
 if [ -z "$2" ]; then GAP="../../../GAP" ; else GAP=$2 ; fi
 echo "GAP matrices located in:  " $GAP
 
-../../build/src/benchmark/cc_demo $GAP/GAP-kron/GAP-kron.$KIND
 ../../build/src/benchmark/cc_demo $GAP/GAP-urand/GAP-urand.$KIND
+../../build/src/benchmark/cc_demo $GAP/GAP-kron/GAP-kron.$KIND
 ../../build/src/benchmark/cc_demo $GAP/GAP-twitter/GAP-twitter.$KIND
 ../../build/src/benchmark/cc_demo $GAP/GAP-web/GAP-web.$KIND
 ../../build/src/benchmark/cc_demo $GAP/GAP-road/GAP-road.$KIND
