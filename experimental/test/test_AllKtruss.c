@@ -38,16 +38,15 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
-// FIXME
-//  {     11, "A.mtx" },
-//  {   2016, "jagmesh7.mtx" },
     { 342300, "bcsstk13.mtx" },
-//  {     45, "karate.mtx" },
-//  {      6, "ldbc-cdlp-undirected-example.mtx" },
-//  {      4, "ldbc-undirected-example-bool.mtx" },
-//  {      4, "ldbc-undirected-example-unweighted.mtx" },
-//  {      4, "ldbc-undirected-example.mtx" },
-//  {      5, "ldbc-wcc-example.mtx" },
+    {     11, "A.mtx" },
+    {   2016, "jagmesh7.mtx" },
+    {     45, "karate.mtx" },
+    {      6, "ldbc-cdlp-undirected-example.mtx" },
+    {      4, "ldbc-undirected-example-bool.mtx" },
+    {      4, "ldbc-undirected-example-unweighted.mtx" },
+    {      4, "ldbc-undirected-example.mtx" },
+    {      5, "ldbc-wcc-example.mtx" },
     { 0, "" },
 } ;
 
@@ -259,7 +258,6 @@ void test_allktruss_errors (void)
 
 TEST_LIST = {
     {"allktruss", test_AllKTruss},
-// FIXME
-//  {"allktruss_errors", test_allktruss_errors},
+    {"allktruss_errors", test_allktruss_errors},
     {NULL, NULL}
 };

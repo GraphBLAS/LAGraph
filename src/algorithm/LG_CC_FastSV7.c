@@ -814,6 +814,11 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         for (tid = 0 ; tid < nthreads ; tid++)
         {
             int64_t ktid = range [tid]  ;
+            memmove (Tj32 ? ((void *) (Tj32 + nvals)) : ((void *) (Tj64 + nvals)),
+                     Tj32 ? ((void *) (Tj32 + TP (ktid))) : ((void *) (Tj64 + TP (ktid))),
+                     tjsize * count [tid]) ;
+
+#if 0
             if (Tj32)
             {
                 memmove (Tj32 + nvals, Tj32 + TP (ktid),
@@ -824,6 +829,8 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
                 memmove (Tj64 + nvals, Tj64 + TP (ktid),
                     sizeof (uint64_t) * count [tid]) ;
             }
+#endif
+
             nvals += count [tid] ;
             count [tid] = nvals - count [tid] ;
         }

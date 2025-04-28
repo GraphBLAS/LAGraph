@@ -338,9 +338,11 @@ if ( LAGRAPH_HAS_OPENMP )
     endif ( )
     message ( STATUS "CMAKE OpenMP C flags:      ${OpenMP_C_FLAGS}" )
 else ( )
-    message ( WARNING
-    "WARNING:  OpenMP was not found (or was disabled with "
-    "LAGRAPH_USE_OPENMP; some LAGraph methods will be slow.)" )
+    if ( NOT COVERAGE )
+        message ( WARNING
+        "WARNING:  OpenMP was not found (or was disabled with "
+        "LAGRAPH_USE_OPENMP; some LAGraph methods will be slow.)" )
+    endif ( )
 endif ( )
 
 #-------------------------------------------------------------------------------

@@ -73,7 +73,6 @@
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
-#include <omp.h>
 #include <stdalign.h>
 #include "LG_internal.h"
 
@@ -204,7 +203,11 @@ int LAGraph_cdlp
     GrB_Index *Sp = NULL, *Si = NULL, *Tp = NULL, *Ti = NULL, *L = NULL, *L_next = NULL ;
     ptable *counts_pool = NULL ;
 
+    #ifdef _OPENMP
     size_t max_threads = omp_get_max_threads();
+    #else
+    size_t max_threads = 1 ;
+    #endif
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -276,7 +279,12 @@ int LAGraph_cdlp
 
 #pragma omp parallel for schedule(dynamic)
         for (GrB_Index i = 0; i < n; i++) {
-            ptable *counts = &counts_pool[omp_get_thread_num()];
+            #ifdef _OPENMP
+            int thread_id = omp_get_thread_num() ;
+            #else
+            int thread_id = 0 ;
+            #endif
+            ptable *counts = &counts_pool [thread_id] ;
             GrB_Index* neighbors = Si + Sp[i] ;
             GrB_Index sz = Sp[i+1] - Sp[i] ;
             for (GrB_Index j = 0; j < sz; j++) {
@@ -318,9 +326,8 @@ int LAGraph_cdlp
     for (GrB_Index i = 0; i < n; i++)
     {
         GrB_Index l = L[i];
-        if (l == GrB_INDEX_MAX + 1) {
-            l = i;
-        }
+//      if (l == GrB_INDEX_MAX + 1) { l = i ; }
+        l = (l == GrB_INDEX_MAX + 1) ? i : l ;
         GRB_TRY (GrB_Vector_setElement(CDLP, l, i))
     }
 
