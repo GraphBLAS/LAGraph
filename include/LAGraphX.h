@@ -1290,6 +1290,21 @@ int LAGr_HITS
 ) ;
 
 //------------------------------------------------------------------------------
+// edge betweenness centrality
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_EdgeBetweennessCentrality
+(
+    // output:
+    GrB_Matrix *centrality,     // centrality(i): betweeness centrality of i
+    // input:
+    LAGraph_Graph G,            // input graph
+    GrB_Vector sources,         // source vertices to compute shortest paths (if NULL or empty, use all vertices)
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
 // graph clustering with quality metrics
 //------------------------------------------------------------------------------
 
@@ -1353,7 +1368,8 @@ int LAGraph_argminmax
     int dim,                    // dim=1: cols of A, dim=2: rows of A
     bool is_min,
     char *msg
-);
+) ; 
+
 
 LAGRAPHX_PUBLIC
 int LAGr_MaximumMatching(
