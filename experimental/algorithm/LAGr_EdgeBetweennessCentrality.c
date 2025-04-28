@@ -24,7 +24,7 @@
 //------------------------------------------------------------------------------
 
 #define useAssign
-#define debug
+// #define debug
 
 #define LG_FREE_WORK                                \
 {                                                   \
@@ -39,6 +39,9 @@
     GrB_free (&temp_update) ;                       \
     GrB_free (&Add_One_Divide) ;                    \
     GrB_free (&Update) ;                            \
+    GrB_free (&HalfUpdate) ;                        \
+    GrB_free (&HalfUpdateT) ;                       \
+    GrB_free (&SymmetricUpdate) ;                   \
     if (Search != NULL)                             \
     {                                               \
         for (int64_t i = 0 ; i < n ; i++)           \
@@ -165,6 +168,12 @@ int LAGr_EdgeBetweennessCentrality
     // Temporary vector for centrality updates
     GrB_Vector temp_update = NULL ;
 
+    // Temporary matrices for doing updates on
+    // approximate and undirected graphs
+    GrB_Matrix HalfUpdate;
+    GrB_Matrix HalfUpdateT;
+    GrB_Matrix SymmetricUpdate;
+
     // Source nodes vector (will be created if NULL is passed)
     GrB_Vector internal_sources = NULL;
     bool created_sources = false;
@@ -223,8 +232,6 @@ int LAGr_EdgeBetweennessCentrality
     // =========================================================================
     // === Process source nodes ================================================
     // =========================================================================
-    
-    GxB_print(sources, GxB_FULL) ;
 
     // If sources is NULL, create a dense vector with all vertices
     if (sources == NULL)
@@ -289,7 +296,6 @@ int LAGr_EdgeBetweennessCentrality
             // Skip invalid indices
             continue;
         }
-        printf("root %ld\n", root) ;
     
         depth = 0 ;
 
@@ -362,14 +368,16 @@ int LAGr_EdgeBetweennessCentrality
         GRB_TRY (GrB_Matrix_new (&Fd1A, GrB_FP64, n, n)) ;
         GRB_TRY (GrB_Vector_new(&temp_update, GrB_FP64, n)) ; // Create a temporary vector
 
+        GrB_Matrix_new(&HalfUpdate, GrB_FP64, n, n);
+        GrB_Matrix_new(&HalfUpdateT, GrB_FP64, n, n);
+        GrB_Matrix_new(&SymmetricUpdate, GrB_FP64, n, n);
+
+
         // Backtrack through the BFS and compute centrality updates for each vertex
         // GrB_Index fd1_size;
 
-        // printf ("\n----------------------------- backtrack:\n") ;
-
         while (depth >= 1)
         {        
-            // printf ("\n----------------------------- backtrack depth : %" PRId64 "\n", depth) ;
             GrB_Vector f_d = Search [depth] ;
             GrB_Vector f_d1 = Search [depth - 1] ;
 
@@ -416,11 +424,30 @@ int LAGr_EdgeBetweennessCentrality
             #ifdef useAssign
                 // centrality{A} += Update, using assign
                 double t3 = LAGraph_WallClockTime();
-                GRB_TRY (GrB_assign(*centrality, A, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n, 
-                GrB_DESC_S));
+                
+                if (G->kind == LAGraph_ADJACENCY_UNDIRECTED) {
+                    // First divide the Update matrix by 2 for symmetric distribution
+                    GrB_apply(HalfUpdate, NULL, NULL, GrB_DIV_FP64, Update, 2.0, NULL);
+
+                    // Create a transposed version of the update
+                    GrB_transpose(HalfUpdateT, NULL, NULL, HalfUpdate, NULL);
+
+                    // Add the original and transposed matrices to create a symmetric update
+                    GrB_eWiseAdd(SymmetricUpdate, NULL, NULL, GrB_PLUS_FP64, HalfUpdate, HalfUpdateT, NULL);
+
+                    // Apply the symmetric update to the centrality
+                    GRB_TRY(GrB_assign(*centrality, A, GrB_PLUS_FP64, SymmetricUpdate, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S));
+
+                }
+                else {
+                    GRB_TRY (GrB_assign(*centrality, A, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n, 
+                        GrB_DESC_S));
+                }
+
                 t3 = LAGraph_WallClockTime() - t3;
                 t3_total += t3;
             #else
+                // FIXME: Approx update using ewise add not implemented
                 // centrality = centrality + Update using eWiseAdd
                 double t3 = LAGraph_WallClockTime();
                 GRB_TRY (GrB_eWiseAdd (*centrality, NULL, NULL, GrB_PLUS_FP64, *centrality, Update, NULL));
@@ -428,8 +455,6 @@ int LAGr_EdgeBetweennessCentrality
                 t3_total += t3;
             #endif
 
-            GxB_print(*centrality, GxB_FULL) ;
-            
 
             //----------------------------------------------------------------------
             // v = Update +.

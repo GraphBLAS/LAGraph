@@ -55,8 +55,6 @@ int LG_check_edgeBetweennessCentrality
 )
 {
 
-    GxB_print (sources, GxB_FULL) ;
-
     //--------------------------------------------------------------------------
     // initialize workspace variables
     //--------------------------------------------------------------------------
@@ -263,7 +261,6 @@ int LG_check_edgeBetweennessCentrality
         while (qh < qt) {
             int64_t v = queue[qh++];
             S[sp++] = v;
-            printf("%d -", v);
 
             // Process neighbors of current vertex
             for (int64_t p = Ap[v]; p < Ap[v+1]; p++) {
@@ -288,10 +285,8 @@ int LG_check_edgeBetweennessCentrality
 
                     Pj[Ptail[w]++] = v;
 
-                    printf(" %d", w);
                 }
             }   
-            printf("\n");
         }
 
         //----------------------------------------------------------------------
@@ -310,14 +305,20 @@ int LG_check_edgeBetweennessCentrality
             // Update dependencies through predecessors
             for (int64_t p = Phead[w]; p < Ptail[w]; p++) {
                 int64_t v = Pj[p];
-                
+
                 // Compute and accumulate dependency
                 double centrality = paths[v] * ((bc_vertex_flow[w] + 1) / paths[w]);
                 bc_vertex_flow[v] += centrality;
-                result[INDEX(v,w)] += centrality;
+
+                if (G->kind == LAGraph_ADJACENCY_UNDIRECTED) {
+                    result[INDEX(v,w)] += centrality / 2;
+                    result[INDEX(w,v)] += centrality / 2;
+                }
+                else {
+                    result[INDEX(v,w)] += centrality;
+                }
             }
         }
-        printf("\n");
     }
 
     if (print_timings)
@@ -357,8 +358,6 @@ GrB_Info GxB_Matrix_pack_FullR  // pack a full matrix, held by row
     LG_TRY (GrB_assign(C_temp, A, NULL, C_temp, GrB_ALL, n, GrB_ALL, n, GrB_DESC_RS)) ;
 
     *C = C_temp;
-
-    GxB_print (*C, GxB_FULL) ;
 
     if (created_sources) {
         GRB_TRY (GrB_free(&internal_sources));
