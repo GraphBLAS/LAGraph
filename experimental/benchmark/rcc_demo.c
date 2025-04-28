@@ -102,7 +102,7 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
     printf ("\n========================== Start RCC ==========================\n") ;
     t = LAGraph_WallClockTime ( ) ;
-    result = LAGraph_RichClubCoefficient_NoGB (&rcc2, G, msg) ;
+    result = LG_check_rcc (&rcc2, G, msg) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGraph_RichClubCoefficient: %g sec\n", t) ;
     #endif
