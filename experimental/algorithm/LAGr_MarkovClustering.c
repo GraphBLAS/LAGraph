@@ -29,10 +29,6 @@
         GrB_free(&argmax_v);                                                   \
         GrB_free(&argmax_p);                                                   \
         GrB_free(&zero_FP32);                                                  \
-        LAGraph_Free((void *)&pi, NULL);                                       \
-        LAGraph_Free((void *)&px, NULL);                                       \
-        LAGraph_Free((void *)&pi_new, NULL);                                   \
-        LAGraph_Free((void *)&px_new, NULL);                                   \
     }
 
 #define LG_FREE_ALL                                                            \
@@ -73,9 +69,6 @@ int LAGr_MarkovClustering(
 
     GrB_Scalar zero_FP32 = NULL;
 
-    GrB_Index *pi = NULL, *px = NULL;
-    GrB_Index *pi_new = NULL, *px_new = NULL;
-
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -106,7 +99,6 @@ int LAGr_MarkovClustering(
     GRB_TRY(GrB_Vector_new(&argmax_v, GrB_FP32, n));
     GRB_TRY(GrB_Vector_new(&argmax_p, GrB_INT64, n));
     GRB_TRY(GrB_Scalar_new(&zero_FP32, GrB_FP32));
-
     GRB_TRY(GrB_Scalar_setElement(zero_FP32, 0));
 
     // Create identity
@@ -198,73 +190,22 @@ int LAGr_MarkovClustering(
     GRB_TRY(GrB_mxv(argmax_p, NULL, NULL, GxB_MIN_SECONDI_INT64, CC, ones,
                     GrB_DESC_T0));
 
-    // pi := array of argmax_p indices, px := array of argmax_p values
-    GrB_Index p_nvals;
-    GRB_TRY(GrB_Vector_nvals(&p_nvals, argmax_p));
-    LG_TRY(LAGraph_Malloc((void **)&pi, p_nvals, sizeof(GrB_Index), msg));
-    LG_TRY(LAGraph_Malloc((void **)&px, p_nvals, sizeof(GrB_Index), msg));
-    GRB_TRY(GrB_Vector_extractTuples_INT64(pi, (int64_t *) px, &p_nvals, argmax_p));
-
     // Sometimes (particularly, when the pruning threshold is high), some
     // columns in the steady-state T have no values, i.e., they are not
     // attracted to any vertex. In this case, fill in the missing values with
     // the index of the vertex (these vertices will be arbitrarily put in the
     // cluster of their index).
+    GrB_Index p_nvals;
+    GRB_TRY(GrB_Vector_nvals(&p_nvals, argmax_p));
     if (p_nvals < n)
     {
-        LG_TRY(LAGraph_Malloc((void **)&pi_new, n, sizeof(GrB_Index), msg));
-        LG_TRY(LAGraph_Malloc((void **)&px_new, n, sizeof(GrB_Index), msg));
-
-        GrB_Index j = 0;
-        GrB_Index currentValue = pi[0];
-
-        for (int i = 0; i < p_nvals && j < n; ++i)
-        {
-            while (currentValue < pi[i] && j < n)
-            {
-                pi_new[j] = currentValue;
-                px_new[j] = currentValue; // Fill skipped px values with their
-                                          // index
-                currentValue++;
-                j++;
-            }
-            if (j < n)
-            {
-                pi_new[j] = pi[i];
-                px_new[j] = px[i];
-                currentValue++;
-                j++;
-            }
-        }
-
-        // Handle any skipped values at the end
-        if (j < n) printf ("Got it: %g %g\n", (double) j, (double) n) ;
-        while (j < n)
-        {
-            pi_new[j] = currentValue;
-            px_new[j] = currentValue; // Fill remaining px values
-            currentValue++;
-            j++;
-        }
-
-        LAGraph_Free((void **)&pi, NULL);
-        LAGraph_Free((void **)&px, NULL);
-        pi = pi_new;
-        px = px_new;
-        // Avoid double free
-        pi_new = NULL;
-        px_new = NULL;
+        // argmax_p <!argmax_p> = 0:n-1
+        GRB_TRY (GrB_apply (argmax_p, argmax_p, NULL, GrB_ROWINDEX_INT64,
+            ones, 0, GrB_DESC_SC)) ;
     }
 
-    GrB_Vector c = NULL;
-    GRB_TRY(GrB_Vector_new(&c, GrB_INT64, n));
-    GRB_TRY(GrB_Vector_build_INT64(c, pi, (int64_t *) px, n, NULL));
-    GrB_Vector_wait(c, GrB_MATERIALIZE);
-
-    LAGraph_Free((void *)&pi, NULL);
-    LAGraph_Free((void *)&px, NULL);
-
-    (*c_f) = c; // Set output vector
+    (*c_f) = argmax_p ; // Set output vector
+    argmax_p = NULL ;
 
     LG_FREE_WORK;
 
