@@ -300,7 +300,8 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             // This case is nearly untestable since it can almost never occur.
             nstall++ ;
             // terminate if the method has stalled too many times
-            LG_ASSERT_MSG (nstall <= 32, -111, "stall") ;
+            LG_ASSERT_MSG (nstall <= 32, LAGRAPH_CONVERGENCE_FAILURE,
+                "method has stalled") ;
             // recreate the random number seeds with a new starting seed
             LG_TRY (LAGraph_Random_Seed (Seed, seed + nstall, msg)) ;
         }
