@@ -1,3 +1,6 @@
+// FIXME: this test needs to check its results.
+// Use a brute force method (extractTuples and do it in plain C, perhaps).
+
 #include <stdio.h>
 #include <acutest.h>
 #include <LAGraphX.h>
