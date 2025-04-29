@@ -15,6 +15,9 @@
 // Querying Using Linear Algebra", URL:
 // https://disser.spbu.ru/files/2022/disser_azimov.pdf
 
+// FIXME: some of the code below is not covered by the test suite, "make cov".
+// See the FIXMEs below.
+
 #define LG_FREE_WORK                                                        \
     {                                                                       \
         LAGraph_Free ((void **) &nnzs, msg) ;                               \
@@ -172,6 +175,7 @@ GrB_Info LAGraph_CFL_reachability
             ADD_TO_MSG("Adjacency matrices with these indexes are null: ");
             ADD_TO_MSG("%d", i);
         } else {
+            // FIXME: this case is not tested.
             ADD_TO_MSG(", %d", i);
         }
 
@@ -220,6 +224,7 @@ GrB_Info LAGraph_CFL_reachability
 
         // [Variable -> eps]
         if (is_rule_eps) {
+            // FIXME: this case is not tested.
             eps_rules[eps_rules_count++] = i;
 
             continue;
@@ -242,6 +247,7 @@ GrB_Info LAGraph_CFL_reachability
 
             if (rule.prod_A < -1 || rule.prod_A >= nonterms_count || rule.prod_B < -1 ||
                 rule.prod_B >= nonterms_count) {
+                // FIXME: this case is not tested.
                 ADD_INDEX_TO_ERROR_RULE(nonterm_err, i);
             }
 
@@ -280,6 +286,7 @@ GrB_Info LAGraph_CFL_reachability
         GRB_TRY(GrB_Matrix_nvals(&adj_matrix_nnz, adj_matrices[term_rule.prod_A]));
 
         if (adj_matrix_nnz == 0) {
+            // FIXME: this case is not tested.
             continue;
         }
 
@@ -304,6 +311,7 @@ GrB_Info LAGraph_CFL_reachability
 
     // Rule [Variable -> eps]
     for (size_t i = 0; i < eps_rules_count; i++) {
+        // FIXME: this case is not tested.
         LAGraph_rule_WCNF eps_rule = rules[eps_rules[i]];
 
         GxB_eWiseUnion (
