@@ -225,7 +225,7 @@ void test_MIS (void)
         result = LAGraph_MaximalIndependentSet (&mis, G, 0, NULL, msg) ;
         random_hack = false ;
         printf ("hack msg: %d %s\n", result, msg) ;
-        TEST_CHECK (result == -111 || result == 0) ;
+        TEST_CHECK (result == LAGRAPH_CONVERGENCE_FAILURE || result == 0) ;
         if (result == 0)
         {
             OK (LG_check_mis (G->A, mis, NULL, msg)) ;
