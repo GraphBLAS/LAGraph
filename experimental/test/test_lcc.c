@@ -76,32 +76,42 @@ void test_lcc (void)
         OK (LAGraph_Cached_IsSymmetricStructure (G, msg));
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
 
-        GrB_Vector c = NULL ;
+        for (int jit = 0 ; jit <= 1 ; jit++)
+        {
+            #if LAGRAPH_SUITESPARSE
+            printf ("jit: %d\n", jit) ;
+            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
+                jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+            #endif
 
-        // compute the local clustering coefficient
-        OK (LAGraph_lcc (&c, G, msg)) ;
+            GrB_Vector c = NULL ;
 
-        GrB_Index n ;
-        OK (GrB_Vector_size (&n, c)) ;
-        LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
+            // compute the local clustering coefficient
+            OK (LAGraph_lcc (&c, G, msg)) ;
 
-        GrB_Vector cgood = NULL ;
-        OK (LG_check_lcc(&cgood, G, msg)) ;
-        OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
-        // cgood = abs (cgood - c)
-        OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
-            NULL)) ;
-        OK (GrB_apply (cgood, NULL, NULL, GrB_ABS_FP64, cgood, NULL)) ;
-        double err = 0 ;
-        // err = max (cgood)
-        OK (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP64, cgood, NULL)) ;
-        printf ("err: %g\n", err) ;
-        TEST_CHECK (err < 1e-6) ;
-        OK (GrB_free (&cgood)) ;
+            GrB_Index n ;
+            OK (GrB_Vector_size (&n, c)) ;
+            LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
-        printf ("\nlcc:\n") ;
-        OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
-        OK (GrB_free (&c)) ;
+            GrB_Vector cgood = NULL ;
+            OK (LG_check_lcc(&cgood, G, msg)) ;
+            OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
+            // cgood = abs (cgood - c)
+            OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
+                NULL)) ;
+            OK (GrB_apply (cgood, NULL, NULL, GrB_ABS_FP64, cgood, NULL)) ;
+            double err = 0 ;
+            // err = max (cgood)
+            OK (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP64, cgood, NULL)) ;
+            printf ("err: %g\n", err) ;
+            TEST_CHECK (err < 1e-6) ;
+            OK (GrB_free (&cgood)) ;
+
+            printf ("\nlcc:\n") ;
+            OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
+            OK (GrB_free (&c)) ;
+
+        }
 
         OK (LAGraph_Delete (&G, msg)) ;
     }

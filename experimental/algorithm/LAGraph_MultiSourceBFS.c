@@ -12,7 +12,6 @@
 //------------------------------------------------------------------------------
 
 // FIXME: almost ready for src; need a vanilla method
-// FIXME: need the CI test for this method
 
 // Takes in a vector of source nodes and finds level and/or parent vectors for each,
 // stored together in a matrix
@@ -74,8 +73,9 @@ int LAGraph_MultiSourceBFS
     GrB_Matrix A = G->A ;
     
     GrB_Index nsrc; // holds the number of source nodes
-    GrB_Index n;
+    GrB_Index n, nvals ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
     GRB_TRY (GrB_Vector_size (&nsrc, src)) ;
     for (int64_t s = 0; s < nsrc; s++) 
     {
@@ -83,7 +83,7 @@ int LAGraph_MultiSourceBFS
         GRB_TRY (GrB_Vector_extractElement (&currsrc, src, s)) ;
         LG_ASSERT_MSG (currsrc < n, GrB_INVALID_INDEX, "invalid source node") ;
     }
-
+    bool very_sparse = (nvals <= n/16) ;
 
     // determine the semiring type 
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
@@ -98,7 +98,10 @@ int LAGraph_MultiSourceBFS
 
         // create the parent matrix.  pi(i, j) is the parent id of node j in source i's BFS
         GRB_TRY (GrB_Matrix_new (&pi, int_type, nsrc, n)) ;
-        GRB_TRY (LG_SET_FORMAT_HINT (pi, LG_BITMAP + LG_FULL)) ;
+        if (!very_sparse)
+        {
+            GRB_TRY (LG_SET_FORMAT_HINT (pi, LG_BITMAP + LG_FULL)) ;
+        }
 
         // pi (i, src) = src denotes the root of that row's BFS tree
         for (int64_t s = 0; s < nsrc; s++) 
@@ -143,7 +146,10 @@ int LAGraph_MultiSourceBFS
         // create the level matrix. v(i,j) is the level of node j in source i's BFS
         // v (s, src) = 0 denotes the source node of that row
         GRB_TRY (GrB_Matrix_new (&v, int_type, nsrc, n)) ;
-        GRB_TRY (LG_SET_FORMAT_HINT (v, LG_BITMAP + LG_FULL)) ;
+        if (!very_sparse)
+        {
+            GRB_TRY (LG_SET_FORMAT_HINT (v, LG_BITMAP + LG_FULL)) ;
+        }
         for (int64_t s = 0; s < nsrc; s++) 
         {
             GrB_Index currsrc;

@@ -69,7 +69,7 @@ CMake looks.
 
 #]=======================================================================]
 
-option ( LAGRAPH_DUMP "ON: display list of places to search. OFF (default): no debug output" ON )
+option ( LAGRAPH_DUMP "ON: display list of places to search. OFF (default): no debug output" OFF )
 
 # NB: this is built around assumptions about one particular GraphBLAS
 # installation (SuiteSparse:GraphBLAS). As other installations become available

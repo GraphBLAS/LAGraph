@@ -1,8 +1,10 @@
-// FIXME: not ready for src, but close
+// FIXME: not ready for src, need to use IndexBinaryOps instead.
+// See argmin/argmax in GraphBLAS/@GrB/*/*/gbargminmax.c.
+
+// FIXME: make x and p GrB_Vectors
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
-#include <omp.h>
 #include <LAGraph.h>
 
 // #define USAGE "usage: [x,p] = LAGraph_argminmax (A, minmax, dim)"
@@ -357,7 +359,6 @@ int LAGraph_argminmax
     // return result
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GrB_Matrix_free (&A)) ;
     return (GrB_SUCCESS) ;
 }
 

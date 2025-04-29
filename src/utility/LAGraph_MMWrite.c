@@ -220,10 +220,11 @@ int LAGraph_MMWrite
     // determine the entry type
     //--------------------------------------------------------------------------
 
-    GrB_Type type ;
+    GrB_Type type = NULL ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
-    LG_TRY (LAGraph_TypeFromName (&type, atype_name, msg)) ;
+    atype_name [0] = '\0' ;
+    LAGraph_Matrix_TypeName (atype_name, A, msg) ;
+    LAGraph_TypeFromName (&type, atype_name, msg) ;
 
     MM_type_enum MM_type = MM_integer ;
 

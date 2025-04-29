@@ -90,25 +90,21 @@ char *output_to_str(size_t nonterm) {
 
 void free_workspace() {
 
-    for (size_t i = 0; i < grammar.terms_count; i++) {
-        if (adj_matrices == NULL)
-            break;
-
-        if (adj_matrices[i] == NULL)
-            continue;
-
-        GrB_free(&adj_matrices[i]);
+    if (adj_matrices != NULL)
+    {
+        for (size_t i = 0; i < grammar.terms_count; i++)
+        {
+            GrB_free(&adj_matrices[i]);
+        }
     }
     LAGraph_Free ((void **) &adj_matrices, msg);
 
-    for (size_t i = 0; i < grammar.nonterms_count; i++) {
-        if (outputs == NULL)
-            break;
-
-        if (outputs[i] == NULL)
-            continue;
-
-        GrB_free(&outputs[i]);
+    if (outputs != NULL)
+    {
+        for (size_t i = 0; i < grammar.nonterms_count; i++)
+        {
+            GrB_free(&outputs[i]);
+        }
     }
     LAGraph_Free ((void **) &outputs, msg);
 
@@ -619,7 +615,8 @@ TEST_LIST = {{"CFL_reachability_complex_grammar", test_CFL_reachability_complex_
              {"CFL_reachability_line", test_CFL_reachability_line},
              {"CFL_reachability_two_nodes_cycle", test_CFL_reachability_two_nodes_cycle},
              {"CFG_reach_basic_invalid_rules", test_CFL_reachability_invalid_rules},
-// FIXME: this fails, see above:
-//           {"CFG_reachability_null_pointers", test_CFL_reachability_null_pointers},
+             #if !defined ( GRAPHBLAS_HAS_CUDA )
+             {"CFG_reachability_null_pointers", test_CFL_reachability_null_pointers},
+             #endif
              {NULL, NULL}};
 

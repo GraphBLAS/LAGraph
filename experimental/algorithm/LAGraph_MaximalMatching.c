@@ -244,7 +244,7 @@ int LAGraph_MaximalMatching
     #ifdef dbg
                 printf("[DBG] hit max failures %d\n", nfailures);
     #endif
-                break ;
+                break ; // FIXME: test coverage doesn't test this case.  Is it possible?
             }
             // regen seed and seed vector
             LG_TRY (LAGraph_Random_Seed (Seed, seed + nfailures, msg)) ;

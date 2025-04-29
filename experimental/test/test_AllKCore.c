@@ -59,7 +59,7 @@ void test_AllKCore (void)
         const char *aname = files [k].name ;
         uint64_t kmax = files [k].kmax ;
         if (strlen (aname) == 0) break;
-        printf ("\n================================== %s: ==================================\n", aname) ;
+        printf ("\n %s: ==================================\n", aname) ;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;

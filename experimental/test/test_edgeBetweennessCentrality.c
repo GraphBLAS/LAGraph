@@ -600,8 +600,20 @@ void test_many_approx(void)
 
         // Compare the results
         double err = matrix_difference(centrality, reference_centrality);
-        printf("  %s: err: %e", files[i], err);
+        printf("  %s: err: %e\n", files[i], err);
         TEST_CHECK(err < 1e-4);
+
+        OK(GrB_free(&centrality));
+
+        // try without the JIT
+        // LG_SET_BURBLE (true) ;
+        OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_PAUSE)) ;
+        OK (LAGr_EdgeBetweennessCentrality(&centrality, G, randomSources, msg));
+        err = matrix_difference (centrality, reference_centrality);
+        printf("  %s: err: %e (JIT paused)\n", files[i], err);
+        TEST_CHECK(err < 1e-4);
+        OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_ON)) ;
+        // LG_SET_BURBLE (false) ;
 
         OK(GrB_free(&centrality));
         OK(GrB_free(&reference_centrality));
@@ -612,6 +624,33 @@ void test_many_approx(void)
     LAGraph_Finalize(msg);
 }
 
+//------------------------------------------------------------------------------
+
+void test_no_sources (void)
+{
+    LAGraph_Init(msg);
+
+    GrB_Matrix A = NULL ;
+    GrB_Matrix centrality = NULL ;
+    GrB_Matrix reference_centrality = NULL ;
+    GrB_Vector sources = NULL ;
+    LAGraph_Graph G = NULL ;
+
+    OK (GrB_Matrix_new (&A, GrB_FP64, 10, 10)) ;
+    OK (GrB_Vector_new (&sources, GrB_INT64, 0)) ;
+    OK (LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+
+    int result = (LAGr_EdgeBetweennessCentrality (&centrality, G, sources, msg)) ;
+    TEST_CHECK (result == GrB_INVALID_VALUE) ;
+
+    OK (LG_check_edgeBetweennessCentrality(&reference_centrality, G, sources, msg));
+
+    OK (GrB_free (&centrality)) ;
+    OK (GrB_free (&reference_centrality)) ;
+    OK (LAGraph_Delete (&G, msg)) ;
+
+    LAGraph_Finalize(msg);
+}
 
 //------------------------------------------------------------------------------
 // list of tests
@@ -624,5 +663,6 @@ TEST_LIST = {
     {"test_diamonds_ebc_approx", test_diamonds_ebc_approx},
     {"test_karate_ebc_approx", test_karate_ebc_approx},
     {"test_many_approx", test_many_approx},
+    {"test_no_sources", test_no_sources},
     {NULL, NULL}
 };
