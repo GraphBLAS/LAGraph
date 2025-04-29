@@ -96,8 +96,33 @@ void test_mcl(void)
         TEST_CHECK(ok_cov);
         TEST_CHECK(ok_perf);
         TEST_CHECK(ok_mod);
-
         OK(GrB_free(&c));
+
+        if (!(k == 3 || k == 1))
+        {
+            // compute clustering with higher e parameter (expansion coef)
+            printf ("\nWith e=4:\n") ;
+            OK(LAGr_MarkovClustering(&c, 4, 2, 0.0001, 1e-8, 100, G, msg));
+            OK(LAGr_PartitionQuality(&cov, &perf, c, G, msg));
+            OK(LAGr_Modularity(&mod, (double)1, c, G, msg));
+            printf("coverage:   %g\n", cov);
+            printf("perf:       %g\n", perf);
+            printf("modularity: %g\n", mod);
+            OK(GrB_free(&c));
+
+            printf ("\nWith high pruning threshold:\n") ;
+            int rr = LAGr_MarkovClustering(&c, 4, 2, 0.01, 1e-8, 100, G, msg);
+            printf ("rr: %d\n", rr) ;
+            OK (rr) ;
+            rr = LAGr_PartitionQuality(&cov, &perf, c, G, msg);
+            printf ("rr: %d\n", rr) ;
+            rr = LAGr_Modularity(&mod, (double)1, c, G, msg);
+            printf ("rr: %d\n", rr) ;
+            printf("coverage:   %g\n", cov);
+            printf("perf:       %g\n", perf);
+            printf("modularity: %g\n", mod);
+            OK(GrB_free(&c));
+        }
 
         OK(LAGraph_Delete(&G, msg));
     }

@@ -238,6 +238,7 @@ int LAGr_MarkovClustering(
         }
 
         // Handle any skipped values at the end
+        if (j < n) printf ("Got it: %g %g\n", (double) j, (double) n) ;
         while (j < n)
         {
             pi_new[j] = currentValue;
