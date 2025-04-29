@@ -23,6 +23,8 @@
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LAGraphX.h"
 #include "LG_internal.h"
+#include "LG_Xtest.h"
+
 void iseq(bool *z, const double *x, const double *y)
 {
     (*z) = (isnan(*x) && isnan(*y)) ||*x == *y ;
