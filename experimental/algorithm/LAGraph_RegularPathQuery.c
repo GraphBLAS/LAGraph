@@ -75,6 +75,9 @@
 // Performance considerations: the best performance is shown when the algorithm
 // receives a minimal deterministic finite automaton as an input.
 
+// FIXME: some of the code below is not covered by the test suite, "make cov".
+// See the FIXMEs below.
+
 #define LG_FREE_WORK                            \
 {                                               \
     GrB_free (&frontier) ;                      \
