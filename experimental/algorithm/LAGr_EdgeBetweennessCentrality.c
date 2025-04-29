@@ -286,12 +286,8 @@ int LAGr_EdgeBetweennessCentrality
         GRB_TRY (GrB_Vector_extractElement(&root, sources, i)) ;
         
         // Verify the root index is valid
-        if (root >= n)
-        {
-            // Skip invalid indices
-            continue;
-        }
-    
+        LG_ASSERT (root < n, GrB_INVALID_VALUE) ;
+
         depth = 0 ;
 
         // root frontier: Search [0](root) = true

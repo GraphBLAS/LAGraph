@@ -175,10 +175,7 @@ int LAGraph_cdlp_withsort
     // check inputs
     //--------------------------------------------------------------------------
 
-    if (CDLP_handle == NULL)
-    {
-        return GrB_NULL_POINTER;
-    }
+    LG_ASSERT (CDLP_handle != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // ensure input is binary and has no self-edges

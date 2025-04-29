@@ -13,7 +13,8 @@ char filename[LEN + 1];
 LAGraph_Graph G = NULL;
 
 // Utility function to compare vectors with expected results
-float difference(GrB_Vector vector, double *expected_result, GrB_Index n) {
+float difference(GrB_Vector vector, double *expected_result, GrB_Index n)
+{
     GrB_Vector diff = NULL;
     float err = 0.0;
     OK(GrB_Vector_new(&diff, GrB_FP32, n));
@@ -28,31 +29,51 @@ float difference(GrB_Vector vector, double *expected_result, GrB_Index n) {
 }
 
 // Test function for a specific graph
-void test_HITS_on_graph(const char *graph_file, double *expected_hubs, double *expected_authorities, GrB_Index n) {
+void test_HITS_on_graph
+(
+    const char *graph_file,
+    bool directed,
+    double *expected_hubs,
+    double *expected_authorities
+)
+{
     GrB_Vector hubs = NULL, authorities = NULL;
-    GrB_Matrix A = NULL;
-    int iters = 0;
-    float tol = 1e-4;
-    int itermax = 100;
+    GrB_Matrix A = NULL ;
+    int iters = 0 ;
+    float tol = 1e-4 ;
+    int itermax = 100 ;
+    GrB_Index n = 0 ;
 
     // Load the graph
-    snprintf(filename, LEN, LG_DATA_DIR "%s", graph_file);
+    printf ("HITS test: %s\n", graph_file) ;
+    snprintf (filename, LEN, LG_DATA_DIR "%s", graph_file);
     FILE *f = fopen(filename, "r");
-    TEST_CHECK(f != NULL);
-    OK(LAGraph_MMRead(&A, f, msg));
-    OK(fclose(f));
-    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (f != NULL);
+    OK (LAGraph_MMRead (&A, f, msg));
+    OK (fclose(f));
+    OK (GrB_Matrix_nrows (&n, A)) ;
+    int kind = directed ? LAGraph_ADJACENCY_DIRECTED : LAGraph_ADJACENCY_UNDIRECTED ;
+    OK (LAGraph_New (&G, &A, kind, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_Cached_OutDegree (G, msg)) ;
-    OK (LAGraph_Cached_InDegree (G, msg)) ;
-    OK (LAGraph_Cached_AT(G, msg)) ;
+    if (directed)
+    {
+        OK (LAGraph_Cached_InDegree (G, msg)) ;
+        OK (LAGraph_Cached_AT(G, msg)) ;
+    }
+
     // Run HITS algorithm
-    OK(LAGr_HITS(&hubs, &authorities, &iters, G, tol, itermax, msg));
+    OK (LAGr_HITS (&hubs, &authorities, &iters, G, tol, itermax, msg)) ;
+    OK (LAGraph_Vector_Print (hubs, 2, stdout, msg)) ;
+    OK (LAGraph_Vector_Print (authorities, 2, stdout, msg)) ;
 
     // Compare results with expected values
-    float err_hubs = difference(hubs, expected_hubs, n);
-    float err_auth = difference(authorities, expected_authorities, n);
-    TEST_CHECK(err_hubs < 1e-4 && err_auth < 1e-4);
+    if (expected_hubs != NULL && expected_authorities != NULL)
+    {
+        float err_hubs = difference(hubs, expected_hubs, n);
+        float err_auth = difference(authorities, expected_authorities, n);
+        TEST_CHECK(err_hubs < 1e-4 && err_auth < 1e-4);
+    }
 
     // Clean up
     OK(GrB_free(&hubs));
@@ -61,7 +82,8 @@ void test_HITS_on_graph(const char *graph_file, double *expected_hubs, double *e
 }
 
 // Test cases for different graphs
-void test_HITS(void) {
+void test_HITS(void)
+{
     LAGraph_Init(msg);
 
     // Test case for Graph 1
@@ -84,7 +106,8 @@ void test_HITS(void) {
     0.23038324707437605,
     -1.5901485815586466e-16,
     0.06250997173907653};
-    test_HITS_on_graph("structure.mtx", structure_hubs, structure_authorities, sizeof(structure_hubs)/sizeof(structure_hubs[0]));
+
+    test_HITS_on_graph ("structure.mtx", true, structure_hubs, structure_authorities) ;
 
     // Additional test cases can be added here
     double karate_authorities[] = {
@@ -123,6 +146,7 @@ void test_HITS(void) {
         0.06200184647383098,
         0.0750029421565755
     };
+
     double karate_hubs[] = {
             0.07141272880825197,
             0.053427231235529976,
@@ -159,7 +183,8 @@ void test_HITS(void) {
             0.062001846473830974,
             0.07500294215657549
         };
-    test_HITS_on_graph("karate.mtx", karate_hubs, karate_authorities, sizeof(karate_hubs)/sizeof(karate_hubs[0]));
+
+    test_HITS_on_graph ("karate.mtx", true, karate_hubs, karate_authorities) ;
     
     double west0067_authorities[] = {
         0.06732949417782225,
@@ -301,14 +326,25 @@ void test_HITS(void) {
         0.0027383517860651856
     };
 
-    test_HITS_on_graph("west0067.mtx", west0067_hubs, west0067_authorities, sizeof(west0067_hubs)/sizeof(west0067_hubs[0]));
-    
+    test_HITS_on_graph ("west0067.mtx", true, west0067_hubs, west0067_authorities) ;
+
     LAGraph_Finalize(msg);
+}
+
+void test_HITS2 (void)
+{
+    LAGraph_Init (msg) ;
+    printf ("\n") ;
+    test_HITS_on_graph ("karate.mtx", false, NULL, NULL) ;
+    test_HITS_on_graph ("karate_verysparse.mtx", false, NULL, NULL) ;
+    test_HITS_on_graph ("diamonds.mtx", false, NULL, NULL) ;
+    LAGraph_Finalize (msg);
 }
 
 // List of tests to run
 TEST_LIST = {
     {"test_HITS", test_HITS},
+    {"test_HITS2", test_HITS2},
     {NULL, NULL}
 };
 

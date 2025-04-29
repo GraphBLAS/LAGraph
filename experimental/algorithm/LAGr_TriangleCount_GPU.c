@@ -69,6 +69,8 @@
 
 #include "LG_internal.h"
 
+#if defined ( GRAPHBLAS_HAS_CUDA )
+
 //------------------------------------------------------------------------------
 // tricount_prep: construct L and U for LAGr_TriangleCount
 //------------------------------------------------------------------------------
@@ -462,3 +464,5 @@ int LAGr_TriangleCount_GPU
     (*ntriangles) = (uint64_t) ntri ;
     return (GrB_SUCCESS) ;
 }
+
+#endif
