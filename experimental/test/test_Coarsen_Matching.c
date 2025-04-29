@@ -139,7 +139,6 @@ void test_Coarsen_Matching () {
         TEST_MSG ("Building of adjacency matrix failed") ;
 
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
-
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
         OK (LAGraph_Cached_AT (G, msg)) ;
 
@@ -160,6 +159,18 @@ void test_Coarsen_Matching () {
 
         uint64_t matching_seed = 0 ;
         for (int i = 0; i < SEEDS_PER_TEST ; i++) {
+
+            if (i == SEEDS_PER_TEST-1)
+            {
+                // convert graph to FP32 for the last test
+                GrB_Matrix A_fp32 = NULL ;
+                OK (GrB_Matrix_new (&A_fp32, GrB_FP32, n, n)) ;
+                OK (GrB_assign (A_fp32, NULL, NULL, G->A, GrB_ALL, n, GrB_ALL, n, NULL)) ;
+                OK (GrB_free (&(G->AT))) ;
+                G->A = A_fp32 ;
+                A_fp32 = NULL ;
+            }
+
             OK (LAGraph_Coarsen_Matching (
                 &A_coarse_LAGraph,
                 &parent,
@@ -217,6 +228,7 @@ void test_Coarsen_Matching () {
 //          OK (LAGraph_Vector_Print (parent[0], LAGraph_COMPLETE, stdout, msg)) ;
 //          OK (LAGraph_Vector_Print (newlabels[0], LAGraph_COMPLETE, stdout, msg)) ;
 #endif
+
             GrB_Matrix Delta ;
             GrB_Index ncoarse ;
             GrB_Matrix_nrows (&ncoarse, A_coarse_LAGraph) ;
@@ -242,7 +254,7 @@ void test_Coarsen_Matching () {
 
             matching_seed += tests [k].n ;
         }
-        OK (LAGraph_Delete (&G, msg)) ;
+
     }
 #endif
 

@@ -171,6 +171,13 @@ void test_errors(void)
     printf("\nresult: %d %s\n", result, msg);
     TEST_CHECK(result == LAGRAPH_NOT_CACHED);
 
+    G->kind = LAGraph_ADJACENCY_UNDIRECTED;
+    G->is_symmetric_structure = LAGraph_FALSE;
+    result = LAGr_PeerPressureClustering(&c, normalize, make_undirected, thresh,
+                                         max_iter, G, msg);
+    printf("\nresult: %d %s\n", result, msg);
+    TEST_CHECK(result == LAGRAPH_NOT_CACHED);
+
     OK(LAGraph_Delete(&G, msg));
     LAGraph_Finalize(msg);
 }
