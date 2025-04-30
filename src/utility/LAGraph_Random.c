@@ -17,12 +17,7 @@
 
 // A very simple thread-safe parallel pseudo-random nuumber generator.
 
-// FIXME: ready for src?
-
-// FIXME: add LAGraph_Random_Init to LAGraph_Init,
-// and added LAGraph_Random_Finalize to LAGraph_Finalize.
-
-// FIXME: is the new init function more complicated than it needs to be?
+// FIXME: ready for src
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
@@ -91,9 +86,8 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 
 // From these references, the recommendation is to create the initial state of
 // a random number generator with an entirely different random number
-// generator.  splitmix64 is recommended, but here we initialize the State(i)
-// with xorshift (i+1) to get a good start, add the scalar seed, and then
-// randomize the State with splitmix64.
+// generator.  splitmix64 is recommended, so we initialize the State(i) with
+// (i+seed) then randomize the State with splitmix64.
 
 // References:
 //
@@ -121,17 +115,12 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 
 #endif
 
-// The init function computes z = splitmix64 (xorshift (i+1) + seed)
+// The init function computes z = splitmix64 (i + seed)
 void LG_rand_init_func (uint64_t *z, const void *x,
     GrB_Index i, GrB_Index j, const uint64_t *seed)
 {
-    // state = xorshift64 (i+1) + seed
-    uint64_t state = i + 1 ;
-    state ^= state << 13 ;
-    state ^= state >> 7 ;
-    state ^= state << 17 ;
-    state += (*seed) ;
-    // result = shiftmix64 (state)
+    uint64_t state = i + (*seed) ;
+    // result = splitmix64 (state)
     uint64_t result = (state += 0x9E3779B97f4A7C15) ;
     result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9 ;
     result = (result ^ (result >> 27)) * 0x94D049BB133111EB ;
@@ -146,11 +135,7 @@ void LG_rand_init_func (uint64_t *z, const void *x,
 "void LG_rand_init_func (uint64_t *z, const void *x,            \n" \
 "    GrB_Index i, GrB_Index j, const uint64_t *seed)            \n" \
 "{                                                              \n" \
-"   uint64_t state = i + 1 ;                                    \n" \
-"   state ^= state << 13 ;                                      \n" \
-"   state ^= state >> 7 ;                                       \n" \
-"   state ^= state << 17 ;                                      \n" \
-"   state += (*seed) ;                                          \n" \
+"   uint64_t state = i + (*seed) ;                              \n" \
 "   uint64_t result = (state += 0x9E3779B97f4A7C15) ;           \n" \
 "   result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9 ;   \n" \
 "   result = (result ^ (result >> 27)) * 0x94D049BB133111EB ;   \n" \
@@ -170,16 +155,21 @@ void LG_rand_init_func (uint64_t *z, const void *x,
     GrB_IndexUnaryOp_free (&LG_rand_init_op) ;              \
 }
 
-int LAGraph_Random_Init (char *msg)
+int LAGraph_Random_Init (char *msg) // FIXME: remove this method
+{
+    return (LG_Random_Init (msg)) ;
+}
+
+int LG_Random_Init (char *msg)
 {
     LG_CLEAR_MSG ;
+    LG_FREE_WORK ; // free the two ops in case LG_Random_Init is called twice
     LG_rand_next_op = NULL ;
     LG_rand_init_op = NULL ;
 
     #if LAGRAPH_SUITESPARSE
     {
         // give SuiteSparse:GraphBLAS the strings that define the functions
-        // using the xorshift generator from LAGraph v1.2
         GRB_TRY (GxB_UnaryOp_new (&LG_rand_next_op,
             (GxB_unary_function) LG_rand_next_f2,
             GrB_UINT64, GrB_UINT64,
@@ -192,7 +182,6 @@ int LAGraph_Random_Init (char *msg)
     #else
     {
         // vanilla GraphBLAS, no strings to define the new operators
-        // using the xorshift generator from LAGraph v1.2
         GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op,
             (GxB_unary_function) LG_rand_next_f2,
             GrB_UINT64, GrB_UINT64)) ;
@@ -209,11 +198,16 @@ int LAGraph_Random_Init (char *msg)
 // LAGraph_Random_Finalize:  free the random state operator
 //------------------------------------------------------------------------------
 
-int LAGraph_Random_Finalize (char *msg)
+int LG_Random_Finalize (char *msg)
 {
     LG_CLEAR_MSG ;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+}
+
+int LAGraph_Random_Finalize (char *msg) // FIXME: remove this method
+{
+    return (LG_Random_Finalize (msg)) ;
 }
 
 //------------------------------------------------------------------------------
@@ -249,8 +243,7 @@ int LAGraph_Random_Seed // construct a random state vector
     LG_CLEAR_MSG ;
     LG_ASSERT (State != NULL, GrB_NULL_POINTER) ;
 
-    // LAGraph v1.2:
-    // State = splitmix64 (xorshift64 (i+1) + seed)
+    // State = splitmix64 (i + seed)
     GRB_TRY (GrB_apply (State, NULL, NULL, LG_rand_init_op, State, seed,
         NULL)) ;
 
