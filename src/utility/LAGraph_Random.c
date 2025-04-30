@@ -226,14 +226,12 @@ int LAGraph_Random_Finalize (char *msg) // FIXME: remove this method
 bool random_hack = false ;
 #endif
 
-// FIXME: should this method allow the user to pass in the init and next ops?
-
-// FIXME: rename this method:
-int LAGraph_Random_Seed // construct a random state vector
+// FIXME: rename this method?
+int LAGraph_Random_Seed // construct a random State vector
 (
-    // input/output
-    GrB_Vector State,   // GrB_UINT64 vector of random number states
-    // input
+    // input/output:
+    GrB_Vector State,   // vector of random number States, normally GrB_UINT64
+    // input:
     uint64_t seed,      // scalar input seed
     char *msg
 )
@@ -271,8 +269,8 @@ int LAGraph_Random_Seed // construct a random state vector
 
 int LAGraph_Random_Next     // advance to next random vector
 (
-    // input/output
-    GrB_Vector State,       // the sparsity pattern of State is preserved
+    // input/output:
+    GrB_Vector State,   // vector of random number States, normally GrB_UINT64
     char *msg
 )
 {

@@ -2030,23 +2030,25 @@ int LAGraph_Vector_IsEqualOp
 /** LAGraph_Random_Seed creates a random vector.  On input, its values are
  * ignored but its structure is used.  On output, all entries that were in
  * the original structure are assigned random values, depending on the scalar
- * seed value.  Each entry is considered its own pseudo-random number stream.
+ * seed value.  Each entry is considered its own pseudo-random number stream,
+ * with the overall seed value being revised for each entry in the vector,
+ * depending on their index in the vector.
  *
- * @param[out,out] Seed vector to initialize with random numbers.
- * @param[in] seed      scalar seed value.
- * @param[in,out] msg   any error messages.
+ * @param[out,out] State vector to initialize with random numbers.
+ * @param[in] seed       scalar seed value.
+ * @param[in,out] msg    any error messages.
  *
  * @retval GrB_SUCCESS if successful.
- * @retval GrB_NULL_POINTER if Seed is NULL.
+ * @retval GrB_NULL_POINTER if State is NULL.
  * @returns any GraphBLAS errors that may have been encountered.
  */
 
 LAGRAPH_PUBLIC
-int LAGraph_Random_Seed     // construct a random seed vector
+int LAGraph_Random_Seed // construct a random State vector
 (
-    // input/output
-    GrB_Vector Seed,    // vector of random number seeds, normally GrB_UINT64
-    // input
+    // input/output:
+    GrB_Vector State,   // vector of random number States, normally GrB_UINT64
+    // input:
     uint64_t seed,      // scalar input seed
     char *msg
 ) ;
@@ -2055,19 +2057,19 @@ int LAGraph_Random_Seed     // construct a random seed vector
  * LAGraph_Random_Seed, and modifies all of them so that they take on their
  * next value in its pseudo-random number stream.
  *
- * @param[out,out] Seed vector with random numbers to be advanced.
+ * @param[out,out] State vector with random numbers to be advanced.
  * @param[in,out] msg   any error messages.
  *
  * @retval GrB_SUCCESS if successful.
- * @retval GrB_NULL_POINTER if Seed is NULL.
+ * @retval GrB_NULL_POINTER if State is NULL.
  * @returns any GraphBLAS errors that may have been encountered.
  */
 
 LAGRAPH_PUBLIC
 int LAGraph_Random_Next     // advance to next random vector
 (
-    // input/output
-    GrB_Vector Seed,
+    // input/output:
+    GrB_Vector State,   // vector of random number States, normally GrB_UINT64
     char *msg
 ) ;
 
