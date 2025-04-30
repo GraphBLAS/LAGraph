@@ -576,6 +576,11 @@ void test_CFL_reachability_invalid_rules(void) {
         (LAGraph_rule_WCNF){.nonterm = 10, .prod_A = 1, .prod_B = 2, .index = 0};
     check_error(GrB_INVALID_VALUE);
 
+    // Rule [S -> A B], where A >= nonterms_count
+    grammar.rules[0] =
+        (LAGraph_rule_WCNF){.nonterm = 0, .prod_A = 10, .prod_B = 2, .index = 0};
+    check_error(GrB_INVALID_VALUE);
+
     // Rule [C -> t], where t >= terms_count
     grammar.rules[0] =
         (LAGraph_rule_WCNF){.nonterm = 0, .prod_A = 10, .prod_B = -1, .index = 0};
@@ -614,6 +619,7 @@ void test_CFL_reachability_null_pointers(void) {
     init_outputs() ;
 
     adj_matrices[0] = NULL;
+    adj_matrices[1] = NULL;
     check_error(GrB_NULL_POINTER);
 
     adj_matrices = NULL;
