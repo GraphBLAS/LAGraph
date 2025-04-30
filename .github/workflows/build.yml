@@ -15,7 +15,7 @@ jobs:
         config:
         # if there are multiple items in this list, only use should
         # deployit=true for just one of them.
-#        - {grb_version: 9.4.5, deployit: false}
+         - {grb_version: 9.0.0, deployit: false}
          - {grb_version: 10.0.3, deployit: true}
     steps:
     - name: Checkout
@@ -57,7 +57,7 @@ jobs:
     strategy:
       matrix:
         config:
-#        - {grb_version: 9.4.5}
+         - {grb_version: 9.0.0}
          - {grb_version: 10.0.3}
     steps:
     - name: Checkout
