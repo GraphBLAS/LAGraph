@@ -139,21 +139,23 @@ void init_grammar_aSb() {
         .nonterms_count = 4, .terms_count = 2, .rules_count = 5, .rules = rules};
 }
 
-// S -> aS | a in WCNF
+// S -> aS | a | eps in WCNF
 //
 // Terms: [0 a]
 // Nonterms: [0 S]
 // S -> SS [0 0 0 0]
 // S -> a  [0 0 -1 0]
+// S -> eps [0 -1 -1 0]
 void init_grammar_aS() {
     LAGraph_rule_WCNF *rules = NULL ;
-    LAGraph_Calloc ((void **) &rules, 2, sizeof(LAGraph_rule_WCNF), msg);
+    LAGraph_Calloc ((void **) &rules, 3, sizeof(LAGraph_rule_WCNF), msg);
 
     rules[0] = (LAGraph_rule_WCNF){0, 0, 0, 0};
     rules[1] = (LAGraph_rule_WCNF){0, 0, -1, 0};
+    rules[2] = (LAGraph_rule_WCNF){0, -1, -1, 0};
 
     grammar = (grammar_t){
-        .nonterms_count = 1, .terms_count = 1, .rules_count = 2, .rules = rules};
+        .nonterms_count = 1, .terms_count = 1, .rules_count = 3, .rules = rules};
 }
 
 // Complex grammar
