@@ -3,6 +3,8 @@
 
 // FIXME: make x and p GrB_Vectors
 
+// Contributed by Olumayowa Olowomeye and Tim Davis, Texas A&M University
+
 #include "LG_internal.h"
 #include "LAGraphX.h"
 #include <LAGraph.h>
