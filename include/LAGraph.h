@@ -98,8 +98,8 @@
 
 #if ( !LAGRAPH_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
     // use SuiteSparse, and its GxB* extensions
-    #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,3)
-    #error "If using SuiteSparse::GraphBLAS, version 10.0.3 or later is required"
+    #if GxB_IMPLEMENTATION < GxB_VERSION (9,0,0)
+    #error "If using SuiteSparse::GraphBLAS, version 9.0.0 or later is required"
     #endif
     #define LAGRAPH_SUITESPARSE 1
 #else
@@ -2018,6 +2018,58 @@ int LAGraph_Vector_IsEqualOp
     const GrB_Vector u,
     const GrB_Vector v,
     const GrB_BinaryOp op,        // comparator to use
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// Random number generator
+//------------------------------------------------------------------------------
+
+// FIXME: rename these methods?
+
+/** LAGraph_Random_Seed creates a random vector.  On input, its values are
+ * ignored but its structure is used.  On output, all entries that were in
+ * the original structure are assigned random values, depending on the scalar
+ * seed value.  Each entry is considered its own pseudo-random number stream,
+ * with the overall seed value being revised for each entry in the vector,
+ * depending on their index in the vector.
+ *
+ * @param[out,out] State vector to initialize with random numbers.
+ * @param[in] seed       scalar seed value.
+ * @param[in,out] msg    any error messages.
+ *
+ * @retval GrB_SUCCESS if successful.
+ * @retval GrB_NULL_POINTER if State is NULL.
+ * @returns any GraphBLAS errors that may have been encountered.
+ */
+
+LAGRAPH_PUBLIC
+int LAGraph_Random_Seed // construct a random State vector
+(
+    // input/output:
+    GrB_Vector State,   // vector of random number States, normally GrB_UINT64
+    // input:
+    uint64_t seed,      // scalar input seed
+    char *msg
+) ;
+
+/** LAGraph_Random_Next takes as input a vector previously initialized by
+ * LAGraph_Random_Seed, and modifies all of them so that they take on their
+ * next value in its pseudo-random number stream.
+ *
+ * @param[out,out] State vector with random numbers to be advanced.
+ * @param[in,out] msg   any error messages.
+ *
+ * @retval GrB_SUCCESS if successful.
+ * @retval GrB_NULL_POINTER if State is NULL.
+ * @returns any GraphBLAS errors that may have been encountered.
+ */
+
+LAGRAPH_PUBLIC
+int LAGraph_Random_Next     // advance to next random vector
+(
+    // input/output:
+    GrB_Vector State,   // vector of random number States, normally GrB_UINT64
     char *msg
 ) ;
 

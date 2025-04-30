@@ -910,7 +910,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // typecast, if requested
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GxB_Matrix_type (&atype, A)) ;     // FIXME: use GrB_get
+    GRB_TRY (GxB_Matrix_type (&atype, A)) ;
 
     if (structural)
     {

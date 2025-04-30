@@ -57,12 +57,12 @@ extern "C"
 //------------------------------------------------------------------------------
 
 LAGRAPHX_PUBLIC
-int LAGraph_Random_Init
+int LAGraph_Random_Init // FIXME: remove this
 (
     char *msg
 ) ;
 LAGRAPHX_PUBLIC
-int LAGraph_Random_Finalize
+int LAGraph_Random_Finalize // FIXME: remove this
 (
     char *msg
 ) ;
@@ -71,24 +71,6 @@ int LAGraph_Random_Finalize
 // for testing only
 LAGRAPHX_PUBLIC extern bool random_hack ;
 #endif
-
-LAGRAPHX_PUBLIC
-int LAGraph_Random_Seed     // construct a random seed vector
-(
-    // input/output
-    GrB_Vector Seed,    // vector of random number seeds, normally GrB_UINT64
-    // input
-    uint64_t seed,      // scalar input seed
-    char *msg
-) ;
-
-LAGRAPHX_PUBLIC
-int LAGraph_Random_Next     // advance to next random vector
-(
-    // input/output
-    GrB_Vector Seed,
-    char *msg
-) ;
 
 LAGRAPHX_PUBLIC
 GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
