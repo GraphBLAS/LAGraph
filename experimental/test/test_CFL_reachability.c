@@ -139,21 +139,23 @@ void init_grammar_aSb() {
         .nonterms_count = 4, .terms_count = 2, .rules_count = 5, .rules = rules};
 }
 
-// S -> aS | a in WCNF
+// S -> aS | a | eps in WCNF
 //
 // Terms: [0 a]
 // Nonterms: [0 S]
 // S -> SS [0 0 0 0]
 // S -> a  [0 0 -1 0]
+// S -> eps [0 -1 -1 0]
 void init_grammar_aS() {
     LAGraph_rule_WCNF *rules = NULL ;
-    LAGraph_Calloc ((void **) &rules, 2, sizeof(LAGraph_rule_WCNF), msg);
+    LAGraph_Calloc ((void **) &rules, 3, sizeof(LAGraph_rule_WCNF), msg);
 
     rules[0] = (LAGraph_rule_WCNF){0, 0, 0, 0};
     rules[1] = (LAGraph_rule_WCNF){0, 0, -1, 0};
+    rules[2] = (LAGraph_rule_WCNF){0, -1, -1, 0};
 
     grammar = (grammar_t){
-        .nonterms_count = 1, .terms_count = 1, .rules_count = 2, .rules = rules};
+        .nonterms_count = 1, .terms_count = 1, .rules_count = 3, .rules = rules};
 }
 
 // Complex grammar
@@ -404,6 +406,24 @@ void init_graph_3() {
     adj_matrices[1] = adj_matrix_b;
 }
 
+// Graph:
+
+// 0 -b-> 1
+// 1 -b-> 0
+void init_graph_4() {
+    LAGraph_Calloc ((void **) &adj_matrices, 2, sizeof (GrB_Matrix), msg) ;
+
+    GrB_Matrix adj_matrix_a, adj_matrix_b;
+    GrB_Matrix_new(&adj_matrix_a, GrB_BOOL, 2, 2);
+    GrB_Matrix_new(&adj_matrix_b, GrB_BOOL, 2, 2);
+
+    OK(GrB_Matrix_setElement(adj_matrix_b, true, 0, 1));
+    OK(GrB_Matrix_setElement(adj_matrix_b, true, 1, 0));
+
+    adj_matrices[0] = adj_matrix_a;
+    adj_matrices[1] = adj_matrix_b;
+}
+
 //====================
 // Tests with valid result
 //====================
@@ -514,6 +534,21 @@ void test_CFL_reachability_two_nodes_cycle(void) {
     teardown();
 }
 
+void test_CFL_reachability_with_empty_adj_matrix(void) {
+    setup();
+    GrB_Info retval;
+
+    init_grammar_aS();
+    init_graph_4();
+    init_outputs() ;
+
+    OK(run_algorithm());
+    check_result("(0, 0) (1, 1)");
+
+    free_workspace();
+    teardown();
+}
+
 //====================
 // Tests with invalid result
 //====================
@@ -539,6 +574,11 @@ void test_CFL_reachability_invalid_rules(void) {
     // Rule [C -> A B], where C >= nonterms_count
     grammar.rules[0] =
         (LAGraph_rule_WCNF){.nonterm = 10, .prod_A = 1, .prod_B = 2, .index = 0};
+    check_error(GrB_INVALID_VALUE);
+
+    // Rule [S -> A B], where A >= nonterms_count
+    grammar.rules[0] =
+        (LAGraph_rule_WCNF){.nonterm = 0, .prod_A = 10, .prod_B = 2, .index = 0};
     check_error(GrB_INVALID_VALUE);
 
     // Rule [C -> t], where t >= terms_count
@@ -579,6 +619,7 @@ void test_CFL_reachability_null_pointers(void) {
     init_outputs() ;
 
     adj_matrices[0] = NULL;
+    adj_matrices[1] = NULL;
     check_error(GrB_NULL_POINTER);
 
     adj_matrices = NULL;
@@ -615,6 +656,7 @@ TEST_LIST = {{"CFL_reachability_complex_grammar", test_CFL_reachability_complex_
              {"CFL_reachability_line", test_CFL_reachability_line},
              {"CFL_reachability_two_nodes_cycle", test_CFL_reachability_two_nodes_cycle},
              {"CFG_reach_basic_invalid_rules", test_CFL_reachability_invalid_rules},
+             {"test_CFL_reachability_with_empty_adj_matrix", test_CFL_reachability_with_empty_adj_matrix},
              #if !defined ( GRAPHBLAS_HAS_CUDA )
              {"CFG_reachability_null_pointers", test_CFL_reachability_null_pointers},
              #endif
