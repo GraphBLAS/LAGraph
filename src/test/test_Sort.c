@@ -134,7 +134,8 @@ void test_sort3 (void)
     OK (LAGraph_Malloc ((void **) &A1, n, sizeof (int64_t), msg)) ;
     OK (LAGraph_Malloc ((void **) &A2, n, sizeof (int64_t), msg)) ;
 
-    uint64_t seed = 1 ;
+    uint64_t seed = 9 ;
+
     for (int k = 0 ; k < n ; k++)
     {
         A0 [k] = (int64_t) (LG_Random64 (&seed) & 0x7FFF) ;

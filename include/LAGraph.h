@@ -2025,8 +2025,8 @@ int LAGraph_Vector_IsEqualOp
 // Random number generator
 //------------------------------------------------------------------------------
 
-/** LAGraph_Random_Seed creates a random vector containing an array of
- * different random streams.  On input, its values are ignored but its
+/** LAGraph_Random_Seed creates a pseudo-random vector containing an array of
+ * different pseudo-random streams.  On input, its values are ignored but its
  * structure is used.  On output, all entries that were in the original
  * structure are assigned random values, depending on the scalar seed value.
  * Each entry is considered its own pseudo-random number stream, with the
