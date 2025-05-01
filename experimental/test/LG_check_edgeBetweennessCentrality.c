@@ -25,6 +25,10 @@
     LAGraph_Free ((void **) &paths, NULL) ;         \
     LAGraph_Free ((void **) &Pj, NULL) ;            \
     LAGraph_Free ((void **) &Ptail, NULL) ;         \
+    if(AT != G->AT)                                 \
+    {                                               \
+        GrB_free (&AT) ;                            \
+    }                                               \
 }
 
 #define LG_FREE_ALL                                 \
@@ -33,6 +37,9 @@
     LAGraph_Free ((void **) &Ap, NULL) ;            \
     LAGraph_Free ((void **) &Aj, NULL) ;            \
     LAGraph_Free ((void **) &Ax, NULL) ;            \
+    LAGraph_Free ((void **) &ATp, NULL) ;           \
+    LAGraph_Free ((void **) &ATj, NULL) ;           \
+    LAGraph_Free ((void **) &ATx, NULL) ;           \
     LAGraph_Free ((void **) &result, NULL) ;        \
 }
 
@@ -92,6 +99,8 @@ int LG_check_edgeBetweennessCentrality
     GrB_Vector internal_sources = NULL;
     bool created_sources = false;
 
+    GrB_Matrix AT  = NULL ;
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -114,7 +123,6 @@ int LG_check_edgeBetweennessCentrality
 
     LG_TRY (LAGraph_Cached_AT (G, msg)) ;
 
-    GrB_Matrix AT ;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
          G->is_symmetric_structure == LAGraph_TRUE)
     {
@@ -219,6 +227,7 @@ int LG_check_edgeBetweennessCentrality
         
         // Clean up resources
         if (created_sources) GRB_TRY (GrB_free(&internal_sources));
+        LG_FREE_ALL ;
         return (GrB_SUCCESS);
     }
 
@@ -370,10 +379,6 @@ GrB_Info GxB_Matrix_pack_FullR  // pack a full matrix, held by row
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
-    if(AT != G->AT)
-    {
-        GRB_TRY (GrB_free (&AT)) ;
-    }
     LG_FREE_WORK ;
 
     if (print_timings)

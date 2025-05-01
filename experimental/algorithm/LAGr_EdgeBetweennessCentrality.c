@@ -286,9 +286,9 @@ int LAGr_EdgeBetweennessCentrality
     GRB_TRY (GrB_Matrix_new (&Fd1A, GrB_FP64, n, n)) ;
     GRB_TRY (GrB_Vector_new(&temp_update, GrB_FP64, n)) ; // Create a temporary vector
 
-    GrB_Matrix_new(&HalfUpdate, GrB_FP64, n, n);
-    GrB_Matrix_new(&HalfUpdateT, GrB_FP64, n, n);
-    GrB_Matrix_new(&SymmetricUpdate, GrB_FP64, n, n);
+    GRB_TRY (GrB_Matrix_new(&HalfUpdate, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_Matrix_new(&HalfUpdateT, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_Matrix_new(&SymmetricUpdate, GrB_FP64, n, n)) ;
 
     // Iterate through source nodes
     for (GrB_Index i = 0; i < nsources; i++)
