@@ -19,8 +19,8 @@
 #define LG_FREE_WORK                                \
 {                                                   \
     LAGraph_Free ((void **) &queue, NULL) ;         \
-    LAGraph_Free ((void **) &depth, NULL) ;             \
-    LAGraph_Free ((void **) &bc_vertex_flow, NULL) ;         \
+    LAGraph_Free ((void **) &depth, NULL) ;         \
+    LAGraph_Free ((void **) &bc_vertex_flow, NULL) ;\
     LAGraph_Free ((void **) &S, NULL) ;             \
     LAGraph_Free ((void **) &paths, NULL) ;         \
     LAGraph_Free ((void **) &Pj, NULL) ;            \
@@ -33,6 +33,7 @@
     LAGraph_Free ((void **) &Ap, NULL) ;            \
     LAGraph_Free ((void **) &Aj, NULL) ;            \
     LAGraph_Free ((void **) &Ax, NULL) ;            \
+    LAGraph_Free ((void **) &result, NULL) ;        \
 }
 
 #include "LG_internal.h"
@@ -119,7 +120,7 @@ int LG_check_edgeBetweennessCentrality
     {
         // A and A' have the same structure
         // AT = A;
-        GrB_Matrix_new (&AT, GrB_FP64, n, n) ;
+        // GrB_Matrix_new (&AT, GrB_FP64, n, n) ;
         GrB_Matrix_dup (&AT, A) ;
     }
     else
@@ -369,7 +370,10 @@ GrB_Info GxB_Matrix_pack_FullR  // pack a full matrix, held by row
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
-
+    if(AT != G->AT)
+    {
+        GRB_TRY (GrB_free (&AT)) ;
+    }
     LG_FREE_WORK ;
 
     if (print_timings)
