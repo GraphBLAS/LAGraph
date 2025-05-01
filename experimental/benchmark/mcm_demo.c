@@ -140,7 +140,6 @@ int main(int argc, char **argv)
     }
     char *matrix_name = (argc > 1) ? argv[1] : "stdin";
 
-    LAGRAPH_TRY(LAGraph_Random_Init(msg));
     bool make_symmetric = false, remove_self_edges = false, structural = true,
          ensure_positive = false;
     LAGRAPH_TRY(readproblem(&G, NULL, make_symmetric, remove_self_edges,

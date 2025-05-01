@@ -86,6 +86,8 @@ int LAGr_SampleDegree
 
     // FIXME: use LAGraph_Random_Seed and LAGraph_Random_Next instead
 
+    if (seed == 0) seed = 1 ;   // a seed of zero will fail
+
     int64_t dsum = 0 ;
     for (int k = 0 ; k < nsamples ; k++)
     {
