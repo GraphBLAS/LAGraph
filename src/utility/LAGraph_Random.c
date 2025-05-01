@@ -96,7 +96,8 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 // From these references, the recommendation is to create the initial state of
 // a random number generator with an entirely different random number
 // generator.  splitmix64 is recommended, so we initialize the State(i) with
-// splitmix64 (i+seed).
+// splitmix64 (i+seed).  The method cannot return a value of zero, so it is
+// suitable as a seed for the xorshift64 generator, above.
 
 // References:
 //
@@ -111,6 +112,8 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 // Guy L. Steele, Doug Lea, and Christine H. Flood. 2014. Fast splittable
 // pseudorandom number generators. SIGPLAN Not. 49, 10 (October 2014), 453–472.
 // https://doi.org/10.1145/2714064.2660195
+//
+// The splitmix64 below method is the mix64variant13 in the above paper.
 
 #if 0
 
@@ -120,7 +123,7 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 
     uint64_t splitmix64(struct splitmix64_state *state)
     {
-        uint64_t result = (state->s += 0x9E3779B97f4A7C15);
+        uint64_t result = (state->s += 0x9E3779B97F4A7C15);
         result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
         result = (result ^ (result >> 27)) * 0x94D049BB133111EB;
         return result ^ (result >> 31);
@@ -128,13 +131,15 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 
 #endif
 
+#define GOLDEN_GAMMA 0x9E3779B97F4A7C15LL
+
 // The init function computes z = splitmix64 (i + seed), but it does not
 // advance the seed value on return.
 void LG_rand_init_func (uint64_t *z, const void *x,
     GrB_Index i, GrB_Index j, const uint64_t *seed)
 {
     uint64_t state = i + (*seed) ;
-    uint64_t result = (state += 0x9E3779B97f4A7C15LL) ;
+    uint64_t result = (state += GOLDEN_GAMMA) ;
     result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9LL ;
     result = (result ^ (result >> 27)) * 0x94D049BB133111EBLL ;
     result = (result ^ (result >> 31)) ;
@@ -146,9 +151,9 @@ void LG_rand_init_func (uint64_t *z, const void *x,
 "    GrB_Index i, GrB_Index j, const uint64_t *seed)            \n" \
 "{                                                              \n" \
 "   uint64_t state = i + (*seed) ;                              \n" \
-"   uint64_t result = (state += 0x9E3779B97f4A7C15) ;           \n" \
-"   result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9 ;   \n" \
-"   result = (result ^ (result >> 27)) * 0x94D049BB133111EB ;   \n" \
+"   uint64_t result = (state += 0x9E3779B97F4A7C15LL) ;         \n" \
+"   result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9LL ; \n" \
+"   result = (result ^ (result >> 27)) * 0x94D049BB133111EBLL ; \n" \
 "   result = (result ^ (result >> 31)) ;                        \n" \
 "   (*z) = result ;                                             \n" \
 "}"
