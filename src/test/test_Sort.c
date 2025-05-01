@@ -39,7 +39,7 @@ void test_sort1 (void)
         uint64_t seed = 1 ;
         for (int k = 0 ; k < n ; k++)
         {
-            A0 [k] = (int64_t) LG_Random15 (&seed) ;
+            A0 [k] = (int64_t) (LG_Random64 (&seed) & 0x7FFF) ;
         }
 
         OK (LG_msort1 (A0, n, msg)) ;
@@ -51,7 +51,7 @@ void test_sort1 (void)
 
         for (int k = 0 ; k < n ; k++)
         {
-            A0 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
+            A0 [k] = (int64_t) (LG_Random64 (&seed) % 4) ;
         }
 
         OK (LG_msort1 (A0, n, msg)) ;
@@ -85,8 +85,8 @@ void test_sort2 (void)
     uint64_t seed = 1 ;
     for (int k = 0 ; k < n ; k++)
     {
-        A0 [k] = (int64_t) LG_Random15 (&seed) ;
-        A1 [k] = (int64_t) LG_Random60 (&seed) ;
+        A0 [k] = (int64_t) (LG_Random64 (&seed) & 0x7FFF) ;
+        A1 [k] = (int64_t) LG_Random64 (&seed) ;
     }
 
     OK (LG_msort2 (A0, A1, n, msg)) ;
@@ -100,7 +100,7 @@ void test_sort2 (void)
     for (int k = 0 ; k < n ; k++)
     {
         A0 [k] = 0 ;
-        A1 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
+        A1 [k] = (int64_t) (LG_Random64 (&seed) % 4) ;
     }
 
     OK (LG_msort2 (A0, A1, n, msg)) ;
@@ -137,9 +137,9 @@ void test_sort3 (void)
     uint64_t seed = 1 ;
     for (int k = 0 ; k < n ; k++)
     {
-        A0 [k] = (int64_t) LG_Random15 (&seed) ;
-        A1 [k] = (int64_t) LG_Random60 (&seed) ;
-        A2 [k] = (int64_t) LG_Random60 (&seed) ;
+        A0 [k] = (int64_t) (LG_Random64 (&seed) & 0x7FFF) ;
+        A1 [k] = (int64_t) LG_Random64 (&seed) ;
+        A2 [k] = (int64_t) LG_Random64 (&seed) ;
     }
 
     OK (LG_msort3 (A0, A1, A2, n, msg)) ;
@@ -155,8 +155,8 @@ void test_sort3 (void)
     for (int k = 0 ; k < n ; k++)
     {
         A0 [k] = 0 ;
-        A1 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
-        A2 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
+        A1 [k] = (int64_t) (LG_Random64 (&seed) % 4) ;
+        A2 [k] = (int64_t) (LG_Random64 (&seed) % 4) ;
     }
 
     OK (LG_msort3 (A0, A1, A2, n, msg)) ;
@@ -196,7 +196,7 @@ void test_sort1_brutal (void)
         uint64_t seed = 1 ;
         for (int k = 0 ; k < n ; k++)
         {
-            A0 [k] = (int64_t) LG_Random15 (&seed) ;
+            A0 [k] = (int64_t) (LG_Random64 (&seed) & 0x7FFF) ;
         }
 
         LG_BRUTAL (LG_msort1 (A0, n, msg)) ;
@@ -208,7 +208,7 @@ void test_sort1_brutal (void)
 
         for (int k = 0 ; k < n ; k++)
         {
-            A0 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
+            A0 [k] = (int64_t) (LG_Random64 (&seed) % 4) ;
         }
 
         LG_BRUTAL (LG_msort1 (A0, n, msg)) ;
@@ -244,8 +244,8 @@ void test_sort2_brutal (void)
     uint64_t seed = 1 ;
     for (int k = 0 ; k < n ; k++)
     {
-        A0 [k] = (int64_t) LG_Random15 (&seed) ;
-        A1 [k] = (int64_t) LG_Random60 (&seed) ;
+        A0 [k] = (int64_t) (LG_Random64 (&seed) & 0x7FFF) ;
+        A1 [k] = (int64_t) LG_Random64 (&seed) ;
     }
 
     LG_BRUTAL (LG_msort2 (A0, A1, n, msg)) ;
@@ -259,7 +259,7 @@ void test_sort2_brutal (void)
     for (int k = 0 ; k < n ; k++)
     {
         A0 [k] = 0 ;
-        A1 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
+        A1 [k] = (int64_t) (LG_Random64 (&seed) % 4) ;
     }
 
     LG_BRUTAL (LG_msort2 (A0, A1, n, msg)) ;
@@ -298,9 +298,9 @@ void test_sort3_brutal (void)
     uint64_t seed = 1 ;
     for (int k = 0 ; k < n ; k++)
     {
-        A0 [k] = (int64_t) LG_Random15 (&seed) ;
-        A1 [k] = (int64_t) LG_Random60 (&seed) ;
-        A2 [k] = (int64_t) LG_Random60 (&seed) ;
+        A0 [k] = (int64_t) (LG_Random64 (&seed) & 0x7FFF) ;
+        A1 [k] = (int64_t) LG_Random64 (&seed) ;
+        A2 [k] = (int64_t) LG_Random64 (&seed) ;
     }
 
     LG_BRUTAL (LG_msort3 (A0, A1, A2, n, msg)) ;
@@ -316,8 +316,8 @@ void test_sort3_brutal (void)
     for (int k = 0 ; k < n ; k++)
     {
         A0 [k] = 0 ;
-        A1 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
-        A2 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
+        A1 [k] = (int64_t) (LG_Random64 (&seed) % 4) ;
+        A2 [k] = (int64_t) (LG_Random64 (&seed) % 4) ;
     }
 
     LG_BRUTAL (LG_msort3 (A0, A1, A2, n, msg)) ;

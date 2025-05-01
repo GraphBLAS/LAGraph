@@ -17,8 +17,6 @@
 
 // A very simple thread-safe parallel pseudo-random nuumber generator.
 
-// FIXME: ready for src
-
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
@@ -38,8 +36,8 @@ GrB_IndexUnaryOp LG_rand_init_op = NULL ;
 
 // z = f(x), where x is the old state and z is the new state.
 
-// using xorshift, from https://en.wikipedia.org/wiki/Xorshift
-// with a state of uint64_t, or xorshift64star.
+// using xorshift64, from https://en.wikipedia.org/wiki/Xorshift
+// with a state of uint64_t.
 
 // Reference: Marsaglia, George (July 2003). "Xorshift RNGs". Journal of
 // Statistical Software. 8 (14).  https://doi.org/10.18637/jss.v008.i14 .
@@ -65,6 +63,16 @@ GrB_IndexUnaryOp LG_rand_init_op = NULL ;
 
 #endif
 
+// return a random uint64_t; for internal use in LAGraph
+uint64_t LG_Random64 (uint64_t *state)
+{
+    (*state) ^= (*state) << 13 ;
+    (*state) ^= (*state) >> 7 ;
+    (*state) ^= (*state) << 17 ;
+    return (*state) ;
+}
+
+// return a random uint64_t; as a unary operator
 void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 {
     uint64_t state = (*x) ;
@@ -87,7 +95,7 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 // From these references, the recommendation is to create the initial state of
 // a random number generator with an entirely different random number
 // generator.  splitmix64 is recommended, so we initialize the State(i) with
-// (i+seed) then randomize the State with splitmix64.
+// splitmix64 (i+seed).
 
 // References:
 //
@@ -98,6 +106,10 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 // Multipliers for Congruential Pseudorandom Number Generators. 22 Jan.
 // 2021. 23 pages. https://arxiv.org/abs/2001.05304 Revised version to appear
 // in Software: Practice and Experience.  https://doi.org/10.1002/spe.3030
+//
+// Guy L. Steele, Doug Lea, and Christine H. Flood. 2014. Fast splittable
+// pseudorandom number generators. SIGPLAN Not. 49, 10 (October 2014), 453–472.
+// https://doi.org/10.1145/2714064.2660195
 
 #if 0
 
@@ -115,7 +127,8 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 
 #endif
 
-// The init function computes z = splitmix64 (i + seed)
+// The init function computes z = splitmix64 (i + seed), but it does not
+// advance the seed value on return.
 void LG_rand_init_func (uint64_t *z, const void *x,
     GrB_Index i, GrB_Index j, const uint64_t *seed)
 {
@@ -125,8 +138,9 @@ void LG_rand_init_func (uint64_t *z, const void *x,
     result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9 ;
     result = (result ^ (result >> 27)) * 0x94D049BB133111EB ;
     result = (result ^ (result >> 31)) ;
+    // FIXME: is this needed? See the splitmix64 paper.
     // this is a precaution against the unlikely event that state is zero:
-    if (result == 0) result = LG_RAND_MARSAGLIA_SEED ;
+    result = (result == 0) ? LG_RAND_MARSAGLIA_SEED : result ;
     // return the result
     (*z) = result ;
 }
@@ -140,7 +154,7 @@ void LG_rand_init_func (uint64_t *z, const void *x,
 "   result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9 ;   \n" \
 "   result = (result ^ (result >> 27)) * 0x94D049BB133111EB ;   \n" \
 "   result = (result ^ (result >> 31)) ;                        \n" \
-"   if (result == 0) result = 88172645463325252LL ;             \n" \
+"   result = (result == 0) ? 88172645463325252LL : result ;     \n" \
 "   (*z) = result ;                                             \n" \
 "}"
 
@@ -226,7 +240,6 @@ int LAGraph_Random_Finalize (char *msg) // FIXME: remove this method
 bool random_hack = false ;
 #endif
 
-// FIXME: rename this method?
 int LAGraph_Random_Seed // construct a random State vector
 (
     // input/output:

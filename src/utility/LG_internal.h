@@ -585,25 +585,13 @@ int LG_nself_edges
 ) ;
 
 //------------------------------------------------------------------------------
-// simple and portable random number generator (internal use only)
+// simple and portable random number generator
 //------------------------------------------------------------------------------
 
-// This is for testing and special-case use only, not for LAGraph
-// algorithms.
+// return a random uint64_t
+uint64_t LG_Random64 (uint64_t *seed) ;
 
-#define LG_RANDOM15_MAX 32767
-#define LG_RANDOM60_MAX ((1ULL << 60) -1)
-
-// return a random number between 0 and LG_RANDOM15_MAX
-GrB_Index LG_Random15 (uint64_t *seed) ;
-
-// return a random uint64_t, in range 0 to LG_RANDOM60_MAX
-GrB_Index LG_Random60 (uint64_t *seed) ;
-
-//------------------------------------------------------------------------------
-// a better random number generator, for algorithmic usage
-//------------------------------------------------------------------------------
-
+// create operators for LAGraph_Random_* methods;
 int LG_Random_Init (char *msg) ;
 int LG_Random_Finalize (char *msg) ;
 
