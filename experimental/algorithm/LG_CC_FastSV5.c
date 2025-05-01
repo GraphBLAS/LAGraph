@@ -110,7 +110,7 @@ static inline void ht_sample
     for (int32_t k = 0 ; k < samples ; k++)
     {
         // select an entry from V32 at random
-        int32_t x = V32 [LG_Random60 (seed) % n] ;
+        int32_t x = V32 [LG_Random64 (seed) % n] ;
 
         // find x in the hash table
         // todo: make this loop a static inline function (see also below)

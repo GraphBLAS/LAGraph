@@ -2025,16 +2025,27 @@ int LAGraph_Vector_IsEqualOp
 // Random number generator
 //------------------------------------------------------------------------------
 
-// FIXME: rename these methods?
-
-/** LAGraph_Random_Seed creates a random vector.  On input, its values are
- * ignored but its structure is used.  On output, all entries that were in
- * the original structure are assigned random values, depending on the scalar
- * seed value.  Each entry is considered its own pseudo-random number stream,
- * with the overall seed value being revised for each entry in the vector,
- * depending on their index in the vector.
+/** LAGraph_Random_Seed creates a pseudo-random vector containing an array of
+ * different pseudo-random streams, one per entry.  On input, the values of the
+ * State vector are ignored but its structure is used.  On output, all entries
+ * that were in the original structure of the State vector are assigned random
+ * values, depending on the scalar seed value.  Each entry is considered its
+ * own pseudo-random number stream, with the overall seed value being revised
+ * for each entry in the vector, depending on their index in the vector.
  *
- * @param[out,out] State vector to initialize with random numbers.
+ * If the entry State [i] is present in the State vector, it is initialized
+ * with the pseudo random number State [i] = splitmix64 (i + seed);
+ * see https://dl.acm.org/doi/10.1145/2714064.2660195 for details, or
+ * https://en.wikipedia.org/wiki/Xorshift .
+ *
+ * To call this method with a new seed, for subsequent iterations for the same
+ * State vector, it is advisable to advance the seed by at least n, where n is
+ * the dimension of the State vector.
+ *
+ * The State vector should normally be of type GrB_UINT64, but this is not
+ * enforced.
+ *
+ * @param[out,out] State vector to initialize with pseudo-random numbers.
  * @param[in] seed       scalar seed value.
  * @param[in,out] msg    any error messages.
  *
@@ -2054,11 +2065,17 @@ int LAGraph_Random_Seed // construct a random State vector
 ) ;
 
 /** LAGraph_Random_Next takes as input a vector previously initialized by
- * LAGraph_Random_Seed, and modifies all of them so that they take on their
- * next value in its pseudo-random number stream.
+ * LAGraph_Random_Seed, and modifies all its entries so that they take on their
+ * next value in their respective pseudo-random number streams.
+ *
+ * Each stream in State [i] should be initialized by LAGraph_Random_Seed, and
+ * then advanced to the next pseudo-random value with LAGraph_Random_Next,
+ * which computes State [i] = xorshift64 (State [i]).  See
+ * https://doi.org/10.18637/jss.v008.i14 and
+ * https://en.wikipedia.org/wiki/Xorshift .
  *
  * @param[out,out] State vector with random numbers to be advanced.
- * @param[in,out] msg   any error messages.
+ * @param[in,out] msg    any error messages.
  *
  * @retval GrB_SUCCESS if successful.
  * @retval GrB_NULL_POINTER if State is NULL.

@@ -33,7 +33,6 @@ int main(int argc, char **argv)
     double density = (argc > 3 ? atof (argv [3]) : DEFAULT_DENSITY) ;
     uint64_t seed = (argc > 4 ? atoll (argv [4]) : DEFAULT_SEED) ;
 
-    LG_TRY (LAGraph_Random_Init (msg)) ;
     int ntrials = 1 ;
 
     for (int i = 0 ; i < ntrials ; i++) {
