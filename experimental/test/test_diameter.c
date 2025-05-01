@@ -77,7 +77,6 @@ const matrix_info files [ ] =
 void test_diameter (void)
 {
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
     #if LAGRAPH_SUITESPARSE
 
     for (int k = 0 ; ; k++)
@@ -156,7 +155,6 @@ void test_diameter (void)
     #else
     printf ("test skipped\n") ;
     #endif
-    OK (LAGraph_Random_Finalize (msg)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 
@@ -167,7 +165,6 @@ void test_diameter (void)
 void test_diameter_huge (void)
 {
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
     #if LAGRAPH_SUITESPARSE
     OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_OFF)) ;
 
@@ -227,7 +224,6 @@ void test_diameter_huge (void)
     #else
     printf ("test skipped\n") ;
     #endif
-    OK (LAGraph_Random_Finalize (msg)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 

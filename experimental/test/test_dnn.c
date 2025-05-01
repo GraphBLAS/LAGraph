@@ -31,7 +31,6 @@ char msg [LAGRAPH_MSG_LEN] ;
 void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
 }
 
 //------------------------------------------------------------------------------
@@ -40,7 +39,6 @@ void setup (void)
 
 void teardown (void)
 {
-    OK (LAGraph_Random_Finalize (msg)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 

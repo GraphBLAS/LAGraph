@@ -90,7 +90,6 @@ void test_MaximalMatching (void)
 {
     OK (LAGraph_Init (msg)) ;
 //  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-    OK (LAGraph_Random_Init (msg)) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -236,7 +235,6 @@ void test_MaximalMatching (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
     OK (LAGraph_Finalize (msg)) ;
-    OK (LAGraph_Random_Finalize (msg)) ;
 }
 
 void test_MaximalMatchingErrors (void)

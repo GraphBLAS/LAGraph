@@ -88,7 +88,6 @@ char msg [LAGRAPH_MSG_LEN] ;
 void test_Coarsen_Matching () {
 
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
 //  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
 
 #if LAGRAPH_SUITESPARSE
@@ -259,7 +258,6 @@ void test_Coarsen_Matching () {
 #endif
 
     OK (LAGraph_Finalize (msg)) ;
-    OK (LAGraph_Random_Finalize (msg)) ;
 }
 
 void test_Coarsen_Matching_Errors() {
@@ -305,7 +303,6 @@ void test_Coarsen_Matching_Errors() {
 void test_Coarsen_Matching_NullInputs() {
 
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
 
 #if LAGRAPH_SUITESPARSE
 
@@ -333,7 +330,6 @@ void test_Coarsen_Matching_NullInputs() {
 #endif
 
     OK (LAGraph_Finalize (msg)) ;
-    OK (LAGraph_Random_Finalize (msg)) ;
 }
 
 TEST_LIST = {

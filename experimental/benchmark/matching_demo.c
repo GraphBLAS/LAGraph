@@ -100,7 +100,6 @@ int main (int argc, char** argv)
     }
     force_stdin = ( strcmp (matrix_name, "stdin") == 0 ) ;
 
-    LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
     LAGRAPH_TRY (readproblem (&G, NULL,
         true, true, false, GrB_FP64, false, force_stdin ? 1 : argc - quality, quality ? q_argv : argv)) ;
 
