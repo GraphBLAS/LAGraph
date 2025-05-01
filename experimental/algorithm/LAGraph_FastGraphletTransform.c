@@ -94,9 +94,6 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 
 void sub_one_mult (int64_t *z, const int64_t *x) { (*z) = (*x) * ((*x)-1) ; }
 
@@ -417,7 +414,6 @@ int LAGraph_FastGraphletTransform
 
     GRB_TRY (info1) ;
 
-//  GxB_set (GxB_NTHREADS, omp_get_max_threads()) ;
     LG_TRY (LAGraph_SetNumThreads (save_nthreads_outer, save_nthreads_inner, msg)) ;
 
     GRB_TRY (GxB_Matrix_concat (C_4, C_Tiles, tile_cnt, 1, NULL)) ;

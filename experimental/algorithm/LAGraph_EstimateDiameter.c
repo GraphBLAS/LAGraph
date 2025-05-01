@@ -12,7 +12,6 @@
 //------------------------------------------------------------------------------
 
 // FIXME: almost ready for src; need to handle GxB
-// FIXME: need the CI test for this method
 
 // Takes in a graph and estimates the diameter 
 // and optionally also finds pseudo-peripheral nodes of the graph
@@ -157,6 +156,8 @@ int LAGraph_EstimateDiameter
     else
     {
         // srcs = randomized, still of size nsrcs-1, values in range 0 to UINT64_MAX
+        // FIXME: if the graph is very sparse, select nodes at random with at
+        // least one out-going edge.
         LAGRAPH_TRY (LAGraph_Random_Seed (srcs, seed, msg)) ;
         GRB_TRY (GxB_BinaryOp_new (&Mod,
             (n > INT32_MAX) ? ((GxB_binary_function)mod64) :

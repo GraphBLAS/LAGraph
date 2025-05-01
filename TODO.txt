@@ -1,5 +1,14 @@
 LAGraph TODO:
 
+For May 14, 2025, meeting:
+
+    Propose releasing a stable v1.2 branch
+    full test coverage except RegularPathQuery
+    Requires SS:GraphBLAS v9.0.0 or later, but additional features of v10.0.0 used
+        by some methods (with an #ifdef)
+    Add LAGraph_Random* methods to src/utililty, but no other methods added to
+        src/algorithm or src/utility (do those later)
+
 Aug 21, 2024:
 
     (1) LAGraph 1.1.4 release, with latest GraphBLAS compiled in CI, not

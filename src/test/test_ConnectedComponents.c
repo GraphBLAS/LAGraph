@@ -145,6 +145,32 @@ void test_cc_matrices (void)
             #endif
             #endif
 
+            // find the connected components with LG_CC_FastSV6
+            #if LAGRAPH_SUITESPARSE
+            printf ("\n------ CC_FastSV6:\n") ;
+            OK (LG_CC_FastSV6 (&C2, G, msg)) ;
+            ncomponents = count_connected_components (C2) ;
+            TEST_CHECK (ncomponents == ncomp) ;
+            OK (LG_check_cc (C2, G, msg)) ;
+            OK (GrB_free (&C2)) ;
+
+            // find the connected components with LG_CC_FastSV7
+            #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+            printf ("\n------ CC_FastSV7:\n") ;
+            OK (LG_CC_FastSV7 (&C2, G, msg)) ;
+            ncomponents = count_connected_components (C2) ;
+            TEST_CHECK (ncomponents == ncomp) ;
+            OK (LG_check_cc (C2, G, msg)) ;
+            OK (GrB_free (&C2)) ;
+            #else
+            printf ("\n------ CC_FastSV7: requires SS:GrB v10.0.0 or later\n") ;
+            int result7 = LG_CC_FastSV7 (&C2, G, msg) ;
+            TEST_CHECK (result7 == GrB_NOT_IMPLEMENTED) ;
+            TEST_CHECK (C2 == NULL) ;
+            #endif
+
+            #endif
+
             // find the connected components with LG_CC_Boruvka
             printf ("\n------ CC_BORUVKA:\n") ;
             OK (LG_CC_Boruvka (&C2, G, msg)) ;

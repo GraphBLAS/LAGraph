@@ -17,6 +17,7 @@
 
 #include "LAGraph_test.h"
 #include "LAGraphX.h"
+#include "LG_internal.h"
 
 // functions defined in LAGr_Init.c:
 LAGRAPH_PUBLIC void LG_set_LAGr_Init_has_been_called (bool setting) ;
@@ -36,6 +37,12 @@ void test_Xinit (void)
 {
 
     printf ("\nTesting LAGr_Init: with expected errors\n") ;
+
+    #if LG_BRUTAL_TESTS
+    printf ("with brutal tests\n") ;
+    #else
+    printf ("with NO brutal tests\n") ;
+    #endif
 
     TEST_CHECK (LAGr_Init (GrB_NONBLOCKING, NULL, NULL, NULL, NULL, msg)
         == GrB_NULL_POINTER) ;

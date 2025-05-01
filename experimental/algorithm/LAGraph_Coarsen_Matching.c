@@ -60,8 +60,6 @@ This method requires O(n + e) space for an undirected graph with e edges and n n
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-#include <omp.h>
-
 // #define dbg
 // #define burble
 
@@ -261,9 +259,6 @@ static int LAGraph_Parent_to_S
     GrB_free(&edge_parent) ;                        \
     GrB_free(&node_parent) ;                        \
     GrB_free(&full) ;                               \
-    LAGraph_Free ((void**)(&rows), msg) ;           \
-    LAGraph_Free ((void**)(&cols), msg) ;           \
-    LAGraph_Free ((void**)(&vals), msg) ;           \
     LAGraph_Delete(&G_cpy, msg) ;                   \
 }
 
@@ -311,11 +306,6 @@ int LAGraph_Coarsen_Matching
     GrB_Vector node_parent = NULL ;         // points to parent (representative) node for each node
     GrB_Vector full = NULL ;                // full vector
 
-    // used to build int64/fp64 A matrix if needed
-    GrB_Index *rows = NULL ;
-    GrB_Index *cols = NULL ;
-    void *vals = NULL ;
-
     GrB_Index nvals, nrows ;
     GrB_Type A_type ;
     // check properties (no self-loops, undirected)
@@ -348,46 +338,12 @@ int LAGraph_Coarsen_Matching
                 printf("Rebuilding A with GrB_INT64/FP64, orig type was %s\n", typename);
             #endif
 
-            #if 0
 
-            // FIXME: fast and easy
+            bool is_float = (type == GrB_FP32) ;
             GRB_TRY (GrB_Matrix_nrows (&nrows, G->A)) ;
             A_type = (is_float ? GrB_FP64 : GrB_INT64) ;
             GRB_TRY (GrB_Matrix_new (&A, A_type, nrows, nrows)) ;
             GRB_TRY (GrB_assign (A, NULL, NULL, G->A, GrB_ALL, nrows, GrB_ALL, nrows, NULL)) ;
-
-            #else
-
-            // FIXME: slow and hard
-            bool is_float = (type == GrB_FP32) ;
-
-            GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-            GRB_TRY (GrB_Matrix_nrows (&nrows, G->A)) ;
-
-            LG_TRY (LAGraph_Malloc ((void**)(&rows), nvals, sizeof(GrB_Index), msg)) ;
-            LG_TRY (LAGraph_Malloc ((void**)(&cols), nvals, sizeof(GrB_Index), msg)) ;
-            LG_TRY (LAGraph_Malloc ((void**)(&vals), nvals, is_float ? sizeof(double) : sizeof(int64_t), msg)) ;
-            // extractTuples casts all entries to target type
-            if (is_float) {
-                GRB_TRY (GrB_Matrix_extractTuples_FP64 (rows, cols, vals, &nvals, G->A)) ;
-            } else {
-                GRB_TRY (GrB_Matrix_extractTuples_INT64 (rows, cols, vals, &nvals, G->A)) ;
-            }
-
-            GRB_TRY (GrB_Matrix_new (&A, is_float ? GrB_FP64 : GrB_INT64, nrows, nrows)) ;
-
-            if (is_float) {
-                GRB_TRY (GrB_Matrix_build_FP64 (A, rows, cols, vals, nvals, NULL)) ;
-            } else {
-                GRB_TRY (GrB_Matrix_build_INT64 (A, rows, cols, vals, nvals, NULL)) ;
-            }
-
-            LG_TRY (LAGraph_Free ((void**)(&rows), msg)) ;
-            LG_TRY (LAGraph_Free ((void**)(&cols), msg)) ;
-            LG_TRY (LAGraph_Free ((void**)(&vals), msg)) ;
-            A_type = (is_float ? GrB_FP64 : GrB_INT64) ;
-            #endif
-            
         }
     }
     else

@@ -194,8 +194,8 @@ int LG_check_bfs
         for (int64_t i = 0 ; i < n ; i++)
         {
             bool ok = (level_in [i] == level_check [i]) ;
-            if (!ok) printf ("level (%" PRId64 ") = %" PRId64 " %" PRId64
-                " is wrong\n", i, level_in [i], level_check [i]) ;
+//          if (!ok) printf ("level (%" PRId64 ") = %" PRId64 " %" PRId64
+ //             " is wrong\n", i, level_in [i], level_check [i]) ;
             LG_ASSERT_MSG (ok, -2000, "invalid level") ;
         }
     }

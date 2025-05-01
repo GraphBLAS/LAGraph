@@ -24,7 +24,6 @@ Usage:
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LAGraphX.h"
 #include "LG_internal.h"
-#include <omp.h>
 
 // #define VERBOSE
 

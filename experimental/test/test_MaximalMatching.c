@@ -96,6 +96,7 @@ void test_MaximalMatching (void)
     {
         const char *aname = tests [k].name ;
         if (strlen (aname) == 0) break ;
+        printf ("\n======================= %s:\n", aname) ;
         TEST_CASE (aname) ;
 
         // old code using files
@@ -109,13 +110,14 @@ void test_MaximalMatching (void)
 
         TEST_CHECK (A != NULL) ;
         TEST_MSG ("Building of adjacency matrix failed") ;
+        GxB_print (A, 1) ;
 
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
         OK (LAGraph_Cached_AT (G, msg)) ;
 
-        if (G->nself_edges != 0)
+//      if (G->nself_edges != 0)
         {
             // remove self-edges
             printf ("graph has %g self edges\n", (double) G->nself_edges) ;

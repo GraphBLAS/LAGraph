@@ -101,7 +101,11 @@ int LG_check_edgeBetweennessCentrality
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    #if defined ( COVERAGE )
+    bool print_timings = true ;
+    #else
     bool print_timings = (n >= 2000) ;
+    #endif
 
     LG_TRY (LAGraph_DeleteSelfEdges (G, msg)) ;
 
@@ -227,14 +231,8 @@ int LG_check_edgeBetweennessCentrality
     for (GrB_Index i = 0; i < nvals_sources; i++) {
         GRB_TRY (GrB_Vector_extractElement(&s, sources, i)) ;
 
-        // Skip invalid indices
-        if (s >= n) {
-            continue;
-        }
-            
-        //----------------------------------------------------------------------
-        // Initialize data structures for current source
-        //----------------------------------------------------------------------
+        // check for invalid indices
+        LG_ASSERT (s < n, GrB_INVALID_VALUE) ;
 
         size_t sp = 0;  // stack pointer
         memcpy(Ptail, ATp, n * sizeof(GrB_Index));
@@ -276,12 +274,17 @@ int LG_check_edgeBetweennessCentrality
                 if (depth[w] == depth[v] + 1) {
                     paths[w] += paths[v];
 
+#if 1
+                    LG_ASSERT (Ptail [w] < Phead [w+1], GrB_INVALID_VALUE) ;
+                    LG_ASSERT (Ptail [w] >= Phead [w], GrB_INVALID_VALUE) ;
+#else
                     if (Ptail [w] >= Phead [w+1] || Ptail [w] < Phead [w])
                     {
                         printf ("Ack! w=%ld Ptail [w]=%ld, Phead [w]=%ld Phead[w+1]=%ld\n", 
                             w, Ptail [w], Phead [w], Phead [w+1]) ;
                         fflush (stdout) ; abort ( ) ;
                     }
+#endif
 
                     Pj[Ptail[w]++] = v;
 

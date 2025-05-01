@@ -21,7 +21,6 @@
 #include <LAGraph.h>
 #include <LG_test.h>
 #include "LG_internal.h"
-#include "omp.h"
 
 #if defined ( __linux__ )
 // for mallopt
@@ -911,7 +910,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // typecast, if requested
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GxB_Matrix_type (&atype, A)) ;     // FIXME: use GrB_get
+    GRB_TRY (GxB_Matrix_type (&atype, A)) ;
 
     if (structural)
     {
