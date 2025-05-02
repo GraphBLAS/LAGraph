@@ -138,6 +138,8 @@ void test_Coarsen_Matching () {
         TEST_MSG ("Building of adjacency matrix failed") ;
 
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;
+        TEST_CHECK (G->A != NULL) ;
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
         OK (LAGraph_Cached_AT (G, msg)) ;
 
@@ -253,7 +255,7 @@ void test_Coarsen_Matching () {
 
             matching_seed += tests [k].n ;
         }
-
+        OK (LAGraph_Delete (&G, msg)) ;
     }
 #endif
 

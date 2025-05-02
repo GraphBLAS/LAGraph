@@ -54,11 +54,13 @@ int LAGr_HITS
     LG_ASSERT (authorities != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_Matrix AT ;
+    GrB_Vector out_degree = G->out_degree, in_degree = NULL ;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
         G->is_symmetric_structure == LAGraph_TRUE)
     {
         // A and A' have the same structure
         AT = G->A ;
+        in_degree = out_degree ;
     }
     else
     {
@@ -66,6 +68,7 @@ int LAGr_HITS
         AT = G->AT ;
         LG_ASSERT_MSG (AT != NULL,
             LAGRAPH_NOT_CACHED, "G->AT is required") ;
+        in_degree = G->in_degree ;
     }
          // Initializations
     GrB_Index n;
@@ -83,18 +86,17 @@ int LAGr_HITS
     GRB_TRY(GrB_assign(a, NULL, NULL, defaultValue, GrB_ALL, n, NULL));
     GRB_TRY(GrB_assign(h, NULL, NULL, defaultValue, GrB_ALL, n, NULL));
 
-    GrB_Index indegree, outdegree;
+    bool flag = true ;
+    if (in_degree != NULL && out_degree != NULL)
+    {
+        GrB_Index in_nonempty = 0, out_nonempty = 0 ;
+        // Count the number of non-zero entries in the in_degree vector
+        GRB_TRY (GrB_Vector_nvals(&in_nonempty, in_degree)) ;
+        // Count the number of non-zero entries in the out_degree vector
+        GRB_TRY (GrB_Vector_nvals(&out_nonempty, out_degree)) ;
+        flag = (in_nonempty + out_nonempty) > n/16.0;
+    }
 
-
-    // Count the number of non-zero entries in the indegree vector
-    GrB_Vector_nvals(&indegree, G->in_degree);
-
-    // Count the number of non-zero entries in the outdegree vector
-    GrB_Vector_nvals(&outdegree, G->out_degree);
-
-
-
-    bool flag = (indegree + outdegree) > n/16.0;
     for((*iters) = 0; (*iters) < itermax && rdiff > tol; (*iters)++) {
         // Save old values of h and a
         GrB_Vector temp = h_old ; h_old = h ; h = temp ;

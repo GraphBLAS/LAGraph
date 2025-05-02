@@ -76,6 +76,9 @@ test: library
 verbose_test: library
 	( cd build && ctest . --verbose || ctest . --rerun-failed --output-on-failure )
 
+memcheck: debug
+	( cd build && ctest . -T memcheck )
+
 # target used in CI
 demos: test
 

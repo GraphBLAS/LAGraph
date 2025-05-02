@@ -54,6 +54,7 @@ void test_argminmax (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
+        fclose (f) ;
         OK (GrB_Matrix_nrows (&nrows, A)) ;
         OK (GrB_Matrix_ncols (&ncols, A)) ;
 

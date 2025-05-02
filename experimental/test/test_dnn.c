@@ -130,6 +130,7 @@ void test_dnn (void)
     f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&T, f, msg)) ;
+    fclose (f) ;
     OK (LAGraph_Matrix_TypeName (type_name, T, msg)) ;
     TEST_CHECK (MATCHNAME (type_name, "bool")) ;
     // TrueCategories = T, as a boolean nfeatures-by-1 vector

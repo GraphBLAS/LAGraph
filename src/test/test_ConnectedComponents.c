@@ -239,6 +239,7 @@ void test_cc_errors (void)
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
     #endif
 
+    OK (LAGraph_Delete (&G, msg)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 
