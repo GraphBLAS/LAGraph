@@ -127,12 +127,13 @@ void test_Coarsen_Matching () {
                 OK (GrB_Matrix_setElement (A, val, row, col)) ;
             }
         }
-        
+
         OK (GrB_free (&A_dup)) ;
         OK (LAGraph_Free ((void**)(&rows), msg)) ;
         OK (LAGraph_Free ((void**)(&cols), msg)) ;
         OK (LAGraph_Free ((void**)(&vals), msg)) ;
-        // =============================== graph generation done ======================================
+
+        // ================== graph generation done ======================================
 
         TEST_CHECK (A != NULL) ;
         TEST_MSG ("Building of adjacency matrix failed") ;
@@ -143,14 +144,9 @@ void test_Coarsen_Matching () {
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
         OK (LAGraph_Cached_AT (G, msg)) ;
 
-//      if (G->nself_edges != 0)
-        {
-            // remove self-edges
-            printf ("graph has %g self edges\n", (double) G->nself_edges) ;
-            OK (LAGraph_DeleteSelfEdges (G, msg)) ;
-            printf ("now has %g self edges\n", (double) G->nself_edges) ;
-            TEST_CHECK (G->nself_edges == 0) ;
-        }
+        // remove self-edges
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+        TEST_CHECK (G->nself_edges == 0) ;
 
         bool ok = 0;
         OK (LAGraph_Matrix_IsEqual (&ok, G->A, G->AT, msg)) ;
@@ -272,6 +268,9 @@ void test_Coarsen_Matching_Errors() {
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
     G->kind = LAGraph_ADJACENCY_DIRECTED ;
+
+    OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+    TEST_CHECK (G->nself_edges == 0) ;
 
     // directed graph
     GrB_Info result = LAGraph_Coarsen_Matching (&C, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
