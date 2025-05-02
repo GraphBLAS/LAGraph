@@ -105,6 +105,7 @@ void test_MaximalMatching (void)
         TEST_CHECK (f != NULL) ;
         TEST_MSG ("Filename %s is invalid", filename) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
+        fclose (f) ;
         //--------------
 
         TEST_CHECK (A != NULL) ;
@@ -262,6 +263,7 @@ void test_MaximalMatchingErrors (void)
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
+    GrB_free (&E) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 

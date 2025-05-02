@@ -250,6 +250,7 @@ int LAGraph_scc
     *result = scc;
     scc = NULL;
 
+    LG_FREE_ALL ;
     return GrB_SUCCESS;
 #endif
 }

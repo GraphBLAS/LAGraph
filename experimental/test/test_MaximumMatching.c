@@ -8,6 +8,10 @@
 
 char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
+GrB_Vector mateC = NULL;
+GrB_Vector mateR = NULL;
+GrB_Vector mateC_init = NULL;
+GrB_Vector mateR_init = NULL;
 
 #define LEN 512
 char filename[LEN + 1];
@@ -69,9 +73,13 @@ void test_MCM(void)
             OK(LAGraph_Malloc((void **)&iso_value, nvals, sizeof(bool), msg));
 
             for (uint64_t i = 0; i < nvals; i++)
+            {
                 iso_value[i] = 1;
+            }
             OK(GrB_Matrix_extractTuples_FP64(I, J, dummy, &nvals, A));
             TEST_CHECK(I != NULL);
+
+            OK(GrB_free(&A));
             OK(GrB_Matrix_new(&A, GrB_BOOL, nrows, ncols));
             OK(GrB_Matrix_build_BOOL(A, I, J, iso_value, nvals,
                                      GrB_FIRST_BOOL));
@@ -81,11 +89,7 @@ void test_MCM(void)
             OK(LAGraph_Free((void **)&dummy, msg));
             OK(LAGraph_Free((void **)&iso_value, msg));
 
-            GrB_Vector mateC = NULL;
             OK(GrB_Vector_new(&mateC, GrB_UINT64, ncols));
-
-            GrB_Vector mateC_init = NULL;
-            GrB_Vector mateR_init = NULL;
 
             if (!strcmp(filenames[test], "lp_afiro_structure.mtx"))
             {
@@ -101,13 +105,13 @@ void test_MCM(void)
                 OK(GrB_transpose(AT, NULL, NULL, A, NULL));
             }
 
+            OK(GrB_free(&mateC));
             OK(LAGr_MaximumMatching(&mateC, NULL, A, AT, mateC_init, true,
                                     msg));
 //          printf("\nmsg: %s\n", msg);
 
             GrB_Index nmatched = 0;
 
-            GrB_Vector mateR = NULL;
             OK(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
 
             // invert to check for dups
@@ -130,7 +134,9 @@ void test_MCM(void)
             bool *val;
             OK(LAGraph_Malloc((void **)&val, nmatched, sizeof(bool), msg));
             for (uint64_t i = 0; i < nmatched; i++)
+            {
                 val[i] = 1;
+            }
             OK(GrB_Matrix_new(&M, GrB_BOOL, nrows, ncols));
             OK(GrB_Matrix_build_BOOL(M, X, J, val, nmatched, NULL));
             OK(LAGraph_Free((void **)&val, msg));

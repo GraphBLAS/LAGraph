@@ -384,7 +384,7 @@ int LAGraph_Laplacian   // compute the Laplacian matrix
 int LAGraph_mypcg2
 (
     //outputs
-    GrB_Vector *steper_handle,
+    GrB_Vector *steper_handle,  // FIXME: do not create this; see usage below
     GrB_Index *k_result,
     // inputs:
     GrB_Matrix L,    // input matrix, symmetric, result from Laplacian
@@ -581,6 +581,7 @@ int LAGraph_mypcg2
     GrB_free (&y);                          \
     GrB_free (&lambhelper);                 \
     GrB_free (&indiag);                     \
+    GrB_free (&x2) ;                        \
 }                                               
 
 #define LG_FREE_ALL                         \
@@ -622,7 +623,7 @@ int LAGraph_Hdip_Fiedler   // compute the Hdip_Fiedler
     GrB_Index i; // This is the integer used in for loop
     GrB_Vector u = NULL;
     GrB_Vector y = NULL;
-    GrB_Vector x = NULL;
+    GrB_Vector x = NULL, x2 = NULL ;
     GrB_Vector iters = NULL;
     GrB_Vector lambhelper = NULL;
     float alpha, lambda ;
@@ -697,8 +698,12 @@ int LAGraph_Hdip_Fiedler   // compute the Hdip_Fiedler
         }
         last_err=e;
 
+        // FIXME: revise x in place:
         //x=mypcg2(L,u,alpha,indiag,x,tol,kmax[1])
-        LG_TRY (LAGraph_mypcg2(&x,&kk,L,u,alpha,indiag,x,tol,kmaxOne,msg));
+        LG_TRY (LAGraph_mypcg2(&x2,&kk,L,u,alpha,indiag,x,tol,kmaxOne,msg));
+        GrB_free (&x) ;
+        x = x2 ; 
+        x2 = NULL ;
 	k_inner=k_inner+kk ;
 
         GRB_TRY (GrB_Vector_setElement_FP32(x, 0, 0));
@@ -726,5 +731,4 @@ int LAGraph_Hdip_Fiedler   // compute the Hdip_Fiedler
     (*iters_handle) = iters ;
     return (GrB_SUCCESS);
 }
-
 

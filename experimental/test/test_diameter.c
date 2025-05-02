@@ -92,6 +92,7 @@ void test_diameter (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
+        fclose (f) ;
         OK (GrB_Matrix_nrows (&n, A)) ;
         LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
         OK (LAGraph_Matrix_Print (A, pr, stdout, msg)) ;
@@ -172,6 +173,7 @@ void test_diameter_huge (void)
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&C, f, msg)) ;
+    fclose (f) ;
     OK (GrB_Matrix_nrows (&n, C)) ;
     OK (LAGraph_Matrix_Print (C, 5, stdout, msg)) ;
 

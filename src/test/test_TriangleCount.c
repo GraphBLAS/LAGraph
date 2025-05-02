@@ -410,6 +410,7 @@ void test_TriangleCount_autosort (void)
     OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
     TEST_CHECK (nt1 == nt0) ;
 
+    OK (LAGraph_Delete (&G, msg)) ;
     OK (LAGraph_Finalize(msg)) ;
 }
 
