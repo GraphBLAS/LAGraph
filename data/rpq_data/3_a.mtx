@@ -1,4 +1,4 @@
-%%MatrixMarket matrix coordinate pattern general
+%%MatrixMarket matrix coordinate pattern symmetric
 %%GraphBLAS type bool
 2 2 1
 1 1
