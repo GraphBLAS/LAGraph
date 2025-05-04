@@ -132,6 +132,7 @@ void test_Coarsen_Matching () {
         OK (LAGraph_Free ((void**)(&rows), msg)) ;
         OK (LAGraph_Free ((void**)(&cols), msg)) ;
         OK (LAGraph_Free ((void**)(&vals), msg)) ;
+        OK (GrB_wait (A, GrB_MATERIALIZE)) ;
 
         // ================== graph generation done ======================================
 
@@ -163,6 +164,7 @@ void test_Coarsen_Matching () {
                 GrB_Matrix A_fp32 = NULL ;
                 OK (GrB_Matrix_new (&A_fp32, GrB_FP32, n, n)) ;
                 OK (GrB_assign (A_fp32, NULL, NULL, G->A, GrB_ALL, n, GrB_ALL, n, NULL)) ;
+                OK (GrB_free (&(G->A))) ;
                 OK (GrB_free (&(G->AT))) ;
                 G->A = A_fp32 ;
                 A_fp32 = NULL ;
