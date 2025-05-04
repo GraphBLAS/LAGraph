@@ -293,6 +293,7 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 # enable testing and add subdirectories
 #-------------------------------------------------------------------------------
 
+set ( MEMORYCHECK_COMMAND_OPTIONS "--show-reachable=no" )
 include ( CTest )
 
 add_subdirectory ( src )
