@@ -257,6 +257,7 @@ void test_cc_errors (void)
     #endif
     #endif
 
+    OK (LAGraph_Delete (&G, msg)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 

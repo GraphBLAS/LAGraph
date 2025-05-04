@@ -33,14 +33,15 @@
 {                           \
     GrB_free (&srcEcc) ;    \
     GrB_free (&ecc) ;       \
-    GrB_free (&level) ;       \
+    GrB_free (&level) ;     \
+    GrB_free (&srcs) ;      \
 }
 
-#define LG_FREE_ALL         \
-{                           \
-    LG_FREE_WORK ;          \
+#define LG_FREE_ALL             \
+{                               \
+    LG_FREE_WORK ;              \
     GrB_free (eccentricity) ;   \
-    GrB_free (&peri) ;      \
+    GrB_free (&peri) ;          \
 }
 
 #include "LG_internal.h"
@@ -69,6 +70,7 @@ int LAGraph_ExactDiameter
     GrB_Vector srcEcc = NULL ;        // work vector to store each iteration's eccentricity in temporarily
     GrB_Matrix level = NULL;          // work matrix for storing msbfs level info
     GrB_Index d ;                     // diameter
+    GrB_Vector srcs = NULL ;
 
 #if !LAGRAPH_SUITESPARSE
     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
@@ -105,7 +107,6 @@ int LAGraph_ExactDiameter
             GrB_MAX_MONOID_INT64 : GrB_MAX_MONOID_INT32 ;
     while (setStart < n){
         // set up the sources for this iteration
-        GrB_Vector srcs;
         int64_t nsrcs;
         if ((setStart + k) <= n){
             nsrcs = k;
@@ -120,12 +121,15 @@ int LAGraph_ExactDiameter
         }
 
         // run bfs to get level matrix for the sources
+        GrB_free (&level) ;
         LAGRAPH_TRY (LAGraph_MultiSourceBFS (&level, NULL, G, srcs, msg)) ;
+        GrB_free (&srcs) ;
 
         // populate setStart to setStart+nsrcs of ecc with the max level for each src
         GRB_TRY (GrB_Vector_new (&srcEcc, int_type, nsrcs)) ;
         GRB_TRY (GrB_reduce(srcEcc, NULL, NULL, max, level, GrB_NULL)) ;
         LAGRAPH_TRY (GrB_assign(ecc, NULL, NULL, srcEcc, sources,  nsrcs, GrB_NULL)) ;
+        GrB_free (&level) ;
         GrB_free (&srcEcc) ;
 
         // adjust setStart for next iteration
@@ -154,8 +158,13 @@ int LAGraph_ExactDiameter
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    if (compute_periphery) (*peripheral) = peri ;
-    if (compute_eccentricity) {
+    if (compute_periphery)
+    {
+        (*peripheral) = peri ;
+        peri = NULL ;
+    }
+    if (compute_eccentricity)
+    {
         (*eccentricity) = ecc ;
         ecc = NULL; // makes sure eccentricity vector doesn't get freed if the user wants it
     } 

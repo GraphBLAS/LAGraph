@@ -75,9 +75,6 @@
 // Performance considerations: the best performance is shown when the algorithm
 // receives a minimal deterministic finite automaton as an input.
 
-// FIXME: some of the code below is not covered by the test suite, "make cov".
-// See the FIXMEs below.
-
 #define LG_FREE_WORK                            \
 {                                               \
     GrB_free (&frontier) ;                      \
@@ -200,8 +197,6 @@ int LAGraph_RegularPathQuery
         B[i] = R[i]->A ;
         if (R[i]->is_symmetric_structure == LAGraph_TRUE)
         {
-            // FIXME: this case is not tested
-            // by experimental/test/test_RegularPathQuery.c
             BT[i] = B[i] ;
         }
         else
@@ -326,8 +321,6 @@ int LAGraph_RegularPathQuery
             }
             else
             {
-                // FIXME: this case is not tested
-                // by experimental/test/test_RegularPathQuery.c
                 GRB_TRY (GrB_mxm (symbol_frontier, GrB_NULL, GrB_NULL,
                     GrB_LOR_LAND_SEMIRING_BOOL, B[i], frontier, GrB_DESC_RT0)) ;
             }

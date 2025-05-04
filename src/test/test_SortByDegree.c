@@ -416,6 +416,7 @@ void test_SortByDegree_failures (void)
     printf ("\nresult %d: msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_NOT_CACHED) ;
 
+    OK (LAGraph_Delete (&G, msg)) ;
     teardown ( ) ;
 }
 

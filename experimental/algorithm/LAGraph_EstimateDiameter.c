@@ -184,12 +184,13 @@ int LAGraph_EstimateDiameter
         lastd = d;
 
         // get new diameter 
+        GrB_free (&level) ;
         LG_TRY (LAGraph_MultiSourceBFS(&level, NULL, G, srcs, msg)) ;
-        // on later iterations, does ecc need to be freed before a new ecc is made?
-        // should this even be in the loop or should it be before the loop and the vector is just overwritten repeatedly?
+        GrB_free (&ecc) ;
         GRB_TRY (GrB_Vector_new (&ecc, int_type, n)) ;
         GRB_TRY (GrB_reduce(ecc, NULL, NULL, max, level, GrB_DESC_T0)) ;
         GRB_TRY (GrB_reduce(&d, NULL, max, ecc, GrB_NULL)) ;
+        GrB_free (&level) ;
 
         // check if done
         if (d == lastd){

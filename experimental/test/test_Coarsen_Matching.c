@@ -88,7 +88,6 @@ char msg [LAGRAPH_MSG_LEN] ;
 void test_Coarsen_Matching () {
 
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
 //  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
 
 #if LAGRAPH_SUITESPARSE
@@ -128,28 +127,27 @@ void test_Coarsen_Matching () {
                 OK (GrB_Matrix_setElement (A, val, row, col)) ;
             }
         }
-        
+
         OK (GrB_free (&A_dup)) ;
         OK (LAGraph_Free ((void**)(&rows), msg)) ;
         OK (LAGraph_Free ((void**)(&cols), msg)) ;
         OK (LAGraph_Free ((void**)(&vals), msg)) ;
-        // =============================== graph generation done ======================================
+        OK (GrB_wait (A, GrB_MATERIALIZE)) ;
+
+        // ================== graph generation done ======================================
 
         TEST_CHECK (A != NULL) ;
         TEST_MSG ("Building of adjacency matrix failed") ;
 
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;
+        TEST_CHECK (G->A != NULL) ;
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
         OK (LAGraph_Cached_AT (G, msg)) ;
 
-//      if (G->nself_edges != 0)
-        {
-            // remove self-edges
-            printf ("graph has %g self edges\n", (double) G->nself_edges) ;
-            OK (LAGraph_DeleteSelfEdges (G, msg)) ;
-            printf ("now has %g self edges\n", (double) G->nself_edges) ;
-            TEST_CHECK (G->nself_edges == 0) ;
-        }
+        // remove self-edges
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+        TEST_CHECK (G->nself_edges == 0) ;
 
         bool ok = 0;
         OK (LAGraph_Matrix_IsEqual (&ok, G->A, G->AT, msg)) ;
@@ -166,6 +164,7 @@ void test_Coarsen_Matching () {
                 GrB_Matrix A_fp32 = NULL ;
                 OK (GrB_Matrix_new (&A_fp32, GrB_FP32, n, n)) ;
                 OK (GrB_assign (A_fp32, NULL, NULL, G->A, GrB_ALL, n, GrB_ALL, n, NULL)) ;
+                OK (GrB_free (&(G->A))) ;
                 OK (GrB_free (&(G->AT))) ;
                 G->A = A_fp32 ;
                 A_fp32 = NULL ;
@@ -254,12 +253,11 @@ void test_Coarsen_Matching () {
 
             matching_seed += tests [k].n ;
         }
-
+        OK (LAGraph_Delete (&G, msg)) ;
     }
 #endif
 
     OK (LAGraph_Finalize (msg)) ;
-    OK (LAGraph_Random_Finalize (msg)) ;
 }
 
 void test_Coarsen_Matching_Errors() {
@@ -272,6 +270,9 @@ void test_Coarsen_Matching_Errors() {
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
     G->kind = LAGraph_ADJACENCY_DIRECTED ;
+
+    OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+    TEST_CHECK (G->nself_edges == 0) ;
 
     // directed graph
     GrB_Info result = LAGraph_Coarsen_Matching (&C, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
@@ -305,7 +306,6 @@ void test_Coarsen_Matching_Errors() {
 void test_Coarsen_Matching_NullInputs() {
 
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
 
 #if LAGRAPH_SUITESPARSE
 
@@ -333,7 +333,6 @@ void test_Coarsen_Matching_NullInputs() {
 #endif
 
     OK (LAGraph_Finalize (msg)) ;
-    OK (LAGraph_Random_Finalize (msg)) ;
 }
 
 TEST_LIST = {

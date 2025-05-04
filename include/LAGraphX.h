@@ -52,21 +52,6 @@ extern "C"
 // development, and is intended only for illustration or testing, not
 // benchmarking.  Do not use for benchmarking without asking the authors.
 
-//------------------------------------------------------------------------------
-// LAGraph_Random_*: Random number generator
-//------------------------------------------------------------------------------
-
-LAGRAPHX_PUBLIC
-int LAGraph_Random_Init // FIXME: remove this
-(
-    char *msg
-) ;
-LAGRAPHX_PUBLIC
-int LAGraph_Random_Finalize // FIXME: remove this
-(
-    char *msg
-) ;
-
 #if defined ( COVERAGE )
 // for testing only
 LAGRAPHX_PUBLIC extern bool random_hack ;

@@ -52,6 +52,7 @@ GrB_IndexUnaryOp LG_rand_init_op = NULL ;
         uint64_t a;
     };
 
+    // the state must be initialized to nonzero
     uint64_t xorshift64(struct xorshift64_state *state)
     {
             uint64_t x = state->a;
@@ -95,7 +96,8 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 // From these references, the recommendation is to create the initial state of
 // a random number generator with an entirely different random number
 // generator.  splitmix64 is recommended, so we initialize the State(i) with
-// splitmix64 (i+seed).
+// splitmix64 (i+seed).  The method cannot return a value of zero, so it is
+// suitable as a seed for the xorshift64 generator, above.
 
 // References:
 //
@@ -110,6 +112,8 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 // Guy L. Steele, Doug Lea, and Christine H. Flood. 2014. Fast splittable
 // pseudorandom number generators. SIGPLAN Not. 49, 10 (October 2014), 453–472.
 // https://doi.org/10.1145/2714064.2660195
+//
+// The splitmix64 below method is the mix64variant13 in the above paper.
 
 #if 0
 
@@ -119,7 +123,7 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 
     uint64_t splitmix64(struct splitmix64_state *state)
     {
-        uint64_t result = (state->s += 0x9E3779B97f4A7C15);
+        uint64_t result = (state->s += 0x9E3779B97F4A7C15);
         result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
         result = (result ^ (result >> 27)) * 0x94D049BB133111EB;
         return result ^ (result >> 31);
@@ -127,21 +131,18 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 
 #endif
 
+#define GOLDEN_GAMMA 0x9E3779B97F4A7C15LL
+
 // The init function computes z = splitmix64 (i + seed), but it does not
 // advance the seed value on return.
 void LG_rand_init_func (uint64_t *z, const void *x,
     GrB_Index i, GrB_Index j, const uint64_t *seed)
 {
     uint64_t state = i + (*seed) ;
-    // result = splitmix64 (state)
-    uint64_t result = (state += 0x9E3779B97f4A7C15) ;
-    result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9 ;
-    result = (result ^ (result >> 27)) * 0x94D049BB133111EB ;
+    uint64_t result = (state += GOLDEN_GAMMA) ;
+    result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9LL ;
+    result = (result ^ (result >> 27)) * 0x94D049BB133111EBLL ;
     result = (result ^ (result >> 31)) ;
-    // FIXME: is this needed? See the splitmix64 paper.
-    // this is a precaution against the unlikely event that state is zero:
-    result = (result == 0) ? LG_RAND_MARSAGLIA_SEED : result ;
-    // return the result
     (*z) = result ;
 }
 
@@ -150,16 +151,15 @@ void LG_rand_init_func (uint64_t *z, const void *x,
 "    GrB_Index i, GrB_Index j, const uint64_t *seed)            \n" \
 "{                                                              \n" \
 "   uint64_t state = i + (*seed) ;                              \n" \
-"   uint64_t result = (state += 0x9E3779B97f4A7C15) ;           \n" \
-"   result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9 ;   \n" \
-"   result = (result ^ (result >> 27)) * 0x94D049BB133111EB ;   \n" \
+"   uint64_t result = (state += 0x9E3779B97F4A7C15LL) ;         \n" \
+"   result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9LL ; \n" \
+"   result = (result ^ (result >> 27)) * 0x94D049BB133111EBLL ; \n" \
 "   result = (result ^ (result >> 31)) ;                        \n" \
-"   result = (result == 0) ? 88172645463325252LL : result ;     \n" \
 "   (*z) = result ;                                             \n" \
 "}"
 
 //------------------------------------------------------------------------------
-// LAGraph_Random_Init:  create the random state operator
+// LG_Random_Init:  create the random state operator
 //------------------------------------------------------------------------------
 
 #undef  LG_FREE_WORK
@@ -167,11 +167,6 @@ void LG_rand_init_func (uint64_t *z, const void *x,
 {                                                           \
     GrB_UnaryOp_free (&LG_rand_next_op) ;                   \
     GrB_IndexUnaryOp_free (&LG_rand_init_op) ;              \
-}
-
-int LAGraph_Random_Init (char *msg) // FIXME: remove this method
-{
-    return (LG_Random_Init (msg)) ;
 }
 
 int LG_Random_Init (char *msg)
@@ -209,7 +204,7 @@ int LG_Random_Init (char *msg)
 }
 
 //------------------------------------------------------------------------------
-// LAGraph_Random_Finalize:  free the random state operator
+// LG_Random_Finalize:  free the random state operator
 //------------------------------------------------------------------------------
 
 int LG_Random_Finalize (char *msg)
@@ -217,11 +212,6 @@ int LG_Random_Finalize (char *msg)
     LG_CLEAR_MSG ;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
-}
-
-int LAGraph_Random_Finalize (char *msg) // FIXME: remove this method
-{
-    return (LG_Random_Finalize (msg)) ;
 }
 
 //------------------------------------------------------------------------------
@@ -290,7 +280,7 @@ int LAGraph_Random_Next     // advance to next random vector
     // check inputs
     LG_CLEAR_MSG ;
     LG_ASSERT (State != NULL, GrB_NULL_POINTER) ;
-    // State = next (State)
+    // State = xorshift64 (State)
     GRB_TRY (GrB_apply (State, NULL, NULL, LG_rand_next_op, State, NULL)) ;
     return (GrB_SUCCESS) ;
 }

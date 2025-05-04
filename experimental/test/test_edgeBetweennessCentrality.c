@@ -617,6 +617,7 @@ void test_many_approx(void)
 
         OK(GrB_free(&centrality));
         OK(GrB_free(&reference_centrality));
+        OK(GrB_free(&randomSources));
         OK(LAGraph_Delete(&G, msg));
     }
     printf("\n") ;
@@ -647,6 +648,7 @@ void test_no_sources (void)
 
     OK (GrB_free (&centrality)) ;
     OK (GrB_free (&reference_centrality)) ;
+    OK (GrB_free (&sources)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
     LAGraph_Finalize(msg);

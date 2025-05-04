@@ -243,7 +243,7 @@ void test_fiedler (void)
     GrB_Vector u = NULL; // a vector of size nrowsLap, filled with 1.
     // set u[0] = 1+sqrt(nrowsLap)
     // Additional variables needed to test Hdip
-    GrB_Vector iters_handle = NULL;
+    GrB_Vector iters = NULL;
     float lambda_result = 0;
     GrB_Vector fiedler_vector = NULL;
     GrB_Vector kmax = NULL;
@@ -272,6 +272,7 @@ void test_fiedler (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
+        fclose (f) ;
 
         // set all entries to 1
         OK (GrB_Matrix_nrows (&n, A)) ;
@@ -333,7 +334,7 @@ void test_fiedler (void)
         OK (GrB_Vector_setElement_FP32(kmax, 20, 0));
         OK (GrB_Vector_setElement_FP32(kmax, 50, 1));
 
-        OK (LAGraph_Hdip_Fiedler (&iters_handle, &lambda_result,
+        OK (LAGraph_Hdip_Fiedler (&iters, &lambda_result,
             &fiedler_vector, Y, infnorm, kmax, 0.000001, 0.000001, msg)) ;
 
         //--------------------------------------------------------------------------
@@ -353,18 +354,21 @@ void test_fiedler (void)
         LAGraph_Vector_Print (fiedler_vector, 3, stdout, msg) ;
         printf("\n===============================The lambda: %f\n", lambda_result);
         printf("\n===============================The iters: \n");
-        LAGraph_Vector_Print (iters_handle, 3, stdout, msg) ;
+        LAGraph_Vector_Print (iters, 3, stdout, msg) ;
 
         //--------------------------------------------------------------------------
         // free everyting and finish
         //--------------------------------------------------------------------------
 
+        GrB_free (&A) ;
         GrB_free (&Y) ;
         GrB_free (&x) ;
         GrB_free (&fiedler_vector) ;
         GrB_free (&u) ;
         GrB_free (&steper) ;
         GrB_free (&indiag) ;
+        GrB_free (&iters) ;
+        GrB_free (&kmax) ;
     }
 
     OK (LAGraph_Finalize (msg)) ;

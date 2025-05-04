@@ -418,6 +418,18 @@ int LAGraph_FastGraphletTransform
 
     GRB_TRY (GxB_Matrix_concat (C_4, C_Tiles, tile_cnt, 1, NULL)) ;
 
+    if (A_Tiles != NULL)
+    {
+        for (int i = 0; i < tile_cnt; ++i) GrB_free (&A_Tiles [i]) ;
+    }
+    if (D_Tiles != NULL)
+    {
+        for (int i = 0; i < tile_cnt; ++i) GrB_free (&D_Tiles [i]) ;
+    }
+    if (C_Tiles != NULL)
+    {
+        for (int i = 0; i < tile_cnt; ++i) GrB_free (&C_Tiles [i]) ;
+    }
     LAGraph_Free ((void **) &Tile_nrows, msg) ;
     LAGraph_Free ((void **) &A_Tiles, msg) ;
     LAGraph_Free ((void **) &D_Tiles, msg) ;
