@@ -75,7 +75,7 @@ jobs:
           cd GraphBLAS
           git checkout tags/v${{ matrix.config.grb_version }}
           make compact
-          make install
+          sudo make install
           cd ..
 
       - name: build and test LAGraph
