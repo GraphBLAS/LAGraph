@@ -4,19 +4,7 @@ on:
   push:
     branches-ignore:
       - '**/v1.2'
-      - '**/with_GraphBLAS_v10'
   pull_request:
-
-concurrency: ci-arch-emu-${{ github.ref }}
-
-env:
-  # string with name of libraries to be built
-  BUILD_LIBS: "LAGraph:GraphBLAS"
-  # string with name of libraries to be checked
-  CHECK_LIBS: "LAGraph:GraphBLAS"
-  # string with name of libraries that are installed
-  INSTALLED_LIBS:  "LAGraph:GraphBLAS"
-
 
 jobs:
 
@@ -32,9 +20,7 @@ jobs:
     strategy:
       matrix:
         config:
-        # if there are multiple items in this list, only use should
-        # deployit=true for just one of them.
-         - {grb_version: 10.0.5, deployit: false}
+         - {grb_version: 10.0.5}
         # For available CPU architectures, see:
         # https://github.com/marketplace/actions/setup-alpine-linux-environment
         arch: [riscv64]
@@ -65,14 +51,10 @@ jobs:
             build-base
             ccache
             cmake
-            gfortran
-            m4
-            python3
             lscpu
-            autoconf
-            automake
             libtool
-          # ${{ matrix.arch != 'riscv64' && 'valgrind' || '' }}
+            git
+            sudo
 
       - name: disable QEMU emulation
         if: matrix.arch == 'armv7'
@@ -82,7 +64,7 @@ jobs:
       - name: get CPU information (emulated)
         run: lscpu
 
-      - name: Build GraphBLAS
+      - name: build GraphBLAS
         run: |
           echo "gcc --version"
           gcc --version
@@ -95,14 +77,10 @@ jobs:
           sudo make install
           cd ..
 
-      - name: Build project
+      - name: build and test LAGraph
         run: |
-          export GRAPHBLAS_INCLUDE_DIR=`pwd`/GraphBLAS/include/suitesparse
-          export GRAPHBLAS_LIBRARY=`pwd`/GraphBLAS/lib/libgraphblas.so
           cd build
-          cmake .. -DCOVERAGE=1 -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
+          cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
           JOBS=2 make
           make test
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.1.1
 
