@@ -1,4 +1,6 @@
 name: arch-emu
+
+# FIXME: do this on workflow_dispatch only
 on:
   workflow_dispatch:
   push:
@@ -72,7 +74,8 @@ jobs:
           gcc -dumpmachine
           git clone https://github.com/DrTimothyAldenDavis/GraphBLAS.git
           cd GraphBLAS
-          git checkout tags/v${{ matrix.config.grb_version }}
+          # git checkout tags/v${{ matrix.config.grb_version }}
+          git checkout dev2
           make compact
           sudo make install
           cd ..
@@ -82,5 +85,5 @@ jobs:
           cd build
           cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
           JOBS=2 make
-          make test
+          make verbose_test
 

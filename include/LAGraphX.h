@@ -13,6 +13,9 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: add LAGr_BreadthFirstSearch_MaxLevel with an extra parameter,
+// max_level.
+
 #ifndef LAGRAPHX_H
 #define LAGRAPHX_H
 
