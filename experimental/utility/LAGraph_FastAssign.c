@@ -60,6 +60,10 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 #if USING_GRAPHBLAS_V10
+
+// Uncomment if you would like to use the monoid version of FastAssign.
+// Passing in a semiring is faster but this may be more convienient.
+#if 0
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                                           \
 {                                                             \
@@ -115,6 +119,7 @@ int LAGraph_FastAssign_Monoid
     LG_FREE_ALL ;
     return (GrB_SUCCESS);
 }
+#endif
 
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                                           \
@@ -139,7 +144,7 @@ int LAGraph_FastAssign_Semiring
     // Optional (Give me a ramp with size > X_vec.size for faster calculations) 
     const GrB_Vector ramp, 
     // monoid is applied to duplicates. Binary op should be SECOND.
-    const GrB_Semiring dup, 
+    const GrB_Semiring semiring, 
     const GrB_Descriptor desc,
     char *msg
 )
@@ -261,7 +266,7 @@ int LAGraph_FastAssign_Semiring
     //----------------------------------------------------------------------
     GRB_TRY (GxB_load_Matrix_from_Container(P, con, NULL));
     // GRB_TRY (GxB_fprint(P, GxB_SHORT, stdout));
-    GRB_TRY (GrB_mxv(c, mask, accum, dup, P, X_vec, desc));
+    GRB_TRY (GrB_mxv(c, mask, accum, semiring, P, X_vec, desc));
     //----------------------------------------------------------------------
     // Free work. 
     // Note: this does not free inputs since they are marked GxB_IS_READONLY

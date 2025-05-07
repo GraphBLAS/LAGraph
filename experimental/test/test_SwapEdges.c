@@ -33,7 +33,10 @@ const char* tests [ ] =
 {
     "random_unweighted_general1.mtx",
     "random_unweighted_general2.mtx",
+    "random_weighted_general1.mtx",
+    "random_weighted_general2.mtx",
     "bcsstk13.mtx",
+    "test_FW_2500.mtx",
     ""
 } ;
 void test_SwapEdges (void)
@@ -43,8 +46,6 @@ void test_SwapEdges (void)
     // start LAGraph
     //--------------------------------------------------------------------------
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init(msg)) ;
-    
 
     for (int k = 0 ; ; k++)
     {
@@ -105,6 +106,7 @@ void test_SwapEdges (void)
         OK(LAGraph_SwapEdges( &A_new, G, (GrB_Index) 100, msg));
         GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
         printf ("Test ends:\n") ;
+        printf ("%s\n", msg + 1) ;
 
         //----------------------------------------------------------------------
         // check results
@@ -140,7 +142,6 @@ void test_SwapEdges (void)
     //--------------------------------------------------------------------------
     // free everything and finalize LAGraph
     //--------------------------------------------------------------------------
-    LAGraph_Random_Finalize(msg);
     LAGraph_Finalize (msg) ;
     #endif
 }

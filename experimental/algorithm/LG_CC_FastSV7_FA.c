@@ -123,7 +123,7 @@ static inline GrB_Info fastsv
         // (See LAGraph_FastAssign.c) 
         // Giving it a full ramp vector speeds up the function
 
-        LG_TRY (LAGraph_FastAssign(
+        LG_TRY (LAGraph_FastAssign_Semiring(
             parent2, NULL, min, parent, mngp, ramp, min_2nd, NULL, msg));
 
         //----------------------------------------------------------------------
@@ -622,7 +622,7 @@ int LG_CC_FastSV7_FA         // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         for (int64_t k = 0 ; k < HASH_SAMPLES ; k++)
         {
             // select an entry ii from PARENT at random
-            uint64_t i = LG_Random60 (&seed) % n ;
+            uint64_t i = LG_Random64 (&seed) % n ;
             GrB_Index x = PARENT (i) ;
             // find x in the hash table
             GrB_Index h = HASH (x) ;
@@ -740,6 +740,11 @@ int LG_CC_FastSV7_FA         // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         for (tid = 0 ; tid < nthreads ; tid++)
         {
             int64_t ktid = range [tid]  ;
+            memmove (Tj32 ? ((void *) (Tj32 + nvals)) : ((void *) (Tj64 + nvals)),
+                     Tj32 ? ((void *) (Tj32 + TP (ktid))) : ((void *) (Tj64 + TP (ktid))),
+                     tjsize * count [tid]) ;
+
+#if 0
             if (Tj32)
             {
                 memmove (Tj32 + nvals, Tj32 + TP (ktid),
@@ -750,6 +755,8 @@ int LG_CC_FastSV7_FA         // SuiteSparse:GraphBLAS method, with GraphBLAS v10
                 memmove (Tj64 + nvals, Tj64 + TP (ktid),
                     sizeof (uint64_t) * count [tid]) ;
             }
+#endif
+
             nvals += count [tid] ;
             count [tid] = nvals - count [tid] ;
         }

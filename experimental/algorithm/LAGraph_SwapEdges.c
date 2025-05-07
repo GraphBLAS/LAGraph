@@ -380,7 +380,7 @@ int LAGraph_SwapEdges
     GrB_Vector r_60 = NULL;
 
     // count swaps 
-    GrB_Index num_swaps = 0, num_attempts = 0, swaps_per_loop = e / 3 ;
+    GrB_Index num_swaps = 0, num_attempts = 0, swaps_per_loop = 0 ;
 
     // Constants ---------------------------------------------------------------
     GrB_Vector x = NULL;
@@ -418,10 +418,33 @@ int LAGraph_SwapEdges
     GRB_TRY (GrB_Matrix_new (&A_tril, GrB_BOOL, n, n)) ;
     GRB_TRY (GrB_Vector_new(&Ai, GrB_BOOL, 0)) ;
     GRB_TRY (GrB_Vector_new(&Aj, GrB_BOOL, 0)) ;
-
+    
     // Extract lower triangular edges
     GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
+    GRB_TRY (GrB_Matrix_nvals(&e, A_tril)) ;
+    swaps_per_loop = e / 3;
     GRB_TRY (GxB_Matrix_extractTuples_Vector(Ai, Aj, NULL, A_tril, NULL)) ;
+    // #ifdef COVERAGE
+    // GxB_fprint(Ai, GxB_SHORT, stdout) ;
+    // GxB_fprint(Aj, GxB_SHORT, stdout) ;
+    // if(n > 100)
+    // {
+    // //     // Make Ai and Aj 64 bit
+    //     GrB_Vector temp_i = NULL;
+    //     GRB_TRY (GrB_Vector_new(&temp_i, GrB_INT64, e)) ;
+    //     GRB_TRY (GrB_assign(temp_i, NULL, NULL, Ai, GrB_ALL, 0, NULL)) ;
+    //     GRB_TRY (GrB_free(&Ai)) ;
+    //     Ai = temp_i;
+    //     temp_i = NULL;
+    //     GRB_TRY (GrB_Vector_new(&temp_i, GrB_INT64, e)) ;
+    //     GRB_TRY (GrB_assign(temp_i, NULL, NULL, Aj, GrB_ALL, 0, NULL)) ;
+    //     GRB_TRY (GrB_free(&Aj)) ;
+    //     Aj = temp_i;
+    //     temp_i = NULL;
+    // }
+    // GxB_fprint(Ai, GxB_SHORT, stdout) ;
+    // GxB_fprint(Aj, GxB_SHORT, stdout) ;
+    // #endif
     int codei = 0, codej = 0;
     GRB_TRY (GxB_Vector_type(&Ai_type, Ai)) ;
     GrB_get(Ai, &codei, GrB_EL_TYPE_CODE);
@@ -431,8 +454,6 @@ int LAGraph_SwapEdges
         codei == codej, GrB_INVALID_VALUE,
         "extractTuples_Vector returned different types for Ai and Aj"
     ) ;
-    GRB_TRY (GrB_Matrix_nvals(&e, A_tril)) ;
-    
     //--------------------------------------------------------------------------
     // Initialize all operators and types
     //--------------------------------------------------------------------------
@@ -472,10 +493,6 @@ int LAGraph_SwapEdges
         GRB_TRY (GxB_IndexUnaryOp_new (
             &swap_pair, (GxB_index_unary_function) (&swap_bc64),
             lg_swap, lg_swap, GrB_BOOL, "swap_bc", SWAP_BC64
-        )) ;
-        GRB_TRY(GxB_BinaryOp_new(
-            &add_term_biop, (GxB_binary_function) (&add_term), 
-            GrB_INT8, GrB_INT8, GrB_INT8, "add_term", ADD_TERM
         )) ;
         GRB_TRY(GxB_BinaryOp_new(
             &second_edge, (GxB_binary_function) (&edge2nd64_edge), 
@@ -586,7 +603,6 @@ int LAGraph_SwapEdges
     while(num_swaps < e * Q && num_attempts < e * Q * 5)
     {
         GrB_Index perm_size, arr_size, junk_size;
-        printf(EDGE_TYPE);
         // r_60 has the random vector shifted by some amount.
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64(
             r_60, NULL, NULL, GxB_BSHIFT_UINT64, random_v, -(shift_e), NULL
@@ -595,7 +611,7 @@ int LAGraph_SwapEdges
         GRB_TRY (GrB_Vector_resize(x, e)) ;
         GRB_TRY (GrB_Vector_assign_BOOL(
             x, NULL, NULL, true, GrB_ALL, 0, NULL)) ;
-        LG_TRY (LAGraph_FastAssign(
+        LG_TRY (LAGraph_FastAssign_Semiring(
             r_permute, NULL, NULL, r_60, x, ramp_v, GxB_ANY_FIRSTJ_INT64,
             NULL, msg)) ;
         
@@ -658,7 +674,7 @@ int LAGraph_SwapEdges
         GRB_TRY (GrB_Vector_assign_BOOL(
             x, NULL, NULL, true, GrB_ALL, 0, NULL)) ;
         // place a one in any bucket that coresponds to an edge currently in E
-        LG_TRY (LAGraph_FastAssign(
+        LG_TRY (LAGraph_FastAssign_Semiring(
             exists, NULL, NULL, hashed_edges, x, ramp_v, GxB_ANY_PAIR_UINT8,
             NULL, msg
         )) ;
@@ -683,7 +699,7 @@ int LAGraph_SwapEdges
 
         // "Count" all of the edges that fit into each bucket. Stop counting at 
         // 2 since we will have to throw that whole bucket away anyway.
-        LG_TRY (LAGraph_FastAssign(
+        LG_TRY (LAGraph_FastAssign_Semiring(
             exists, NULL, add_term_biop, new_hashed_edges, x, ramp_v, 
             plus_term_one, NULL, msg
         )) ;
@@ -695,7 +711,7 @@ int LAGraph_SwapEdges
         )) ;
 
         // Find each hashed edge's bucket, dup_swaps_v is 1 if exists[edge] = 1
-        // LG_TRY (LAGraph_FastAssign(
+        // LG_TRY (LAGraph_FastAssign_Semiring(
         //     dup_swaps_v, NULL, NULL, new_hashed_edges, exists, ramp_v, 
         //     GxB_ANY_PAIR_INT8, GrB_DESC_T0, msg
         // )) ;
@@ -740,7 +756,7 @@ int LAGraph_SwapEdges
         dup_swaps_v = NULL;
         GRB_TRY (GxB_load_Vector_from_Container(M, con, NULL)) ;
         GRB_TRY (GrB_free(&con)) ;
-        GRB_TRY (LAGraph_FastAssign(
+        GRB_TRY (LAGraph_FastAssign_Semiring(
             E_vec, NULL, second_edge, edge_perm, M, ramp_v, 
             second_second_edge, NULL, msg)) ;
         #else // Fix for old saxpy4 bug
@@ -764,7 +780,8 @@ int LAGraph_SwapEdges
         printf("#####Made %ld swaps. Total %ld out of %ld."\
              "Attempting %ld swaps next.#####\n\n", 
              n_keep, num_swaps, e * Q, swaps_per_loop) ;
-    } 
+    // return (GrB_NOT_IMPLEMENTED) ;
+    }
     GRB_TRY (GxB_Vector_unload(
         E_vec, (void **) &indices, &lg_edge, &e, &ind_size, &E_hand, NULL));
     GRB_TRY (GxB_Vector_load(

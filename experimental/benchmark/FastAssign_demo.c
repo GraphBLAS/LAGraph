@@ -52,7 +52,6 @@ int main (int argc, char **argv)
     bool *set_a = NULL;
     GrB_Index r_size = 0, ramp_size = 0, junk_size = 0;
     bool iso = false;
-    LG_TRY (LAGraph_Random_Init (msg)) ;
 
     bool *val_of_P = NULL;
     double t = LAGraph_WallClockTime ( ) ;
@@ -137,8 +136,8 @@ int main (int argc, char **argv)
     #else
     // FastAssign!
     t = LAGraph_WallClockTime ( ) ;
-    LG_TRY (LAGraph_FastAssign(
-        fa_s, NULL, NULL, rand_v, x, ramp, GxB_ANY_BOOL_MONOID, NULL, msg
+    LG_TRY (LAGraph_FastAssign_Semiring(
+        fa_s, NULL, NULL, rand_v, x, ramp, GxB_ANY_PAIR_BOOL, NULL, msg
     ));
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGraph_FastAssign: %g sec\n", t) ;
@@ -170,7 +169,6 @@ int main (int argc, char **argv)
 
     LG_FREE_ALL ;
     LG_TRY (LAGraph_Finalize (msg)) ;
-    LG_TRY (LAGraph_Random_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
     #else
     printf ("GraphBLAS version too low to test LAGraph_FastAssign\n") ;

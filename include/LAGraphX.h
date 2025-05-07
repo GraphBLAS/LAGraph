@@ -296,13 +296,7 @@ int LAGraph_FastAssign_Semiring
     const GrB_Descriptor desc,
     char *msg
 ) ;
-#define LAGraph_FastAssign(c, mask, accum, I_vec, X_vec, ramp, dup, desc, msg)  \
-    _Generic((dup),                                                             \
-    GrB_Monoid:                                                                 \
-        LAGraph_FastAssign_Monoid,                                              \
-    GrB_Semiring:                                                               \
-        LAGraph_FastAssign_Semiring)                                            \
-    (c, mask, accum, I_vec, X_vec, ramp, dup, desc, msg)
+
 //****************************************************************************
 // Algorithms
 //****************************************************************************
