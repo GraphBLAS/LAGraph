@@ -86,5 +86,5 @@ jobs:
           # cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
           cmake ..
           JOBS=2 make
-	  ctest . --verbose
+          ctest . --verbose
 
