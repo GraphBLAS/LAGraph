@@ -8,8 +8,11 @@ on:
   pull_request:
 
 jobs:
+
   linux:
+
     runs-on: ubuntu-22.04
+
     strategy:
       matrix:
         config:
@@ -19,11 +22,14 @@ jobs:
          - {grb_version: 10.0.3, deployit: true}
 
     steps:
+
     - name: Checkout
       uses: actions/checkout@v2.0.0
+
     - name: Install tools for build
       run: |
         sudo apt install -y lcov
+
     - name: Build GraphBLAS
       run: |
         git clone https://github.com/DrTimothyAldenDavis/GraphBLAS.git
@@ -32,14 +38,14 @@ jobs:
         make compact
         sudo make install
         cd ..
+
     - name: Build project
       run: |
-        # export GRAPHBLAS_INCLUDE_DIR=`pwd`/GraphBLAS/include/suitesparse
-        # export GRAPHBLAS_LIBRARY=`pwd`/GraphBLAS/lib/libgraphblas.so
         cd build
         cmake .. -DCOVERAGE=1
         JOBS=2 make
         make test_coverage
+
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@4.1.1
       if: matrix.config.deployit && github.event_name == 'push' && github.ref == 'refs/heads/stable'
@@ -47,6 +53,7 @@ jobs:
         branch: gh-pages
         folder: build/test_coverage/
         single-commit: true
+
     - name: Save output
       uses: actions/upload-artifact@v4.6.0
       if: matrix.config.deployit
@@ -55,20 +62,26 @@ jobs:
         path: build/test_coverage/
 
   macos:
+
     runs-on: macos-14
+
     strategy:
       matrix:
         config:
          - {grb_version: 9.0.0}
          - {grb_version: 10.0.3}
+
     steps:
+
     - name: Checkout
       uses: actions/checkout@v2.0.0
+
     - name: Install dependencies
       run: |
         brew tap-new libomp/cask
         brew extract --version=14.0.6 libomp libomp/cask
         brew install libomp@14.0.6
+
     - name: Build GraphBLAS
       run: |
         git clone https://github.com/DrTimothyAldenDavis/GraphBLAS.git
@@ -77,6 +90,7 @@ jobs:
         make compact
         sudo make install
         cd ..
+
     - name: Build project
       run: |
         # adding an extra line to the CMakeLists.txt file to locate the libomp instance installed by brew
@@ -85,3 +99,4 @@ jobs:
         cmake ..
         JOBS=2 make
         ctest .
+
