@@ -83,7 +83,8 @@ jobs:
       - name: build and test LAGraph
         run: |
           cd build
-          cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
+          # cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
+          cmake ..
           JOBS=2 make
-          make verbose_test
+	  ctest . --verbose
 

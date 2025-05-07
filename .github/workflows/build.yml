@@ -34,10 +34,10 @@ jobs:
         cd ..
     - name: Build project
       run: |
-        export GRAPHBLAS_INCLUDE_DIR=`pwd`/GraphBLAS/include/suitesparse
-        export GRAPHBLAS_LIBRARY=`pwd`/GraphBLAS/lib/libgraphblas.so
+        # export GRAPHBLAS_INCLUDE_DIR=`pwd`/GraphBLAS/include/suitesparse
+        # export GRAPHBLAS_LIBRARY=`pwd`/GraphBLAS/lib/libgraphblas.so
         cd build
-        cmake .. -DCOVERAGE=1 -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
+        cmake .. -DCOVERAGE=1
         JOBS=2 make
         make test_coverage
     - name: Deploy
