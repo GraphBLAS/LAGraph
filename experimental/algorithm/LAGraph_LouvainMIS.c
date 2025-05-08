@@ -18,7 +18,11 @@ int LAGraph_LouvainMIS(
 
     GrB_Semiring stdmxm = GrB_PLUS_TIMES_SEMIRING_FP64;
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
 >>>>>>> 49da79e1 (GAP test)
+=======
+    
+>>>>>>> 91a5c9dd (Adding isolate sets algorithm w/ test cases.)
 }
