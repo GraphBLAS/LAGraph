@@ -497,7 +497,7 @@ void test_BreadthFirstSearch_Extended(void)
 
             GrB_Index nvals ;
             OK (GrB_Vector_nvals (&nvals, level)) ;
-            printf ("vanilla: %d nvals: % " PRIu64 "\n", vanilla, nvals) ;
+            printf ("vanilla: %d nvals: %" PRIu64 "\n", vanilla, nvals) ;
 
             // check the levels of all nodes
             for (int64_t k = 0 ; k < 34 ; k++)
