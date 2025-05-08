@@ -1,4 +1,6 @@
 name: arch-emu
+
+# FIXME: do this on workflow_dispatch only
 on:
   workflow_dispatch:
   push:
@@ -20,6 +22,7 @@ jobs:
     strategy:
       matrix:
         config:
+          # FIXME: switch to 10.1.0 when it is released:
          - {grb_version: 10.0.5}
         # For available CPU architectures, see:
         # https://github.com/marketplace/actions/setup-alpine-linux-environment
@@ -55,7 +58,6 @@ jobs:
             libtool
             git
             sudo
-          # ${{ matrix.arch != 'riscv64' && 'valgrind' || '' }}
 
       - name: disable QEMU emulation
         if: matrix.arch == 'armv7'
@@ -73,7 +75,9 @@ jobs:
           gcc -dumpmachine
           git clone https://github.com/DrTimothyAldenDavis/GraphBLAS.git
           cd GraphBLAS
-          git checkout tags/v${{ matrix.config.grb_version }}
+          # FIXME: switch to 10.1.0 when it is released:
+          # git checkout tags/v${{ matrix.config.grb_version }}
+          git checkout dev2
           make compact
           sudo make install
           cd ..
@@ -81,7 +85,7 @@ jobs:
       - name: build and test LAGraph
         run: |
           cd build
-          cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
+          cmake ..
           JOBS=2 make
-          make test
+          ctest . --verbose
 
