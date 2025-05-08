@@ -69,7 +69,7 @@ jobs:
       matrix:
         config:
          - {grb_version: 9.0.0}
-         - {grb_version: 10.0.3}
+         - {grb_version: 10.0.5}
 
     steps:
 
