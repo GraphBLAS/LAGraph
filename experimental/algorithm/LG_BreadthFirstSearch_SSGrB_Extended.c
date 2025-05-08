@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LG_BreadthFirstSearch_SSGrB:  BFS using Suitesparse extensions
+// LG_BreadthFirstSearch_SSGrB_Extended:  BFS using Suitesparse extensions
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
@@ -33,5 +33,6 @@
 
 // revised by Tim Davis (davis@tamu.edu), Texas A&M University
 
+#define LG_BFS_EXTENDED
 #include "template/LG_BreadthFirstSearch_SSGrB_template.c"
 

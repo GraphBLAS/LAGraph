@@ -221,6 +221,7 @@ message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_C_FOUND} )
 
 include_directories ( ${PROJECT_SOURCE_DIR}/include
                       ${PROJECT_SOURCE_DIR}/src/utility
+                      ${PROJECT_SOURCE_DIR}/src/algorithm
                       ${PROJECT_SOURCE_DIR}/test/include )
 
 # tell LAGraph where to find its own source (for LAGraph/data files)

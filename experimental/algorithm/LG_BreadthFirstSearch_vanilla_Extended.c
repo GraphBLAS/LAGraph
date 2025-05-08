@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LG_BreadthFirstSearch_vanilla:  BFS using only GraphBLAS API
+// LG_BreadthFirstSearch_vanilla_Extended:  BFS using only GraphBLAS API
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
@@ -19,5 +19,6 @@
 // This is a Basic algorithm (no extra cached properties are required),
 // but it is not user-callable (see LAGr_BreadthFirstSearch instead).
 
+#define LG_BFS_EXTENDED
 #include "template/LG_BreadthFirstSearch_vanilla_template.c"
 

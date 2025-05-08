@@ -2317,6 +2317,21 @@ int LAGr_BreadthFirstSearch
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
+int LAGr_BreadthFirstSearch_Extended
+(
+    // output:
+    GrB_Vector *level,
+    GrB_Vector *parent,
+    // input:
+    const LAGraph_Graph G,
+    GrB_Index src,
+    int64_t max_level,  // < 0: no limit; otherwise, stop at this level
+    int64_t dest,       // < 0: no destination; otherwise, stop if dest
+                        // node is reached
+    char *msg
+) ;
+
 //------------------------------------------------------------------------------
 // LAGr_ConnectedComponents: connected components of an undirected graph
 //------------------------------------------------------------------------------
