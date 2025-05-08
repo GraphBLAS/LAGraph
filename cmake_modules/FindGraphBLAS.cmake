@@ -338,7 +338,7 @@ endif ( )
 
 # Create target from information found
 
-if ( GRAPHBLAS_LIBRARY )
+if ( GRAPHBLAS_FOUND )
     message ( STATUS "Create target GraphBLAS::GraphBLAS" )
     # Get library name from filename of library
     # This might be something like:
