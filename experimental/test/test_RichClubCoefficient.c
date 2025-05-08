@@ -98,10 +98,11 @@ const char *tests2 [ ] =
     "random_unweighted_general1.mtx",
     "random_unweighted_general2.mtx",
     "bcsstk13.mtx",
+    "bcsstk13_celeb.mtx",
     "test_FW_1000.mtx",
     "test_FW_2003.mtx",
     "test_FW_2500.mtx",
-    NULL
+    ""
 } ;
 
 void test_RichClubCoefficient (void)
@@ -199,11 +200,6 @@ void iseq(bool *z, const double *x, const double *y)
 {
     (*z) = (isnan(*x) && isnan(*y)) ||*x == *y ;
 }
-#define ISEQ \
-"   void iseq(bool *z, const double *x, const double *y)                        \n"\
-"   {                                                                           \n"\
-"       (*z) = (isnan(*x) && isnan(*y)) || *x == *y ;                          \n"\
-"   }"
 //------------------------------------------------------------------------------
 // test RichClubCoefficient vs C code
 //------------------------------------------------------------------------------
@@ -214,14 +210,16 @@ void test_RCC_Check (void)
     //--------------------------------------------------------------------------
     OK (LAGraph_Init (msg)) ;
     GrB_BinaryOp iseqFP = NULL ;
-    OK (GxB_BinaryOp_new (
-        &iseqFP, (GxB_binary_function) iseq, 
-        GrB_BOOL, GrB_FP64, GrB_FP64, "iseq", ISEQ)) ;
+    OK (GrB_BinaryOp_new (
+        &iseqFP, (GxB_binary_function) iseq, GrB_BOOL, GrB_FP64, GrB_FP64)) ;
+    // OK (GxB_BinaryOp_new (
+    //     &iseqFP, (GxB_binary_function) iseq, 
+    //     GrB_BOOL, GrB_FP64, GrB_FP64, "iseq", ISEQ)) ;
     for (int k = 0 ; ; k++)
     {
         //The following code taken from MIS tester
         // load the matrix as A
-        const char *aname = tests [k].name;
+        const char *aname = tests2 [k];
         if (strlen (aname) == 0) break;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
@@ -231,8 +229,6 @@ void test_RCC_Check (void)
         OK (fclose (f)) ;
         TEST_MSG ("Loading of valued matrix failed") ;
         printf ("\nMatrix: %s\n", aname) ;
-        const double *ans = tests [k].rcc;
-        const uint64_t n_ans = tests [k].n;
 
         // C = structure of A
         OK (LAGraph_Matrix_Structure (&C, A, msg)) ;

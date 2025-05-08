@@ -711,12 +711,12 @@ int LAGraph_SwapEdges
         )) ;
 
         // Find each hashed edge's bucket, dup_swaps_v is 1 if exists[edge] = 1
-        // LG_TRY (LAGraph_FastAssign_Semiring(
-        //     dup_swaps_v, NULL, NULL, new_hashed_edges, exists, ramp_v, 
-        //     GxB_ANY_PAIR_INT8, GrB_DESC_T0, msg
-        // )) ;
-        GRB_TRY (GxB_Vector_extract_Vector(
-            dup_swaps_v, NULL, NULL, exists, new_hashed_edges, NULL)) ;
+        LG_TRY (LAGraph_FastAssign_Semiring(
+            dup_swaps_v, NULL, NULL, new_hashed_edges, exists, ramp_v, 
+            GxB_ANY_PAIR_INT8, GrB_DESC_T0, msg
+        )) ;
+        // GRB_TRY (GxB_Vector_extract_Vector(
+        //     dup_swaps_v, NULL, NULL, exists, new_hashed_edges, NULL)) ;
 
         // Fill out dup_swaps_v in O(1) time.
         GRB_TRY (GxB_Container_new(&con)) ;
@@ -746,7 +746,6 @@ int LAGraph_SwapEdges
         // Place Good Swaps back into E_vec
         // ---------------------------------------------------------------------
 
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,1)
         GRB_TRY (GxB_Container_new(&con)) ;
         GRB_TRY (GxB_unload_Vector_into_Container(M, con, NULL)) ;
         GRB_TRY (GrB_free(&(con->b))) ;
@@ -759,10 +758,6 @@ int LAGraph_SwapEdges
         GRB_TRY (LAGraph_FastAssign_Semiring(
             E_vec, NULL, second_edge, edge_perm, M, ramp_v, 
             second_second_edge, NULL, msg)) ;
-        #else // Fix for old saxpy4 bug
-        GRB_TRY(GxB_Vector_subassign_Vector(
-            E_vec, dup_swaps_v, NULL, M, edge_perm, NULL));
-        #endif
         
 
         n_keep /= 2;
