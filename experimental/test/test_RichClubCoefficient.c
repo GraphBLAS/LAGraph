@@ -398,7 +398,9 @@ void test_rcc_brutal (void)
 TEST_LIST =
 {
     {"RichClubCoefficient", test_RichClubCoefficient},
+    #if USING_GRAPHBLAS_V10
     {"RichClubCoefficient_Check", test_RCC_Check},
+    #endif
     #if LAGRAPH_SUITESPARSE
     {"rcc_brutal", test_rcc_brutal},
     #endif
