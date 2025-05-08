@@ -1262,6 +1262,15 @@ int LAGraph_Louvain2
     LAGraph_Graph G,
     char* msg
 );
+LAGRAPHX_PUBLIC
+int LAGraph_IsolateSets(
+    //output
+    GrB_Vector *isolate_set,
+    //input
+    LAGraph_Graph G,
+    uint64_t seed,
+    char* msg
+);
 #if defined ( __cplusplus )
 }
 #endif
