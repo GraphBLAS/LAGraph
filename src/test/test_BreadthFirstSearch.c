@@ -23,6 +23,7 @@
 #include <LAGraph_test.h>
 #include <graph_zachary_karate.h>
 #include "LG_alg_internal.h"
+#include "LAGraphX.h"
 
 char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;

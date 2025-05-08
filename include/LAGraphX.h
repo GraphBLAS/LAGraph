@@ -13,9 +13,6 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: add LAGr_BreadthFirstSearch_MaxLevel with an extra parameter,
-// max_level.
-
 #ifndef LAGRAPHX_H
 #define LAGRAPHX_H
 
@@ -1359,6 +1356,21 @@ int LAGr_MaximumMatching(
                    // the columns' or from the rows' perspective, ignored if
                    // mate_init is NULL
     char *msg);
+
+LAGRAPH_PUBLIC
+int LAGr_BreadthFirstSearch_Extended
+(
+    // output:
+    GrB_Vector *level,
+    GrB_Vector *parent,
+    // input:
+    const LAGraph_Graph G,
+    GrB_Index src,
+    int64_t max_level,  // < 0: no limit; otherwise, stop at this level
+    int64_t dest,       // < 0: no destination; otherwise, stop if dest
+                        // node is reached
+    char *msg
+) ;
 
 #if defined ( __cplusplus )
 }
