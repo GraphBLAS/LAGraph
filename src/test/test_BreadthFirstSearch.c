@@ -491,7 +491,7 @@ void test_BreadthFirstSearch_Extended(void)
             else
             {
                 retval = LAGr_BreadthFirstSearch_Extended (&level,
-                    NULL, G, SRC, max_level, -1, msg) ;
+                    NULL, G, SRC, max_level, -1, max_level > 2, msg) ;
             }
             TEST_CHECK (retval == GrB_SUCCESS) ;
 
@@ -534,7 +534,7 @@ void test_BreadthFirstSearch_Extended(void)
             else
             {
                 retval = LAGr_BreadthFirstSearch_Extended (&level,
-                    NULL, G, SRC, -1, dest, msg) ;
+                    NULL, G, SRC, -1, dest, false, msg) ;
             }
             TEST_CHECK (retval == GrB_SUCCESS) ;
 

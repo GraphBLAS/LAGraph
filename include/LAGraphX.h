@@ -1369,6 +1369,9 @@ int LAGr_BreadthFirstSearch_Extended
     int64_t max_level,  // < 0: no limit; otherwise, stop at this level
     int64_t dest,       // < 0: no destination; otherwise, stop if dest
                         // node is reached
+    bool many_expected, // if true, the result is expected to include a fair
+                        // portion of the graph.  If false, the result (parent
+                        // and level) is expected to be very sparse.
     char *msg
 ) ;
 
