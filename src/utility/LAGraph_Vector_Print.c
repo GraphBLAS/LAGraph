@@ -94,8 +94,11 @@ LG_VECTOR_PRINT (UINT32, uint32_t, GrB_UINT32, "%" PRIu32, "%" PRIu32  )
 LG_VECTOR_PRINT (UINT64, uint64_t, GrB_UINT64, "%" PRIu64, "%" PRIu64  )
 LG_VECTOR_PRINT (FP32  , float   , GrB_FP32  , "%g"  , "%0.7g" )
 LG_VECTOR_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g")
-// LG_VECTOR_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...)
-// LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...)
+#if 0
+// would need to pass in an iscomplex flag to print creal(x) and cimag(x)
+LG_VECTOR_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...)
+LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...)
+#endif
 
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK ;
