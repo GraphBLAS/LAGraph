@@ -46,7 +46,7 @@
     GrB_free (&v) ;         \
 }
 
-#include "LG_internal.h"
+#include "LG_alg_internal.h"
 
 #ifdef LG_BFS_EXTENDED
 int LG_BreadthFirstSearch_SSGrB_Extended
@@ -58,6 +58,9 @@ int LG_BreadthFirstSearch_SSGrB_Extended
     int64_t max_level,  // < 0: no limit; otherwise, stop at this level
     int64_t dest,       // < 0: no destination; otherwise, stop if dest
                         // node is reached
+    bool many_expected, // if true, the result is expected to include a fair
+                        // portion of the graph.  If false, the result (parent
+                        // and level) is expected to be very sparse.
     char *msg
 )
 #else
@@ -131,6 +134,10 @@ int LG_BreadthFirstSearch_SSGrB
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
     GrB_Semiring semiring ;
 
+    #ifndef LG_BFS_EXTENDED
+    bool many_expected = (nvals >= n) ;
+    #endif
+
     if (compute_parent)
     {
         // use the ANY_SECONDI_INT* semiring: either 32 or 64-bit depending on
@@ -140,7 +147,10 @@ int LG_BreadthFirstSearch_SSGrB
 
         // create the parent vector.  pi(i) is the parent id of node i
         GRB_TRY (GrB_Vector_new (&pi, int_type, n)) ;
-        GRB_TRY (LG_SET_FORMAT_HINT (pi, LG_BITMAP + LG_FULL)) ;
+        if (many_expected)
+        {
+            GRB_TRY (LG_SET_FORMAT_HINT (pi, LG_BITMAP + LG_FULL)) ;
+        }
         // pi (src) = src denotes the root of the BFS tree
         GRB_TRY (GrB_Vector_setElement (pi, src, src)) ;
 
@@ -163,7 +173,10 @@ int LG_BreadthFirstSearch_SSGrB
         // create the level vector. v(i) is the level of node i
         // v (src) = 0 denotes the source node
         GRB_TRY (GrB_Vector_new (&v, int_type, n)) ;
-        GRB_TRY (LG_SET_FORMAT_HINT (v, LG_BITMAP + LG_FULL)) ;
+        if (many_expected)
+        {
+            GRB_TRY (LG_SET_FORMAT_HINT (v, LG_BITMAP + LG_FULL)) ;
+        }
         GRB_TRY (GrB_Vector_setElement (v, 0, src)) ;
     }
 
