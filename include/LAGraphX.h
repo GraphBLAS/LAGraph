@@ -1335,7 +1335,11 @@ int LAGraph_argminmax
     int dim,                    // dim=1: cols of A, dim=2: rows of A
     bool is_min,
     char *msg
+<<<<<<< HEAD
 ) ; 
+=======
+); 
+>>>>>>> 91a5c9dd407d0d0ad612ad605ac140bacb3c40ea
 LAGRAPHX_PUBLIC
 int LAGr_Modularity2(
     //output
@@ -1358,6 +1362,7 @@ int LAGraph_Louvain
     LAGraph_Graph G,
     char* msg
 );
+<<<<<<< HEAD
 
 LAGRAPHX_PUBLIC
 int LAGraph_Louvain2
@@ -1410,7 +1415,27 @@ int LAGr_BreadthFirstSearch_Extended
                         // node is reached
     char *msg
 ) ;
+=======
+>>>>>>> 91a5c9dd407d0d0ad612ad605ac140bacb3c40ea
 
+LAGRAPHX_PUBLIC
+int LAGraph_Louvain2
+(
+    //ouptut
+    GrB_Matrix *S_result,
+    // input
+    LAGraph_Graph G,
+    char* msg
+);
+LAGRAPHX_PUBLIC
+int LAGraph_IsolateSets(
+    //output
+    GrB_Vector *isolate_set,
+    //input
+    LAGraph_Graph G,
+    uint64_t seed,
+    char* msg
+);
 #if defined ( __cplusplus )
 }
 #endif
