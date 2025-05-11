@@ -159,7 +159,7 @@ int LAGraph_FastAssign_Semiring
     int64_t n, nrows;
     GxB_Container con = NULL;
     void *ramp_a = NULL, *i_a =NULL;
-    int ramp_h = 0, trsp = GrB_DEFAULT, i_h = 0;
+    int ramp_h = GrB_DEFAULT, trsp = GrB_DEFAULT, i_h = GrB_DEFAULT;
     int64_t ramp_n = 0, ramp_size = 0, i_n = 0, i_size= 0;
     GrB_Type x_type = NULL, i_type = NULL, ramp_type = NULL;
     bool iso = false;
@@ -170,8 +170,8 @@ int LAGraph_FastAssign_Semiring
     LG_ASSERT (c != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (I_vec != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (X_vec != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT_MSG (c != X_vec && c != I_vec && c != yada yada, GrB_NOT_IMPLEMENTED, 
-        "c cannot be aliased with any input.") ; 
+    LG_ASSERT_MSG (c != X_vec && c != I_vec && c != ramp && c != mask, 
+        GrB_NOT_IMPLEMENTED, "c cannot be aliased with any input.") ; 
 
     //----------------------------------------------------------------------
     // Find dimensions and type
@@ -203,7 +203,7 @@ int LAGraph_FastAssign_Semiring
 
     if(ramp == NULL)
     {
-        //TODO: maybe let user input a size 0 ramp and build it for them?
+        //FUTURE: maybe let user input a size 0 ramp and build it for them?
         GRB_TRY (GrB_free(&(con->p))) ;
         ramp_type = (n + 1 <= INT32_MAX)? GrB_UINT32: GrB_UINT64;
         GrB_IndexUnaryOp idxnum = (n + 1 <= INT32_MAX)? 
@@ -218,7 +218,7 @@ int LAGraph_FastAssign_Semiring
             ramp, &ramp_a, &ramp_type, &ramp_n, &ramp_size, &ramp_h, NULL)) ;
         LG_ASSERT_MSG (ramp_n > n, GrB_DIMENSION_MISMATCH, "Ramp too small!");
         GRB_TRY (GxB_Vector_load(
-            con->p, &ramp_a, ramp_type, n + 1, (n + 1) * (ramp_size / ramp_n),
+            con->p, &ramp_a, ramp_type, n + 1, ramp_size,
             GxB_IS_READONLY, NULL)) ;
         // Since con->p won't free this array I should be safe to load it back 
         // into ramp.
@@ -226,23 +226,17 @@ int LAGraph_FastAssign_Semiring
             ramp, &ramp_a, ramp_type, ramp_n, ramp_size, ramp_h, NULL)) ;
         ramp_a = NULL;
     }
-    if (c == I_vec)
-    {
-        GRB_TRY (GrB_Vector_dup(&con->i, I_vec)) ;
-    }
-    else
-    {
-        // con->i = I_vec;
-        GRB_TRY (GxB_Vector_unload(
-            I_vec, &i_a, &i_type, &i_n, &i_size, &i_h, NULL)) ;
-        GRB_TRY (GxB_Vector_load(
-            con->i, &i_a, i_type, i_n, i_size, GxB_IS_READONLY, NULL)) ;
-        // Since con->i won't free this array I should be safe to load it back 
-        // into I_vec.
-        GRB_TRY (GxB_Vector_load(
-            I_vec, &i_a, i_type, i_n, i_size, i_h, NULL)) ;
-        i_a = NULL;
-    }
+    // con->i = I_vec;
+    GRB_TRY (GxB_Vector_unload(
+        I_vec, &i_a, &i_type, &i_n, &i_size, &i_h, NULL)) ;
+    GRB_TRY (GxB_Vector_load(
+        con->i, &i_a, i_type, i_n, i_size, GxB_IS_READONLY, NULL)) ;
+    // Since con->i won't free this array I should be safe to load it back 
+    // into I_vec.
+    GRB_TRY (GxB_Vector_load(
+        I_vec, &i_a, i_type, i_n, i_size, i_h, NULL)) ;
+    i_a = NULL;
+
     // con->x [0] = false, of length 1
     GRB_TRY (GrB_free(&(con->x))) ;
     GRB_TRY (GrB_Vector_new (&(con->x), GrB_BOOL, 1)) ;

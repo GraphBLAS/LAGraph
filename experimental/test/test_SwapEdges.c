@@ -97,46 +97,49 @@ void test_SwapEdges (void)
         GrB_Index n = 0;
         OK (LAGraph_Cached_OutDegree (G, msg)) ;
         OK (GrB_Matrix_nrows(&n, G->A));
+        for (int jit = 0 ; jit <= 1 ; jit++)
+        {
+            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
+                jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
 
-        //----------------------------------------------------------------------
-        // test the algorithm
-        //----------------------------------------------------------------------
+            //------------------------------------------------------------------
+            // test the algorithm
+            //------------------------------------------------------------------
+            // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+            OK(LAGraph_SwapEdges( &A_new, G, (GrB_Index) 100, msg));
+            // GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
+            printf ("Test ends:\n") ;
+            printf ("%s\n", msg) ;
 
-        GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-        OK(LAGraph_SwapEdges( &A_new, G, (GrB_Index) 100, msg));
-        GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
-        printf ("Test ends:\n") ;
-        printf ("%s\n", msg + 1) ;
+            //------------------------------------------------------------------
+            // check results
+            //------------------------------------------------------------------
+            bool ok = false;
+            //Make sure we got a symetric back out:
+            OK (LAGraph_New (&G_new, &A_new, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+            OK (LAGraph_Cached_AT (G_new, msg)) ;
+            OK (LAGraph_Matrix_IsEqual (&ok, G_new->AT, G_new->A, msg)) ;
+            TEST_CHECK (ok) ;
+                    
+            //Make sure no self edges created.
+            OK (LAGraph_Cached_NSelfEdges (G_new, msg)) ;
+            TEST_CHECK (G_new->nself_edges == 0);
 
-        //----------------------------------------------------------------------
-        // check results
-        //----------------------------------------------------------------------
-        bool ok = false;
-        //Make sure we got a symetric back out:
-        OK (LAGraph_New (&G_new, &A_new, LAGraph_ADJACENCY_DIRECTED, msg)) ;
-        OK (LAGraph_Cached_AT (G_new, msg)) ;
-        OK (LAGraph_Matrix_IsEqual (&ok, G_new->AT, G_new->A, msg)) ;
-        TEST_CHECK (ok) ;
+            // Check nvals stay the same. 
+            GrB_Index edge_count, new_edge_count;
+            OK (GrB_Matrix_nvals(&edge_count, G->A)) ;
+            OK (GrB_Matrix_nvals(&new_edge_count, G_new->A)) ;
+            printf("old: %ld, new: %ld", edge_count,new_edge_count);
+            TEST_CHECK(edge_count == new_edge_count);
+            //next: check degrees stay the same.
+            OK (LAGraph_Cached_OutDegree (G_new, msg)) ;
 
-        //Make sure no self edges created.
-        OK (LAGraph_Cached_NSelfEdges (G_new, msg)) ;
-        TEST_CHECK (G_new->nself_edges == 0);
-
-        // Check nvals stay the same. 
-        GrB_Index edge_count, new_edge_count;
-        OK (GrB_Matrix_nvals(&edge_count, G->A)) ;
-        OK (GrB_Matrix_nvals(&new_edge_count, G_new->A)) ;
-        printf("old: %ld, new: %ld", edge_count,new_edge_count);
-        TEST_CHECK(edge_count == new_edge_count);
-        //next: check degrees stay the same.
-        OK (LAGraph_Cached_OutDegree (G_new, msg)) ;
-
-        OK (LAGraph_Vector_IsEqual (
-            &ok, G->out_degree, G_new->out_degree, msg)) ;
-        TEST_CHECK (ok) ;
-
+            OK (LAGraph_Vector_IsEqual (
+                &ok, G->out_degree, G_new->out_degree, msg)) ;
+            TEST_CHECK (ok) ;
+            OK (LAGraph_Delete (&G_new, msg)) ;
+        }
         OK (LAGraph_Delete (&G, msg)) ;
-        OK (LAGraph_Delete (&G_new, msg)) ;
     }
 
     //--------------------------------------------------------------------------
