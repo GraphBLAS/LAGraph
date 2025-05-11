@@ -34,6 +34,23 @@ int LG_BreadthFirstSearch_SSGrB
     char          *msg
 ) ;
 
+int LG_BreadthFirstSearch_SSGrB_Extended
+(
+    // output:
+    GrB_Vector    *level,
+    GrB_Vector    *parent,
+    // input:
+    const LAGraph_Graph G,
+    GrB_Index      src,
+    int64_t max_level,  // < 0: no limit; otherwise, stop at this level
+    int64_t dest,       // < 0: no destination; otherwise, stop if dest
+                        // node is reached
+    bool many_expected, // if true, the result is expected to include a fair
+                        // portion of the graph.  If false, the result (parent
+                        // and level) is expected to be very sparse.
+    char          *msg
+) ;
+
 int LG_BreadthFirstSearch_vanilla
 (
     // output:
@@ -42,6 +59,20 @@ int LG_BreadthFirstSearch_vanilla
     // input:
     const LAGraph_Graph G,
     GrB_Index      src,
+    char          *msg
+) ;
+
+int LG_BreadthFirstSearch_vanilla_Extended
+(
+    // output:
+    GrB_Vector    *level,
+    GrB_Vector    *parent,
+    // input:
+    const LAGraph_Graph G,
+    GrB_Index      src,
+    int64_t max_level,  // < 0: no limit; otherwise, stop at this level
+    int64_t dest,       // < 0: no destination; otherwise, stop if dest
+                        // node is reached
     char          *msg
 ) ;
 

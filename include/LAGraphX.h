@@ -13,9 +13,6 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: add LAGr_BreadthFirstSearch_MaxLevel with an extra parameter,
-// max_level.
-
 #ifndef LAGRAPHX_H
 #define LAGRAPHX_H
 
@@ -1429,6 +1426,24 @@ int LG_CC_FastSV7_FA // SuiteSparse:GraphBLAS method, with GxB extensions
     GrB_Vector *component,  // component(i)=r if node is in the component r
     // input:
     LAGraph_Graph G,        // input graph (modified then restored)
+    char *msg
+) ;
+
+LAGRAPH_PUBLIC
+int LAGr_BreadthFirstSearch_Extended
+(
+    // output:
+    GrB_Vector *level,
+    GrB_Vector *parent,
+    // input:
+    const LAGraph_Graph G,
+    GrB_Index src,
+    int64_t max_level,  // < 0: no limit; otherwise, stop at this level
+    int64_t dest,       // < 0: no destination; otherwise, stop if dest
+                        // node is reached
+    bool many_expected, // if true, the result is expected to include a fair
+                        // portion of the graph.  If false, the result (parent
+                        // and level) is expected to be very sparse.
     char *msg
 ) ;
 

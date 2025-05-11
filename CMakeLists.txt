@@ -39,7 +39,7 @@
 cmake_minimum_required ( VERSION 3.20 ) # LAGraph can be built stand-alone
 
 # version of LAGraph
-set ( LAGraph_DATE "Feb XX, 2024" )
+set ( LAGraph_DATE "FIXME, 2025" )
 set ( LAGraph_VERSION_MAJOR 1 CACHE STRING "" FORCE )
 set ( LAGraph_VERSION_MINOR 2 CACHE STRING "" FORCE )
 set ( LAGraph_VERSION_SUB   0 CACHE STRING "" FORCE )
@@ -221,6 +221,7 @@ message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_C_FOUND} )
 
 include_directories ( ${PROJECT_SOURCE_DIR}/include
                       ${PROJECT_SOURCE_DIR}/src/utility
+                      ${PROJECT_SOURCE_DIR}/src/algorithm
                       ${PROJECT_SOURCE_DIR}/test/include )
 
 # tell LAGraph where to find its own source (for LAGraph/data files)
