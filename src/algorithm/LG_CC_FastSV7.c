@@ -54,14 +54,6 @@
 #define LG_FREE_ALL ;
 #include "LG_internal.h"
 
-#define USING_GRAPHBLAS_V10 0
-#if LAGRAPH_SUITESPARSE
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
-        #undef  USING_GRAPHBLAS_V10
-        #define USING_GRAPHBLAS_V10 1
-    #endif
-#endif
-
 double timings [16] ;
 
 #if USING_GRAPHBLAS_V10
