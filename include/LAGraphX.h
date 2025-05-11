@@ -13,6 +13,9 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: add LAGr_BreadthFirstSearch_MaxLevel with an extra parameter,
+// max_level.
+
 #ifndef LAGRAPHX_H
 #define LAGRAPHX_H
 
@@ -52,43 +55,10 @@ extern "C"
 // development, and is intended only for illustration or testing, not
 // benchmarking.  Do not use for benchmarking without asking the authors.
 
-//------------------------------------------------------------------------------
-// LAGraph_Random_*: Random number generator
-//------------------------------------------------------------------------------
-
-LAGRAPHX_PUBLIC
-int LAGraph_Random_Init
-(
-    char *msg
-) ;
-LAGRAPHX_PUBLIC
-int LAGraph_Random_Finalize
-(
-    char *msg
-) ;
-
 #if defined ( COVERAGE )
 // for testing only
 LAGRAPHX_PUBLIC extern bool random_hack ;
 #endif
-
-LAGRAPHX_PUBLIC
-int LAGraph_Random_Seed     // construct a random seed vector
-(
-    // input/output
-    GrB_Vector Seed,    // vector of random number seeds, normally GrB_UINT64
-    // input
-    uint64_t seed,      // scalar input seed
-    char *msg
-) ;
-
-LAGRAPHX_PUBLIC
-int LAGraph_Random_Next     // advance to next random vector
-(
-    // input/output
-    GrB_Vector Seed,
-    char *msg
-) ;
 
 LAGRAPHX_PUBLIC
 GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
@@ -329,13 +299,7 @@ int LAGraph_FastAssign_Semiring
     const GrB_Descriptor desc,
     char *msg
 ) ;
-#define LAGraph_FastAssign(c, mask, accum, I_vec, X_vec, ramp, dup, desc, msg)  \
-    _Generic((dup),                                                             \
-    GrB_Monoid:                                                                 \
-        LAGraph_FastAssign_Monoid,                                              \
-    GrB_Semiring:                                                               \
-        LAGraph_FastAssign_Semiring)                                            \
-    (c, mask, accum, I_vec, X_vec, ramp, dup, desc, msg)
+
 //****************************************************************************
 // Algorithms
 //****************************************************************************

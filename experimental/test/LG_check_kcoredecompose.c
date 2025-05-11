@@ -23,6 +23,11 @@
 {                                   \
     GrB_free (&C) ;                 \
     GrB_free (&deg) ;               \
+    LAGraph_Free ((void **) &row, msg) ;                \
+    LAGraph_Free ((void **) &col, msg) ;                \
+    LAGraph_Free ((void **) &matrix_values, msg) ;      \
+    LAGraph_Free ((void **) &vector, msg) ;             \
+    LAGraph_Free ((void **) &vector_values, msg) ;      \
 }
 
 #define LG_FREE_ALL                 \
@@ -52,6 +57,7 @@ int LG_check_kcore_decompose
     // declare items
     GrB_Matrix A = NULL, C = NULL;
     GrB_Vector deg = NULL;
+    GrB_Index *row = NULL, *col = NULL , *matrix_values = NULL, *vector = NULL, *vector_values = NULL;
 
     LG_ASSERT (D != NULL, GrB_NULL_POINTER) ;
     (*D) = NULL ;
@@ -87,7 +93,6 @@ int LG_check_kcore_decompose
     GRB_TRY (GrB_Vector_nvals(&nvals_vector, decomp));
 
     //extract out the values of the input graph
-    GrB_Index *row = NULL, *col = NULL , *matrix_values = NULL, *vector = NULL, *vector_values = NULL;
     LG_TRY (LAGraph_Malloc ((void **) &row, nvals_matrix, sizeof (GrB_Index), msg));
     LG_TRY (LAGraph_Malloc ((void **) &col, nvals_matrix, sizeof (GrB_Index), msg));
     LG_TRY (LAGraph_Malloc ((void **) &matrix_values, nvals_matrix, sizeof (GrB_Index), msg));
@@ -114,3 +119,4 @@ int LG_check_kcore_decompose
     GRB_TRY (GrB_Matrix_wait(*D, GrB_MATERIALIZE));
     return (GrB_SUCCESS);
 }
+

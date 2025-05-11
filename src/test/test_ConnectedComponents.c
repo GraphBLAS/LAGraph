@@ -162,6 +162,11 @@ void test_cc_matrices (void)
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
+            #else
+            printf ("\n------ CC_FastSV7: requires SS:GrB v10.0.0 or later\n") ;
+            int result7 = LG_CC_FastSV7 (&C2, G, msg) ;
+            TEST_CHECK (result7 == GrB_NOT_IMPLEMENTED) ;
+            TEST_CHECK (C2 == NULL) ;
             #endif
 
             #endif
@@ -252,6 +257,7 @@ void test_cc_errors (void)
     #endif
     #endif
 
+    OK (LAGraph_Delete (&G, msg)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 

@@ -263,24 +263,28 @@ int LAGraph_RichClubCoefficient
         }
         GRB_TRY (GrB_Vector_nvals(&edge_vec_nvals, node_edges_x))
         GRB_TRY (GrB_Vector_new(&ones_v, GrB_INT64, edge_vec_nvals)) ;
-        GRB_TRY (GrB_Vector_new(&ramp_v, GrB_INT64, edge_vec_nvals + 1)) ;  
 
-        GRB_TRY (GrB_Vector_assign_INT64(
-            ramp_v, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;
+        
         GRB_TRY (GrB_Vector_assign_INT64(
             edges_per_deg, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;
         GRB_TRY (GrB_Vector_assign_INT64(
             verts_per_deg, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;
         GRB_TRY (GrB_Vector_assign_INT64(
             ones_v, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;
-
+            
+        #if !defined(COVERAGE)
+        GRB_TRY (GrB_Vector_new(&ramp_v, GrB_INT64, edge_vec_nvals + 1)) ;  
+        GRB_TRY (GrB_Vector_assign_INT64(
+            ramp_v, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;
         GRB_TRY (GrB_apply (
             ramp_v, NULL, NULL, GrB_ROWINDEX_INT64, ramp_v, 0, NULL)) ;
-        LG_TRY (LAGraph_FastAssign (
+        #endif
+
+        LG_TRY (LAGraph_FastAssign_Semiring (
             edges_per_deg, NULL, GrB_PLUS_INT64, deg_x, node_edges_x, ramp_v,
             GxB_PLUS_SECOND_INT64, NULL, msg
         )) ;
-        LG_TRY (LAGraph_FastAssign (
+        LG_TRY (LAGraph_FastAssign_Semiring (
             verts_per_deg, NULL, GrB_PLUS_INT64, deg_x, ones_v, ramp_v,
             GxB_PLUS_PAIR_INT64, NULL, msg
         )) ;

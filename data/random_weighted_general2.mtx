@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate integer symmetric
-%%GraphBLAS type uint32_t
+%%GraphBLAS type uint64_t
 300 300 746
 185 90 4294420090
 227 66 4288698439

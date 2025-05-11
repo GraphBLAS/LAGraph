@@ -90,12 +90,12 @@ void test_MaximalMatching (void)
 {
     OK (LAGraph_Init (msg)) ;
 //  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-    OK (LAGraph_Random_Init (msg)) ;
 
     for (int k = 0 ; ; k++)
     {
         const char *aname = tests [k].name ;
         if (strlen (aname) == 0) break ;
+        printf ("\n======================= %s:\n", aname) ;
         TEST_CASE (aname) ;
 
         // old code using files
@@ -105,10 +105,12 @@ void test_MaximalMatching (void)
         TEST_CHECK (f != NULL) ;
         TEST_MSG ("Filename %s is invalid", filename) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
+        fclose (f) ;
         //--------------
 
         TEST_CHECK (A != NULL) ;
         TEST_MSG ("Building of adjacency matrix failed") ;
+        GxB_print (A, 1) ;
 
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
@@ -234,7 +236,6 @@ void test_MaximalMatching (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
     OK (LAGraph_Finalize (msg)) ;
-    OK (LAGraph_Random_Finalize (msg)) ;
 }
 
 void test_MaximalMatchingErrors (void)
@@ -262,6 +263,7 @@ void test_MaximalMatchingErrors (void)
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
+    GrB_free (&E) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 

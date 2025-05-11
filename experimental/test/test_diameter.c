@@ -77,7 +77,6 @@ const matrix_info files [ ] =
 void test_diameter (void)
 {
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
     #if LAGRAPH_SUITESPARSE
 
     for (int k = 0 ; ; k++)
@@ -93,6 +92,7 @@ void test_diameter (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
+        fclose (f) ;
         OK (GrB_Matrix_nrows (&n, A)) ;
         LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
         OK (LAGraph_Matrix_Print (A, pr, stdout, msg)) ;
@@ -156,7 +156,6 @@ void test_diameter (void)
     #else
     printf ("test skipped\n") ;
     #endif
-    OK (LAGraph_Random_Finalize (msg)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 
@@ -167,7 +166,6 @@ void test_diameter (void)
 void test_diameter_huge (void)
 {
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
     #if LAGRAPH_SUITESPARSE
     OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_OFF)) ;
 
@@ -175,6 +173,7 @@ void test_diameter_huge (void)
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&C, f, msg)) ;
+    fclose (f) ;
     OK (GrB_Matrix_nrows (&n, C)) ;
     OK (LAGraph_Matrix_Print (C, 5, stdout, msg)) ;
 
@@ -227,7 +226,6 @@ void test_diameter_huge (void)
     #else
     printf ("test skipped\n") ;
     #endif
-    OK (LAGraph_Random_Finalize (msg)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 

@@ -26,7 +26,7 @@
 char msg [LAGRAPH_MSG_LEN] ;
 
 GrB_Matrix A = NULL, C = NULL;
-GrB_Vector rcc = NULL;
+GrB_Vector rcc = NULL, check_rcc = NULL ;
 LAGraph_Graph G = NULL ;
 
 #define LEN 512
@@ -91,6 +91,18 @@ const matrix_info tests [ ] =
     {rcc3, sizeof(rcc3) / sizeof(rcc3[0]), "bcsstk13.mtx"},
     {rcc4, sizeof(rcc4) / sizeof(rcc4[0]), "test_FW_2500.mtx"},
     {NULL, 0, ""}
+} ;
+
+const char *tests2 [ ] =
+{
+    "random_unweighted_general1.mtx",
+    "random_unweighted_general2.mtx",
+    "bcsstk13.mtx",
+    "bcsstk13_celeb.mtx",
+    "test_FW_1000.mtx",
+    "test_FW_2003.mtx",
+    "test_FW_2500.mtx",
+    ""
 } ;
 
 void test_RichClubCoefficient (void)
@@ -184,6 +196,102 @@ void test_RichClubCoefficient (void)
     OK (LAGraph_Finalize (msg)) ;
 }
 
+void iseq(bool *z, const double *x, const double *y)
+{
+    (*z) = (isnan(*x) && isnan(*y)) ||*x == *y ;
+}
+//------------------------------------------------------------------------------
+// test RichClubCoefficient vs C code
+//------------------------------------------------------------------------------
+void test_RCC_Check (void)
+{
+    //--------------------------------------------------------------------------
+    // start LAGraph
+    //--------------------------------------------------------------------------
+    OK (LAGraph_Init (msg)) ;
+    GrB_BinaryOp iseqFP = NULL ;
+    OK (GrB_BinaryOp_new (
+        &iseqFP, (GxB_binary_function) iseq, GrB_BOOL, GrB_FP64, GrB_FP64)) ;
+    // OK (GxB_BinaryOp_new (
+    //     &iseqFP, (GxB_binary_function) iseq, 
+    //     GrB_BOOL, GrB_FP64, GrB_FP64, "iseq", ISEQ)) ;
+    for (int k = 0 ; ; k++)
+    {
+        //The following code taken from MIS tester
+        // load the matrix as A
+        const char *aname = tests2 [k];
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of valued matrix failed") ;
+        printf ("\nMatrix: %s\n", aname) ;
+
+        // C = structure of A
+        OK (LAGraph_Matrix_Structure (&C, A, msg)) ;
+        OK (GrB_free (&A)) ;
+
+        // construct a directed graph G with adjacency matrix C
+        OK (LAGraph_New (&G, &C, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (C == NULL) ;
+
+        // check if the pattern is symmetric
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+
+        if (G->is_symmetric_structure == LAGraph_FALSE)
+        {
+            // make the adjacency matrix symmetric
+            OK (LAGraph_Cached_AT (G, msg)) ;
+            OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_LOR, G->A, G->AT, NULL)) ;
+            G->is_symmetric_structure = LAGraph_TRUE ;
+        }
+        G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+
+        // check for self-edges
+        OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+        if (G->nself_edges != 0)
+        {
+            // remove self-edges
+            printf ("graph has %g self edges\n", (double) G->nself_edges) ;
+            OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+            printf ("now has %g self edges\n", (double) G->nself_edges) ;
+            TEST_CHECK (G->nself_edges == 0) ;
+        }
+
+        // compute the row degree
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
+
+        //----------------------------------------------------------------------
+        // test the algorithm
+        //----------------------------------------------------------------------
+
+        // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+        OK(LAGraph_RichClubCoefficient ( &rcc, G, msg));
+        // GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
+
+        OK(LG_check_rcc(&check_rcc, G, msg));
+        //----------------------------------------------------------------------
+        // check results
+        //----------------------------------------------------------------------
+        bool flag = false;
+        OK (LAGraph_Vector_IsEqualOp(&flag, rcc, check_rcc, iseqFP, msg)) ;
+        TEST_CHECK (flag) ;
+        GxB_Vector_fprint (rcc, "rcc", GxB_SHORT, stdout);
+        GxB_Vector_fprint (check_rcc, "check_rcc", GxB_SHORT, stdout);
+        OK (GrB_free (&rcc)) ;
+        OK (GrB_free (&check_rcc)) ;
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    //--------------------------------------------------------------------------
+    // free everything and finalize LAGraph
+    //--------------------------------------------------------------------------
+    OK (GrB_free (&iseqFP)) ;
+    OK (LAGraph_Finalize (msg)) ;
+}
 //------------------------------------------------------------------------------
 // test_RCC_brutal:
 //------------------------------------------------------------------------------
@@ -286,6 +394,9 @@ void test_rcc_brutal (void)
 TEST_LIST =
 {
     {"RichClubCoefficient", test_RichClubCoefficient},
+    #if USING_GRAPHBLAS_V10
+    {"RichClubCoefficient_Check", test_RCC_Check},
+    #endif
     #if LAGRAPH_SUITESPARSE
     {"rcc_brutal", test_rcc_brutal},
     #endif

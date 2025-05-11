@@ -54,6 +54,7 @@ void test_argminmax (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
+        fclose (f) ;
         OK (GrB_Matrix_nrows (&nrows, A)) ;
         OK (GrB_Matrix_ncols (&ncols, A)) ;
 
@@ -95,6 +96,7 @@ void test_argminmax (void)
                     // test the algorithm
                     OK (LAGraph_argminmax (&x, &p, C, dim, is_min, msg)) ;
                     // print the result
+                    // FIXME need to check the result
                     printf ("\nx:\n") ;
                     OK (LAGraph_Matrix_Print (x, 2, stdout, msg)) ;
                     printf ("\np:\n") ;

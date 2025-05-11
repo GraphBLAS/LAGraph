@@ -112,6 +112,7 @@ void test_scc (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
+        fclose (f) ;
 
         // construct a directed graph G with adjacency matrix A
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;

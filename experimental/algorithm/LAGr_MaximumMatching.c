@@ -451,6 +451,7 @@ invert_2(GrB_Vector out,  // input/output
         GrB_free(&getRootsOp);                                                 \
         GrB_free(&parentsUpdate);                                              \
         GrB_free(&ufrontierR);                                                 \
+        GrB_free(&mateC);                                                      \
         GrB_free(&mateR);                                                      \
         GrB_free(&rootsufR);                                                   \
         GrB_free(&pathUpdate);                                                 \
@@ -945,13 +946,16 @@ int LAGr_MaximumMatching(
     } while (npath); // only in the first and last iteration should this
                      // condition be false
 
+    // return result
     if (mateC_handle != NULL)
     {
         (*mateC_handle) = mateC;
+        mateC = NULL ;
     }
     if (mateR_handle != NULL)
     {
         (*mateR_handle) = mateR;
+        mateR = NULL ;
     }
     LG_FREE_WORK;
 

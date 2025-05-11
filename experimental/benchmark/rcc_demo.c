@@ -59,7 +59,6 @@ int main (int argc, char **argv)
     // start GraphBLAS and LAGraph
     bool burble = true ;               // set true for diagnostic outputs
     demo_init (burble) ;
-    LG_TRY (LAGraph_Random_Init (msg)) ;
     GRB_TRY (GxB_BinaryOp_new (
         &iseqFP, (GxB_binary_function) iseq, 
         GrB_BOOL, GrB_FP64, GrB_FP64, "iseq", ISEQ)) ;

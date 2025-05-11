@@ -60,6 +60,10 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 #if USING_GRAPHBLAS_V10
+
+// Uncomment if you would like to use the monoid version of FastAssign.
+// Passing in a semiring is faster but this may be more convienient.
+#if 0
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                                           \
 {                                                             \
@@ -115,6 +119,7 @@ int LAGraph_FastAssign_Monoid
     LG_FREE_ALL ;
     return (GrB_SUCCESS);
 }
+#endif
 
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                                           \
@@ -139,7 +144,7 @@ int LAGraph_FastAssign_Semiring
     // Optional (Give me a ramp with size > X_vec.size for faster calculations) 
     const GrB_Vector ramp, 
     // monoid is applied to duplicates. Binary op should be SECOND.
-    const GrB_Semiring dup, 
+    const GrB_Semiring semiring, 
     const GrB_Descriptor desc,
     char *msg
 )
@@ -154,7 +159,7 @@ int LAGraph_FastAssign_Semiring
     int64_t n, nrows;
     GxB_Container con = NULL;
     void *ramp_a = NULL, *i_a =NULL;
-    int ramp_h = 0, trsp = 0, i_h = 0;
+    int ramp_h = 0, trsp = GrB_DEFAULT, i_h = 0;
     int64_t ramp_n = 0, ramp_size = 0, i_n = 0, i_size= 0;
     GrB_Type x_type = NULL, i_type = NULL, ramp_type = NULL;
     bool iso = false;
@@ -165,29 +170,27 @@ int LAGraph_FastAssign_Semiring
     LG_ASSERT (c != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (I_vec != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (X_vec != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT_MSG (c != X_vec, GrB_NOT_IMPLEMENTED, 
-        "c cannot be aliased with X_vec.") ; 
+    LG_ASSERT_MSG (c != X_vec && c != I_vec && c != yada yada, GrB_NOT_IMPLEMENTED, 
+        "c cannot be aliased with any input.") ; 
 
     //----------------------------------------------------------------------
     // Find dimensions and type
     //----------------------------------------------------------------------
     GRB_TRY (GrB_Vector_size(&n, I_vec)) ;
+
     if(desc != NULL)
     {
         GRB_TRY (GrB_get(desc, &trsp, GrB_INP0)) ;
-        if(trsp == GrB_TRAN)
-        {
-            GRB_TRY (GrB_Vector_size(&nrows, X_vec)) ;
-        }
-        else 
-        {
-            GRB_TRY (GrB_Vector_size(&nrows, c)) ;
-        }
     }
-    else
+    if(trsp == GrB_TRAN)
+    {
+        GRB_TRY (GrB_Vector_size(&nrows, X_vec)) ;
+    }
+    else 
     {
         GRB_TRY (GrB_Vector_size(&nrows, c)) ;
     }
+
     GRB_TRY (GrB_Vector_get_INT32(X_vec, (int32_t *) &iso, GxB_ISO)) ;
 
     GRB_TRY (GxB_Vector_type(&x_type, X_vec));
@@ -261,7 +264,7 @@ int LAGraph_FastAssign_Semiring
     //----------------------------------------------------------------------
     GRB_TRY (GxB_load_Matrix_from_Container(P, con, NULL));
     // GRB_TRY (GxB_fprint(P, GxB_SHORT, stdout));
-    GRB_TRY (GrB_mxv(c, mask, accum, dup, P, X_vec, desc));
+    GRB_TRY (GrB_mxv(c, mask, accum, semiring, P, X_vec, desc));
     //----------------------------------------------------------------------
     // Free work. 
     // Note: this does not free inputs since they are marked GxB_IS_READONLY

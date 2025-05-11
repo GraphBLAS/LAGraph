@@ -8,6 +8,10 @@
 
 char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
+GrB_Vector mateC = NULL;
+GrB_Vector mateR = NULL;
+GrB_Vector mateC_init = NULL;
+GrB_Vector mateR_init = NULL;
 
 #define LEN 512
 char filename[LEN + 1];
@@ -18,6 +22,19 @@ const char *filenames[NTESTS] = {"random_weighted_bipartite2.mtx",
                                  "test_FW_2500.mtx", "LFAT5_hypersparse.mtx",
                                  "lp_afiro_structure.mtx", "sources_7.mtx"};
 const uint64_t spranks[NTESTS] = {298, 2009, 14, 27, 1};
+
+#if 0
+#undef OK
+#define OK(method) \
+{ \
+    GrB_Info info2 = method ; \
+    if (info2 != GrB_SUCCESS) \
+    { \
+        printf ("info: %d, msg: %s\n", info2, msg) ; \
+        TEST_CHECK (false) ; \
+    } \
+}
+#endif
 
 void test_MCM(void)
 {
@@ -32,6 +49,7 @@ void test_MCM(void)
         for (uint64_t test = 0; test < NTESTS; test++)
         {
 
+            printf ("\n%s =======================\n", filenames [test]) ;
             GrB_Matrix A = NULL;
             GrB_Matrix AT = NULL;
             snprintf(filename, LEN, LG_DATA_DIR "%s", filenames[test]);
@@ -55,9 +73,13 @@ void test_MCM(void)
             OK(LAGraph_Malloc((void **)&iso_value, nvals, sizeof(bool), msg));
 
             for (uint64_t i = 0; i < nvals; i++)
+            {
                 iso_value[i] = 1;
+            }
             OK(GrB_Matrix_extractTuples_FP64(I, J, dummy, &nvals, A));
             TEST_CHECK(I != NULL);
+
+            OK(GrB_free(&A));
             OK(GrB_Matrix_new(&A, GrB_BOOL, nrows, ncols));
             OK(GrB_Matrix_build_BOOL(A, I, J, iso_value, nvals,
                                      GrB_FIRST_BOOL));
@@ -67,29 +89,29 @@ void test_MCM(void)
             OK(LAGraph_Free((void **)&dummy, msg));
             OK(LAGraph_Free((void **)&iso_value, msg));
 
-            GrB_Vector mateC = NULL;
             OK(GrB_Vector_new(&mateC, GrB_UINT64, ncols));
-
-            GrB_Vector mateC_init = NULL;
 
             if (!strcmp(filenames[test], "lp_afiro_structure.mtx"))
             {
                 OK(GrB_Vector_new(&mateC_init, GrB_UINT64, ncols));
+                OK(GrB_Vector_new(&mateR_init, GrB_UINT64, nrows));
                 OK(GrB_Vector_setElement_UINT64(
                     mateC_init, 0, 19)); // col 20 matched with row 1 (1-based)
+                OK(GrB_Vector_setElement_UINT64(
+                    mateR_init, 19, 0)); // col 20 matched with row 1 (1-based)
                 OK(GrB_Matrix_new(&AT, GrB_BOOL, ncols,
                                   nrows)); // transpose matrix has the reverse
                                            // dimensions from the original
                 OK(GrB_transpose(AT, NULL, NULL, A, NULL));
             }
 
+            OK(GrB_free(&mateC));
             OK(LAGr_MaximumMatching(&mateC, NULL, A, AT, mateC_init, true,
                                     msg));
-            printf("\nmsg: %s\n", msg);
+//          printf("\nmsg: %s\n", msg);
 
             GrB_Index nmatched = 0;
 
-            GrB_Vector mateR = NULL;
             OK(GrB_Vector_new(&mateR, GrB_UINT64, nrows));
 
             // invert to check for dups
@@ -105,13 +127,16 @@ void test_MCM(void)
             // if nvals of mateC and mateR don't match, then there's at least
             // one row that is used in at least one matching
             TEST_CHECK(nmatched == nmateR);
+            printf ("# of matches: %" PRIu64 "\n", nmatched) ;
 
             // pack matched values in a matrix
             GrB_Matrix M = NULL;
             bool *val;
             OK(LAGraph_Malloc((void **)&val, nmatched, sizeof(bool), msg));
             for (uint64_t i = 0; i < nmatched; i++)
+            {
                 val[i] = 1;
+            }
             OK(GrB_Matrix_new(&M, GrB_BOOL, nrows, ncols));
             OK(GrB_Matrix_build_BOOL(M, X, J, val, nmatched, NULL));
             OK(LAGraph_Free((void **)&val, msg));
@@ -128,11 +153,44 @@ void test_MCM(void)
             // sprank must be equal to nvals of mateC (nmatched)
             TEST_CHECK(nmatched == spranks[test]);
 
-            OK(GrB_Vector_free(&mateC));
-            OK(GrB_Vector_free(&mateR));
-            OK(GrB_Matrix_free(&M));
-            OK(GrB_Matrix_free(&A));
-            OK(GrB_Matrix_free(&AT));
+            OK(GrB_free(&mateC));
+            OK(GrB_free(&mateR));
+            OK(GrB_free(&M));
+
+            // return both mateR and mateC
+            OK(LAGr_MaximumMatching(&mateC, &mateR, A, AT, mateC_init, true,
+                                    msg));
+            GrB_Index nmateC = 0 ;
+            nmateR = 0 ;
+            OK(GrB_Vector_nvals(&nmateC, mateC));
+            OK(GrB_Vector_nvals(&nmateR, mateR));
+            TEST_CHECK(nmateC == nmateR);
+            TEST_CHECK(nmateC == nmatched);
+            OK(GrB_free(&mateC));
+            OK(GrB_free(&mateR));
+
+            // ensure AT exists, and pass in AT only, and use mateR_init
+            if (AT == NULL)
+            {
+                OK(GrB_Matrix_new(&AT, GrB_BOOL, ncols, nrows));
+                OK(GrB_transpose(AT, NULL, NULL, A, NULL));
+            }
+            OK(LAGr_MaximumMatching(&mateC, &mateR, NULL, AT, mateR_init, false,
+                                    msg));
+            nmateC = 0 ;
+            nmateR = 0 ;
+            OK(GrB_Vector_nvals(&nmateC, mateC));
+            OK(GrB_Vector_nvals(&nmateR, mateR));
+            TEST_CHECK(nmateC == nmateR);
+            TEST_CHECK(nmateC == nmatched);
+            OK(GrB_free(&mateC));
+            OK(GrB_free(&mateR));
+
+            OK(GrB_free(&mateC_init));
+            OK(GrB_free(&mateR_init));
+            OK(GrB_free(&A));
+            OK(GrB_free(&AT));
+
         }
     }
     LAGraph_Finalize(msg);

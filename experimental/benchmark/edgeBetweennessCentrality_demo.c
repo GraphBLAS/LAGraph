@@ -87,8 +87,8 @@ int main (int argc, char **argv)
         int num_sources = atoi(argv[2]);
         if (num_sources <= 0 || num_sources > n-1)
         {
-            printf("Error: Number of sources must be between 1 and %lu\n", n-1);
-            printf("Hint: If you want the exact EBC (you called 0 or %lu), ", n);
+            printf("Error: Number of sources must be between 1 and %" PRIu64 "\n", n-1);
+            printf("Hint: If you want the exact EBC (you called 0 or %" PRIu64 "), ", n);
             printf("then call the demo with just the matrix file.\n");
             LG_FREE_ALL;
             return (GrB_INVALID_VALUE);

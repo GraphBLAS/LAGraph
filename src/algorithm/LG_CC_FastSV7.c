@@ -696,7 +696,7 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         for (int64_t k = 0 ; k < HASH_SAMPLES ; k++)
         {
             // select an entry ii from PARENT at random
-            uint64_t i = LG_Random60 (&seed) % n ;
+            uint64_t i = LG_Random64 (&seed) % n ;
             GrB_Index x = PARENT (i) ;
             // find x in the hash table
             GrB_Index h = HASH (x) ;

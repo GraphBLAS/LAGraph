@@ -43,8 +43,6 @@ int main(int argc, char **argv)
     // using -r will build a random graph
     bool random = (strcmp (matrix_name, "-r") == 0) ;
 
-    LG_TRY (LAGraph_Random_Init (msg)) ;
-
     if (!random) {
         LG_TRY (readproblem (&G, NULL,
             true, true, false, GrB_FP64, false, argc, argv)) ;

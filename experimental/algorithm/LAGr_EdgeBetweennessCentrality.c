@@ -42,9 +42,10 @@
     GrB_free (&HalfUpdate) ;                        \
     GrB_free (&HalfUpdateT) ;                       \
     GrB_free (&SymmetricUpdate) ;                   \
+    GrB_free (&internal_sources) ;                  \
     if (Search != NULL)                             \
     {                                               \
-        for (int64_t i = 0 ; i < n ; i++)           \
+        for (int64_t i = 0 ; i <= n ; i++)          \
         {                                           \
             GrB_free (&(Search [i])) ;              \
         }                                           \
@@ -238,7 +239,7 @@ int LAGr_EdgeBetweennessCentrality
     GRB_TRY (GrB_assign (*centrality, A, NULL, 0.0, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
 
     // Allocate memory for the array of S vectors
-    LG_TRY (LAGraph_Calloc ((void **) &Search, n+1, sizeof (GrB_Vector), msg)) ;
+    LG_TRY (LAGraph_Calloc ((void **) &Search, n + 1, sizeof (GrB_Vector), msg)) ;
 
     // =========================================================================
     // === Process source nodes ================================================
@@ -279,7 +280,16 @@ int LAGr_EdgeBetweennessCentrality
 
     int64_t depth;
     GrB_Index root;
-    
+
+    GRB_TRY (GrB_Vector_new(&J_vec, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (&I_vec, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Matrix_new (&Fd1A, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_Vector_new(&temp_update, GrB_FP64, n)) ; // Create a temporary vector
+
+    GRB_TRY (GrB_Matrix_new(&HalfUpdate, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_Matrix_new(&HalfUpdateT, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_Matrix_new(&SymmetricUpdate, GrB_FP64, n, n)) ;
+
     // Iterate through source nodes
     for (GrB_Index i = 0; i < nsources; i++)
     {
@@ -351,17 +361,17 @@ int LAGr_EdgeBetweennessCentrality
         // =========================================================================
 
         // bc_vertex_flow = ones (n, n) ; a full matrix (and stays full)
-        GRB_TRY (GrB_Vector_new (&bc_vertex_flow, GrB_FP64, n)) ;
         GRB_TRY (GrB_assign(bc_vertex_flow, NULL, NULL, 0.0, GrB_ALL, n, NULL)) ;
 
-        GRB_TRY (GrB_Vector_new(&J_vec, GrB_FP64, n)) ;
-        GRB_TRY (GrB_Vector_new (&I_vec, GrB_FP64, n)) ;
-        GRB_TRY (GrB_Matrix_new (&Fd1A, GrB_FP64, n, n)) ;
-        GRB_TRY (GrB_Vector_new(&temp_update, GrB_FP64, n)) ; // Create a temporary vector
+        GRB_TRY (GrB_Matrix_clear (HalfUpdate)) ;
+        GRB_TRY (GrB_Matrix_clear (HalfUpdateT)) ;
+        GRB_TRY (GrB_Matrix_clear (SymmetricUpdate)) ;
+        GRB_TRY (GrB_Matrix_clear (Fd1A)) ;
+        GRB_TRY (GrB_Vector_clear (J_vec)) ;
+        GRB_TRY (GrB_Vector_clear (I_vec)) ;
+        GRB_TRY (GrB_Vector_clear (temp_update)) ;
 
-        GrB_Matrix_new(&HalfUpdate, GrB_FP64, n, n);
-        GrB_Matrix_new(&HalfUpdateT, GrB_FP64, n, n);
-        GrB_Matrix_new(&SymmetricUpdate, GrB_FP64, n, n);
+
 
 
         // Backtrack through the BFS and compute centrality updates for each vertex
@@ -406,7 +416,8 @@ int LAGr_EdgeBetweennessCentrality
                 Fd1A, J_matrix, NULL));
             t2 = LAGraph_WallClockTime() - t2;
             t2_total += t2;
-
+            GRB_TRY (GrB_free (&I_matrix)) ;
+            GRB_TRY (GrB_free (&J_matrix)) ;
             //----------------------------------------------------------------------
             // centrality<A> += Update
             // Accumulate centrality values for edges

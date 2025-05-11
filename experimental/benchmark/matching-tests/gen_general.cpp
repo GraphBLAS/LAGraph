@@ -263,7 +263,6 @@ int main(int argc, char **argv){
     uint32_t *vals ;
 
     OK ( LAGraph_Init (msg)) ;
-    OK ( LAGraph_Random_Init (msg)) ;
 
     OK ( LAGraph_Random_Matrix (&A, GrB_UINT32, n, n, (sparse_factor / n), seed, msg)) ;
 

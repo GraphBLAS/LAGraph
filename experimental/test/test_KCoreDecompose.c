@@ -66,6 +66,7 @@ void test_KCoreDecompose (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
+        fclose (f) ;
 
         // construct an undirected graph G with adjacency matrix A
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
@@ -114,6 +115,9 @@ void test_KCoreDecompose (void)
         OK (LAGraph_Matrix_IsEqual (&ok, D1, D2, msg)) ;
         TEST_CHECK(ok);
 
+        GrB_free (&c) ;
+        GrB_free (&D1) ;
+        GrB_free (&D2) ;
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
@@ -135,6 +139,7 @@ void test_errors (void)
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, f, msg)) ;
     TEST_MSG ("Loading of adjacency matrix failed") ;
+    fclose (f) ;
 
     // construct an undirected graph G with adjacency matrix A
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;

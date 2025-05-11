@@ -31,7 +31,6 @@ GrB_Vector Seed = NULL ;
 void test_Random (void)
 {
     LAGraph_Init (msg) ;
-    OK (LAGraph_Random_Init (msg)) ;
 
     uint64_t seed = 42 ;
     LAGraph_PrintLevel pr = LAGraph_COMPLETE_VERBOSE ;
@@ -72,7 +71,6 @@ void test_Random (void)
         OK (GrB_Vector_free (&Seed)) ;
     }
 
-    OK (LAGraph_Random_Finalize (msg)) ;
     LAGraph_Finalize (msg) ;
 }
 
