@@ -21,9 +21,9 @@ void test_coloring(void)
     // setup
     // ------------------------------------------------
 
-    /* required initialization (found from other test files) */
+    /* required initialization */
     LAGraph_Init(msg);
-    LAGraph_Random_Init(msg);
+    LG_Random_Init(msg);
 
     /* initializing A (matrix) and C (color vector) */
     GrB_Matrix A = NULL;
@@ -46,7 +46,7 @@ void test_coloring(void)
 
     int num_colors = 0;
     double time = LAGraph_WallClockTime();    
-    LAGraph_coloring_independent_set_optimized(&C, &num_colors, G, msg);
+    LAGraph_coloring_independent_set(&C, &num_colors, G, msg);
     time = LAGraph_WallClockTime() - time;
 
     GxB_set (GxB_BURBLE, false) ;
@@ -108,7 +108,7 @@ void test_coloring(void)
     /* clean up (don't understand this) */
     OK(LAGraph_Delete(&G, msg));
     LAGraph_Finalize(msg);
-    LAGraph_Random_Finalize(msg);
+    LG_Random_Finalize(msg);
 }
 
 TEST_LIST =

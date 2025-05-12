@@ -29,7 +29,7 @@ int main (int argc, char **argv)
     // start GraphBLAS and LAGraph
     bool burble = false ;               // set true for diagnostic outputs
     demo_init (burble) ;
-    LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
+    LAGRAPH_TRY (LG_Random_Init (msg)) ;
 
     //--------------------------------------------------------------------------
     // read in the graph (defined in LAGraph_demo.h)
@@ -83,7 +83,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     LG_FREE_ALL ;
-    LAGRAPH_TRY (LAGraph_Random_Finalize (msg)) ;
+    LAGRAPH_TRY (LG_Random_Finalize (msg)) ;
     LG_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 
