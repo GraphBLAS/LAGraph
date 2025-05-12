@@ -59,7 +59,7 @@ int main (int argc, char **argv)
     t = LAGraph_WallClockTime ( ) ;
     int status = (LAGraph_coloring_MIS (&C, &num_colors, G, msg)) ;
     alg_time = LAGraph_WallClockTime ( ) - t ;
-    printf ("Time for IS Coloring:        %g sec\n", alg_time) ;
+    printf ("Time for MIS Coloring:        %g sec\n", alg_time) ;
 
     //--------------------------------------------------------------------------
     // check the results

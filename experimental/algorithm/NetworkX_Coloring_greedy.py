@@ -19,7 +19,7 @@ for f in files:
     A = mmread(f)
     G = nx.Graph(A)
 
-    print("done reading. exec...")
+    print("done reading. exececuting...")
 
     t = time.perf_counter()
     d = nx.coloring.greedy_color(G)
