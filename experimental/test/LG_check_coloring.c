@@ -61,6 +61,7 @@ int LG_check_coloring
         int color;
         if (GrB_Vector_extractElement(&color, C, i) != GrB_SUCCESS) {
             printf("error: node %lu has no assigned color!\n", i);
+            return -1;
         }
     }
 
@@ -74,17 +75,11 @@ int LG_check_coloring
 
         for (Ai_index = Ai_index_start; Ai_index < Ai_index_end; Ai_index++) {
 
-            if (Ai[Ai_index] == Ap_index) {
-                continue; // skip self-edges
+            // skip self-edges
+            if (Ai[Ai_index] != Ap_index) {
+                GRB_TRY(GrB_Vector_extractElement(&neighbor_color, C, Ai[Ai_index]));
+                LG_ASSERT_MSG(neighbor_color != current_color, LAGRAPH_COLORING_INVALID_COLORING, "found 2 connected nodes with the same color");
             }
-
-            GRB_TRY(GrB_Vector_extractElement(&neighbor_color, C, Ai[Ai_index]));
-
-            if (current_color == neighbor_color) {
-                printf("node 1: %ld, node 2: %ld, color: %d\n", Ap_index, Ai[Ai_index], current_color);
-            }
-
-            LG_ASSERT_MSG(neighbor_color != current_color, LAGRAPH_COLORING_INVALID_COLORING, "found 2 connected nodes with the same color");
         }
     }
 

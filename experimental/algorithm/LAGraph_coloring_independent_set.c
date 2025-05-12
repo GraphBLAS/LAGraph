@@ -94,7 +94,7 @@ int LAGraph_coloring_independent_set
             GrB_Index nvals_local_color;
             GRB_TRY(GrB_Vector_nvals(&nvals_local_color, local_color));
             if (nvals_local_color < n) {
-                printf("ERROR in LAGraph_coloring_independent_set_optimized: in_curr_subset is empty, but nvals (local_color) < n\n");
+                printf("ERROR in LAGraph_coloring_independent_set: in_curr_subset is empty, but nvals (local_color) < n\n");
                 LG_FREE_ALL ;
                 return (1) ;
             }

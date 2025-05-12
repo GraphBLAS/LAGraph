@@ -39,10 +39,10 @@ void test_coloring(void)
     TEST_CHECK(A == NULL); // A has been moved into G->A
 
     // ------------------------------------------------
-    // run algorithm independet set
+    // run algorithm independent set
     // ------------------------------------------------
 
-    GxB_set (GxB_BURBLE, false) ;
+    // GxB_set (GxB_BURBLE, false) ;
 
     int num_colors = 0;
     double time = LAGraph_WallClockTime();    
@@ -63,12 +63,53 @@ void test_coloring(void)
     OK (LG_check_coloring(G, C, msg));
     printf("Number of Colors: %d\n", num_colors);
 
+    // induce no assigned color error
+    #if defined ( COVERAGE )
+    GrB_free(&C);
+    C = NULL;
+    LAGraph_Delete(&G, msg);
+    snprintf(filename, LEN, LG_DATA_DIR "%s", "ldbc-undirected-example-unweighted.mtx");
+    f = fopen(filename, "r");
+    TEST_CHECK(f != NULL);
+    OK(LAGraph_MMRead(&A, f, msg));
+    OK(fclose(f));
+    OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg));
+    TEST_CHECK(A == NULL); // A has been moved into G->A
+
+    GrB_Vector C_dummy;
+    GrB_Vector_new (&C_dummy, GrB_UINT64, 1);
+    int check_coloring_result = LG_check_coloring(G, C, msg);
+    TEST_CHECK (check_coloring_result == -1);
+    #endif
 
     // ------------------------------------------------
-    // run algorithm maximal independet set
+    // run algorithm independent set with hack
     // ------------------------------------------------
 
-    GxB_set (GxB_BURBLE, false) ;
+    // hack the random number generator to induce an error condition
+    #if defined ( COVERAGE )
+    GrB_free(&C);
+    C = NULL;
+    LAGraph_Delete(&G, msg);
+    snprintf(filename, LEN, LG_DATA_DIR "%s", "ldbc-undirected-example-unweighted.mtx");
+    f = fopen(filename, "r");
+    TEST_CHECK(f != NULL);
+    OK(LAGraph_MMRead(&A, f, msg));
+    OK(fclose(f));
+    OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg));
+    TEST_CHECK(A == NULL); // A has been moved into G->A
+
+    printf ("Hack the random number generator to induce a stall:\n") ;
+    random_hack = true ;
+    int result = LAGraph_coloring_independent_set(&C, &num_colors, G, msg);
+    random_hack = false ;
+    printf ("hack msg: %d %s\n", result, msg) ;
+    TEST_CHECK (result == 1) ;
+    #endif
+
+    // ------------------------------------------------
+    // run algorithm maximal independent set
+    // ------------------------------------------------
 
     GrB_free(&C);
     C = NULL;
