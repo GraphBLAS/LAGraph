@@ -12,7 +12,7 @@
 #define LG_FREE_ALL                 \
     LG_FREE_WORK ;
 
-int LAGraph_coloring_independent_set_optimized
+int LAGraph_coloring_independent_set
 (
     // output
     GrB_Vector *color,
@@ -69,7 +69,7 @@ int LAGraph_coloring_independent_set_optimized
     for (curr_color = 1; curr_color < n+1; curr_color++) {
         /* mxv - find maximum of all neighboring weights */
 
-        // FIXME: try using a set of sparse candidate nodes, not yet colored
+        // FUTURE WORK: try using a set of sparse candidate nodes, not yet colored
         GRB_TRY(GrB_mxv(max_weights, local_color, GrB_NULL,
             GrB_MAX_SECOND_SEMIRING_UINT64, G->A, weight, GrB_DESC_RSC));
 
@@ -91,7 +91,6 @@ int LAGraph_coloring_independent_set_optimized
         GrB_Index nvals_in_curr_subset;
         GRB_TRY(GrB_Vector_nvals(&nvals_in_curr_subset, in_curr_subset));
         if (nvals_in_curr_subset == 0) { 
-            // FIXME: future: if in_curr_subset is empty, but nvals (local_color) < n, then BROKEN
             GrB_Index nvals_local_color;
             GRB_TRY(GrB_Vector_nvals(&nvals_local_color, local_color));
             if (nvals_local_color < n) {
