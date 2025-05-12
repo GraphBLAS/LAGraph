@@ -1383,17 +1383,6 @@ LAGRAPHX_PUBLIC
 int LAGraph_coloring_independent_set
 (
     // output
-    GrB_Vector *C,
-
-    // input
-    LAGraph_Graph G,
-    char *msg
-) ;
-
-LAGRAPHX_PUBLIC
-int LAGraph_coloring_independent_set_optimized
-(
-    // output
     GrB_Vector *color,
     int *num_colors,
 
