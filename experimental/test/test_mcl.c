@@ -67,6 +67,7 @@ void test_mcl(void)
         FILE *f = fopen(filename, "r");
         TEST_CHECK(f != NULL);
         OK(LAGraph_MMRead(&A, f, msg));
+        fclose (f) ;
 
         // construct a directed graph G with adjacency matrix A
         OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
@@ -96,8 +97,30 @@ void test_mcl(void)
         TEST_CHECK(ok_cov);
         TEST_CHECK(ok_perf);
         TEST_CHECK(ok_mod);
-
         OK(GrB_free(&c));
+
+        if (k != 3)
+        {
+            // compute clustering with higher e parameter (expansion coef)
+            printf ("\nWith e=4:\n") ;
+            OK(LAGr_MarkovClustering(&c, 4, 2, 0.0001, 1e-8, 100, G, msg));
+            OK(LAGr_PartitionQuality(&cov, &perf, c, G, msg));
+            OK(LAGr_Modularity(&mod, (double)1, c, G, msg));
+            printf("coverage:   %g\n", cov);
+            printf("perf:       %g\n", perf);
+            printf("modularity: %g\n", mod);
+            OK(GrB_free(&c));
+
+            // compute clustering with high pruning threshold
+            printf ("\nWith high pruning threshold:\n") ;
+            OK (LAGr_MarkovClustering(&c, 4, 2, 0.005, 1e-8, 100, G, msg));
+            OK (LAGr_PartitionQuality(&cov, &perf, c, G, msg));
+            OK (LAGr_Modularity(&mod, (double)1, c, G, msg));
+            printf("coverage:   %g\n", cov);
+            printf("perf:       %g\n", perf);
+            printf("modularity: %g\n", mod);
+            OK(GrB_free(&c));
+        }
 
         OK(LAGraph_Delete(&G, msg));
     }
@@ -118,6 +141,7 @@ void test_errors(void)
     TEST_CHECK(f != NULL);
     OK(LAGraph_MMRead(&A, f, msg));
     TEST_MSG("Loading of adjacency matrix failed");
+    fclose (f) ;
 
     // construct an undirected graph G with adjacency matrix A
     OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg));

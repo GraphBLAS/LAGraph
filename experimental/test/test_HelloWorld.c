@@ -75,7 +75,7 @@ void test_HelloWorld (void)
 }
 
 //----------------------------------------------------------------------------
-// the make program is created by acutest, and it runs a list of tests:
+// the main program is created by acutest, and it runs a list of tests:
 //----------------------------------------------------------------------------
 
 TEST_LIST =
@@ -83,3 +83,4 @@ TEST_LIST =
     {"HelloWorld", test_HelloWorld},    // just one test in this example
     {NULL, NULL}
 } ;
+

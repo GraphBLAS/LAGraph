@@ -66,6 +66,7 @@ This method requires O(e) space for an undirected graph with e edges
     GrB_free(&new_members_nodes) ;          \
     GrB_free(&new_members_node_degree) ;    \
     GrB_free(&empty) ;                      \
+    GrB_free(&weight) ;                     \
 }                                           \
 
 #define LG_FREE_ALL                         \
@@ -239,12 +240,16 @@ int LAGraph_MaximalMatching
 
         if (max_degree > 1) {
             nfailures++ ;
+            LG_ASSERT_MSG (nfailures <= MAX_FAILURES, LAGRAPH_CONVERGENCE_FAILURE,
+                "method has stalled") ;
+#if 0
             if (nfailures > MAX_FAILURES) {
     #ifdef dbg
                 printf("[DBG] hit max failures %d\n", nfailures);
     #endif
-                break ;
+                break ; // test coverage doesn't test this case.  Is it possible?
             }
+#endif
             // regen seed and seed vector
             LG_TRY (LAGraph_Random_Seed (Seed, seed + nfailures, msg)) ;
             continue ;

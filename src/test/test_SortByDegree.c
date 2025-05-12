@@ -240,7 +240,7 @@ void test_SortByDegree (void)
 // test_SortByDegree_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_SortByDegree_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -416,6 +416,7 @@ void test_SortByDegree_failures (void)
     printf ("\nresult %d: msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_NOT_CACHED) ;
 
+    OK (LAGraph_Delete (&G, msg)) ;
     teardown ( ) ;
 }
 
@@ -427,7 +428,7 @@ TEST_LIST =
 {
     { "SortByDegree", test_SortByDegree },
     { "SortByDegree_failures", test_SortByDegree_failures },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "SortByDegree_brutal", test_SortByDegree_brutal },
     #endif
     { NULL, NULL }

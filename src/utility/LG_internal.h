@@ -585,17 +585,15 @@ int LG_nself_edges
 ) ;
 
 //------------------------------------------------------------------------------
-// simple and portable random number generator (internal use only)
+// simple and portable random number generator
 //------------------------------------------------------------------------------
 
-#define LG_RANDOM15_MAX 32767
-#define LG_RANDOM60_MAX ((1ULL << 60) -1)
+// return a random uint64_t
+uint64_t LG_Random64 (uint64_t *seed) ;
 
-// return a random number between 0 and LG_RANDOM15_MAX
-GrB_Index LG_Random15 (uint64_t *seed) ;
-
-// return a random uint64_t, in range 0 to LG_RANDOM60_MAX
-GrB_Index LG_Random60 (uint64_t *seed) ;
+// create operators for LAGraph_Random_* methods;
+int LG_Random_Init (char *msg) ;
+int LG_Random_Finalize (char *msg) ;
 
 //------------------------------------------------------------------------------
 // LG_KindName: return the name of a kind
@@ -645,6 +643,13 @@ int LG_KindName
     #define LG_GET_LIBRARY_DATE(date) \
         GrB_get (GrB_GLOBAL, (char *) date, GxB_LIBRARY_DATE)
 
+    #if defined ( GRAPHBLAS_HAS_CUDA )
+    // the LG_brutal_malloc family of methods.
+    #define LG_BRUTAL_TESTS 0
+    #else
+    #define LG_BRUTAL_TESTS 1
+    #endif
+
 #else
 
     // vanilla GraphBLAS
@@ -659,6 +664,7 @@ int LG_KindName
     #define LG_GET_FORMAT_HINT(A,status) GrB_SUCCESS
     #define LG_SET_BURBLE(burble) GrB_SUCCESS
     #define LG_GET_LIBRARY_DATE(date) GrB_SUCCESS
+    #define LG_BRUTAL_TESTS 0
 
 #endif
 

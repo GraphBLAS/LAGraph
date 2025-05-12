@@ -18,6 +18,11 @@
 
 // Modified by Pascal Costanza, Intel, Belgium
 
+// NOTE: the calloc/free below must be thread-safe,
+// so it cannot use LAGraph_Malloc/LAGraph_Free (which can use
+// the Rapids Memory Manager methods when using CUDA, and those
+// methods are not yet thread-safe).
+
 //------------------------------------------------------------------------------
 
 // ## Background
@@ -55,19 +60,19 @@
 {                                                                       \
     GrB_free (&S) ;                                                     \
     GrB_free (&T) ;                                                     \
-    LAGraph_Free ((void *) &Sp, NULL) ;                                 \
-    LAGraph_Free ((void *) &Si, NULL) ;                                 \
-    LAGraph_Free ((void *) &Tp, NULL) ;                                 \
-    LAGraph_Free ((void *) &Ti, NULL) ;                                 \
-    free (L) ; L = NULL ;                                               \
-    free (L_next) ; L = NULL ;                                          \
-    ptable_pool_free (counts_pool, max_threads) ; counts_pool = NULL ;  \
+    LAGraph_Free ((void **) &Sp, NULL) ;                                \
+    LAGraph_Free ((void **) &Si, NULL) ;                                \
+    LAGraph_Free ((void **) &Tp, NULL) ;                                \
+    LAGraph_Free ((void **) &Ti, NULL) ;                                \
+    LAGraph_Free ((void **) &L, NULL) ;                                 \
+    LAGraph_Free ((void **) &L_next, NULL) ;                            \
+    ptable_pool_free (counts_pool, max_threads) ;                       \
+    counts_pool = NULL ;                                                \
     GrB_free (&CDLP) ;                                                  \
 }
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
-#include <omp.h>
 #include <stdalign.h>
 #include "LG_internal.h"
 
@@ -78,7 +83,7 @@ typedef struct {
 } plist;
 
 void plist_free(plist *list) {
-    free(list->entries);
+    free(list->entries);        // NOTE: cannot be LAGraph_Free
 }
 
 void plist_clear(plist *list) {
@@ -152,7 +157,7 @@ void ptable_pool_free(ptable* table, size_t n) {
     for (size_t i = 0; i < n; i++) {
         ptable_free(&table[i]);
     }
-    free(table);
+    free(table);        // NOTE: cannot be LAGraph_Free
 }
 
 void ptable_clear(ptable* table) {
@@ -198,7 +203,11 @@ int LAGraph_cdlp
     GrB_Index *Sp = NULL, *Si = NULL, *Tp = NULL, *Ti = NULL, *L = NULL, *L_next = NULL ;
     ptable *counts_pool = NULL ;
 
+    #ifdef _OPENMP
     size_t max_threads = omp_get_max_threads();
+    #else
+    size_t max_threads = 1 ;
+    #endif
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -257,11 +266,12 @@ int LAGraph_cdlp
         GRB_TRY (GrB_free (&S)) ;
     }
 
-    L = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &L, n, sizeof (GrB_Index), msg)) ;
+
     for (GrB_Index i = 0; i < n; i++) {
         L[i] = i ;
     }
-    L_next = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &L_next, n, sizeof (GrB_Index), msg)) ;
 
     counts_pool = calloc(max_threads, sizeof(ptable));
 
@@ -269,7 +279,12 @@ int LAGraph_cdlp
 
 #pragma omp parallel for schedule(dynamic)
         for (GrB_Index i = 0; i < n; i++) {
-            ptable *counts = &counts_pool[omp_get_thread_num()];
+            #ifdef _OPENMP
+            int thread_id = omp_get_thread_num() ;
+            #else
+            int thread_id = 0 ;
+            #endif
+            ptable *counts = &counts_pool [thread_id] ;
             GrB_Index* neighbors = Si + Sp[i] ;
             GrB_Index sz = Sp[i+1] - Sp[i] ;
             for (GrB_Index j = 0; j < sz; j++) {
@@ -311,9 +326,8 @@ int LAGraph_cdlp
     for (GrB_Index i = 0; i < n; i++)
     {
         GrB_Index l = L[i];
-        if (l == GrB_INDEX_MAX + 1) {
-            l = i;
-        }
+//      if (l == GrB_INDEX_MAX + 1) { l = i ; }
+        l = (l == GrB_INDEX_MAX + 1) ? i : l ;
         GRB_TRY (GrB_Vector_setElement(CDLP, l, i))
     }
 

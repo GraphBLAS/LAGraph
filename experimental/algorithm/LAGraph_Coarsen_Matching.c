@@ -60,8 +60,6 @@ This method requires O(n + e) space for an undirected graph with e edges and n n
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-#include <omp.h>
-
 // #define dbg
 // #define burble
 
@@ -261,9 +259,6 @@ static int LAGraph_Parent_to_S
     GrB_free(&edge_parent) ;                        \
     GrB_free(&node_parent) ;                        \
     GrB_free(&full) ;                               \
-    LAGraph_Free ((void**)(&rows), msg) ;           \
-    LAGraph_Free ((void**)(&cols), msg) ;           \
-    LAGraph_Free ((void**)(&vals), msg) ;           \
     LAGraph_Delete(&G_cpy, msg) ;                   \
 }
 
@@ -301,7 +296,7 @@ int LAGraph_Coarsen_Matching
     LG_CLEAR_MSG ;
 
     LAGraph_Graph G_cpy = NULL ;            // used for the IncidenceMatrix function
-    GrB_Matrix A = NULL ;                   // resulting adjacency matrix (used for output)
+    GrB_Matrix C = NULL ;                   // resulting adjacency matrix (used for output)
     GrB_Matrix E = NULL ;                   // incidence matrix
     GrB_Matrix E_t = NULL ;                 // transpose of incidence
     GrB_Matrix S = NULL ;                   // S matrix (S[i][j] -> node j maps to node i in coarsened graph)
@@ -311,22 +306,21 @@ int LAGraph_Coarsen_Matching
     GrB_Vector node_parent = NULL ;         // points to parent (representative) node for each node
     GrB_Vector full = NULL ;                // full vector
 
-    // used to build int64/fp64 A matrix if needed
-    GrB_Index *rows = NULL ;
-    GrB_Index *cols = NULL ;
-    void *vals = NULL ;
-
     GrB_Index nvals, nrows ;
     GrB_Type A_type ;
-    // check properties (no self-loops, undirected)
+
+    // check properties (no self-loops, undirected
+    LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, "G->nself_edges must be zero") ;
 
 #if !LAGRAPH_SUITESPARSE
      LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #endif
 
-    //----------------------------------------------------------------------------------------------------------------------------------------------------
+    LG_ASSERT (coarsened != NULL, GrB_NULL_POINTER) ;
+
+    //------------------------------------------------------------------------------
     // check input graph, build local adjacency matrix to use for coarsening
-    //----------------------------------------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED)
     {
@@ -337,55 +331,20 @@ int LAGraph_Coarsen_Matching
 
         if ((type == GrB_FP64) || (type == GrB_INT64 || type == GrB_UINT64)) {
             // output will keep the same type as input
-            GRB_TRY (GrB_Matrix_dup (&A, G->A)) ;
+            GRB_TRY (GrB_Matrix_dup (&C, G->A)) ;
             A_type = type ;
         } else {
             // output will become int64/fp64
             // reasoning: want to prevent overflow from combining edges and accomodate negative edge weights
             #ifdef dbg
-                printf("Rebuilding A with GrB_INT64/FP64, orig type was %s\n", typename);
+                printf("Rebuilding with GrB_INT64/FP64, orig type was %s\n", typename);
             #endif
 
-            #if 0
-
-            // FIXME: fast and easy
-            GRB_TRY (GrB_Matrix_nrows (&nrows, G->A)) ;
-            A_type = (is_float ? GrB_FP64 : GrB_INT64) ;
-            GRB_TRY (GrB_Matrix_new (&A, A_type, nrows, nrows)) ;
-            GRB_TRY (GrB_assign (A, NULL, NULL, G->A, GrB_ALL, nrows, GrB_ALL, nrows, NULL)) ;
-
-            #else
-
-            // FIXME: slow and hard
             bool is_float = (type == GrB_FP32) ;
-
-            GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
             GRB_TRY (GrB_Matrix_nrows (&nrows, G->A)) ;
-
-            LG_TRY (LAGraph_Malloc ((void**)(&rows), nvals, sizeof(GrB_Index), msg)) ;
-            LG_TRY (LAGraph_Malloc ((void**)(&cols), nvals, sizeof(GrB_Index), msg)) ;
-            LG_TRY (LAGraph_Malloc ((void**)(&vals), nvals, is_float ? sizeof(double) : sizeof(int64_t), msg)) ;
-            // extractTuples casts all entries to target type
-            if (is_float) {
-                GRB_TRY (GrB_Matrix_extractTuples_FP64 (rows, cols, vals, &nvals, G->A)) ;
-            } else {
-                GRB_TRY (GrB_Matrix_extractTuples_INT64 (rows, cols, vals, &nvals, G->A)) ;
-            }
-
-            GRB_TRY (GrB_Matrix_new (&A, is_float ? GrB_FP64 : GrB_INT64, nrows, nrows)) ;
-
-            if (is_float) {
-                GRB_TRY (GrB_Matrix_build_FP64 (A, rows, cols, vals, nvals, NULL)) ;
-            } else {
-                GRB_TRY (GrB_Matrix_build_INT64 (A, rows, cols, vals, nvals, NULL)) ;
-            }
-
-            LG_TRY (LAGraph_Free ((void**)(&rows), msg)) ;
-            LG_TRY (LAGraph_Free ((void**)(&cols), msg)) ;
-            LG_TRY (LAGraph_Free ((void**)(&vals), msg)) ;
             A_type = (is_float ? GrB_FP64 : GrB_INT64) ;
-            #endif
-            
+            GRB_TRY (GrB_Matrix_new (&C, A_type, nrows, nrows)) ;
+            GRB_TRY (GrB_assign (C, NULL, NULL, G->A, GrB_ALL, nrows, GrB_ALL, nrows, NULL)) ;
         }
     }
     else
@@ -393,25 +352,18 @@ int LAGraph_Coarsen_Matching
         // G is not undirected
         LG_ASSERT_MSG (false, LAGRAPH_INVALID_GRAPH, "G must be undirected") ;
     }
-    CHKPT("Done with building A");
-    LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, "G->nself_edges must be zero") ;
-
-    if (coarsened == NULL) {
-        return GrB_NULL_POINTER ;
-    }
+    CHKPT("Done with building C");
 
     // make new LAGraph_Graph to use for LAGraph_IncidenceMatrix and for useful functions (delete self-edges)
-    LG_TRY (LAGraph_New (&G_cpy, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+    LG_TRY (LAGraph_New (&G_cpy, &C, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+    ASSERT (C == NULL) ;
     LG_TRY (LAGraph_Cached_NSelfEdges (G_cpy, msg)) ;
-
-    // set A back (LAGraph_New sets A = NULL)
-    A = G_cpy->A ;
 
     GrB_Index num_nodes ;
     GrB_Index num_edges ;
 
-    GRB_TRY (GrB_Matrix_nrows (&num_nodes, A)) ;
-    GRB_TRY (GrB_Matrix_nvals (&num_edges, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&num_nodes, G_cpy->A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&num_edges, G_cpy->A)) ;
     num_edges /= 2 ; // since undirected
 
     CHKPT("Done building G_cpy");
@@ -435,15 +387,17 @@ int LAGraph_Coarsen_Matching
     GrB_Index curr_level = 0 ;
     CHKPT("Starting coarsening step");
 
-    //----------------------------------------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
     // coarsening step
-    //----------------------------------------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
     // get incidence matrix
     LG_TRY (LAGraph_Incidence_Matrix (&E, G_cpy, msg)) ;
     CHKPT("Done with LAGraph_IncidenceMatrix");
 
     GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
+    // set to row major incase Incidence_Matrix gave col_major
+    GRB_TRY (GrB_set(E, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
     CHKPT("Starting maximal matching");
     // run maximal matching
     LG_TRY (LAGraph_MaximalMatching (&matched_edges, E, E_t, matching_type, seed, msg)) ;
@@ -502,8 +456,8 @@ int LAGraph_Coarsen_Matching
     #ifdef dbg
         printf("Printing S for level (%lld)\n", curr_level) ;
         LG_TRY (LAGraph_Matrix_Print (S, LAGraph_COMPLETE, stdout, msg)) ;
-        printf("Printing A for level (%lld)\n", curr_level) ;
-        LG_TRY (LAGraph_Matrix_Print (A, LAGraph_COMPLETE, stdout, msg)) ;
+        printf("Printing C for level (%lld)\n", curr_level) ;
+        LG_TRY (LAGraph_Matrix_Print (G_cpy->A, LAGraph_COMPLETE, stdout, msg)) ;
     #endif
     
     GrB_Index S_nrows, S_ncols ;
@@ -520,47 +474,36 @@ int LAGraph_Coarsen_Matching
     GrB_Semiring combine_semiring = (A_type == GrB_FP64) ? GrB_PLUS_TIMES_SEMIRING_FP64 : GrB_PLUS_TIMES_SEMIRING_INT64 ;
     GrB_Semiring semiring = combine_weights ? combine_semiring : LAGraph_any_one_bool ;
     
-    GRB_TRY (GrB_mxm (S, NULL, NULL, semiring, S, A, NULL)) ;
+    GRB_TRY (GrB_mxm (S, NULL, NULL, semiring, S, G_cpy->A, NULL)) ;
 
     #ifdef dbg
-        printf("Printing S * A for level (%lld)\n", curr_level) ;
+        printf("Printing S * C for level (%lld)\n", curr_level) ;
         LG_TRY (LAGraph_Matrix_Print (S, LAGraph_COMPLETE, stdout, msg)) ;
     #endif
 
     if (!preserve_mapping) {
         // re-instantiate adjacency matrix with new dimensions
-        GRB_TRY (GrB_free (&A)) ;
-        GRB_TRY (GrB_Matrix_new (&A, A_type, S_nrows, S_nrows)) ;
+        GRB_TRY (GrB_free (&G_cpy->A)) ;
+        GRB_TRY (GrB_Matrix_new (&(G_cpy->A), A_type, S_nrows, S_nrows)) ;
     }
-    GRB_TRY (GrB_mxm (A, NULL, NULL, semiring, S, S_t, NULL)) ;
+    GRB_TRY (GrB_mxm (G_cpy->A, NULL, NULL, semiring, S, S_t, NULL)) ;
 
-    G_cpy->A = A ;
     // make nself_edges unknown for delete self edges to work
     G_cpy->nself_edges = LAGRAPH_UNKNOWN ;
     // parent nodes for matched edges will form self-edges; need to delete
     LG_TRY (LAGraph_DeleteSelfEdges (G_cpy, msg)) ;
-    A = G_cpy->A ;
-    G_cpy->A = NULL ;
-//  printf ("in Coarsen_Matching: A after deleting self edges:\n") ;
-//  GxB_print (A,5) ;
 
-    // free all objects
-    GRB_TRY (GrB_free (&S)) ;
-    GRB_TRY (GrB_free (&E)) ;
-    GRB_TRY (GrB_free (&E_t)) ;
-    GRB_TRY (GrB_free (&matched_edges)) ;
-    GRB_TRY (GrB_free (&edge_parent)) ;
+//  printf ("in Coarsen_Matching: G_cpy->A after deleting self edges:\n") ;
+//  GxB_print (G_cpy->A,5) ;
 
-    GRB_TRY (GrB_free (&node_parent)) ;
-    GRB_TRY (GrB_free (&S_t)) ;
-
-    //----------------------------------------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
     // coarsening step done
-    //----------------------------------------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    (*coarsened) = A ;
-    
+    (*coarsened) = G_cpy->A ;
+    G_cpy->A = NULL ;
+
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
-
 }
+

@@ -13,6 +13,8 @@
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
+// FIXME: use 32-bit integers for GraphBLAS v10
+
 //------------------------------------------------------------------------------
 
 // LAGraph_MMRead: read a matrix from a Matrix Market file

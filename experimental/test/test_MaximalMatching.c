@@ -90,12 +90,12 @@ void test_MaximalMatching (void)
 {
     OK (LAGraph_Init (msg)) ;
 //  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-    OK (LAGraph_Random_Init (msg)) ;
 
     for (int k = 0 ; ; k++)
     {
         const char *aname = tests [k].name ;
         if (strlen (aname) == 0) break ;
+        printf ("\n======================= %s:\n", aname) ;
         TEST_CASE (aname) ;
 
         // old code using files
@@ -105,17 +105,19 @@ void test_MaximalMatching (void)
         TEST_CHECK (f != NULL) ;
         TEST_MSG ("Filename %s is invalid", filename) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
+        fclose (f) ;
         //--------------
 
         TEST_CHECK (A != NULL) ;
         TEST_MSG ("Building of adjacency matrix failed") ;
+        GxB_print (A, 1) ;
 
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
         OK (LAGraph_Cached_AT (G, msg)) ;
 
-        if (G->nself_edges != 0)
+//      if (G->nself_edges != 0)
         {
             // remove self-edges
             printf ("graph has %g self edges\n", (double) G->nself_edges) ;
@@ -139,6 +141,8 @@ void test_MaximalMatching (void)
         OK (GrB_Matrix_ncols (&num_edges, E)) ;
         OK (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, num_nodes)) ;
         OK (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
+        // set to row major incase Incidence_Matrix gave col_major
+        OK (GrB_set(E, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
 
         // get weight vector
         OK (GrB_Vector_new (&weight, GrB_FP64, num_edges)) ;
@@ -232,7 +236,6 @@ void test_MaximalMatching (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
     OK (LAGraph_Finalize (msg)) ;
-    OK (LAGraph_Random_Finalize (msg)) ;
 }
 
 void test_MaximalMatchingErrors (void)
@@ -260,6 +263,7 @@ void test_MaximalMatchingErrors (void)
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
+    GrB_free (&E) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 

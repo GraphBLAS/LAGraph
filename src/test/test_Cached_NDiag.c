@@ -168,7 +168,7 @@ void test_Cached_NSelfEdges (void)
 // test_Cached_NSelfEdges_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_Cached_NSelfEdges_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -216,7 +216,7 @@ void test_Cached_NSelfEdges_brutal (void)
 TEST_LIST =
 {
     { "NSelfEdges", test_Cached_NSelfEdges },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "NSelfEdges_brutal", test_Cached_NSelfEdges_brutal },
     #endif
     { NULL, NULL }

@@ -73,18 +73,19 @@ typedef struct
 }
 matrix_info ;
 
+// NOTE: these expected results depend on the random number generator used
 const matrix_info files [ ] =
 {
     { "A.mtx",
-        4.6, 5.0,
-        4.6, 5.0,
+        5.0, 5.0,
+        5.0, 5.0,
         5, 123456 },
      { "LFAT5.mtx",
-        2.2, 2.0,
-        2.2, 2.0,
+        2.6, 2.0,
+        2.6, 2.0,
         5, 123456 },
      { "cover.mtx",
-        1.4, 1.0,
+        1.6, 1.0,
         2.4, 3.0,
         5, 123456 },
      { "full.mtx",
@@ -96,26 +97,22 @@ const matrix_info files [ ] =
         4.0, 4.0,
         5, 123456 },
      { "karate.mtx",
-        3.0, 3.0,
-        3.0, 3.0,
+        4.2, 4.0,
+        4.2, 4.0,
         5, 123456 },
      // Add karate two more times to test seed and nsamples
      { "karate.mtx",
-        3.46666666667, 3.0,
-        3.46666666667, 3.0,
+        4.93333333, 4.0,
+        4.93333333, 4.0,
         15, 123456 },
      { "karate.mtx",
-        8.4, 6.0,
-        8.4, 6.0,
+        3.2, 2.0,
+        3.2, 2.0,
         5, 87654432 },
      { "ldbc-cdlp-directed-example.mtx",
-        2.2, 2.0,
-        1.8, 2.0,
+        2.0, 2.0,
+        2.0, 1.0,
         5, 123456 },
-//   { "ldbc-directed-example-bool.mtx",
-//      2.5, 3.0,
-//      3.8, 3.0,
-//      10, 123456 },
     { "", 0.0, 0.0, 0.0, 0.0, 1, 0 }
 } ;
 
@@ -195,7 +192,7 @@ void test_SampleDegree (void)
 // test_SampleDegree_brutal
 //-----------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_SampleDegree_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -225,7 +222,12 @@ void test_SampleDegree_brutal (void)
             files [k].nsamples, files [k].seed, msg)) ;
 
         TEST_CHECK (is_close(mean, files [k].row_mean)) ;
+        TEST_MSG ("Row Mean Expected: %f", files [k].row_mean) ;
+        TEST_MSG ("Row Mean Produced: %f", mean) ;
+
         TEST_CHECK (is_close(median, files [k].row_median)) ;
+        TEST_MSG ("Row Median Expected: %f", files [k].row_median) ;
+        TEST_MSG ("Row Median Produced: %f", median) ;
 
         // Compute the column samples
         LG_BRUTAL (LAGraph_DeleteCached (G, msg)) ;
@@ -235,7 +237,12 @@ void test_SampleDegree_brutal (void)
             files [k].nsamples, files [k].seed, msg)) ;
 
         TEST_CHECK (is_close(mean, files [k].col_mean)) ;
+        TEST_MSG ("Column Mean Expected: %f", files [k].col_mean) ;
+        TEST_MSG ("Column Mean Produced: %f", mean) ;
+
         TEST_CHECK (is_close(median, files [k].col_median)) ;
+        TEST_MSG ("Column Median Expected: %f", files [k].col_median) ;
+        TEST_MSG ("Column Median Produced: %f", median) ;
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
@@ -251,7 +258,7 @@ void test_SampleDegree_brutal (void)
 TEST_LIST =
 {
     { "SampleDegree", test_SampleDegree },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "SampleDegree_brutal", test_SampleDegree_brutal },
     #endif
     { NULL, NULL }

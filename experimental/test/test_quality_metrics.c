@@ -79,11 +79,13 @@ void test_quality_metrics(void)
         FILE *f1 = fopen(filename, "r");
         TEST_CHECK(f1 != NULL);
         OK(LAGraph_MMRead(&A, f1, msg));
+        fclose (f1) ;
 
         snprintf(cluster_filename, LEN, LG_DATA_DIR "%s", aname_cluster);
         FILE *f2 = fopen(cluster_filename, "r");
         TEST_CHECK(f2 != NULL);
         OK(LAGraph_MMRead((GrB_Matrix *)&c, f2, msg));
+        fclose (f2) ;
 
         // construct a directed graph G with adjacency matrix A
         OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
@@ -131,12 +133,14 @@ void test_partition_quality_errors(void)
     TEST_CHECK(f1 != NULL);
     OK(LAGraph_MMRead(&A, f1, msg));
     TEST_MSG("Loading of adjacency matrix failed");
+    fclose (f1) ;
 
     snprintf(cluster_filename, LEN, LG_DATA_DIR "%s", "west0067_cluster.mtx");
     FILE *f2 = fopen(cluster_filename, "r");
     TEST_CHECK(f2 != NULL);
     OK(LAGraph_MMRead((GrB_Matrix *)&c, f2, msg));
     TEST_MSG("Loading of cluster vector failed");
+    fclose (f2) ;
 
     // construct an undirected graph G with adjacency matrix A
     OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg));
@@ -164,6 +168,7 @@ void test_partition_quality_errors(void)
     printf("\nresult: %d %s\n", result, msg);
     TEST_CHECK(result == LAGRAPH_INVALID_GRAPH);
 
+    GrB_free (&c) ;
     OK(LAGraph_Delete(&G, msg));
     TEST_CHECK(G == NULL);
 
@@ -179,12 +184,14 @@ void test_modularity_errors(void)
     TEST_CHECK(f1 != NULL);
     OK(LAGraph_MMRead(&A, f1, msg));
     TEST_MSG("Loading of adjacency matrix failed");
+    fclose (f1) ;
 
     snprintf(cluster_filename, LEN, LG_DATA_DIR "%s", "west0067_cluster.mtx");
     FILE *f2 = fopen(cluster_filename, "r");
     TEST_CHECK(f2 != NULL);
     OK(LAGraph_MMRead((GrB_Matrix *)&c, f2, msg));
     TEST_MSG("Loading of cluster vector failed");
+    fclose (f2) ;
 
     // construct an undirected graph G with adjacency matrix A
     OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg));
@@ -214,6 +221,7 @@ void test_modularity_errors(void)
     printf("\nresult: %d %s\n", result, msg);
     TEST_CHECK(result == LAGRAPH_INVALID_GRAPH);
 
+    GrB_free (&c) ;
     OK(LAGraph_Delete(&G, msg));
     TEST_CHECK(G == NULL);
 

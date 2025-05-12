@@ -1,3 +1,6 @@
+// FIXME: this test needs to check its results.
+// Use a brute force method (extractTuples and do it in plain C, perhaps).
+
 #include <stdio.h>
 #include <acutest.h>
 #include <LAGraphX.h>
@@ -8,10 +11,24 @@
 #include <LG_internal.h>
 
 char msg [LAGRAPH_MSG_LEN] ;
-LAGraph_Graph G = NULL ;
 
 #define LEN 512
 char filename [LEN+1] ;
+
+typedef struct
+{
+    const char *name ;
+}
+matrix_info ;
+
+const matrix_info files [ ] =
+{
+    { "structure.mtx" },
+    { "karate.mtx" },
+    { "west0067.mtx" },
+    { "bcsstk13.mtx" },
+    { "" },
+} ;
 
 void test_argminmax (void)
 {
@@ -21,60 +38,92 @@ void test_argminmax (void)
     //--------------------------------------------------------------------------
 
     LAGraph_Init (msg) ;
-    GrB_Matrix A = NULL;
-    GrB_Matrix x = NULL, p = NULL;
+    GrB_Matrix A = NULL, C = NULL ;
+    GrB_Matrix x = NULL, p = NULL ;
+    GrB_Index nrows, ncols ;
 
-    int dim  = 0;
-    bool is_min =1;
+    for (int k = 0 ; ; k++)
+    {
+        // load the matrix as A
+        const char *aname = files [k].name ;
+        if (strlen (aname) == 0) break ;
+        printf ("\n %s: ==================================\n", aname) ;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+        fclose (f) ;
+        OK (GrB_Matrix_nrows (&nrows, A)) ;
+        OK (GrB_Matrix_ncols (&ncols, A)) ;
+
+        for (int ktype = 0 ; ktype < 11 ; ktype++)
+        {
+            GrB_Type type ;
+            switch (ktype)
+            {
+                case  0: type = GrB_BOOL    ; break ;
+                case  1: type = GrB_INT8    ; break ;
+                case  2: type = GrB_INT16   ; break ;
+                case  3: type = GrB_INT32   ; break ;
+                case  4: type = GrB_INT64   ; break ;
+                case  5: type = GrB_UINT8   ; break ;
+                case  6: type = GrB_UINT16  ; break ;
+                case  7: type = GrB_UINT32  ; break ;
+                case  8: type = GrB_UINT64  ; break ;
+                case  9: type = GrB_FP32    ; break ;
+                default:
+                case 10: type = GrB_FP64    ; break ;
+            }
+
+            // typecast A into a different type
+            OK (GrB_Matrix_new (&C, type, nrows, ncols)) ;
+            OK (GrB_assign (C, NULL, NULL, A,
+                GrB_ALL, nrows, GrB_ALL, ncols, NULL)) ;
+
+            printf ("\nA:\n") ;
+            OK (LAGraph_Matrix_Print (A, 2, stdout, msg)) ;
+
+            printf ("\nC:\n") ;
+            OK (LAGraph_Matrix_Print (C, 2, stdout, msg)) ;
+
+            for (int is_min = 0 ; is_min <= 1 ; is_min++)
+            {
+                for (int dim = 0 ; dim <= 2 ; dim++)
+                {
+                    printf ("\nis_min: %d dim: %d\n", is_min, dim) ;
+                    // test the algorithm
+                    OK (LAGraph_argminmax (&x, &p, C, dim, is_min, msg)) ;
+                    // print the result
+                    // FIXME need to check the result
+                    printf ("\nx:\n") ;
+                    OK (LAGraph_Matrix_Print (x, 2, stdout, msg)) ;
+                    printf ("\np:\n") ;
+                    OK (LAGraph_Matrix_Print (p, 2, stdout, msg)) ;
+                    OK (GrB_free (&x)) ;
+                    OK (GrB_free (&p)) ;
+                }
+            }
+            OK (GrB_free (&C)) ;
+        }
+        OK (GrB_free (&A)) ;
+    }
 
     //--------------------------------------------------------------------------
-    // test with the A matrix
+    // finalize LAGraph
     //--------------------------------------------------------------------------
-
-    // create the graph
-    snprintf (filename, LEN, LG_DATA_DIR "%s", "structure.mtx") ;
-    FILE *f = fopen (filename, "r") ;
-    TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, f, msg)) ;
-    OK (fclose (f)) ;
-    printf ("\nInput of Matrix:\n") ;
-    GxB_print(A, 2);
-    // test the algorithm
-    int info = LAGraph_argminmax (&x,&p, A,dim,is_min, msg) ;
-    printf("msg %s\n", msg) ;
-    OK (info) ;
-    printf("\n") ;
-    GxB_print(x,3);
-    GxB_print(p,3);
-    // print the result
-    
-
-    // OK (LAGraph_Matrix_Print (A, LAGraph_COMPLETE, stdout, msg)) ;
-
-    // check the result (ensure Y is equal to G->A)
-    // bool ok ;
-    // OK (LAGraph_Matrix_IsEqual (&ok, Y, G->A, msg)) ;
-    // TEST_CHECK (ok) ;
-
-    //--------------------------------------------------------------------------
-    // free everything and finalize LAGraph
-    //--------------------------------------------------------------------------
-
-    OK (GrB_free (&A)) ;
-    OK (GrB_free (&x)) ;
-    OK (GrB_free (&p)) ;
-
-    OK (LAGraph_Delete (&G, msg)) ;
 
     LAGraph_Finalize (msg) ;
 }
 
 //----------------------------------------------------------------------------
-// the make program is created by acutest, and it runs a list of tests:
+// the main program is created by acutest, and it runs a list of tests:
 //----------------------------------------------------------------------------
 
 TEST_LIST =
 {
-    {"Argminmax", test_argminmax},    // just one test in this example
+    {"argminmax", test_argminmax},
     {NULL, NULL}
 } ;
+

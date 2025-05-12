@@ -74,6 +74,7 @@ void test_peer_pressure(void)
         TEST_CHECK(f != NULL);
         OK(LAGraph_MMRead(&A, f, msg));
         // GxB_print (A, 5) ;
+        fclose (f) ;
 
         // construct a directed graph G with adjacency matrix A
         OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
@@ -91,6 +92,7 @@ void test_peer_pressure(void)
         OK(LAGr_PeerPressureClustering(&c, true, false, 0.0001, 50, G, msg));
         OK(LAGr_PartitionQuality(&cov, &perf, c, G, msg));
         OK(LAGr_Modularity(&mod, (double)1, c, G, msg));
+        GrB_free (&c) ;
 
         bool ok_cov = false, ok_perf = false, ok_mod = false;
         printf("\nConfiguration 1:\n");
@@ -105,7 +107,6 @@ void test_peer_pressure(void)
         TEST_CHECK(ok_perf);
         TEST_CHECK(ok_mod);
 
-        c = NULL;
         OK(LAGr_PeerPressureClustering(&c, false, true, 0.0001, 50, G, msg));
         OK(LAGr_PartitionQuality(&cov, &perf, c, G, msg));
         OK(LAGr_Modularity(&mod, (double)1, c, G, msg));
@@ -145,6 +146,7 @@ void test_errors(void)
     TEST_CHECK(f != NULL);
     OK(LAGraph_MMRead(&A, f, msg));
     TEST_MSG("Loading of adjacency matrix failed");
+    fclose (f) ;
 
     // construct an undirected graph G with adjacency matrix A
     OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg));
@@ -170,6 +172,15 @@ void test_errors(void)
                                          max_iter, G, msg);
     printf("\nresult: %d %s\n", result, msg);
     TEST_CHECK(result == LAGRAPH_NOT_CACHED);
+    GrB_free (&c) ;
+
+    G->kind = LAGraph_ADJACENCY_UNDIRECTED;
+    G->is_symmetric_structure = LAGraph_FALSE;
+    result = LAGr_PeerPressureClustering(&c, normalize, make_undirected, thresh,
+                                         max_iter, G, msg);
+    printf("\nresult: %d %s\n", result, msg);
+    TEST_CHECK(result == LAGRAPH_NOT_CACHED);
+    GrB_free (&c) ;
 
     OK(LAGraph_Delete(&G, msg));
     LAGraph_Finalize(msg);
