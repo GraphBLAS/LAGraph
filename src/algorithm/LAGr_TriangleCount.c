@@ -232,7 +232,7 @@ int LAGr_TriangleCount
             // GAP tc.cc benchmark, GAP-kron and GAP-twitter are sorted, and so
             // is GAP-web, but GAP-web is not sorted here.
 
-            #define NSAMPLES 1000
+            #define NSAMPLES 2000
             GrB_Index nvals ;
             GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
             if (n > NSAMPLES && ((double) nvals / ((double) n)) >= 10)
@@ -242,7 +242,7 @@ int LAGr_TriangleCount
                 LG_TRY (LAGr_SampleDegree (&mean, &median,
                     G, true, NSAMPLES, n, msg)) ;
                 // sort if the average degree is very high vs the median
-                if (mean > 4 * median)
+                if (mean > 3 * median)
                 {
                     switch (method)
                     {

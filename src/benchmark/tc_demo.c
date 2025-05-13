@@ -143,6 +143,23 @@ int main (int argc, char **argv)
     fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
+    // sample the degree
+    //--------------------------------------------------------------------------
+
+    for (int nsamples = 1000 ; nsamples <= 100000 ; nsamples += 1000)
+    {
+        double ts = LAGraph_WallClockTime ( ) ;
+        double mean, median ;
+        LG_TRY (LAGr_SampleDegree (&mean, &median, G, true,
+            (GrB_Index) nsamples, n, msg)) ;
+        ts = LAGraph_WallClockTime ( ) - ts ;
+        printf ("nsamples: %6d " PRIu64 " mean %10.2f median %10.2f "
+            "(mean > 3*med) %d time: %10.4f\n",
+            nsamples, mean, median, mean > 3 * median, ts) ;
+        fflush (stdout) ;
+    }
+
+    //--------------------------------------------------------------------------
     // triangle counting
     //--------------------------------------------------------------------------
 
