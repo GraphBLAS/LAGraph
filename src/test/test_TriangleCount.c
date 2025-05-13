@@ -3,7 +3,7 @@
 // counting algorithms
 // ----------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -47,6 +47,7 @@ const matrix_info files [ ] =
     {      0, "LFAT5.mtx" },
     { 342300, "bcsstk13.mtx" },
     {      0, "tree-example.mtx" },
+    { 111958, "arrow.mtx"},
     {      0, "" },
 } ;
 
