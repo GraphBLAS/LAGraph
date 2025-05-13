@@ -22,6 +22,7 @@ const matrix_info files[] = {
     {"karate.mtx"},
     {""} 
 };
+
 void test_IsolateSets(void){
     LAGraph_Init(msg);
     OK (LAGraph_Random_Init (msg)) ;

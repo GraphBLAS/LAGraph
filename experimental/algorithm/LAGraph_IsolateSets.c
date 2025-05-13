@@ -69,7 +69,7 @@ int LAGraph_IsolateSets(
     GRB_TRY (GrB_Vector_new (&scoreA, GrB_FP32, n)) ;
 
     //rand
-    seed = (uint64_t)time(NULL);
+    seed = 123;
     printf("%ld",seed);
     GRB_TRY (GrB_assign (Seed, NULL, NULL, 1, GrB_ALL, n, NULL));
     GRB_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
@@ -94,24 +94,12 @@ int LAGraph_IsolateSets(
     dbg(neighbor_max);
     dbg(score);
 
-    GRB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GE_FP32,
-        score, neighbor_max, NULL)) ;
+    GRB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GE_FP32,score, neighbor_max, NULL)) ;
     dbg(new_members);
     GRB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL,
         new_members, (bool) true, NULL)) ;
     dbg(new_members);
     GRB_TRY (GrB_assign (iset, new_members, NULL,true,GrB_ALL,n,NULL)) ;
-    // GRB_TRY (GrB_assign (candidates, new_members, NULL, empty,
-    //     GrB_ALL, n, GrB_DESC_S)) ;
-    // GxB_print(candidates,5);
-    // GrB_Index n_new_members ;
-    // GRB_TRY (GrB_Vector_nvals (&n_new_members, new_members)) ;
-
-    // GRB_TRY (GrB_vxm (new_membersA, candidates, NULL,
-    //     LAGraph_any_one_bool, new_members, A, GrB_DESC_RS)) ; 
-    // GRB_TRY (GrB_vxm (new_neighbors, candidates, NULL,
-    //     LAGraph_any_one_bool, new_membersA, A, GrB_DESC_RS)) ;
-    // GxB_print(new_neighbors,5);
     (*isolate_set) = iset;
     iset = NULL;
     LG_FREE_ALL;
