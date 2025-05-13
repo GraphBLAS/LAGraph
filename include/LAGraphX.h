@@ -1375,6 +1375,34 @@ int LAGr_BreadthFirstSearch_Extended
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
+// coloring algorithms
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGraph_coloring_independent_set
+(
+    // output
+    GrB_Vector *color,
+    int *num_colors,
+
+    // input
+    LAGraph_Graph G,
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
+int LAGraph_coloring_MIS
+(
+    // output
+    GrB_Vector *color,
+    int *num_colors,
+
+    // input
+    LAGraph_Graph G,
+    char *msg
+) ;
+
 #if defined ( __cplusplus )
 }
 #endif
