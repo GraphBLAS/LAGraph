@@ -3,7 +3,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-
+#define DEBUG 0
+#define dbg(x) if (DEBUG) GxB_print(x,5)
+#undef LG_FREE_ALL
+#define LG_FREE_ALL\
+{   \
+}
 int LAGraph_LouvainMIS(
     //output
     GrB_Matrix *S_result,
@@ -11,18 +16,60 @@ int LAGraph_LouvainMIS(
     LAGraph_Graph G,
     char* msg
 ){
-    GrB_Monoid plusmon = GrB_PLUS_MONOID_FP64;
+    LG_CLEAR_MSG ;
 
+    char MATRIX_TYPE[LAGRAPH_MSG_LEN];
+    if (DEBUG)
+        GrB_set (GrB_GLOBAL, true, GxB_BURBLE);
+    // Shortened monoids, Binary ops, and Semirings
+    GrB_Monoid plusmon = GrB_PLUS_MONOID_FP64;
     GrB_BinaryOp plusf64 = GrB_PLUS_FP64;
     GrB_BinaryOp timesf64 = GrB_TIMES_FP64;
-
     GrB_Semiring stdmxm = GrB_PLUS_TIMES_SEMIRING_FP64;
-<<<<<<< HEAD
-<<<<<<< HEAD
+
+
+    // Declarations
+    GrB_Vector iset = NULL;
+    GrB_Vector k = NULL;
+    GrB_Vector x = NULL;
+    GrB_Matrix S = NULL;
+    GrB_Matrix A = NULL;
+    GrB_Index n ; 
+
+
+    // Initializing 
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
+    LG_ASSERT(S_result != NULL, GrB_NULL_POINTER);
+    A = G->A;
+    dbg(A);
     
-=======
->>>>>>> 49da79e1 (GAP test)
-=======
+    //k = [+_j A(:,j)]
+    GRB_TRY(GrB_Vector_new(&iset,GrB_BOOL,n));
+    GRB_TRY(GrB_Vector_new(&k, GrB_FP64, n));
+    double m;
+    GRB_TRY(GrB_Vector_reduce_FP64(&m,NULL,plusmon,k,NULL));
+    m*=.5;
+
+    // S <- I
+    GRB_TRY(GrB_Vector_new(&x,GrB_FP64,n));
+    GRB_TRY(GrB_assign (x, NULL, NULL, 1, GrB_ALL, n, NULL)) ;
+    // GxB_print(i,5);
+    GRB_TRY(GrB_Matrix_diag(&S,x,0));
     
->>>>>>> 91a5c9dd (Adding isolate sets algorithm w/ test cases.)
+    // Compute Isolate Set
+    
+
+    // Compute max change in modularity for each node in the isolate set
+    // Aggregate Graph
+    // Iterate till no change is detected
+    double Q;
+    double gamma = 1;
+    GRB_TRY(LAGr_Modularity2(&Q,gamma,A,S,msg));
+    // printf("Iterations: %d\n", iter);
+    printf("Q:%.15g\n",Q);
+    (*S_result) = S ;
+    S = NULL;
+    LG_FREE_ALL;
+    return 0;
+
 }

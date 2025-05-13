@@ -1381,7 +1381,7 @@ int LAGraph_argminmax
     int dim,                    // dim=1: cols of A, dim=2: rows of A
     bool is_min,
     char *msg
-); 
+) ; 
 LAGRAPHX_PUBLIC
 int LAGr_Modularity2(
     //output

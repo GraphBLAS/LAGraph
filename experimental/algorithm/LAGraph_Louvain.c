@@ -78,7 +78,7 @@ int LAGraph_Louvain(
     bool * vals;
     GrB_Index *p_cs=NULL;
     double * p_vals;
-
+    GxB_Container S_container = NULL;
 
     GrB_Matrix A = G->A;
     // GxB_print(A,5);
@@ -141,11 +141,10 @@ int LAGraph_Louvain(
             // GxB_print(sr,5);
 
             //S(i,:) = empty
-            GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Sj, (void ** )&Sx,
-                &Sp_size, &Sj_size, &Sx_size, NULL, &S_jumbled, NULL)) ;
-            Sx[i] = false;
-            GRB_TRY (GxB_Matrix_pack_CSR (S, &Sp, &Sj, (void**)&Sx,
-                Sp_size, Sj_size, Sx_size, NULL, S_jumbled, NULL));
+            GRB_TRY(GxB_unload_Matrix_into_Container(S,S_container,NULL));
+            GRB_TRY(GrB_Vector_setElement_BOOL(S_container->x,false,i));
+            GRB_TRY(GxB_load_Matrix_from_Container(S,S_container,NULL));
+
 
             double alpha = -k_i/m;
 
@@ -202,12 +201,16 @@ int LAGraph_Louvain(
             GRB_TRY (LAGraph_Malloc ((void **) &coor, nvals_t, sizeof (GrB_Index), msg));
             GRB_TRY (LAGraph_Malloc ((void **) &vals, nvals_t, sizeof (bool), msg)) ;
             GRB_TRY(GrB_Vector_extractTuples_BOOL(coor,vals,&nvals_t,t));
-            GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Sj, (void ** )&Sx,
-                &Sp_size, &Sj_size, &Sx_size, NULL, &S_jumbled, NULL)) ;
-            Sj[i] = coor[0];
-            Sx[i] = true;
-            GRB_TRY (GxB_Matrix_pack_CSR (S, &Sp, &Sj, (void**)&Sx,
-                Sp_size, Sj_size, Sx_size, NULL, S_jumbled, NULL));
+            GRB_TRY(GxB_unload_Matrix_into_Container(S,S_container,NULL));
+            GRB_TRY(GrB_Vector_setElement(S_container->i,coor[0],i));
+            GRB_TRY(GrB_Vector_setElement_BOOL(S_container->x,true,i));
+            GRB_TRY(GxB_load_Matrix_from_Container(S,S_container,NULL));
+            // GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Sj, (void ** )&Sx,
+            //     &Sp_size, &Sj_size, &Sx_size, NULL, &S_jumbled, NULL)) ;
+            // Sj[i] = coor[0];
+            // Sx[i] = true;
+            // GRB_TRY (GxB_Matrix_pack_CSR (S, &Sp, &Sj, (void**)&Sx,
+            //     Sp_size, Sj_size, Sx_size, NULL, S_jumbled, NULL));
             free(coor);
             free(vals);
             // GxB_print(S,5);

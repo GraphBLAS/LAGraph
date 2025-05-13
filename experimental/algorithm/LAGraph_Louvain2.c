@@ -53,7 +53,8 @@
         LAGraph_Free ((void *) &dSp, NULL) ;     \
         LAGraph_Free ((void *) &dSj, NULL) ;     \
     }
-#define DEBUG 0
+#define DEBUG 1
+#define dbg(x) if (DEBUG) GxB_print(x,5)
 // uint64_t seed = 213;
 typedef struct tuple_fp64{
     int64_t k;
@@ -134,7 +135,7 @@ int LAGraph_Louvain2(
 
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
     if (DEBUG)
-        GrB_set (GrB_GLOBAL, true, GxB_BURBLE);
+        GrB_set (GrB_GLOBAL, false, GxB_BURBLE);
 
     //assignment of monoids, bops, and semis   
     GrB_Monoid plusmon = GrB_PLUS_MONOID_FP64;
@@ -173,6 +174,7 @@ int LAGraph_Louvain2(
     GrB_Scalar Theta = NULL ;
     GrB_Type Tuple = NULL ;
     GrB_Monoid Mon = NULL ;
+    GxB_Container S_container = NULL;
     double *dSx = NULL ; 
     GrB_Index *dSp = NULL, *dSj = NULL, dSp_size, dSj_size, dSx_size ;
     bool dS_jumbled = false, dS_iso = false ;
@@ -183,7 +185,7 @@ int LAGraph_Louvain2(
     double k_i = 0;
     // FIXME: add check to see if S_result is NULL
 
-    (*S_result) = NULL ;
+    LG_ASSERT(S_result != NULL, GrB_NULL_POINTER);
 
     GrB_Matrix A = G->A;
     // GxB_print(A,5);
@@ -222,10 +224,12 @@ int LAGraph_Louvain2(
     // printf("m= %f\n", m);
 
     // S <- I
-    GRB_TRY(GrB_Vector_new(&x,GrB_FP64,n));
-    GRB_TRY(GrB_assign (x, NULL, NULL, 1, GrB_ALL, n, NULL)) ;
+    GRB_TRY(GrB_Vector_new(&x,GrB_BOOL,n));
+    GRB_TRY(GrB_assign (x, NULL, NULL, true, GrB_ALL, n, NULL)) ;
     // GxB_print(i,5);
     GRB_TRY(GrB_Matrix_diag(&S,x,0));
+    GRB_TRY(GrB_set(S,false,GxB_ISO));
+    GrB_set (S, GxB_SPARSE, GxB_SPARSITY_CONTROL) ;
     // GxB_print(S,5);
     GRB_TRY(GrB_Vector_new(&v,GrB_FP64,n));
     //var used in for loop
@@ -239,7 +243,7 @@ int LAGraph_Louvain2(
     // temp used to  set dS to 0 matrix
     GRB_TRY(GrB_Vector_new(&temp,GrB_FP64,n));
     GRB_TRY(GrB_assign(temp, NULL, NULL, 0, GrB_ALL,n,NULL));
-
+    GRB_TRY(GxB_Container_new(&S_container));
     GRB_TRY(GrB_Vector_new(&max_q1,Tuple,1));
     GRB_TRY(GrB_Vector_new(&srxq,GrB_BOOL,n));
     GRB_TRY(GrB_Matrix_diag(&dS,temp,0));  
@@ -259,13 +263,16 @@ int LAGraph_Louvain2(
     while(changed && iter < max_iter){
         changed = false;
         for(int i=0;i<n;i++){//extract tuples
-            printf("%d",i);
+            // printf("%d",i);
+
             // v = A(i,:)
             GRB_TRY (GrB_Col_extract (v, NULL, NULL, A, GrB_ALL, b, i,GrB_DESC_T0));
             // GxB_print(v,5);
+
             // -- extract k_i
             GRB_TRY(GrB_Vector_extractElement_FP64(&k_i,k,i));
             // GxB_print(S,5);
+
             //t_q =v any.pair S   O(|v|)
             GRB_TRY(GrB_vxm(t_q,NULL,NULL,anypB,v,S,GrB_DESC_T0));
             // GxB_print(t_q,5);
@@ -273,52 +280,27 @@ int LAGraph_Louvain2(
             //sr = S(i,:)
             GRB_TRY(GrB_Col_extract(sr,NULL,NULL,S,GrB_ALL,1,i,GrB_DESC_T0));
             // GxB_print(sr,5);
+
             //S(i,:) = empty
-            GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Sj, (void ** )&Sx,
-                &Sp_size, &Sj_size, &Sx_size, NULL, NULL, NULL)) ;
-            Sx[i] = false;
-            GRB_TRY (GxB_Matrix_pack_CSR (S, &Sp, &Sj, (void**)&Sx,
-                Sp_size, Sj_size, Sx_size, false, false, NULL));
+            GRB_TRY(GxB_unload_Matrix_into_Container(S,S_container,NULL));
+            GRB_TRY(GrB_Vector_setElement_BOOL(S_container->x,false,i));
+            GRB_TRY(GxB_load_Matrix_from_Container(S,S_container,NULL));
+
+
 
 ////////////////////////////////////////////////////////////
 //-------------q1<t_q> = a(kTS)+vTS----------- -----------//
             // double alpha_p = 1;
             double alpha = -k_i/m;
-            // printf("^^^^^^^^^^^^^^^^^^alpha %f^^^^^^^^^^^^^^^^^", alpha);
-            //compute dS
-            //  GRB_TRY (GxB_Matrix_unpack_CSR (dS, &dSp, &dSj, (void ** )&dSx,
-            //     &dSp_size, &dSj_size, &dSx_size, NULL, NULL, NULL)) ;
-            // dSx[i] = -1;
-            // if(i>0) {dSx[i-1] =0;}
-            // GRB_TRY (GxB_Matrix_pack_CSR (dS, &dSp, &dSj, (void**)&dSx,
-            //     dSp_size, dSj_size, dSx_size, false, false, NULL));
-            // printf("%d",i);
-            // GxB_print(dS,5);
 
-            // //compute z
-            // GRB_TRY(GrB_mxv(dSTk,NULL,NULL,stdmxm,dS,k,GrB_DESC_T0));
-            // GxB_print(dSTk,5);
-            // GxB_print(z,5);
-            // GRB_TRY(GrB_Vector_eWiseAdd_BinaryOp(z_dSTk,NULL,NULL,plusf64,z,dSTk,NULL));
-
-            // printf("z+=(ds)Tk");
-            // GxB_print(z_dSTk,5);
             GRB_TRY(GrB_Vector_apply_BinaryOp2nd_FP64(za,NULL,NULL,timesf64,z,alpha,GrB_DESC_T0));
-            // alpha_p  = alpha;
-            printf("z*alpha");
-            // GxB_print(za,5);
-            
-            // vtS
-            //add +dS here
-            // GRB_TRY(GrB_vxm(vtS,NULL,NULL,stdmxm,v,S,GrB_DESC_T0));
-            // GxB_print(vtS,5);
-            // GRB_TRY(GrB_Vector_eWiseAdd_BinaryOp(q1,t_q,NULL,plusf64,za,vtS,GrB_DESC_RT0));
+
             
             GRB_TRY(GrB_eWiseAdd(za,NULL,NULL,plusf64,za,v,NULL));
-            printf("z*alpha + v");
+            // printf("z*alpha + v\n");
             // GxB_print(za,5);
             GRB_TRY(GrB_vxm(q1,t_q,NULL,stdmxm,za,S,GrB_DESC_R));
-            // GxB_print(q1,5);
+            // dbg(q1);
 ///////////////////////////////////////////////////////////
             
 ///////////////////////////////////////////////////////////
@@ -331,24 +313,17 @@ int LAGraph_Louvain2(
             // GxB_print(q1,5); 
             GRB_TRY(GrB_mxv(max_q1,NULL,NULL,Semiring,(GrB_Matrix)q1,y_rand,GrB_DESC_T0));
             // GxB_print(q1,5);
+
             GRB_TRY(GrB_Vector_extractElement_UDT((void*)&o,max_q1,0));
-            printf("choice:%ld tb: %ld\n",(long)o.k, (long)o.tb);
-            GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Sj, (void ** )&Sx,
-                &Sp_size, &Sj_size, &Sx_size, NULL, &S_jumbled, NULL)) ;
-            Sj[i] = o.k;
-            Sx[i] = true;
-            GRB_TRY (GxB_Matrix_pack_CSR (S, &Sp, &Sj, (void**)&Sx,
-                Sp_size, Sj_size, Sx_size, false, S_jumbled, NULL));
-            // }else{
-            //     GRB_TRY(GrB_Vector_extractElement_FP64(&o1,q1,0));
-            //     printf("Monochoice:%f\n",o1);
-            //     GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Sj, (void ** )&Sx,
-            //         &Sp_size, &Sj_size, &Sx_size, NULL, &S_jumbled, NULL)) ;
-            //     Sj[i] = o1;
-            //     Sx[i] = true;
-            //     GRB_TRY (GxB_Matrix_pack_CSR (S, &Sp, &Sj, (void**)&Sx,
-            //         Sp_size, Sj_size, Sx_size, false, S_jumbled, NULL));
-            // }
+            // printf("choice:%ld tb: %ld\n",(long)o.k, (long)o.tb);
+            // dbg(S);
+
+            GRB_TRY(GxB_unload_Matrix_into_Container(S,S_container,NULL));
+            GRB_TRY(GrB_Vector_setElement(S_container->i,o.k,i));
+            GRB_TRY(GrB_Vector_setElement_BOOL(S_container->x,true,i));
+            GRB_TRY(GxB_load_Matrix_from_Container(S,S_container,NULL));
+            // GxB_print(S,5);
+
 //////////////////////////////////////////////////////////
 
             // GxB_print(sr,5);
@@ -360,7 +335,7 @@ int LAGraph_Louvain2(
             if(vals_srxq==0){
                 changed  = true;
             }
-            // if(i==4)break;
+            // if(i==0)break;
             
         }
         iter++;
