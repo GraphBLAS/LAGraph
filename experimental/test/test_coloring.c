@@ -104,7 +104,7 @@ void test_coloring(void)
     int result = LAGraph_coloring_independent_set(&C, &num_colors, G, msg);
     random_hack = false ;
     printf ("hack msg: %d %s\n", result, msg) ;
-    TEST_CHECK (result == 1) ;
+    TEST_CHECK (result == LAGRAPH_CONVERGENCE_FAILURE) ;
     #endif
 
     // ------------------------------------------------

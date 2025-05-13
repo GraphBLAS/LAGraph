@@ -84,8 +84,8 @@ int LAGraph_coloring_independent_set
 
         GrB_Index nvals_local_color;
         GRB_TRY(GrB_Vector_nvals(&nvals_local_color, local_color));
-        printf ("colored: %ld of %ld: %g\n", nvals_local_color, n, tthis) ;
-        fflush (stdout) ;
+        // printf ("colored: %ld of %ld: %g\n", nvals_local_color, n, tthis) ;
+        // fflush (stdout) ;
 
         /* check if in_curr_subset is empty then break */
         GrB_Index nvals_in_curr_subset;
@@ -94,9 +94,11 @@ int LAGraph_coloring_independent_set
             GrB_Index nvals_local_color;
             GRB_TRY(GrB_Vector_nvals(&nvals_local_color, local_color));
             if (nvals_local_color < n) {
-                printf("ERROR in LAGraph_coloring_independent_set: in_curr_subset is empty, but nvals (local_color) < n\n");
-                LG_FREE_ALL ;
-                return (1) ;
+//              printf("ERROR in LAGraph_coloring_independent_set: in_curr_subset is empty, but nvals (local_color) < n\n");
+//              LG_FREE_ALL ;
+//              return (1) ;
+                LG_ASSERT_MSG (false, LAGRAPH_CONVERGENCE_FAILURE,
+                    "LAGraph_coloring_independent_set: in_curr_subset is empty, but nvals (local_color) < n") ;
             }
             break;
         }
