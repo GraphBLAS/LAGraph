@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+
 // #include <iostream>
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                     \
@@ -53,7 +54,7 @@
         LAGraph_Free ((void *) &dSp, NULL) ;     \
         LAGraph_Free ((void *) &dSj, NULL) ;     \
     }
-#define DEBUG 1
+#define DEBUG 0
 #define dbg(x) if (DEBUG) GxB_print(x,5)
 // uint64_t seed = 213;
 typedef struct tuple_fp64{
@@ -69,13 +70,8 @@ void make_fp64(tuple_fp64 *z,
 {
     z->k = (int64_t)jx;
     z->v = (*x);
-    size_t tb = (*y)+1;
-    tb ^= tb << 13;
-    tb ^= tb >> 7;
-    tb ^= tb << 17;
-    tb = (tb ^ (tb >> 27)) * 0x94D049BB133111EB ;
-    tb = (tb ^ (tb >> 31)) ;
-    (tb = tb ^ (tb >> 30)) * 0xBF58476D1CE4E5B9 ;
+    uint64_t seed = (*y + ix + iy + jy);
+    uint64_t tb = LG_Random64(&seed);
     z->tb = tb;
 }
 void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
@@ -111,13 +107,8 @@ void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
 "{                                                           \n" \
 "    z->k = (int64_t)jx;                                     \n" \
 "    z->v = (*x);                   \n" \ 
-"     size_t tb = (*y)+1; \n"\
-"    tb ^= tb << 13;\n"\
-"    tb ^= tb >> 7;\n" \
-"    tb ^= tb << 17; \n"\
-"    tb = (tb ^ (tb >> 27)) * 0x94D049BB133111EB ; \n"\
-"    tb = (tb ^ (tb >> 31)) ;\n"\
-"  (tb = tb ^ (tb >> 30)) * 0xBF58476D1CE4E5B9 ;\n"\
+"    uint64_t seed = (*y + ix + iy + jy); \n"\
+"    uint64_t tb = LG_Random64(&seed);\n"\
 "    z->tb = tb;\n"\
 "}"
 
@@ -135,7 +126,7 @@ int LAGraph_Louvain2(
 
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
     if (DEBUG)
-        GrB_set (GrB_GLOBAL, false, GxB_BURBLE);
+        GrB_set (GrB_GLOBAL, true, GxB_BURBLE);
 
     //assignment of monoids, bops, and semis   
     GrB_Monoid plusmon = GrB_PLUS_MONOID_FP64;
@@ -184,12 +175,13 @@ int LAGraph_Louvain2(
     double o1;
     double k_i = 0;
     // FIXME: add check to see if S_result is NULL
-
+    LG_Random_Init(msg)
     LG_ASSERT(S_result != NULL, GrB_NULL_POINTER);
 
     GrB_Matrix A = G->A;
     // GxB_print(A,5);
-
+    // printf("rand init");
+    double test = 23;
 //index bin op definitions
 //------------------------------------------------------------------------------------------------------------------
 
@@ -207,7 +199,6 @@ int LAGraph_Louvain2(
     GRB_TRY(GrB_Semiring_new(&Semiring, Mon, Bop));
 //------------------------------------------------------------------------------------------------------------------
 
-    GRB_TRY(LAGraph_Random_Init(msg));
 
     GRB_TRY(GrB_Matrix_nrows(&n,A));
     GRB_TRY(GrB_Matrix_ncols(&b,A));
@@ -255,8 +246,8 @@ int LAGraph_Louvain2(
     bool changed = true;
     int max_iter = 20;
     int iter =0;
-    uint64_t seed = (uint64_t)time(NULL);
-    GRB_TRY(LAGraph_Random_Seed(y_rand,seed,msg));
+    uint64_t seed = 231;
+    
     // GxB_print(y_rand,5);
     GRB_TRY(GrB_mxv(z,NULL,NULL,stdmxm,S,k,NULL));
     // GxB_print(z,5);
@@ -309,7 +300,9 @@ int LAGraph_Louvain2(
             // GxB_print(q1,5);
             // printf("Size of q1: %ld\n",q1_size);
             // GRB_TRY(GrB_Vector_setElement_UINT64(y_rand,seed,0));
-            // GRB_TRY (GrB_assign (y_rand, t_q, NULL, seed, GrB_ALL, n, GrB_DESC_S));
+            seed+=i;
+            GRB_TRY (GrB_assign (y_rand, t_q, NULL, seed, GrB_ALL, n, GrB_DESC_S));
+
             // GxB_print(q1,5); 
             GRB_TRY(GrB_mxv(max_q1,NULL,NULL,Semiring,(GrB_Matrix)q1,y_rand,GrB_DESC_T0));
             // GxB_print(q1,5);

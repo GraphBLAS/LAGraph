@@ -53,7 +53,7 @@ int LAGraph_Louvain(
 )
 {
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
-    GrB_set (GrB_GLOBAL, false, GxB_BURBLE);
+    GrB_set (GrB_GLOBAL, true, GxB_BURBLE);
     //assignment of monoids, bops, and semis   
     GrB_Monoid plusmon = GrB_PLUS_MONOID_FP64;
     GrB_Monoid maxmon = GrB_MAX_MONOID_FP64;
@@ -103,7 +103,7 @@ int LAGraph_Louvain(
     GRB_TRY(GrB_assign (x, NULL, NULL, 1, GrB_ALL, n, NULL)) ;
     // GxB_print(i,5);
     GRB_TRY(GrB_Matrix_diag(&S,x,0));
-    // GxB_print(S,5);
+    GxB_print(S,5);
 
     //var used in for loop
     GrB_Index vertices_changed;
@@ -137,6 +137,7 @@ int LAGraph_Louvain(
             // GxB_print(t_q,5);
 
             // sr = S(i,:)
+
             GRB_TRY(GrB_Col_extract(sr,NULL,NULL,S,GrB_ALL,1,i,GrB_DESC_T0));
             // GxB_print(sr,5);
 

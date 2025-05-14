@@ -23,10 +23,8 @@ const matrix_info files[] = {
     // {"karate2.mtx", .42},
     {"",-1}  
 };
-//Store matrix by row
 void test_Louvain(void){
     LAGraph_Init(msg);
-    //Lagraph+RAndom_init
     printf("\n");
     for(int k = 0;;k++){
         if (strlen(files[k].matrix_file) == 0)
@@ -39,6 +37,7 @@ void test_Louvain(void){
         TEST_CHECK (A == NULL) ;
 
         // check if the pattern is symmetric - if it isn't make it.
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
         OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         if (G->is_symmetric_structure == LAGraph_FALSE)
@@ -55,11 +54,12 @@ void test_Louvain(void){
         {
             G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
         }
-        GrB_Matrix S=NULL;
+        GrB_Matrix S;
         double tsimple = LAGraph_WallClockTime ( ) ;
-        OK(LAGraph_Louvain(S,G,msg));
+        OK(LAGraph_LouvainMIS(&S,G,msg));
         tsimple = LAGraph_WallClockTime ( ) - tsimple ;
         printf(" time: %f\n",tsimple);
+
 
     }
 }

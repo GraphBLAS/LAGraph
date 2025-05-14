@@ -119,7 +119,9 @@ int LAGr_Modularity2(
     //------------------------------------------------------------------------------
     GRB_TRY(GrB_Matrix_new(&BS, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&S_BS, GrB_FP64, n, n));
+    // GxB_print(S,5);
     GRB_TRY(GrB_mxm(BS, NULL, NULL, stdmxm, B, S, NULL));
+    // GxB_print(BS,5);
     GRB_TRY(GrB_mxm(S_BS,NULL,NULL,stdmxm,S,BS,GrB_DESC_T0));  
     // GxB_print (S_BS,3);
 
