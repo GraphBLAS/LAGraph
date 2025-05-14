@@ -57,6 +57,7 @@ int LAGraph_Happly //happly Checked for pointer issues
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
     float reduced = 0.0;
     // y = u .* x
     GRB_TRY (GrB_eWiseAdd (y,NULL, NULL, GrB_TIMES_FP32, u, x, NULL));
@@ -68,6 +69,9 @@ int LAGraph_Happly //happly Checked for pointer issues
     GRB_TRY (GrB_eWiseAdd(y,NULL,NULL,GrB_PLUS_FP32,x,y,NULL));
     
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 } 
 //-------------------------------------------------------------------------------------------------
 /*
@@ -125,6 +129,7 @@ int LAGraph_hmhx //hmhx checked for pointer issues
     char *msg
 ) 
 {
+#if LAGRAPH_SUITESPARSE
     GrB_Vector t = NULL ;
     GrB_Index n = 0 ;
 
@@ -145,6 +150,9 @@ int LAGraph_hmhx //hmhx checked for pointer issues
     // free workspace
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }
 //-------------------------------------------------------------------------------------------------
 /*
@@ -174,6 +182,7 @@ int LAGraph_norm2 //norm2 checked for pointer mistakes
     
 )
 {
+#if LAGRAPH_SUITESPARSE
     GrB_Vector t = NULL ;
     GrB_Index len ;
     float norm2;
@@ -192,6 +201,9 @@ int LAGraph_norm2 //norm2 checked for pointer mistakes
     (*norm2_helper) = norm2 ;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -247,6 +259,7 @@ int LAGraph_Laplacian   // compute the Laplacian matrix
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
     GrB_Index ncol;
     GrB_Vector x = NULL;
     GrB_Vector t = NULL;
@@ -296,6 +309,9 @@ int LAGraph_Laplacian   // compute the Laplacian matrix
     (*Lap_handle)= Lap;
     (*infnorm)= result ;
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -398,6 +414,7 @@ int LAGraph_mypcg2
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     (*steper_handle) = NULL ;
     GrB_Vector r = NULL ; // This vector will be a copy of vector b to make sure vector b remains unchanged.
@@ -511,6 +528,9 @@ int LAGraph_mypcg2
     (*k_result) = k ;
     (*steper_handle) = steper ;
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }
 
 
@@ -615,6 +635,7 @@ int LAGraph_Hdip_Fiedler   // compute the Hdip_Fiedler
     char *msg
 )
 {   
+#if LAGRAPH_SUITESPARSE
 
     GrB_Index n;
     GrB_Index k_inner = 0 ;
@@ -730,5 +751,8 @@ int LAGraph_Hdip_Fiedler   // compute the Hdip_Fiedler
     (*x_handle) = x;
     (*iters_handle) = iters ;
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }
 

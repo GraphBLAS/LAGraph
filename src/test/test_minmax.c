@@ -209,9 +209,11 @@ void test_minmax (void)
         double emin2 = 0 ;
         double emax2 = 0 ;
 
+        #if LAGRAPH_SUITESPARSE
         printf ("min/max as GrB_Scalars:\n") ;
         GxB_print (G->emin, 3) ;
         GxB_print (G->emax, 3) ;
+        #endif
 
         int result ;
         result = GrB_Scalar_extractElement_FP64 (&emin2, G->emin) ;

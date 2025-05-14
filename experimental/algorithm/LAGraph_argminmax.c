@@ -15,6 +15,8 @@
 // argminmax: compute argmin/max of each row/column of A
 //------------------------------------------------------------------------------
 
+#if LAGRAPH_SUITESPARSE
+
 int argminmax
 (
     // output
@@ -122,6 +124,7 @@ int argminmax
     GrB_Matrix_free (&y) ;
     return (GrB_SUCCESS) ;
 }
+#endif
 
 //------------------------------------------------------------------------------
 // gbargminmax: mexFunction to compute the argmin/max of each row/column of A
@@ -139,6 +142,7 @@ int LAGraph_argminmax
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -154,7 +158,7 @@ int LAGraph_argminmax
     //--------------------------------------------------------------------------
 
     GrB_Type type ;
-    GRB_TRY (GxB_Matrix_type (&type, A)) ;      // FIXME: use GrB_get
+    GRB_TRY (GxB_Matrix_type (&type, A)) ;
     GrB_Semiring minmax_first, any_equal ;
     if (is_min)
     {
@@ -362,5 +366,8 @@ int LAGraph_argminmax
     //--------------------------------------------------------------------------
 
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED);
+#endif
 }
 

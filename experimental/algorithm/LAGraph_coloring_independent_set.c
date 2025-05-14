@@ -23,6 +23,7 @@ int LAGraph_coloring_independent_set
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
     // printf("initial graph: \n");
     // LAGraph_Matrix_Print(G->A, LAGraph_SHORT, stdout, msg);
 
@@ -118,4 +119,7 @@ int LAGraph_coloring_independent_set
     local_color = NULL ;
     LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

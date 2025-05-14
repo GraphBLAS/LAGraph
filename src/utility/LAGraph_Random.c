@@ -169,9 +169,9 @@ void LG_rand_init_func (uint64_t *z, const void *x,
     GrB_IndexUnaryOp_free (&LG_rand_init_op) ;              \
 }
 
-#ifndef LAGRAPH_SUITESPARSE
-typedef void (*GxB_unary_function)  (void *, const void *) ;
-typedef void (*GxB_index_unary_function)
+#if !LAGRAPH_SUITESPARSE
+typedef void (*grb_unary_function)  (void *, const void *) ;
+typedef void (*grb_index_unary_function)
 (
     void *z,            // output value z, of type ztype
     const void *x,      // input value x of type xtype; value of v(i) or A(i,j)
@@ -204,10 +204,10 @@ int LG_Random_Init (char *msg)
     {
         // vanilla GraphBLAS, no strings to define the new operators
         GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op,
-            (GxB_unary_function) LG_rand_next_f2,
+            (grb_unary_function) LG_rand_next_f2,
             GrB_UINT64, GrB_UINT64)) ;
         GRB_TRY (GrB_IndexUnaryOp_new (&LG_rand_init_op,
-            (GxB_index_unary_function) LG_rand_init_func,
+            (grb_index_unary_function) LG_rand_init_func,
             GrB_UINT64, GrB_UINT64, GrB_UINT64)) ;
     }
     #endif

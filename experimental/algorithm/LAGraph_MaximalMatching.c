@@ -45,6 +45,8 @@ This method requires O(e) space for an undirected graph with e edges
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
+#if LAGRAPH_SUITESPARSE
+
 // #define dbg
 
 #undef LG_FREE_ALL
@@ -76,6 +78,7 @@ This method requires O(e) space for an undirected graph with e edges
 }                                           \
 
 #define MAX_FAILURES 50
+#endif
 
 int LAGraph_MaximalMatching
 (
@@ -89,6 +92,7 @@ int LAGraph_MaximalMatching
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
     LG_CLEAR_MSG ;
 
     if ((matching == NULL) || (E == NULL) || (E_t == NULL)) {
@@ -307,4 +311,7 @@ int LAGraph_MaximalMatching
     
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

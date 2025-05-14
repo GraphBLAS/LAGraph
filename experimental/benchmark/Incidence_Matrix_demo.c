@@ -31,6 +31,7 @@
 
 int main (int argc, char **argv)
 {
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // startup LAGraph and GraphBLAS
@@ -132,5 +133,6 @@ int main (int argc, char **argv)
 
     LG_FREE_ALL ;
     LG_TRY (LAGraph_Finalize (msg)) ;
+#endif
     return (GrB_SUCCESS) ;
 }

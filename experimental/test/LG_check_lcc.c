@@ -20,6 +20,8 @@
 // This method is for testing only, to check the result of other, faster methods.
 // Do not benchmark this method; it is simple by design.
 
+#if LAGRAPH_SUITESPARSE
+
 #define LG_FREE_ALL                         \
 {                                           \
     GrB_free (&S) ;                         \
@@ -32,6 +34,7 @@
     LAGraph_Free ((void **) &vb, msg) ;     \
     LAGraph_Free ((void **) &vx, msg) ;     \
 }
+#endif
 
 #include <stdlib.h>
 #include "LG_internal.h"
@@ -87,7 +90,9 @@ int LG_check_lcc(
     // inputs
     LAGraph_Graph G,        // input graph
     char *msg
-) {
+)
+{
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -192,4 +197,7 @@ int LG_check_lcc(
     *coefficients = LCC ; LCC = NULL ;
     LG_FREE_ALL;
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

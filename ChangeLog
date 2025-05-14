@@ -3,7 +3,8 @@ Version 1.2.0:  in progress
     * v2.1 C API: using the new GrB_get/set methods in the C API;
         LAGraph can now use a "vanilla" GraphBLAS that supports the v2.1
         C API.  If SuiteSparse:GraphBLAS is used, v9.0.0 is required.
-
+    * src/utility: random number generator
+    * added many experimental algorithms and utilities
 
 Feb 20, 2025: version 1.1.5
 

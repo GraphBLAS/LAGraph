@@ -17,6 +17,8 @@
 
 // FIXME: ready to consider for src
 
+#if LAGRAPH_SUITESPARSE
+
 #define LG_FREE_WORK                                                           \
     {                                                                          \
         GrB_free(&T_prev);                                                     \
@@ -36,6 +38,7 @@
         LG_FREE_WORK;                                                          \
         GrB_free(c_f);                                                         \
     }
+#endif
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
@@ -52,6 +55,7 @@ int LAGr_MarkovClustering(
     LAGraph_Graph G,              // input graph
     char *msg)
 {
+#if LAGRAPH_SUITESPARSE
     GrB_Matrix T_prev = NULL;   // previous iteration transfer matrix
     GrB_Matrix T = NULL;        // current iteration transfer matrix
     GrB_Matrix CC = NULL;
@@ -210,4 +214,7 @@ int LAGr_MarkovClustering(
     LG_FREE_WORK;
 
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED);
+#endif
 }

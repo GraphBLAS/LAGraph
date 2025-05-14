@@ -96,7 +96,7 @@ void test_cc_matrices (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
-        GxB_print (A, 2) ;
+        // GxB_print (A, 2) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
         GrB_Index n ;
