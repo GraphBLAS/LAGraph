@@ -1586,6 +1586,16 @@ int LAGr_MaxFlow(
     //inout
     char* msg
 );
+LAGRAPHX_PUBLIC
+int LAGraph_LouvainMIS(
+    //output
+    GrB_Matrix *S_result,
+    //input 
+    LAGraph_Graph G,
+    char* msg
+);
+LAGRAPHX_PUBLIC
+uint64_t LG_Random64 (uint64_t *state);
 
 
 #if defined ( __cplusplus )
