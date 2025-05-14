@@ -19,6 +19,8 @@
 // FIXME: define the output vector c that defines the cluster assignment
 // FIXME: some unused variables (the vector c)
 
+#if LAGRAPH_SUITESPARSE
+
 #define LG_FREE_WORK                                                           \
     {                                                                          \
         GrB_free(&A);                                                          \
@@ -47,6 +49,7 @@
         LG_FREE_WORK;                                                          \
         GrB_free(c_f);                                                         \
     }
+#endif
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
@@ -64,6 +67,7 @@ int LAGr_PeerPressureClustering(
     LAGraph_Graph G,      // input graph
     char *msg)
 {
+#if LAGRAPH_SUITESPARSE
 
     GrB_Matrix A = NULL;
     GrB_Matrix S = NULL;      // symmetrized matrix, if needed
@@ -237,4 +241,7 @@ int LAGr_PeerPressureClustering(
     LG_FREE_WORK;
 
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

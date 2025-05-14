@@ -63,6 +63,8 @@ This method requires O(n + e) space for an undirected graph with e edges and n n
 // #define dbg
 // #define burble
 
+#if LAGRAPH_SUITESPARSE
+
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
 
@@ -275,6 +277,8 @@ static int LAGraph_Parent_to_S
 
 #define OPTIMIZE_PUSH_PULL
 
+#endif
+
 int LAGraph_Coarsen_Matching
 (
     // outputs:
@@ -292,6 +296,7 @@ int LAGraph_Coarsen_Matching
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     LG_CLEAR_MSG ;
 
@@ -505,5 +510,8 @@ int LAGraph_Coarsen_Matching
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }
 

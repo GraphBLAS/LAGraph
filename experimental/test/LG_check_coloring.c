@@ -5,6 +5,7 @@
 #include "LG_test.h"
 #include "LG_Xtest.h"
 
+// FIXME: cannot use free here!
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK                            \
 {                                               \
@@ -20,6 +21,7 @@ int LG_check_coloring
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
     // ------------------------------------------------
     // check if coloring is valid
     // ------------------------------------------------
@@ -85,4 +87,7 @@ int LG_check_coloring
 
     LG_FREE_WORK;
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

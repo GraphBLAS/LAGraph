@@ -40,8 +40,10 @@ int main(int argc, char **argv)
 
         LG_TRY (LAGraph_Random_Matrix (&B, GrB_FP64, n, n, density, seed, msg)) ;
         LG_TRY (LAGraph_Random_Matrix (&D, GrB_FP64, n, n, density, seed + 32, msg)) ;
+        #if LAGRAPH_SUITESPARSE
         GRB_TRY (GxB_set (B, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
         GRB_TRY (GxB_set (D, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+        #endif
 
         GRB_TRY (GrB_Scalar_new (&s, GrB_FP64)) ;
         GRB_TRY (GrB_Scalar_setElement_UINT64 (s, 2.0)) ;

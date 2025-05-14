@@ -174,10 +174,12 @@ int main (int argc, char **argv)
             LAGRAPH_TRY (LAGr_ConnectedComponents (&components2, G, msg)) ;
             ttrial = LAGraph_WallClockTime ( ) - ttrial ;
             ttt += ttrial ;
+            #if LAGRAPH_SUITESPARSE
             #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
             printf ("SV7") ;
             #else
             printf ("SV6") ;
+            #endif
             #endif
             printf (":      nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;

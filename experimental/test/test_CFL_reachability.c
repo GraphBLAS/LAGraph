@@ -439,6 +439,7 @@ void init_graph_4() {
 //====================
 
 void test_CFL_reachability_cycle(void) {
+#if LAGRAPH_SUITESPARSE
     setup();
     GrB_Info retval;
 
@@ -451,9 +452,11 @@ void test_CFL_reachability_cycle(void) {
 
     free_workspace();
     teardown();
+#endif
 }
 
 void test_CFL_reachability_two_cycle(void) {
+#if LAGRAPH_SUITESPARSE
     setup();
     GrB_Info retval;
 
@@ -466,9 +469,11 @@ void test_CFL_reachability_two_cycle(void) {
 
     free_workspace();
     teardown();
+#endif
 }
 
 void test_CFL_reachability_labels_more_than_nonterms(void) {
+#if LAGRAPH_SUITESPARSE
     setup();
     GrB_Info retval;
 
@@ -481,9 +486,11 @@ void test_CFL_reachability_labels_more_than_nonterms(void) {
 
     free_workspace();
     teardown();
+#endif
 }
 
 void test_CFL_reachability_complex_grammar(void) {
+#if LAGRAPH_SUITESPARSE
     setup();
     GrB_Info retval;
 
@@ -496,9 +503,11 @@ void test_CFL_reachability_complex_grammar(void) {
 
     free_workspace();
     teardown();
+#endif
 }
 
 void test_CFL_reachability_tree(void) {
+#if LAGRAPH_SUITESPARSE
     setup();
     GrB_Info retval;
 
@@ -512,9 +521,11 @@ void test_CFL_reachability_tree(void) {
 
     free_workspace();
     teardown();
+#endif
 }
 
 void test_CFL_reachability_line(void) {
+#if LAGRAPH_SUITESPARSE
     setup();
     GrB_Info retval;
 
@@ -527,9 +538,11 @@ void test_CFL_reachability_line(void) {
 
     free_workspace();
     teardown();
+#endif
 }
 
 void test_CFL_reachability_two_nodes_cycle(void) {
+#if LAGRAPH_SUITESPARSE
     setup();
     GrB_Info retval;
 
@@ -542,9 +555,11 @@ void test_CFL_reachability_two_nodes_cycle(void) {
 
     free_workspace();
     teardown();
+#endif
 }
 
 void test_CFL_reachability_with_empty_adj_matrix(void) {
+#if LAGRAPH_SUITESPARSE
     setup();
     GrB_Info retval;
 
@@ -557,6 +572,7 @@ void test_CFL_reachability_with_empty_adj_matrix(void) {
 
     free_workspace();
     teardown();
+#endif
 }
 
 //====================
@@ -564,6 +580,7 @@ void test_CFL_reachability_with_empty_adj_matrix(void) {
 //====================
 
 void test_CFL_reachability_invalid_rules(void) {
+#if LAGRAPH_SUITESPARSE
     setup();
     GrB_Info retval;
 
@@ -598,11 +615,11 @@ void test_CFL_reachability_invalid_rules(void) {
 
     free_workspace();
     teardown();
-
-    return;
+#endif
 }
 
 void test_CFL_reachability_null_pointers(void) {
+#if LAGRAPH_SUITESPARSE
 // FIXME: this test fails when testing with CUDA:
 // Test CFG_reachability_null_pointers... 
 // GB_cuda_get_device_count: 2, cudaError_t: 0
@@ -659,8 +676,7 @@ void test_CFL_reachability_null_pointers(void) {
 
     free_workspace();
     teardown();
-
-    return;
+#endif
 }
 
 TEST_LIST = {{"CFL_reachability_complex_grammar", test_CFL_reachability_complex_grammar},

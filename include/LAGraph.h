@@ -46,6 +46,18 @@
 // include files and helper macros
 //==============================================================================
 
+// vanilla vs SuiteSparse:
+#if !defined ( LAGRAPH_VANILLA )
+    // by default, set LAGRAPH_VANILLA to false
+    #define LAGRAPH_VANILLA 0
+#endif
+
+#if LAGRAPH_VANILLA
+// SuiteSparse:GraphBLAS uses this #define to disable all GxB extensions.
+// Other GraphBLAS implementations can ignore this #define:
+#define GRAPHBLAS_VANILLA
+#endif
+
 #include <GraphBLAS.h>
 #if defined ( _OPENMP )
     #include <omp.h>
@@ -88,12 +100,6 @@
 #else
     // use the restrict keyword for ANSI C99 compilers
     #define LAGRAPH_RESTRICT restrict
-#endif
-
-// vanilla vs SuiteSparse:
-#if !defined ( LAGRAPH_VANILLA )
-    // by default, set LAGRAPH_VANILLA to false
-    #define LAGRAPH_VANILLA 0
 #endif
 
 #if ( !LAGRAPH_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )

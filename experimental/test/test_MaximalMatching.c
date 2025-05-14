@@ -88,6 +88,7 @@ char msg [LAGRAPH_MSG_LEN] ;
 
 void test_MaximalMatching (void) 
 {
+#if LAGRAPH_SUITESPARSE
     OK (LAGraph_Init (msg)) ;
 //  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
 
@@ -236,10 +237,12 @@ void test_MaximalMatching (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
     OK (LAGraph_Finalize (msg)) ;
+#endif
 }
 
 void test_MaximalMatchingErrors (void)
 {
+#if LAGRAPH_SUITESPARSE
     OK (LAGraph_Init (msg)) ;
 //  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
 
@@ -265,6 +268,7 @@ void test_MaximalMatchingErrors (void)
 
     GrB_free (&E) ;
     OK (LAGraph_Finalize (msg)) ;
+#endif
 }
 
 TEST_LIST = {

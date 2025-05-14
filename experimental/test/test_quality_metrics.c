@@ -62,6 +62,7 @@ const double modularity[] = {0.000000, 0.641262, 0.043324,
 //****************************************************************************
 void test_quality_metrics(void)
 {
+#if LAGRAPH_SUITESPARSE
     LAGraph_Init(msg);
 
     for (int k = 0;; k++)
@@ -118,6 +119,7 @@ void test_quality_metrics(void)
     }
 
     LAGraph_Finalize(msg);
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -126,6 +128,7 @@ void test_quality_metrics(void)
 
 void test_partition_quality_errors(void)
 {
+#if LAGRAPH_SUITESPARSE
     LAGraph_Init(msg);
 
     snprintf(filename, LEN, LG_DATA_DIR "%s", "west0067.mtx");
@@ -173,10 +176,12 @@ void test_partition_quality_errors(void)
     TEST_CHECK(G == NULL);
 
     LAGraph_Finalize(msg);
+#endif
 }
 
 void test_modularity_errors(void)
 {
+#if LAGRAPH_SUITESPARSE
     LAGraph_Init(msg);
 
     snprintf(filename, LEN, LG_DATA_DIR "%s", "west0067.mtx");
@@ -226,6 +231,7 @@ void test_modularity_errors(void)
     TEST_CHECK(G == NULL);
 
     LAGraph_Finalize(msg);
+#endif
 }
 
 //****************************************************************************

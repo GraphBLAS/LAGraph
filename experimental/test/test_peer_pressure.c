@@ -59,6 +59,7 @@ const double modularity[] = {
 //****************************************************************************
 void test_peer_pressure(void)
 {
+#if LAGRAPH_SUITESPARSE
     LAGraph_Init(msg);
 
     for (int k = 0;; k++)
@@ -131,6 +132,7 @@ void test_peer_pressure(void)
     }
 
     LAGraph_Finalize(msg);
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -139,6 +141,7 @@ void test_peer_pressure(void)
 
 void test_errors(void)
 {
+#if LAGRAPH_SUITESPARSE
     LAGraph_Init(msg);
 
     snprintf(filename, LEN, LG_DATA_DIR "%s", "karate.mtx");
@@ -184,6 +187,7 @@ void test_errors(void)
 
     OK(LAGraph_Delete(&G, msg));
     LAGraph_Finalize(msg);
+#endif
 }
 
 //****************************************************************************

@@ -17,6 +17,7 @@ const char* matrix_files[] = {
 
 void test_coloring(void)
 {
+#if LAGRAPH_SUITESPARSE
     // ------------------------------------------------
     // setup
     // ------------------------------------------------
@@ -150,6 +151,7 @@ void test_coloring(void)
     OK(LAGraph_Delete(&G, msg));
     LAGraph_Finalize(msg);
     LG_Random_Finalize(msg);
+#endif
 }
 
 TEST_LIST =
