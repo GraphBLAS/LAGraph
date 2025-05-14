@@ -175,7 +175,6 @@ int LAGraph_Louvain2(
     double o1;
     double k_i = 0;
     // FIXME: add check to see if S_result is NULL
-    LG_Random_Init(msg)
     LG_ASSERT(S_result != NULL, GrB_NULL_POINTER);
 
     GrB_Matrix A = G->A;
