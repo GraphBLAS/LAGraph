@@ -2,7 +2,7 @@
 // LAGraph_Random: generate a random vector (of any sparsity structure)
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2024 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -18,7 +18,6 @@
 // A very simple thread-safe parallel pseudo-random nuumber generator.
 
 #include "LG_internal.h"
-#include "LAGraphX.h"
 
 //------------------------------------------------------------------------------
 // global operator
@@ -43,10 +42,12 @@ GrB_IndexUnaryOp LG_rand_init_op = NULL ;
 // Statistical Software. 8 (14).  https://doi.org/10.18637/jss.v008.i14 .
 
 // For this random number generator, the output random number is the same
-// as the state.  The default seed is given below:
-#define LG_RAND_MARSAGLIA_SEED 88172645463325252LL
+// as the state.
 
 #if 0
+
+    The default initial state is given below, but is unused here:
+    #define LG_RAND_MARSAGLIA_SEED 88172645463325252LL
 
     struct xorshift64_state {
         uint64_t a;
@@ -104,16 +105,17 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 // David Blackman and Sebastiano Vigna. Scrambled linear pseudorandom number
 // generators. ACM Trans. Math. Softw., 47:1−32, 2021.
 //
-// Guy Steele and Sebastiano Vigna. 2021. Computationally Easy, Spectrally Good
-// Multipliers for Congruential Pseudorandom Number Generators. 22 Jan.
-// 2021. 23 pages. https://arxiv.org/abs/2001.05304 Revised version to appear
-// in Software: Practice and Experience.  https://doi.org/10.1002/spe.3030
+// Steele GL, Vigna S. Computationally easy, spectrally good multipliers for
+// congruential pseudorandom number generators.  Software: Practice and
+// Experience 2022; 52(2): 443–458. https://doi.org/10.1002/spe.3030
 //
 // Guy L. Steele, Doug Lea, and Christine H. Flood. 2014. Fast splittable
 // pseudorandom number generators. SIGPLAN Not. 49, 10 (October 2014), 453–472.
 // https://doi.org/10.1145/2714064.2660195
 //
 // The splitmix64 below method is the mix64variant13 in the above paper.
+
+#define GOLDEN_GAMMA 0x9E3779B97F4A7C15LL
 
 #if 0
 
@@ -123,15 +125,13 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 
     uint64_t splitmix64(struct splitmix64_state *state)
     {
-        uint64_t result = (state->s += 0x9E3779B97F4A7C15);
-        result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
-        result = (result ^ (result >> 27)) * 0x94D049BB133111EB;
+        uint64_t result = (state->s += 0x9E3779B97F4A7C15LL) ;
+        result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9LL ;
+        result = (result ^ (result >> 27)) * 0x94D049BB133111EBLL ;
         return result ^ (result >> 31);
     }
 
 #endif
-
-#define GOLDEN_GAMMA 0x9E3779B97F4A7C15LL
 
 // The init function computes z = splitmix64 (i + seed), but it does not
 // advance the seed value on return.
@@ -169,6 +169,18 @@ void LG_rand_init_func (uint64_t *z, const void *x,
     GrB_IndexUnaryOp_free (&LG_rand_init_op) ;              \
 }
 
+#ifndef LAGRAPH_SUITESPARSE
+typedef void (*GxB_unary_function)  (void *, const void *) ;
+typedef void (*GxB_index_unary_function)
+(
+    void *z,            // output value z, of type ztype
+    const void *x,      // input value x of type xtype; value of v(i) or A(i,j)
+    GrB_Index i,        // row index of A(i,j)
+    GrB_Index j,        // column index of A(i,j), or zero for v(i)
+    const void *y       // input scalar y
+) ;
+#endif
+
 int LG_Random_Init (char *msg)
 {
     LG_CLEAR_MSG ;
@@ -196,7 +208,7 @@ int LG_Random_Init (char *msg)
             GrB_UINT64, GrB_UINT64)) ;
         GRB_TRY (GrB_IndexUnaryOp_new (&LG_rand_init_op,
             (GxB_index_unary_function) LG_rand_init_func,
-            GrB_UINT64, GrB_UINT64, GrB_UINT64) ;
+            GrB_UINT64, GrB_UINT64, GrB_UINT64)) ;
     }
     #endif
 
@@ -244,7 +256,7 @@ int LAGraph_Random_Seed // construct a random State vector
     LG_CLEAR_MSG ;
     LG_ASSERT (State != NULL, GrB_NULL_POINTER) ;
 
-    // State = splitmix64 (i + seed)
+    // State (i) = splitmix64 (i + seed) for all prior entries in State
     GRB_TRY (GrB_apply (State, NULL, NULL, LG_rand_init_op, State, seed,
         NULL)) ;
 

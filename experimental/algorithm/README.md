@@ -1,4 +1,4 @@
-# Algorithms: 
+# Experimental Algorithms:
 
 * LAGraph_AllKTruss: all k-trusses of a graph
 
@@ -21,18 +21,16 @@
 * LAGraph_lcc: Local clustering coefficient
 * LAGraph_msf: Minimum spanning forest
 * LAGraph_scc: Strongly connected components
-* LAGr_PageRankGX: PageRank algorithm as defined by LDBC Graphalytics
 
-
-* LAGraph_AllKCore
-* LAGraph_KCore
-* LAGraph_KCoreDecompose
+* LAGraph_AllKCore: all K-cores of a graph
+* LAGraph_KCore: a single K-core of a graph
+* LAGraph_KCoreDecompose:
 
 * LAGraph_MaximalMatching
 * LAGraph_Coarsen_Matching
 
-* LAGraph_EstimateDiameter
 * LAGraph_ExactDiameter
+* LAGraph_EstimateDiameter
 * LAGraph_MultiSourceBFS
 
 * LAGraph_FastGraphletTransform
@@ -49,12 +47,22 @@
 
 * LAGraph_VertexCentrality_Triangle
 
+* LAGr_PageRankGX: PageRank algorithm as defined by LDBC Graphalytics
+
 * LAGr_MarkovClustering
 * LAGr_Modularity
 * LAGr_PartitionQuality
 * LAGr_PeerPressureClustering
 
 * LAGr_TriangleCount_GPU
-* LG_CC_FastSV5
 
-* more to appear here...
+* LAGraph_argminmax: argmin/argmax of a matrix
+* LAGraph_CFL_reachability: Context-Free Language Reachability
+* LAGraph_RegularPathQuery: regular path query
+* LAGraph_coloring_independent_set
+* LAGraph_coloring_MIS
+
+* LAGr_BreadthFirstSearch_Extended: BFS with max_level and destination node options
+* LAGr_EdgeBetweennessCentrality
+* LAGr_MaximumMatching: maximum bipartite matching
+

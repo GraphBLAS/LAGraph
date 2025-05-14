@@ -213,9 +213,11 @@ void test_CheckGraph_failures (void)
     G->in_degree = NULL ;
 
     // G->A must be by-row
+    #if LAGRAPH_SUITESPARSE
     OK (GrB_set (G->A, GrB_COLMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg (A colmajor): %s\n", msg) ;
+    #endif
 
     GrB_free (&d_bool) ;
     GrB_free (&d_int64) ;
