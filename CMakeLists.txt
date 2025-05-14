@@ -2,7 +2,7 @@
 # LAGraph/CMakeLists.txt:  cmake script for LAGraph
 #-------------------------------------------------------------------------------
 
-# LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
+# LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 #
 # For additional details (including references to third party source code and
@@ -13,9 +13,9 @@
 
 #-------------------------------------------------------------------------------
 
-# CMakeLists.txt: instructions for cmake to build LAGraph.  An ANSI C11
-# compiler is required.  First, install any GraphBLAS library.  Alternatively,
-# use ../GraphBLAS (see comments below).
+# CMakeLists.txt: instructions for cmake to build LAGraph.  A C11 compiler is
+# required.  First, install any GraphBLAS library.  Alternatively, use
+# ../GraphBLAS (see comments below).
 #
 # To compile the LAGraph library and its tests and benchmarks, and run the
 # tests:
@@ -25,7 +25,7 @@
 #   make
 #   make test
 #
-# If that fails for any reason, make sure your compiler supports ANSI C11.  You
+# If that fails for any reason, make sure your compiler supports C11.  You
 # could try changing your compiler for the cmake command, for example:
 #
 #   CC=icc cmake ..
@@ -91,7 +91,7 @@ check_symbol_exists ( fmax "math.h" NO_LIBM )
 
 if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     if ( COVERAGE )
-        message ( STATUS "============== Code coverage enabled ===============" )
+        message ( STATUS "============= Code coverage enabled ===============" )
         set ( CMAKE_BUILD_TYPE Debug )
         # On the Mac, you need gcov-11 from homebrew (part of gcc-11):
         # and uncomment this line:

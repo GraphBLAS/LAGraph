@@ -64,8 +64,8 @@ int LAGraph_coloring_MIS
         GRB_TRY(GrB_assign(local_color, curr_MIS, GrB_NULL, curr_color, GrB_ALL, n, GrB_DESC_S));
 
         GrB_Vector_nvals(&colored_nodes, local_color);
-        printf ("colored: %ld of %ld\n", colored_nodes, n) ;
-        fflush (stdout) ;
+        // printf ("colored: %ld of %ld\n", colored_nodes, n) ;
+        // fflush (stdout) ;
         if (colored_nodes == n) {
             break;
         }

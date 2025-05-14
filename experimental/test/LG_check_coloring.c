@@ -60,7 +60,7 @@ int LG_check_coloring
     for (GrB_Index i = 0; i < Ap_size - 1; i++) {
         int color;
         if (GrB_Vector_extractElement(&color, C, i) != GrB_SUCCESS) {
-            printf("error: node %lu has no assigned color!\n", i);
+            printf("error: node %" PRIu64 " has no assigned color!\n", i);
             return -1;
         }
     }

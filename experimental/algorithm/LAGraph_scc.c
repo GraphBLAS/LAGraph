@@ -110,8 +110,6 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     return GrB_SUCCESS;
 }
 
-#endif
-
 //****************************************************************************
 
 #undef  LG_FREE_ALL
@@ -131,6 +129,8 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     GrB_free (&sel1);                       \
     GrB_free (&sel2);                       \
     GrB_free (&scc);
+
+#endif
 
 //****************************************************************************
 int LAGraph_scc
