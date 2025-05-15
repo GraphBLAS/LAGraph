@@ -106,10 +106,6 @@ int LAGraph_cc_lacc
 
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    //GrB_Index nnz ;
-    //GRB_TRY (GrB_Matrix_nvals (&nnz, A)) ;
-    //printf ("number of nodes: %g\n", (double) n) ;
-    //printf ("number of edges: %g\n", (double) nnz) ;
 
     if (sanitize)
     {

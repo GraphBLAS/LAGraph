@@ -243,14 +243,6 @@ int LAGraph_MaximalMatching
             nfailures++ ;
             LG_ASSERT_MSG (nfailures <= MAX_FAILURES, LAGRAPH_CONVERGENCE_FAILURE,
                 "method has stalled") ;
-#if 0
-            if (nfailures > MAX_FAILURES) {
-    #ifdef dbg
-                printf("[DBG] hit max failures %d\n", nfailures);
-    #endif
-                break ; // test coverage doesn't test this case.  Is it possible?
-            }
-#endif
             // regen seed and seed vector
             LG_TRY (LAGraph_Random_Seed (Seed, seed + nfailures, msg)) ;
             continue ;

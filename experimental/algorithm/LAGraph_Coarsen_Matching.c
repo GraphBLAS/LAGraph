@@ -493,9 +493,6 @@ int LAGraph_Coarsen_Matching
     // parent nodes for matched edges will form self-edges; need to delete
     LG_TRY (LAGraph_DeleteSelfEdges (G_cpy, msg)) ;
 
-//  printf ("in Coarsen_Matching: G_cpy->A after deleting self edges:\n") ;
-//  GxB_print (G_cpy->A,5) ;
-
     //------------------------------------------------------------------------------
     // coarsening step done
     //------------------------------------------------------------------------------
