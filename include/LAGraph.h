@@ -108,15 +108,9 @@
     #error "If using SuiteSparse::GraphBLAS, version 9.0.0 or later is required"
     #endif
     #define LAGRAPH_SUITESPARSE 1
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
-        #define USING_GRAPHBLAS_V10 1
-    #else
-        #define USING_GRAPHBLAS_V10 0
-#endif
 #else
     // use any GraphBLAS library (possibly SuiteSparse) but with no GxB*
     #define LAGRAPH_SUITESPARSE 0
-    #define USING_GRAPHBLAS_V10 0
 #endif
 
 // maximum length of the name of a GrB type, including the null-terminator
