@@ -79,11 +79,13 @@ void test_lcc (void)
 
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
-            #if LAGRAPH_SUITESPARSE
+
+//          #if LAGRAPH_SUITESPARSE
             printf ("jit: %d\n", jit) ;
-            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
-                jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
-            #endif
+//          OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
+//              jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+//          #endif
+            OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
 
             GrB_Vector c = NULL ;
 

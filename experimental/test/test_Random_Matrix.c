@@ -42,16 +42,18 @@ void test_Random_Matrix (void)
         seed++ ;
         printf ("\n=============================== seed: %g\n", (double) seed) ;
 
-        #if LAGRAPH_SUITESPARSE
-        if (trial == 4 || trial == 2)
-        {
-            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_OFF)) ;
-        }
-        else
-        {
-            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_ON)) ;
-        }
-        #endif
+//      #if LAGRAPH_SUITESPARSE
+//      if (trial == 4 || trial == 2)
+//      {
+//          OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_OFF)) ;
+//      }
+//      else
+//      {
+//          OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_ON)) ;
+//      }
+//      #endif
+
+        OK (LG_SET_JIT ((trial == 4 || trial == 2) ? LG_JIT_OFF : LG_JIT_ON)) ;
 
         double d = (trial == 4) ? INFINITY : ((double) trial / 4) ;
         printf ("density: %g, expected values: %g\n", d, d*20) ;

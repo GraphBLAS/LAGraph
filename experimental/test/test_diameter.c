@@ -117,8 +117,9 @@ void test_diameter (void)
 
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
-            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
-                jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+//          OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
+//              jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+            OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
             // compute the estimated diameter
             GrB_Index estimated_diameter = 0 ;
             OK (LAGraph_EstimateDiameter (&estimated_diameter, &est_peripheral,
@@ -165,7 +166,8 @@ void test_diameter_huge (void)
 {
     #if LAGRAPH_SUITESPARSE
     OK (LAGraph_Init (msg)) ;
-    OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_OFF)) ;
+//  OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_OFF)) ;
+    OK (LG_SET_JIT (LG_JIT_OFF)) ;
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
