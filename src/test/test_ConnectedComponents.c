@@ -82,7 +82,7 @@ void test_cc_matrices (void)
 {
 
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
+//  OK (LG_SET_BURBLE (true)) ;
     for (int k = 0 ; ; k++)
     {
 
@@ -135,10 +135,8 @@ void test_cc_matrices (void)
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
-            #endif
 
             // find the connected components with LG_CC_FastSV6
-            #if LAGRAPH_SUITESPARSE
             printf ("\n------ CC_FastSV6:\n") ;
             OK (LG_CC_FastSV6 (&C2, G, msg)) ;
             ncomponents = count_connected_components (C2) ;
@@ -209,7 +207,7 @@ void test_cc_matrices (void)
 void test_cc_errors (void)
 {
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
+//  OK (LG_SET_BURBLE (true)) ;
     printf ("\n") ;
 
     // check for null pointers

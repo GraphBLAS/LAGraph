@@ -38,10 +38,7 @@ int main(int argc, char **argv)
     for (int i = 0 ; i < ntrials ; i++) {
 
         LG_TRY (LAGraph_Random_Matrix (&A, GrB_UINT64, n, n, density, seed, msg)) ;
-        #if LAGRAPH_SUITESPARSE
-        GRB_TRY (GxB_set (A, GxB_SPARSITY_CONTROL,
-            BITMAP ? GxB_BITMAP : GxB_SPARSE)) ;
-        #endif
+        GRB_TRY (LG_SET_FORMAT_HINT (A, BITMAP ? LG_BITMAP : LG_SPARSE)) ;
 
         GrB_Index A_nvals ;
         GRB_TRY (GrB_Matrix_nvals (&A_nvals, A)) ;

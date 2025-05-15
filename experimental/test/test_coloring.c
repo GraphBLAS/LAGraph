@@ -43,14 +43,14 @@ void test_coloring(void)
     // run algorithm independent set
     // ------------------------------------------------
 
-    // GxB_set (GxB_BURBLE, false) ;
+//  OK (LG_SET_BURBLE (false)) ;
 
     int num_colors = 0;
     double time = LAGraph_WallClockTime();    
     LAGraph_coloring_independent_set(&C, &num_colors, G, msg);
     time = LAGraph_WallClockTime() - time;
 
-    GxB_set (GxB_BURBLE, false) ;
+    OK (LG_SET_BURBLE (false)) ;
 
     printf("\nTook %g seconds\n", time);
     printf("Initial Matrix:\n"); LAGraph_Matrix_Print(G->A, LAGraph_SHORT, stdout, msg);
@@ -132,7 +132,7 @@ void test_coloring(void)
     LAGraph_coloring_MIS(&C, &num_colors, G, msg);
     time = LAGraph_WallClockTime() - time;
 
-    GxB_set (GxB_BURBLE, false) ;
+    OK (LG_SET_BURBLE (false)) ;
 
     printf("\nTook %g seconds\n", time);
     

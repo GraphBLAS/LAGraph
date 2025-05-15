@@ -483,7 +483,8 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         int Ap_handling, Aj_handling ;
 
         // unload A in sparse CSR format into the A_Container
-        GRB_TRY (GrB_set (A, GxB_SPARSE, GxB_SPARSITY_CONTROL)) ;
+//      GRB_TRY (GrB_set (A, GxB_SPARSE, GxB_SPARSITY_CONTROL)) ;
+        GRB_TRY (LG_SET_FORMAT_HINT (A, LG_SPARSE)) ;
         GRB_TRY (GrB_set (A, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
         GRB_TRY (GxB_unload_Matrix_into_Container (A, A_Container, NULL)) ;
         A_jumbled = A_Container->jumbled ;

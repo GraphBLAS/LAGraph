@@ -26,8 +26,6 @@
 #define useAssign
 // #define debug
 
-#if LAGRAPH_SUITESPARSE
-
 #define LG_FREE_WORK                                \
 {                                                   \
     GrB_free (&frontier) ;                          \
@@ -60,32 +58,9 @@
     LG_FREE_WORK ;                  \
     GrB_free (centrality) ;         \
 }
-#endif
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
-
-#undef  LAGRAPH_CATCH
-#define LAGRAPH_CATCH(status)                                           \
-{                                                                       \
-    print ("LAGraph failure (file %s, line %d): status: %d",     \
-        __FILE__, __LINE__, status) ;                                   \
-    LG_ERROR_MSG ("LAGraph failure (file %s, line %d): status: %d",     \
-        __FILE__, __LINE__, status) ;                                   \
-    LG_FREE_ALL ;                                                       \
-    return (status) ;                                                   \
-}
-
-#undef GRB_CATCH
-#define GRB_CATCH(info)                                                 \
-{                                                                       \
-    printf ("GraphBLAS failure (file %s, line %d): info: %d",     \
-        __FILE__, __LINE__, info) ;                                     \
-    LG_ERROR_MSG ("GraphBLAS failure (file %s, line %d): info: %d",     \
-        __FILE__, __LINE__, info) ;                                     \
-    LG_FREE_ALL ;                                                       \
-    return (info) ;                                                     \
-}
 
 //------------------------------------------------------------------------------
 // (1+x)/y function for double: z = (1 + x) / y

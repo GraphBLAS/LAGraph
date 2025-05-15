@@ -61,7 +61,7 @@ LAGraph_Graph G = NULL ;
 void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
+//  OK (LG_SET_BURBLE (true)) ;
 }
 
 //------------------------------------------------------------------------------

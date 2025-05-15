@@ -48,10 +48,6 @@
 #define LAGRAPH_BIN_HEADER 512
 #define LEN LAGRAPH_BIN_HEADER
 
-#if !LAGRAPH_SUITESPARSE
-#warning "SuiteSparse:GraphBLAS v9.0.0 or later is required"
-#endif
-
 //------------------------------------------------------------------------------
 // binwrite: write a matrix to a binary file
 //------------------------------------------------------------------------------

@@ -137,6 +137,8 @@ int main(int argc, char **argv)
 
     LG_FREE_ALL;
     LAGRAPH_TRY(LAGraph_Finalize(msg));
-#endif
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

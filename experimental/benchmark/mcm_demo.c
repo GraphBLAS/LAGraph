@@ -39,6 +39,8 @@ Usage:
         LAGraph_Free((void *)&X, NULL);                                        \
     }
 
+#if LAGRAPH_SUITESPARSE
+
 GrB_Info check_matching(GrB_Matrix A, GrB_Vector mateC, char *msg)
 {
     GrB_Index nmatched = 0;
@@ -96,6 +98,7 @@ GrB_Info check_matching(GrB_Matrix A, GrB_Vector mateC, char *msg)
     GrB_Matrix_free(&M);
     return (GrB_SUCCESS);
 }
+#endif
 
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                                                            \
@@ -109,6 +112,8 @@ GrB_Info check_matching(GrB_Matrix A, GrB_Vector mateC, char *msg)
 
 int main(int argc, char **argv)
 {
+#if LAGRAPH_SUITESPARSE
+
     //--------------------------------------------------------------------------
     // declare inputs and outputs
     //--------------------------------------------------------------------------
@@ -268,5 +273,8 @@ int main(int argc, char **argv)
     LG_FREE_ALL;
 
     LAGRAPH_TRY(LAGraph_Finalize(msg));
-    return (GrB_SUCCESS);
+    return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

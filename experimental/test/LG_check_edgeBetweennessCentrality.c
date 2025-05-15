@@ -16,8 +16,6 @@
 
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
-
 #define LG_FREE_WORK                                \
 {                                                   \
     LAGraph_Free ((void **) &queue, NULL) ;         \
@@ -44,7 +42,6 @@
     LAGraph_Free ((void **) &ATx, NULL) ;           \
     LAGraph_Free ((void **) &result, NULL) ;        \
 }
-#endif
 
 #include "LG_internal.h"
 #include <LAGraphX.h>

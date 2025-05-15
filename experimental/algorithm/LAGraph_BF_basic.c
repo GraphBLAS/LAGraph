@@ -83,9 +83,6 @@ GrB_Info LAGraph_BF_basic
     // terminate when no new path is found or more than n-1 loops
     while (!same && iter < n - 1)
     {
-
-        double t = LAGraph_WallClockTime ( ) ;
-
         // execute semiring on d and A, and save the result to d
         GRB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
             GrB_NULL));
@@ -97,11 +94,6 @@ GrB_Info LAGraph_BF_basic
             d = ttmp;
         }
         iter++;
-        t = LAGraph_WallClockTime ( ) - t ;
-        GrB_Index dnz ;
-        GRB_TRY (GrB_Vector_nvals (&dnz, d)) ;
-//      printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t, (double) dnz);
-        fflush (stdout) ;
     }
 
     // check for negative-weight cycle only when there was a new path in the
@@ -116,7 +108,6 @@ GrB_Info LAGraph_BF_basic
         // if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)
         {
-            // printf("A negative-weight cycle found. \n");
             LG_FREE_ALL;
             return (GrB_NO_VALUE) ;
         }

@@ -90,7 +90,7 @@ void test_MaximalMatching (void)
 {
 #if LAGRAPH_SUITESPARSE
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+//  OK (LG_SET_BURBLE (true)) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -244,7 +244,7 @@ void test_MaximalMatchingErrors (void)
 {
 #if LAGRAPH_SUITESPARSE
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+//  OK (LG_SET_BURBLE (true)) ;
 
     E = NULL ;
     matching = NULL ;

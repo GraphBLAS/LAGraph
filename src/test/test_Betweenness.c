@@ -226,7 +226,7 @@ double west0067_bc [67] = {
 void test_bc (void)
 {
     LAGraph_Init (msg) ;
-//  GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
+//  OK (LG_SET_BURBLE (true)) ;
     GrB_Matrix A = NULL ;
     GrB_Vector centrality = NULL ;
     int niters = 0 ;

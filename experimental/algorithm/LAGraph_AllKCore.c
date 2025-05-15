@@ -120,7 +120,6 @@ int LAGraph_KCore_All
 
     GRB_TRY (LG_SET_FORMAT_HINT (done, LG_BITMAP + LG_FULL)) ;
 
-    //printf ("\n================================== COMPUTING GrB_KCORE: ==================================\n") ;
     while (todo > 0)
     {
         level++;

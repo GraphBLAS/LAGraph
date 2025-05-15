@@ -15,8 +15,6 @@
 // Querying Using Linear Algebra", URL:
 // https://disser.spbu.ru/files/2022/disser_azimov.pdf
 
-#if LAGRAPH_SUITESPARSE
-
 #define LG_FREE_WORK                                                        \
     {                                                                       \
         LAGraph_Free ((void **) &nnzs, msg) ;                               \
@@ -34,7 +32,6 @@
                                                                             \
         LG_FREE_WORK;                                                       \
     }
-#endif
 
 #include "LG_internal.h"
 #include <LAGraphX.h>

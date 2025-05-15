@@ -19,8 +19,6 @@
 // FIXME: define the output vector c that defines the cluster assignment
 // FIXME: some unused variables (the vector c)
 
-#if LAGRAPH_SUITESPARSE
-
 #define LG_FREE_WORK                                                           \
     {                                                                          \
         GrB_free(&A);                                                          \
@@ -49,7 +47,6 @@
         LG_FREE_WORK;                                                          \
         GrB_free(c_f);                                                         \
     }
-#endif
 
 #include "LG_internal.h"
 #include <LAGraphX.h>

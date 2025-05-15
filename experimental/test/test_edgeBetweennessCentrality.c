@@ -582,21 +582,24 @@ void test_many_approx(void)
         GrB_Vector_new(&randomSources, GrB_UINT64, 8);
 
         // For ensuring unique indices
-        bool* used = (bool*)calloc(n, sizeof(bool));
+        bool *used = NULL ;
+        OK (LAGraph_Calloc ((void **) &used, n, sizeof (bool), msg)) ;
+
         double t = LAGraph_WallClockTime() ;
-        srand((int) t);
+        // srand((int) t);
+        uint64_t seed = 42 ;
 
         // Generate 8 unique random indices between 0 and n-1
         int count = 0;
         while (count < 8 && count < n) { 
-            GrB_Index random_idx = rand() % n;
+            GrB_Index random_idx = LG_Random64 (&seed) % n;
             if (!used[random_idx]) {
                 used[random_idx] = true;
                 GrB_Vector_setElement(randomSources, random_idx, count);
                 count++;
             }
         }
-        free(used);
+        OK (LAGraph_Free ((void **) &used, msg)) ;
 
         // compute its betweenness centrality (GraphBLAS version)
         t = LAGraph_WallClockTime() ;
@@ -619,12 +622,12 @@ void test_many_approx(void)
 
         // try without the JIT
         // LG_SET_BURBLE (true) ;
-        OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_PAUSE)) ;
+        OK (LG_SET_JIT (LG_JIT_PAUSE)) ;
         OK (LAGr_EdgeBetweennessCentrality(&centrality, G, randomSources, msg));
         err = matrix_difference (centrality, reference_centrality);
         printf("  %s: err: %e (JIT paused)\n", files[i], err);
         TEST_CHECK(err < 1e-4);
-        OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_ON)) ;
+        OK (LG_SET_JIT (LG_JIT_ON)) ;
         // LG_SET_BURBLE (false) ;
 
         OK(GrB_free(&centrality));

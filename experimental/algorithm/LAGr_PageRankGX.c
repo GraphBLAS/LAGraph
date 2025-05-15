@@ -132,8 +132,6 @@ int LAGr_PageRankGX
     // pagerank iterations
     //--------------------------------------------------------------------------
 
-    printf("running pagerank for a maximum of %d iterations", itermax);
-
     for ((*iters) = 0 ; (*iters) < itermax ; (*iters)++)
     {
         // swap t and r ; now t is the old score

@@ -86,11 +86,11 @@ char filename [LEN+1] ;
 char msg [LAGRAPH_MSG_LEN] ;
 
 void test_Coarsen_Matching () {
+#if LAGRAPH_SUITESPARSE
 
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+//  OK (LG_SET_BURBLE (true)) ;
 
-#if LAGRAPH_SUITESPARSE
     for (int k = 0 ; ; k++)
     {
         const char *aname = tests [k].name ;
@@ -255,16 +255,16 @@ void test_Coarsen_Matching () {
         }
         OK (LAGraph_Delete (&G, msg)) ;
     }
-#endif
 
     OK (LAGraph_Finalize (msg)) ;
+#endif
 }
 
 void test_Coarsen_Matching_Errors() {
+#if LAGRAPH_SUITESPARSE
 
     OK (LAGraph_Init (msg)) ;
 
-#if LAGRAPH_SUITESPARSE
     GrB_Matrix C = NULL ;
     OK (GrB_Matrix_new (&A, GrB_FP64, 5, 5)) ;
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
@@ -297,17 +297,16 @@ void test_Coarsen_Matching_Errors() {
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
-#endif
-
     OK (LAGraph_Finalize (msg)) ;
+#endif
 }
 
 
 void test_Coarsen_Matching_NullInputs() {
+#if LAGRAPH_SUITESPARSE
 
     OK (LAGraph_Init (msg)) ;
 
-#if LAGRAPH_SUITESPARSE
 
     GrB_Matrix C = NULL ;
     OK (GrB_Matrix_new (&A, GrB_FP64, 5, 5)) ;
@@ -330,9 +329,8 @@ void test_Coarsen_Matching_NullInputs() {
     TEST_MSG ("Null input check failed!\n") ;
 
     OK (GrB_free (&newlabel)) ;
-#endif
-
     OK (LAGraph_Finalize (msg)) ;
+#endif
 }
 
 TEST_LIST = {

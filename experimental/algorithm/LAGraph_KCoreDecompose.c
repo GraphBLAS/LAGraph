@@ -48,6 +48,7 @@ int LAGraph_KCore_Decompose
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
     LG_CLEAR_MSG ;
 
     // declare items
@@ -57,10 +58,6 @@ int LAGraph_KCore_Decompose
 
     LG_ASSERT (D != NULL, GrB_NULL_POINTER) ;
     (*D) = NULL ;
-
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
@@ -106,5 +103,7 @@ int LAGraph_KCore_Decompose
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

@@ -140,11 +140,10 @@ int LAGraph_scc
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     LG_CLEAR_MSG ;
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
+
     GrB_Info info;
     GrB_Vector scc = NULL ;
     GrB_Vector ind = NULL ;
@@ -251,6 +250,8 @@ int LAGraph_scc
     scc = NULL;
 
     LG_FREE_ALL ;
-    return GrB_SUCCESS;
+    return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

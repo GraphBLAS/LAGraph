@@ -63,8 +63,6 @@ This method requires O(n + e) space for an undirected graph with e edges and n n
 // #define dbg
 // #define burble
 
-#if LAGRAPH_SUITESPARSE
-
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
 
@@ -87,6 +85,8 @@ This method requires O(n + e) space for an undirected graph with e edges and n n
 }                                                   \
 
 #define F_INDEX_UNARY(f)  ((void (*)(void *, const void *, GrB_Index, GrB_Index, const void *)) f)
+
+#if LAGRAPH_SUITESPARSE
 
 void valueeq_index_func (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const void *y) {
     (*z) = ((*x) == i) ;
@@ -246,6 +246,7 @@ static int LAGraph_Parent_to_S
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
+#endif
 
 
 #undef LG_FREE_ALL
@@ -276,8 +277,6 @@ static int LAGraph_Parent_to_S
 #endif
 
 #define OPTIMIZE_PUSH_PULL
-
-#endif
 
 int LAGraph_Coarsen_Matching
 (
@@ -316,10 +315,6 @@ int LAGraph_Coarsen_Matching
 
     // check properties (no self-loops, undirected
     LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, "G->nself_edges must be zero") ;
-
-#if !LAGRAPH_SUITESPARSE
-     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#endif
 
     LG_ASSERT (coarsened != NULL, GrB_NULL_POINTER) ;
 
@@ -424,10 +419,10 @@ int LAGraph_Coarsen_Matching
     GRB_TRY (GrB_Vector_nvals (&num_matched, edge_parent)) ;
     
     if (num_matched > sparsity_thresh * num_edges) {
-        GRB_TRY (GxB_set (edge_parent, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+        GRB_TRY (LG_SET_FORMAT_HINT (edge_parent, LG_BITMAP)) ;
         GRB_TRY (GrB_mxv (node_parent, NULL, NULL, GrB_MIN_SECOND_SEMIRING_UINT64, E, edge_parent, NULL)) ;
     } else {
-        GRB_TRY (GxB_set (edge_parent, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+        GRB_TRY (LG_SET_FORMAT_HINT (edge_parent, LG_SPARSE)) ;
         GRB_TRY (GrB_vxm (node_parent, NULL, NULL, GrB_MIN_FIRST_SEMIRING_UINT64, edge_parent, E_t, NULL)) ;
     }
 
@@ -497,9 +492,6 @@ int LAGraph_Coarsen_Matching
     G_cpy->nself_edges = LAGRAPH_UNKNOWN ;
     // parent nodes for matched edges will form self-edges; need to delete
     LG_TRY (LAGraph_DeleteSelfEdges (G_cpy, msg)) ;
-
-//  printf ("in Coarsen_Matching: G_cpy->A after deleting self edges:\n") ;
-//  GxB_print (G_cpy->A,5) ;
 
     //------------------------------------------------------------------------------
     // coarsening step done

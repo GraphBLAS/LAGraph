@@ -76,8 +76,8 @@ const matrix_info files [ ] =
 
 void test_diameter (void)
 {
-    OK (LAGraph_Init (msg)) ;
     #if LAGRAPH_SUITESPARSE
+    OK (LAGraph_Init (msg)) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -117,8 +117,7 @@ void test_diameter (void)
 
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
-            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
-                jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+            OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
             // compute the estimated diameter
             GrB_Index estimated_diameter = 0 ;
             OK (LAGraph_EstimateDiameter (&estimated_diameter, &est_peripheral,
@@ -153,10 +152,8 @@ void test_diameter (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
-    #else
-    printf ("test skipped\n") ;
-    #endif
     OK (LAGraph_Finalize (msg)) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -165,9 +162,9 @@ void test_diameter (void)
 
 void test_diameter_huge (void)
 {
-    OK (LAGraph_Init (msg)) ;
     #if LAGRAPH_SUITESPARSE
-    OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_OFF)) ;
+    OK (LAGraph_Init (msg)) ;
+    OK (LG_SET_JIT (LG_JIT_OFF)) ;
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
@@ -223,10 +220,8 @@ void test_diameter_huge (void)
     OK (LAGraph_Free ((void **) &I, msg)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
-    #else
-    printf ("test skipped\n") ;
-    #endif
     OK (LAGraph_Finalize (msg)) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -235,13 +230,11 @@ void test_diameter_huge (void)
 
 void test_errors (void)
 {
-    LAGraph_Init (msg) ;
     #if LAGRAPH_SUITESPARSE
-    // FIXME
-    #else
-    printf ("test skipped\n") ;
-    #endif
+    LAGraph_Init (msg) ;
+    // FIXME: add error tests here
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //****************************************************************************

@@ -20,8 +20,6 @@
 // This method is for testing only, to check the result of other, faster methods.
 // Do not benchmark this method; it is simple by design.
 
-#if LAGRAPH_SUITESPARSE
-
 #define LG_FREE_ALL                         \
 {                                           \
     GrB_free (&S) ;                         \
@@ -34,7 +32,6 @@
     LAGraph_Free ((void **) &vb, msg) ;     \
     LAGraph_Free ((void **) &vx, msg) ;     \
 }
-#endif
 
 #include <stdlib.h>
 #include "LG_internal.h"

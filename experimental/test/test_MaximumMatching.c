@@ -46,7 +46,7 @@ void test_MCM(void)
     for (uint8_t jit = 0; jit < 2; jit++)
     {
         uint8_t JIT_flag = jit * 4; // JIT_OFF = 0 and JIT_ON = 4
-        OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, JIT_flag));
+        OK (LG_SET_JIT (JIT_flag)) ;
         for (uint64_t test = 0; test < NTESTS; test++)
         {
 
