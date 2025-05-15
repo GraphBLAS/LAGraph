@@ -86,6 +86,8 @@ This method requires O(n + e) space for an undirected graph with e edges and n n
 
 #define F_INDEX_UNARY(f)  ((void (*)(void *, const void *, GrB_Index, GrB_Index, const void *)) f)
 
+#if LAGRAPH_SUITESPARSE
+
 void valueeq_index_func (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const void *y) {
     (*z) = ((*x) == i) ;
 }
@@ -244,6 +246,7 @@ static int LAGraph_Parent_to_S
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
+#endif
 
 
 #undef LG_FREE_ALL

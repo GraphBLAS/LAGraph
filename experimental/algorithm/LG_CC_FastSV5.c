@@ -51,6 +51,8 @@
 
 // FIXME: not ready for src; need a vanilla method with no GxB
 
+#if LAGRAPH_SUITESPARSE
+
 //------------------------------------------------------------------------------
 // hash functions: todo describe me
 //------------------------------------------------------------------------------
@@ -292,6 +294,8 @@ static inline int Reduce_assign32
 
     return (GrB_SUCCESS) ;
 }
+
+#endif
 
 //------------------------------------------------------------------------------
 // LG_CC_FastSV5
