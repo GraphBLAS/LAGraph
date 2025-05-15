@@ -40,9 +40,7 @@ int LAGraph_coloring_independent_set
     GRB_TRY(GrB_Vector_new(&local_color, Int, n));
 
     // lg_set_format_hint -> bitmap
-//  GRB_TRY (GxB_set (local_color, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
     GRB_TRY (LG_SET_FORMAT_HINT (local_color, LG_BITMAP)) ;
-    GxB_print (local_color, 2) ;
 
     /* weights initialized randomly
     *  seed of 20 was chosen arbitrarily */   

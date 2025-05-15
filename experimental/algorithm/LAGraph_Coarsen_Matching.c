@@ -419,11 +419,9 @@ int LAGraph_Coarsen_Matching
     GRB_TRY (GrB_Vector_nvals (&num_matched, edge_parent)) ;
     
     if (num_matched > sparsity_thresh * num_edges) {
-//      GRB_TRY (GxB_set (edge_parent, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
         GRB_TRY (LG_SET_FORMAT_HINT (edge_parent, LG_BITMAP)) ;
         GRB_TRY (GrB_mxv (node_parent, NULL, NULL, GrB_MIN_SECOND_SEMIRING_UINT64, E, edge_parent, NULL)) ;
     } else {
-//      GRB_TRY (GxB_set (edge_parent, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
         GRB_TRY (LG_SET_FORMAT_HINT (edge_parent, LG_SPARSE)) ;
         GRB_TRY (GrB_vxm (node_parent, NULL, NULL, GrB_MIN_FIRST_SEMIRING_UINT64, edge_parent, E_t, NULL)) ;
     }

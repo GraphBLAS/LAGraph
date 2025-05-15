@@ -189,11 +189,9 @@ int LAGraph_MaximalMatching
         // intermediate result. Max score edge touching each node
         // don't need to clear this out first because we populate the result for all nodes
         if (ncandidates > sparsity_thresh * num_edges) {
-//          GRB_TRY (GxB_set (score, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
             GRB_TRY (LG_SET_FORMAT_HINT (score, LG_BITMAP)) ;
             GRB_TRY (GrB_mxv (max_node_neighbor, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E, score, NULL)) ;
         } else {
-//          GRB_TRY (GxB_set (score, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
             GRB_TRY (LG_SET_FORMAT_HINT (score, LG_SPARSE)) ;
             GRB_TRY (GrB_vxm (max_node_neighbor, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP64, score, E_t, NULL)) ;
         }
@@ -203,11 +201,9 @@ int LAGraph_MaximalMatching
 
         // Max edge touching each candidate edge, including itself
         if (node_nvals > sparsity_thresh * num_nodes) {
-//          GRB_TRY (GxB_set (max_node_neighbor, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
             GRB_TRY (LG_SET_FORMAT_HINT (max_node_neighbor, LG_BITMAP)) ;
             GRB_TRY (GrB_mxv (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E_t, max_node_neighbor, GrB_DESC_RS)) ;
         } else {
-//          GRB_TRY (GxB_set (max_node_neighbor, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
             GRB_TRY (LG_SET_FORMAT_HINT (max_node_neighbor, LG_SPARSE)) ;
             GRB_TRY (GrB_vxm (max_neighbor, candidates, NULL, GrB_MAX_FIRST_SEMIRING_FP64, max_node_neighbor, E, GrB_DESC_RS)) ;
         }
@@ -228,11 +224,9 @@ int LAGraph_MaximalMatching
 
         // check if any node has > 1 edge touching it. 
         if (new_members_nvals > sparsity_thresh * num_edges) {
-//          GRB_TRY (GxB_set (new_members, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
             GRB_TRY (LG_SET_FORMAT_HINT (new_members, LG_BITMAP)) ;
             GRB_TRY (GrB_mxv (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, new_members, NULL)) ;
         } else {
-//          GRB_TRY (GxB_set (new_members, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
             GRB_TRY (LG_SET_FORMAT_HINT (new_members, LG_SPARSE)) ;
             GRB_TRY (GrB_vxm (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, new_members, E_t, NULL)) ;
         }
@@ -259,11 +253,9 @@ int LAGraph_MaximalMatching
         // to include neighbor edges, need to compute new_neighbors
         // to do this, we need to compute the intermediate result new_members_nodes
         if (new_members_nvals > sparsity_thresh * num_edges) {
-//          GRB_TRY (GxB_set (new_members, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
             GRB_TRY (LG_SET_FORMAT_HINT (new_members, LG_BITMAP)) ;
             GRB_TRY (GrB_mxv (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, E, new_members, NULL)) ;
         } else {
-//          GRB_TRY (GxB_set (new_members, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
             GRB_TRY (LG_SET_FORMAT_HINT (new_members, LG_SPARSE)) ;
             GRB_TRY (GrB_vxm (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, new_members, E_t, NULL)) ;
         }
@@ -271,11 +263,9 @@ int LAGraph_MaximalMatching
         GRB_TRY (GrB_Vector_nvals (&node_nvals, new_members_nodes)) ;
 
         if (node_nvals > sparsity_thresh * num_nodes) {
-//          GRB_TRY (GxB_set (new_members_nodes, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
             GRB_TRY (LG_SET_FORMAT_HINT (new_members_nodes, LG_BITMAP)) ;
             GRB_TRY (GrB_mxv (new_neighbors, NULL, NULL, LAGraph_any_one_bool, E_t, new_members_nodes, NULL)) ;
         } else {
-//          GRB_TRY (GxB_set (new_members_nodes, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
             GRB_TRY (LG_SET_FORMAT_HINT (new_members_nodes, LG_SPARSE)) ;
             GRB_TRY (GrB_vxm (new_neighbors, NULL, NULL, LAGraph_any_one_bool, new_members_nodes, E, NULL)) ;
         }

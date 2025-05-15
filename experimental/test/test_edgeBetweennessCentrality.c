@@ -622,13 +622,11 @@ void test_many_approx(void)
 
         // try without the JIT
         // LG_SET_BURBLE (true) ;
-//      OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_PAUSE)) ;
         OK (LG_SET_JIT (LG_JIT_PAUSE)) ;
         OK (LAGr_EdgeBetweennessCentrality(&centrality, G, randomSources, msg));
         err = matrix_difference (centrality, reference_centrality);
         printf("  %s: err: %e (JIT paused)\n", files[i], err);
         TEST_CHECK(err < 1e-4);
-//      OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_ON)) ;
         OK (LG_SET_JIT (LG_JIT_ON)) ;
         // LG_SET_BURBLE (false) ;
 

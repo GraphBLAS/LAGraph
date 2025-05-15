@@ -381,7 +381,6 @@ int LAGraph_FastGraphletTransform
         }                                   \
     }
 
-//  GxB_set (GxB_NTHREADS, 1) ;
     int save_nthreads_outer, save_nthreads_inner ;
     LG_TRY (LAGraph_GetNumThreads (&save_nthreads_outer, &save_nthreads_inner, msg)) ;
     LG_TRY (LAGraph_SetNumThreads (1, 1, msg)) ;
