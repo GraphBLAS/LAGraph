@@ -56,7 +56,7 @@ const matrix_info files [ ] =
 void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
-//  GxB_set (GxB_BURBLE, true, GrB_GLOBAL) ;
+//  OK (LG_SET_BURBLE (true)) ;
 }
 
 //------------------------------------------------------------------------------
