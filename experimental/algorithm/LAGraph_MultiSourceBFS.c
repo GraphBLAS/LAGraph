@@ -42,6 +42,7 @@ int LAGraph_MultiSourceBFS
     char          *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -52,10 +53,6 @@ int LAGraph_MultiSourceBFS
     // GrB_Vector w = NULL ;     to compute work remaining, removed since not doing push-pull
     GrB_Matrix pi = NULL ;          // parent matrix
     GrB_Matrix v = NULL ;           // level matrix
-
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
 
     bool compute_level  = (level != NULL) ;
     bool compute_parent = (parent != NULL) ;
@@ -217,5 +214,7 @@ int LAGraph_MultiSourceBFS
     if (compute_level ) (*level ) = v ;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

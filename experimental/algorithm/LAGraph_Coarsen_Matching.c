@@ -63,8 +63,6 @@ This method requires O(n + e) space for an undirected graph with e edges and n n
 // #define dbg
 // #define burble
 
-#if LAGRAPH_SUITESPARSE
-
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
 
@@ -277,8 +275,6 @@ static int LAGraph_Parent_to_S
 
 #define OPTIMIZE_PUSH_PULL
 
-#endif
-
 int LAGraph_Coarsen_Matching
 (
     // outputs:
@@ -316,10 +312,6 @@ int LAGraph_Coarsen_Matching
 
     // check properties (no self-loops, undirected
     LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, "G->nself_edges must be zero") ;
-
-#if !LAGRAPH_SUITESPARSE
-     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#endif
 
     LG_ASSERT (coarsened != NULL, GrB_NULL_POINTER) ;
 

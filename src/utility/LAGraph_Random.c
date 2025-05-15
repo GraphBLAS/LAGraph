@@ -15,7 +15,18 @@
 
 //------------------------------------------------------------------------------
 
-// A very simple thread-safe parallel pseudo-random nuumber generator.
+// A very simple thread-safe parallel pseudo-random number generator.  These
+// have a period of 2^(64)-1.  For longer periods, a better method is needed.
+
+// In the future, the State vector could be based on a 256-bit user-defined
+// type, created by LG_Random_Init below.  The LAGraph_Random_Seed and
+// LAGraph_Random_Next API would not change.  Instead, they would select the
+// operators based on the type of the State vector (GrB_UINT64 in the current
+// method, or the 256-bit type in a future method).  Then we would need a
+// single new method, say LAGraph_Random_Value, which extracts the random
+// number from the State.  It would compute R = f(State), where R is GrB_UINT64
+// and the State vector (with its 256-bit data type) is unchanged.  With the
+// current method, R=State is implicit.
 
 #include "LG_internal.h"
 
@@ -230,12 +241,12 @@ int LG_Random_Finalize (char *msg)
 // LAGraph_Random_Seed:  create a vector of random states
 //------------------------------------------------------------------------------
 
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK ;
+
 // Initializes a vector with random state values.  The State vector must be
 // allocated on input, and should be of type GrB_UINT64.  Its sparsity
 // structure is unchanged.
-
-#undef  LG_FREE_WORK
-#define LG_FREE_WORK GrB_free (&T) ;
 
 #if defined ( COVERAGE )
 // for testing only
@@ -252,7 +263,6 @@ int LAGraph_Random_Seed // construct a random State vector
 )
 {
     // check inputs
-    GrB_Vector T = NULL ;
     LG_CLEAR_MSG ;
     LG_ASSERT (State != NULL, GrB_NULL_POINTER) ;
 
@@ -271,16 +281,12 @@ int LAGraph_Random_Seed // construct a random State vector
     }
     #endif
 
-    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------
 // LAGraph_Random_Next: return next vector of random seeds
 //------------------------------------------------------------------------------
-
-#undef  LG_FREE_WORK
-#define LG_FREE_WORK ;
 
 int LAGraph_Random_Next     // advance to next random vector
 (

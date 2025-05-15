@@ -55,9 +55,6 @@ void test_Init (void)
     TEST_CHECK (ver [1] == GxB_IMPLEMENTATION_MINOR) ;
     TEST_CHECK (ver [2] == GxB_IMPLEMENTATION_SUB) ;
     OK (strcmp (date, GxB_IMPLEMENTATION_DATE)) ;
-    #endif
-
-    #if LAGRAPH_SUITESPARSE
     char compiler [1024] ;
     int compiler_version [3] ;
     OK (GrB_Global_get_String (GrB_GLOBAL, compiler, GxB_COMPILER_NAME)) ;

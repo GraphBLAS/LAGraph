@@ -102,14 +102,9 @@ int main (int argc, char **argv)
         srand((int) t);
         
         // Generate unique random indices
-        bool* used = (bool*)calloc(n, sizeof(bool));
-        if (used == NULL)
-        {
-            printf("Error: Out of memory\n");
-            LG_FREE_ALL;
-            return (GrB_OUT_OF_MEMORY);
-        }
-        
+        bool *used = NULL ;
+        LAGRAPH_TRY (LAGraph_Calloc ((void **) &used, n, sizeof (bool), msg)) ;
+
         for (int i = 0; i < num_sources; i++)
         {
             GrB_Index random_idx;
@@ -120,9 +115,8 @@ int main (int argc, char **argv)
             used[random_idx] = true;
             GRB_TRY (GrB_Vector_setElement(sources, random_idx, i));
         }
-        
-        free(used);
-        
+        LAGRAPH_TRY (LAGraph_Free ((void **) &used, msg)) ;
+
         printf("Using %d random source nodes for approximation\n", num_sources);
     }
 

@@ -5,13 +5,12 @@
 #include "LG_test.h"
 #include "LG_Xtest.h"
 
-// FIXME: cannot use free here!
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK                            \
 {                                               \
-    free(Ap);                                   \
-    free(Ai);                                   \
-    free(Ax);                                   \
+    LAGraph_Free ((void **) &Ap, NULL) ;        \
+    LAGraph_Free ((void **) &Ai, NULL) ;        \
+    LAGraph_Free ((void **) &Ax, NULL) ;        \
 }
 
 int LG_check_coloring

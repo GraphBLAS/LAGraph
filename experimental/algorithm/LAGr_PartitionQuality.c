@@ -30,7 +30,6 @@
 
 // https://arxiv.org/abs/0906.0612 pp. 15
 
-#if LAGRAPH_SUITESPARSE
 #define LG_FREE_WORK                                                           \
     {                                                                          \
         GrB_free(&trace);                                                      \
@@ -44,7 +43,6 @@
     {                                                                          \
         LG_FREE_WORK;                                                          \
     }
-#endif
 
 #include "LG_internal.h"
 #include <LAGraphX.h>

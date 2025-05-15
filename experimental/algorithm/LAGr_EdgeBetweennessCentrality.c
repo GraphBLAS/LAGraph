@@ -26,10 +26,9 @@
 #define useAssign
 // #define debug
 
-#if LAGRAPH_SUITESPARSE
-
 #define LG_FREE_WORK                                \
 {                                                   \
+    printf ("free work\n") ; \
     GrB_free (&frontier) ;                          \
     GrB_free (&J_vec) ;                             \
     GrB_free (&I_vec) ;                             \
@@ -60,7 +59,6 @@
     LG_FREE_WORK ;                  \
     GrB_free (centrality) ;         \
 }
-#endif
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
@@ -497,6 +495,7 @@ int LAGr_EdgeBetweennessCentrality
     // === finalize the centrality =============================================
     // =========================================================================
 
+    printf ("bye\n") ; \
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 #else

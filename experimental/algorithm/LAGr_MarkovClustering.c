@@ -17,8 +17,6 @@
 
 // FIXME: ready to consider for src
 
-#if LAGRAPH_SUITESPARSE
-
 #define LG_FREE_WORK                                                           \
     {                                                                          \
         GrB_free(&T_prev);                                                     \
@@ -38,7 +36,6 @@
         LG_FREE_WORK;                                                          \
         GrB_free(c_f);                                                         \
     }
-#endif
 
 #include "LG_internal.h"
 #include <LAGraphX.h>

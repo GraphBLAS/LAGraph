@@ -582,21 +582,24 @@ void test_many_approx(void)
         GrB_Vector_new(&randomSources, GrB_UINT64, 8);
 
         // For ensuring unique indices
-        bool* used = (bool*)calloc(n, sizeof(bool));
+        bool *used = NULL ;
+        OK (LAGraph_Calloc ((void **) &used, n, sizeof (bool), msg)) ;
+
         double t = LAGraph_WallClockTime() ;
-        srand((int) t);
+        // srand((int) t);
+        uint64_t seed = 42 ;
 
         // Generate 8 unique random indices between 0 and n-1
         int count = 0;
         while (count < 8 && count < n) { 
-            GrB_Index random_idx = rand() % n;
+            GrB_Index random_idx = LG_Random64 (&seed) % n;
             if (!used[random_idx]) {
                 used[random_idx] = true;
                 GrB_Vector_setElement(randomSources, random_idx, count);
                 count++;
             }
         }
-        free(used);
+        OK (LAGraph_Free ((void **) &used, msg)) ;
 
         // compute its betweenness centrality (GraphBLAS version)
         t = LAGraph_WallClockTime() ;

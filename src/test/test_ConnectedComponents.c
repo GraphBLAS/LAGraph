@@ -135,10 +135,8 @@ void test_cc_matrices (void)
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
-            #endif
 
             // find the connected components with LG_CC_FastSV6
-            #if LAGRAPH_SUITESPARSE
             printf ("\n------ CC_FastSV6:\n") ;
             OK (LG_CC_FastSV6 (&C2, G, msg)) ;
             ncomponents = count_connected_components (C2) ;

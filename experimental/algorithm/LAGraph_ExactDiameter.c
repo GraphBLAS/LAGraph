@@ -59,6 +59,7 @@ int LAGraph_ExactDiameter
     char          *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -71,10 +72,6 @@ int LAGraph_ExactDiameter
     GrB_Matrix level = NULL;          // work matrix for storing msbfs level info
     GrB_Index d ;                     // diameter
     GrB_Vector srcs = NULL ;
-
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
 
     bool compute_periphery  = (peripheral != NULL) ;
     if (compute_periphery ) (*peripheral) = NULL ;
@@ -171,5 +168,7 @@ int LAGraph_ExactDiameter
     (*diameter) = d;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

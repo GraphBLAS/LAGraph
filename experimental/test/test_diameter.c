@@ -76,8 +76,8 @@ const matrix_info files [ ] =
 
 void test_diameter (void)
 {
-    OK (LAGraph_Init (msg)) ;
     #if LAGRAPH_SUITESPARSE
+    OK (LAGraph_Init (msg)) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -153,10 +153,8 @@ void test_diameter (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
-    #else
-    printf ("test skipped\n") ;
-    #endif
     OK (LAGraph_Finalize (msg)) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -165,8 +163,8 @@ void test_diameter (void)
 
 void test_diameter_huge (void)
 {
-    OK (LAGraph_Init (msg)) ;
     #if LAGRAPH_SUITESPARSE
+    OK (LAGraph_Init (msg)) ;
     OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_OFF)) ;
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
@@ -223,10 +221,8 @@ void test_diameter_huge (void)
     OK (LAGraph_Free ((void **) &I, msg)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
-    #else
-    printf ("test skipped\n") ;
-    #endif
     OK (LAGraph_Finalize (msg)) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -235,13 +231,11 @@ void test_diameter_huge (void)
 
 void test_errors (void)
 {
-    LAGraph_Init (msg) ;
     #if LAGRAPH_SUITESPARSE
-    // FIXME
-    #else
-    printf ("test skipped\n") ;
-    #endif
+    LAGraph_Init (msg) ;
+    // FIXME: add error tests here
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //****************************************************************************
