@@ -630,14 +630,14 @@ int LG_KindName
     #define LG_FULL        GxB_FULL
     #define LG_SET_FORMAT_HINT(object,sparsity) \
         GrB_set (object, (int32_t) (sparsity), GxB_SPARSITY_CONTROL)
-    #define LG_GET_FORMAT_HINT(A,status) \
-        GrB_get (A, (int32_t *) status, GxB_SPARSITY_STATUS)
+    #define LG_GET_FORMAT_HINT(object,status) \
+        GrB_get (object, (int32_t *) status, GxB_SPARSITY_STATUS)
     #define LG_SET_NTHREADS(nthreads) \
         GrB_set (GrB_GLOBAL, (int32_t) (nthreads), GxB_NTHREADS)
-    #define LG_SET_HYPER_SWITCH(A,hyper) \
-        GrB_set (A, hyper, GxB_HYPER_SWITCH)
-    #define LG_GET_HYPER_SWITCH(A,hyper) \
-        GrB_get (A, hyper, GxB_HYPER_SWITCH)
+    #define LG_SET_HYPER_SWITCH(object,hyper) \
+        GrB_set (object, hyper, GxB_HYPER_SWITCH)
+    #define LG_GET_HYPER_SWITCH(object,hyper) \
+        GrB_get (object, hyper, GxB_HYPER_SWITCH)
     #define LG_SET_BURBLE(burble) \
         GrB_set (GrB_GLOBAL, (int32_t) (burble), GxB_BURBLE)
     #define LG_GET_LIBRARY_DATE(date) \
@@ -659,9 +659,9 @@ int LG_KindName
     #define LG_FULL        8
     #define LG_SET_FORMAT_HINT(object,sparsity) GrB_SUCCESS
     #define LG_SET_NTHREADS(nthreads) GrB_SUCCESS
-    #define LG_SET_HYPER_SWITCH(A,hyper) GrB_SUCCESS
-    #define LG_GET_HYPER_SWITCH(A,hyper) GrB_SUCCESS
-    #define LG_GET_FORMAT_HINT(A,status) GrB_SUCCESS
+    #define LG_SET_HYPER_SWITCH(object,hyper) GrB_SUCCESS
+    #define LG_GET_HYPER_SWITCH(object,hyper) GrB_SUCCESS
+    #define LG_GET_FORMAT_HINT(object,status) GrB_SUCCESS
     #define LG_SET_BURBLE(burble) GrB_SUCCESS
     #define LG_GET_LIBRARY_DATE(date) GrB_SUCCESS
     #define LG_BRUTAL_TESTS 0
