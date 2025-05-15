@@ -15,7 +15,6 @@
 // Querying Using Linear Algebra", URL:
 // https://disser.spbu.ru/files/2022/disser_azimov.pdf
 
-
 #define LG_FREE_WORK                                                        \
     {                                                                       \
         LAGraph_Free ((void **) &nnzs, msg) ;                               \
@@ -135,6 +134,7 @@ GrB_Info LAGraph_CFL_reachability
     char *msg                       // Message string for error reporting.
 )
 {
+#if LAGRAPH_SUITESPARSE
     // Declare workspace and clear the msg string, if not NULL
     GrB_Matrix *T;
     bool t_empty_flags[nonterms_count]; // t_empty_flags[i] == true <=> T[i] is empty
@@ -369,4 +369,7 @@ GrB_Info LAGraph_CFL_reachability
 
     LG_FREE_WORK;
     return GrB_SUCCESS;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

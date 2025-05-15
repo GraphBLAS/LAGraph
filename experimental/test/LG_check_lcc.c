@@ -87,7 +87,9 @@ int LG_check_lcc(
     // inputs
     LAGraph_Graph G,        // input graph
     char *msg
-) {
+)
+{
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -192,4 +194,7 @@ int LG_check_lcc(
     *coefficients = LCC ; LCC = NULL ;
     LG_FREE_ALL;
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

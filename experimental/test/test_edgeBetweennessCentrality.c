@@ -1,9 +1,8 @@
 //------------------------------------------------------------------------------
 // LAGraph/src/test/test_edgeBetweennessCentrality.c: test cases for EBC 
-//                                                    (GAP method)
 // -----------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -15,6 +14,8 @@
 // Contributed by Casey Pei and Timothy A. Davis, Texas A&M University
 
 //------------------------------------------------------------------------------
+
+// NOTE: these tests require SuiteSparse:GraphBLAS
 
 #include <stdio.h>
 #include <acutest.h>
@@ -217,6 +218,7 @@ int64_t approx_sources [4] = {0, 1, 2, 3};
 
 void test_diamonds_ebc (void)
 {
+    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
     GrB_Matrix A = NULL ;
     GrB_Matrix AT = NULL ;
@@ -267,6 +269,7 @@ void test_diamonds_ebc (void)
 
     OK (LAGraph_Delete (&G, msg)) ;
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -275,6 +278,7 @@ void test_diamonds_ebc (void)
 
 void test_karate_ebc (void)
 {
+    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
     GrB_Matrix A = NULL ;
     GrB_Matrix centrality = NULL ;
@@ -317,6 +321,7 @@ void test_karate_ebc (void)
 
     OK (LAGraph_Delete (&G, msg)) ;
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -325,6 +330,7 @@ void test_karate_ebc (void)
 
 void test_many(void)
 {
+    #if LAGRAPH_SUITESPARSE
     LAGraph_Init(msg);
 
     const char *files[] = {
@@ -386,6 +392,7 @@ void test_many(void)
     printf("\n") ;
 
     LAGraph_Finalize(msg);
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -394,6 +401,7 @@ void test_many(void)
 
 void test_diamonds_ebc_approx (void)
 {
+    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
     GrB_Matrix A = NULL ;
     GrB_Matrix AT = NULL ;
@@ -454,6 +462,7 @@ void test_diamonds_ebc_approx (void)
 
     OK (LAGraph_Delete (&G, msg)) ;
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -462,6 +471,7 @@ void test_diamonds_ebc_approx (void)
 
 void test_karate_ebc_approx (void)
 {
+    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
     GrB_Matrix A = NULL ;
     GrB_Matrix centrality = NULL ;
@@ -520,6 +530,7 @@ void test_karate_ebc_approx (void)
 
     OK (LAGraph_Delete (&G, msg)) ;
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -529,6 +540,7 @@ void test_karate_ebc_approx (void)
 
 void test_many_approx(void)
 {
+    #if LAGRAPH_SUITESPARSE
     LAGraph_Init(msg);
 
     const char *files[] = {
@@ -570,21 +582,24 @@ void test_many_approx(void)
         GrB_Vector_new(&randomSources, GrB_UINT64, 8);
 
         // For ensuring unique indices
-        bool* used = (bool*)calloc(n, sizeof(bool));
+        bool *used = NULL ;
+        OK (LAGraph_Calloc ((void **) &used, n, sizeof (bool), msg)) ;
+
         double t = LAGraph_WallClockTime() ;
-        srand((int) t);
+        // srand((int) t);
+        uint64_t seed = 42 ;
 
         // Generate 8 unique random indices between 0 and n-1
         int count = 0;
         while (count < 8 && count < n) { 
-            GrB_Index random_idx = rand() % n;
+            GrB_Index random_idx = LG_Random64 (&seed) % n;
             if (!used[random_idx]) {
                 used[random_idx] = true;
                 GrB_Vector_setElement(randomSources, random_idx, count);
                 count++;
             }
         }
-        free(used);
+        OK (LAGraph_Free ((void **) &used, msg)) ;
 
         // compute its betweenness centrality (GraphBLAS version)
         t = LAGraph_WallClockTime() ;
@@ -623,12 +638,14 @@ void test_many_approx(void)
     printf("\n") ;
 
     LAGraph_Finalize(msg);
+    #endif
 }
 
 //------------------------------------------------------------------------------
 
 void test_no_sources (void)
 {
+    #if LAGRAPH_SUITESPARSE
     LAGraph_Init(msg);
 
     GrB_Matrix A = NULL ;
@@ -652,6 +669,7 @@ void test_no_sources (void)
     OK (LAGraph_Delete (&G, msg)) ;
 
     LAGraph_Finalize(msg);
+    #endif
 }
 
 //------------------------------------------------------------------------------

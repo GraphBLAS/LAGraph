@@ -89,6 +89,7 @@ int LAGraph_MaximalMatching
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
     LG_CLEAR_MSG ;
 
     if ((matching == NULL) || (E == NULL) || (E_t == NULL)) {
@@ -307,4 +308,7 @@ int LAGraph_MaximalMatching
     
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

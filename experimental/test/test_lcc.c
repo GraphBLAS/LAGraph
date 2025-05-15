@@ -52,8 +52,8 @@ const matrix_info files [ ] =
 //****************************************************************************
 void test_lcc (void)
 {
-    LAGraph_Init (msg) ;
     #if LAGRAPH_SUITESPARSE
+    LAGraph_Init (msg) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -117,10 +117,8 @@ void test_lcc (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
-    #else
-    printf ("test skipped\n") ;
-    #endif
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -129,8 +127,8 @@ void test_lcc (void)
 
 void test_errors (void)
 {
-    LAGraph_Init (msg) ;
     #if LAGRAPH_SUITESPARSE
+    LAGraph_Init (msg) ;
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
@@ -154,10 +152,8 @@ void test_errors (void)
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
-    #else
-    printf ("test skipped\n") ;
-    #endif
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //****************************************************************************

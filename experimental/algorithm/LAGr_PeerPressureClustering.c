@@ -64,6 +64,7 @@ int LAGr_PeerPressureClustering(
     LAGraph_Graph G,      // input graph
     char *msg)
 {
+#if LAGRAPH_SUITESPARSE
 
     GrB_Matrix A = NULL;
     GrB_Matrix S = NULL;      // symmetrized matrix, if needed
@@ -237,4 +238,7 @@ int LAGr_PeerPressureClustering(
     LG_FREE_WORK;
 
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

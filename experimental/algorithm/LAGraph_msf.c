@@ -129,12 +129,9 @@ int LAGraph_msf
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     LG_CLEAR_MSG ;
-
-#if !LAGRAPH_SUITESPARSE
-    return (GrB_NOT_IMPLEMENTED) ;
-#else
 
     GrB_Info info;
     GrB_Index n;
@@ -291,6 +288,8 @@ int LAGraph_msf
     T = NULL ;
 
     LG_FREE_ALL;
-    return GrB_SUCCESS;
+    return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

@@ -227,6 +227,7 @@ const matrix_info files [ ] =
 
 void test_fiedler (void)
 {
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // startup LAGraph and GraphBLAS
@@ -372,6 +373,7 @@ void test_fiedler (void)
     }
 
     OK (LAGraph_Finalize (msg)) ;
+#endif
 }
 
 TEST_LIST = {

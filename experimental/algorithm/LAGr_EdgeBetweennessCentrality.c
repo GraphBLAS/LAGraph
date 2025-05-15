@@ -28,6 +28,7 @@
 
 #define LG_FREE_WORK                                \
 {                                                   \
+    printf ("free work\n") ; \
     GrB_free (&frontier) ;                          \
     GrB_free (&J_vec) ;                             \
     GrB_free (&I_vec) ;                             \
@@ -117,6 +118,8 @@ int LAGr_EdgeBetweennessCentrality
     char *msg
 )
 {
+
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -492,6 +495,10 @@ int LAGr_EdgeBetweennessCentrality
     // === finalize the centrality =============================================
     // =========================================================================
 
+    printf ("bye\n") ; \
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

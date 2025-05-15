@@ -69,6 +69,7 @@ int LAGr_Modularity(
     LAGraph_Graph G,   // original graph from which clustering was obtained
     char *msg)
 {
+#if LAGRAPH_SUITESPARSE
     GrB_Vector l = NULL;
     GrB_Vector vmask = NULL;
     GrB_Vector k_in = NULL, k_out = NULL;
@@ -203,8 +204,9 @@ int LAGr_Modularity(
     }
 
     (*mod_handle) = mod;
-
     LG_FREE_WORK;
-
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED);
+#endif
 }

@@ -89,6 +89,7 @@ const char *files [ ] =
 //****************************************************************************
 void test_SSaveSet (void)
 {
+    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
 
     // load all matrices into a single set
@@ -143,6 +144,7 @@ void test_SSaveSet (void)
     LAGraph_Free ((void **) &collection, NULL) ;
 
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //****************************************************************************

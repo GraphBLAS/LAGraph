@@ -62,6 +62,7 @@ int LG_check_edgeBetweennessCentrality
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // initialize workspace variables
@@ -387,4 +388,7 @@ GrB_Info GxB_Matrix_pack_FullR  // pack a full matrix, held by row
         printf ("LG_check_edgeBetweennessCentrality check time: %g sec\n", tt) ;
     }
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

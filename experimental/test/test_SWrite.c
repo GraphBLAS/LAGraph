@@ -94,6 +94,7 @@ const char *files [ ] =
 
 void test_SWrite (void)
 {
+    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
 
     for (int k = 0 ; k < NFILES ; k++)
@@ -114,9 +115,7 @@ void test_SWrite (void)
         OK (LAGraph_Matrix_TypeName (atypename, A, msg)) ;
         OK (LAGraph_TypeFromName (&atype, atypename, msg)) ;
 
-        #if LAGRAPH_SUITESPARSE
         for (int scon = 1 ; scon <= 8 ; scon = 2*scon)
-        #endif
         {
             // for SuiteSparse only: test all sparsity formats
             OK (LG_SET_FORMAT_HINT (A, scon)) ;
@@ -130,14 +129,13 @@ void test_SWrite (void)
             // serialize the matrix
             void *blob = NULL ;
             GrB_Index blob_size = 0 ;
-            #if LAGRAPH_SUITESPARSE
+
             if (k % 2 == 0)
             {
                 // for SuiteSparse
                 OK (GxB_Matrix_serialize (&blob, &blob_size, A, NULL)) ;
             }
             else
-            #endif
             {
                 // try GrB version
                 OK (GrB_Matrix_serializeSize (&blob_size, A)) ;
@@ -215,12 +213,14 @@ void test_SWrite (void)
     }
 
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
 
 void test_SWrite_errors (void)
 {
+    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
 
     // create a simple test matrix
@@ -235,23 +235,9 @@ void test_SWrite_errors (void)
     bool ok ;
     void *blob = NULL ;
     GrB_Index blob_size = 0 ;
-    #if LAGRAPH_SUITESPARSE
-    {
-        // for SuiteSparse
-        OK (GxB_Matrix_serialize (&blob, &blob_size, A, NULL)) ;
-    }
-    #else
-    {
-        // use GrB version
-        OK (GrB_Matrix_serializeSize (&blob_size, A)) ;
-        GrB_Index blob_size_old = blob_size ;
-        OK (LAGraph_Malloc ((void **) &blob, blob_size, sizeof (uint8_t), msg));
-        TEST_CHECK (blob != NULL) ;
-        OK (GrB_Matrix_serialize (blob, &blob_size, A)) ;
-        OK (LAGraph_Realloc ((void **) &blob, blob_size,
-            blob_size_old, sizeof (uint8_t), msg)) ;
-    }
-    #endif
+
+    // for SuiteSparse
+    OK (GxB_Matrix_serialize (&blob, &blob_size, A, NULL)) ;
 
     FILE *f = tmpfile ( )  ;
     TEST_CHECK (f != NULL) ;
@@ -354,6 +340,7 @@ void test_SWrite_errors (void)
 
     OK (GrB_free (&A)) ;
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //****************************************************************************

@@ -2,7 +2,7 @@
 // LAGraph.h: user-visible include file for LAGraph
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -46,6 +46,18 @@
 // include files and helper macros
 //==============================================================================
 
+// vanilla vs SuiteSparse:
+#if !defined ( LAGRAPH_VANILLA )
+    // by default, set LAGRAPH_VANILLA to false
+    #define LAGRAPH_VANILLA 0
+#endif
+
+#if LAGRAPH_VANILLA
+// SuiteSparse:GraphBLAS uses this #define to disable all GxB extensions.
+// Other GraphBLAS implementations can ignore this #define:
+#define GRAPHBLAS_VANILLA
+#endif
+
 #include <GraphBLAS.h>
 #if defined ( _OPENMP )
     #include <omp.h>
@@ -88,12 +100,6 @@
 #else
     // use the restrict keyword for ANSI C99 compilers
     #define LAGRAPH_RESTRICT restrict
-#endif
-
-// vanilla vs SuiteSparse:
-#if !defined ( LAGRAPH_VANILLA )
-    // by default, set LAGRAPH_VANILLA to false
-    #define LAGRAPH_VANILLA 0
 #endif
 
 #if ( !LAGRAPH_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
@@ -2039,17 +2045,22 @@ int LAGraph_Vector_IsEqualOp
  * own pseudo-random number stream, with the overall seed value being revised
  * for each entry in the vector, depending on their index in the vector.
  *
- * If the entry State [i] is present in the State vector, it is initialized
- * with the pseudo random number State [i] = splitmix64 (i + seed);
+ * More precisely, if the entry State [i] is present in the State vector, it is
+ * initialized with the pseudo random number State [i] = splitmix64 (i + seed);
  * see https://dl.acm.org/doi/10.1145/2714064.2660195 for details, or
  * https://en.wikipedia.org/wiki/Xorshift .
  *
- * To call this method with a new seed, for subsequent iterations for the same
- * State vector, it is advisable to advance the seed by at least n, where n is
- * the dimension of the State vector.
+ * To call this method again with a new scalar seed, for subsequent iterations
+ * for the same State vector, it is advisable to advance the seed by at least
+ * n, where n is the dimension of the State vector.  Otherwise, the random
+ * number streams will be correlated.  For example, if seed++ is performed when
+ * this method is called again, then the new State [1] stream will be identical
+ * to the prior State [0] stream.
  *
  * The State vector should normally be of type GrB_UINT64, but this is not
- * enforced.
+ * enforced.  Typecasting will be performed if it has a different type, which
+ * will affect the pseudo-random numbers generated and results are thus not
+ * guaranteed in this case.
  *
  * @param[out,out] State vector to initialize with pseudo-random numbers.
  * @param[in] seed       scalar seed value.

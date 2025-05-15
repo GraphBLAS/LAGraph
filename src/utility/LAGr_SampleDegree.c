@@ -94,7 +94,7 @@ int LAGr_SampleDegree
         uint64_t result = LG_Random64 (&seed) ;
         int64_t i = result % n ;
         // d = Degree (i)
-        int64_t d ;
+        int64_t d = 0 ;
         GRB_TRY (GrB_Vector_extractElement (&d, Degree, i)) ;
         samples [k] = d ;
         dsum += d ;

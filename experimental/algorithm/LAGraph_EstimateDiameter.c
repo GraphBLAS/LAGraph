@@ -90,6 +90,7 @@ int LAGraph_EstimateDiameter
     char          *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -105,10 +106,6 @@ int LAGraph_EstimateDiameter
     GrB_Matrix level = NULL ;       // matrix for msbfs to put level info in
     GrB_Vector candidateSrcs = NULL ; // work vector for getting sources for the next iteration of the loop
     GrB_BinaryOp Mod = NULL ;
-
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
 
     bool compute_periphery  = (peripheral != NULL) ;
     if (compute_periphery ) (*peripheral) = NULL ;
@@ -257,5 +254,7 @@ int LAGraph_EstimateDiameter
     (*diameter ) = d ;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

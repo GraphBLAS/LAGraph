@@ -96,7 +96,7 @@ void test_cc_matrices (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
-        GxB_print (A, 2) ;
+        // GxB_print (A, 2) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
         GrB_Index n ;
@@ -135,18 +135,8 @@ void test_cc_matrices (void)
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
-            #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
-            printf ("\n------ LG_CC_FastSV7_FA:\n") ;
-            OK (LG_CC_FastSV7_FA (&C2, G, msg)) ;
-            ncomponents = count_connected_components (C2) ;
-            TEST_CHECK (ncomponents == ncomp) ;
-            OK (LG_check_cc (C2, G, msg)) ;
-            OK (GrB_free (&C2)) ;
-            #endif
-            #endif
 
             // find the connected components with LG_CC_FastSV6
-            #if LAGRAPH_SUITESPARSE
             printf ("\n------ CC_FastSV6:\n") ;
             OK (LG_CC_FastSV6 (&C2, G, msg)) ;
             ncomponents = count_connected_components (C2) ;
@@ -156,6 +146,12 @@ void test_cc_matrices (void)
 
             // find the connected components with LG_CC_FastSV7
             #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+            printf ("\n------ LG_CC_FastSV7_FA:\n") ;
+            OK (LG_CC_FastSV7_FA (&C2, G, msg)) ;
+            ncomponents = count_connected_components (C2) ;
+            TEST_CHECK (ncomponents == ncomp) ;
+            OK (LG_check_cc (C2, G, msg)) ;
+            OK (GrB_free (&C2)) ;
             printf ("\n------ CC_FastSV7:\n") ;
             OK (LG_CC_FastSV7 (&C2, G, msg)) ;
             ncomponents = count_connected_components (C2) ;
@@ -163,9 +159,13 @@ void test_cc_matrices (void)
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
             #else
-            printf ("\n------ CC_FastSV7: requires SS:GrB v10.0.0 or later\n") ;
-            int result7 = LG_CC_FastSV7 (&C2, G, msg) ;
+            printf ("\n------ CC_FastSV7_FA: requires SS:GrB v10.0.0 or later\n") ;
+            int result7 = LG_CC_FastSV7_FA (&C2, G, msg) ;
             TEST_CHECK (result7 == GrB_NOT_IMPLEMENTED) ;
+            TEST_CHECK (C2 == NULL) ;
+            printf ("\n------ CC_FastSV7: requires SS:GrB v10.0.0 or later\n") ;
+            int result8 = LG_CC_FastSV7 (&C2, G, msg) ;
+            TEST_CHECK (result8 == GrB_NOT_IMPLEMENTED) ;
             TEST_CHECK (C2 == NULL) ;
             #endif
 

@@ -52,6 +52,7 @@ int LAGr_MarkovClustering(
     LAGraph_Graph G,              // input graph
     char *msg)
 {
+#if LAGRAPH_SUITESPARSE
     GrB_Matrix T_prev = NULL;   // previous iteration transfer matrix
     GrB_Matrix T = NULL;        // current iteration transfer matrix
     GrB_Matrix CC = NULL;
@@ -210,4 +211,7 @@ int LAGr_MarkovClustering(
     LG_FREE_WORK;
 
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED);
+#endif
 }

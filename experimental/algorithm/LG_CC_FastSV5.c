@@ -51,8 +51,6 @@
 
 // FIXME: not ready for src; need a vanilla method with no GxB
 
-#if LAGRAPH_SUITESPARSE
-
 //------------------------------------------------------------------------------
 // hash functions: todo describe me
 //------------------------------------------------------------------------------
@@ -320,8 +318,6 @@ static inline int Reduce_assign32
     GrB_free (&mod) ;                           \
 }
 
-#endif
-
 int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
 (
     // output
@@ -331,16 +327,13 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "SuiteSparse required") ;
-#else
 
     uint32_t *V32 = NULL ;
     int32_t *ht_key = NULL, *ht_val = NULL ;
@@ -771,5 +764,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
     }
     LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

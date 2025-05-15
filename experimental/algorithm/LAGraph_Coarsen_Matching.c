@@ -292,6 +292,7 @@ int LAGraph_Coarsen_Matching
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     LG_CLEAR_MSG ;
 
@@ -311,10 +312,6 @@ int LAGraph_Coarsen_Matching
 
     // check properties (no self-loops, undirected
     LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, "G->nself_edges must be zero") ;
-
-#if !LAGRAPH_SUITESPARSE
-     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#endif
 
     LG_ASSERT (coarsened != NULL, GrB_NULL_POINTER) ;
 
@@ -505,5 +502,8 @@ int LAGraph_Coarsen_Matching
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }
 

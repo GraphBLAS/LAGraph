@@ -48,10 +48,6 @@
 #define LAGRAPH_BIN_HEADER 512
 #define LEN LAGRAPH_BIN_HEADER
 
-#if !LAGRAPH_SUITESPARSE
-#warning "SuiteSparse:GraphBLAS v7.1.0 or later is required"
-#endif
-
 //------------------------------------------------------------------------------
 // binwrite: write a matrix to a binary file
 //------------------------------------------------------------------------------
@@ -910,7 +906,13 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // typecast, if requested
     //--------------------------------------------------------------------------
 
+    #if LAGRAPH_SUITESPARSE
     GRB_TRY (GxB_Matrix_type (&atype, A)) ;
+    #else
+    char aname [1024] ;
+    LG_TRY (LAGraph_Matrix_TypeName (aname, A, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&atype, aname, msg)) ;
+    #endif
 
     if (structural)
     {

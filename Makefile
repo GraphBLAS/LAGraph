@@ -68,6 +68,9 @@ vanilla:
 debug:
 	( cd build && cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . --config Release -j${JOBS} )
 
+vanilla_debug:
+	( cd build && cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug -USUITESPARSE_PKGFILEDIR -DLAGRAPH_VANILLA=1 .. && cmake --build . --config Release -j${JOBS} )
+
 all: library
 
 test: library

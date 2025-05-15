@@ -2,7 +2,7 @@
 // LG_internal.h: include file for use within LAGraph itself
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -591,7 +591,7 @@ int LG_nself_edges
 // return a random uint64_t
 uint64_t LG_Random64 (uint64_t *seed) ;
 
-// create operators for LAGraph_Random_* methods;
+// create operators for LAGraph_Random_* methods
 int LG_Random_Init (char *msg) ;
 int LG_Random_Finalize (char *msg) ;
 

@@ -56,6 +56,7 @@ int LAGr_PartitionQuality(
     LAGraph_Graph G, // original graph from which the clustering was obtained
     char *msg)
 {
+#if LAGRAPH_SUITESPARSE
     GrB_Vector trace = NULL;
     GrB_Vector k = NULL;
     GrB_Matrix C = NULL;
@@ -166,6 +167,8 @@ int LAGr_PartitionQuality(
     }
 
     LG_FREE_WORK;
-
     return (GrB_SUCCESS);
+#else
+    return (GrB_NOT_IMPLEMENTED);
+#endif
 }

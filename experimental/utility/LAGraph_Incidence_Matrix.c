@@ -65,6 +65,7 @@ int LAGraph_Incidence_Matrix
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
     
     GrB_Matrix E = NULL ;
     GrB_Matrix E_half = NULL ;
@@ -277,4 +278,7 @@ int LAGraph_Incidence_Matrix
     
     (*result) = E ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
+#endif
 }

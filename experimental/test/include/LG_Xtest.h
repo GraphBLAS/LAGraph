@@ -81,6 +81,14 @@ int LG_check_coarsen
     char *msg
 ) ;
 
+int LG_check_coloring
+(
+    // inputs
+    LAGraph_Graph G,
+    GrB_Vector C,
+    char *msg
+) ;
+
 int LG_check_edgeBetweennessCentrality
 (
     // output

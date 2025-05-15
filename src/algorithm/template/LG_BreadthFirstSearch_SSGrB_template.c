@@ -74,6 +74,7 @@ int LG_BreadthFirstSearch_SSGrB
 )
 #endif
 {
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -84,10 +85,6 @@ int LG_BreadthFirstSearch_SSGrB
     GrB_Vector w = NULL ;           // to compute work remaining
     GrB_Vector pi = NULL ;          // parent vector
     GrB_Vector v = NULL ;           // level vector
-
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
 
     bool compute_level  = (level != NULL) ;
     bool compute_parent = (parent != NULL) ;
@@ -352,5 +349,7 @@ int LG_BreadthFirstSearch_SSGrB
     if (compute_level ) (*level ) = v ;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

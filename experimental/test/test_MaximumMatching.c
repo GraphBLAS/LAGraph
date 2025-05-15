@@ -38,6 +38,7 @@ const uint64_t spranks[NTESTS] = {298, 2009, 14, 27, 1};
 
 void test_MCM(void)
 {
+#if LAGRAPH_SUITESPARSE
     LAGraph_Init(msg);
 
 //  OK(LG_SET_BURBLE(1));
@@ -194,6 +195,7 @@ void test_MCM(void)
         }
     }
     LAGraph_Finalize(msg);
+#endif
 }
 
 TEST_LIST = {{"MaximumMatching", test_MCM}, // just one test in this example

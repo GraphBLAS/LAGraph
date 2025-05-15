@@ -107,6 +107,8 @@ int LAGraph_FastGraphletTransform
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
+
     LG_CLEAR_MSG ;
     GrB_Index const U_inv_I[] = {0, 1, 2, 2, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 10, 10, 10, 10, 11, 11, 11, 12, 12, 12, 12, 13, 13, 14, 14, 15} ;
     GrB_Index const U_inv_J[] = {0, 1, 2, 4, 3, 4, 4, 5, 9, 10, 12, 13, 14, 15, 6, 10, 11, 12, 13, 14, 15, 7, 9, 10, 13, 14, 15, 8, 11, 14, 15, 9, 13, 15, 10, 13, 14, 15, 11, 14, 15, 12, 13, 14, 15, 13, 15, 14, 15, 15} ;
@@ -164,10 +166,6 @@ int LAGraph_FastGraphletTransform
 
     GrB_Index nvals ;
     int64_t ntri ;
-
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
 
     A = G->A ;
 
@@ -649,7 +647,8 @@ int LAGraph_FastGraphletTransform
     //--------------------------------------------------------------------------
 
     LG_FREE_WORK ;
-
-    return (0) ;
+    return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }
