@@ -175,12 +175,31 @@ void test_argminmax (void)
 }
 
 //----------------------------------------------------------------------------
+// test_argminmax_errors
+//----------------------------------------------------------------------------
+
+void test_argminmax_errors (void)
+{
+#if LAGRAPH_SUITESPARSE
+    LAGraph_Init (msg) ;
+    GrB_Matrix A = NULL ;
+    GrB_Vector x = NULL, p = NULL ;
+    OK (LAGraph_Random_Matrix (&A, GrB_FP64, 5, 5, 0.5, 1, msg)) ;
+    GrB_Info info = LG_check_argminmax (&x, &p, A, 3, true, msg) ;
+    TEST_CHECK (info == GrB_INVALID_VALUE) ;
+    GrB_free (&A) ;
+    LAGraph_Finalize (msg) ;
+#endif
+}
+
+//----------------------------------------------------------------------------
 // the main program is created by acutest, and it runs a list of tests:
 //----------------------------------------------------------------------------
 
 TEST_LIST =
 {
     {"argminmax", test_argminmax},
+    {"argminmax_errors", test_argminmax_errors},
     {NULL, NULL}
 } ;
 
