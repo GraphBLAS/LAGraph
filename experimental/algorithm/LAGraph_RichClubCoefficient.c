@@ -272,7 +272,7 @@ int LAGraph_RichClubCoefficient
         GRB_TRY (GrB_Vector_assign_INT64(
             ones_v, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;
             
-        #if !defined(COVERAGE)
+        #ifndef COVERAGE
         GRB_TRY (GrB_Vector_new(&ramp_v, GrB_INT64, edge_vec_nvals + 1)) ;  
         GRB_TRY (GrB_Vector_assign_INT64(
             ramp_v, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;

@@ -1420,6 +1420,20 @@ int LAGraph_SwapEdges
 ) ;
 
 LAGRAPHX_PUBLIC
+int LAGr_SwapEdges
+(
+    // output
+    GrB_Matrix *A_new, //The adjacency matrix of G with edges randomly swapped
+    // input: not modified
+    LAGraph_Graph G,
+    double loopTry, // Percent of edges to involve per loop [0,1]
+    double loopMin, // Minimum Swaps percent per loop [0,1)
+    GrB_Index totSwaps, // Desired Swaps
+    GrB_Index seed,
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
 int LG_CC_FastSV7_FA // SuiteSparse:GraphBLAS method, with GxB extensions
 (
     // output:
