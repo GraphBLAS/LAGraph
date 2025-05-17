@@ -1408,11 +1408,13 @@ int LAGraph_RichClubCoefficient
 //------------------------------------------------------------------------------
 // LAGraph_SwapEdges: Randomize Graph while maintaining degree sequence. 
 //------------------------------------------------------------------------------
+#define LAGRAPH_INSUFFICIENT_SWAPS 2100
+
 LAGRAPHX_PUBLIC
 int LAGraph_SwapEdges
 (
     // output
-    GrB_Matrix *A_new, //The adjacency matrix of G with edges randomly swapped
+    LAGraph_Graph *G_new, //The adjacency matrix of G with edges randomly swapped
     // input: not modified
     LAGraph_Graph G,
     GrB_Index Q, // Swaps per edge
@@ -1423,7 +1425,7 @@ LAGRAPHX_PUBLIC
 int LAGr_SwapEdges
 (
     // output
-    GrB_Matrix *A_new, //The adjacency matrix of G with edges randomly swapped
+    LAGraph_Graph *G_new, //The adjacency matrix of G with edges randomly swapped
     // input: not modified
     LAGraph_Graph G,
     double loopTry, // Percent of edges to involve per loop [0,1]

@@ -58,7 +58,7 @@
     GrB_free (&one8) ;                          \
     GrB_free (&x) ;                             \
     GrB_free (&temp_i) ;                        \
-    LAGraph_Free ((void ** )&indices, msg) ;    \
+    LAGraph_Free ((void ** )&indices, NULL) ;   \
     LAGraph_Free ((void **) &dup_swaps, NULL);  \
     FREE_LOOP ;                                 \
 }
@@ -68,7 +68,7 @@
     /* free any workspace used here */      \
     LG_FREE_WORK ;                          \
     /* free all the output variable(s) */   \
-    GrB_free(A_new) ;                       \
+    LAGraph_Delete(G_new, NULL) ;           \
     /* take any other corrective action */  \
 }
 
@@ -316,7 +316,7 @@ void edge2nd32_edge
 int LAGr_SwapEdges
 (
     // output
-    GrB_Matrix *A_new, //The adjacency matrix of G with edges randomly swapped
+    LAGraph_Graph *G_new, //The adjacency matrix of G with edges randomly swapped
     // input: not modified
     LAGraph_Graph G,
     double loopTry, // Percent of edges to involve per loop [0,1]
@@ -330,7 +330,7 @@ int LAGr_SwapEdges
     //--------------------------------------------------------------------------
     // Declorations
     //--------------------------------------------------------------------------
-    GrB_Matrix A = NULL; // n x n Adjacency Matrix 
+    GrB_Matrix A = NULL, A_new = NULL; // n x n Adjacency Matrix 
     GrB_Vector Ai = NULL, Aj = NULL;
     // e x 1 vector, each entry is an edge.
     GrB_Vector E_vec = NULL, E_temp = NULL; 
@@ -429,10 +429,8 @@ int LAGr_SwapEdges
     // char type[LAGRAPH_MAX_NAME_LEN];
     LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, 
         "G->nself_edges must be zero") ;
-    LG_ASSERT (A_new != NULL, GrB_NULL_POINTER) ;
-    // GRB_TRY (GxB_Matrix_type(&E_type, A)) ;
-    // LG_ASSERT_MSG (E_type == GrB_BOOL || , LAGRAPH_INVALID_GRAPH, 
-    //     "A must be structural") ;
+    LG_ASSERT (G_new != NULL, GrB_NULL_POINTER) ;
+    *G_new = NULL ;
 
     //--------------------------------------------------------------------------
     // Initializations
@@ -793,7 +791,7 @@ int LAGr_SwapEdges
                 "Completed %ld swaps total. [%.3f%% of Planned]\n", 
              n_keep, n_keep * 100.0 / totSwaps, n_keep * 200.0 / e, num_swaps, 
              num_swaps * 100.0 / totSwaps) ;
-        if(n_keep < (int) (loopMin * e))
+        if(n_keep < (int) (loopMin * e / 2) + 1)
         {
             printf("Too Few Swaps occured! Exiting.\n");
             break;
@@ -809,14 +807,14 @@ int LAGr_SwapEdges
     GRB_TRY (GrB_Vector_extract(
         Ai, NULL, NULL, E_vec, stride, GxB_STRIDE, NULL));
     // Build Output Matrix
-    GRB_TRY(GrB_Matrix_new(A_new, GrB_BOOL, n, n)) ;
-    GRB_TRY (GxB_Matrix_build_Scalar_Vector(*A_new, Ai, Aj, one8, NULL)) ;
+    GRB_TRY (GrB_Matrix_new(&A_new, GrB_BOOL, n, n)) ;
+    GRB_TRY (GxB_Matrix_build_Scalar_Vector(A_new, Ai, Aj, one8, NULL)) ;
     GRB_TRY (GrB_eWiseAdd(
-        *A_new, NULL, NULL, GrB_LOR_MONOID_BOOL, *A_new,*A_new, GrB_DESC_T0
+        A_new, NULL, NULL, GrB_LOR_MONOID_BOOL, A_new,A_new, GrB_DESC_T0
     )) ;
-
+    LAGRAPH_TRY (LAGraph_New (G_new, &A_new, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     LG_FREE_WORK ;
-    return (GrB_SUCCESS) ;
+    return (num_swaps >= totSwaps)? GrB_SUCCESS :  LAGRAPH_INSUFFICIENT_SWAPS ;
     #else
     printf("LAGr_SwapEdges Needs GB v10\n") ;
     return (GrB_NOT_IMPLEMENTED) ;

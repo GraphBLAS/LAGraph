@@ -24,7 +24,7 @@
 int LAGraph_SwapEdges
 (
     // output
-    GrB_Matrix *A_new, //The adjacency matrix of G with edges randomly swapped
+    LAGraph_Graph *G_new, //The adjacency matrix of G with edges randomly swapped
     // input: not modified
     LAGraph_Graph G,
     GrB_Index Q, // Swaps per edge
@@ -33,5 +33,7 @@ int LAGraph_SwapEdges
 {
     GrB_Index numSwaps = 0;
     GrB_Matrix_nvals(&numSwaps, G->A) ;
-    return LAGr_SwapEdges(A_new, G, .70, .10, numSwaps, 891234789234ull, msg) ;
+    numSwaps /= 2;
+    numSwaps *= Q;
+    return LAGr_SwapEdges(G_new, G, .70, .10, numSwaps, 891234789234ull, msg) ;
 }

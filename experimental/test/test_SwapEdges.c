@@ -25,7 +25,7 @@
 
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL, G_new = NULL;
-GrB_Matrix A = NULL, C = NULL, A_new = NULL, C_new = NULL; 
+GrB_Matrix A = NULL, C = NULL, C_new = NULL; 
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -106,7 +106,7 @@ void test_SwapEdges (void)
             // test the algorithm
             //------------------------------------------------------------------
             // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-            OK(LAGraph_SwapEdges( &A_new, G, (GrB_Index) 100, msg));
+            OK(LAGraph_SwapEdges( &G_new, G, (GrB_Index) 100, msg));
             // GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
             printf ("Test ends:\n") ;
             printf ("%s\n", msg) ;
@@ -116,7 +116,6 @@ void test_SwapEdges (void)
             //------------------------------------------------------------------
             bool ok = false;
             //Make sure we got a symetric back out:
-            OK (LAGraph_New (&G_new, &A_new, LAGraph_ADJACENCY_DIRECTED, msg)) ;
             OK (LAGraph_Cached_AT (G_new, msg)) ;
             OK (LAGraph_Matrix_IsEqual (&ok, G_new->AT, G_new->A, msg)) ;
             TEST_CHECK (ok) ;
@@ -149,6 +148,76 @@ void test_SwapEdges (void)
     #endif
 }
 
+void test_SwapFull()
+{
+    #if USING_GRAPHBLAS_V10
+    //--------------------------------------------------------------------------
+    // start LAGraph
+    //--------------------------------------------------------------------------
+    OK (LAGraph_Init (msg)) ;
+    //The following code taken from MIS tester
+    // load the matrix as A
+    const char *aname = "full.mtx";
+    TEST_CASE (aname) ;
+    snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    TEST_MSG ("Loading of valued matrix failed") ;
+    printf ("\nMatrix: %s\n", aname) ;
+
+    // C = structure of A
+    OK (LAGraph_Matrix_Structure (&C, A, msg)) ;
+    OK (GrB_free (&A)) ;
+
+    // construct a directed graph G with adjacency matrix C
+    OK (LAGraph_New (&G, &C, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (C == NULL) ;
+
+    // check if the pattern is symmetric
+    OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+    G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+
+    // check for self-edges
+    OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+    if (G->nself_edges != 0)
+    {
+        // remove self-edges
+        printf ("graph has %g self edges\n", (double) G->nself_edges) ;
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+        printf ("now has %g self edges\n", (double) G->nself_edges) ;
+        TEST_CHECK (G->nself_edges == 0) ;
+    }
+
+    // compute the row degree
+    GrB_Index n = 0;
+    OK (LAGraph_Cached_OutDegree (G, msg)) ;
+    OK (GrB_Matrix_nrows(&n, G->A));
+    //------------------------------------------------------------------
+    // test the algorithm
+    //------------------------------------------------------------------
+    TEST_CHECK(
+        LAGraph_SwapEdges( &G_new, G, 100, msg) == LAGRAPH_INSUFFICIENT_SWAPS) ;
+    printf ("Test ends:\n") ;
+    printf ("%s\n", msg) ;
+    //------------------------------------------------------------------
+    // check results (No swaps should have occured)
+    //------------------------------------------------------------------
+
+    bool ok = false;
+    OK (LAGraph_Matrix_IsEqual (&ok, G_new->A, G->A, msg)) ;
+    TEST_CHECK (ok) ;
+    OK (LAGraph_Delete (&G_new, msg)) ;
+    OK (LAGraph_Delete (&G, msg)) ;
+
+    //--------------------------------------------------------------------------
+    // free everything and finalize LAGraph
+    //--------------------------------------------------------------------------
+    LAGraph_Finalize (msg) ;
+    #endif
+}
+
 //----------------------------------------------------------------------------
 // the make program is created by acutest, and it runs a list of tests:
 //----------------------------------------------------------------------------
@@ -156,5 +225,6 @@ void test_SwapEdges (void)
 TEST_LIST =
 {
     {"SwapEdges", test_SwapEdges},   
+    {"SwapFull", test_SwapFull},   
     {NULL, NULL}
 } ;
