@@ -80,7 +80,7 @@ void test_FastGraphletTransform(void)
 {
     #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
-//  OK (GrB_Global_set_INT32 (GrB_GLOBAL, true, GxB_BURBLE)) ;
+//  OK (LG_SET_BURBLE (true)) ;
 
     GrB_Matrix A = NULL, F_net = NULL ;
     GrB_Index n ;

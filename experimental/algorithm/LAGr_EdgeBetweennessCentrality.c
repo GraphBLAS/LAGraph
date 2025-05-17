@@ -28,7 +28,6 @@
 
 #define LG_FREE_WORK                                \
 {                                                   \
-    printf ("free work\n") ; \
     GrB_free (&frontier) ;                          \
     GrB_free (&J_vec) ;                             \
     GrB_free (&I_vec) ;                             \
@@ -62,28 +61,6 @@
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
-
-#undef  LAGRAPH_CATCH
-#define LAGRAPH_CATCH(status)                                           \
-{                                                                       \
-    print ("LAGraph failure (file %s, line %d): status: %d",     \
-        __FILE__, __LINE__, status) ;                                   \
-    LG_ERROR_MSG ("LAGraph failure (file %s, line %d): status: %d",     \
-        __FILE__, __LINE__, status) ;                                   \
-    LG_FREE_ALL ;                                                       \
-    return (status) ;                                                   \
-}
-
-#undef GRB_CATCH
-#define GRB_CATCH(info)                                                 \
-{                                                                       \
-    printf ("GraphBLAS failure (file %s, line %d): info: %d",     \
-        __FILE__, __LINE__, info) ;                                     \
-    LG_ERROR_MSG ("GraphBLAS failure (file %s, line %d): info: %d",     \
-        __FILE__, __LINE__, info) ;                                     \
-    LG_FREE_ALL ;                                                       \
-    return (info) ;                                                     \
-}
 
 //------------------------------------------------------------------------------
 // (1+x)/y function for double: z = (1 + x) / y
@@ -495,7 +472,6 @@ int LAGr_EdgeBetweennessCentrality
     // === finalize the centrality =============================================
     // =========================================================================
 
-    printf ("bye\n") ; \
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 #else

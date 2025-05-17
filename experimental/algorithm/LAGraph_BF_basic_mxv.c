@@ -119,7 +119,6 @@ GrB_Info LAGraph_BF_basic_mxv
         LG_TRY (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
         if (!same)
         {
-            // printf("AT negative-weight cycle found. \n");
             LG_FREE_ALL;
             return (GrB_NO_VALUE) ;
         }

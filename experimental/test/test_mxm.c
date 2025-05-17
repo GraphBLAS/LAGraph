@@ -82,11 +82,7 @@ void test_mxm (void)
                     LG_SET_FORMAT_HINT (Cin, C_sparsity) ;
                     for (int jit = 0 ; jit <= 1 ; jit++)
                     {
-
-                        #if LAGRAPH_SUITESPARSE
-                        OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
-                            jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
-                        #endif
+                        OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
 
                         // C2 = Cin + A*B
                         OK (GrB_Matrix_dup (&C2, Cin)) ;

@@ -14,15 +14,6 @@
     LG_FREE_WORK ;                  \
 }
 
-#undef  LAGRAPH_CATCH
-#define LAGRAPH_CATCH(status)                                   \
-{                                                               \
-    printf ("LAGraph error: (%d): file: %s, line: %d\n%s\n",    \
-        status, __FILE__, __LINE__, msg) ;                      \
-    LG_FREE_ALL ;                                               \
-    return (status) ;                                           \
-}
-
 int LAGraph_coloring_MIS
 (
     // output
@@ -34,9 +25,6 @@ int LAGraph_coloring_MIS
     char *msg
 )
 {
-    // printf("initial graph: \n");
-    // LAGraph_Matrix_Print(G->A, LAGraph_SHORT, stdout, msg);
-
     bool verbose = false;
     GrB_Vector local_color = NULL;
     GrB_Vector curr_MIS = NULL;
@@ -52,7 +40,6 @@ int LAGraph_coloring_MIS
     LAGRAPH_TRY(LAGraph_Cached_OutDegree(G, msg)) ;    
 
     /* algorithm start */
-    // printf("starting algorithm\n");
     GrB_Index colored_nodes;
     int64_t curr_color;
     for (curr_color = 1; curr_color < n+1; curr_color++) {
@@ -64,15 +51,12 @@ int LAGraph_coloring_MIS
         GRB_TRY(GrB_assign(local_color, curr_MIS, GrB_NULL, curr_color, GrB_ALL, n, GrB_DESC_S));
 
         GrB_Vector_nvals(&colored_nodes, local_color);
-        // printf ("colored: %ld of %ld\n", colored_nodes, n) ;
-        // fflush (stdout) ;
         if (colored_nodes == n) {
             break;
         }
 
     }
     
-    // printf("finished algorithm\n");
     (*num_colors) = curr_color;
     (*color) = local_color;
     local_color = NULL ;

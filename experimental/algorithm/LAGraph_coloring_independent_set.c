@@ -24,8 +24,6 @@ int LAGraph_coloring_independent_set
 )
 {
 #if LAGRAPH_SUITESPARSE
-    // printf("initial graph: \n");
-    // LAGraph_Matrix_Print(G->A, LAGraph_SHORT, stdout, msg);
 
     bool verbose = false;
     GrB_Vector local_color = NULL;
@@ -42,8 +40,7 @@ int LAGraph_coloring_independent_set
     GRB_TRY(GrB_Vector_new(&local_color, Int, n));
 
     // lg_set_format_hint -> bitmap
-    GRB_TRY (GxB_set (local_color, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
-    GxB_print (local_color, 2) ;
+    GRB_TRY (LG_SET_FORMAT_HINT (local_color, LG_BITMAP)) ;
 
     /* weights initialized randomly
     *  seed of 20 was chosen arbitrarily */   
@@ -53,10 +50,6 @@ int LAGraph_coloring_independent_set
     // LG_TRY(LAGraph_Random_Seed(weight, 2, msg));
     LG_TRY (LAGraph_Random_Seed(weight, 20, msg)) ;
 
-    // printf("random done\n");
-    // printf("weight vector\n");
-    // GxB_print(weight, 3);
-
     GRB_TRY(GrB_Vector_new(&in_curr_subset, GrB_BOOL, n));
 
     GRB_TRY(GrB_Vector_new(&max_weights, GrB_UINT64, n));
@@ -65,7 +58,6 @@ int LAGraph_coloring_independent_set
     LG_SET_BURBLE(true) ;
 
     /* algorithm start */
-    // printf("starting algorithm\n");
     int64_t curr_color;
     for (curr_color = 1; curr_color < n+1; curr_color++) {
         /* mxv - find maximum of all neighboring weights */
@@ -85,8 +77,6 @@ int LAGraph_coloring_independent_set
 
         GrB_Index nvals_local_color;
         GRB_TRY(GrB_Vector_nvals(&nvals_local_color, local_color));
-        // printf ("colored: %ld of %ld: %g\n", nvals_local_color, n, tthis) ;
-        // fflush (stdout) ;
 
         /* check if in_curr_subset is empty then break */
         GrB_Index nvals_in_curr_subset;
@@ -95,9 +85,6 @@ int LAGraph_coloring_independent_set
             GrB_Index nvals_local_color;
             GRB_TRY(GrB_Vector_nvals(&nvals_local_color, local_color));
             if (nvals_local_color < n) {
-//              printf("ERROR in LAGraph_coloring_independent_set: in_curr_subset is empty, but nvals (local_color) < n\n");
-//              LG_FREE_ALL ;
-//              return (1) ;
                 LG_ASSERT_MSG (false, LAGRAPH_CONVERGENCE_FAILURE,
                     "LAGraph_coloring_independent_set: in_curr_subset is empty, but nvals (local_color) < n") ;
             }
@@ -113,7 +100,6 @@ int LAGraph_coloring_independent_set
     
     LG_SET_BURBLE(false) ;
 
-    // printf("finished algorithm\n");
     (*num_colors) = curr_color - 1;
     (*color) = local_color;
     local_color = NULL ;

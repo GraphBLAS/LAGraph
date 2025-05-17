@@ -1,9 +1,18 @@
-// FIXME: not ready for src, need to use IndexBinaryOps instead.
-// See argmin/argmax in GraphBLAS/@GrB/*/*/gbargminmax.c.
+//------------------------------------------------------------------------------
+// experimental/algorithm/LAGraph_argminmax
+//------------------------------------------------------------------------------
 
-// FIXME: make x and p GrB_Vectors
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 // Contributed by Olumayowa Olowomeye and Tim Davis, Texas A&M University
+
+//------------------------------------------------------------------------------
+
+// FIXME: not ready for src, need to use IndexBinaryOps instead.
+// See argmin/argmax in GraphBLAS/@GrB/*/*/gbargminmax.c.
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
@@ -14,6 +23,22 @@
 //------------------------------------------------------------------------------
 // argminmax: compute argmin/max of each row/column of A
 //------------------------------------------------------------------------------
+
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK        \
+{                           \
+    GrB_free (&G) ;         \
+    GrB_free (&D) ;         \
+    GrB_free (&y) ;         \
+}
+
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL         \
+{                           \
+    LG_FREE_WORK ;          \
+    GrB_free (x) ;          \
+    GrB_free (p) ;          \
+}
 
 #if LAGRAPH_SUITESPARSE
 
@@ -35,20 +60,21 @@ int argminmax
     // get the size and type of A
     //--------------------------------------------------------------------------
 
-    // (*x) = NULL ;
-    // (*p) = NULL ;
+    GrB_Matrix y = NULL ;
+    GrB_Matrix G = NULL, D = NULL ;
+    (*x) = NULL ;
+    (*p) = NULL ;
 
     GrB_Index nrows, ncols ;
     GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
     GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Type type ;
     GRB_TRY (GxB_Matrix_type (&type, A)) ;
+
     //--------------------------------------------------------------------------
     // create outputs x and p, and the iso full vector y
     //--------------------------------------------------------------------------
 
-    GrB_Matrix y = NULL ;
-    GrB_Matrix G = NULL, D = NULL ;
     GrB_Index n = (dim == 2) ? ncols : nrows ;
     GrB_Index m = (dim == 2) ? nrows : ncols ;
     GrB_Descriptor desc = (dim == 2) ? NULL : GrB_DESC_T0 ;
@@ -130,11 +156,28 @@ int argminmax
 // gbargminmax: mexFunction to compute the argmin/max of each row/column of A
 //------------------------------------------------------------------------------
 
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK        \
+{                           \
+    GrB_free (&x1) ;        \
+    GrB_free (&p1) ;        \
+    GrB_free (&x) ;         \
+    GrB_free (&p) ;         \
+}
+
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL         \
+{                           \
+    LG_FREE_WORK ;          \
+    GrB_free (x_result) ;   \
+    GrB_free (p_result) ;   \
+}
+
 int LAGraph_argminmax
 (
     // output
-    GrB_Matrix *x,              // min/max value in each row/col of A
-    GrB_Matrix *p,              // index of min/max value in each row/col of A
+    GrB_Vector *x_result,       // min/max value in each row/col of A
+    GrB_Vector *p_result,       // index of min/max value in each row/col of A
     // input
     GrB_Matrix A,
     int dim,                    // dim=1: cols of A, dim=2: rows of A
@@ -150,8 +193,9 @@ int LAGraph_argminmax
 
     // FIXME: need LAGraph error checks here
 
-    (*x) = NULL ;
-    (*p) = NULL ;
+    GrB_Matrix x = NULL, p = NULL, x1 = NULL, p1 = NULL ;
+    (*x_result) = NULL ;
+    (*p_result) = NULL ;
 
     //--------------------------------------------------------------------------
     // select the semirings
@@ -295,7 +339,6 @@ int LAGraph_argminmax
         else
         {
             // ERROR ("unsupported type") ;
-            // LG_ASSERT_MSG (false, -105, "G->A must be symmetric") ;
         }
     }
 
@@ -311,19 +354,18 @@ int LAGraph_argminmax
         //----------------------------------------------------------------------
 
         // [x1,p1] = argmin/max of each column of A
-        GrB_Matrix x1, p1 ;
         argminmax (&x1, &p1, A, 1, minmax_first, any_equal, msg) ;
         // [x,p] = argmin/max of each entry in x
-        argminmax (x, p, x1, 1, minmax_first, any_equal, msg) ;
+        argminmax (&x, &p, x1, 1, minmax_first, any_equal, msg) ;
         // get the row and column index of the overall argmin/max of A
         int64_t I [2] = { 0, 0 } ;
         GrB_Index nvals0, nvals1 ;
-        GRB_TRY (GrB_Matrix_nvals (&nvals0, *p)) ;
+        GRB_TRY (GrB_Matrix_nvals (&nvals0, p)) ;
         GRB_TRY (GrB_Matrix_nvals (&nvals1, p1)) ;
         if (nvals0 > 0 && nvals1 > 0)
         {
             // I [0] = p [0], the row index of the global argmin/max of A
-            GRB_TRY (GrB_Matrix_extractElement_INT64 (&(I [0]), *p, 0, 0)) ;
+            GRB_TRY (GrB_Matrix_extractElement_INT64 (&(I [0]), p, 0, 0)) ;
             // I [1] = p1 [I [0]]
             // which is the column index of the global argmin/max of A
             GRB_TRY (GrB_Matrix_extractElement_INT64 (&(I [1]), p1, I [0], 0)) ;
@@ -332,12 +374,17 @@ int LAGraph_argminmax
         // free workspace and create p = [row, col]
         GRB_TRY (GrB_Matrix_free (&x1)) ;
         GRB_TRY (GrB_Matrix_free (&p1)) ;
-        GRB_TRY (GrB_Matrix_free (p)) ;
-        GRB_TRY (GrB_Matrix_new (p, GrB_INT64, 2,1)) ;
+        GRB_TRY (GrB_Matrix_free (&p)) ;
+        GRB_TRY (GrB_Vector_new (x_result, type, 1)) ;
+        GRB_TRY (GrB_Vector_new (p_result, GrB_INT64, 2)) ;
         if (nvals0 > 0 && nvals1 > 0)
         {
-            GRB_TRY (GrB_Matrix_setElement_INT64 (*p, I [1], 0, 0)) ;
-            GRB_TRY (GrB_Matrix_setElement_INT64 (*p, I [0], 1, 0)) ;
+            // x_result = x (:,0)
+            GRB_TRY (GrB_Col_extract (*x_result, NULL, NULL, x, GrB_ALL,
+                1, 0, NULL)) ;
+            // p_result = [row, col]
+            GRB_TRY (GrB_Vector_setElement_INT64 (*p_result, I [1], 0)) ;
+            GRB_TRY (GrB_Vector_setElement_INT64 (*p_result, I [0], 1)) ;
         }
 
     }
@@ -348,7 +395,7 @@ int LAGraph_argminmax
         // argmin/max of each column of A
         //----------------------------------------------------------------------
 
-        argminmax (x, p, A, 1, minmax_first, any_equal, msg) ;
+        argminmax (&x, &p, A, 1, minmax_first, any_equal, msg) ;
     }
     else
     {
@@ -358,13 +405,28 @@ int LAGraph_argminmax
         // argmin/max of each row of A
         //----------------------------------------------------------------------
 
-        argminmax (x, p, A, 2, minmax_first, any_equal, msg) ;
+        argminmax (&x, &p, A, 2, minmax_first, any_equal, msg) ;
     }
 
     //--------------------------------------------------------------------------
     // return result
     //--------------------------------------------------------------------------
 
+    if (dim != 0)
+    {
+        // x_result = x (:,0)
+        // p_result = p (:,0)
+        GrB_Index m ;
+        GRB_TRY (GrB_Matrix_nrows (&m, x)) ;
+        GRB_TRY (GrB_Vector_new (x_result, type, m)) ;
+        GRB_TRY (GrB_Vector_new (p_result, GrB_INT64, m)) ;
+        GRB_TRY (GrB_Col_extract (*x_result, NULL, NULL, x, GrB_ALL, m, 0,
+            NULL)) ;
+        GRB_TRY (GrB_Col_extract (*p_result, NULL, NULL, p, GrB_ALL, m, 0,
+            NULL)) ;
+    }
+
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 #else
     return (GrB_NOT_IMPLEMENTED);

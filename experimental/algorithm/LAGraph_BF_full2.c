@@ -237,7 +237,6 @@ GrB_Info LAGraph_BF_full2
     int nthreads, nthreads_outer, nthreads_inner ;
     LG_TRY (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, msg)) ;
     nthreads = nthreads_outer * nthreads_inner ;
-    printf ("nthreads %d\n", nthreads) ;
     int64_t k;
     #pragma omp parallel for num_threads(nthreads) schedule(static)
     for (k = 0; k < nz; k++)
@@ -312,7 +311,6 @@ GrB_Info LAGraph_BF_full2
         LG_TRY (LAGraph_Vector_IsEqualOp (&same, dtmp, d, BF_EQ_Tuple3, NULL));
         if (!same)
         {
-            // printf("A negative-weight cycle found. \n");
             LG_FREE_ALL;
             return (GrB_NO_VALUE) ;
         }

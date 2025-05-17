@@ -36,10 +36,8 @@ int main(int argc, char **argv)
     for (int i = 0 ; i < ntrials ; i++) {
         LG_TRY (LAGraph_Random_Matrix (&D, GrB_FP64, n, n, density, seed, msg)) ;
         LG_TRY (LAGraph_Random_Matrix (&A, GrB_FP64, n, n, density, seed + 32, msg)) ;
-        #if LAGRAPH_SUITESPARSE
-        GRB_TRY (GxB_set (D, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-        GRB_TRY (GxB_set (A, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-        #endif
+        GRB_TRY (LG_SET_FORMAT_HINT (D, LG_SPARSE)) ;
+        GRB_TRY (LG_SET_FORMAT_HINT (A, LG_SPARSE)) ;
 
         GRB_TRY (GrB_Scalar_new (&s, GrB_FP64)) ;
         GRB_TRY (GrB_Scalar_setElement_UINT64 (s, 2.0)) ;

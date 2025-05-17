@@ -106,4 +106,16 @@ int LG_check_rcc
     char *msg
 ) ;
 
+int LG_check_argminmax
+(
+    // output
+    GrB_Vector *x_result,       // min/max value in each row/col of A
+    GrB_Vector *p_result,       // index of min/max value in each row/col of A
+    // input
+    GrB_Matrix A,
+    int dim,                    // dim=1: cols of A, dim=2: rows of A
+    bool is_min,
+    char *msg
+) ;
+
 #endif

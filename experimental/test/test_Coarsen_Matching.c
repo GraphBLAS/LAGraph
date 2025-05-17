@@ -89,7 +89,7 @@ void test_Coarsen_Matching () {
 #if LAGRAPH_SUITESPARSE
 
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+//  OK (LG_SET_BURBLE (true)) ;
 
     for (int k = 0 ; ; k++)
     {

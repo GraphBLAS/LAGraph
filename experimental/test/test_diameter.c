@@ -15,7 +15,8 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: need to check the results with correct their values
+// FIXME: vector results (peripheral, eccentricity, level, and parent) are not
+// checked with exact values
 
 #include <stdio.h>
 #include <acutest.h>
@@ -39,6 +40,7 @@ char filename [LEN+1] ;
 
 typedef struct
 {
+    int diameter ;
     bool symmetric ;
     const char *name ;
 }
@@ -46,17 +48,17 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
-    { 1, "A.mtx" },
-    { 1, "jagmesh7.mtx" },
-    { 0, "west0067.mtx" }, // unsymmetric
-    { 1, "bcsstk13.mtx" },
-    { 1, "karate.mtx" },
-    { 1, "ldbc-cdlp-undirected-example.mtx" },
-    { 1, "ldbc-undirected-example-bool.mtx" },
-    { 1, "ldbc-undirected-example-unweighted.mtx" },
-    { 1, "ldbc-undirected-example.mtx" },
-    { 1, "ldbc-wcc-example.mtx" },
-    { 0, "" },
+    {  2, 1, "A.mtx" },
+    { 60, 1, "jagmesh7.mtx" },
+    {  6, 0, "west0067.mtx" }, // unsymmetric
+    { 11, 1, "bcsstk13.mtx" },
+    {  5, 1, "karate.mtx" },
+    {  4, 1, "ldbc-cdlp-undirected-example.mtx" },
+    {  4, 1, "ldbc-undirected-example-bool.mtx" },
+    {  4, 1, "ldbc-undirected-example-unweighted.mtx" },
+    {  4, 1, "ldbc-undirected-example.mtx" },
+    {  3, 1, "ldbc-wcc-example.mtx" },
+    {  0, 0, "" },
 } ;
 
 #undef OK
@@ -109,7 +111,9 @@ void test_diameter (void)
         OK (LAGraph_ExactDiameter (&diameter, &peripheral, &eccentricity,
             G, 8, msg)) ;
 
-        printf ("\ndiameter: %" PRIu64 "\n", diameter) ;
+        printf ("\n%s exact diameter: %" PRIu64 "\n", aname, diameter) ;
+        TEST_CHECK (diameter == files [k].diameter) ;
+
         printf ("\nperipheral:\n") ;
         OK (LAGraph_Vector_Print (peripheral, pr, stdout, msg)) ;
         printf ("\neccentricity:\n") ;
@@ -117,8 +121,7 @@ void test_diameter (void)
 
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
-            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
-                jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+            OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
             // compute the estimated diameter
             GrB_Index estimated_diameter = 0 ;
             OK (LAGraph_EstimateDiameter (&estimated_diameter, &est_peripheral,
@@ -165,7 +168,7 @@ void test_diameter_huge (void)
 {
     #if LAGRAPH_SUITESPARSE
     OK (LAGraph_Init (msg)) ;
-    OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_OFF)) ;
+    OK (LG_SET_JIT (LG_JIT_OFF)) ;
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;

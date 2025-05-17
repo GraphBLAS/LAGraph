@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/experimental/benchmark/estimateDiameter_demo.c: a simple demo
+// LAGraph/experimental/benchmark/estimateDiameter_demo.c
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2022 by The LAGraph Contributors, All Rights Reserved.
@@ -28,20 +28,16 @@
 //      ./experimental/benchmark/estimateDiameter_demo < /raid/matrices/com-Youtube/com-Youtube.mtx
 //
 #include "LAGraphX.h"
+#include "LG_internal.h"
 
-// LAGRAPH_CATCH is required by LAGRAPH_TRY.  If an error occurs, this macro
-// catches it and takes corrective action, then terminates this program.
-#define LAGRAPH_CATCH(info)                     \
+#undef LG_FREE_ALL
+#define LG_FREE_ALL                             \
 {                                               \
     GrB_free (&Y) ;                             \
     GrB_free (&A) ;                             \
-    GrB_free (&peripheral) ;                         \
+    GrB_free (&peripheral) ;                    \
     LAGraph_Delete (&G, msg) ;                  \
-    return (info) ;                             \
 }
-
-// GRB_CATCH is required by GRB_TRY (although GRB_TRY isn't used here)
-#define GRB_CATCH(info) LAGRAPH_CATCH(info)
 
 int main (int argc, char **argv)
 {
@@ -103,8 +99,7 @@ int main (int argc, char **argv)
     // free everything and finish
     //--------------------------------------------------------------------------
 
-    GrB_free (&Y) ;
-    LAGraph_Delete (&G, msg) ;
+    LG_FREE_ALL ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

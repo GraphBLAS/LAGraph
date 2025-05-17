@@ -2,7 +2,7 @@
 // LAGraphX.h: include file for LAGraph experimental code
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -1365,8 +1365,8 @@ LAGRAPHX_PUBLIC
 int LAGraph_argminmax
 (
     // output
-    GrB_Matrix *x,              // min/max value in each row/col of A
-    GrB_Matrix *p,              // index of min/max value in each row/col of A
+    GrB_Vector *x,              // min/max value in each row/col of A
+    GrB_Vector *p,              // index of min/max value in each row/col of A
     // input
     GrB_Matrix A,
     int dim,                    // dim=1: cols of A, dim=2: rows of A

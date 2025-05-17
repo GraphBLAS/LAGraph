@@ -82,7 +82,7 @@ void test_cc_matrices (void)
 {
 
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
+//  OK (LG_SET_BURBLE (true)) ;
     for (int k = 0 ; ; k++)
     {
 
@@ -217,7 +217,7 @@ void test_cc_matrices (void)
 void test_cc_errors (void)
 {
     OK (LAGraph_Init (msg)) ;
-//  GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
+//  OK (LG_SET_BURBLE (true)) ;
     printf ("\n") ;
 
     // check for null pointers
