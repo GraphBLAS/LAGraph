@@ -149,7 +149,7 @@ int LAGraph_RichClubCoefficient
     GrB_Index n ;
     
     GrB_Index edge_vec_nvals;
-    GrB_Index max_deg;
+    int64_t max_deg;
     bool iso = false;
 
     void *a_space = NULL;
@@ -158,7 +158,7 @@ int LAGraph_RichClubCoefficient
         *epd_arr = NULL, *ones = NULL, 
         *vpd_arr = NULL;
     GrB_Type epd_type = NULL, vpd_type = NULL;
-    int64_t epd_n = 0, vpd_n = 0, epd_size = 0, vpd_size = 0;
+    uint64_t epd_n = 0, vpd_n = 0, epd_size = 0, vpd_size = 0;
     int epd_h = 0, vpd_h = 0;
     GrB_Index *epd_index = NULL,  *vpd_index = NULL;
 

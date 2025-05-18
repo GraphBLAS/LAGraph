@@ -137,7 +137,7 @@ void test_SwapEdges (void)
             GrB_Index edge_count, new_edge_count;
             OK (GrB_Matrix_nvals(&edge_count, G->A)) ;
             OK (GrB_Matrix_nvals(&new_edge_count, G_new->A)) ;
-            printf("old: %ld, new: %ld", edge_count,new_edge_count);
+            printf("old: %lu, new: %lu", edge_count, new_edge_count);
             TEST_CHECK(edge_count == new_edge_count);
             //next: check degrees stay the same.
             OK (LAGraph_Cached_OutDegree (G_new, msg)) ;
@@ -284,8 +284,8 @@ void test_SwapEdges_brutal (void)
             TEST_CHECK (G->nself_edges == 0) ;
         }
         #else
-        LG_ASSERT (G->is_symmetric_structure, GrB_INVALID_VALUE) ;
-        LG_ASSERT (G->nself_edges == 0, GrB_INVALID_VALUE) ;
+        TEST_CHECK (G->is_symmetric_structure) ;
+        TEST_CHECK (G->nself_edges == 0) ;
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
         #endif
 

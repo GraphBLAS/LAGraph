@@ -156,7 +156,7 @@ int LAGraph_FastAssign_Semiring
     // TODO: Ditto for X_vec
 
     GrB_Matrix P = NULL;
-    int64_t n, nrows;
+    GrB_Index n, nrows;
     GxB_Container con = NULL;
     void *ramp_a = NULL, *i_a =NULL;
     int ramp_h = GrB_DEFAULT, trsp = GrB_DEFAULT, i_h = GrB_DEFAULT;
