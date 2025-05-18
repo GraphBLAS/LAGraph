@@ -39,6 +39,15 @@ const char* tests [ ] =
     "test_FW_2500.mtx",
     ""
 } ;
+const char* testsb [ ] =
+{
+    "random_unweighted_general1.mtx",
+    "random_unweighted_general2.mtx",
+    "random_weighted_general1.mtx",
+    "random_weighted_general2.mtx",
+    "bucky.mtx",
+    ""
+} ;
 void test_SwapEdges (void)
 {
     #if USING_GRAPHBLAS_V10
@@ -106,7 +115,7 @@ void test_SwapEdges (void)
             // test the algorithm
             //------------------------------------------------------------------
             // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-            OK(LAGraph_SwapEdges( &G_new, G, (GrB_Index) 100, msg));
+            OK(LAGraph_SwapEdges( &G_new, G, (GrB_Index) 10, msg));
             // GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
             printf ("Test ends:\n") ;
             printf ("%s\n", msg) ;
@@ -114,11 +123,11 @@ void test_SwapEdges (void)
             //------------------------------------------------------------------
             // check results
             //------------------------------------------------------------------
-            bool ok = false;
             //Make sure we got a symetric back out:
-            OK (LAGraph_Cached_AT (G_new, msg)) ;
-            OK (LAGraph_Matrix_IsEqual (&ok, G_new->AT, G_new->A, msg)) ;
-            TEST_CHECK (ok) ;
+            OK (LAGraph_CheckGraph (G_new, msg)) ;
+                    
+            OK (LAGraph_Cached_NSelfEdges (G_new, msg)) ;
+            TEST_CHECK (G_new->nself_edges == 0);
                     
             //Make sure no self edges created.
             OK (LAGraph_Cached_NSelfEdges (G_new, msg)) ;
@@ -133,6 +142,7 @@ void test_SwapEdges (void)
             //next: check degrees stay the same.
             OK (LAGraph_Cached_OutDegree (G_new, msg)) ;
 
+            bool ok = false;
             OK (LAGraph_Vector_IsEqual (
                 &ok, G->out_degree, G_new->out_degree, msg)) ;
             TEST_CHECK (ok) ;
@@ -148,7 +158,7 @@ void test_SwapEdges (void)
     #endif
 }
 
-void test_SwapFull()
+void test_SwapFull(void)
 {
     #if USING_GRAPHBLAS_V10
     //--------------------------------------------------------------------------
@@ -217,7 +227,108 @@ void test_SwapFull()
     LAGraph_Finalize (msg) ;
     #endif
 }
+void test_SwapEdges_brutal (void)
+{
+    #if USING_GRAPHBLAS_V10
+    //--------------------------------------------------------------------------
+    // start LAGraph
+    //--------------------------------------------------------------------------
+    OK (LG_brutal_setup (msg)) ;
 
+    for (int k = 0 ; ; k++)
+    {
+        //The following code taken from MIS tester
+        // load the matrix as A
+        const char *aname = testsb [k];
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of valued matrix failed") ;
+        printf ("\nMatrix: %s\n", aname) ;
+
+        // C = structure of A
+        OK (LAGraph_Matrix_Structure (&C, A, msg)) ;
+        OK (GrB_free (&A)) ;
+
+        // construct a directed graph G with adjacency matrix C
+        OK (LAGraph_New (&G, &C, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (C == NULL) ;
+
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+        OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+
+        // all matricies I test on here are undirected with no self edges. 
+        // If this changes, change to #if 1.
+        #if 0
+        // check if the pattern is symmetric
+        if (G->is_symmetric_structure == LAGraph_FALSE)
+        {
+            // make the adjacency matrix symmetric
+            OK (LAGraph_Cached_AT (G, msg)) ;
+            OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_LOR, G->A, G->AT, NULL)) ;
+            G->is_symmetric_structure = LAGraph_TRUE ;
+        }
+        G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+
+        // check for self-edges
+        if (G->nself_edges != 0)
+        {
+            // remove self-edges
+            printf ("graph has %g self edges\n", (double) G->nself_edges) ;
+            OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+            printf ("now has %g self edges\n", (double) G->nself_edges) ;
+            TEST_CHECK (G->nself_edges == 0) ;
+        }
+        #else
+        LG_ASSERT (G->is_symmetric_structure, GrB_INVALID_VALUE) ;
+        LG_ASSERT (G->nself_edges == 0, GrB_INVALID_VALUE) ;
+        G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+        #endif
+
+        // compute the row degree
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
+        LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
+        //------------------------------------------------------------------
+        // test the algorithm
+        //------------------------------------------------------------------
+        LG_BRUTAL_BURBLE (LAGraph_SwapEdges( &G_new, G, (GrB_Index) 1, msg)) ;
+        printf ("Test ends:\n") ;
+        printf ("%s\n", msg) ;
+
+        //------------------------------------------------------------------
+        // check results
+        //------------------------------------------------------------------
+        //Make sure we got a symetric back out:
+        LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G_new, msg)) ;
+                
+        OK (LAGraph_Cached_NSelfEdges (G_new, msg)) ;
+        TEST_CHECK (G_new->nself_edges == 0);
+
+        // Check nvals stay the same. 
+        GrB_Index edge_count, new_edge_count;
+        OK (GrB_Matrix_nvals(&edge_count, G->A)) ;
+        OK (GrB_Matrix_nvals(&new_edge_count, G_new->A)) ;
+        TEST_CHECK(edge_count == new_edge_count);
+        //next: check degrees stay the same.
+        OK (LAGraph_Cached_OutDegree (G_new, msg)) ;
+
+        bool ok = false;
+        OK (LAGraph_Vector_IsEqual (
+            &ok, G->out_degree, G_new->out_degree, msg)) ;
+        TEST_CHECK (ok) ;
+        OK (LAGraph_Delete (&G_new, msg)) ;
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+    //--------------------------------------------------------------------------
+    // free everything and finalize LAGraph
+    //--------------------------------------------------------------------------
+    OK (LG_brutal_teardown (msg)) ;
+    #endif
+}
 //----------------------------------------------------------------------------
 // the make program is created by acutest, and it runs a list of tests:
 //----------------------------------------------------------------------------
@@ -226,5 +337,8 @@ TEST_LIST =
 {
     {"SwapEdges", test_SwapEdges},   
     {"SwapFull", test_SwapFull},   
+    #if LG_BRUTAL_TESTS
+    {"SwapFull", test_SwapEdges_brutal},
+    #endif
     {NULL, NULL}
 } ;

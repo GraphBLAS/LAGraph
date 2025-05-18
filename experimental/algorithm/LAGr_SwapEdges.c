@@ -68,6 +68,7 @@
     /* free any workspace used here */      \
     LG_FREE_WORK ;                          \
     /* free all the output variable(s) */   \
+    GrB_free (&A_new) ;                     \
     LAGraph_Delete(G_new, NULL) ;           \
     /* take any other corrective action */  \
 }
@@ -586,7 +587,7 @@ int LAGr_SwapEdges
     shift_e = __builtin_clzl(e);
     #endif
     uint64_t ehash_size = (1ull << (67-shift_e)) ;
-    printf("Hash Size: %ld\n", ehash_size);
+    // printf("Hash Size: %ld\n", ehash_size);
 
     //--------------------------------------------------------------------------
     // Initialize the rest of the vectors
@@ -619,7 +620,7 @@ int LAGr_SwapEdges
     LG_TRY(
         LAGraph_Random_Seed(random_v, seed, msg)) ;
     
-    printf("Entering loop, Good Luck:\n") ;
+    // printf("Entering loop, Good Luck:\n") ;
     while(num_swaps < totSwaps)
     {
         GrB_Index perm_size, arr_size, junk_size;
@@ -786,11 +787,11 @@ int LAGr_SwapEdges
 
         num_swaps += n_keep ;
         LG_TRY (LAGraph_Random_Next(random_v, msg)) ;
-        printf("Made %ld swaps this loop. "
-                "[%.3f%% of Planned, %.3f%% of edges swapped]\n"
-                "Completed %ld swaps total. [%.3f%% of Planned]\n", 
-             n_keep, n_keep * 100.0 / totSwaps, n_keep * 200.0 / e, num_swaps, 
-             num_swaps * 100.0 / totSwaps) ;
+        // printf("Made %ld swaps this loop. "
+        //         "[%.3f%% of Planned, %.3f%% of edges swapped]\n"
+        //         "Completed %ld swaps total. [%.3f%% of Planned]\n", 
+        //      n_keep, n_keep * 100.0 / totSwaps, n_keep * 200.0 / e, num_swaps, 
+        //      num_swaps * 100.0 / totSwaps) ;
         if(n_keep < (int) (loopMin * e / 2) + 1)
         {
             printf("Too Few Swaps occured! Exiting.\n");
@@ -812,7 +813,8 @@ int LAGr_SwapEdges
     GRB_TRY (GrB_eWiseAdd(
         A_new, NULL, NULL, GrB_LOR_MONOID_BOOL, A_new,A_new, GrB_DESC_T0
     )) ;
-    LAGRAPH_TRY (LAGraph_New (G_new, &A_new, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    LAGRAPH_TRY (LAGraph_New (
+        G_new, &A_new, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     LG_FREE_WORK ;
     return (num_swaps >= totSwaps)? GrB_SUCCESS :  LAGRAPH_INSUFFICIENT_SWAPS ;
     #else

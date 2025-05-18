@@ -1408,8 +1408,6 @@ int LAGraph_RichClubCoefficient
 //------------------------------------------------------------------------------
 // LAGraph_SwapEdges: Randomize Graph while maintaining degree sequence. 
 //------------------------------------------------------------------------------
-#define LAGRAPH_INSUFFICIENT_SWAPS 2100
-
 LAGRAPHX_PUBLIC
 int LAGraph_SwapEdges
 (
@@ -1420,6 +1418,8 @@ int LAGraph_SwapEdges
     GrB_Index Q, // Swaps per edge
     char *msg
 ) ;
+
+#define LAGRAPH_INSUFFICIENT_SWAPS 2100
 
 LAGRAPHX_PUBLIC
 int LAGr_SwapEdges
