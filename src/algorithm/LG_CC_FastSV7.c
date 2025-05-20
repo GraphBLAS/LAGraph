@@ -56,7 +56,7 @@
 
 double timings [16] ;
 
-#if USING_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10
 
 //==============================================================================
 // fastsv: find the components of a graph
@@ -248,7 +248,7 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
 )
 {
 
-#if USING_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10
 
     //--------------------------------------------------------------------------
     // check inputs

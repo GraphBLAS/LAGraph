@@ -50,7 +50,7 @@ const char* testsb [ ] =
 } ;
 void test_SwapEdges (void)
 {
-    #if USING_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     //--------------------------------------------------------------------------
     // start LAGraph
     //--------------------------------------------------------------------------
@@ -137,7 +137,6 @@ void test_SwapEdges (void)
             GrB_Index edge_count, new_edge_count;
             OK (GrB_Matrix_nvals(&edge_count, G->A)) ;
             OK (GrB_Matrix_nvals(&new_edge_count, G_new->A)) ;
-            printf("old: %lu, new: %lu", edge_count, new_edge_count);
             TEST_CHECK(edge_count == new_edge_count);
             //next: check degrees stay the same.
             OK (LAGraph_Cached_OutDegree (G_new, msg)) ;
@@ -160,7 +159,7 @@ void test_SwapEdges (void)
 
 void test_SwapFull(void)
 {
-    #if USING_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     //--------------------------------------------------------------------------
     // start LAGraph
     //--------------------------------------------------------------------------
@@ -208,7 +207,7 @@ void test_SwapFull(void)
     // test the algorithm
     //------------------------------------------------------------------
     TEST_CHECK(
-        LAGraph_SwapEdges( &G_new, G, 100, msg) == LAGRAPH_INSUFFICIENT_SWAPS) ;
+        LAGraph_SwapEdges( &G_new, G, 100, msg) == LAGRAPH_CONVERGENCE_FAILURE) ;
     printf ("Test ends:\n") ;
     printf ("%s\n", msg) ;
     //------------------------------------------------------------------
@@ -229,7 +228,7 @@ void test_SwapFull(void)
 }
 void test_SwapEdges_brutal (void)
 {
-    #if USING_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     //--------------------------------------------------------------------------
     // start LAGraph
     //--------------------------------------------------------------------------

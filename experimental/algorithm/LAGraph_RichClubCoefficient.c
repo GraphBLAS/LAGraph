@@ -239,7 +239,7 @@ int LAGraph_RichClubCoefficient
     // each degree and then doing a cummulative sum to know the amount of edges 
     // and nodes at degree geq k.
     GRB_TRY (GrB_Vector_nvals (&edge_vec_nvals, node_edges)) ;
-    #if USING_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
         if(n == edge_vec_nvals)
         {
             deg_x = degrees;

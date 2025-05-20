@@ -1419,8 +1419,6 @@ int LAGraph_SwapEdges
     char *msg
 ) ;
 
-#define LAGRAPH_INSUFFICIENT_SWAPS 2100
-
 LAGRAPHX_PUBLIC
 int LAGr_SwapEdges
 (

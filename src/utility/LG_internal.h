@@ -275,12 +275,12 @@ typedef unsigned char LG_void ;
 // GraphBLAS version 10 flag
 #if LAGRAPH_SUITESPARSE 
     #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
-        #define USING_GRAPHBLAS_V10 1
+        #define LG_SUITESPARSE_GRAPHBLAS_V10 1
     #else
-        #define USING_GRAPHBLAS_V10 0
+        #define LG_SUITESPARSE_GRAPHBLAS_V10 0
     #endif
 #else
-    #define USING_GRAPHBLAS_V10 0
+    #define LG_SUITESPARSE_GRAPHBLAS_V10 0
 #endif
 
 //------------------------------------------------------------------------------

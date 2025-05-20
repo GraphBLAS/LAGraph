@@ -327,7 +327,7 @@ int LAGr_SwapEdges
     char *msg
 )
 {
-    #if USING_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     //--------------------------------------------------------------------------
     // Declorations
     //--------------------------------------------------------------------------
@@ -816,7 +816,7 @@ int LAGr_SwapEdges
     LAGRAPH_TRY (LAGraph_New (
         G_new, &A_new, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     LG_FREE_WORK ;
-    return (num_swaps >= totSwaps)? GrB_SUCCESS :  LAGRAPH_INSUFFICIENT_SWAPS ;
+    return (num_swaps >= totSwaps)? GrB_SUCCESS :  LAGRAPH_CONVERGENCE_FAILURE ;
     #else
     printf("LAGr_SwapEdges Needs GB v10\n") ;
     return (GrB_NOT_IMPLEMENTED) ;

@@ -59,7 +59,7 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
-#if USING_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10
 
 // Uncomment if you would like to use the monoid version of FastAssign.
 // Passing in a semiring is faster but this may be more convienient.

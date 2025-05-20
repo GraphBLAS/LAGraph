@@ -96,7 +96,7 @@ int LG_check_rcc
     char *msg
 )
 {
-    #if USING_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     GxB_Container cont = NULL;
     GrB_Matrix A = G->A;
     int64_t  *Ap = NULL, *Ai = NULL;
