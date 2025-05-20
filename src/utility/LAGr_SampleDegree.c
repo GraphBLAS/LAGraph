@@ -84,7 +84,7 @@ int LAGr_SampleDegree
     GrB_Index n ;
     GRB_TRY (GrB_Vector_size (&n, Degree)) ;
 
-    // FIXME: use LAGraph_Random_Seed and LAGraph_Random_Next instead
+    // FUTURE: use LAGraph_Random_Seed instead
 
     if (seed == 0) seed = 1 ;   // a seed of zero will fail
 

@@ -95,7 +95,7 @@ int main (int argc, char **argv)
     LAGraph_Graph G = NULL ;
 
     // start GraphBLAS and LAGraph
-    bool burble = true ;    // FIXME
+    bool burble = false ;
     demo_init (burble) ;
 
     int ntrials = 5 ;
