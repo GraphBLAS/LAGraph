@@ -13,8 +13,6 @@
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
-// FIXME: use 32-bit integers for GraphBLAS v10
-
 //------------------------------------------------------------------------------
 
 // LAGraph_MMRead: read a matrix from a Matrix Market file
@@ -1043,6 +1041,21 @@ int LAGraph_MMRead
         GRB_TRY (GxB_Matrix_build_FC64 (*A, I, J, (GxB_FC64_t *) X, nvals2, NULL)) ;
     }
 #endif
+
+    //--------------------------------------------------------------------------
+    // use 32-bit integers if possible
+    //--------------------------------------------------------------------------
+
+    // FUTURE: use 32-bit integers throughout, when using GraphBLAS v10 and
+    // later, instead of converting to 32-bit indices here at the end.
+
+    #if LAGRAPH_SUITESPARSE
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    GRB_TRY (GrB_Matrix_set_INT32 (*A, 32, GxB_ROWINDEX_INTEGER_HINT)) ;
+    GRB_TRY (GrB_Matrix_set_INT32 (*A, 32, GxB_COLINDEX_INTEGER_HINT)) ;
+    GRB_TRY (GrB_Matrix_set_INT32 (*A, 32, GxB_OFFSET_INTEGER_HINT)) ;
+    #endif
+    #endif
 
     //--------------------------------------------------------------------------
     // free workspace and return result
