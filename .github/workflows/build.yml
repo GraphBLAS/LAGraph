@@ -18,8 +18,9 @@ jobs:
         config:
         # if there are multiple items in this list, only use should
         # deployit=true for just one of them.
+        # FIXME: use GraphBLAS v10.1.0 once it's released
          - {grb_version: 9.0.0, deployit: false}
-         - {grb_version: 10.0.3, deployit: true}
+         - {grb_version: 10.0.5, deployit: true}
 
     steps:
 
@@ -68,8 +69,9 @@ jobs:
     strategy:
       matrix:
         config:
+        # FIXME: use GraphBLAS v10.1.0 once it's released
          - {grb_version: 9.0.0}
-         - {grb_version: 10.0.3}
+         - {grb_version: 10.0.5}
 
     steps:
 
