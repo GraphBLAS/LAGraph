@@ -72,7 +72,7 @@ enable_language ( C )
 
 # configure LAGraph.h with the LAGraph date and version
 configure_file (
-    "config/LAGraph.h.in"
+    "Config/LAGraph.h.in"
     "${PROJECT_SOURCE_DIR}/include/LAGraph.h"
     NEWLINE_STYLE LF )
 
@@ -316,13 +316,41 @@ if ( BUILD_SHARED_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    #-------------------------------------------------------------------------------
+    # LAGraph shared targets and package configuration
+    #-------------------------------------------------------------------------------
+
+    # create (temporary) export target file during build
+    export ( EXPORT LAGraphTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/LAGraphTargets.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT LAGraphTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/LAGraph )
 endif ( )
 
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS LAGraph_static LAGraphX_static
-        EXPORT LAGraphTargets
+        EXPORT LAGraphTargets_static
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    #-------------------------------------------------------------------------------
+    # LAGraph static targets and package configuration
+    #-------------------------------------------------------------------------------
+
+    # create (temporary) export target file during build
+    export ( EXPORT LAGraphTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/LAGraphTargets_static.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT LAGraphTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/LAGraph )
 endif ( )
 
 #-------------------------------------------------------------------------------
@@ -347,31 +375,17 @@ else ( )
     endif ( )
 endif ( )
 
-#-------------------------------------------------------------------------------
-# LAGraph targets and package configuration
-#-------------------------------------------------------------------------------
-
-# create (temporary) export target file during build
-export ( EXPORT LAGraphTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/LAGraphTargets.cmake )
-
-# install export target, config and version files for find_package
-install ( EXPORT LAGraphTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/LAGraph )
-
 # generate config file to be used in common build tree
 set ( SUITESPARSE_IN_BUILD_TREE ON )
 configure_package_config_file (
-    config/LAGraphConfig.cmake.in
+    Config/LAGraphConfig.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/LAGraphConfig.cmake
     INSTALL_DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/LAGraphConfig.cmake )
 
 # generate config file to be installed
 set ( SUITESPARSE_IN_BUILD_TREE OFF )
 configure_package_config_file (
-    config/LAGraphConfig.cmake.in
+    Config/LAGraphConfig.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/target/LAGraphConfig.cmake
     INSTALL_DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/LAGraph )
 
@@ -445,7 +459,7 @@ if ( NOT MSVC )
         set ( SUITESPARSE_LIB_BASE_NAME $<TARGET_FILE_BASE_NAME:LAGraph_static> )
     endif ( )
     configure_file (
-        config/LAGraph.pc.in
+        Config/LAGraph.pc.in
         LAGraph.pc.out
         @ONLY
         NEWLINE_STYLE LF )

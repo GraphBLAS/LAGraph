@@ -34,6 +34,8 @@
     GrB_free (&srcs) ;      \
     GrB_free (&level) ;     \
     GrB_free (&Mod) ;       \
+    LAGraph_Free((void**) &sourceIndicies, NULL);   \
+    LAGraph_Free((void**) &sourceValues, NULL);     \
 }
 
 #define LG_FREE_ALL         \
@@ -106,6 +108,9 @@ int LAGraph_EstimateDiameter
     GrB_Matrix level = NULL ;       // matrix for msbfs to put level info in
     GrB_Vector candidateSrcs = NULL ; // work vector for getting sources for the next iteration of the loop
     GrB_BinaryOp Mod = NULL ;
+
+    GrB_Index *sourceIndicies = NULL ;
+    int64_t *sourceValues = NULL ; // just need this so extractTuples will run
 
     bool compute_periphery  = (peripheral != NULL) ;
     if (compute_periphery ) (*peripheral) = NULL ;
@@ -216,15 +221,16 @@ int LAGraph_EstimateDiameter
         // choose sources
         GrB_free (&srcs) ;
         GRB_TRY (GrB_Vector_new (&srcs, int_type, nsrcs)) ;
-        GrB_Index sourceIndecies[nperi];
-        int64_t sourceValues[nperi]; // just need this so extractTuples will run
-        GRB_TRY (GrB_Vector_extractTuples(sourceIndecies, sourceValues, &nperi, candidateSrcs)) ;
+
+        GRB_TRY (LAGraph_Calloc((void **) &sourceIndicies, nperi, sizeof(GrB_Index), msg)) ;
+        GRB_TRY (LAGraph_Calloc((void **) &sourceValues, nperi, sizeof(int64_t), msg)) ;
+        GRB_TRY (GrB_Vector_extractTuples(sourceIndicies, sourceValues, &nperi, candidateSrcs)) ;
         for (int64_t j = 0; j < nsrcs; j++) {
-            GRB_TRY (GrB_Vector_setElement (srcs, sourceIndecies[j], j)) ;
+            GRB_TRY (GrB_Vector_setElement (srcs, sourceIndicies[j], j)) ;
         }
+        LAGraph_Free((void**) &sourceIndicies, NULL);
+        LAGraph_Free((void**) &sourceValues, NULL);
         GrB_free(&candidateSrcs) ;
-
-
     }
 
     //--------------------------------------------------------------------------

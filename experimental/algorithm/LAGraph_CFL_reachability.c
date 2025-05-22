@@ -22,6 +22,10 @@
         GrB_free(&identity_matrix);                                         \
         LAGraph_Free ((void **) &T, msg);                                   \
         LAGraph_Free ((void **) &indexes, msg);                             \
+        LAGraph_Free((void**) &t_empty_flags, NULL);                        \
+        LAGraph_Free((void**) &eps_rules, NULL);                            \
+        LAGraph_Free((void**) &term_rules, NULL);                           \
+        LAGraph_Free((void**) &bin_rules, NULL);                            \
     }
 
 #define LG_FREE_ALL                                                         \
@@ -137,7 +141,7 @@ GrB_Info LAGraph_CFL_reachability
 #if LAGRAPH_SUITESPARSE
     // Declare workspace and clear the msg string, if not NULL
     GrB_Matrix *T;
-    bool t_empty_flags[nonterms_count]; // t_empty_flags[i] == true <=> T[i] is empty
+    bool *t_empty_flags = NULL ; // t_empty_flags[i] == true <=> T[i] is empty
     GrB_Matrix identity_matrix = NULL;
     uint64_t *nnzs = NULL;
     LG_CLEAR_MSG;
@@ -145,12 +149,17 @@ GrB_Info LAGraph_CFL_reachability
     bool iso_flag = false;
     GrB_Index *indexes = NULL;
 
+    // Arrays for processing rules
+    size_t *eps_rules = NULL, eps_rules_count = 0;   // [Variable -> eps]
+    size_t *term_rules = NULL, term_rules_count = 0; // [Variable -> term]
+    size_t *bin_rules = NULL, bin_rules_count = 0;   // [Variable -> AB]
 
     GrB_Scalar true_scalar;
     GrB_Scalar_new(&true_scalar, GrB_BOOL);
     GrB_Scalar_setElement_BOOL(true_scalar, true);
-    
+
     LG_TRY(LAGraph_Calloc((void **) &T, nonterms_count, sizeof(GrB_Matrix), msg));
+    LG_TRY(LAGraph_Calloc((void **) &t_empty_flags, nonterms_count, sizeof(bool), msg)) ;
 
     LG_ASSERT_MSG(terms_count > 0, GrB_INVALID_VALUE,
                   "The number of terminals must be greater than zero.");
@@ -193,10 +202,9 @@ GrB_Info LAGraph_CFL_reachability
         t_empty_flags[i] = true;
     }
 
-    // Arrays for processing rules
-    size_t eps_rules[rules_count], eps_rules_count = 0;   // [Variable -> eps]
-    size_t term_rules[rules_count], term_rules_count = 0; // [Variable -> term]
-    size_t bin_rules[rules_count], bin_rules_count = 0;   // [Variable -> AB]
+    LG_TRY(LAGraph_Calloc((void **) &eps_rules, rules_count, sizeof(size_t), msg)) ;
+    LG_TRY(LAGraph_Calloc((void **) &term_rules, rules_count, sizeof(size_t), msg)) ;
+    LG_TRY(LAGraph_Calloc((void **) &bin_rules, rules_count, sizeof(size_t), msg)) ;
 
     // Process rules
     typedef struct {
