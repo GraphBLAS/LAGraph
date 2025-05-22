@@ -186,8 +186,9 @@ static int LAGraph_Parent_to_S
         // build ramp vector
         LG_TRY (LAGraph_Malloc ((void**) &ramp, num_preserved, sizeof(uint64_t), msg)) ;
 
+        int64_t i;
         #pragma omp parallel for
-        for (GrB_Index i = 0 ; i < num_preserved ; i++) {
+        for (i = 0 ; i < num_preserved ; i++) {
             ramp [i] = i ;
         }
 

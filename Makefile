@@ -115,5 +115,5 @@ clean: distclean
 purge: distclean
 
 distclean:
-	- $(RM) -rf build/* config/*.tmp
+	- $(RM) -rf build/* Config/*.tmp
 

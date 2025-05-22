@@ -98,7 +98,7 @@ endif ( )
 # libm
 #-------------------------------------------------------------------------------
 
-if ( NOT ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") ) )
+if ( NOT NO_LIBM )
     if ( BUILD_SHARED_LIBS )
         target_link_libraries ( LAGraphX PRIVATE m )
     endif ( )
