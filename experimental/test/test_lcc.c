@@ -99,7 +99,6 @@ void test_lcc (void)
             LG_SET_BURBLE (true) ;
             OK (LAGraph_lcc (&c, G, msg)) ;
             LG_SET_BURBLE (false) ;
-            GxB_print (c, 5) ;  // FIXME
 
             GrB_Index n ;
             OK (GrB_Vector_size (&n, c)) ;
@@ -108,7 +107,6 @@ void test_lcc (void)
             GrB_Vector cgood = NULL ;
             OK (LG_check_lcc(&cgood, G, msg)) ;
             OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
-            GxB_print (cgood, 5) ;  // FIXME
 
             // cgood = abs (cgood - c)
             OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
