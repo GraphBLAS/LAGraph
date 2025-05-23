@@ -335,6 +335,38 @@ int main (int argc, char **argv)
 #endif
 
     //--------------------------------------------------------------------------
+    // LG_CC_FastSV7_FA
+    //--------------------------------------------------------------------------
+#if 0
+    for (int trial = 1 ; trial <= nt ; trial++)
+    {
+        int nthreads = Nthreads [trial] ;
+        if (nthreads > nthreads_max) continue ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, NULL)) ;
+        double ttt = 0 ;
+        int ntrials = NTRIALS ;
+        for (int k = 0 ; k < ntrials ; k++)
+        {
+            GrB_free (&components2) ;
+            double ttrial = LAGraph_WallClockTime ( ) ;
+            LAGRAPH_TRY (LG_CC_FastSV7_FA (&components2, G, msg)) ;
+            ttrial = LAGraph_WallClockTime ( ) - ttrial ;
+            ttt += ttrial ;
+            printf ("FastSV7_FA:     nthreads: %2d trial: %2d time: %10.4f sec\n",
+                nthreads, k, ttrial) ;
+            GrB_Index nCC2 = countCC (components2, n) ;
+            if (nCC != nCC2) printf ("failure! %g %g diff %g\n",
+                (double) nCC, (double) nCC2, (double) (nCC-nCC2)) ;
+        }
+        ttt = ttt / ntrials ;
+        printf ("FastSV7_FA:     nthreads: %2d Avg: time: %10.4f sec ntrials %d\n\n",
+                nthreads, ttt, ntrials) ;
+        fprintf (stderr,
+                "FastSV7_FA:     nthreads: %2d Avg: time: %10.4f sec ntrials %d\n",
+                nthreads, ttt, ntrials) ;
+    }
+#endif
+    //--------------------------------------------------------------------------
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
