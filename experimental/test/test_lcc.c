@@ -85,7 +85,9 @@ void test_lcc (void)
             GrB_Vector c = NULL ;
 
             // compute the local clustering coefficient
+            LG_SET_BURBLE (true) ;
             OK (LAGraph_lcc (&c, G, msg)) ;
+            LG_SET_BURBLE (false) ;
             GxB_print (c, 5) ;  // FIXME
 
             GrB_Index n ;
