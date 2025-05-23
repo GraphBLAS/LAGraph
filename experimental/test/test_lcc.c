@@ -79,13 +79,14 @@ void test_lcc (void)
 
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
-            printf ("jit: %d\n", jit) ;
+            printf ("\n-------- jit: %d\n", jit) ;
             OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
 
             GrB_Vector c = NULL ;
 
             // compute the local clustering coefficient
             OK (LAGraph_lcc (&c, G, msg)) ;
+            GxB_print (c, 5) ;  // FIXME
 
             GrB_Index n ;
             OK (GrB_Vector_size (&n, c)) ;
@@ -94,6 +95,8 @@ void test_lcc (void)
             GrB_Vector cgood = NULL ;
             OK (LG_check_lcc(&cgood, G, msg)) ;
             OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
+            GxB_print (cgood, 5) ;  // FIXME
+
             // cgood = abs (cgood - c)
             OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
                 NULL)) ;
