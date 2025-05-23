@@ -277,8 +277,9 @@ int LAGraph_cdlp
 
     for (int iteration = 0; iteration < itermax; iteration++) {
 
+        int64_t i;
 #pragma omp parallel for schedule(dynamic)
-        for (GrB_Index i = 0; i < n; i++) {
+        for (i = 0; i < n; i++) {
             #ifdef _OPENMP
             int thread_id = omp_get_thread_num() ;
             #else

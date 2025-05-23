@@ -104,8 +104,10 @@ foreach( testsourcefile ${TEST_SOURCES} )
             LAGraphX_static LAGraph_static lagraphxtest_static lagraphtest_static GraphBLAS::GraphBLAS )
     endif ( )
 
-    # add libm
-    target_link_libraries ( ${testname} m )
+    if ( NOT NO_LIBM )
+        # add libm
+        target_link_libraries ( ${testname} m )
+    endif ( )
 
     string( REPLACE "test_" "LAGraphX_" ctestname ${testname})
     add_test( NAME ${ctestname} COMMAND $<TARGET_FILE:${testname}> )
