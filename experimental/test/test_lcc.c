@@ -49,6 +49,17 @@ const matrix_info files [ ] =
     { "" },
 } ;
 
+#undef OK
+#define OK(method) \
+{ \
+    GrB_Info info = method ; \
+    if (info != GrB_SUCCESS) \
+    { \
+        printf ("info: %d, msg: %s\n", info, msg) ; \
+        TEST_CHECK (false) ; \
+    } \
+}
+
 //****************************************************************************
 void test_lcc (void)
 {
