@@ -169,7 +169,7 @@ int LAGr_PeerPressureClustering(
     GrB_Index last_num_changed = n;
     GrB_Index num_changed;
 
-    LG_TRY(LAGraph_Malloc((void **)&m_index_values, n, sizeof(int64_t), msg));
+    LG_TRY(LAGraph_Malloc((void **)&m_index_values, n, sizeof(GrB_Index), msg));
 
     //--------------------------------------------------------------------------
     // main algorithm logic
