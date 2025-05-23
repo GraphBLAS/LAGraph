@@ -146,6 +146,12 @@ void test_cc_matrices (void)
 
             // find the connected components with LG_CC_FastSV7
             #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+            printf ("\n------ LG_CC_FastSV7_FA:\n") ;
+            OK (LG_CC_FastSV7_FA (&C2, G, msg)) ;
+            ncomponents = count_connected_components (C2) ;
+            TEST_CHECK (ncomponents == ncomp) ;
+            OK (LG_check_cc (C2, G, msg)) ;
+            OK (GrB_free (&C2)) ;
             printf ("\n------ CC_FastSV7:\n") ;
             OK (LG_CC_FastSV7 (&C2, G, msg)) ;
             ncomponents = count_connected_components (C2) ;
@@ -153,9 +159,13 @@ void test_cc_matrices (void)
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
             #else
-            printf ("\n------ CC_FastSV7: requires SS:GrB v10.0.0 or later\n") ;
-            int result7 = LG_CC_FastSV7 (&C2, G, msg) ;
+            printf ("\n------ CC_FastSV7_FA: requires SS:GrB v10.0.0 or later\n") ;
+            int result7 = LG_CC_FastSV7_FA (&C2, G, msg) ;
             TEST_CHECK (result7 == GrB_NOT_IMPLEMENTED) ;
+            TEST_CHECK (C2 == NULL) ;
+            printf ("\n------ CC_FastSV7: requires SS:GrB v10.0.0 or later\n") ;
+            int result8 = LG_CC_FastSV7 (&C2, G, msg) ;
+            TEST_CHECK (result8 == GrB_NOT_IMPLEMENTED) ;
             TEST_CHECK (C2 == NULL) ;
             #endif
 
@@ -216,7 +226,12 @@ void test_cc_errors (void)
     #if LAGRAPH_SUITESPARSE
     result = LG_CC_FastSV6 (NULL, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    result = LG_CC_FastSV7_FA (NULL, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     #endif
+    #endif
+
 
     // load a valid matrix
     FILE *f = fopen (LG_DATA_DIR "LFAT5_two.mtx", "r") ;
@@ -235,6 +250,11 @@ void test_cc_errors (void)
     result = LG_CC_FastSV6 (&C, G, msg) ;
     TEST_CHECK (result == -1001) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    result = LG_CC_FastSV7_FA (&C, G, msg) ;
+    TEST_CHECK (result == -1001) ;
+    printf ("result expected: %d msg:\n%s\n", result, msg) ;
+    #endif
     #endif
 
     OK (LAGraph_Delete (&G, msg)) ;
@@ -268,7 +288,13 @@ void test_cc_brutal (void)
     // find the connected components
     printf ("\n--- CC: FastSV6/7 if SuiteSparse, Boruvka if vanilla:\n") ;
     LG_BRUTAL_BURBLE (LAGr_ConnectedComponents (&C, G, msg)) ;
-//  printf ("\nSV6/7 test result, parent vector:\n") ;
+
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    OK (GrB_free (&C)) ;
+    printf ("\n--- CC: FastSV7_FA\n") ;
+    LG_BRUTAL_BURBLE (LG_CC_FastSV7_FA (&C, G, msg)) ;
+    #endif
+    //  printf ("\nSV6/7 test result, parent vector:\n") ;
 //  LG_BRUTAL_BURBLE (LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg)) ;
 
     // count the # of connected components

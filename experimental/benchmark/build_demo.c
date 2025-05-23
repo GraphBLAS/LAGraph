@@ -40,7 +40,7 @@
 
 int main (int argc, char **argv)
 {
-#if USING_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10
 
     //--------------------------------------------------------------------------
     // startup LAGraph and GraphBLAS

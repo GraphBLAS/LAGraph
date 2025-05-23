@@ -99,6 +99,13 @@ int LG_check_edgeBetweennessCentrality
     char *msg
 ) ;
 
+int LG_check_rcc
+(
+    GrB_Vector *rich_club_coefficents, //output
+    LAGraph_Graph G, //input graph
+    char *msg
+) ;
+
 int LG_check_argminmax
 (
     // output

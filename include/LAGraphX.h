@@ -260,6 +260,43 @@ int LAGraph_Incidence_Matrix
     char *msg
 ) ;
 
+LAGRAPHX_PUBLIC
+int LAGraph_FastAssign_Monoid
+(
+    // output
+    // Vector to be built (or assigned): initialized with correct dimensions.
+    GrB_Vector c, 
+    // inputs
+    const GrB_Vector mask,
+    const GrB_BinaryOp accum, 
+    const GrB_Vector I_vec, // Indecies  (duplicates allowed)
+    const GrB_Vector X_vec, // Values
+    // Optional (Give me a ramp with size > x.size for faster calculations) 
+    const GrB_Vector ramp, 
+    const GrB_Monoid dup, // Applied to duplicates
+    const GrB_Descriptor desc,
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
+int LAGraph_FastAssign_Semiring
+(
+    // output
+    // Vector to be built (or assigned): initialized with correct dimensions.
+    GrB_Vector c, 
+    // inputs
+    const GrB_Vector mask,
+    const GrB_BinaryOp accum, 
+    const GrB_Vector I_vec, // Indecies  (duplicates allowed)
+    const GrB_Vector X_vec, // Values
+    // Optional (Give me a ramp with size > x.size for faster calculations) 
+    const GrB_Vector ramp, 
+    // monoid is applied to duplicates. Binary op should be SECOND.
+    const GrB_Semiring dup, 
+    const GrB_Descriptor desc,
+    char *msg
+) ;
+
 //****************************************************************************
 // Algorithms
 //****************************************************************************
@@ -1356,6 +1393,59 @@ int LAGr_MaximumMatching(
                    // the columns' or from the rows' perspective, ignored if
                    // mate_init is NULL
     char *msg);
+//------------------------------------------------------------------------------
+// LAGraph_RichClubCoefficient: Compute Rich Club Coefficient of Graph
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGraph_RichClubCoefficient
+(
+    GrB_Vector *rich_club_coefficents, //output
+    LAGraph_Graph G, //input graph
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_SwapEdges: Randomize Graph while maintaining degree sequence. 
+//------------------------------------------------------------------------------
+LAGRAPHX_PUBLIC
+int LAGraph_SwapEdges
+(
+    // output
+    LAGraph_Graph *G_new,  // A new graph with the same degree for each node
+    double *pQ,            // Actual Swaps proformed per edge
+    // input: not modified
+    const LAGraph_Graph G, // Graph to be randomized.
+    double Q,              // Swaps per edge
+    char *msg
+) ;
+
+#define LAGRAPH_INSUFFICIENT_SWAPS 2100
+
+LAGRAPHX_PUBLIC
+int LAGr_SwapEdges
+(
+    // output
+    LAGraph_Graph *G_new,   // A new graph with the same degree for each node
+    uint64_t *pSwaps,       // Actual number of Swaps proformed
+    // input: not modified
+    const LAGraph_Graph G,  // Graph to be randomized.
+    double loopTry,         // Percent of edges to involve per loop [0,1]
+    double loopMin,         // Minimum Swaps percent per loop [0,1)
+    uint64_t totSwaps,      // Desired Swaps
+    uint64_t seed,          // Random Seed 
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
+int LG_CC_FastSV7_FA // SuiteSparse:GraphBLAS method, with GxB extensions
+(
+    // output:
+    GrB_Vector *component,  // component(i)=r if node is in the component r
+    // input:
+    LAGraph_Graph G,        // input graph (modified then restored)
+    char *msg
+) ;
 
 LAGRAPH_PUBLIC
 int LAGr_BreadthFirstSearch_Extended

@@ -272,6 +272,17 @@ typedef unsigned char LG_void ;
 
 #endif
 
+// GraphBLAS version 10 flag
+#if LAGRAPH_SUITESPARSE 
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+        #define LG_SUITESPARSE_GRAPHBLAS_V10 1
+    #else
+        #define LG_SUITESPARSE_GRAPHBLAS_V10 0
+    #endif
+#else
+    #define LG_SUITESPARSE_GRAPHBLAS_V10 0
+#endif
+
 //------------------------------------------------------------------------------
 // LG_Multiply_size_t:  c = a*b but check for overflow
 //------------------------------------------------------------------------------
