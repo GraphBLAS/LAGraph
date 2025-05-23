@@ -110,14 +110,14 @@ void test_SwapEdges (void)
         {
             OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
                 jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
-
+            double pQ = 0.0;
             //------------------------------------------------------------------
             // test the algorithm
             //------------------------------------------------------------------
             // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-            OK(LAGraph_SwapEdges( &G_new, G, (GrB_Index) 10, msg));
+            OK(LAGraph_SwapEdges( &G_new, &pQ, G, 100.0, msg));
             // GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
-            printf ("Test ends:\n") ;
+            printf ("Test ends. Swaps per Edge: %g \n", pQ) ;
             printf ("%s\n", msg) ;
 
             //------------------------------------------------------------------
@@ -206,9 +206,12 @@ void test_SwapFull(void)
     //------------------------------------------------------------------
     // test the algorithm
     //------------------------------------------------------------------
+    double pQ = 0;
     TEST_CHECK(
-        LAGraph_SwapEdges( &G_new, G, 100, msg) == LAGRAPH_CONVERGENCE_FAILURE) ;
-    printf ("Test ends:\n") ;
+        LAGraph_SwapEdges( &G_new, &pQ, G, 100.0, msg) 
+        == LAGRAPH_INSUFFICIENT_SWAPS) ;
+    TEST_CHECK(pQ == 0.0);
+    printf ("Test ends. \n") ;
     printf ("%s\n", msg) ;
     //------------------------------------------------------------------
     // check results (No swaps should have occured)
@@ -294,8 +297,9 @@ void test_SwapEdges_brutal (void)
         //------------------------------------------------------------------
         // test the algorithm
         //------------------------------------------------------------------
-        LG_BRUTAL_BURBLE (LAGraph_SwapEdges( &G_new, G, (GrB_Index) 1, msg)) ;
-        printf ("Test ends:\n") ;
+        double pQ = 0.0;
+        LG_BRUTAL_BURBLE (LAGraph_SwapEdges( &G_new, &pQ, G, 1.0, msg)) ;
+        printf ("Test ends. Swaps per Edge: %g \n", pQ) ;
         printf ("%s\n", msg) ;
 
         //------------------------------------------------------------------

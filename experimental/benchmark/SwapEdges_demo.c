@@ -41,6 +41,7 @@ int main (int argc, char **argv)
 
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
     LAGraph_Graph G = NULL, G_new = NULL;
+    double pQ = 0;
 
     // start GraphBLAS and LAGraph
     bool burble = false ;               // set true for diagnostic outputs
@@ -80,9 +81,9 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
     printf("Time To Swap #################################################") ;
     t = LAGraph_WallClockTime ( ) ;
-    LG_TRY (LAGraph_SwapEdges (&G_new, G, swaps, msg)) ;
+    LG_TRY (LAGraph_SwapEdges (&G_new, &pQ, G, swaps, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
-    printf ("===============================LAGraph_SwapEdges took:  %g sec\n", t) ;
+    printf ("LAGraph_SwapEdges took %g sec and made %g swaps\n", t, pQ) ;
     
     //--------------------------------------------------------------------------
     // check the results 

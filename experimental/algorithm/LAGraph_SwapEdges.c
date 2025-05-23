@@ -24,16 +24,23 @@
 int LAGraph_SwapEdges
 (
     // output
-    LAGraph_Graph *G_new, //The adjacency matrix of G with edges randomly swapped
+    LAGraph_Graph *G_new,  // A new graph with the same degree for each node
+    double *pQ,            // Actual Swaps proformed per edge
     // input: not modified
-    LAGraph_Graph G,
-    GrB_Index Q, // Swaps per edge
+    const LAGraph_Graph G, // Graph to be randomized.
+    double Q,              // Swaps per edge
     char *msg
 )
 {
-    GrB_Index numSwaps = 0;
-    GrB_Matrix_nvals(&numSwaps, G->A) ;
-    numSwaps /= 2;
-    numSwaps *= Q;
-    return LAGr_SwapEdges(G_new, G, .70, .10, numSwaps, 891234789234ull, msg) ;
+    LG_ASSERT(pQ != NULL, GrB_NULL_POINTER);
+    LG_ASSERT(Q > 0.0, GrB_INVALID_VALUE);
+    GrB_Index numEdges = 0;
+    GrB_Matrix_nvals(&numEdges, G->A) ;
+    numEdges /= 2;
+    uint64_t pSwaps = 0; 
+    int info = LAGr_SwapEdges(
+        G_new, &pSwaps, G, .70, .10, 
+        (uint64_t) (numEdges * Q), 891234789234ull, msg) ;
+    *pQ = ((double) pSwaps / (double) numEdges);
+    return  info;
 }

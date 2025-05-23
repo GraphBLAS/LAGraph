@@ -317,13 +317,14 @@ void edge2nd32_edge
 int LAGr_SwapEdges
 (
     // output
-    LAGraph_Graph *G_new, //The adjacency matrix of G with edges randomly swapped
+    LAGraph_Graph *G_new,   // A new graph with the same degree for each node
+    uint64_t *pSwaps,       // Actual number of Swaps proformed
     // input: not modified
-    LAGraph_Graph G,
-    double loopTry, // Percent of edges to involve per loop [0,1]
-    double loopMin, // Minimum Swaps percent per loop [0,1)
-    GrB_Index totSwaps, // Desired Swaps
-    GrB_Index seed,
+    const LAGraph_Graph G,  // Graph to be randomized.
+    double loopTry,         // Percent of edges to involve per loop [0,1]
+    double loopMin,         // Minimum Swaps percent per loop [0,1)
+    uint64_t totSwaps,      // Desired Swaps
+    uint64_t seed,          // Random Seed 
     char *msg
 )
 {
@@ -420,7 +421,7 @@ int LAGr_SwapEdges
     GrB_Index ind_size = 0;
     
     //--------------------------------------------------------------------------
-    // Check inputs TODO
+    // Check inputs
     //--------------------------------------------------------------------------
     LG_ASSERT_MSG (
         G->kind == LAGraph_ADJACENCY_UNDIRECTED,
@@ -431,6 +432,7 @@ int LAGr_SwapEdges
     LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, 
         "G->nself_edges must be zero") ;
     LG_ASSERT (G_new != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (pSwaps != NULL, GrB_NULL_POINTER) ;
     *G_new = NULL ;
 
     //--------------------------------------------------------------------------
@@ -794,7 +796,7 @@ int LAGr_SwapEdges
         //      num_swaps * 100.0 / totSwaps) ;
         if(n_keep < (int) (loopMin * e / 2) + 1)
         {
-            printf("Too Few Swaps occured! Exiting.\n");
+            // printf("Too Few Swaps occured! Exiting.\n");
             break;
         }
     }
@@ -816,9 +818,9 @@ int LAGr_SwapEdges
     LAGRAPH_TRY (LAGraph_New (
         G_new, &A_new, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     LG_FREE_WORK ;
-    return (num_swaps >= totSwaps)? GrB_SUCCESS :  LAGRAPH_CONVERGENCE_FAILURE ;
+    return (num_swaps >= totSwaps)? GrB_SUCCESS :  LAGRAPH_INSUFFICIENT_SWAPS ;
     #else
-    printf("LAGr_SwapEdges Needs GB v10\n") ;
+    // printf("LAGr_SwapEdges Needs GB v10\n") ;
     return (GrB_NOT_IMPLEMENTED) ;
     #endif
 }

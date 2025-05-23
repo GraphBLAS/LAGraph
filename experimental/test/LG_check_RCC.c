@@ -136,10 +136,10 @@ int LG_check_rcc
     LG_ASSERT_MSG(cont->format == GxB_SPARSE, GrB_NOT_IMPLEMENTED, 
         "Matrix must be sparse") ;    
     LG_TRY (LAGraph_Malloc(
-        (void **) &Ap, cont->nvals, sizeof(uint64_t), NULL)) ;
+        (void **) &Ap, cont->nrows + 1, sizeof(uint64_t), NULL)) ;
     LG_TRY (LAGraph_Malloc(
-        (void **) &Ai, cont->nvals + 1, sizeof(uint64_t), NULL)) ;
-    p_n = cont->nvals + 1; i_n = cont->nvals;
+        (void **) &Ai, cont->nvals, sizeof(uint64_t), NULL)) ;
+    p_n = cont->nrows + 1; i_n = cont->nvals;
     GRB_TRY (GrB_Vector_extractTuples_INT64(
         NULL, Ap, &p_n, cont->p)) ;
     GRB_TRY (GrB_Vector_extractTuples_INT64(

@@ -1412,24 +1412,28 @@ LAGRAPHX_PUBLIC
 int LAGraph_SwapEdges
 (
     // output
-    LAGraph_Graph *G_new, //The adjacency matrix of G with edges randomly swapped
+    LAGraph_Graph *G_new,  // A new graph with the same degree for each node
+    double *pQ,            // Actual Swaps proformed per edge
     // input: not modified
-    LAGraph_Graph G,
-    GrB_Index Q, // Swaps per edge
+    const LAGraph_Graph G, // Graph to be randomized.
+    double Q,              // Swaps per edge
     char *msg
 ) ;
+
+#define LAGRAPH_INSUFFICIENT_SWAPS 2100
 
 LAGRAPHX_PUBLIC
 int LAGr_SwapEdges
 (
     // output
-    LAGraph_Graph *G_new, //The adjacency matrix of G with edges randomly swapped
+    LAGraph_Graph *G_new,   // A new graph with the same degree for each node
+    uint64_t *pSwaps,       // Actual number of Swaps proformed
     // input: not modified
-    LAGraph_Graph G,
-    double loopTry, // Percent of edges to involve per loop [0,1]
-    double loopMin, // Minimum Swaps percent per loop [0,1)
-    GrB_Index totSwaps, // Desired Swaps
-    GrB_Index seed,
+    const LAGraph_Graph G,  // Graph to be randomized.
+    double loopTry,         // Percent of edges to involve per loop [0,1]
+    double loopMin,         // Minimum Swaps percent per loop [0,1)
+    uint64_t totSwaps,      // Desired Swaps
+    uint64_t seed,          // Random Seed 
     char *msg
 ) ;
 
