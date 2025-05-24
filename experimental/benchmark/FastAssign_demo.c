@@ -56,7 +56,7 @@ int main (int argc, char **argv)
     bool *val_of_P = NULL;
     double t = LAGraph_WallClockTime ( ) ;
     GrB_Index size = (argc > 1) ? atoll(argv [1]) : 1000 ;
-    int shift_e = __builtin_clzl(size);
+    int shift_e = 63 - (int) floor (log2 ((double) size)) ;
     GrB_Index size_p2 = (1ull << (64-shift_e));
     GrB_Index bit_mask = size_p2 - 1;
     GRB_TRY (GrB_Vector_new(&rand_v, GrB_UINT64, size)) ;
