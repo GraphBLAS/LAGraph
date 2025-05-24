@@ -49,6 +49,17 @@ const matrix_info files [ ] =
     { "" },
 } ;
 
+#undef OK
+#define OK(method) \
+{ \
+    GrB_Info info = method ; \
+    if (info != GrB_SUCCESS) \
+    { \
+        printf ("info: %d, msg: %s\n", info, msg) ; \
+        TEST_CHECK (false) ; \
+    } \
+}
+
 //****************************************************************************
 void test_lcc (void)
 {
@@ -79,13 +90,15 @@ void test_lcc (void)
 
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
-            printf ("jit: %d\n", jit) ;
+            printf ("\n-------- jit: %d\n", jit) ;
             OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
 
             GrB_Vector c = NULL ;
 
             // compute the local clustering coefficient
+            LG_SET_BURBLE (true) ;
             OK (LAGraph_lcc (&c, G, msg)) ;
+            LG_SET_BURBLE (false) ;
 
             GrB_Index n ;
             OK (GrB_Vector_size (&n, c)) ;
@@ -94,6 +107,7 @@ void test_lcc (void)
             GrB_Vector cgood = NULL ;
             OK (LG_check_lcc(&cgood, G, msg)) ;
             OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
+
             // cgood = abs (cgood - c)
             OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
                 NULL)) ;

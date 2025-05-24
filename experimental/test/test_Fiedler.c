@@ -323,8 +323,12 @@ void test_fiedler (void)
         OK (GrB_assign(x, NULL, NULL, 1, GrB_ALL, n, NULL));
         OK (GrB_Vector_setElement_FP32(x, 0, 0));
 
-        OK (LAGraph_mypcg2 (&steper, &kk, Y, u, alpha, indiag, x, .000001, 50,
-            msg)) ;
+        LG_SET_BURBLE (true) ;
+        GrB_Info info = LAGraph_mypcg2 (&steper, &kk, Y, u, alpha, indiag,
+            x, .000001, 50, msg) ;
+        LG_SET_BURBLE (false) ;
+        printf ("info: %d\n", info) ;
+        OK (info) ;
 
         //--------------------------------------------------------------------------
         // try the LAGraph_Hdip_Fiedler algorithm
