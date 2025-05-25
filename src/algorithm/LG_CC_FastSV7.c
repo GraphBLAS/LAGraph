@@ -54,7 +54,7 @@
 #define LG_FREE_ALL ;
 #include "LG_internal.h"
 
-double timings [16] ;
+static double timings [16] ;
 
 #if LG_SUITESPARSE_GRAPHBLAS_V10
 

@@ -154,11 +154,12 @@ int LG_check_rcc
     LG_TRY (LAGraph_Calloc(&a_space, max_deg * 2, sizeof(uint64_t), NULL)) ;
     LG_TRY (LAGraph_Malloc((void **)&slice, n_threads + 1, sizeof(int64_t), NULL)) ;
     epd = a_space ;
-    vpd = a_space + max_deg * sizeof(uint64_t) ;
+    vpd = ((uint64_t *) a_space) + max_deg ;
     LG_TRY (LAGraph_Malloc((void **) &rcc, max_deg, sizeof(double), NULL)) ;
     LG_eslice (slice, i_n, n_threads) ;
+    int tid;
     #pragma omp parallel for num_threads(n_threads) schedule(static, 1) private(i)
-    for (int tid = 0 ; tid < n_threads ; tid++)
+    for (tid = 0 ; tid < n_threads ; tid++)
     {
         int64_t loc_sum = 0, dp = 0;
         int64_t loc_arr[1024];
