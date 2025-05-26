@@ -92,7 +92,7 @@ GrB_Info check_matching(GrB_Matrix A, GrB_Vector mateC, char *msg)
     }
 
     GRB_TRY(GxB_Vector_pack_CSC(mateC, (GrB_Index **)&I, (void **)&X, IBytes,
-                                XBytes, NULL, nmatched, jumbled, NULL));
+                                XBytes, false, nmatched, jumbled, NULL));
 
     GrB_Vector_free(&mateR);
     GrB_Matrix_free(&M);

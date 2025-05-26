@@ -85,7 +85,7 @@ const matrix_info tests [ ] = {
 char filename [LEN+1] ;
 char msg [LAGRAPH_MSG_LEN] ;
 
-void test_Coarsen_Matching () {
+void test_Coarsen_Matching (void) {
 #if LAGRAPH_SUITESPARSE
 
     OK (LAGraph_Init (msg)) ;
@@ -260,7 +260,7 @@ void test_Coarsen_Matching () {
 #endif
 }
 
-void test_Coarsen_Matching_Errors() {
+void test_Coarsen_Matching_Errors(void) {
 #if LAGRAPH_SUITESPARSE
 
     OK (LAGraph_Init (msg)) ;
@@ -302,7 +302,7 @@ void test_Coarsen_Matching_Errors() {
 }
 
 
-void test_Coarsen_Matching_NullInputs() {
+void test_Coarsen_Matching_NullInputs(void) {
 #if LAGRAPH_SUITESPARSE
 
     OK (LAGraph_Init (msg)) ;

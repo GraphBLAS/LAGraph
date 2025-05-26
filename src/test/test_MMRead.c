@@ -699,7 +699,7 @@ void test_MMReadWrite_brutal (void)
 // test_array_pattern
 //------------------------------------------------------------------------------
 
-void test_array_pattern ( )
+void test_array_pattern (void)
 {
 
     //--------------------------------------------------------------------------

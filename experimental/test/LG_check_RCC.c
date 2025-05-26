@@ -104,7 +104,8 @@ int LG_check_rcc
     GrB_Type p_type = NULL, i_type = NULL;
     int p_hand = 0, i_hand = 0;
     int n_threads = LG_nthreads_outer * LG_nthreads_inner;
-    uint64_t p_n = 0, i_n = 0, p_size = 0, i_size = 0, max_deg = 0;
+    uint64_t p_n = 0, i_n = 0, p_size = 0, i_size = 0 ;
+    int64_t max_deg = 0;
     uint64_t *epd = NULL, *vpd = NULL;
     int64_t *LG_RESTRICT slice  = NULL;
     double *rcc = NULL;
