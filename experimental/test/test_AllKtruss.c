@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/experimental/test/test_AllKtest.c: test cases for all-k-truss
+// LAGraph/experimental/test/test_AllKtruss.c: test cases for all-k-truss
 // ----------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -38,9 +38,9 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
+    { 342300, "bcsstk13.mtx" },
     {     11, "A.mtx" },
     {   2016, "jagmesh7.mtx" },
-    { 342300, "bcsstk13.mtx" },
     {     45, "karate.mtx" },
     {      6, "ldbc-cdlp-undirected-example.mtx" },
     {      4, "ldbc-undirected-example-bool.mtx" },
@@ -54,6 +54,7 @@ const matrix_info files [ ] =
 void test_AllKTruss (void)
 {
     LAGraph_Init (msg) ;
+//  OK (LG_SET_BURBLE (true)) ;
 
     for (int id = 0 ; ; id++)
     {

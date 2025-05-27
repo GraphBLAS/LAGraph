@@ -214,7 +214,6 @@ GrB_Info LAGraph_BF_basic_pushpull
         // if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)
         {
-            // printf("A negative-weight cycle found. \n");
             LG_FREE_ALL;
             return (GrB_NO_VALUE) ;
         }
@@ -223,14 +222,6 @@ GrB_Info LAGraph_BF_basic_pushpull
     //--------------------------------------------------------------------------
     // todo: make d sparse
     //--------------------------------------------------------------------------
-    /*if (!dsparse)
-    {
-        GRB_TRY (GrB_assign (d, d, NULL, d, GrB_ALL, n, GrB_DESC_R)) ;
-        GRB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
-        GrB_Index dnz ;
-        GRB_TRY (GrB_Vector_nvals (&dnz, d)) ;
-        printf ("final nvals %.16g\n", (double) dnz) ;
-    }*/
 
     (*pd_output) = d;
     d = NULL;

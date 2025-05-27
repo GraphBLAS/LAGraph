@@ -300,7 +300,6 @@ GrB_Info LAGraph_BF_full_mxv
         // if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)
         {
-            // printf("A negative-weight cycle found. \n");
             LG_FREE_ALL;
             return (GrB_NO_VALUE) ;
         }

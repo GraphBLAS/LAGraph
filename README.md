@@ -72,7 +72,7 @@ LAGraph contains the following files and folders:
 
     include: contains the LAGraph.h and LAGraphX.h files
         Do not edit include/LAGraph.h, since it is constructed
-        from config/LAGraph.h.in.
+        from Config/LAGraph.h.in.
 
     LICENSE: BSD 2-clause license
 

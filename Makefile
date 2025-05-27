@@ -68,6 +68,9 @@ vanilla:
 debug:
 	( cd build && cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . --config Release -j${JOBS} )
 
+vanilla_debug:
+	( cd build && cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug -USUITESPARSE_PKGFILEDIR -DLAGRAPH_VANILLA=1 .. && cmake --build . --config Release -j${JOBS} )
+
 all: library
 
 test: library
@@ -75,6 +78,14 @@ test: library
 
 verbose_test: library
 	( cd build && ctest . --verbose || ctest . --rerun-failed --output-on-failure )
+
+# memcheck: compile with -g and no OpenMP (the latter gives spurious leaks from
+# dlopen and dlinit), and run the tests with valgrind.  For best results,
+# compile GraphBLAS without OpenMP and with the JIT disabled.
+memcheck: distclean
+	( cd build && cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug -DLAGRAPH_USE_OPENMP=0 .. )
+	( cd build && cmake --build . --config Release -j${JOBS} )
+	( cd build && ctest . -T memcheck )
 
 # target used in CI
 demos: test
@@ -104,5 +115,5 @@ clean: distclean
 purge: distclean
 
 distclean:
-	- $(RM) -rf build/* config/*.tmp
+	- $(RM) -rf build/* Config/*.tmp
 

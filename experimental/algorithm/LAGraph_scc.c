@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: not ready for src; uses global variables
+
 /**
  * Code is based on the Min-Label algorithm described in the following paper:
  * D. Yan, J. Cheng, K. Xin, Y. Lu, W. Ng, Y. Bu, "Pregel Algorithms for Graph
@@ -74,13 +76,18 @@ void trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thu
 //  - AT     : (input) transposed matrix
 //  - n      : (input) number of vertices
 
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL    \
+    GrB_free (&s) ;    \
+    GrB_free (&t) ;
+
 static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
         GrB_Matrix A, GrB_Matrix AT, GrB_Index n, char *msg)
 {
     GrB_Info info;
     // semirings
 
-    GrB_Vector s, t;
+    GrB_Vector s = NULL, t = NULL;
     GRB_TRY (GrB_Vector_new (&s, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
     GRB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
@@ -99,14 +106,32 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
         GRB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
     }
 
-    GRB_TRY (GrB_free (&s));
-    GRB_TRY (GrB_free (&t));
+    LG_FREE_ALL ;
     return GrB_SUCCESS;
 }
 
+//****************************************************************************
+
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL                         \
+    LAGraph_Free ((void **) &I, msg);       \
+    LAGraph_Free ((void **) &V, msg);       \
+    LAGraph_Free ((void **) &F, msg);       \
+    LAGraph_Free ((void **) &B, msg);       \
+    LAGraph_Free ((void **) &M, msg);       \
+    GrB_free (&ind);                        \
+    GrB_free (&inf);                        \
+    GrB_free (&f);                          \
+    GrB_free (&b);                          \
+    GrB_free (&mask);                       \
+    GrB_free (&FW);                         \
+    GrB_free (&BW);                         \
+    GrB_free (&sel1);                       \
+    GrB_free (&sel2);                       \
+    GrB_free (&scc);
+
 #endif
 
-//****************************************************************************
 //****************************************************************************
 int LAGraph_scc
 (
@@ -115,18 +140,18 @@ int LAGraph_scc
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     LG_CLEAR_MSG ;
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
+
     GrB_Info info;
-    GrB_Vector scc;
-    GrB_Vector ind;
-    GrB_Vector inf;
-    GrB_Vector f, b, mask;
+    GrB_Vector scc = NULL ;
+    GrB_Vector ind = NULL ;
+    GrB_Vector inf = NULL ;
+    GrB_Vector f = NULL, b = NULL, mask = NULL ;
     GrB_IndexUnaryOp sel1 = NULL, sel2 = NULL ;
-    GrB_Monoid Add;
+    GrB_Monoid Add = NULL ;
+    GrB_Matrix FW = NULL, BW = NULL;
 
     if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
 
@@ -136,25 +161,25 @@ int LAGraph_scc
     if (n != ncols) return (GrB_DIMENSION_MISMATCH) ;
 
     // store the graph in both directions (forward / backward)
-    GrB_Matrix FW, BW;
     GRB_TRY (GrB_Matrix_new (&FW, GrB_BOOL, n, n));
     GRB_TRY (GrB_Matrix_new (&BW, GrB_BOOL, n, n));
     GRB_TRY (GrB_transpose (FW, 0, 0, A, GrB_DESC_T0)); // FW = A
     GRB_TRY (GrB_transpose (BW, 0, 0, A, 0));     // BW = A'
 
     // check format
-    GxB_Format_Value A_format, AT_format;
-    GRB_TRY (GxB_get (FW, GxB_FORMAT, &A_format));
-    GRB_TRY (GxB_get (BW, GxB_FORMAT, &AT_format));
+    int32_t A_format, AT_format;
+    GRB_TRY (GrB_get (FW, &A_format , GrB_STORAGE_ORIENTATION_HINT));
+    GRB_TRY (GrB_get (BW, &AT_format, GrB_STORAGE_ORIENTATION_HINT));
 
-    bool is_csr = (A_format == GxB_BY_ROW && AT_format == GxB_BY_ROW);
+    bool is_csr = (A_format == GrB_ROWMAJOR && AT_format == GrB_ROWMAJOR);
     if (!is_csr) return (GrB_INVALID_VALUE) ;
 
-    I = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    V = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    F = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    B = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    M = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    LG_TRY (LAGraph_Malloc ((void **) &I, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &V, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &F, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &B, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &M, n, sizeof (GrB_Index), msg)) ;
+
     for (GrB_Index i = 0; i < n; i++)
         I[i] = V[i] = i;
 
@@ -224,22 +249,9 @@ int LAGraph_scc
     *result = scc;
     scc = NULL;
 
-    free (I);
-    free (V);
-    free (F);
-    free (B);
-    free (M);
-    GrB_free (&ind);
-    GrB_free (&inf);
-    GrB_free (&f);
-    GrB_free (&b);
-    GrB_free (&mask);
-    GrB_free (&FW);
-    GrB_free (&BW);
-    GrB_free (&sel1);
-    GrB_free (&sel2);
-    GrB_free (&scc);
-
-    return GrB_SUCCESS;
+    LG_FREE_ALL ;
+    return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

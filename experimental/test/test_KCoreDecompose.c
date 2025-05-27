@@ -51,8 +51,8 @@ const matrix_info files [ ] =
 
 void test_KCoreDecompose (void)
 {
-    LAGraph_Init (msg) ;
     #if LAGRAPH_SUITESPARSE
+    LAGraph_Init (msg) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -66,6 +66,7 @@ void test_KCoreDecompose (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
+        fclose (f) ;
 
         // construct an undirected graph G with adjacency matrix A
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
@@ -114,11 +115,14 @@ void test_KCoreDecompose (void)
         OK (LAGraph_Matrix_IsEqual (&ok, D1, D2, msg)) ;
         TEST_CHECK(ok);
 
+        GrB_free (&c) ;
+        GrB_free (&D1) ;
+        GrB_free (&D2) ;
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
-    #endif
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -127,14 +131,15 @@ void test_KCoreDecompose (void)
 
 void test_errors (void)
 {
-    LAGraph_Init (msg) ;
     #if LAGRAPH_SUITESPARSE
+    LAGraph_Init (msg) ;
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, f, msg)) ;
     TEST_MSG ("Loading of adjacency matrix failed") ;
+    fclose (f) ;
 
     // construct an undirected graph G with adjacency matrix A
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
@@ -178,14 +183,12 @@ void test_errors (void)
     TEST_CHECK (c == NULL) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
-    #endif
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 TEST_LIST = {
-    #if LAGRAPH_SUITESPARSE
     {"KCoreDecompose", test_KCoreDecompose},
     {"KCoreDecompose_errors", test_errors},
-    #endif
     {NULL, NULL}
 };

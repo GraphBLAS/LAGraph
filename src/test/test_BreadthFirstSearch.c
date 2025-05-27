@@ -23,6 +23,7 @@
 #include <LAGraph_test.h>
 #include <graph_zachary_karate.h>
 #include "LG_alg_internal.h"
+#include "LAGraphX.h"
 
 char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
@@ -94,9 +95,9 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
+    { LAGraph_ADJACENCY_UNDIRECTED, "jagmesh7.mtx" },
     { LAGraph_ADJACENCY_UNDIRECTED, "A.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "cover.mtx" },
-    { LAGraph_ADJACENCY_UNDIRECTED, "jagmesh7.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "ldbc-cdlp-directed-example.mtx" },
     { LAGraph_ADJACENCY_UNDIRECTED, "ldbc-cdlp-undirected-example.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx" },
@@ -191,6 +192,7 @@ bool check_karate_levels30(GrB_Vector levels)
 void setup(void)
 {
     LAGraph_Init(msg);
+//  OK (LG_SET_BURBLE (true)) ;
     int retval;
     GrB_Matrix A = NULL;
 
@@ -466,10 +468,103 @@ void test_BreadthFirstSearch_both(void)
     teardown();
 }
 
+//------------------------------------------------------------------------------
+// test_BreadthFirstSearch_Extended: test max_level and dest
+//------------------------------------------------------------------------------
+
+void test_BreadthFirstSearch_Extended(void)
+{
+    setup();
+    GrB_Vector level = NULL ;
+
+    for (int64_t max_level = 0 ; max_level <= 5 ; max_level++)
+    {
+        printf ("\nmax_level: %" PRId64 "\n", max_level) ;
+        for (int vanilla = 0 ; vanilla <= 1 ; vanilla++)
+        {
+            int retval ;
+            if (vanilla)
+            {
+                retval = LG_BreadthFirstSearch_vanilla_Extended (&level,
+                    NULL, G, SRC, max_level, -1, msg) ;
+            }
+            else
+            {
+                retval = LAGr_BreadthFirstSearch_Extended (&level,
+                    NULL, G, SRC, max_level, -1, max_level > 2, msg) ;
+            }
+            TEST_CHECK (retval == GrB_SUCCESS) ;
+
+            GrB_Index nvals ;
+            OK (GrB_Vector_nvals (&nvals, level)) ;
+            printf ("vanilla: %d nvals: %" PRIu64 "\n", vanilla, nvals) ;
+
+            // check the levels of all nodes
+            for (int64_t k = 0 ; k < 34 ; k++)
+            {
+                int64_t lvl = -1 ;
+                int64_t valid_level = LEVELS30 [k] ;
+                retval = GrB_Vector_extractElement (&lvl, level, k) ;
+                if (valid_level <= max_level)
+                {
+                    TEST_CHECK (retval == GrB_SUCCESS) ;
+                    TEST_CHECK (lvl == valid_level) ;
+                }
+                else
+                {
+                    TEST_CHECK (retval == GrB_NO_VALUE) ;
+                }
+            }
+            OK (GrB_free (&level)) ;
+        }
+    }
+
+    for (int64_t dest = 0 ; dest < 34 ; dest++)
+    {
+        printf ("\ndest: %" PRId64 "\n", dest) ;
+
+        for (int vanilla = 0 ; vanilla <= 1 ; vanilla++)
+        {
+            int retval ;
+            if (vanilla)
+            {
+                retval = LG_BreadthFirstSearch_vanilla_Extended (&level,
+                    NULL, G, SRC, -1, dest, msg) ;
+            }
+            else
+            {
+                retval = LAGr_BreadthFirstSearch_Extended (&level,
+                    NULL, G, SRC, -1, dest, false, msg) ;
+            }
+            TEST_CHECK (retval == GrB_SUCCESS) ;
+
+            int64_t lvl = -1 ;
+            OK (GrB_Vector_extractElement (&lvl, level, dest)) ;
+            int64_t valid_level = LEVELS30 [dest] ;
+            TEST_CHECK (lvl == valid_level) ;
+
+            GrB_Index nvals ;
+            OK (GrB_Vector_nvals (&nvals, level)) ;
+
+            printf ("   vanilla: %d level %" PRId64 " nvals: %" PRIu64 "\n",
+                vanilla, lvl, nvals) ;
+
+            int64_t max_level = -1 ;
+            OK (GrB_reduce (&max_level, NULL, GrB_MAX_MONOID_INT64, level,
+                NULL)) ;
+            TEST_CHECK (lvl == max_level) ;
+            OK (GrB_free (&level)) ;
+        }
+    }
+
+    teardown();
+}
+
 //****************************************************************************
 void test_BreadthFirstSearch_many(void)
 {
     LAGraph_Init(msg);
+//  OK (LG_SET_BURBLE (true)) ;
     GrB_Matrix A = NULL ;
 
     for (int k = 0 ; ; k++)
@@ -504,13 +599,14 @@ void test_BreadthFirstSearch_many(void)
                 GrB_Vector parent = NULL ;
                 GrB_Vector level = NULL ;
 
-                int64_t maxlevel ;
+                int64_t maxlevel = -9999 ;
                 GrB_Index nvisited ;
 
                 OK (LAGr_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
                 OK (LG_check_bfs (level, parent, G, src, msg)) ;
                 OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
                     level, NULL)) ;
+                TEST_CHECK (maxlevel != -9999) ;
                 OK (GrB_Vector_nvals (&nvisited, level)) ;
                 {
                     printf ("src %g n: %g max level: %g nvisited: %g\n",
@@ -576,7 +672,7 @@ void test_BreadthFirstSearch_many(void)
 // test_bfs_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_bfs_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -670,8 +766,9 @@ TEST_LIST = {
     {"BreadthFirstSearch_level", test_BreadthFirstSearch_level},
     {"BreadthFirstSearch_both", test_BreadthFirstSearch_both},
     {"BreadthFirstSearch_many", test_BreadthFirstSearch_many},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"BreadthFirstSearch_brutal", test_bfs_brutal },
     #endif
+    {"BreadthFirstSearch_Extended", test_BreadthFirstSearch_Extended},
     {NULL, NULL}
 } ;

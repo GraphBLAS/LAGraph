@@ -1,0 +1,6 @@
+# Ignore these files:
+out_*txt
+
+# Do not ignore this file
+!.gitignore
+

@@ -97,8 +97,8 @@ const matrix_info files [ ] =
 //****************************************************************************
 void test_scc (void)
 {
-    LAGraph_Init (msg) ;
     #if LAGRAPH_SUITESPARSE
+    LAGraph_Init (msg) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -112,6 +112,7 @@ void test_scc (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
+        fclose (f) ;
 
         // construct a directed graph G with adjacency matrix A
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
@@ -150,10 +151,8 @@ void test_scc (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
-    #else
-    printf ("test skipped\n") ;
-    #endif
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -162,8 +161,8 @@ void test_scc (void)
 
 void test_errors (void)
 {
-    LAGraph_Init (msg) ;
     #if LAGRAPH_SUITESPARSE
+    LAGraph_Init (msg) ;
 
     GrB_Vector c = NULL ;
     GrB_Matrix A = NULL ;
@@ -180,10 +179,8 @@ void test_errors (void)
 
     OK (GrB_free (&c)) ;
     OK (GrB_free (&A)) ;
-    #else
-    printf ("test skipped\n") ;
-    #endif
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //****************************************************************************

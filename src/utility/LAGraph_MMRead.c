@@ -1043,6 +1043,21 @@ int LAGraph_MMRead
 #endif
 
     //--------------------------------------------------------------------------
+    // use 32-bit integers if possible
+    //--------------------------------------------------------------------------
+
+    // FUTURE: use 32-bit integers throughout, when using GraphBLAS v10 and
+    // later, instead of converting to 32-bit indices here at the end.
+
+    #if LAGRAPH_SUITESPARSE
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    GRB_TRY (GrB_Matrix_set_INT32 (*A, 32, GxB_ROWINDEX_INTEGER_HINT)) ;
+    GRB_TRY (GrB_Matrix_set_INT32 (*A, 32, GxB_COLINDEX_INTEGER_HINT)) ;
+    GRB_TRY (GrB_Matrix_set_INT32 (*A, 32, GxB_OFFSET_INTEGER_HINT)) ;
+    #endif
+    #endif
+
+    //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
 

@@ -57,6 +57,8 @@ bool is_close (double a, double b)
 void test_SquareClustering (void)
 {
     LAGraph_Init (msg) ;
+//  OK (LG_SET_BURBLE (true)) ;
+
 
     GrB_Matrix A = NULL ;
     LAGraph_Graph G = NULL ;

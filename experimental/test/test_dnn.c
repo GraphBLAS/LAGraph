@@ -31,7 +31,6 @@ char msg [LAGRAPH_MSG_LEN] ;
 void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
 }
 
 //------------------------------------------------------------------------------
@@ -40,7 +39,6 @@ void setup (void)
 
 void teardown (void)
 {
-    OK (LAGraph_Random_Finalize (msg)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 
@@ -132,6 +130,7 @@ void test_dnn (void)
     f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&T, f, msg)) ;
+    fclose (f) ;
     OK (LAGraph_Matrix_TypeName (type_name, T, msg)) ;
     TEST_CHECK (MATCHNAME (type_name, "bool")) ;
     // TrueCategories = T, as a boolean nfeatures-by-1 vector

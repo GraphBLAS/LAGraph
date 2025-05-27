@@ -83,7 +83,6 @@ if ( LAGRAPH_HAS_OPENMP )
     endif ( )
 endif ( )
 
-
 #-------------------------------------------------------------------------------
 # This will only build tests from files with the name "test_*.c"
 #-------------------------------------------------------------------------------
@@ -104,6 +103,12 @@ foreach( testsourcefile ${TEST_SOURCES} )
         target_link_libraries( ${testname}
             LAGraphX_static LAGraph_static lagraphxtest_static lagraphtest_static GraphBLAS::GraphBLAS )
     endif ( )
+
+    if ( NOT NO_LIBM )
+        # add libm
+        target_link_libraries ( ${testname} m )
+    endif ( )
+
     string( REPLACE "test_" "LAGraphX_" ctestname ${testname})
     add_test( NAME ${ctestname} COMMAND $<TARGET_FILE:${testname}> )
 #   add_test( NAME ${ctestname} COMMAND valgrind $<TARGET_FILE:${testname}> )

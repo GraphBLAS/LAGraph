@@ -89,12 +89,8 @@ const char *files [ ] =
 //****************************************************************************
 void test_SSaveSet (void)
 {
-    LAGraph_Init (msg) ;
-    GrB_Descriptor desc = NULL ;
     #if LAGRAPH_SUITESPARSE
-    OK (GrB_Descriptor_new (&desc)) ;
-    OK (GxB_set (desc, GxB_COMPRESSION, GxB_COMPRESSION_LZ4HC + 9)) ;
-    #endif
+    LAGraph_Init (msg) ;
 
     // load all matrices into a single set
     GrB_Matrix *Set = NULL ;
@@ -113,19 +109,6 @@ void test_SSaveSet (void)
         fclose (f) ;
     }
 
-    // workaround for bug in v6.0.0 to v6.0.2:
-    // ensure the matrix is not iso
-    #if LAGRAPH_SUITESPARSE
-    #if GxB_IMPLEMENTATION < GxB_VERSION (6,0,3)
-    printf ("\nworkaround for bug in SS:GrB v6.0.2 (fixed in v6.0.3)\n") ;
-    for (int k = 0 ; k < NFILES ; k++)
-    {
-        OK (GrB_Matrix_setElement (Set [k], 0, 0, 0)) ;
-        OK (GrB_wait (Set [k], GrB_MATERIALIZE)) ;
-    }
-    #endif
-    #endif
-
     // save the set of matrices in a single file
     OK (LAGraph_SSaveSet ("matrices.lagraph", Set, NFILES, "many test matrices",
         msg)) ;
@@ -140,7 +123,11 @@ void test_SSaveSet (void)
     printf ("nmatrices %g r %d msg %s\n", (double) nmatrices, r, msg) ;
     TEST_CHECK (nmatrices == NFILES) ;
     TEST_CHECK (Set2 != NULL) ;
-    TEST_CHECK (strcmp (collection, "many test matrices") == 0) ;
+    TEST_CHECK (collection != NULL) ;
+    if (collection != NULL)
+    {
+        TEST_CHECK (strcmp (collection, "many test matrices") == 0) ;
+    }
 
     // check the matrices
     for (int k = 0 ; k < NFILES ; k++)
@@ -156,8 +143,8 @@ void test_SSaveSet (void)
     LAGraph_SFreeSet (&Set2, NFILES) ;
     LAGraph_Free ((void **) &collection, NULL) ;
 
-    OK (GrB_free (&desc)) ;
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //****************************************************************************

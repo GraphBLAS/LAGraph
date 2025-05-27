@@ -194,6 +194,8 @@ int LG_check_bfs
         for (int64_t i = 0 ; i < n ; i++)
         {
             bool ok = (level_in [i] == level_check [i]) ;
+//          if (!ok) printf ("level (%" PRId64 ") = %" PRId64 " %" PRId64
+ //             " is wrong\n", i, level_in [i], level_check [i]) ;
             LG_ASSERT_MSG (ok, -2000, "invalid level") ;
         }
     }
@@ -210,6 +212,7 @@ int LG_check_bfs
             {
                 // src node is its own parent
                 bool ok = (parent_in [src] == src) && (visited [src]) ;
+                if (!ok) printf ("parent src bad\n") ;
                 LG_ASSERT_MSG (ok, -2001, "invalid parent") ;
             }
             else if (visited [i])
@@ -217,14 +220,17 @@ int LG_check_bfs
                 int64_t pi = parent_in [i] ;
                 // ensure the parent pi is valid and has been visited
                 bool ok = (pi >= 0 && pi < n) && visited [pi] ;
+                if (!ok) printf ("parent bad\n") ;
                 LG_ASSERT_MSG (ok, -2001, "invalid parent") ;
                 // ensure the edge (pi,i) exists
                 bool x ;
                 int info = GrB_Matrix_extractElement_BOOL (&x, G->A, pi, i) ;
                 ok = (info == GrB_SUCCESS) ;
+                if (!ok) printf ("parent bad2\n") ;
                 LG_ASSERT_MSG (ok, -2001, "invalid parent") ;
                 // ensure the parent's level is ok
                 ok = (level_check [i] == level_check [pi] + 1) ;
+                if (!ok) printf ("parent bad3\n") ;
                 LG_ASSERT_MSG (ok, -2001, "invalid parent") ;
             }
         }

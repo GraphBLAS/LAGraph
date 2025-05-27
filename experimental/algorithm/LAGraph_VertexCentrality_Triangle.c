@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: ready for src, except remove all methods except method 3.
+
 // LAGraph_VertexCentrality_Triangle: computes the TriangleCentrality of
 // an undirected graph.  No self edges are allowed on the input graph.
 // Methods 2 and 3 can tolerate any edge weights (they are ignored; only the
@@ -22,8 +24,9 @@
 // (this could be modified); results are undefined if this condition doesn't
 // hold.
 
-// P. Burkhardt, "Triangle centrality," https://arxiv.org/pdf/2105.00110.pdf,
-// April 2021.
+// Paul Burkhardt. 2024. Triangle Centrality. ACM Trans. Knowl. Discov. Data
+// 18, 9, Article 217 (November 2024), 34 pages.
+// https://doi.org/10.1145/3685677
 
 // Method 3 is by far the fastest.
 

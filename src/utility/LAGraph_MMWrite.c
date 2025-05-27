@@ -220,10 +220,11 @@ int LAGraph_MMWrite
     // determine the entry type
     //--------------------------------------------------------------------------
 
-    GrB_Type type ;
+    GrB_Type type = NULL ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
-    LG_TRY (LAGraph_TypeFromName (&type, atype_name, msg)) ;
+    atype_name [0] = '\0' ;
+    LAGraph_Matrix_TypeName (atype_name, A, msg) ;
+    LAGraph_TypeFromName (&type, atype_name, msg) ;
 
     MM_type_enum MM_type = MM_integer ;
 
@@ -238,12 +239,10 @@ int LAGraph_MMWrite
         MM_type = MM_real ;
     }
     #if 0
-    #if LAGRAPH_SUITESPARSE
     else if (type == GxB_FC32 || type == GxB_FC64)
     {
         MM_type = MM_complex ;
     }
-    #endif
     #endif
     else
     {
@@ -411,24 +410,6 @@ int LAGraph_MMWrite
     else if (type == GxB_FC32  ) { FPRINTF (f, "float complex\n")  ; }
     else if (type == GxB_FC64  ) { FPRINTF (f, "double complex\n") ; }
     #endif
-
-#if 0
-    if      (type == GrB_BOOL  ) { FPRINTF (f, "GrB_BOOL\n")   ; }
-    else if (type == GrB_INT8  ) { FPRINTF (f, "GrB_INT8\n")   ; }
-    else if (type == GrB_INT16 ) { FPRINTF (f, "GrB_INT16\n")  ; }
-    else if (type == GrB_INT32 ) { FPRINTF (f, "GrB_INT32\n")  ; }
-    else if (type == GrB_INT64 ) { FPRINTF (f, "GrB_INT64\n")  ; }
-    else if (type == GrB_UINT8 ) { FPRINTF (f, "GrB_UINT8\n")  ; }
-    else if (type == GrB_UINT16) { FPRINTF (f, "GrB_UINT16\n") ; }
-    else if (type == GrB_UINT32) { FPRINTF (f, "GrB_UINT32\n") ; }
-    else if (type == GrB_UINT64) { FPRINTF (f, "GrB_UINT64\n") ; }
-    else if (type == GrB_FP32  ) { FPRINTF (f, "GrB_FP32\n")   ; }
-    else if (type == GrB_FP64  ) { FPRINTF (f, "GrB_FP64\n")   ; }
-    #if 0
-    else if (type == GxB_FC32  ) { FPRINTF (f, "GxB_FC32\n")   ; }
-    else if (type == GxB_FC64  ) { FPRINTF (f, "GxB_FC64\n")   ; }
-    #endif
-#endif
 
     //--------------------------------------------------------------------------
     // include any additional comments

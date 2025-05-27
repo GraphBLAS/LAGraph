@@ -2,7 +2,7 @@
 // LG_CC_FastSV5: connected components
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -48,6 +48,8 @@
 #define LG_FREE_ALL ;
 
 #include "LG_internal.h"
+
+// TODO: not ready for src; need a vanilla method with no GxB
 
 #if LAGRAPH_SUITESPARSE
 
@@ -108,7 +110,7 @@ static inline void ht_sample
     for (int32_t k = 0 ; k < samples ; k++)
     {
         // select an entry from V32 at random
-        int32_t x = V32 [LG_Random60 (seed) % n] ;
+        int32_t x = V32 [LG_Random64 (seed) % n] ;
 
         // find x in the hash table
         // todo: make this loop a static inline function (see also below)
@@ -158,8 +160,7 @@ static inline int32_t ht_most_frequent
 // in undefined behavior.  GrB_assign in SuiteSparse:GraphBLAS follows the
 // MATLAB rule, which discards all but the first of the duplicates.
 
-// todo: add this to GraphBLAS as a variant of GrB_assign, either as
-// GxB_assign_accum (or another name), or as a GxB_* descriptor setting.
+// TODO: Reduce_assign32 is slow.  See src/algorithm/LG_CC_FastSV6.
 
 static inline int Reduce_assign32
 (
@@ -211,7 +212,7 @@ static inline int Reduce_assign32
         ht_init (ht_key, ht_val) ;
         ht_sample (index, n, HASH_SAMPLES, ht_key, ht_val, seed) ;
 
-        int tid;
+        int tid ;
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (tid = 0 ; tid < nthreads ; tid++)
         {
@@ -273,7 +274,7 @@ static inline int Reduce_assign32
     else
     {
         // sequential version
-        for (GrB_Index k = 0 ; k < n ; k++)
+        for (int64_t k = 0 ; k < n ; k++)
         {
             uint32_t i = index [k] ;
             w_x [i] = LAGRAPH_MIN (w_x [i], s_x [s_iso?0:k]) ;
@@ -293,6 +294,8 @@ static inline int Reduce_assign32
 
     return (GrB_SUCCESS) ;
 }
+
+#endif
 
 //------------------------------------------------------------------------------
 // LG_CC_FastSV5
@@ -319,9 +322,7 @@ static inline int Reduce_assign32
     GrB_free (&mod) ;                           \
 }
 
-#endif
-
-int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
+int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
 (
     // output
     GrB_Vector *component,  // component(i)=s if node is in the component s
@@ -330,16 +331,13 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "SuiteSparse required") ;
-#else
 
     uint32_t *V32 = NULL ;
     int32_t *ht_key = NULL, *ht_val = NULL ;
@@ -395,7 +393,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     LAGRAPH_TRY (LAGraph_Malloc ((void **) &V32, n, sizeof (uint32_t), msg)) ;
 
     // prepare vectors
-    int64_t i;
+    int64_t i ;
     #pragma omp parallel for num_threads(nthreads2) schedule(static)
     for (i = 0 ; i < n ; i++)
     {
@@ -441,7 +439,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         GRB_TRY (GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &Sp, &Sj,
             &Sx, &Sp_size, &Sj_size, &Sx_size,
             &S_iso, &S_jumbled, NULL)) ;
-        GRB_TRY (GxB_Type_size (&typesize, type)) ;
+        LAGRAPH_TRY (LAGraph_SizeOfType (&typesize, type, msg)) ;
         G->A = NULL ;
 
         //----------------------------------------------------------------------
@@ -480,7 +478,8 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         //----------------------------------------------------------------------
 
         // thread tid works on rows range[tid]:range[tid+1]-1 of S and T
-        for (int tid = 0 ; tid <= nthreads ; tid++)
+        int tid ;
+        for (tid = 0 ; tid <= nthreads ; tid++)
         {
             range [tid] = (n * tid + nthreads - 1) / nthreads ;
         }
@@ -489,7 +488,6 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         // determine the number entries to be constructed in T for each thread
         //----------------------------------------------------------------------
 
-        int tid;
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (tid = 0 ; tid < nthreads ; tid++)
         {
@@ -515,8 +513,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 
         // T (i,:) consists of the first FASTSV_SAMPLES of S (i,:).
 
-        // todo: this could be done by GxB_Select, using a new operator.  Need
-        // to define a set of GxB_SelectOp operators that would allow for this.
+        // todo: this could be done by GrB_Select, using a new operator.
 
         // Note that Tx is not modified.  Only Tp and Tj are constructed.
 
@@ -578,7 +575,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
             // calculate grandparent
             // fixme: NULL parameter is SS:GrB extension
             GRB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // fixme
-            int32_t i;
+            int64_t i ;
             #pragma omp parallel for num_threads(nthreads2) schedule(static)
             for (i = 0 ; i < n ; i++)
             {
@@ -674,23 +671,10 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_Index offset = 0 ;
         for (tid = 0 ; tid < nthreads ; tid++)
         {
-
-//          this memcpy is not safe (src/dest can overlap)
-//          memcpy (Tj + offset, Tj + Tp [range [tid]],
-//              sizeof (GrB_Index) * count [tid]) ;
-
-//          // using a for loop instead:
-//          GrB_Index *Tj_dest = Tj + offset ;
-//          GrB_Index *Tj_src  = Tj + Tp [range [tid]] ;
-//          for (int64_t k = 0 ; k < count [tid] ; k++)
-//          {
-//              Tj_dest [k] = Tj_src [k] ;
-//          }
-
-//          this is safe (memmove_s not necessary):
+            // the source and destination can overlap;
+            // this is safe (memmove_s not necessary):
             memmove (Tj + offset, Tj + Tp [range [tid]],
                 sizeof (GrB_Index) * count [tid]) ;
-
             offset += count [tid] ;
             count [tid] = offset - count [tid] ;
         }
@@ -700,7 +684,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         for (tid = 0 ; tid < nthreads ; tid++)
         {
             GrB_Index ptr = Tp [range [tid]] ;
-            for (int32_t i = range [tid] ; i < range [tid+1] ; i++)
+            for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
                 Tp [i] -= ptr - count [tid] ;
             }
@@ -755,7 +739,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         // calculate grandparent
         // fixme: NULL parameter is SS:GrB extension
         GRB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // fixme
-        int32_t k;
+        int64_t k ;
         #pragma omp parallel for num_threads(nthreads2) schedule(static)
         for (k = 0 ; k < n ; k++)
         {
@@ -784,5 +768,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     }
     LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

@@ -41,6 +41,8 @@ gmon.out
 cmake-build-debug*
 CMakeFiles*
 *~
+data/comments*.txt
+data/comments*.mtx
 
 */build/*
 **/.venv/*

@@ -47,11 +47,11 @@ int LAGraph_CheckGraph
             "adjacency matrix must be square") ;
     }
 
+    int32_t fmt ;
+    GRB_TRY (GrB_get (A, &fmt, GrB_STORAGE_ORIENTATION_HINT)) ;
     #if LAGRAPH_SUITESPARSE
         // only by-row format is supported when using SuiteSparse
-        GxB_Format_Value fmt ;
-        GRB_TRY (GxB_get (A, GxB_FORMAT, &fmt)) ;
-        LG_ASSERT_MSG (fmt == GxB_BY_ROW, LAGRAPH_INVALID_GRAPH,
+        LG_ASSERT_MSG (fmt == GrB_ROWMAJOR, LAGRAPH_INVALID_GRAPH,
             "only by-row format supported") ;
     #endif
 
@@ -68,12 +68,11 @@ int LAGraph_CheckGraph
         LG_ASSERT_MSG (nrows == ncols2 && ncols == nrows2,
             LAGRAPH_INVALID_GRAPH, "G->AT matrix has the wrong dimensions") ;
 
+        GRB_TRY (GrB_get (AT, &fmt, GrB_STORAGE_ORIENTATION_HINT)) ;
         #if LAGRAPH_SUITESPARSE
             // only by-row format is supported when using SuiteSparse
-            GxB_Format_Value fmt ;
-            GRB_TRY (GxB_get (AT, GxB_FORMAT, &fmt)) ;
-            LG_ASSERT_MSG (fmt == GxB_BY_ROW,
-                LAGRAPH_INVALID_GRAPH, "only by-row format supported") ;
+            LG_ASSERT_MSG (fmt == GrB_ROWMAJOR, LAGRAPH_INVALID_GRAPH,
+                "only by-row format supported") ;
         #endif
 
         // ensure the types of A and AT are the same

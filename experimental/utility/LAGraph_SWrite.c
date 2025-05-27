@@ -43,22 +43,14 @@ int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
     FPRINT ((f, "{\n    \"LAGraph\": [%d,%d,%d],\n    \"GraphBLAS\": [ ",
         LAGRAPH_VERSION_MAJOR, LAGRAPH_VERSION_MINOR, LAGRAPH_VERSION_UPDATE)) ;
 
-    #if LAGRAPH_SUITESPARSE
-
-        // SuiteSparse:GraphBLAS v6.0.0 or later
-        char *library ;
-        int ver [3] ;
-        GRB_TRY (GxB_get (GxB_LIBRARY_NAME, &library)) ;
-        GRB_TRY (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
-        FPRINT ((f, "\"%s\", [%d,%d,%d] ],\n", library,
-            ver [0], ver [1], ver [2])) ;
-
-    #else
-
-        // some other GraphBLAS library: call it "vanilla 1.0.0"
-        FPRINT ((f, "\"%s\", [%d,%d,%d] ],\n", "vanilla", 1, 0, 0)) ;
-
-    #endif
+    char library [256] ;
+    int32_t ver [3] ;
+    GRB_TRY (GrB_get (GrB_GLOBAL, library, GrB_NAME)) ;
+    GRB_TRY (GrB_get (GrB_GLOBAL, &(ver [0]), GrB_LIBRARY_VER_MAJOR)) ;
+    GRB_TRY (GrB_get (GrB_GLOBAL, &(ver [1]), GrB_LIBRARY_VER_MINOR)) ;
+    GRB_TRY (GrB_get (GrB_GLOBAL, &(ver [2]), GrB_LIBRARY_VER_PATCH)) ;
+    FPRINT ((f, "\"%s\", [%d,%d,%d] ],\n", library,
+        ver [0], ver [1], ver [2])) ;
 
     // write name of this collection and start the list of items
     FPRINT ((f, "    \"%s\":\n    [\n", name)) ;

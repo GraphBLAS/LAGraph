@@ -57,7 +57,6 @@ int main (int argc, char **argv)
     // start GraphBLAS and LAGraph
     bool burble = false ;
     demo_init (burble) ;
-    LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
 
     int ntrials = 3 ;
     ntrials = 3 ;
@@ -148,7 +147,6 @@ int main (int argc, char **argv)
 
     fflush (stdout) ;
     LG_FREE_ALL ;
-    LAGRAPH_TRY (LAGraph_Random_Finalize (msg)) ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

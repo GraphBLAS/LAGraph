@@ -2,7 +2,7 @@
 // LG_internal.h: include file for use within LAGraph itself
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -270,6 +270,17 @@ typedef unsigned char LG_void ;
     // debugging disabled
     #define ASSERT(x)
 
+#endif
+
+// GraphBLAS version 10 flag
+#if LAGRAPH_SUITESPARSE 
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+        #define LG_SUITESPARSE_GRAPHBLAS_V10 1
+    #else
+        #define LG_SUITESPARSE_GRAPHBLAS_V10 0
+    #endif
+#else
+    #define LG_SUITESPARSE_GRAPHBLAS_V10 0
 #endif
 
 //------------------------------------------------------------------------------
@@ -585,17 +596,15 @@ int LG_nself_edges
 ) ;
 
 //------------------------------------------------------------------------------
-// simple and portable random number generator (internal use only)
+// simple and portable random number generator
 //------------------------------------------------------------------------------
 
-#define LG_RANDOM15_MAX 32767
-#define LG_RANDOM60_MAX ((1ULL << 60) -1)
+// return a random uint64_t
+uint64_t LG_Random64 (uint64_t *seed) ;
 
-// return a random number between 0 and LG_RANDOM15_MAX
-GrB_Index LG_Random15 (uint64_t *seed) ;
-
-// return a random uint64_t, in range 0 to LG_RANDOM60_MAX
-GrB_Index LG_Random60 (uint64_t *seed) ;
+// create operators for LAGraph_Random_* methods
+int LG_Random_Init (char *msg) ;
+int LG_Random_Finalize (char *msg) ;
 
 //------------------------------------------------------------------------------
 // LG_KindName: return the name of a kind
@@ -618,5 +627,72 @@ int LG_KindName
 
 // # of entries to print for LAGraph_Matrix_Print and LAGraph_Vector_Print
 #define LG_SHORT_LEN 30
+
+//------------------------------------------------------------------------------
+// GrB_get/set for SuiteSparse extensions
+//------------------------------------------------------------------------------
+
+#if LAGRAPH_SUITESPARSE
+
+    // SuiteSparse:GraphBLAS v8.1 or later
+    #define LG_HYPERSPARSE GxB_HYPERSPARSE
+    #define LG_SPARSE      GxB_SPARSE
+    #define LG_BITMAP      GxB_BITMAP
+    #define LG_FULL        GxB_FULL
+    #define LG_SET_FORMAT_HINT(object,sparsity) \
+        GrB_set (object, (int32_t) (sparsity), GxB_SPARSITY_CONTROL)
+    #define LG_GET_FORMAT_HINT(object,status) \
+        GrB_get (object, (int32_t *) status, GxB_SPARSITY_STATUS)
+    #define LG_SET_NTHREADS(nthreads) \
+        GrB_set (GrB_GLOBAL, (int32_t) (nthreads), GxB_NTHREADS)
+    #define LG_SET_HYPER_SWITCH(object,hyper) \
+        GrB_set (object, hyper, GxB_HYPER_SWITCH)
+    #define LG_GET_HYPER_SWITCH(object,hyper) \
+        GrB_get (object, hyper, GxB_HYPER_SWITCH)
+    #define LG_SET_BURBLE(burble) \
+        GrB_set (GrB_GLOBAL, (int32_t) (burble), GxB_BURBLE)
+    #define LG_GET_LIBRARY_DATE(date) \
+        GrB_get (GrB_GLOBAL, (char *) date, GxB_LIBRARY_DATE)
+
+    #define LG_JIT_OFF   GxB_JIT_OFF
+    #define LG_JIT_PAUSE GxB_JIT_PAUSE
+    #define LG_JIT_RUN   GxB_JIT_RUN
+    #define LG_JIT_LOAD  GxB_JIT_LOAD
+    #define LG_JIT_ON    GxB_JIT_ON
+    #define LG_SET_JIT(jit) \
+        GrB_set (GrB_GLOBAL, (int32_t) (jit), GxB_JIT_C_CONTROL)
+
+    #if defined ( GRAPHBLAS_HAS_CUDA )
+    // the LG_brutal_malloc family of methods.
+    #define LG_BRUTAL_TESTS 0
+    #else
+    #define LG_BRUTAL_TESTS 1
+    #endif
+
+#else
+
+    // vanilla GraphBLAS
+    #define LG_HYPERSPARSE 1
+    #define LG_SPARSE      2
+    #define LG_BITMAP      4
+    #define LG_FULL        8
+    #define LG_SET_FORMAT_HINT(object,sparsity) GrB_SUCCESS
+    #define LG_SET_NTHREADS(nthreads) GrB_SUCCESS
+    #define LG_SET_HYPER_SWITCH(object,hyper) GrB_SUCCESS
+    #define LG_GET_HYPER_SWITCH(object,hyper) GrB_SUCCESS
+    #define LG_GET_FORMAT_HINT(object,status) GrB_SUCCESS
+    #define LG_SET_BURBLE(burble) GrB_SUCCESS
+    #define LG_GET_LIBRARY_DATE(date) GrB_SUCCESS
+
+    #define LG_JIT_OFF   0
+    #define LG_JIT_PAUSE 1
+    #define LG_JIT_RUN   2
+    #define LG_JIT_LOAD  3
+    #define LG_JIT_ON    4
+    #define LG_SET_JIT(jit) GrB_SUCCESS
+
+    #define LG_BRUTAL_TESTS 0
+
+#endif
 
 #endif

@@ -133,8 +133,14 @@ int LAGr_Init
 
     // malloc and free are required; calloc and realloc are optional
     LG_CLEAR_MSG ;
-    LG_ASSERT (user_malloc_function != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (user_free_function   != NULL, GrB_NULL_POINTER) ;
+
+    #if LAGRAPH_SUITESPARSE
+    if (!(mode == GxB_NONBLOCKING_GPU || mode == GxB_BLOCKING_GPU))
+    #endif
+    {
+        LG_ASSERT (user_malloc_function != NULL, GrB_NULL_POINTER) ;
+        LG_ASSERT (user_free_function   != NULL, GrB_NULL_POINTER) ;
+    }
     GrB_Info info ;
 
     // ensure LAGr_Init has not already been called
@@ -173,10 +179,26 @@ int LAGr_Init
     // save the memory management pointers in global LAGraph space
     //--------------------------------------------------------------------------
 
+    #if LAGRAPH_SUITESPARSE
+    // ask SuiteSparse:GraphBLAS for the function pointers
+    GRB_TRY (GrB_Global_get_VOID (GrB_GLOBAL,
+        (void *) (&LAGraph_Malloc_function),
+        GxB_MALLOC_FUNCTION)) ;
+    GRB_TRY (GrB_Global_get_VOID (GrB_GLOBAL,
+        (void *) (&LAGraph_Calloc_function),
+        GxB_CALLOC_FUNCTION)) ;
+    GRB_TRY (GrB_Global_get_VOID (GrB_GLOBAL,
+        (void *) (&LAGraph_Realloc_function),
+        GxB_REALLOC_FUNCTION)) ;
+    GRB_TRY (GrB_Global_get_VOID (GrB_GLOBAL,
+        (void *) (&LAGraph_Free_function),
+        GxB_FREE_FUNCTION)) ;
+    #else
     LAGraph_Malloc_function  = user_malloc_function ;
     LAGraph_Calloc_function  = user_calloc_function ;
     LAGraph_Realloc_function = user_realloc_function ;
     LAGraph_Free_function    = user_free_function ;
+    #endif
 
     //--------------------------------------------------------------------------
     // set # of LAGraph threads
@@ -190,15 +212,13 @@ int LAGr_Init
     LG_nthreads_inner = 1 ;
     #endif
 
-    #if LAGRAPH_SUITESPARSE
-    {
-        GRB_TRY (GxB_set (GxB_NTHREADS, LG_nthreads_inner)) ;
-    }
-    #endif
+    GRB_TRY (LG_SET_NTHREADS (LG_nthreads_inner)) ;
 
     //--------------------------------------------------------------------------
     // create global objects
     //--------------------------------------------------------------------------
+
+    LG_Random_Init (msg) ;
 
     // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
     // GrB_FIRST_T multiplicative operator.  These semirings compute C=A*B
@@ -328,4 +348,3 @@ int LAGr_Init
     LG_set_LAGr_Init_has_been_called (true) ;
     return (GrB_SUCCESS) ;
 }
-

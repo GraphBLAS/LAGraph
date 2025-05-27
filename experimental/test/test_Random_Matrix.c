@@ -33,7 +33,6 @@ typedef int myint ;
 void test_Random_Matrix (void)
 {
     LAGraph_Init (msg) ;
-    OK (LAGraph_Random_Init (msg)) ;
 
     uint64_t seed = 42 ;
     LAGraph_PrintLevel pr = LAGraph_COMPLETE_VERBOSE ;
@@ -42,6 +41,7 @@ void test_Random_Matrix (void)
     {
         seed++ ;
         printf ("\n=============================== seed: %g\n", (double) seed) ;
+        OK (LG_SET_JIT ((trial == 4 || trial == 2) ? LG_JIT_OFF : LG_JIT_ON)) ;
 
         double d = (trial == 4) ? INFINITY : ((double) trial / 4) ;
         printf ("density: %g, expected values: %g\n", d, d*20) ;
@@ -115,7 +115,6 @@ void test_Random_Matrix (void)
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
     OK (GrB_free (&MyInt)) ;
 
-    OK (LAGraph_Random_Finalize (msg)) ;
     LAGraph_Finalize (msg) ;
 }
 

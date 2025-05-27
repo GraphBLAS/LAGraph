@@ -30,6 +30,8 @@ int LAGraph_Finalize (char *msg)
     // free global objects
     //--------------------------------------------------------------------------
 
+    LG_TRY (LG_Random_Finalize (msg)) ;
+
     GRB_TRY (GrB_Semiring_free (&LAGraph_plus_first_int8  )) ;
     GRB_TRY (GrB_Semiring_free (&LAGraph_plus_first_int16 )) ;
     GRB_TRY (GrB_Semiring_free (&LAGraph_plus_first_int32 )) ;
@@ -82,3 +84,4 @@ int LAGraph_Finalize (char *msg)
     GRB_TRY (GrB_finalize ( )) ;
     return (GrB_SUCCESS) ;
 }
+

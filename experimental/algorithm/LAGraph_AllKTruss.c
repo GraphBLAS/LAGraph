@@ -39,11 +39,10 @@
 
 //      int64_t kmax ;
 //      GrB_Matrix_nrows (&n, A) ;
-//      int64_t n4 = (n > 4) ? n : 4 ;
-//      GrB_Matrix *Cset = LAGraph_malloc (n4, sizeof (GrB_Matrix)) ;
-//      int64_t *ntris   = LAGraph_malloc (n4, sizeof (int64_t)) ;
-//      int64_t *nedges  = LAGraph_malloc (n4, sizeof (int64_t)) ;
-//      int64_t *nstepss = LAGraph_malloc (n4, sizeof (int64_t)) ;
+//      GrB_Matrix *Cset = array of size max(n,4)
+//      int64_t *ntris   = array of size max(n,4)
+//      int64_t *nedges  = array of size max(n,4)
+//      int64_t *nstepss = array of size max(n,4)
 //      int result = LAGraph_AllKTruss (&Cset, &kmax, ntris, nedges,
 //          nstepss, G, msg) ;
 
@@ -52,6 +51,8 @@
 
 // todo: consider LAGraph_KTrussNext to compute the (k+1)-truss from the
 // k-truss
+
+// TODO: ready for src
 
 #define LG_FREE_ALL                         \
 {                                           \
@@ -140,8 +141,25 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
     // find all k-trusses
     //--------------------------------------------------------------------------
 
+    #if 0
+    int mtx = 0 ;
+    #endif
+
     while (true)
     {
+        #if 0
+        // dump the matrix S to a file
+        uint64_t snvals ;
+        GRB_TRY (GrB_Matrix_nvals (&snvals, S)) ;
+        char filename [2000] ;
+        sprintf (filename, "mtx_%04d.mtx", mtx) ;
+        FILE *f = fopen (filename, "w") ;
+        printf ("%s: with %" PRId64 " values\n", filename, snvals) ;
+        LAGraph_MMWrite (S, f, NULL, msg) ;
+        fclose (f) ;
+        mtx++ ;
+        #endif
+
         // C{S} = S*S'
         GRB_TRY (GrB_mxm (C, S, NULL, LAGraph_plus_one_uint32, S, S,
             GrB_DESC_RST1)) ;

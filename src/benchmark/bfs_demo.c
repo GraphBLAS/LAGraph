@@ -17,8 +17,19 @@
 
 #include "LAGraph_demo.h"
 
+// to run just once, with p = omp_get_max_threads() threads
 #define NTHREAD_LIST 1
 #define THREAD_LIST 0
+
+// to run with p and p/2 threads, if p = omp_get_max_threads()
+// #define NTHREAD_LIST 2
+// #define THREAD_LIST 0
+
+// #define NTHREAD_LIST 7
+// #define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
+
+// #define NTHREAD_LIST 4
+// #define THREAD_LIST 32, 24, 16, 8
 
 // #define NTHREAD_LIST 8
 // #define THREAD_LIST 8, 7, 6, 5, 4, 3, 2, 1
@@ -81,9 +92,13 @@ int main (int argc, char **argv)
     }
     printf ("\n") ;
 
-    double *tpl = malloc ((nthreads_max+1) * sizeof (double)) ;
-    double *tp = malloc ((nthreads_max+1) * sizeof (double)) ;
-    double *tl = malloc ((nthreads_max+1) * sizeof (double)) ;
+    double *tpl = NULL, *tp = NULL, *tl = NULL ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &tpl, nthreads_max+1,
+        sizeof (double), msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &tp, nthreads_max+1,
+        sizeof (double), msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &tl, nthreads_max+1,
+        sizeof (double), msg)) ;
 
     //--------------------------------------------------------------------------
     // read in the graph
@@ -111,6 +126,7 @@ int main (int argc, char **argv)
 
     // HACK
     // ntrials = 4 ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // warmup
@@ -118,11 +134,13 @@ int main (int argc, char **argv)
 
     int64_t src ;
     GRB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, 0, 0)) ;
+    src-- ; // convert from 1-based to 0-based
     double twarmup = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGr_BreadthFirstSearch (NULL, &parent, G, src, msg)) ;
     GrB_free (&parent) ;
     twarmup = LAGraph_WallClockTime ( ) - twarmup ;
     printf ("warmup: parent only, pushpull: %g sec\n", twarmup) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // run the BFS on all source nodes
@@ -161,7 +179,7 @@ int main (int argc, char **argv)
                 printf ("parent only  pushpull trial: %2d threads: %2d "
                     "src: %12" PRId64 " %10.4f sec\n",
                     trial, nthreads, src, ttrial) ;
-                fflush (stdout) ;
+                fflush (stdout) ; fflush (stderr) ;
 
                 int32_t maxlevel ;
                 GrB_Index nvisited ;
@@ -259,9 +277,12 @@ int main (int argc, char **argv)
             tl  [nthreads] = tl  [nthreads] / ntrials ;
             tpl [nthreads] = tpl [nthreads] / ntrials ;
 
-            fprintf (stderr, "Avg: BFS pushpull parent only  threads %3d: "
-                "%10.3f sec: %s\n",
+            printf (         "Avg: BFS pushpull parent only, threads %3d: %10.3f sec, graph: %s\n",
                  nthreads, tp [nthreads], matrix_name) ;
+            fprintf (stderr, "Avg: BFS pushpull parent only, threads %3d: %10.3f sec, graph: %s\n",
+                 nthreads, tp [nthreads], matrix_name) ;
+            fflush (stdout) ; fflush (stderr) ;
+
 #if 0
             fprintf (stderr, "Avg: BFS pushpull level only   threads %3d: "
                 "%10.3f sec: %s\n",
@@ -270,13 +291,7 @@ int main (int argc, char **argv)
             fprintf (stderr, "Avg: BFS pushpull level+parent threads %3d: "
                 "%10.3f sec: %s\n",
                  nthreads, tpl [nthreads], matrix_name) ;
-#endif
 
-            printf ("Avg: BFS pushpull parent only  threads %3d: "
-                "%10.3f sec: %s\n",
-                 nthreads, tp [nthreads], matrix_name) ;
-
-#if 0
             printf ("Avg: BFS pushpull level only   threads %3d: "
                 "%10.3f sec: %s\n",
                  nthreads, tl [nthreads], matrix_name) ;
@@ -295,9 +310,10 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    free ((void *) tpl) ;
-    free ((void *) tp) ;
-    free ((void *) tl) ;
+    LAGraph_Free ((void **) &tpl, msg) ;
+    LAGraph_Free ((void **) &tp, msg) ;
+    LAGraph_Free ((void **) &tl, msg) ;
+
     LG_FREE_ALL ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;

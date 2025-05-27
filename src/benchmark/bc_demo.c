@@ -33,6 +33,9 @@
 #define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
+// #define NTHREAD_LIST 7
+// #define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
+
 // to run with p and p/2 threads, if p = omp_get_max_threads()
 // #define NTHREAD_LIST 2
 // #define THREAD_LIST 0
@@ -98,7 +101,9 @@ int main (int argc, char **argv)
     }
     printf ("\n") ;
 
-    double *tt = malloc ((nthreads_max+1) *sizeof (double));
+    double *tt = NULL ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &tt, nthreads_max+1,
+        sizeof (double), msg)) ;
 
     //--------------------------------------------------------------------------
     // read in the graph
@@ -124,11 +129,19 @@ int main (int argc, char **argv)
         exit (1) ;
     }
 
+    fflush (stdout) ; fflush (stderr) ;
+
     //--------------------------------------------------------------------------
     // Begin tests
     //--------------------------------------------------------------------------
 
     int ntrials = 0 ;
+
+for (int nrepeat = 0 ; nrepeat <= 1 ; nrepeat++)
+{
+    // nrepeat == 0 is a warmup with just one nthreads setting
+    memset (tt, 0, (nthreads_max+1) * sizeof (double)) ;
+    ntrials = 0 ;
 
     for (int64_t kstart = 0 ; kstart < nsource ; kstart += batch_size)
     {
@@ -148,7 +161,7 @@ int main (int argc, char **argv)
                 k + kstart, 0)) ;
             // subtract one to convert from 1-based to 0-based
             source-- ;
-            vertex_list [k] = source ;
+            vertex_list [k] = source  ;
             printf (" %"PRId64, source) ;
         }
         printf (" ]\n") ;
@@ -170,9 +183,10 @@ int main (int argc, char **argv)
                 batch_size, msg)) ;
             t2 = LAGraph_WallClockTime ( ) - t2 ;
             printf ("BC time %2d: %12.4f (sec)\n", Nthreads [t], t2) ;
-            fflush (stdout) ;
             tt [t] += t2 ;
+            fflush (stdout) ; fflush (stderr) ;
 
+            if (nrepeat == 0) break ;
         }
 
         GrB_free (&centrality) ;
@@ -180,6 +194,11 @@ int main (int argc, char **argv)
         // if burble is on, just do the first batch
         if (burble) break ;
     }
+    if (nrepeat == 0)
+    {
+        printf ("warmup average: %g sec\n", tt [1] / ntrials) ;
+    }
+}
 
     //--------------------------------------------------------------------------
     // free all workspace and finish
@@ -192,14 +211,15 @@ int main (int argc, char **argv)
     {
         if (Nthreads [t] > nthreads_max) continue ;
         double t2 = tt [t] / ntrials ;
-        printf ("Ave BC %2d: %10.3f sec, rate %10.3f\n",
-            Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
-        fprintf (stderr, "Avg: BC %3d: %10.3f sec: %s\n",
+        printf (         "Avg: BC threads %3d: %10.3f sec, graph: %s\n",
+            Nthreads [t], t2, matrix_name) ;
+        fprintf (stderr, "Avg: BC threads %3d: %10.3f sec, graph: %s\n",
             Nthreads [t], t2, matrix_name) ;
     }
+    fflush (stdout) ; fflush (stderr) ;
 
-    free ((void *) tt);
-    LG_FREE_ALL;
+    LAGraph_Free ((void **) &tt, msg) ;
+    LG_FREE_ALL ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

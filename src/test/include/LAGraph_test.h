@@ -22,6 +22,7 @@
 #include <LG_test.h>
 #include <acutest.h>
 #include <graph_zachary_karate.h>
+#include "LG_internal.h"
 
 #if LAGRAPH_SUITESPARSE
 // to allow tests to call GrB_init twice
@@ -59,10 +60,8 @@ static inline const char *typename (GrB_Type type)
     else if (type == GrB_UINT64) return ("GrB_UINT64") ;
     else if (type == GrB_FP32  ) return ("GrB_FP32") ;
     else if (type == GrB_FP64  ) return ("GrB_FP64") ;
-    #if 0
-    else if (type == GxB_FC32  ) return ("GxB_FC32") ;
-    else if (type == GxB_FC64  ) return ("GxB_FC64") ;
-    #endif
+//  else if (type == GxB_FC32  ) return ("GxB_FC32") ;
+//  else if (type == GxB_FC64  ) return ("GxB_FC64") ;
     return (NULL) ;
 }
 

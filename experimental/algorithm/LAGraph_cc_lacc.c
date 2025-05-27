@@ -21,10 +21,48 @@
  * distributed memory (IPDPS 2019)
  **/
 
+// TODO: is this ready for src?  Good, except Reduce_assign.
+// TODO: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
+
+#include "LG_internal.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
+
+//****************************************************************************
+// mask = NULL, accumulator = GrB_MIN_UINT64, descriptor = NULL
+
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL LAGraph_Free ((void **) &mem, msg) ;
+
+static GrB_Info Reduce_assign (GrB_Vector w,
+                               GrB_Vector src,
+                               GrB_Index *index,
+                               GrB_Index nLocs, char *msg)
+{
+    GrB_Index nw, ns;
+    GrB_Vector_nvals(&nw, w);
+    GrB_Vector_nvals(&ns, src);
+    GrB_Index *mem = NULL ;
+    LG_TRY (LAGraph_Malloc ((void **) &mem, nw*3, sizeof (GrB_Index), msg)) ;
+    GrB_Index *ind = mem, *sval = mem + nw, *wval = sval + nw;
+    GRB_TRY (GrB_Vector_extractTuples(ind, wval, &nw, w)) ;
+    GRB_TRY (GrB_Vector_extractTuples(ind, sval, &ns, src)) ;
+    for (GrB_Index i = 0; i < nLocs; i++)
+        if (sval[i] < wval[index[i]])
+            wval[index[i]] = sval[i];
+    GRB_TRY (GrB_Vector_clear(w)) ;
+    GRB_TRY (GrB_Vector_build(w, ind, wval, nw, GrB_PLUS_UINT64)) ;
+    LG_FREE_ALL ;
+    return GrB_SUCCESS;
+}
+
+//****************************************************************************
+
+#undef  LG_FREE_ALL
 #define LG_FREE_ALL         \
 {                           \
-    free(I);                \
-    free(V);                \
+    LAGraph_Free ((void **) &I, msg);   \
+    LAGraph_Free ((void **) &V, msg);   \
     GrB_free (&S2) ;        \
     GrB_free (&stars);      \
     GrB_free (&mask);       \
@@ -38,34 +76,6 @@
     GrB_free (&nsgp);       \
 }
 
-#include "LG_internal.h"
-#include <LAGraph.h>
-#include <LAGraphX.h>
-
-//****************************************************************************
-// mask = NULL, accumulator = GrB_MIN_UINT64, descriptor = NULL
-static GrB_Info Reduce_assign (GrB_Vector w,
-                               GrB_Vector src,
-                               GrB_Index *index,
-                               GrB_Index nLocs)
-{
-    GrB_Index nw, ns;
-    GrB_Vector_nvals(&nw, w);
-    GrB_Vector_nvals(&ns, src);
-    GrB_Index *mem = (GrB_Index*) malloc(sizeof(GrB_Index) * nw * 3);
-    GrB_Index *ind = mem, *sval = mem + nw, *wval = sval + nw;
-    GrB_Vector_extractTuples(ind, wval, &nw, w);
-    GrB_Vector_extractTuples(ind, sval, &ns, src);
-    for (GrB_Index i = 0; i < nLocs; i++)
-        if (sval[i] < wval[index[i]])
-            wval[index[i]] = sval[i];
-    GrB_Vector_clear(w);
-    GrB_Vector_build(w, ind, wval, nw, GrB_PLUS_UINT64);
-    free(mem);
-    return GrB_SUCCESS;
-}
-
-//****************************************************************************
 int LAGraph_cc_lacc
 (
     GrB_Vector *result,     // output: array of component identifiers
@@ -96,10 +106,6 @@ int LAGraph_cc_lacc
 
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    //GrB_Index nnz ;
-    //GRB_TRY (GrB_Matrix_nvals (&nnz, A)) ;
-    //printf ("number of nodes: %g\n", (double) n) ;
-    //printf ("number of edges: %g\n", (double) nnz) ;
 
     if (sanitize)
     {
@@ -123,8 +129,8 @@ int LAGraph_cc_lacc
     GRB_TRY (GrB_Vector_new (&pNonstars, GrB_UINT64, n));
 
     // temporary arrays
-    I = malloc(sizeof(GrB_Index) * n);
-    V = malloc(sizeof(GrB_Index) * n);
+    LG_TRY (LAGraph_Malloc ((void **) &I, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &V, n, sizeof (GrB_Index), msg)) ;
 
     // prepare the vectors
     for (GrB_Index i = 0 ; i < n ; i++)
@@ -150,7 +156,7 @@ int LAGraph_cc_lacc
         GRB_TRY (GrB_Vector_extractTuples (I, V, &nHooks, hookP));
         GRB_TRY (GrB_Vector_new (&tmp, GrB_UINT64, nHooks));
         GRB_TRY (GrB_extract (tmp, 0, 0, hookMNP, I, nHooks, 0));
-        LG_TRY (Reduce_assign (parents, tmp, V, nHooks));
+        LG_TRY (Reduce_assign (parents, tmp, V, nHooks, msg));
         GRB_TRY (GrB_Vector_clear (tmp));
         // modify the stars vector
         GRB_TRY (GrB_assign (stars, 0, 0, false, V, nHooks, 0));
@@ -180,7 +186,7 @@ int LAGraph_cc_lacc
         GRB_TRY (GrB_Vector_new (&tmp, GrB_UINT64, nHooks));
         GRB_TRY (GrB_extract (tmp, 0, 0, hookMNP, I, nHooks, 0));
         GRB_TRY (GrB_assign (parents, 0, 0, n, V, nHooks, 0)); // !!
-        LG_TRY (Reduce_assign (parents, tmp, V, nHooks));
+        LG_TRY (Reduce_assign (parents, tmp, V, nHooks, msg));
         // modify the star vector
         GRB_TRY (GrB_assign (stars, 0, 0, false, V, nHooks, 0));
         GRB_TRY (GrB_Vector_extractTuples (I, V, &n, parents));

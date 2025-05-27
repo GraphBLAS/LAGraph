@@ -61,7 +61,7 @@ LAGraph_Graph G = NULL ;
 void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
-    OK (LAGraph_Random_Init (msg)) ;
+//  OK (LG_SET_BURBLE (true)) ;
 }
 
 //------------------------------------------------------------------------------
@@ -70,7 +70,6 @@ void setup (void)
 
 void teardown (void)
 {
-    OK (LAGraph_Random_Finalize (msg)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 
@@ -224,7 +223,7 @@ void test_MIS (void)
         result = LAGraph_MaximalIndependentSet (&mis, G, 0, NULL, msg) ;
         random_hack = false ;
         printf ("hack msg: %d %s\n", result, msg) ;
-        TEST_CHECK (result == -111 || result == 0) ;
+        TEST_CHECK (result == LAGRAPH_CONVERGENCE_FAILURE || result == 0) ;
         if (result == 0)
         {
             OK (LG_check_mis (G->A, mis, NULL, msg)) ;

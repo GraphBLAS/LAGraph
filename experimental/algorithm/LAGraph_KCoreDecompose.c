@@ -16,6 +16,10 @@
 
 //------------------------------------------------------------------------------
 
+// The input is a graph G and its k-core vector, decomp.
+// The output is the k-core adjacency matrix D itself, with the same number of
+// nodes as the input graph G, but with edges not in the k-core deleted.
+
 #define LG_FREE_WORK                \
 {                                   \
     GrB_free (&C) ;                 \
@@ -30,6 +34,8 @@
 
 #include "LG_internal.h"
 
+// TODO: need both basic and expert; this is advanced
+// TODO: this should return D as an LAGraph_Graph, not as a GrB_Matrix
 
 int LAGraph_KCore_Decompose
 (
@@ -37,11 +43,12 @@ int LAGraph_KCore_Decompose
     GrB_Matrix *D,              // kcore decomposition
     // inputs:
     LAGraph_Graph G,            // input graph
-    GrB_Vector decomp,         // input decomposition matrix
+    GrB_Vector decomp,          // input decomposition vector
     uint64_t k,
     char *msg
 )
 {
+#if LAGRAPH_SUITESPARSE
     LG_CLEAR_MSG ;
 
     // declare items
@@ -51,10 +58,6 @@ int LAGraph_KCore_Decompose
 
     LG_ASSERT (D != NULL, GrB_NULL_POINTER) ;
     (*D) = NULL ;
-
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
@@ -90,19 +93,7 @@ int LAGraph_KCore_Decompose
 
     //create decomposition matrix (C * A * C)
 
-    #if LAGRAPH_SUITESPARSE
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (7,0,0)
-        // SuiteSparse 7.x and later:
-        GRB_TRY (GrB_Matrix_diag(&C, deg, 0)) ;
-        #else
-        // SuiteSparse 6.x and earlier, which had the incorrect signature:
-        GRB_TRY (GrB_Matrix_new(&C, GrB_INT64, n, n)) ;
-        GRB_TRY (GrB_Matrix_diag(C, deg, 0)) ;
-        #endif
-    #else
-    // standard GrB:
     GRB_TRY (GrB_Matrix_diag(&C, deg, 0)) ;
-    #endif
 
     GRB_TRY (GrB_mxm (*D, NULL, NULL, GxB_ANY_SECONDI_INT64, C, A, GrB_NULL)) ;
     GRB_TRY (GrB_mxm (*D, NULL, NULL, GxB_MIN_SECONDI_INT64, *D, C, GrB_NULL)) ;
@@ -112,5 +103,7 @@ int LAGraph_KCore_Decompose
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

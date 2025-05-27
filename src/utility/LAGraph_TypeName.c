@@ -2,7 +2,7 @@
 // LAGraph_*TypeName: return the name of type of a matrix, vector, or scalar
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -32,26 +32,50 @@
 //      "float"     GrB_FP32
 //      "double"    GrB_FP64
 
-// SuiteSparse:GraphBLAS adds two extended types:
-//      "float complex"     GxB_FC32
-//      "double complex"    GxB_FC64
+// For user-defined types, the GrB_NAME of the type is returned.
 
-// For user-defined types, if SuiteSparse:GraphBLAS is used, then GrB_Type_new
-// can capture the type name, if called as follows, where the 2nd parameter has
-// the form "sizeof (T)" for some C typedef type T.
-//
-//      typedef ... myctype ;
-//      GrB_Type MyType ;
-//      GrB_Type_new (&MyType, sizeof (myctype)) ;
-//
-// In this case, LAGraph_*TypeName returns the string "myctype".
-
-// Currently, these methods require SuiteSparse:GraphBLAS.  Other GraphBLAS
-// libraries will result in a return value of GrB_NOT_IMPLEMENTED, and the name
-// is returned as an empty string.  The type cannot be queried using the v2.0 C
-// API.  This will be resolved in a future C API spec.
+#define LG_FREE_WORK LAGraph_Free ((void **) &t, NULL) ;
+#define LG_FREE_ALL LG_FREE_WORK
 
 #include "LG_internal.h"
+
+#define TYPENAME(object)                                                       \
+    char *t = NULL ;                                                           \
+    LG_CLEAR_MSG ;                                                             \
+    LG_ASSERT (name != NULL, GrB_NULL_POINTER) ;                               \
+    size_t len ;                                                               \
+    name [0] = '\0' ;                                                          \
+    int32_t typecode ;                                                         \
+    GRB_TRY (GrB_get (object, &typecode, GrB_EL_TYPE_CODE)) ;                  \
+    switch (typecode)                                                          \
+    {                                                                          \
+        /* for user-defined types, return the GrB_EL_TYPE_STRING */            \
+        default :                                                              \
+        case GrB_UDT_CODE    :                                                 \
+            GRB_TRY (GrB_get (object, &len, GrB_EL_TYPE_STRING)) ;             \
+            LG_TRY (LAGraph_Malloc ((void **) &t, len+1, sizeof (char), msg)) ;\
+            GRB_TRY (GrB_get (object, t, GrB_EL_TYPE_STRING)) ;                \
+            len = LAGRAPH_MIN (len, LAGRAPH_MAX_NAME_LEN) ;                    \
+            strncpy (name, t, len) ;                                           \
+            name [LAGRAPH_MAX_NAME_LEN-1] = '\0' ;                             \
+            LG_FREE_WORK ;                                                     \
+            break ;                                                            \
+        /* for built-in types, return the C type name */                       \
+        case GrB_BOOL_CODE   : strcpy (name, "bool"    ) ; break ;             \
+        case GrB_INT8_CODE   : strcpy (name, "int8_t"  ) ; break ;             \
+        case GrB_INT16_CODE  : strcpy (name, "int16_t" ) ; break ;             \
+        case GrB_INT32_CODE  : strcpy (name, "int32_t" ) ; break ;             \
+        case GrB_INT64_CODE  : strcpy (name, "int64_t" ) ; break ;             \
+        case GrB_UINT8_CODE  : strcpy (name, "uint8_t" ) ; break ;             \
+        case GrB_UINT16_CODE : strcpy (name, "uint16_t") ; break ;             \
+        case GrB_UINT32_CODE : strcpy (name, "uint32_t") ; break ;             \
+        case GrB_UINT64_CODE : strcpy (name, "uint64_t") ; break ;             \
+        case GrB_FP32_CODE   : strcpy (name, "float"   ) ; break ;             \
+        case GrB_FP64_CODE   : strcpy (name, "double"  ) ; break ;             \
+/*      case GxB_FC32_CODE   : strcpy (name, "float complex"  ) ; break ; */   \
+/*      case GxB_FC64_CODE   : strcpy (name, "double complex" ) ; break ; */   \
+    }                                                                          \
+    return (GrB_SUCCESS) ;
 
 //------------------------------------------------------------------------------
 // LAGraph_Matrix_TypeName: return the name of the GrB_Type of a GrB_Matrix
@@ -67,24 +91,7 @@ int LAGraph_Matrix_TypeName
     char *msg
 )
 {
-
-    //--------------------------------------------------------------------------
-    // check inputs
-    //--------------------------------------------------------------------------
-
-    LG_CLEAR_MSG ;
-    LG_ASSERT (name != NULL, GrB_NULL_POINTER) ;
-
-    //--------------------------------------------------------------------------
-    // determine the name of the type of the GrB_Matrix A
-    //--------------------------------------------------------------------------
-
-    #if 1 // LAGRAPH_SUITESPARSE
-    return (GxB_Matrix_type_name (name, A)) ;
-    #else
-    name [0] = '\0' ;
-    return (GrB_NOT_IMPLEMENTED) ;
-    #endif
+    TYPENAME (A) ;
 }
 
 //------------------------------------------------------------------------------
@@ -101,24 +108,7 @@ int LAGraph_Vector_TypeName
     char *msg
 )
 {
-
-    //--------------------------------------------------------------------------
-    // check inputs
-    //--------------------------------------------------------------------------
-
-    LG_CLEAR_MSG ;
-    LG_ASSERT (name != NULL, GrB_NULL_POINTER) ;
-
-    //--------------------------------------------------------------------------
-    // determine the name of the type of the GrB_Vector v
-    //--------------------------------------------------------------------------
-
-    #if 1 // LAGRAPH_SUITESPARSE
-    return (GxB_Vector_type_name (name, v)) ;
-    #else
-    name [0] = '\0' ;
-    return (GrB_NOT_IMPLEMENTED) ;
-    #endif
+    TYPENAME (v) ;
 }
 
 //------------------------------------------------------------------------------
@@ -135,22 +125,6 @@ int LAGraph_Scalar_TypeName
     char *msg
 )
 {
-
-    //--------------------------------------------------------------------------
-    // check inputs
-    //--------------------------------------------------------------------------
-
-    LG_CLEAR_MSG ;
-    LG_ASSERT (name != NULL, GrB_NULL_POINTER) ;
-
-    //--------------------------------------------------------------------------
-    // determine the name of the type of the GrB_Scalar s
-    //--------------------------------------------------------------------------
-
-    #if 1 // LAGRAPH_SUITESPARSE
-    return (GxB_Scalar_type_name (name, s)) ;
-    #else
-    name [0] = '\0' ;
-    return (GrB_NOT_IMPLEMENTED) ;
-    #endif
+    TYPENAME (s) ;
 }
+

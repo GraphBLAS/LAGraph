@@ -32,9 +32,19 @@
     GrB_free (&components2) ;       \
 }
 
+// to run just once, with p = omp_get_max_threads() threads
 #define NTHREAD_LIST 1
-// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
+
+// to run with p and p/2 threads, if p = omp_get_max_threads()
+// #define NTHREAD_LIST 2
+// #define THREAD_LIST 0
+
+// #define NTHREAD_LIST 7
+// #define THREAD_LIST 32, 24, 16, 8, 4, 2, 1
+
+// #define NTHREAD_LIST 4
+// #define THREAD_LIST 32, 24, 16, 8
 
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
@@ -106,7 +116,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    fprintf (stderr, "\n%s:\n", matrix_name) ;
+    printf ("\n%s:\n", matrix_name) ;
     LAGRAPH_TRY (readproblem (&G,
         NULL,   // no source nodes
         true,   // make the graph undirected, and symmetrize the matrix
@@ -118,6 +128,7 @@ int main (int argc, char **argv)
     GrB_Index n, nvals ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // begin tests
@@ -126,7 +137,7 @@ int main (int argc, char **argv)
     // warmup
     LAGRAPH_TRY (LAGr_ConnectedComponents (&components, G, msg)) ;
     GrB_Index nCC = countCC (components, n) ;
-    printf ("nCC: %20.0g\n", (double) nCC) ;
+    printf ("nCC: %llu\n", (long long unsigned int) nCC) ;
 
 #if 0 & LG_CHECK_RESULT
     double tcheck = LAGraph_WallClockTime ( ) ;
@@ -143,6 +154,7 @@ int main (int argc, char **argv)
     #define NTRIALS 16
     // #define NTRIALS 1
     printf ("# of trials: %d\n\n", NTRIALS) ;
+    fflush (stdout) ; fflush (stderr) ;
 
     //--------------------------------------------------------------------------
     // LAGr_ConnectedComponents
@@ -162,18 +174,28 @@ int main (int argc, char **argv)
             LAGRAPH_TRY (LAGr_ConnectedComponents (&components2, G, msg)) ;
             ttrial = LAGraph_WallClockTime ( ) - ttrial ;
             ttt += ttrial ;
-            printf ("SV6:      nthreads: %2d trial: %2d time: %10.4f sec\n",
+            #if LAGRAPH_SUITESPARSE
+            #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+            printf ("SV7") ;
+            #else
+            printf ("SV6") ;
+            #endif
+            #endif
+            printf (":      nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
             GrB_Index nCC2 = countCC (components2, n) ;
             if (nCC != nCC2) printf ("failure! %g %g diff %g\n",
                 (double) nCC, (double) nCC2, (double) (nCC-nCC2)) ;
+            fflush (stdout) ; fflush (stderr) ;
         }
         ttt = ttt / ntrials ;
-        printf ("SV6:      nthreads: %2d Avg: time: %10.4f sec ntrials %d\n\n",
-                nthreads, ttt, ntrials) ;
-        fprintf (stderr,
-                "SV6:      nthreads: %2d Avg: time: %10.4f sec ntrials %d\n",
-                nthreads, ttt, ntrials) ;
+
+        printf (         "Avg: CC threads %3d: %10.3f sec, graph: %s\n",
+                nthreads, ttt, matrix_name) ;
+        fprintf (stderr, "Avg: CC threads %3d: %10.3f sec, graph: %s\n",
+                nthreads, ttt, matrix_name) ;
+        fflush (stdout) ; fflush (stderr) ;
+
     }
 
     //--------------------------------------------------------------------------
@@ -312,6 +334,38 @@ int main (int argc, char **argv)
     }
 #endif
 
+    //--------------------------------------------------------------------------
+    // LG_CC_FastSV7_FA
+    //--------------------------------------------------------------------------
+#if 0
+    for (int trial = 1 ; trial <= nt ; trial++)
+    {
+        int nthreads = Nthreads [trial] ;
+        if (nthreads > nthreads_max) continue ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, NULL)) ;
+        double ttt = 0 ;
+        int ntrials = NTRIALS ;
+        for (int k = 0 ; k < ntrials ; k++)
+        {
+            GrB_free (&components2) ;
+            double ttrial = LAGraph_WallClockTime ( ) ;
+            LAGRAPH_TRY (LG_CC_FastSV7_FA (&components2, G, msg)) ;
+            ttrial = LAGraph_WallClockTime ( ) - ttrial ;
+            ttt += ttrial ;
+            printf ("FastSV7_FA:     nthreads: %2d trial: %2d time: %10.4f sec\n",
+                nthreads, k, ttrial) ;
+            GrB_Index nCC2 = countCC (components2, n) ;
+            if (nCC != nCC2) printf ("failure! %g %g diff %g\n",
+                (double) nCC, (double) nCC2, (double) (nCC-nCC2)) ;
+        }
+        ttt = ttt / ntrials ;
+        printf ("FastSV7_FA:     nthreads: %2d Avg: time: %10.4f sec ntrials %d\n\n",
+                nthreads, ttt, ntrials) ;
+        fprintf (stderr,
+                "FastSV7_FA:     nthreads: %2d Avg: time: %10.4f sec ntrials %d\n",
+                nthreads, ttt, ntrials) ;
+    }
+#endif
     //--------------------------------------------------------------------------
     // free all workspace and finish
     //--------------------------------------------------------------------------

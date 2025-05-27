@@ -84,13 +84,17 @@ int LAGr_SampleDegree
     GrB_Index n ;
     GRB_TRY (GrB_Vector_size (&n, Degree)) ;
 
+    // FUTURE: use LAGraph_Random_Seed instead
+
+    if (seed == 0) seed = 1 ;   // a seed of zero will fail
+
     int64_t dsum = 0 ;
     for (int k = 0 ; k < nsamples ; k++)
     {
-        uint64_t result = LG_Random60 (&seed) ;
+        uint64_t result = LG_Random64 (&seed) ;
         int64_t i = result % n ;
         // d = Degree (i)
-        int64_t d ;
+        int64_t d = 0 ;
         GRB_TRY (GrB_Vector_extractElement (&d, Degree, i)) ;
         samples [k] = d ;
         dsum += d ;

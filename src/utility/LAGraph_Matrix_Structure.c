@@ -57,7 +57,7 @@ int LAGraph_Matrix_Structure
 
     GRB_TRY (GrB_Matrix_new (C, GrB_BOOL, nrows, ncols)) ;
     GRB_TRY (GrB_assign (*C, A, NULL, (bool) true,
-        GrB_ALL, nrows, GrB_ALL, nrows, GrB_DESC_S)) ;
+        GrB_ALL, nrows, GrB_ALL, ncols, GrB_DESC_S)) ;
 
     return (GrB_SUCCESS) ;
 }

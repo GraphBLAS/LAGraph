@@ -17,6 +17,7 @@
 
 #include "LAGraph_test.h"
 #include "LAGraphX.h"
+#include "LG_internal.h"
 
 // functions defined in LAGr_Init.c:
 LAGRAPH_PUBLIC void LG_set_LAGr_Init_has_been_called (bool setting) ;
@@ -36,6 +37,12 @@ void test_Xinit (void)
 {
 
     printf ("\nTesting LAGr_Init: with expected errors\n") ;
+
+    #if LG_BRUTAL_TESTS
+    printf ("with brutal tests\n") ;
+    #else
+    printf ("with NO brutal tests\n") ;
+    #endif
 
     TEST_CHECK (LAGr_Init (GrB_NONBLOCKING, NULL, NULL, NULL, NULL, msg)
         == GrB_NULL_POINTER) ;
@@ -78,7 +85,7 @@ void test_Xinit (void)
 // test_Xinit_brutal:  test LAGr_Init with brutal memory debug
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_Xinit_brutal (void)
 {
     // no brutal memory failures, but test LG_brutal_malloc/calloc/realloc/free
@@ -179,7 +186,7 @@ void test_Xinit_brutal (void)
 TEST_LIST =
 {
     { "Xinit", test_Xinit },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "Xinit_brutal", test_Xinit_brutal },
     #endif
     { NULL, NULL }

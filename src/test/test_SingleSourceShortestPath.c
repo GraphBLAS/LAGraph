@@ -71,6 +71,7 @@ const matrix_info files [ ] =
 void test_SingleSourceShortestPath(void)
 {
     LAGraph_Init(msg);
+//  OK (LG_SET_BURBLE (true)) ;
     GrB_Matrix A = NULL, T = NULL ;
     GrB_Scalar Delta = NULL ;
     OK (GrB_Scalar_new (&Delta, GrB_INT32)) ;
@@ -263,7 +264,7 @@ void test_SingleSourceShortestPath_types (void)
             // T = max (abs (double (A)), 0.1)
             OK (GrB_Matrix_new (&T, GrB_FP64, n, n)) ;
             OK (GrB_apply (T, NULL, NULL, GrB_ABS_FP64, A, NULL)) ;
-            OK (GrB_apply (T, NULL, NULL, GrB_MAX_FP64, A, 0.1, NULL)) ;
+            OK (GrB_apply (T, NULL, NULL, GrB_MAX_FP64, T, 0.1, NULL)) ;
             OK (GrB_free (&A)) ;
             A = T ;
         }
@@ -350,7 +351,7 @@ void test_SingleSourceShortestPath_failure (void)
 // test_SingleSourceShortestPath_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_SingleSourceShortestPath_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -449,7 +450,7 @@ TEST_LIST = {
     {"SSSP", test_SingleSourceShortestPath},
     {"SSSP_types", test_SingleSourceShortestPath_types},
     {"SSSP_failure", test_SingleSourceShortestPath_failure},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"SSSP_brutal", test_SingleSourceShortestPath_brutal },
     #endif
     {NULL, NULL}

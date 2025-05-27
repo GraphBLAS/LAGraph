@@ -73,6 +73,7 @@ const matrix_info files [ ] =
 void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
+//  OK (LG_SET_BURBLE (true)) ;
 }
 
 //------------------------------------------------------------------------------
@@ -206,7 +207,7 @@ void test_IsEqual (void)
 // test_IsEqual_brutal:
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_IsEqual_brutal (void)
 {
 
@@ -216,7 +217,6 @@ void test_IsEqual_brutal (void)
 
     OK (LG_brutal_setup (msg)) ;
     printf ("\nTesting IsEqual:\n") ;
-    GxB_set (GxB_BURBLE, false) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -445,7 +445,7 @@ TEST_LIST =
     { "IsEqual", test_IsEqual },
     { "Vector_IsEqual", test_Vector_IsEqual },
     { "IsEqual_failures", test_IsEqual_failures },
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     { "IsEqual_brutal", test_IsEqual_brutal },
     #endif
     { NULL, NULL }

@@ -58,4 +58,64 @@ int LG_check_kcore_decompose
     char *msg
 ) ;
 
+int LG_check_lcc
+(
+     // outputs:
+     GrB_Vector *coefficients,     // the local clustering coefficients
+     // inputs
+     LAGraph_Graph G,        // input graph
+     char *msg
+) ;
+
+int LG_check_coarsen
+(
+    // outputs:
+    GrB_Matrix *coarsened,    // coarsened adjacency
+    // inputs:
+    GrB_Matrix A,               // input adjacency (for the purposes of testing, is FP64)
+    GrB_Vector parent,          // parent mapping. Must not be NULL.
+    GrB_Vector newlabel,       // new labels of nodes, used to populate resulting adjacency matrix, can be NULL if preserve_mapping = 1, else must be a valid result
+    GrB_Vector inv_newlabel,   // inverse of newlabel, can be NULL if preserve_mapping = 1, else must be a valid result
+    int preserve_mapping,       // whether to preserve the original namespace of nodes
+    int combine_weights,        // whether to combine the weights of edges that collapse together
+    char *msg
+) ;
+
+int LG_check_coloring
+(
+    // inputs
+    LAGraph_Graph G,
+    GrB_Vector C,
+    char *msg
+) ;
+
+int LG_check_edgeBetweennessCentrality
+(
+    // output
+    GrB_Matrix *C,       // centrality matrix
+    // input
+    LAGraph_Graph G,
+    GrB_Vector sources,  // source vertices to compute shortest paths (if NULL or empty, use all vertices)
+    char *msg
+) ;
+
+int LG_check_rcc
+(
+    GrB_Vector *rich_club_coefficents, //output
+    LAGraph_Graph G, //input graph
+    char *msg
+) ;
+
+int LG_check_argminmax
+(
+    // output
+    GrB_Vector *x_result,       // min/max value in each row/col of A
+    GrB_Vector *p_result,       // index of min/max value in each row/col of A
+    // input
+    GrB_Matrix A,
+    int dim,                    // dim=1: cols of A, dim=2: rows of A
+    bool is_min,
+    char *msg
+) ;
+
 #endif

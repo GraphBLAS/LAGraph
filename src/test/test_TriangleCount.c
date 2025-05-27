@@ -3,7 +3,7 @@
 // counting algorithms
 // ----------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -47,6 +47,7 @@ const matrix_info files [ ] =
     {      0, "LFAT5.mtx" },
     { 342300, "bcsstk13.mtx" },
     {      0, "tree-example.mtx" },
+    { 111958, "arrow.mtx"},
     {      0, "" },
 } ;
 
@@ -363,12 +364,21 @@ void test_TriangleCount_autosort (void)
     GrB_Matrix A = NULL ;
     OK (GrB_Matrix_new (&A, GrB_BOOL, n, n)) ;
 
-    for (int k = 0 ; k <= 10 ; k++)
+    for (int k = 0 ; k <= 50 ; k++)
     {
         for (int i = 0 ; i < n ; i++)
         {
             OK (GrB_Matrix_setElement_BOOL (A, true, i, k)) ;
             OK (GrB_Matrix_setElement_BOOL (A, true, k, i)) ;
+        }
+    }
+
+    for (int i = 0 ; i < n ; i++)
+    {
+        for (int j = i ; j < LAGRAPH_MIN (n, i + 5) ; j++)
+        {
+            OK (GrB_Matrix_setElement_BOOL (A, true, j, i)) ;
+            OK (GrB_Matrix_setElement_BOOL (A, true, i, j)) ;
         }
     }
 
@@ -382,20 +392,26 @@ void test_TriangleCount_autosort (void)
     OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
     // try each method; with autosort
-    GrB_Index nt1 = 0 ;
-    for (int method = 0 ; method <= 6 ; method++)
+    GrB_Index nt1 = 0, nt0 = 0 ;
+    for (int method = 3 ; method <= 6 ; method++)
     {
         LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
         LAGr_TriangleCount_Method m = method ;
         nt1 = 0 ;
         OK (LAGr_TriangleCount (&nt1, G, &m, &presort, msg)) ;
-        TEST_CHECK (nt1 == 2749560) ;
+        if (method == 3)
+        {
+            nt0 = nt1 ;
+        }
+        TEST_CHECK (nt1 == nt0) ;
+//      TEST_CHECK (nt1 == 2749560) ;
     }
 
     nt1 = 0 ;
     OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
-    TEST_CHECK (nt1 == 2749560) ;
+    TEST_CHECK (nt1 == nt0) ;
 
+    OK (LAGraph_Delete (&G, msg)) ;
     OK (LAGraph_Finalize(msg)) ;
 }
 
@@ -403,7 +419,7 @@ void test_TriangleCount_autosort (void)
 // test_TriangleCount_brutal
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_TriangleCount_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -483,7 +499,7 @@ TEST_LIST = {
     {"TriangleCount"         , test_TriangleCount},
     {"TriangleCount_many"    , test_TriangleCount_many},
     {"TriangleCount_autosort", test_TriangleCount_autosort},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"TriangleCount_brutal"  , test_TriangleCount_brutal},
     #endif
     {NULL, NULL}

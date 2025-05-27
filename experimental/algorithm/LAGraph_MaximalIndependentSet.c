@@ -56,6 +56,10 @@
 // selected and cause the method to stall.  To avoid this case they are removed
 // from the candidate set at the begining, and added to the independent set.
 
+// TODO: rename LAGr_MaximalIndependentSet (this is expert)
+// TODO: add a basic method
+// vanilla OK: no GxB used
+
 int LAGraph_MaximalIndependentSet       // maximal independent set
 (
     // outputs:
@@ -238,6 +242,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             score, neighbor_max, NULL)) ;
 
         // drop explicit zeros from new_members
+        // in particular, this replaces all 0s with empty
         GRB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL,
             new_members, (bool) true, NULL)) ;
 
@@ -294,7 +299,8 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             // This case is nearly untestable since it can almost never occur.
             nstall++ ;
             // terminate if the method has stalled too many times
-            LG_ASSERT_MSG (nstall <= 32, -111, "stall") ;
+            LG_ASSERT_MSG (nstall <= 32, LAGRAPH_CONVERGENCE_FAILURE,
+                "method has stalled") ;
             // recreate the random number seeds with a new starting seed
             LG_TRY (LAGraph_Random_Seed (Seed, seed + nstall, msg)) ;
         }
