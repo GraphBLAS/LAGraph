@@ -59,6 +59,13 @@ Printing
 
 .. doxygenenum:: LAGraph_PrintLevel
 
+Matrix/Vector Generation
+------------------------
+
+.. doxygenfunction:: LAGraph_Random_Seed
+
+.. doxygenfunction:: LAGraph_Random_Next
+
 Pre-defined semirings
 ---------------------
 
