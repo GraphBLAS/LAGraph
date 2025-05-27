@@ -15,9 +15,8 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: ready to consider for src
-// FIXME: define the output vector c that defines the cluster assignment
-// FIXME: some unused variables (the vector c)
+// TODO: ready to consider for src
+// TODO: define the output vector c_f that defines the cluster assignment
 
 #define LG_FREE_WORK                                                           \
     {                                                                          \
@@ -36,7 +35,6 @@
         GrB_free(&E);                                                          \
         GrB_free(&I);                                                          \
         GrB_free(&ones);                                                       \
-        GrB_free(&c);                                                          \
         LAGraph_Free((void **)&m_index_values, NULL);                          \
         LAGraph_Free((void **)&CfI, NULL);                                     \
         LAGraph_Free((void **)&CfJ, NULL);                                     \
@@ -90,7 +88,6 @@ int LAGr_PeerPressureClustering(
 
     GrB_Index *m_index_values = NULL;
     GrB_Index *CfI = NULL, *CfJ = NULL;
-    GrB_Vector c = NULL;
 
     //--------------------------------------------------------------------------
     // check inputs

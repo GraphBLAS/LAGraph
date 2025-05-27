@@ -52,7 +52,7 @@
 // todo: consider LAGraph_KTrussNext to compute the (k+1)-truss from the
 // k-truss
 
-// FIXME: ready for src
+// TODO: ready for src
 
 #define LG_FREE_ALL                         \
 {                                           \

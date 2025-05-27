@@ -80,7 +80,7 @@ void minparent(vertex *z, const vertex *x, const vertex *y)
 "    *z = x->parentC < y->parentC ? *x : *y;                    \n" \
 "}"
 
-// FIXME: revise GraphBLAS so we can tell it that the select2nd operator
+// TODO: revise GraphBLAS so we can tell it that the select2nd operator
 // does not use the 'x' input.
 void select2nd(vertex *z, const bool *x, const vertex *y)
 {

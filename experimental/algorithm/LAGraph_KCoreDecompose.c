@@ -34,8 +34,8 @@
 
 #include "LG_internal.h"
 
-// FIXME: need both basic and expert; this is advanced
-// FIXME: this should return D as an LAGraph_Graph, not as a GrB_Matrix
+// TODO: need both basic and expert; this is advanced
+// TODO: this should return D as an LAGraph_Graph, not as a GrB_Matrix
 
 int LAGraph_KCore_Decompose
 (

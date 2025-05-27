@@ -49,7 +49,7 @@
 
 #include "LG_internal.h"
 
-// FIXME: not ready for src; need a vanilla method with no GxB
+// TODO: not ready for src; need a vanilla method with no GxB
 
 #if LAGRAPH_SUITESPARSE
 
@@ -160,7 +160,7 @@ static inline int32_t ht_most_frequent
 // in undefined behavior.  GrB_assign in SuiteSparse:GraphBLAS follows the
 // MATLAB rule, which discards all but the first of the duplicates.
 
-// FIXME: Reduce_assign32 is slow.  See src/algorithm/LG_CC_FastSV6.
+// TODO: Reduce_assign32 is slow.  See src/algorithm/LG_CC_FastSV6.
 
 static inline int Reduce_assign32
 (

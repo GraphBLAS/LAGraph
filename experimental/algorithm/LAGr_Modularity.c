@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: ready to consider for src
+// TODO: ready to consider for src
 
 // The modularity (Q) of a graph clustering C is defined as (directed case):
 //

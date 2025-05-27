@@ -21,8 +21,8 @@
  * distributed memory (IPDPS 2019)
  **/
 
-// FIXME: is this ready for src?  Good, except Reduce_assign.
-// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
+// TODO: is this ready for src?  Good, except Reduce_assign.
+// TODO: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
 
 #include "LG_internal.h"
 #include <LAGraph.h>

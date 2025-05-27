@@ -429,7 +429,7 @@ int LAGr_EdgeBetweennessCentrality
                 t3 = LAGraph_WallClockTime() - t3;
                 t3_total += t3;
             #else
-                // FIXME: Approx update using ewise add not implemented
+                // TODO: Approx update using ewise add not implemented
                 // centrality = centrality + Update using eWiseAdd
                 double t3 = LAGraph_WallClockTime();
                 GRB_TRY (GrB_eWiseAdd (*centrality, NULL, NULL, GrB_PLUS_FP64, *centrality, Update, NULL));

@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: almost ready for src; says it's not vanilla but should be OK
+// TODO: almost ready for src; says it's not vanilla but should be OK
 
 // Takes in a graph and finds the diameter 
 // and optionally also the peripheral nodes of the graph

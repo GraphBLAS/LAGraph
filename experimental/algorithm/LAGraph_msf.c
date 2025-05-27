@@ -19,8 +19,8 @@
  * Code is based on Boruvka's minimum spanning forest algorithm
  */
 
-// FIXME: is this ready for src?  It uses global values, so not yet ready.
-// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6/7.
+// TODO: is this ready for src?  It uses global values, so not yet ready.
+// TODO: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6/7.
 
 #include "LG_internal.h"
 #include <LAGraph.h>
@@ -44,7 +44,7 @@ static void get_snd (void *y, const void *x)
 }
 
 //****************************************************************************
-// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
+// TODO: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
 
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL LAGraph_Free ((void **) &mem, msg) ;

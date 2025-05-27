@@ -1,10 +1,9 @@
 #include "LG_internal.h"
 #include <float.h>
 
-// FIXME: rename this method and add to src
-// FIXME: add standard comments to the top of this file
-// FIXME: what functions should be exposed to the user application?
-// FIXME: need the CI test for this method
+// TODO: rename this method and add to src
+// TODO: add standard comments to the top of this file
+// TODO: what functions should be exposed to the user application?
 
 //      candidates:
 //      LAGraph_Laplacian: compute the Laplacian matrix  
@@ -191,7 +190,7 @@ int LAGraph_norm2 //norm2 checked for pointer mistakes
     GRB_TRY (GrB_Vector_new (&t, GrB_FP32, len)) ;
 
     // t = v.^2
-    // FIXME: use GrB_TIMES_FP32 with GrB_eWiseMult for vanilla case
+    // TODO: use GrB_TIMES_FP32 with GrB_eWiseMult for vanilla case
     GRB_TRY (GrB_apply (t, NULL, NULL, GxB_POW_FP32, v, (float) 2, NULL)) ;
 
     GRB_TRY (GrB_reduce (&norm2,NULL, GrB_PLUS_MONOID_FP32, t, NULL));
@@ -400,7 +399,7 @@ int LAGraph_Laplacian   // compute the Laplacian matrix
 int LAGraph_mypcg2
 (
     //outputs
-    GrB_Vector *steper_handle,  // FIXME: do not create this; see usage below
+    GrB_Vector *steper_handle,  // TODO: do not create this; see usage below
     GrB_Index *k_result,
     // inputs:
     GrB_Matrix L,    // input matrix, symmetric, result from Laplacian
@@ -613,11 +612,11 @@ int LAGraph_mypcg2
     GrB_free (&iters) ;                     \
 }
 
-// FIXME: need a basic API and an Advanced API
-// FIXME: the basic API needs to use an LAGraph_Graph
-// FIXME: the advance API can work on the Laplacian L and its infinity norm
-// FIXME: this method has many inputs; the basic method should use defaults
-// FIXME: need to add error checking of inputs
+// TODO: need a basic API and an Advanced API
+// TODO: the basic API needs to use an LAGraph_Graph
+// TODO: the advance API can work on the Laplacian L and its infinity norm
+// TODO: this method has many inputs; the basic method should use defaults
+// TODO: need to add error checking of inputs
 
 int LAGraph_Hdip_Fiedler   // compute the Hdip_Fiedler
 (
@@ -719,7 +718,7 @@ int LAGraph_Hdip_Fiedler   // compute the Hdip_Fiedler
         }
         last_err=e;
 
-        // FIXME: revise x in place:
+        // TODO: revise x in place:
         //x=mypcg2(L,u,alpha,indiag,x,tol,kmax[1])
         LG_TRY (LAGraph_mypcg2(&x2,&kk,L,u,alpha,indiag,x,tol,kmaxOne,msg));
         GrB_free (&x) ;

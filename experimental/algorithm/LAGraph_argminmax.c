@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: not ready for src, need to use IndexBinaryOps instead.
+// TODO: not ready for src, need to use IndexBinaryOps instead.
 // See argmin/argmax in GraphBLAS/@GrB/*/*/gbargminmax.c.
 
 #include "LG_internal.h"
@@ -191,7 +191,7 @@ int LAGraph_argminmax
     // check inputs
     //--------------------------------------------------------------------------
 
-    // FIXME: need LAGraph error checks here
+    // TODO: need LAGraph error checks here
 
     GrB_Matrix x = NULL, p = NULL, x1 = NULL, p1 = NULL ;
     (*x_result) = NULL ;
@@ -211,7 +211,7 @@ int LAGraph_argminmax
         // semirings for argmin
         //----------------------------------------------------------------------
 
-        // FIXME: use GrB or LAGraph_* semirings when possible
+        // TODO: use GrB or LAGraph_* semirings when possible
 
         if (type == GrB_BOOL)
         {

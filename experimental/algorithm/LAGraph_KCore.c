@@ -35,13 +35,13 @@
 
 #include "LG_internal.h"
 
-// FIXME: revise and add to src
-// FIXME: need both basic and expert methods; this is mixed
+// TODO: revise and add to src
+// TODO: need both basic and expert methods; this is mixed
 // vanilla OK: no GxB used here
 
-int LAGraph_KCore  // FIXME: LAGr_KCore (expert), cache is_symmetric_structure
-                   // FIXME: cache nself_edges
-                   // FIXME: cache out degree
+int LAGraph_KCore  // TODO: LAGr_KCore (expert), cache is_symmetric_structure
+                   // TODO: cache nself_edges
+                   // TODO: cache out degree
 (
     // outputs:
     GrB_Vector *decomp,     // kcore decomposition
@@ -102,7 +102,7 @@ int LAGraph_KCore  // FIXME: LAGr_KCore (expert), cache is_symmetric_structure
     //change deg vector to int32 if needed
     if (int_type == GrB_INT32)
     {
-        // FIXME: deg is freed; it should never have been constructed above
+        // TODO: deg is freed; it should never have been constructed above
         GrB_free (&deg) ;
         GRB_TRY (GrB_Vector_new(&deg, int_type, n)) ;
         GRB_TRY (GrB_assign (deg, G->out_degree, NULL, G->out_degree, GrB_ALL, n, NULL)) ;

@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: ready to consider for src
+// TODO: ready to consider for src
 
 #define LG_FREE_WORK                                                           \
     {                                                                          \

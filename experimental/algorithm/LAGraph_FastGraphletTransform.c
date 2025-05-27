@@ -18,7 +18,7 @@
 // LAGraph_FastGraphletTransform: computes the Fast Graphlet Transform of
 // an undirected graph.  No self edges are allowed on the input graph.
 
-// FIXME: rename this, and add to src (but it uses GxB)
+// TODO: rename this, and add to src (but it uses GxB)
 
 // https://arxiv.org/pdf/2007.11111.pdf
 
@@ -197,7 +197,7 @@ int LAGraph_FastGraphletTransform
 
     GRB_TRY (GrB_Vector_new (&d_2, GrB_INT64, n)) ;
 
-    // FIXME: use LAGraph_plus_second_int64
+    // TODO: use LAGraph_plus_second_int64
     // d_2 = p_2 = A*p_1 - c_2 = A*d_1 - d_1
     GRB_TRY (GrB_mxv (d_2, NULL, NULL, GxB_PLUS_SECOND_INT64, A, d_1, NULL)) ;
     GRB_TRY (GrB_eWiseMult (d_2, NULL, NULL, GrB_MINUS_INT64, d_2, d_1, NULL)) ;
@@ -220,7 +220,7 @@ int LAGraph_FastGraphletTransform
     GRB_TRY (GrB_Matrix_new (&C_3, GrB_INT64, n, n)) ;
     GRB_TRY (GrB_Vector_new (&d_4, GrB_INT64, n)) ;
 
-    // FIXME: use LAGraph_plus_first_int64
+    // TODO: use LAGraph_plus_first_int64
     // C_3 = hadamard(A, A^2)
     GRB_TRY (GrB_mxm (C_3, A, NULL, GxB_PLUS_FIRST_INT64, A, A, GrB_DESC_ST1)) ;
 
@@ -243,7 +243,7 @@ int LAGraph_FastGraphletTransform
     GRB_TRY (GrB_apply (two_c_3, NULL, NULL, GrB_TIMES_INT64, 2, d_4, NULL)) ;
 
     // d_5 = A * d_2
-    // FIXME: use LAGraph_plus_second_int64
+    // TODO: use LAGraph_plus_second_int64
     GRB_TRY (GrB_mxv (d_5, NULL, NULL, GxB_PLUS_SECOND_INT64, A, d_2, NULL)) ;
 
     // d_5 -= hadamard(p_1, p_1 - 1)
@@ -279,7 +279,7 @@ int LAGraph_FastGraphletTransform
     GRB_TRY (GrB_apply (p_1_minus_two, NULL, NULL, GrB_MINUS_INT64, d_1, (int64_t) 2, NULL)) ;
     GRB_TRY (GrB_eWiseMult (p_1_p_1_had, NULL, NULL, GrB_TIMES_INT64, p_1_minus_one, p_1_minus_two, NULL)) ;
 
-    // FIXME: use LAGraph_plus_second_int64
+    // TODO: use LAGraph_plus_second_int64
     GRB_TRY (GrB_mxv (d_7, NULL, NULL, GxB_PLUS_SECOND_INT64, A, p_1_p_1_had, NULL)) ;
     GRB_TRY (GrB_apply (d_7, NULL, NULL, GrB_DIV_INT64, d_7, (int64_t) 2, NULL)) ;
 
@@ -298,7 +298,7 @@ int LAGraph_FastGraphletTransform
 
     GRB_TRY (GrB_Vector_new (&d_9, GrB_INT64, n)) ;
 
-    // FIXME: use LAGraph_plus_second_int64
+    // TODO: use LAGraph_plus_second_int64
     GRB_TRY (GrB_mxv (d_9, NULL, NULL, GxB_PLUS_SECOND_INT64, A, d_4, NULL)) ;
     GRB_TRY (GrB_eWiseAdd (d_9, NULL, NULL, GrB_MINUS_INT64, d_9, two_c_3, NULL)) ;
 
@@ -308,7 +308,7 @@ int LAGraph_FastGraphletTransform
 
     GRB_TRY (GrB_Vector_new (&d_10, GrB_INT64, n)) ;
 
-    // FIXME: use GrB_PLUS_TIMES_INT64
+    // TODO: use GrB_PLUS_TIMES_INT64
     GRB_TRY (GrB_mxv (d_10, NULL, NULL, GxB_PLUS_TIMES_INT64, C_3, p_1_minus_two, NULL)) ;
 
     //--------------------------------------------------------------------------
@@ -329,10 +329,10 @@ int LAGraph_FastGraphletTransform
     GRB_TRY (GrB_Vector_new (&d_12, GrB_INT64, n)) ;
 
     // D_1 = diag(d_1)
-    // FIXME: use GrB_Matrix_diag
+    // TODO: use GrB_Matrix_diag
     GRB_TRY (GxB_Matrix_diag (D_1, d_1, (int64_t) 0, NULL)) ;
 
-    // FIXME: true GxB starts here.  For vanilla method, put this
+    // TODO: true GxB starts here.  For vanilla method, put this
     // in a single call to GrB_mxm to compute C_4
 
     GRB_TRY (GrB_Matrix_nvals (&nvals, A));
@@ -475,7 +475,7 @@ int LAGraph_FastGraphletTransform
     // compute d_15 = Te/6
     //--------------------------------------------------------------------------
 
-    // FIXME: computing d_15 requires GxB iterators.  For vanilla GrB,
+    // TODO: computing d_15 requires GxB iterators.  For vanilla GrB,
     // export the CSR matrix and use it directly.
 
     if (compute_d_15)

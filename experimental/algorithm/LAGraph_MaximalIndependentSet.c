@@ -56,9 +56,8 @@
 // selected and cause the method to stall.  To avoid this case they are removed
 // from the candidate set at the begining, and added to the independent set.
 
-// FIXME: rename LAGr_MaximalIndependentSet (this is expert)
-// FIXME: add a basic method
-// FIXME: need random numbers, vectors, matrices for LAGraph
+// TODO: rename LAGr_MaximalIndependentSet (this is expert)
+// TODO: add a basic method
 // vanilla OK: no GxB used
 
 int LAGraph_MaximalIndependentSet       // maximal independent set

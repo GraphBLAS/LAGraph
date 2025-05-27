@@ -13,8 +13,8 @@
 
 // Contributed by Aurko Routh, Texas A&M University
 
-// FIXME: almost ready for src.  this is advanced; add a basic method and add to src
-// FIXME: rename to LAGr_HubsAndAuthorities?
+// TODO: almost ready for src.  this is advanced; add a basic method and add to src
+// TODO: rename to LAGr_HubsAndAuthorities?
 
 //------------------------------------------------------------------------------
 
