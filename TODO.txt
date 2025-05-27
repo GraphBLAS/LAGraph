@@ -17,7 +17,7 @@ Aug 21, 2024:
     LAGraph v1.2:
     (3) doesn't compile for vanilla GraphBLAS; add vanilla case to CI
     (4) new algorithms, many ready for src, many need a little work.
-    (5) FIXMEs in src: use GrB_get instead of GxB*
+    (5) Fixme's in src: use GrB_get instead of GxB*
     (6) MaximalMatching and CoarsenMatching tests pass with the new
         random number generator, but they require LAGraph_Incidence_Matrix,
         which needs work to be ready for src
@@ -26,7 +26,7 @@ May 29, 2024:
 
     since last meeting:  added better random number generator, and argmin/argmax
     agenda: see May 15:
-        (1) many FIXMEs
+        (1) many Fixme's
         (2) need latest GraphBLAS (at least 9.1.0)
         (3) test coverage
         (4) fix MaximalMatching and CoarsenMatching (change in random number
@@ -36,7 +36,7 @@ May 15, 2024:
 
     agenda:
         need to start moving algorithms from experimental to src;
-            see all the FIXMEs.
+            see all the Fixme's.
         need conda forge with GraphBLAS 9.1.x for github CI
     discussion: on random number generation
 
