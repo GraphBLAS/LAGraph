@@ -248,7 +248,7 @@ static inline GrB_Info invert_nondestructive(
                 // values list, so dups are not handled
 #if LAGRAPH_SUITESPARSE
     GRB_TRY(GxB_Vector_pack_CSC(in, (GrB_Index **)&I, (void **)&X1, IBytes,
-                                XBytes, NULL, nvals, jumbled, NULL));
+                                XBytes, false, nvals, jumbled, NULL));
 #endif
     return (GrB_SUCCESS);
 }
@@ -292,7 +292,7 @@ invert(GrB_Vector out,  // input/output.  Same as invert_nondescructive above.
     {
 #if LAGRAPH_SUITESPARSE
         GRB_TRY(GxB_Vector_pack_CSC(out, (GrB_Index **)&X1, (void **)&I, XBytes,
-                                    IBytes, NULL, nvals, true, NULL));
+                                    IBytes, false, nvals, true, NULL));
 #else
         GRB_TRY(GrB_Vector_clear(out));
         // GrB_MIN_UINT64 is used instead of first because first is an extension
@@ -346,7 +346,7 @@ invert_2(GrB_Vector out,  // input/output
     {
         LAGraph_Free((void *)&I, NULL);
         GRB_TRY(GxB_Vector_pack_CSC(out, (GrB_Index **)&X2, (void **)&X1,
-                                    X2Bytes, X1Bytes, NULL, nvals2, true,
+                                    X2Bytes, X1Bytes, false, nvals2, true,
                                     NULL)); // the values are not ordered,
                                             // so the indices are jumbled
     }

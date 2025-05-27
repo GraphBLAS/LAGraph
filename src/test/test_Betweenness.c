@@ -225,6 +225,7 @@ double west0067_bc [67] = {
 
 void test_bc (void)
 {
+    fprintf (stderr, "\nGxB_STDC_VERSION: %d\n", (int) GxB_STDC_VERSION) ;
     LAGraph_Init (msg) ;
 //  OK (LG_SET_BURBLE (true)) ;
     GrB_Matrix A = NULL ;

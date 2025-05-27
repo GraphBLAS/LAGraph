@@ -1060,6 +1060,7 @@ int LAGraph_SquareClustering
 // (1, 3) - because there exists a path (1-2-3) that forms "ab"
 // (1, 2) - because there exists a path (1-5-2) that forms the word "ab"
 // (0, 3) - because there exists a path (0-1-5-2-3) that forms the word "aabb"
+
 GrB_Info LAGraph_CFL_reachability
 (
     // Output
@@ -1069,7 +1070,6 @@ GrB_Info LAGraph_CFL_reachability
                          // outputs[k]: (i, j) = true if and only if there is a path
                          // from node i to node j whose edge labels form a word
                          // derivable from the non-terminal 'k' of the specified CFG.
-
     // Input
     const GrB_Matrix *adj_matrices, // Array of adjacency matrices representing the graph.
                                     // The length of this array is equal to the count of
@@ -1079,13 +1079,12 @@ GrB_Info LAGraph_CFL_reachability
                                     // is an edge between nodes i and j with the label of
                                     // the terminal corresponding to index 't' (where t is
                                     // in the range [0, terms_count - 1]).
-
-    int32_t terms_count,    // The total number of terminal symbols in the CFG.
-    int32_t nonterms_count, // The total number of non-terminal symbols in the CFG.
+    int64_t terms_count,            // The total number of terminal symbols in the CFG.
+    int64_t nonterms_count,         // The total number of non-terminal symbols in the CFG.
     const LAGraph_rule_WCNF *rules, // The rules of the CFG.
-    size_t rules_count,             // The total number of rules in the CFG.
+    int64_t rules_count,            // The total number of rules in the CFG.
     char *msg                       // Message string for error reporting.
-);
+) ;
 
 //------------------------------------------------------------------------------
 // a simple example of an algorithm

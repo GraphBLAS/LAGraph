@@ -160,7 +160,7 @@ int LAGraph_FastAssign_Semiring
     GxB_Container con = NULL;
     void *ramp_a = NULL, *i_a =NULL;
     int ramp_h = GrB_DEFAULT, trsp = GrB_DEFAULT, i_h = GrB_DEFAULT;
-    int64_t ramp_n = 0, ramp_size = 0, i_n = 0, i_size= 0;
+    uint64_t ramp_n = 0, ramp_size = 0, i_n = 0, i_size= 0;
     GrB_Type x_type = NULL, i_type = NULL, ramp_type = NULL;
     bool iso = false;
     //----------------------------------------------------------------------

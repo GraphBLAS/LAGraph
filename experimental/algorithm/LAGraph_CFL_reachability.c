@@ -30,7 +30,7 @@
 
 #define LG_FREE_ALL                                                         \
     {                                                                       \
-        for (size_t i = 0; i < nonterms_count; i++) {                       \
+        for (int64_t i = 0; i < nonterms_count; i++) {                      \
             GrB_free(&T[i]);                                                \
         }                                                                   \
                                                                             \
@@ -40,11 +40,10 @@
 #include "LG_internal.h"
 #include <LAGraphX.h>
 
-#define ERROR_RULE(msg)                                                     \
+#define ERROR_RULE(msg,i)                                                   \
     {                                                                       \
         LG_ASSERT_MSGF(false, GrB_INVALID_VALUE,                            \
-            "Rule with index %ld is invalid. " msg,                         \
-                       i);                                                  \
+            "Rule with index %" PRId64 " is invalid. ", msg, i);            \
     }
 
 #define ADD_TO_MSG(...)                                                     \
@@ -66,7 +65,7 @@
         rule.len_indexes_str += snprintf(                                   \
             rule.indexes_str + rule.len_indexes_str,                        \
             LAGRAPH_MSG_LEN - rule.len_indexes_str,                         \
-            rule.count == 0 ? "%ld" : ", %ld", i);                          \
+            rule.count == 0 ? "%" PRId64 : ", %" PRId64, i);                \
         rule.count++;                                                       \
     }
 
@@ -113,6 +112,7 @@
 // (1, 3) - because there exists a path (1-2-3) that forms "ab"
 // (1, 2) - because there exists a path (1-5-2) that forms the word "ab"
 // (0, 3) - because there exists a path (0-1-5-2-3) that forms the word "aabb"
+
 GrB_Info LAGraph_CFL_reachability
 (
     // Output
@@ -131,13 +131,14 @@ GrB_Info LAGraph_CFL_reachability
                                     // is an edge between nodes i and j with the label of
                                     // the terminal corresponding to index 't' (where t is
                                     // in the range [0, terms_count - 1]).
-    int32_t terms_count,             // The total number of terminal symbols in the CFG.
-    int32_t nonterms_count, // The total number of non-terminal symbols in the CFG.
+    int64_t terms_count,            // The total number of terminal symbols in the CFG.
+    int64_t nonterms_count,         // The total number of non-terminal symbols in the CFG.
     const LAGraph_rule_WCNF *rules, // The rules of the CFG.
-    size_t rules_count,             // The total number of rules in the CFG.
+    int64_t rules_count,            // The total number of rules in the CFG.
     char *msg                       // Message string for error reporting.
 )
 {
+
 #if LAGRAPH_SUITESPARSE
     // Declare workspace and clear the msg string, if not NULL
     GrB_Matrix *T;
@@ -174,15 +175,15 @@ GrB_Info LAGraph_CFL_reachability
 
     // Find null adjacency matrices
     bool found_null = false;
-    for (int32_t i = 0; i < terms_count; i++) {
+    for (int64_t i = 0; i < terms_count; i++) {
         if (adj_matrices[i] != NULL)
             continue;
 
         if (!found_null) {
             ADD_TO_MSG("Adjacency matrices with these indexes are null: ");
-            ADD_TO_MSG("%d", i);
+            ADD_TO_MSG("%" PRId64, i);
         } else {
-            ADD_TO_MSG(", %d", i);
+            ADD_TO_MSG("%" PRId64, i);
         }
 
         found_null = true;
@@ -197,7 +198,7 @@ GrB_Info LAGraph_CFL_reachability
     GRB_TRY(GrB_Matrix_ncols(&n, adj_matrices[0]));
 
     // Create nonterms matrices
-    for (int32_t i = 0; i < nonterms_count; i++) {
+    for (int64_t i = 0; i < nonterms_count; i++) {
         GRB_TRY(GrB_Matrix_new(&T[i], GrB_BOOL, n, n));
         t_empty_flags[i] = true;
     }
@@ -215,7 +216,7 @@ GrB_Info LAGraph_CFL_reachability
     rule_error_s term_err = {0};
     rule_error_s nonterm_err = {0};
     rule_error_s invalid_err = {0};
-    for (size_t i = 0; i < rules_count; i++) {
+    for (int64_t i = 0; i < rules_count; i++) {
         LAGraph_rule_WCNF rule = rules[i];
 
         bool is_rule_eps = rule.prod_A == -1 && rule.prod_B == -1;
@@ -262,8 +263,8 @@ GrB_Info LAGraph_CFL_reachability
     }
 
     if (term_err.count + nonterm_err.count + invalid_err.count > 0) {
-        ADD_TO_MSG("Count of invalid rules: %ld.\n",
-                   term_err.count + nonterm_err.count + invalid_err.count);
+        ADD_TO_MSG("Count of invalid rules: %" PRId64 ".\n",
+            (int64_t) (term_err.count + nonterm_err.count + invalid_err.count));
 
         if (nonterm_err.count > 0) {
             ADD_TO_MSG("Non-terminals must be in range [0, nonterms_count). ");
@@ -283,7 +284,7 @@ GrB_Info LAGraph_CFL_reachability
     }
 
     // Rule [Variable -> term]
-    for (size_t i = 0; i < term_rules_count; i++) {
+    for (int64_t i = 0; i < term_rules_count; i++) {
         LAGraph_rule_WCNF term_rule = rules[term_rules[i]];
         GrB_Index adj_matrix_nnz = 0;
         GRB_TRY(GrB_Matrix_nvals(&adj_matrix_nnz, adj_matrices[term_rule.prod_A]));
@@ -312,7 +313,7 @@ GrB_Info LAGraph_CFL_reachability
     GRB_TRY(GrB_free(&v_diag));
 
     // Rule [Variable -> eps]
-    for (size_t i = 0; i < eps_rules_count; i++) {
+    for (int64_t i = 0; i < eps_rules_count; i++) {
         LAGraph_rule_WCNF eps_rule = rules[eps_rules[i]];
 
         GxB_eWiseUnion (
@@ -334,7 +335,7 @@ GrB_Info LAGraph_CFL_reachability
     bool changed = true;
     while (changed) {
         changed = false;
-        for (size_t i = 0; i < bin_rules_count; i++) {
+        for (int64_t i = 0; i < bin_rules_count; i++) {
             LAGraph_rule_WCNF bin_rule = rules[bin_rules[i]];
 
             // If one of matrices is empty then their product will be empty
@@ -357,7 +358,7 @@ GrB_Info LAGraph_CFL_reachability
             #ifdef DEBUG_CFL_REACHBILITY
             GxB_Matrix_iso(&iso_flag, T[bin_rule.nonterm]);
             printf("[TERM1 TERM2] MULTIPLY, S: %d, A: %d, B: %d, "
-                   "I: %ld (ISO: %d)\n",
+                   "I: %" PRId64 " (ISO: %d)\n",
                    bin_rule.nonterm, bin_rule.prod_A, bin_rule.prod_B, i, iso_flag);
             #endif
             
@@ -365,13 +366,13 @@ GrB_Info LAGraph_CFL_reachability
     }
 
     #ifdef DEBUG_CFL_REACHBILITY
-        for (int32_t i = 0; i < nonterms_count; i++) {
-            printf("MATRIX WITH INDEX %d:\n", i);
+        for (int64_t i = 0; i < nonterms_count; i++) {
+            printf("MATRIX WITH INDEX %" PRId64 ":\n", i);
             GxB_print(T[i], GxB_SUMMARY);
         }
     #endif
 
-    for (int32_t i = 0; i < nonterms_count; i++) {
+    for (int64_t i = 0; i < nonterms_count; i++) {
         outputs[i] = T[i];
     }
 
