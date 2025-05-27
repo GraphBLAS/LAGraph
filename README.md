@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/GraphBLAS/LAGraph/workflows/LAGraph%20CI/badge.svg)](https://github.com/GraphBLAS/LAGraph/actions)
+[![Build Status](https://github.com/GraphBLAS/LAGraph/workflows/LAGraph%20CI%20with%20Builtin%20GraphBLAS/badge.svg)](https://github.com/GraphBLAS/LAGraph/actions)
 [![Documentation Status](https://readthedocs.org/projects/lagraph/badge/?version=latest)](https://lagraph.readthedocs.io/en/latest/?badge=latest)
 
 # LAGraph
