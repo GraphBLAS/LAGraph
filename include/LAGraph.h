@@ -248,7 +248,7 @@
  *
  * Error handling is simplified by the @sphinxref{LAGRAPH_TRY} / LAGRAPH_CATCH
  * mechanism described below.  For example, assuming the user application
- * #defines a single LAGRAPH_CATCH mechanism for all error handling, the
+ * defines a single LAGRAPH_CATCH mechanism for all error handling, the
  * above example would become:
  *
  *      GrB_Vector level, parent ;
@@ -286,7 +286,7 @@
  * The LAGRAPH_CATCH macro takes a single argument, which is the return value
  * from an LAGraph method.
  *
- * A typical example of a user function that calls LAGraph might #define
+ * A typical example of a user function that calls LAGraph might define
  * LAGRAPH_CATCH as follows.  Suppose workvector is a GrB_vector used for
  * computations internal to the mybfs function, and W is a (double *) space
  * created by malloc.
@@ -844,7 +844,7 @@ LAGRAPH_PUBLIC extern GrB_Semiring
 
 /** LAGraph_Version: determines the version of LAGraph.  The version number and
  * date can also be obtained via compile-time constants from LAGraph.h.
- * However, it is possible to compile a user application that #includes one
+ * However, it is possible to compile a user application that includes one
  * version of LAGraph.h and then links with another version of the LAGraph
  * library later on, so the version number and date may differ from the
  * compile-time constants.
@@ -2056,7 +2056,7 @@ int LAGraph_Vector_IsEqualOp
  * will affect the pseudo-random numbers generated and results are thus not
  * guaranteed in this case.
  *
- * @param[out,out] State vector to initialize with pseudo-random numbers.
+ * @param[in,out] State  vector to initialize with pseudo-random numbers.
  * @param[in] seed       scalar seed value.
  * @param[in,out] msg    any error messages.
  *
@@ -2085,7 +2085,7 @@ int LAGraph_Random_Seed // construct a random State vector
  * https://doi.org/10.18637/jss.v008.i14 and
  * https://en.wikipedia.org/wiki/Xorshift .
  *
- * @param[out,out] State vector with random numbers to be advanced.
+ * @param[in,out] State  vector with random numbers to be advanced.
  * @param[in,out] msg    any error messages.
  *
  * @retval GrB_SUCCESS if successful.
