@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: not ready for src; uses global variables
+// TODO: not ready for src; uses global variables
 
 /**
  * Code is based on the Min-Label algorithm described in the following paper:

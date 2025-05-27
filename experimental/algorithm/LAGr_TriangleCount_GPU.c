@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: this is a rough test of the GraphBLAS GPU methods for triangle
+// TODO: this is a rough test of the GraphBLAS GPU methods for triangle
 // counting. It will not appear as a user-callable algorithm.
 
 // Count the number of triangles in a graph,

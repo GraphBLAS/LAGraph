@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: ready for src, except this is advanced; need basic method.
+// TODO: ready for src, except this is advanced; need basic method.
 
 // Compute the square clustering coefficient for each node of an undirected
 // graph, which is the fraction of possible squares that exist at each node.

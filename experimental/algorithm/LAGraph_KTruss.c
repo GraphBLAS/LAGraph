@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: ready for src
+// TODO: ready for src
 
 // LAGraph_KTruss: k-truss subgraph.
 

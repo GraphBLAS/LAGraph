@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: vector results (peripheral, eccentricity, level, and parent) are not
+// TODO: vector results (peripheral, eccentricity, level, and parent) are not
 // checked with exact values
 
 #include <stdio.h>
@@ -236,7 +236,7 @@ void test_errors (void)
 {
     #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
-    // FIXME: add error tests here
+    // TODO: add error tests here
     LAGraph_Finalize (msg) ;
     #endif
 }

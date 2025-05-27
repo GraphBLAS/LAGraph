@@ -620,23 +620,6 @@ void test_CFL_reachability_invalid_rules(void) {
 
 void test_CFL_reachability_null_pointers(void) {
 #if LAGRAPH_SUITESPARSE
-// FIXME: this test fails when testing with CUDA:
-// Test CFG_reachability_null_pointers... 
-// GB_cuda_get_device_count: 2, cudaError_t: 0
-// GB_cuda_init: ngpus: 2
-// Device: 0: memory: 34079899648 SMs: 80 compute: 7.0
-// Device: 1: memory: 34079899648 SMs: 80 compute: 7.0
-// CUDA_VISIBLE_DEVICES = 0,1
-// getting cuda visible devices
-// Found device_id 0
-// Found device_id 1
-// devices.size is 2
-// cuda warmup 0
-// cuda warmup 0 OK
-// cuda warmup 1
-// cuda warmup 1 OK
-// free(): invalid pointer
-//   Test interrupted by SIGABRT.
 
     setup();
     GrB_Info retval;

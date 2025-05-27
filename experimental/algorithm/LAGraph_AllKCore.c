@@ -35,8 +35,8 @@
 
 #include "LG_internal.h"
 
-// FIXME: need both basic and expert methods; this is mixed
-// FIXME: match filename to function name (this name is OK)
+// TODO: need both basic and expert methods; this is mixed
+// TODO: match filename to function name (this name is OK)
 // vanilla OK: no GxB used here
 
 int LAGraph_KCore_All
@@ -75,7 +75,7 @@ int LAGraph_KCore_All
         LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
     }
 
-    // FIXME: in basic: compute it, this is Advanced:
+    // TODO: in basic: compute it, this is Advanced:
     // no self edges can be present
     LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
 
@@ -84,7 +84,7 @@ int LAGraph_KCore_All
     GrB_Index n, todo, nvals, maxDeg ;
     GRB_TRY (GrB_Matrix_nrows(&n, A)) ;
 
-    // FIXME: do not call Cached in an advanced algorithm, this is Basic:
+    // TODO: do not call Cached in an advanced algorithm, this is Basic:
     //create deg vector using out_degree property
     LG_TRY (LAGraph_Cached_OutDegree(G, msg)) ;
 
@@ -106,7 +106,7 @@ int LAGraph_KCore_All
     //change deg vector to int32 if needed
     if (int_type == GrB_INT32)
     {
-        // FIXME: deg is freed; it should never have been constructed above
+        // TODO: deg is freed; it should never have been constructed above
         GrB_free (&deg) ;
         GRB_TRY (GrB_Vector_new(&deg, int_type, n)) ;
         GRB_TRY (GrB_assign (deg, G->out_degree, NULL, G->out_degree, GrB_ALL, n, NULL)) ;

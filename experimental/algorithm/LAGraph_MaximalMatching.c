@@ -10,7 +10,7 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: ready for src? need a vanilla non-GxB, and incidence graphs.
+// TODO: ready for src? need a vanilla non-GxB, and incidence graphs.
 
 /*
 Uses a modified version of Luby's MIS algorithm
