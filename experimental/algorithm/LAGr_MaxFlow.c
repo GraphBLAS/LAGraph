@@ -109,6 +109,7 @@ static GrB_Info LG_augment_maxflow
     GrB_free(&GrB_CreateResidualForward);                                      \
     GrB_free(&GrB_CreateResidualBackward);                                     \
     GrB_free(&zero);                                                           \
+    GrB_free(&empty);                                                          \
     GrB_free(&Re);                                                             \
     GrB_free(&invariant);                                                      \
     GrB_free(&GrB_InvariantCheck);                                             \
@@ -631,6 +632,7 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
 
   //scalars
   GrB_Scalar zero = NULL ;
+  GrB_Scalar empty = NULL ;
 
   //invariant
   GrB_Vector invariant = NULL ;
@@ -736,6 +738,7 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
   //create scalars
   GRB_TRY(GrB_Scalar_new(&zero, GrB_FP64));
   GRB_TRY(GrB_Scalar_setElement(zero, 0));
+  GRB_TRY(GrB_Scalar_new (&empty, GrB_FP64)) ;
 
   if(n > INT32_MAX){
   
@@ -943,12 +946,17 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
 
       // FIXME: simplify this to 1 call to GrB_assign [
       // e<!lvl,struct> = empty
+#if 0
       GRB_TRY(GrB_assign(e, lvl, NULL,
 			 -1, GrB_ALL, n, GrB_DESC_SC));
       GRB_TRY(GrB_select(e, NULL,
 			 NULL, GrB_VALUEGT_FP64,    /* FLOP */
 			 e, -1, NULL));
+#else
+      GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
+#endif
       // ]
+
 
       GrB_free(&lvl);
       LG_TRY(LAGraph_Delete(&res_graph, msg));
@@ -1030,7 +1038,17 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
     ++iter;
     
   }
-  
+
+#if 0
+  if (*F_handle != NULL)
+  {
+    F = new matrix, type double
+    F = R.flow, that is:
+        F(i,j) = R(i,j).flow
+    drop values <= 0 from F
+  }
+#endif
+
   LG_FREE_ALL;
   return GrB_SUCCESS;
 }
