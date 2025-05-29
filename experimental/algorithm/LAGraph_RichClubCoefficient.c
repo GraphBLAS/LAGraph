@@ -298,7 +298,7 @@ int LAGraph_RichClubCoefficient
         
         LG_ASSERT (max_deg == vpd_n && max_deg == epd_n, GrB_INVALID_VALUE) ;
         //run a cummulative sum (backwards) on vpd_arr
-        for(GrB_Index i = max_deg - 1; i > 0; --i)
+        for(int64_t i = max_deg - 1; i > 0; --i)
         {
             vpd_arr[i-1] += vpd_arr[i] ;
             epd_arr[i-1] += epd_arr[i] ;
@@ -358,7 +358,7 @@ int LAGraph_RichClubCoefficient
             vpd_index, vpd_arr, &max_deg, verts_per_deg
         )) ;
         //run a cummulative sum (backwards) on vpd_arr
-        for(GrB_Index i = max_deg - 1; i > 0; --i)
+        for(int64_t i = max_deg - 1; i > 0; --i)
         {
             vpd_arr[i-1] += vpd_arr[i] ;
             epd_arr[i-1] += epd_arr[i] ;

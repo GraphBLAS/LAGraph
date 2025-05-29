@@ -769,6 +769,7 @@ int LAGr_SwapEdges
         con->format = GxB_BITMAP;
         dup_swaps_v = NULL;
         GRB_TRY (GxB_load_Vector_from_Container(M, con, NULL)) ;
+GRB_TRY (GxB_print (M, 1)) ; // FIXME: added for debugging
         GRB_TRY (GrB_free(&con)) ;
         GRB_TRY (LAGraph_FastAssign_Semiring(
             E_vec, NULL, second_edge, edge_perm, M, ramp_v, 
