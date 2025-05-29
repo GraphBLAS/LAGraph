@@ -10,7 +10,7 @@ See <https://github.com/GraphBLAS/LAGraph> for the source code for LAGraph,
 Documenation is at <https://lagraph.readthedocs.org>.
 Test coverage results are at <https://graphblas.org/LAGraph>.
 
-Currently, SuiteSparse:GraphBLAS v7.0.0 or later is required.  However, use the
+Currently, SuiteSparse:GraphBLAS v9.0.0 or later is required.  However, use the
 latest stable release of SuiteSparse:GraphBLAS for best results.
 See <https://github.com/DrTimothyAldenDavis/GraphBLAS>
 
