@@ -590,7 +590,7 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
   //active_set and n_active
 //GrB_Vector active_set = NULL ;
   GrB_Vector src_and_sink = NULL ;
-  GrB_Index n_active ;
+  GrB_Index n_active = INT32_MAX ;
 
   //semiring and vectors for y<e, struct> = R x d
   GrB_Vector y = NULL ;
@@ -707,10 +707,12 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
 			  GrB_FlowEdge, GrB_FP64, "MF_MakeFlow", GRB_MAKEF_STR));
   GRB_TRY(GrB_Vector_new(&Re, GrB_FlowEdge, n));
   GRB_TRY(GrB_Vector_new(&e, GrB_FP64, n));
+#if 0
   GRB_TRY(GrB_extract(e, NULL, NULL, A, GrB_ALL, n, src, GrB_DESC_T0));
   GRB_TRY(GrB_apply(Re, NULL, NULL, GrB_MakeFlow, e, NULL));
   GRB_TRY(GrB_assign(R, NULL, GrB_InitForwardFlows, Re, src, GrB_ALL, n, NULL));
   GRB_TRY(GrB_assign(R, NULL, GrB_InitBackwardFlows, Re, GrB_ALL, n, src, NULL));
+#endif
 
   //extract n_active from e masking sink and src then assign to e
 //GRB_TRY(GrB_Vector_new(&active_set, GrB_FP64, n));
@@ -719,8 +721,8 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
   GRB_TRY (GrB_Vector_setElement (src_and_sink, true, src)) ;
 
   // augment maxflow if the edge (src,sink) exists
-  LG_TRY (LG_augment_maxflow (f, e, sink, src_and_sink,
-			      /* active_set, */ &n_active, /* n, */ msg)) ;
+  //LG_TRY (LG_augment_maxflow (f, e, sink, src_and_sink,
+  //			      /* active_set, */ &n_active, /* n, */ msg)) ;
   //create flow vec
   GRB_TRY(GrB_Vector_new(&residual_vec, GrB_FP64, n));
 
@@ -953,7 +955,17 @@ int LAGr_MaxFlow(double* f, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char
 			 NULL, GrB_VALUEGT_FP64,    /* FLOP */
 			 e, -1, NULL));
 #else
-      GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
+      if(iter == 0){
+	GRB_TRY(GrB_extract(e, lvl, NULL, A, GrB_ALL, n, src, GrB_DESC_ST0));
+	GRB_TRY(GrB_apply(Re, NULL, NULL, GrB_MakeFlow, e, NULL));
+        GRB_TRY(GrB_assign(R, NULL, GrB_InitForwardFlows, Re, src, GrB_ALL, n, NULL));
+        GRB_TRY(GrB_assign(R, NULL, GrB_InitBackwardFlows, Re, GrB_ALL, n, src, NULL));
+	LG_TRY (LG_augment_maxflow (f, e, sink, src_and_sink,
+  			      /* active_set, */ &n_active, /* n, */ msg)) ;
+      }
+      else{
+	GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
+      }
 #endif
       // ]
 
