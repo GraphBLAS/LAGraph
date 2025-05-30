@@ -123,6 +123,8 @@ void test_SwapEdges (void)
             //------------------------------------------------------------------
             // check results
             //------------------------------------------------------------------
+            // Check sufficient swaps were performed.
+            TEST_CHECK (pQ >= 100.0) ;
             //Make sure we got a symetric back out:
             OK (LAGraph_CheckGraph (G_new, msg)) ;
                     
@@ -305,6 +307,8 @@ void test_SwapEdges_brutal (void)
         //------------------------------------------------------------------
         // check results
         //------------------------------------------------------------------
+        // Check sufficient swaps were performed.
+        TEST_CHECK (pQ >= 1.0) ;
         //Make sure we got a symetric back out:
         LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G_new, msg)) ;
                 

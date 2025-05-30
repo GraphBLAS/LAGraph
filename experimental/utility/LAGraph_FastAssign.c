@@ -161,8 +161,7 @@ int LAGraph_FastAssign_Semiring
     void *ramp_a = NULL, *i_a =NULL;
     int ramp_h = GrB_DEFAULT, trsp = GrB_DEFAULT, i_h = GrB_DEFAULT;
     uint64_t ramp_n = 0, ramp_size = 0, i_n = 0, i_size= 0;
-    GrB_Type x_type = NULL, i_type = NULL, ramp_type = NULL;
-    int32_t iso = false;
+    GrB_Type i_type = NULL, ramp_type = NULL;
     //----------------------------------------------------------------------
     // Check inputs
     //----------------------------------------------------------------------
@@ -190,10 +189,6 @@ int LAGraph_FastAssign_Semiring
     {
         GRB_TRY (GrB_Vector_size(&nrows, c)) ;
     }
-
-    GRB_TRY (GrB_Vector_get_INT32(X_vec, &iso, GxB_ISO)) ;
-
-    GRB_TRY (GxB_Vector_type(&x_type, X_vec));
 
     //----------------------------------------------------------------------
     // Load up containers
