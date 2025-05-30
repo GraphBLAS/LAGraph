@@ -765,15 +765,20 @@ int LAGr_SwapEdges
         GRB_TRY (GxB_unload_Vector_into_Container(M, con, NULL)) ;
         GRB_TRY (GrB_free(&(con->b))) ;
         con->b = dup_swaps_v;
+        // n_keep = sum (dup_swaps_v), to count the # of 1's that now appear in
+        // dup_swaps_v, which will become nvals(M) after loading M from the
+        // container con.
+        GRB_TRY (GrB_reduce (&n_keep, NULL, GrB_PLUS_MONOID_UINT64,
+            dup_swaps_v, NULL)) ;
         con->nvals = n_keep;
         con->format = GxB_BITMAP;
         dup_swaps_v = NULL;
         GRB_TRY (GxB_load_Vector_from_Container(M, con, NULL)) ;
+        // GRB_TRY (GxB_print (M, 1)) ; // for debugging; must be OK here
         GRB_TRY (GrB_free(&con)) ;
         GRB_TRY (LAGraph_FastAssign_Semiring(
             E_vec, NULL, second_edge, edge_perm, M, ramp_v, 
             second_second_edge, NULL, msg)) ;
-        
 
         n_keep /= 2;
 
@@ -810,6 +815,7 @@ int LAGr_SwapEdges
     LAGRAPH_TRY (LAGraph_New (
         G_new, &A_new, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     LG_FREE_WORK ;
+    (*pSwaps) = num_swaps ;
     return (num_swaps >= totSwaps)? GrB_SUCCESS :  LAGRAPH_INSUFFICIENT_SWAPS ;
     #else
     // printf("LAGr_SwapEdges Needs GB v10\n") ;

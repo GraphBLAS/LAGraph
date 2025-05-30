@@ -1,6 +1,8 @@
 name: arch-emu
 
-# this is done on workflow_dispatch only since it takes a very long time
+# this is done on workflow_dispatch only since it takes a very long time.
+# It also uses the latest GraphBLAS dev2 branch, so be sure that branch
+# is operational before running this test.
 on:
   workflow_dispatch:
 
@@ -18,8 +20,7 @@ jobs:
     strategy:
       matrix:
         config:
-          # FIXME: switch to 10.1.0 when it is released:
-         - {grb_version: 10.0.5}
+         - {grb_version: dev2}
         # For available CPU architectures, see:
         # https://github.com/marketplace/actions/setup-alpine-linux-environment
         arch: [riscv64]
@@ -71,8 +72,6 @@ jobs:
           gcc -dumpmachine
           git clone https://github.com/DrTimothyAldenDavis/GraphBLAS.git
           cd GraphBLAS
-          # FIXME: switch to 10.1.0 when it is released:
-          # git checkout tags/v${{ matrix.config.grb_version }}
           git checkout dev2
           make compact
           sudo make install

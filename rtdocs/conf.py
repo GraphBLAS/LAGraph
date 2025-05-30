@@ -45,7 +45,7 @@ if read_the_docs_build:
 # -- Project information -----------------------------------------------------
 
 project = 'LAGraph'
-copyright = '2019-2022, LAGraph Contributors'
+copyright = '2019-2025, LAGraph Contributors'
 author = 'Tim Davis, Tim Mattson, Scott McMillan, Jim Kitchen, Erik Welch'
 
 
