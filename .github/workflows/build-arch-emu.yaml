@@ -18,8 +18,7 @@ jobs:
     strategy:
       matrix:
         config:
-          # FIXME: switch to 10.1.0 when it is released:
-         - {grb_version: 10.0.5}
+         - {grb_version: 10.1.0}
         # For available CPU architectures, see:
         # https://github.com/marketplace/actions/setup-alpine-linux-environment
         arch: [riscv64]
@@ -71,9 +70,7 @@ jobs:
           gcc -dumpmachine
           git clone https://github.com/DrTimothyAldenDavis/GraphBLAS.git
           cd GraphBLAS
-          # FIXME: switch to 10.1.0 when it is released:
-          # git checkout tags/v${{ matrix.config.grb_version }}
-          git checkout dev2
+          git checkout tags/v${{ matrix.config.grb_version }}
           make compact
           sudo make install
           cd ..
