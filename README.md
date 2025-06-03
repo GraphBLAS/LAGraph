@@ -7,7 +7,8 @@ LAGraph is a library plus a test harness for collecting algorithms that
 use GraphBLAS.
 
 See <https://github.com/GraphBLAS/LAGraph> for the source code for LAGraph,
-Documenation is at <https://lagraph.readthedocs.org>.
+Documentation is at <https://lagraph.readthedocs.org>, and also as a PDF
+file in the [LAGraph User Guide (PDF)](./lagraph-readthedocs-io-en-latest.pdf).
 Test coverage results are at <https://graphblas.org/LAGraph>.
 
 Currently, SuiteSparse:GraphBLAS v9.0.0 or later is required.  However, use the
