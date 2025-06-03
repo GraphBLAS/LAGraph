@@ -1326,7 +1326,8 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
  * Market "coordinate" and "array" format (http://www.nist.gov/MatrixMarket),
  * for sparse and dense matrices respectively.  The format is fully described
  * in <a href="https://github.com/GraphBLAS/LAGraph/blob/stable/papers/MatrixMarket.pdf">
- * LAGraph/Doc/MatrixMarket.pdf</a>, and summarized here (with extensions for LAGraph).
+ * LAGraph/papers/MatrixMarket.pdf</a>, and summarized here (with extensions
+ * for LAGraph).
  *
  * \rst_star{
  * First Line
