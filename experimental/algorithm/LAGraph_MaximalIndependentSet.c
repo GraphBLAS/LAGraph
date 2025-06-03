@@ -127,9 +127,10 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GRB_TRY (GrB_Vector_new (&score, GrB_FP32, n)) ;
     GRB_TRY (GrB_Vector_new (&iset, GrB_BOOL, n)) ;
 
-    // degree = (float) G->out_degree
+    // degree = (float) 1 / G->out_degree
     GRB_TRY (GrB_assign (degree, NULL, NULL, G->out_degree, GrB_ALL, n, NULL)) ;
-
+    GRB_TRY (GrB_Vector_apply (
+        degree, NULL, NULL, GrB_MINV_FP32, degree, NULL)) ;
     //--------------------------------------------------------------------------
     // remove singletons (nodes of degree zero) and handle ignore_node
     //--------------------------------------------------------------------------
@@ -212,7 +213,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         // score = (float) Seed
         GRB_TRY (GrB_assign (score, NULL, NULL, Seed, GrB_ALL, n, NULL)) ;
         // score = score / degree
-        GRB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_DIV_FP32, score, degree,
+        GRB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_TIMES_FP32, score, degree,
             NULL)) ;
 
         // compute the max score of all candidate neighbors (only candidates
