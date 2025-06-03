@@ -30,7 +30,7 @@
 // encode each edge into a single uint64_t
 static void combine (uint64_t *z, const uint64_t *x, const uint64_t *y)
 {
-    *z = ((*x) << 32) + (*y);
+    *z = ((*x) << 32) | (*y);
 }
 
 static void get_fst (uint64_t *y, const uint64_t *x)
@@ -172,8 +172,16 @@ int LAGraph_msf
     GrB_Index ncols ;
     GRB_TRY (GrB_Matrix_nrows (&n, A));
     GRB_TRY (GrB_Matrix_ncols (&ncols, A));
-    if (n != ncols) return (GrB_DIMENSION_MISMATCH) ;
+    LG_ASSERT(n == ncols, GrB_DIMENSION_MISMATCH) ;
 
+    // // TODO: use tuple types so that we don't overflow.
+    LG_ASSERT_MSG (n <= INT32_MAX, 
+        GrB_INVALID_VALUE, "Matrix too large. Exiting to prevent overflow") ;
+    uint64_t max_val = 0;
+    GRB_TRY(GrB_Matrix_reduce_UINT64(
+        &max_val, NULL, GrB_MAX_MONOID_UINT64, A, NULL)) ;
+    LG_ASSERT_MSG (max_val <= INT32_MAX, 
+        GrB_INVALID_VALUE, "Matrix values too large. Exiting to prevent overflow") ;
     if (sanitize)
     {
         // S = A+A'

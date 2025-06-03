@@ -44,7 +44,7 @@ const matrix_info files [ ] =
     { 1, "A.mtx" },
     { 1, "jagmesh7.mtx" },
     { 0, "west0067.mtx" }, // unsymmetric
-    { 1, "bcsstk13.mtx" },
+    // { 1, "bcsstk13.mtx" }, // values are too large, will overflow.
     { 1, "karate.mtx" },
     { 1, "ldbc-cdlp-undirected-example.mtx" },
     { 1, "ldbc-undirected-example-bool.mtx" },
