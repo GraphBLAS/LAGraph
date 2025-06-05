@@ -126,7 +126,7 @@ void removeEdge (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF
     LAGraph_Free ((void **) &SX, msg);          \
     LAGraph_Free ((void **) &context.data, msg);\
     GrB_free (&f);                      \
-    GrB_free (&i);                      \
+    GrB_free (&I);                      \
     GrB_free (&t);                      \
     GrB_free (&edge);                   \
     GrB_free (&cedge);                  \
@@ -139,7 +139,8 @@ void removeEdge (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF
     GrB_free (&s1);                     \
     GrB_free (&s2);                     \
     GrB_free (&contx_type);             \
-    GrB_free (&parent_v);             \
+    GrB_free (&parent_v);               \
+    GrB_free (&ramp);                   \
 }
 
 //****************************************************************************
@@ -158,8 +159,9 @@ int LAGraph_msf
     GrB_Info info;
     GrB_Index n;
     GrB_Matrix S = NULL, T = NULL;
-    GrB_Vector f = NULL, i = NULL, t = NULL, parent_v = NULL,
-        edge = NULL, cedge = NULL, mask = NULL, index = NULL;
+    GrB_Vector f = NULL, I = NULL, t = NULL, parent_v = NULL,
+        edge = NULL, cedge = NULL, mask = NULL, index = NULL, ramp = NULL;
+
     GrB_Index *SI = NULL, *SJ = NULL, *SX = NULL, *V = NULL;
     GrB_Type contx_type = NULL;
     GrB_BinaryOp comb = NULL;
@@ -197,7 +199,7 @@ int LAGraph_msf
     GRB_TRY (GrB_Matrix_new (&T, GrB_UINT64, n, n));
     GRB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&f, GrB_UINT64, n));
-    GRB_TRY (GrB_Vector_new (&i, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_new (&ramp, GrB_INT64, n + 1));
     GRB_TRY (GrB_Vector_new (&edge, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&cedge, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&mask, GrB_BOOL, n));
@@ -224,9 +226,13 @@ int LAGraph_msf
     GRB_TRY (GrB_Vector_assign_UINT64 (
         f, NULL, NULL, (uint64_t) 0, GrB_ALL, n, NULL));
     GRB_TRY (GrB_Vector_apply_IndexOp_INT64 (
-        f, NULL, NULL, GrB_ROWINDEX_INT64, f, (uint64_t) 0, NULL));
-    GRB_TRY (GrB_assign (i, 0, 0, f, GrB_ALL, 0, 0));
-
+        f, NULL, NULL, GrB_ROWINDEX_INT64, f, (int64_t) 0, NULL));
+    GRB_TRY (GrB_Vector_dup (&I, f));
+    GRB_TRY (GrB_Vector_assign_UINT64 (
+        ramp, NULL, NULL, (uint64_t) 0, GrB_ALL, n + 1, NULL));
+    GRB_TRY (GrB_Vector_apply_IndexOp_INT64 (
+        ramp, NULL, NULL, GrB_ROWINDEX_INT64, ramp, (int64_t) 0, NULL));
+        
     #if LG_SUITESPARSE_GRAPHBLAS_V10
     GRB_TRY (GxB_Vector_load(parent_v, (void **) &context.parent, 
         GrB_UINT64, n, 3 * n * sizeof (uint64_t), GxB_IS_READONLY, NULL));
@@ -269,17 +275,17 @@ int LAGraph_msf
         // cedge[u] = children's minimum edge  | if u is a root
         //          = (INT_MAX, u)             | otherwise
         GRB_TRY (GrB_assign (t, 0, 0, (uint64_t) INT_MAX, GrB_ALL, 0, 0));
-        GRB_TRY (GrB_eWiseMult (cedge, 0, 0, comb, t, i, 0));
+        GRB_TRY (GrB_eWiseMult (cedge, 0, 0, comb, t, I, 0));
         #if LG_SUITESPARSE_GRAPHBLAS_V10
         LG_TRY (LAGraph_FastAssign_Semiring(
-            cedge, NULL, GrB_MIN_UINT64, parent_v, edge, NULL, 
+            cedge, NULL, GrB_MIN_UINT64, parent_v, edge, ramp, 
             GrB_MIN_SECOND_SEMIRING_UINT64, NULL, msg
         ));
         #else
         LG_TRY (Reduce_assign (cedge, edge, context.parent, n, msg));
         #endif
         // if (f[u] == u) f[u] := snd(cedge[u])  -- the index part of the edge
-        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, f, i, 0));
+        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, f, I, 0));
         GRB_TRY (GrB_apply (f, mask, GrB_SECOND_UINT64, snd, cedge, 0));
         // identify all the vertex pairs (u, v) where f[u] == v and f[v] == u
         // and then select the minimum of u, v as the new root;
@@ -290,12 +296,12 @@ int LAGraph_msf
         GRB_TRY (GrB_Vector_extractTuples_UINT64 (NULL, V, &n, f));
         GRB_TRY (GrB_Vector_extract (t, NULL, NULL, f, V, n, NULL));
         #endif
-        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, i, t, 0));
-        GRB_TRY (GrB_assign (f, mask, GrB_MIN_UINT64, i, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, I, t, 0));
+        GRB_TRY (GrB_assign (f, mask, GrB_MIN_UINT64, I, GrB_ALL, 0, 0));
 
         // five steps to generate the solution
         // 1. new roots (f[i] == i) revise their entries in cedge
-        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, i, f, 0));
+        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, I, f, 0));
         GRB_TRY (GrB_assign (cedge, mask, 0, inf, GrB_ALL, 0, 0));
 
         // 2. every vertex tries to know whether one of its edges is selected
@@ -304,18 +310,18 @@ int LAGraph_msf
 
         // 3. each root picks a vertex from its children to generate the solution
         GRB_TRY (GrB_assign (index, 0, 0, n, GrB_ALL, 0, 0));
-        GRB_TRY (GrB_assign (index, mask, 0, i, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_assign (index, mask, 0, I, GrB_ALL, 0, 0));
         GRB_TRY (GrB_assign (t, 0, 0, n, GrB_ALL, 0, 0));
         #if LG_SUITESPARSE_GRAPHBLAS_V10
         LG_TRY (LAGraph_FastAssign_Semiring(
-            t, NULL, GrB_MIN_UINT64, parent_v, index, NULL, 
+            t, NULL, GrB_MIN_UINT64, parent_v, index, ramp, 
             GrB_MIN_SECOND_SEMIRING_UINT64, NULL, msg
         ));
         #else
         LG_TRY (Reduce_assign (t, index, context.parent, n, msg));
         #endif
         GRB_TRY (GrB_extract (index, 0, 0, t, context.parent, n, 0));
-        GRB_TRY (GrB_eWiseMult (mask ,0, 0, GrB_EQ_UINT64, i, index, 0));
+        GRB_TRY (GrB_eWiseMult (mask ,0, 0, GrB_EQ_UINT64, I, index, 0));
 
         // 4. generate the select function (set the global pointers)
         GRB_TRY (GrB_assign (t, 0, 0, inf, GrB_ALL, 0, 0));
@@ -330,7 +336,7 @@ int LAGraph_msf
         // 5. the generated matrix may still have redundant edges
         //    remove the duplicates by GrB_mxv() and store them as tuples
         GRB_TRY (GrB_Vector_clear (edge));
-        GRB_TRY (GrB_mxv (edge, mask, GrB_MIN_UINT64, combMin, T, i, 0));
+        GRB_TRY (GrB_mxv (edge, mask, GrB_MIN_UINT64, combMin, T, I, 0));
         GRB_TRY (GrB_Vector_nvals (&num, edge));
         GRB_TRY (GrB_apply (t, 0, 0, snd, edge, 0));
         GRB_TRY (GrB_Vector_extractTuples (SI + ntuples, SJ + ntuples, &num, t));
