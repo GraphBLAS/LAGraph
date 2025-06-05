@@ -264,7 +264,8 @@ int LAGraph_msf
     ));
 
     // the main computation
-    GrB_Index nvals, diff, ntuples = 0, num;
+    GrB_Index nvals, ntuples = 0, num;
+    bool diff = false;
     GRB_TRY (GrB_Matrix_nvals (&nvals, S));
     for (int iters = 1; nvals > 0; iters++)
     {
@@ -358,8 +359,8 @@ int LAGraph_msf
             f = t;
             t = temp;
             temp = NULL;
-            GRB_TRY (GrB_reduce (&diff, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
-        } while (diff != 0);
+            GRB_TRY (GrB_Vector_reduce_BOOL (&diff, NULL, GrB_LOR_MONOID_BOOL, mask, 0));
+        } while (diff);
 
         // remove the edges in the same connected component
         GRB_TRY (GrB_Vector_extractTuples (NULL, context.parent, &n, f));
