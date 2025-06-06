@@ -47,6 +47,7 @@ static void get_snd (uint64_t *y, const uint64_t *x)
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL LAGraph_Free ((void **) &mem, msg) ;
 
+#if !LG_SUITESPARSE_GRAPHBLAS_V10
 // w[index[i]] = min(w[index[i]], s[i]) for i in [0..n-1]
 static GrB_Info Reduce_assign (GrB_Vector w,
         GrB_Vector s, GrB_Index *index, GrB_Index n, char *msg)
@@ -64,6 +65,7 @@ static GrB_Info Reduce_assign (GrB_Vector w,
     LG_FREE_ALL ;
     return GrB_SUCCESS;
 }
+#endif
 
 //****************************************************************************
 typedef struct

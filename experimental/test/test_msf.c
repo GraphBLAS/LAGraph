@@ -90,36 +90,40 @@ void test_msf (void)
         TEST_CHECK (S == NULL) ;
 
         bool sanitize = (!symmetric) ;
-
-        // compute the min spanning forest
-        C = NULL ;
-        int result = LAGraph_msf (&C, G->A, sanitize, msg) ;
-        printf ("result: %d\n", result) ;
-        LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
-
-        // check result C for A.mtx
-        if (strcmp (aname, "A.mtx") == 0)
+        for (int jit = 0 ; jit <= 1 ; jit++)
         {
-            GrB_Matrix Cgood = NULL ;
-            OK (GrB_Matrix_new (&Cgood, GrB_UINT64, n, n)) ;
-            OK (GrB_Matrix_setElement (Cgood, 1, 1, 0)) ;
-            OK (GrB_Matrix_setElement (Cgood, 1, 2, 0)) ;
-            OK (GrB_Matrix_setElement (Cgood, 1, 3, 1)) ;
-            OK (GrB_Matrix_setElement (Cgood, 1, 4, 1)) ;
-            OK (GrB_Matrix_setElement (Cgood, 1, 5, 1)) ;
-            OK (GrB_Matrix_setElement (Cgood, 1, 6, 0)) ;
-            OK (GrB_wait (Cgood, GrB_MATERIALIZE)) ;
-            printf ("\nmsf (known result):\n") ;
-            OK (LAGraph_Matrix_Print (Cgood, pr, stdout, msg)) ;
-            bool ok = false ;
-            OK (LAGraph_Matrix_IsEqual (&ok, C, Cgood, msg)) ;
-            TEST_CHECK (ok) ;
-            OK (GrB_free (&Cgood)) ;
-        }
+            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
+                jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+            // compute the min spanning forest
+            C = NULL ;
+            int result = LAGraph_msf (&C, G->A, sanitize, msg) ;
+            printf ("result: %d\n", result) ;
+            LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
-        printf ("\nmsf:\n") ;
-        OK (LAGraph_Matrix_Print (C, pr, stdout, msg)) ;
-        OK (GrB_free (&C)) ;
+            // check result C for A.mtx
+            if (strcmp (aname, "A.mtx") == 0)
+            {
+                GrB_Matrix Cgood = NULL ;
+                OK (GrB_Matrix_new (&Cgood, GrB_UINT64, n, n)) ;
+                OK (GrB_Matrix_setElement (Cgood, 1, 1, 0)) ;
+                OK (GrB_Matrix_setElement (Cgood, 1, 2, 0)) ;
+                OK (GrB_Matrix_setElement (Cgood, 1, 3, 1)) ;
+                OK (GrB_Matrix_setElement (Cgood, 1, 4, 1)) ;
+                OK (GrB_Matrix_setElement (Cgood, 1, 5, 1)) ;
+                OK (GrB_Matrix_setElement (Cgood, 1, 6, 0)) ;
+                OK (GrB_wait (Cgood, GrB_MATERIALIZE)) ;
+                printf ("\nmsf (known result):\n") ;
+                OK (LAGraph_Matrix_Print (Cgood, pr, stdout, msg)) ;
+                bool ok = false ;
+                OK (LAGraph_Matrix_IsEqual (&ok, C, Cgood, msg)) ;
+                TEST_CHECK (ok) ;
+                OK (GrB_free (&Cgood)) ;
+            }
+
+            printf ("\nmsf:\n") ;
+            OK (LAGraph_Matrix_Print (C, pr, stdout, msg)) ;
+            OK (GrB_free (&C)) ;
+        }
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
