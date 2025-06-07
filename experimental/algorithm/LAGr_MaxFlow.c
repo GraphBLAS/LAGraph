@@ -1,7 +1,3 @@
-//************************HOUSE RULES *******************
-// user defined typedefs are MF for Max Flow
-// when registered with GraphBLAS, replace MF with GrB
-// macros are all caps
 
 #include <LAGraphX.h>
 #include "LG_internal.h"
@@ -11,7 +7,9 @@
 // LG_augment_maxflow
 //------------------------------------------------------------------------------
 
-// FIXME: describe me
+// LG_augment_maxflow is a function used to sum the current excess flow of the
+// sink into the output variable f for each iteration.
+
 
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL ;
