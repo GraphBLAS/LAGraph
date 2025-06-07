@@ -1495,6 +1495,7 @@ int LAGraph_coloring_MIS
 int LAGr_MaxFlow(
     //outputs
     double* f,
+    GrB_Matrix* flow_mtx,
     //inputs
     LAGraph_Graph G,
     GrB_Index src, //source node index
