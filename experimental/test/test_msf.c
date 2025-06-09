@@ -44,7 +44,9 @@ const matrix_info files [ ] =
     { 1, "A.mtx" },
     { 1, "jagmesh7.mtx" },
     { 0, "west0067.mtx" }, // unsymmetric
-    // { 1, "bcsstk13.mtx" }, // values are too large, will overflow.
+    #if LG_SUITESPARSE_GRAPHBLAS_V10 
+    { 1, "bcsstk13.mtx" }, // overflows an INT32
+    #endif 
     { 1, "karate.mtx" },
     { 1, "ldbc-cdlp-undirected-example.mtx" },
     { 1, "ldbc-undirected-example-bool.mtx" },
@@ -96,7 +98,9 @@ void test_msf (void)
                 jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
             // compute the min spanning forest
             C = NULL ;
+            // GxB_Global_Option_set(GxB_BURBLE, true);
             int result = LAGraph_msf (&C, G->A, sanitize, msg) ;
+            // GxB_Global_Option_set(GxB_BURBLE, false);
             printf ("result: %d\n", result) ;
             LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
