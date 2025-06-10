@@ -26,24 +26,51 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
+#if LG_SUITESPARSE_GRAPHBLAS_V10
+typedef struct
+{
+    union{
+        uint64_t wInt;
+        double wFp;
+    };
+    uint64_t idx;
+} pairW;
+
+#define PAIRW               \
+"typedef struct\n"          \
+"{\n"                       \
+"    union{\n"              \
+"        uint64_t wInt;\n"  \
+"        double wFp;\n"     \
+"    };\n"                  \
+"    uint64_t idx;\n"       \
+"} pairW;\n"       
+
+typedef struct
+{
+    uint64_t    *parent;   // parent of each vertex in the spanning forest
+    pairW       *w_partner;  // partner vertex in the spanning forest
+    // GrB_Type_Code type;
+} MSF_context;
+
+//pairW works inconsistently with JIT
+#define MSF_CONT                \
+"typedef struct\n"              \
+"{\n"                           \
+"    uint64_t   *parent;\n"     \
+"    struct\n"                  \
+"    {\n"                       \
+"        union{\n"              \
+"            uint64_t wInt;\n"  \
+"            double wFp;\n"     \
+"        };\n"                  \
+"        uint64_t idx;\n"       \
+"    } *w_partner;\n"           \
+/* "    GrB_Type_Code type;\n"          */\
+"} MSF_context;\n"      
 
 
 //****************************************************************************
-typedef struct
-{
-    uint64_t *data;     // array to malloc / free
-    uint64_t *parent;   // parent of each vertex in the spanning forest
-    uint64_t *partner;  // partner vertex in the spanning forest
-    uint64_t *weight;   // minimum edge weight for each vertex
-} MSF_context;
-#define MSF_CONT    \
-"typedef struct\n"              \
-"{\n"                           \
-"    uint64_t *data;     \n"   \
-"    uint64_t *parent;   \n"   \
-"    uint64_t *partner;  \n"   \
-"    uint64_t *weight;   \n"   \
-"} MSF_context;\n"
 // generate solution:
 // for each element A(i, j), it is selected if
 //   1. weight[i] == A(i, j)    -- where weight[i] stores i's minimum edge weight
@@ -51,13 +78,13 @@ typedef struct
 
 void selectEdge (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF_context *thunk)
 {
-    (*z) = (thunk->weight[i] == *x) && (thunk->parent[j] == thunk->partner[i]);
+    (*z) = (thunk->w_partner[i].wInt == *x) && (thunk->parent[j] == thunk->w_partner[i].idx);
 }
 #define SELECTEDGE  \
 "void selectEdge\n"                                                                 \
 "(bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF_context *thunk)\n"\
 "{\n"                                                                               \
-"    (*z) = (thunk->weight[i] == *x) && (thunk->parent[j] == thunk->partner[i]);\n"\
+"    (*z) = (thunk->w_partner[i].wInt == *x) && (thunk->parent[j] == thunk->w_partner[i].idx);\n"\
 "}"
 
 // edge removal:
@@ -76,87 +103,88 @@ void removeEdge (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF
 
 //****************************************************************************
 
-
-#if LG_SUITESPARSE_GRAPHBLAS_V10
-typedef struct
+static void combine (pairW *z, const uint64_t *x, const uint64_t *y)
 {
-    uint64_t w;
-    uint64_t idx;
-} pairIntW;
-#define PAIRINTW \
-"typedef struct\n"      \
-"{\n"                   \
-"    uint64_t w;\n"     \
-"    uint64_t idx;\n"   \
-"} pairIntW;\n"         \
-
-
-static void combine (pairIntW *z, const uint64_t *x, const uint64_t *y)
-{
-    z->w = *x;
+    z->wInt = *x;
     z->idx = *y;
 }
 #define COMBINE \
-"void combine (pairIntW *z, const uint64_t *x, const uint64_t *y)\n"\
+"void combine (pairW *z, const uint64_t *x, const uint64_t *y)\n"\
 "{\n"\
-"    z->w = *x;\n"\
+"    z->wInt = *x;\n"\
 "    z->idx = *y;\n"\
 "}\n"
 
-static void get_fst (uint64_t *y, const pairIntW *x)
+static void get_fst (uint64_t *y, const pairW *x)
 {
-    *y = x->w;
+    *y = x->wInt;
 }
 #define GETFST \
-"void get_fst (uint64_t *y, const pairIntW *x)\n"\
+"void get_fst (uint64_t *y, const pairW *x)\n"\
 "{\n"\
-"    *y = x->w;\n"\
+"    *y = x->wInt;\n"\
 "}\n"
 
-static void get_snd (uint64_t *y, const pairIntW *x)
+static void get_snd (uint64_t *y, const pairW *x)
 {
     *y = x->idx;
 }
 #define GETSND \
-"void get_snd (uint64_t *y, const pairIntW *x)\n"\
+"void get_snd (uint64_t *y, const pairW *x)\n"\
 "{\n"\
 "    *y = x->idx;\n"\
 "}\n"
 
-static void tupleMin(pairIntW *z, const pairIntW *x, const pairIntW *y)
+static void tupleMinInt(pairW *z, const pairW *x, const pairW *y)
 {
-    bool xSmaller = x->w < y->w || (x->w == y->w && x->idx < y->idx);
-    z->w = (xSmaller)? x->w: y->w; 
+    bool xSmaller = x->wInt < y->wInt || (x->wInt == y->wInt && x->idx < y->idx);
+    z->wInt = (xSmaller)? x->wInt: y->wInt; 
     z->idx = (xSmaller)? x->idx: y->idx; 
 }
-#define TUPLEMIN \
-"void tupleMin(pairIntW *z, const pairIntW *x, const pairIntW *y)\n"\
+#define TUPLEMININT \
+"void tupleMinInt(pairW *z, const pairW *x, const pairW *y)\n"\
 "{\n"\
-"    bool xSmaller = x->w < y->w || (x->w == y->w && x->idx < y->idx);\n"\
-"    z->w = (xSmaller)? x->w: y->w; \n"\
+"    bool xSmaller = x->wInt < y->wInt || (x->wInt == y->wInt && x->idx < y->idx);\n"\
+"    z->wInt = (xSmaller)? x->wInt: y->wInt; \n"\
+"    z->idx = (xSmaller)? x->idx: y->idx; \n"\
+"}\n"
+static void tupleMinFp(pairW *z, const pairW *x, const pairW *y)
+{
+    bool xSmaller = x->wFp < y->wFp || (x->wFp == y->wFp && x->idx < y->idx);
+    z->wFp = (xSmaller)? x->wFp: y->wFp; 
+    z->idx = (xSmaller)? x->idx: y->idx; 
+}
+#define TUPLEMINFP \
+"void tupleMinFp(pairW *z, const pairW *x, const pairW *y)\n"\
+"{\n"\
+"    bool xSmaller = x->wFp < y->wFp || (x->wFp == y->wFp && x->idx < y->idx);\n"\
+"    z->wFp = (xSmaller)? x->wFp: y->wFp; \n"\
 "    z->idx = (xSmaller)? x->idx: y->idx; \n"\
 "}\n"
 
-static void tuple2nd(pairIntW *z, const void *x, const pairIntW *y)
+// Set z to the second -- sets bits regardless of weight type.
+static void tuple2nd(pairW *z, const void *x, const pairW *y)
 {
-    z->w = y->w; 
+    z->wInt = y->wInt; 
     z->idx = y->idx; 
 }
 #define TUPLE2ND \
-"void tuple2nd(pairIntW *z, const void *x, const pairIntW *y)\n"\
+"void tuple2nd(pairW *z, const void *x, const pairW *y)\n"\
 "{\n"\
-"    z->w = y->w;\n"\
+"    z->wInt = y->wInt;\n"\
 "    z->idx = y->idx;\n"\
 "}\n"
 
-static void tupleEq(bool *z, const pairIntW *x, const pairIntW *y)
+// Since no arithmetic is done on tuples, can compare the ints to know if they
+// are equal.
+static void tupleEq(bool *z, const pairW *x, const pairW *y)
 {
-    *z = x->w == y->w && x->idx == y->idx;
+    *z = x->wInt == y->wInt && x->idx == y->idx;
 }
 #define TUPLEEQ \
-"void tupleEq(bool *z, const pairIntW *x, const pairIntW *y)\n"\
+"void tupleEq(bool *z, const pairW *x, const pairW *y)\n"\
 "{\n"\
-"    *z = x->w == y->w && x->idx == y->idx;\n"\
+"    *z = x->wInt == y->wInt && x->idx == y->idx;\n"\
 "}\n"
 
 #undef  LG_FREE_ALL
@@ -167,7 +195,7 @@ static void tupleEq(bool *z, const pairIntW *x, const pairIntW *y)
     LAGraph_Free ((void **) &SI, msg);          \
     LAGraph_Free ((void **) &SJ, msg);          \
     LAGraph_Free ((void **) &SX, msg);          \
-    LAGraph_Free ((void **) &context.data, msg);\
+    LAGraph_Free ((void **) &context.parent, msg);\
     GrB_free (&f);                      \
     GrB_free (&I);                      \
     GrB_free (&t);                      \
@@ -201,7 +229,10 @@ int LAGraph_msf_GB10
 )
 {
     LG_CLEAR_MSG ;
-    MSF_context context = {NULL, NULL, NULL, NULL};
+    MSF_context context = {
+        .parent = NULL, .w_partner = NULL, 
+        // .type = GrB_UINT64_CODE
+    };
     GrB_Info info;
     GrB_Index n;
     GrB_Matrix S = NULL, T = NULL;
@@ -209,35 +240,75 @@ int LAGraph_msf_GB10
         edge = NULL, cedge = NULL, mask = NULL, index = NULL, ramp = NULL;
 
     GrB_Index *SI = NULL, *SJ = NULL, *SX = NULL;
-    GrB_Type contx_type = NULL, lg_pair = NULL;
+    GrB_Type contx_type = NULL, lg_pair = NULL, weight_type = NULL;
     GrB_BinaryOp comb = NULL, pairMin = NULL, pairSec = NULL, pairEq = NULL;
     GrB_Monoid pairMin_monoid = NULL;
     GrB_Semiring minComb = NULL, pairMin2nd = NULL;
     GrB_UnaryOp fst = NULL, snd = NULL;
-
+    int edge_h = GrB_DEFAULT;
+    uint64_t edge_size = 0, edge_n = 0; 
     GrB_IndexUnaryOp s1 = NULL, s2 = NULL;
-    if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
 
+
+    //--------------------------------------------------------------------------
+    // Check inputs
+    //--------------------------------------------------------------------------
+    
+    if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
     GrB_Index ncols ;
     GRB_TRY (GrB_Matrix_nrows (&n, A));
     GRB_TRY (GrB_Matrix_ncols (&ncols, A));
     LG_ASSERT(n == ncols, GrB_DIMENSION_MISMATCH) ;
 
+    GrB_Type_Code tcode = 0;
     if (sanitize)
     {
+        GrB_Matrix_get_INT32(A, &(tcode), GrB_EL_TYPE_CODE);
         // S = A+A'
-        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n));
-        GRB_TRY (GrB_eWiseAdd (S, 0, 0, GrB_PLUS_UINT64, A, A, GrB_DESC_T1));
+        switch (tcode)
+        {
+        case GrB_INT8_CODE:
+        case GrB_INT16_CODE:
+        case GrB_INT32_CODE:
+        case GrB_INT64_CODE:
+            // TODO handle negative weights here.
+        case GrB_BOOL_CODE:
+        case GrB_UINT8_CODE:
+        case GrB_UINT16_CODE:
+        case GrB_UINT32_CODE:
+        case GrB_UINT64_CODE:
+            tcode = GrB_UINT64_CODE;
+            GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n));
+            GRB_TRY (GrB_Matrix_eWiseAdd_BinaryOp 
+                (S, NULL, NULL, GrB_MIN_UINT64, A, A, GrB_DESC_T1));
+            break;
+        case GrB_FP32_CODE:
+        case GrB_FP64_CODE:
+            tcode = GrB_FP64_CODE;
+            GRB_TRY (GrB_Matrix_new (&S, GrB_FP64, n, n));
+            GRB_TRY (GrB_Matrix_eWiseAdd_BinaryOp 
+                (S, NULL, NULL, GrB_MIN_FP64, A, A, GrB_DESC_T1));
+            break;
+        default:
+            LG_ASSERT(false, GrB_DOMAIN_MISMATCH) ;
+            break;
+        }
+        weight_type = tcode == GrB_UINT64_CODE? GrB_UINT64: GrB_FP64;
     }
     else
     {
-        // Use the input as-is, and assume it is GrB_UINT64 and symmetric
-        GRB_TRY (GrB_Matrix_dup (&S, A));
+        // Use the input as-is, and assume it is symmetric
+        GrB_Matrix_get_INT32(A, &(tcode), GrB_EL_TYPE_CODE);
+        LG_ASSERT(tcode < 12 && tcode > 0, GrB_DOMAIN_MISMATCH);
+        tcode = (tcode == GrB_FP32_CODE || tcode == GrB_FP64_CODE)? 
+            GrB_FP64_CODE: GrB_UINT64_CODE;
+        weight_type = tcode == GrB_UINT64_CODE? GrB_UINT64: GrB_FP64;
+        GRB_TRY (GrB_Matrix_new (&S, weight_type, n, n));
+        GRB_TRY (GrB_Matrix_assign
+                (S, NULL, NULL, A, GrB_ALL, n, GrB_ALL, n, NULL));
     }
-
-    GRB_TRY (GxB_Type_new(&lg_pair, sizeof(pairIntW), "pairIntW", PAIRINTW));
-
-    GRB_TRY (GrB_Matrix_new (&T, GrB_UINT64, n, n));
+    GRB_TRY (GxB_Type_new(&lg_pair, sizeof(pairW), "pairW", PAIRW));
+    GRB_TRY (GrB_Matrix_new (&T, weight_type, n, n));
     GRB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&f, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&ramp, GrB_INT64, n + 1));
@@ -253,10 +324,7 @@ int LAGraph_msf_GB10
     LG_TRY (LAGraph_Malloc ((void **) &SX, 2*n, sizeof (GrB_Index), msg)) ;
 
     // context arrays
-    LG_TRY (LAGraph_Malloc ((void **) &context.data, 3 * n, sizeof (uint64_t), msg)) ;
-    context.parent  = context.data;
-    context.partner = context.data + n;
-    context.weight  = context.data + 2 * n;
+    LG_TRY (LAGraph_Malloc ((void **) &context.parent, n, sizeof (uint64_t), msg)) ;
 
     // prepare vectors
     for (uint64_t i = 0; i < n; i++)
@@ -273,16 +341,28 @@ int LAGraph_msf_GB10
     GRB_TRY (GxB_Vector_load(parent_v, (void **) &context.parent, 
         GrB_UINT64, n, 3 * n * sizeof (uint64_t), GxB_IS_READONLY, NULL));
     // semiring & monoid
-    pairIntW inf = {UINT64_MAX, UINT64_MAX};
+    pairW inf = {.wInt = UINT64_MAX, .idx = UINT64_MAX};
+    if(tcode == GrB_FP64_CODE) inf.wFp = INFINITY;
 
     GRB_TRY (GxB_BinaryOp_new (
         &comb, (GxB_binary_function) combine,
-        lg_pair, GrB_UINT64, GrB_UINT64, "combine", COMBINE
+        lg_pair, weight_type, GrB_UINT64, "combine", COMBINE
     ));
-    GRB_TRY (GxB_BinaryOp_new (
-        &pairMin, (GxB_binary_function) tupleMin, 
-        lg_pair, lg_pair, lg_pair, "tupleMin", TUPLEMIN
-    ));
+    if(tcode == GrB_UINT64_CODE)
+    {
+        GRB_TRY (GxB_BinaryOp_new (
+            &pairMin, (GxB_binary_function) tupleMinInt, 
+            lg_pair, lg_pair, lg_pair, "tupleMinInt", TUPLEMININT
+        ));
+    }
+    else
+    {
+        GRB_TRY (GxB_BinaryOp_new (
+            &pairMin, (GxB_binary_function) tupleMinFp, 
+            lg_pair, lg_pair, lg_pair, "tupleMinFp", TUPLEMINFP
+        ));
+    }
+    
     GRB_TRY (GxB_BinaryOp_new (
         &pairSec, (GxB_binary_function) tuple2nd, 
         lg_pair, GrB_BOOL, lg_pair, "tuple2nd", TUPLE2ND
@@ -295,7 +375,7 @@ int LAGraph_msf_GB10
     GRB_TRY (GrB_Semiring_new (&minComb, pairMin_monoid, comb));
     GRB_TRY (GrB_Semiring_new (&pairMin2nd, pairMin_monoid, pairSec));
     GRB_TRY (GxB_UnaryOp_new (
-        &fst, (GxB_unary_function) get_fst, GrB_UINT64, lg_pair, 
+        &fst, (GxB_unary_function) get_fst, weight_type, lg_pair, 
         "get_fst", GETFST));
     GRB_TRY (GxB_UnaryOp_new (
         &snd, (GxB_unary_function) get_snd, GrB_UINT64, lg_pair,
@@ -307,7 +387,7 @@ int LAGraph_msf_GB10
         
     // ops for GrB_select
     GRB_TRY(GxB_IndexUnaryOp_new (
-        &s1, (GxB_index_unary_function) selectEdge, GrB_BOOL, GrB_UINT64, 
+        &s1, (GxB_index_unary_function) selectEdge, GrB_BOOL, weight_type, 
         contx_type, "selectEdge", SELECTEDGE
     ));
     GRB_TRY(GxB_IndexUnaryOp_new (
@@ -321,6 +401,9 @@ int LAGraph_msf_GB10
     GRB_TRY (GrB_Matrix_nvals (&nvals, S));
     for (int iters = 1; nvals > 0; iters++)
     {
+        #ifdef DEBUG
+        LG_ASSERT(iters < 100, LAGRAPH_CONVERGENCE_FAILURE);
+        #endif
         // every vertex points to a root vertex at the beginning
         // edge[u] = u's minimum edge (weight and index are encoded together)
         GRB_TRY (GrB_Vector_assign_UDT (
@@ -366,15 +449,13 @@ int LAGraph_msf_GB10
         GRB_TRY (GrB_eWiseMult (mask ,0, 0, GrB_EQ_UINT64, I, index, 0));
 
         // 4. generate the select function (set the global pointers)
-        GRB_TRY (GrB_Vector_assign_UINT64 (
-            t, NULL, NULL, UINT64_MAX, GrB_ALL, n, NULL));
-        GRB_TRY (GrB_apply (t, mask, 0, fst, edge, 0));
-        GRB_TRY (GrB_Vector_extractTuples (NULL, context.weight, &n, t));
-        GRB_TRY (GrB_Vector_assign_UINT64 (
-            t, NULL, NULL, UINT64_MAX, GrB_ALL, n, NULL));
-        GRB_TRY (GrB_apply (t, mask, 0, snd, edge, 0));
-        GRB_TRY (GrB_Vector_extractTuples (NULL, context.partner, &n, t));
+        GRB_TRY (GxB_Vector_unload(
+            edge, (void **) &context.w_partner, &lg_pair, &edge_n, &edge_size,
+            &edge_h, NULL)) ;
         GRB_TRY (GrB_Matrix_select_UDT (T, NULL, NULL, s1, S, &context, NULL));
+        GRB_TRY (GxB_Vector_load(
+            edge, (void **) &context.w_partner, lg_pair, edge_n, edge_size,
+            edge_h, NULL)) ;
         GRB_TRY (GrB_Vector_clear (t));
 
         // 5. the generated matrix may still have redundant edges
@@ -384,9 +465,25 @@ int LAGraph_msf_GB10
         GRB_TRY (GrB_Vector_nvals (&num, edge));
         GRB_TRY (GrB_apply (t, 0, 0, snd, edge, 0));
         GRB_TRY (GrB_Vector_extractTuples (NULL, SJ + ntuples, &num, t));
-        GRB_TRY (GrB_apply (t, 0, 0, fst, edge, 0));
-        GRB_TRY (GrB_Vector_extractTuples (SI + ntuples, SX + ntuples, &num, t));
-        GRB_TRY (GrB_Vector_clear (t));
+        if(tcode == GrB_UINT64_CODE)
+        {
+            GRB_TRY (GrB_apply (t, 0, 0, fst, edge, 0));
+            GRB_TRY (GrB_Vector_extractTuples_UINT64 (
+                SI + ntuples, SX + ntuples, &num, t));
+            GRB_TRY (GrB_Vector_clear (t));
+        }
+        else
+        {
+            GRB_TRY (GrB_free(&t)) ;
+            GRB_TRY (GrB_Vector_new(&t, weight_type, n));
+            GRB_TRY (GrB_apply (t, 0, 0, fst, edge, 0));
+            GRB_TRY (GrB_Vector_extractTuples_FP64 (
+                SI + ntuples, (double *) SX + ntuples, &num, t));
+            GRB_TRY (GrB_Vector_clear (t));
+            GRB_TRY (GrB_free(&t)) ;
+            GRB_TRY (GrB_Vector_new(&t, GrB_UINT64, n));
+        }
+        
         ntuples += num;
 
         // path halving until every vertex points on a root
@@ -406,7 +503,14 @@ int LAGraph_msf_GB10
         if (nvals == 0) break;
     }
     GRB_TRY (GrB_Matrix_clear (T));
-    GRB_TRY (GrB_Matrix_build (T, SI, SJ, SX, ntuples, GxB_IGNORE_DUP));
+    if(tcode == GrB_UINT64_CODE)
+    {
+        GRB_TRY (GrB_Matrix_build_UINT64 (T, SI, SJ, (uint64_t *)SX, ntuples, GxB_IGNORE_DUP));
+    }
+    else
+    {
+        GRB_TRY (GrB_Matrix_build_FP64 (T, SI, SJ, (double *)SX, ntuples, GxB_IGNORE_DUP));
+    }
     *result = T;
     T = NULL ;
 
@@ -453,6 +557,57 @@ static GrB_Info Reduce_assign (GrB_Vector w,
     LG_FREE_ALL ;
     return GrB_SUCCESS;
 }
+
+typedef struct
+{
+    uint64_t *data;     // array to malloc / free
+    uint64_t *parent;   // parent of each vertex in the spanning forest
+    uint64_t *partner;  // partner vertex in the spanning forest
+    uint64_t *weight;
+    GrB_Type_Code type;
+} MSF_context;
+#define MSF_CONT    \
+"typedef struct\n"              \
+"{\n"                           \
+"    uint64_t *data;     \n"   \
+"    uint64_t *parent;   \n"   \
+"    uint64_t *partner;  \n"   \
+"    uint64_t *weight;   \n"   \
+"} MSF_context;\n"
+
+//****************************************************************************
+// generate solution:
+// for each element A(i, j), it is selected if
+//   1. weight[i] == A(i, j)    -- where weight[i] stores i's minimum edge weight
+//   2. parent[j] == partner[i] -- j belongs to the specified connected component
+
+void selectEdge (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF_context *thunk)
+{
+    (*z) = (thunk->weight[i] == *x) && (thunk->parent[j] == thunk->partner[i]);
+}
+#define SELECTEDGE  \
+"void selectEdge\n"                                                                 \
+"(bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF_context *thunk)\n"\
+"{\n"                                                                               \
+"    (*z) = (thunk->weight[i] == *x) && (thunk->parent[j] == thunk->partner[i]);\n"\
+"}"
+
+// edge removal:
+// A(i, j) is removed when parent[i] == parent[j]
+
+void removeEdge (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF_context *thunk)
+{
+    (*z) = (thunk->parent[i] != thunk->parent[j]);
+}
+#define REMOVEEDGE  \
+"void removeEdge\n"                                                                 \
+"(bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF_context *thunk)\n"\
+"{\n"                                                                               \
+"    (*z) = (thunk->parent[i] != thunk->parent[j]);\n"                              \
+"}"
+
+//****************************************************************************
+
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL                             \
 {                                               \
@@ -507,7 +662,7 @@ int LAGraph_msf
     GrB_BinaryOp comb = NULL;
     GrB_Semiring minComb = NULL;
     GrB_UnaryOp fst = NULL, snd = NULL;
-
+    GrB_Type_Code tcode = 0;
     GrB_IndexUnaryOp s1 = NULL, s2 = NULL;
     if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
 
@@ -524,16 +679,15 @@ int LAGraph_msf
         &max_val, NULL, GrB_MAX_MONOID_UINT64, A, NULL)) ;
     LG_ASSERT_MSG (max_val <= INT32_MAX, 
         GrB_INVALID_VALUE, "Matrix values too large. Exiting to prevent overflow") ;
+    GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n));
+    GrB_Matrix_get_INT32(A, (int *) (&tcode), GrB_EL_TYPE_CODE);
+    LG_ASSERT(tcode < 12 && tcode > 0, GrB_DOMAIN_MISMATCH);
+    GRB_TRY (GrB_Matrix_assign (
+            S, NULL, NULL, A, GrB_ALL, n, GrB_ALL, n, NULL));
     if (sanitize)
     {
         // S = A+A'
-        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n));
-        GRB_TRY (GrB_eWiseAdd (S, 0, 0, GrB_PLUS_UINT64, A, A, GrB_DESC_T1));
-    }
-    else
-    {
-        // Use the input as-is, and assume it is GrB_UINT64 and symmetric
-        GRB_TRY (GrB_Matrix_dup (&S, A));
+        GRB_TRY (GrB_eWiseAdd (S, 0, 0, GrB_PLUS_UINT64, S, S, GrB_DESC_T1));
     }
 
     GRB_TRY (GrB_Matrix_new (&T, GrB_UINT64, n, n));

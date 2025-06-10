@@ -25,9 +25,10 @@
 #include <LAGraph_test.h>
 
 char msg [LAGRAPH_MSG_LEN] ;
-LAGraph_Graph G = NULL ;
+LAGraph_Graph G = NULL, G_C = NULL;
 GrB_Matrix A = NULL ;
 GrB_Matrix S = NULL ;
+GrB_Matrix S_C = NULL ;
 GrB_Matrix C = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
@@ -36,23 +37,27 @@ typedef struct
 {
     bool symmetric ;
     const char *name ;
+    uint64_t ans_n;
+    const uint64_t *ans_i;
+    const uint64_t *ans_j;
 }
 matrix_info ;
-
+const uint64_t A_mtx_i [] = {1, 2, 3, 4, 5, 6};
+const uint64_t A_mtx_j [] = {0, 0, 1, 1, 1, 0};
 const matrix_info files [ ] =
 {
-    { 1, "A.mtx" },
-    { 1, "jagmesh7.mtx" },
-    { 0, "west0067.mtx" }, // unsymmetric
+    { 1, "A.mtx", 6, A_mtx_i, A_mtx_j},
+    { 1, "jagmesh7.mtx", 1137, NULL, NULL},
+    { 0, "west0067.mtx", 66, NULL, NULL}, // unsymmetric
     #if LG_SUITESPARSE_GRAPHBLAS_V10 
-    { 1, "bcsstk13.mtx" }, // overflows an INT32
+    { 1, "bcsstk13.mtx", 2002, NULL, NULL}, // overflows an INT32
     #endif 
-    { 1, "karate.mtx" },
-    { 1, "ldbc-cdlp-undirected-example.mtx" },
-    { 1, "ldbc-undirected-example-bool.mtx" },
-    { 1, "ldbc-undirected-example-unweighted.mtx" },
-    { 1, "ldbc-undirected-example.mtx" },
-    { 1, "ldbc-wcc-example.mtx" },
+    { 1, "karate.mtx", 33, NULL, NULL},
+    { 1, "ldbc-cdlp-undirected-example.mtx", 7, NULL, NULL},
+    { 1, "ldbc-undirected-example-bool.mtx", 8, NULL, NULL},
+    { 1, "ldbc-undirected-example-unweighted.mtx", 8, NULL, NULL},
+    { 1, "ldbc-undirected-example.mtx", 8, NULL, NULL},
+    { 1, "ldbc-wcc-example.mtx", 9, NULL, NULL},
     { 0, "" },
 } ;
 
@@ -68,6 +73,7 @@ void test_msf (void)
         // load the matrix as A
         const char *aname = files [k].name ;
         bool symmetric = files [k].symmetric ;
+        uint64_t branches = 0;
         if (strlen (aname) == 0) break;
         printf ("\n================================== %s:\n", aname) ;
         TEST_CASE (aname) ;
@@ -78,17 +84,10 @@ void test_msf (void)
         fclose (f) ;
 
         // ensure A is uint64
-        GrB_Index nrows, ncols ;
-        OK (GrB_Matrix_nrows (&nrows, A)) ;
-        OK (GrB_Matrix_ncols (&ncols, A)) ;
-        OK (GrB_Matrix_new (&S, GrB_UINT64, nrows, ncols)) ;
-        OK (GrB_assign (S, NULL, NULL, A, GrB_ALL, nrows, GrB_ALL, ncols,
-            NULL)) ;
-        GrB_Index n = nrows ;
-        OK (GrB_free (&A)) ;
+        GrB_Index n = 0;
+        OK (GrB_Matrix_nrows (&n, A)) ;
 
         // construct a directed graph G with adjacency matrix S
-        OK (LAGraph_New (&G, &S, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (S == NULL) ;
 
         bool sanitize = (!symmetric) ;
@@ -99,36 +98,61 @@ void test_msf (void)
             // compute the min spanning forest
             C = NULL ;
             // GxB_Global_Option_set(GxB_BURBLE, true);
-            int result = LAGraph_msf (&C, G->A, sanitize, msg) ;
+            int result = LAGraph_msf (&C, A, sanitize, msg) ;
             // GxB_Global_Option_set(GxB_BURBLE, false);
             printf ("result: %d\n", result) ;
+            OK(result);
+            GrB_Matrix_nvals(&branches, C);
+            TEST_CHECK(branches == files[k].ans_n);
             LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
-
-            // check result C for A.mtx
-            if (strcmp (aname, "A.mtx") == 0)
+            
+            OK (GrB_Matrix_new(&S, GrB_BOOL, n, n)) ;
+            OK (GrB_Matrix_assign_BOOL(
+                S, A, NULL, (bool) true, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+            if(!symmetric)
             {
-                GrB_Matrix Cgood = NULL ;
-                OK (GrB_Matrix_new (&Cgood, GrB_UINT64, n, n)) ;
-                OK (GrB_Matrix_setElement (Cgood, 1, 1, 0)) ;
-                OK (GrB_Matrix_setElement (Cgood, 1, 2, 0)) ;
-                OK (GrB_Matrix_setElement (Cgood, 1, 3, 1)) ;
-                OK (GrB_Matrix_setElement (Cgood, 1, 4, 1)) ;
-                OK (GrB_Matrix_setElement (Cgood, 1, 5, 1)) ;
-                OK (GrB_Matrix_setElement (Cgood, 1, 6, 0)) ;
-                OK (GrB_wait (Cgood, GrB_MATERIALIZE)) ;
-                printf ("\nmsf (known result):\n") ;
-                OK (LAGraph_Matrix_Print (Cgood, pr, stdout, msg)) ;
-                bool ok = false ;
-                OK (LAGraph_Matrix_IsEqual (&ok, C, Cgood, msg)) ;
+                OK (GrB_Matrix_eWiseAdd_BinaryOp(
+                    S, NULL, NULL, GxB_ANY_BOOL, S, S, GrB_DESC_T1)) ;
+            }
+            OK (GrB_Matrix_new(&S_C, GrB_BOOL, n, n)) ;
+            OK (GrB_Matrix_assign_BOOL(
+                S_C, C, NULL, (bool) true, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+            OK (GrB_Matrix_eWiseAdd_BinaryOp(
+                S_C, NULL, NULL, GxB_ANY_BOOL, S_C, S_C, GrB_DESC_T1)) ;
+            OK(LAGraph_New(&G, &S, LAGraph_ADJACENCY_UNDIRECTED, msg));
+            OK(LAGraph_New(&G_C, &S_C, LAGraph_ADJACENCY_UNDIRECTED, msg));
+
+            
+            //Check that the graph has all the same ccs.
+            GrB_Vector cc0 = NULL, cc1 = NULL;
+            OK (LAGr_ConnectedComponents(&cc0, G, msg));
+            OK (LAGr_ConnectedComponents(&cc1, G_C, msg));
+            bool ok = false ;
+            OK (LAGraph_Vector_IsEqual(&ok, cc0, cc1, msg));
+            TEST_CHECK(ok);
+            // check result C for A.mtx
+            if (files[k].ans_i && files[k].ans_j)
+            {
+                uint64_t *result_i = NULL, *result_j = NULL;
+                OK (LAGraph_Malloc((void **) &result_i, branches, sizeof(uint64_t), msg));
+                OK (LAGraph_Malloc((void **) &result_j, branches, sizeof(uint64_t), msg));
+                OK (GrB_Matrix_extractTuples_UINT64(result_i, result_j, NULL, &branches, C));
+                ok = true;
+                for (int i = 0; i < branches; ++i)
+                {
+                    ok = ok && (result_i[i] == files[k].ans_i[i]);
+                    ok = ok && (result_j[i] == files[k].ans_j[i]);
+                }
                 TEST_CHECK (ok) ;
-                OK (GrB_free (&Cgood)) ;
             }
 
             printf ("\nmsf:\n") ;
             OK (LAGraph_Matrix_Print (C, pr, stdout, msg)) ;
+            OK (LAGraph_Delete (&G, msg)) ;
+            OK (LAGraph_Delete (&G_C, msg)) ;
             OK (GrB_free (&C)) ;
         }
-        OK (LAGraph_Delete (&G, msg)) ;
+        OK (GrB_free (&A)) ;
     }
 
     LAGraph_Finalize (msg) ;
@@ -152,6 +176,10 @@ void test_errors (void)
     OK (GrB_Matrix_new (&A, GrB_UINT64, 3, 4)) ;
     result = LAGraph_msf (&C, A, true, msg) ;
     TEST_CHECK (result == GrB_DIMENSION_MISMATCH) ;
+    // A must be square
+    OK (GrB_Matrix_new (&A, GxB_FC32, 4, 4)) ;
+    result = LAGraph_msf (&C, A, true, msg) ;
+    TEST_CHECK (result == GrB_DOMAIN_MISMATCH) ;
 
     OK (GrB_free (&A)) ;
     LAGraph_Finalize (msg) ;
