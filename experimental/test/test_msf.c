@@ -44,6 +44,10 @@ typedef struct
 matrix_info ;
 const uint64_t A_mtx_i [] = {1, 2, 3, 4, 5, 6};
 const uint64_t A_mtx_j [] = {0, 0, 1, 1, 1, 0};
+const uint64_t mtx8u_i [] = {1, 2, 3, 4, 5, 6};
+const uint64_t mtx8u_j [] = {4, 3, 0, 6, 2, 3};
+const uint64_t mtx8_i [] = {1, 2, 3, 4, 5, 6};
+const uint64_t mtx8_j [] = {4, 3, 0, 6, 2, 3};
 const matrix_info files [ ] =
 {
     { 1, "A.mtx", 6, A_mtx_i, A_mtx_j},
@@ -52,6 +56,8 @@ const matrix_info files [ ] =
     #if LG_SUITESPARSE_GRAPHBLAS_V10 
     { 1, "bcsstk13.mtx", 2002, NULL, NULL}, // overflows an INT32
     #endif 
+    { 0, "matrix_uint8.mtx", 6, mtx8u_i, mtx8u_j},
+    { 0, "matrix_int8.mtx", 6, mtx8_i, mtx8_j},
     { 1, "karate.mtx", 33, NULL, NULL},
     { 1, "ldbc-cdlp-undirected-example.mtx", 7, NULL, NULL},
     { 1, "ldbc-undirected-example-bool.mtx", 8, NULL, NULL},
@@ -90,6 +96,7 @@ void test_msf (void)
         // construct a directed graph G with adjacency matrix S
         TEST_CHECK (S == NULL) ;
 
+        OK (LAGraph_Matrix_Print (A, GxB_SHORT, stdout, msg)) ;
         bool sanitize = (!symmetric) ;
         for (int jit = 0 ; jit <= 1 ; jit++)
         {

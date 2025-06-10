@@ -30,7 +30,7 @@
 typedef struct
 {
     union{
-        uint64_t wInt;
+        int64_t wInt;
         double wFp;
     };
     uint64_t idx;
@@ -40,7 +40,7 @@ typedef struct
 "typedef struct\n"          \
 "{\n"                       \
 "    union{\n"              \
-"        uint64_t wInt;\n"  \
+"        int64_t wInt;\n"  \
 "        double wFp;\n"     \
 "    };\n"                  \
 "    uint64_t idx;\n"       \
@@ -61,7 +61,7 @@ typedef struct
 "    struct\n"                  \
 "    {\n"                       \
 "        union{\n"              \
-"            uint64_t wInt;\n"  \
+"            int64_t wInt;\n"  \
 "            double wFp;\n"     \
 "        };\n"                  \
 "        uint64_t idx;\n"       \
@@ -76,7 +76,7 @@ typedef struct
 //   1. weight[i] == A(i, j)    -- where weight[i] stores i's minimum edge weight
 //   2. parent[j] == partner[i] -- j belongs to the specified connected component
 
-void selectEdge (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF_context *thunk)
+void selectEdge (bool *z, const int64_t *x, GrB_Index i, GrB_Index j, const MSF_context *thunk)
 {
     (*z) = (thunk->w_partner[i].wInt == *x) && (thunk->parent[j] == thunk->w_partner[i].idx);
 }
@@ -90,7 +90,7 @@ void selectEdge (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF
 // edge removal:
 // A(i, j) is removed when parent[i] == parent[j]
 
-void removeEdge (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF_context *thunk)
+void removeEdge (bool *z, const int64_t *x, GrB_Index i, GrB_Index j, const MSF_context *thunk)
 {
     (*z) = (thunk->parent[i] != thunk->parent[j]);
 }
@@ -103,7 +103,7 @@ void removeEdge (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const MSF
 
 //****************************************************************************
 
-static void combine (pairW *z, const uint64_t *x, const uint64_t *y)
+static void combine (pairW *z, const int64_t *x, const uint64_t *y)
 {
     z->wInt = *x;
     z->idx = *y;
@@ -239,7 +239,8 @@ int LAGraph_msf_GB10
     GrB_Vector f = NULL, I = NULL, t = NULL, parent_v = NULL, tedge = NULL,
         edge = NULL, cedge = NULL, mask = NULL, index = NULL, ramp = NULL;
 
-    GrB_Index *SI = NULL, *SJ = NULL, *SX = NULL;
+    GrB_Index *SI = NULL, *SJ = NULL;
+    int64_t *SX = NULL;
     GrB_Type contx_type = NULL, lg_pair = NULL, weight_type = NULL;
     GrB_BinaryOp comb = NULL, pairMin = NULL, pairSec = NULL, pairEq = NULL;
     GrB_Monoid pairMin_monoid = NULL;
@@ -271,16 +272,15 @@ int LAGraph_msf_GB10
         case GrB_INT16_CODE:
         case GrB_INT32_CODE:
         case GrB_INT64_CODE:
-            // TODO handle negative weights here.
         case GrB_BOOL_CODE:
         case GrB_UINT8_CODE:
         case GrB_UINT16_CODE:
         case GrB_UINT32_CODE:
         case GrB_UINT64_CODE:
-            tcode = GrB_UINT64_CODE;
-            GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n));
+            tcode = GrB_INT64_CODE;
+            GRB_TRY (GrB_Matrix_new (&S, GrB_INT64, n, n));
             GRB_TRY (GrB_Matrix_eWiseAdd_BinaryOp 
-                (S, NULL, NULL, GrB_MIN_UINT64, A, A, GrB_DESC_T1));
+                (S, NULL, NULL, GrB_MIN_INT64, A, A, GrB_DESC_T1));
             break;
         case GrB_FP32_CODE:
         case GrB_FP64_CODE:
@@ -293,7 +293,7 @@ int LAGraph_msf_GB10
             LG_ASSERT(false, GrB_DOMAIN_MISMATCH) ;
             break;
         }
-        weight_type = tcode == GrB_UINT64_CODE? GrB_UINT64: GrB_FP64;
+        weight_type = tcode == GrB_INT64_CODE? GrB_INT64: GrB_FP64;
     }
     else
     {
@@ -301,8 +301,8 @@ int LAGraph_msf_GB10
         GrB_Matrix_get_INT32(A, &(tcode), GrB_EL_TYPE_CODE);
         LG_ASSERT(tcode < 12 && tcode > 0, GrB_DOMAIN_MISMATCH);
         tcode = (tcode == GrB_FP32_CODE || tcode == GrB_FP64_CODE)? 
-            GrB_FP64_CODE: GrB_UINT64_CODE;
-        weight_type = tcode == GrB_UINT64_CODE? GrB_UINT64: GrB_FP64;
+            GrB_FP64_CODE: GrB_INT64_CODE;
+        weight_type = tcode == GrB_INT64_CODE? GrB_INT64: GrB_FP64;
         GRB_TRY (GrB_Matrix_new (&S, weight_type, n, n));
         GRB_TRY (GrB_Matrix_assign
                 (S, NULL, NULL, A, GrB_ALL, n, GrB_ALL, n, NULL));
@@ -341,14 +341,14 @@ int LAGraph_msf_GB10
     GRB_TRY (GxB_Vector_load(parent_v, (void **) &context.parent, 
         GrB_UINT64, n, 3 * n * sizeof (uint64_t), GxB_IS_READONLY, NULL));
     // semiring & monoid
-    pairW inf = {.wInt = UINT64_MAX, .idx = UINT64_MAX};
+    pairW inf = {.wInt = INT64_MAX, .idx = UINT64_MAX};
     if(tcode == GrB_FP64_CODE) inf.wFp = INFINITY;
 
     GRB_TRY (GxB_BinaryOp_new (
         &comb, (GxB_binary_function) combine,
         lg_pair, weight_type, GrB_UINT64, "combine", COMBINE
     ));
-    if(tcode == GrB_UINT64_CODE)
+    if(tcode == GrB_INT64_CODE)
     {
         GRB_TRY (GxB_BinaryOp_new (
             &pairMin, (GxB_binary_function) tupleMinInt, 
@@ -468,7 +468,7 @@ int LAGraph_msf_GB10
         if(tcode == GrB_UINT64_CODE)
         {
             GRB_TRY (GrB_apply (t, 0, 0, fst, edge, 0));
-            GRB_TRY (GrB_Vector_extractTuples_UINT64 (
+            GRB_TRY (GrB_Vector_extractTuples_INT64 (
                 SI + ntuples, SX + ntuples, &num, t));
             GRB_TRY (GrB_Vector_clear (t));
         }
@@ -505,7 +505,7 @@ int LAGraph_msf_GB10
     GRB_TRY (GrB_Matrix_clear (T));
     if(tcode == GrB_UINT64_CODE)
     {
-        GRB_TRY (GrB_Matrix_build_UINT64 (T, SI, SJ, (uint64_t *)SX, ntuples, GxB_IGNORE_DUP));
+        GRB_TRY (GrB_Matrix_build_INT64 (T, SI, SJ, (int64_t *)SX, ntuples, GxB_IGNORE_DUP));
     }
     else
     {
