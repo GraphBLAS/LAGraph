@@ -30,6 +30,7 @@ GrB_Matrix A = NULL ;
 GrB_Matrix S = NULL ;
 GrB_Matrix S_C = NULL ;
 GrB_Matrix C = NULL ;
+GrB_Matrix Ans = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -55,9 +56,9 @@ const matrix_info files [ ] =
     { 0, "west0067.mtx", 66, NULL, NULL}, // unsymmetric
     #if LG_SUITESPARSE_GRAPHBLAS_V10 
     { 1, "bcsstk13.mtx", 2002, NULL, NULL}, // overflows an INT32
+    { 0, "matrix_int8.mtx", 6, mtx8_i, mtx8_j},
     #endif 
     { 0, "matrix_uint8.mtx", 6, mtx8u_i, mtx8u_j},
-    { 0, "matrix_int8.mtx", 6, mtx8_i, mtx8_j},
     { 1, "karate.mtx", 33, NULL, NULL},
     { 1, "ldbc-cdlp-undirected-example.mtx", 7, NULL, NULL},
     { 1, "ldbc-undirected-example-bool.mtx", 8, NULL, NULL},
@@ -72,7 +73,9 @@ void test_msf (void)
 {
     #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
-
+    GrB_Scalar zeroB = NULL;
+    GrB_Scalar_new(&zeroB, GrB_BOOL);
+    GrB_Scalar_setElement_BOOL(zeroB, false);
     for (int k = 0 ; ; k++)
     {
 
@@ -98,6 +101,15 @@ void test_msf (void)
 
         OK (LAGraph_Matrix_Print (A, GxB_SHORT, stdout, msg)) ;
         bool sanitize = (!symmetric) ;
+
+        if (files[k].ans_i && files[k].ans_j)
+        {
+            OK (GrB_Matrix_new(&Ans, GrB_BOOL, n, n)) ;
+            OK (GxB_Matrix_build_Scalar(
+                Ans, files[k].ans_i, files[k].ans_j, zeroB, files[k].ans_n
+            )) ;
+        }
+        
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
             OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
@@ -140,16 +152,13 @@ void test_msf (void)
             // check result C for A.mtx
             if (files[k].ans_i && files[k].ans_j)
             {
-                uint64_t *result_i = NULL, *result_j = NULL;
-                OK (LAGraph_Malloc((void **) &result_i, branches, sizeof(uint64_t), msg));
-                OK (LAGraph_Malloc((void **) &result_j, branches, sizeof(uint64_t), msg));
-                OK (GrB_Matrix_extractTuples_UINT64(result_i, result_j, NULL, &branches, C));
-                ok = true;
-                for (int i = 0; i < branches; ++i)
-                {
-                    ok = ok && (result_i[i] == files[k].ans_i[i]);
-                    ok = ok && (result_j[i] == files[k].ans_j[i]);
-                }
+                OK (GrB_Matrix_eWiseMult_BinaryOp(
+                    Ans, NULL, GxB_LOR_BOOL, GrB_ONEB_BOOL, Ans, C, NULL)) ;
+                OK (GrB_Matrix_eWiseMult_BinaryOp(
+                    Ans, NULL, GxB_LOR_BOOL, GrB_ONEB_BOOL, Ans, C, GrB_DESC_T1
+                )) ;
+                OK (GrB_Matrix_reduce_BOOL(
+                    &ok, NULL, GrB_LAND_MONOID_BOOL, Ans, NULL));
                 TEST_CHECK (ok) ;
             }
 
@@ -157,11 +166,14 @@ void test_msf (void)
             OK (LAGraph_Matrix_Print (C, pr, stdout, msg)) ;
             OK (LAGraph_Delete (&G, msg)) ;
             OK (LAGraph_Delete (&G_C, msg)) ;
+            OK (GrB_free (&cc0)) ;
+            OK (GrB_free (&cc1)) ;
             OK (GrB_free (&C)) ;
         }
+        OK (GrB_free(&Ans)) ;
         OK (GrB_free (&A)) ;
     }
-
+    GrB_free(&zeroB);
     LAGraph_Finalize (msg) ;
     #endif
 }
@@ -183,6 +195,8 @@ void test_errors (void)
     OK (GrB_Matrix_new (&A, GrB_UINT64, 3, 4)) ;
     result = LAGraph_msf (&C, A, true, msg) ;
     TEST_CHECK (result == GrB_DIMENSION_MISMATCH) ;
+    OK (GrB_free (&A)) ;
+
     // A must be square
     OK (GrB_Matrix_new (&A, GxB_FC32, 4, 4)) ;
     result = LAGraph_msf (&C, A, true, msg) ;
