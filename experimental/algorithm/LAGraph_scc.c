@@ -34,8 +34,19 @@
 #if LAGRAPH_SUITESPARSE
 
 //****************************************************************************
-// global C arrays used in SelectOp
-GrB_Index *I = NULL, *V = NULL, *F = NULL, *B = NULL, *M = NULL;
+//arrays used in SelectOp
+typedef struct 
+{
+    uint64_t *F, *B;
+    bool *M;
+} sccContext;
+#define SCCCONTEXT \
+"typedef struct \n"             \
+"{\n"                           \
+"    uint64_t *F, *B;\n"    \
+"    bool *M;\n"                \
+"} sccContext;\n"               
+
 
 // edge_removal:
 //  - remove the edges connected to newly identified SCCs (vertices u with M[u]==1)
@@ -50,11 +61,21 @@ GrB_Index *I = NULL, *V = NULL, *F = NULL, *B = NULL, *M = NULL;
 // an edge (u, v) if either F[u]!=F[v] or B[u]!=B[v] holds, which can accelerate
 // the SCC computation in the future rounds.
 
-void edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk) ;
-void edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
+void edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk) ;
+void edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk)
 {
-    (*z) = (!M[i] && !M[j] && F[i] == F[j] && B[i] == B[j]) ;
+    (*z) = (!thunk->M[i] && !thunk->M[j] 
+        && thunk->F[i] == thunk->F[j] 
+        && thunk->B[i] == thunk->B[j]) ;
 }
+#define EDGE_REMOVAL \
+"void edge_removal \n"                                                          \
+"(bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk)\n" \
+"{\n"                                                                           \
+"    (*z) = (!thunk->M[i] && !thunk->M[j] \n"                                   \
+"        && thunk->F[i] == thunk->F[j] \n"                                      \
+"        && thunk->B[i] == thunk->B[j]) ;\n"                                    \
+"}\n"                                                                           
 
 //****************************************************************************
 // trim_one: remove the edges connected to trivial SCCs
@@ -62,11 +83,17 @@ void edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const void 
 //  - M[i] = i   | if vertex i is a trivial SCC
 //    M[i] = n   | otherwise
 
-void trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk) ;
-void trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
+void trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk) ;
+void trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk)
 {
-    (*z) = (M[i] == M[j]) ;
+    (*z) = (thunk->F[i] == thunk->F[j]) ;
 }
+#define TRIM_ONE \
+"void trim_one\n"                                                               \
+"(bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk)\n" \
+"{\n"                                                                           \
+"    (*z) = (thunk->F[i] == thunk->F[j]) ;\n"                                   \
+"}\n"
 
 //****************************************************************************
 // label propagation
@@ -91,14 +118,17 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     GRB_TRY (GrB_Vector_new (&s, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
     GRB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
+    // GxB_fprint(s, GxB_SHORT, stdout);
     GRB_TRY (GrB_assign (t, 0, 0, label, GrB_ALL, 0, 0));
 
     GrB_Index active;
     while (true)
     {
+        // GRB_TRY (GrB_mxv 
+        //     (t, 0, GrB_MIN_UINT64, GrB_MIN_SECOND_SEMIRING_UINT64, AT, s, 0));
         GRB_TRY (GrB_vxm (t, 0, GrB_MIN_UINT64,
                                  GrB_MIN_FIRST_SEMIRING_UINT64, s, A, 0));
-        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISNE_UINT64, t, label, 0));
+        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_NE_UINT64, t, label, 0));
         GRB_TRY (GrB_assign (label, mask, 0, t, GrB_ALL, 0, 0));
         GRB_TRY (GrB_reduce (&active, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
         if (active == 0) break;
@@ -114,11 +144,9 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
 
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL                         \
-    LAGraph_Free ((void **) &I, msg);       \
-    LAGraph_Free ((void **) &V, msg);       \
-    LAGraph_Free ((void **) &F, msg);       \
-    LAGraph_Free ((void **) &B, msg);       \
-    LAGraph_Free ((void **) &M, msg);       \
+    LAGraph_Free ((void **) &contx.F, msg);       \
+    LAGraph_Free ((void **) &contx.B, msg);       \
+    LAGraph_Free ((void **) &contx.M, msg);       \
     GrB_free (&ind);                        \
     GrB_free (&inf);                        \
     GrB_free (&f);                          \
@@ -128,6 +156,7 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     GrB_free (&BW);                         \
     GrB_free (&sel1);                       \
     GrB_free (&sel2);                       \
+    GrB_free (&contx_type);                 \
     GrB_free (&scc);
 
 #endif
@@ -143,28 +172,70 @@ int LAGraph_scc
 #if LAGRAPH_SUITESPARSE
 
     LG_CLEAR_MSG ;
-
-    GrB_Info info;
+    sccContext contx = {NULL, NULL, NULL};
+    GrB_Info info = GrB_SUCCESS;
+    GrB_Type contx_type = NULL;
     GrB_Vector scc = NULL ;
     GrB_Vector ind = NULL ;
     GrB_Vector inf = NULL ;
+    GrB_Vector x = NULL ;
     GrB_Vector f = NULL, b = NULL, mask = NULL ;
     GrB_IndexUnaryOp sel1 = NULL, sel2 = NULL ;
     GrB_Monoid Add = NULL ;
     GrB_Matrix FW = NULL, BW = NULL;
-
-    if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
+    LG_ASSERT(result != NULL, GrB_NULL_POINTER);
+    LG_ASSERT(A != NULL, GrB_NULL_POINTER);
 
     GrB_Index n, ncols, nvals;
     GRB_TRY (GrB_Matrix_nrows (&n, A));
     GRB_TRY (GrB_Matrix_ncols (&ncols, A));
-    if (n != ncols) return (GrB_DIMENSION_MISMATCH) ;
+    LG_ASSERT(n == ncols, GrB_DIMENSION_MISMATCH);
+    
+
+    LG_TRY (LAGraph_Malloc ((void **) &contx.F, n, sizeof (uint64_t), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &contx.B, n, sizeof (uint64_t), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &contx.M, n, sizeof (bool), msg)) ;
+    // LG_TRY (LAGraph_Malloc (&contx.data, 3 * n, sizeof (uint64_t), msg)) ;
+    // contx.F = (uint64_t *) contx.data;
+    // contx.B = (contx.F) + n;
+    // contx.M = (contx.F) + 2 * n;
+    // scc: the SCC identifier for each vertex
+    // scc[u] == n: not assigned yet
+    GRB_TRY (GrB_Vector_new (&scc, GrB_UINT64, n));
+    // vector of indices: ind[i] == i
+    GRB_TRY (GrB_Vector_new (&ind, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_assign_UINT64 (ind, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_Vector_apply_IndexOp_UINT64 (
+        ind, NULL, NULL, GrB_ROWINDEX_INT64, ind, 0, NULL)) ;
+    // vector of infinite value: inf[i] == n
+    GRB_TRY (GrB_Vector_new (&inf, GrB_UINT64, n));
+    GRB_TRY (GrB_assign (inf, 0, 0, n, GrB_ALL, 0, 0));
+    // other vectors
+    GRB_TRY (GrB_Vector_new (&f, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_new (&b, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_new (&mask, GrB_BOOL, n));
+    GRB_TRY (GrB_Vector_new (&x, GrB_BOOL, n));
+    GRB_TRY (GxB_Type_new (
+        &contx_type, sizeof(sccContext), "sccContext", SCCCONTEXT)) ;
+    GRB_TRY (GxB_IndexUnaryOp_new (
+        &sel1, (GxB_index_unary_function) trim_one, 
+        GrB_BOOL, GrB_UINT64, contx_type, 
+        // NULL, NULL
+        "trim_one", TRIM_ONE
+    ));
+    GRB_TRY (GxB_IndexUnaryOp_new (
+        &sel2, (GxB_index_unary_function) edge_removal, 
+        GrB_BOOL, GrB_UINT64, contx_type,
+        // NULL, NULL
+        "edge_removal", EDGE_REMOVAL
+    ));
 
     // store the graph in both directions (forward / backward)
     GRB_TRY (GrB_Matrix_new (&FW, GrB_BOOL, n, n));
     GRB_TRY (GrB_Matrix_new (&BW, GrB_BOOL, n, n));
-    GRB_TRY (GrB_transpose (FW, 0, 0, A, GrB_DESC_T0)); // FW = A
-    GRB_TRY (GrB_transpose (BW, 0, 0, A, 0));     // BW = A'
+    GRB_TRY (GrB_Matrix_assign_BOOL(
+        FW, A, NULL, true, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+    GRB_TRY (GrB_transpose (BW, 0, 0, FW, 0));     // BW = FW'
 
     // check format
     int32_t A_format, AT_format;
@@ -172,79 +243,59 @@ int LAGraph_scc
     GRB_TRY (GrB_get (BW, &AT_format, GrB_STORAGE_ORIENTATION_HINT));
 
     bool is_csr = (A_format == GrB_ROWMAJOR && AT_format == GrB_ROWMAJOR);
-    if (!is_csr) return (GrB_INVALID_VALUE) ;
-
-    LG_TRY (LAGraph_Malloc ((void **) &I, n, sizeof (GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void **) &V, n, sizeof (GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void **) &F, n, sizeof (GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void **) &B, n, sizeof (GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void **) &M, n, sizeof (GrB_Index), msg)) ;
-
-    for (GrB_Index i = 0; i < n; i++)
-        I[i] = V[i] = i;
-
-    // scc: the SCC identifier for each vertex
-    // scc[u] == n: not assigned yet
-    GRB_TRY (GrB_Vector_new (&scc, GrB_UINT64, n));
-    // vector of indices: ind[i] == i
-    GRB_TRY (GrB_Vector_new (&ind, GrB_UINT64, n));
-    GRB_TRY (GrB_Vector_build (ind, I, V, n, GrB_PLUS_UINT64));
-    // vector of infinite value: inf[i] == n
-    GRB_TRY (GrB_Vector_new (&inf, GrB_UINT64, n));
-    GRB_TRY (GrB_assign (inf, 0, 0, n, GrB_ALL, 0, 0));
-    // other vectors
-    GRB_TRY (GrB_Vector_new (&f, GrB_UINT64, n));
-    GRB_TRY (GrB_Vector_new (&b, GrB_UINT64, n));
-    GRB_TRY (GrB_Vector_new (&mask, GrB_UINT64, n));
-    GRB_TRY (GrB_IndexUnaryOp_new (&sel1, (void *) trim_one, GrB_BOOL, GrB_UINT64, GrB_UINT64));
-    GRB_TRY (GrB_IndexUnaryOp_new (&sel2, (void *) edge_removal, GrB_BOOL, GrB_UINT64, GrB_UINT64));
+    LG_ASSERT (is_csr, GrB_INVALID_VALUE) ;
 
     // remove trivial SCCs
     GRB_TRY (GrB_reduce (f, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, FW, 0));
     GRB_TRY (GrB_reduce (b, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, BW, 0));
-    GRB_TRY (GrB_eWiseMult (mask, 0, GxB_LAND_UINT64, GxB_LAND_UINT64, f, b, 0));
+    GRB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_ONEB_BOOL, f, b, NULL));
     GRB_TRY (GrB_Vector_nvals (&nvals, mask));
 
     GRB_TRY (GrB_assign (scc, 0, 0, ind, GrB_ALL, 0, 0));
     GRB_TRY (GrB_assign (scc, mask, 0, n, GrB_ALL, 0, 0));
-    GRB_TRY (GrB_Vector_clear (mask));
 
     if (nvals < n)
     {
-        GRB_TRY (GrB_Vector_extractTuples (I, M, &n, scc));
-        GRB_TRY (GrB_select (FW, 0, 0, sel1, FW, 0, 0));
-        GRB_TRY (GrB_select (BW, 0, 0, sel1, BW, 0, 0));
+        // TODO this should be a single mxm with a diagonal mask matrix.
+        // No reason for context. 
+        GRB_TRY (GrB_Vector_extractTuples (NULL, contx.F, &n, scc));
+        GRB_TRY (GrB_Matrix_select_UDT (
+            FW, NULL, NULL, sel1, FW, &contx, NULL)) ;
+        GRB_TRY (GrB_Matrix_select_UDT (
+            BW, NULL, NULL, sel1, BW, &contx, NULL)) ;
     }
 
     GRB_TRY (GrB_Matrix_nvals (&nvals, FW));
     while (nvals > 0)
     {
-        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
+        GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64 (
+            mask, NULL, NULL, GrB_EQ_UINT64, scc, n, NULL));
         GRB_TRY (GrB_assign (f, 0, 0, ind, GrB_ALL, 0, 0));
         LG_TRY (propagate (f, mask, FW, BW, n, msg));
 
-        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, ind, 0));
-        GRB_TRY (GrB_assign (b, 0, 0, inf, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, f, ind, 0));
+        GRB_TRY (GrB_Vector_assign_UINT64 (
+            b, NULL, NULL, n, GrB_ALL, 0, NULL)) ;
         GRB_TRY (GrB_assign (b, mask, 0, ind, GrB_ALL, 0, 0));
         LG_TRY (propagate (b, mask, BW, FW, n, msg));
 
-        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, b, 0));
+        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, f, b, 0));
         GRB_TRY (GrB_assign (scc, mask, GrB_MIN_UINT64, f, GrB_ALL, 0, 0));
 
-        GRB_TRY (GrB_Vector_extractTuples (I, F, &n, f));
-        GRB_TRY (GrB_Vector_extractTuples (I, B, &n, b));
-        GRB_TRY (GrB_Vector_extractTuples (I, M, &n, mask));
+        GRB_TRY (GrB_Vector_extractTuples_UINT64 (NULL, contx.F, &n, f));
+        GRB_TRY (GrB_Vector_extractTuples_UINT64 (NULL, contx.B, &n, b));
+        GRB_TRY (GrB_Vector_extractTuples_BOOL (NULL, contx.M, &n, mask));
 
-        GRB_TRY (GrB_select (FW, 0, 0, sel2, FW, 0, 0));
-        GRB_TRY (GrB_select (BW, 0, 0, sel2, BW, 0, 0));
+        GRB_TRY (GrB_Matrix_select_UDT (
+            FW, NULL, NULL, sel2, FW, &contx, NULL)) ;
+        GRB_TRY (GrB_Matrix_select_UDT (
+            BW, NULL, NULL, sel2, BW, &contx, NULL)) ;
 
         GRB_TRY (GrB_Matrix_nvals (&nvals, FW));
     }
-    GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
+    GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64 (
+            mask, NULL, NULL, GrB_EQ_UINT64, scc, n, NULL));
     GRB_TRY (GrB_assign (scc, mask, 0, ind, GrB_ALL, 0, 0));
-
-    GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, ind, 0));
-    GRB_TRY (GrB_reduce (&nvals, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
 
     *result = scc;
     scc = NULL;
