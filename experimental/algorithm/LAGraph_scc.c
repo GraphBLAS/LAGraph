@@ -151,7 +151,9 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     GrB_free (&inf);                        \
     GrB_free (&f);                          \
     GrB_free (&b);                          \
+    GrB_free (&D);                          \
     GrB_free (&mask);                       \
+    GrB_free (&m2);                         \
     GrB_free (&FW);                         \
     GrB_free (&BW);                         \
     GrB_free (&sel1);                       \
@@ -175,14 +177,17 @@ int LAGraph_scc
     sccContext contx = {NULL, NULL, NULL};
     GrB_Info info = GrB_SUCCESS;
     GrB_Type contx_type = NULL;
+    GrB_Type type_F = NULL, type_B = NULL, type_M = NULL;
+    int hand_F = GrB_DEFAULT, hand_B = GrB_DEFAULT, hand_M = GrB_DEFAULT;
+    uint64_t n_F = 0, n_B = 0, n_M = 0, size_F = 0, size_B = 0, size_M = 0;
     GrB_Vector scc = NULL ;
     GrB_Vector ind = NULL ;
     GrB_Vector inf = NULL ;
     GrB_Vector x = NULL ;
-    GrB_Vector f = NULL, b = NULL, mask = NULL ;
+    GrB_Vector f = NULL, b = NULL, mask = NULL, m2 = NULL;
     GrB_IndexUnaryOp sel1 = NULL, sel2 = NULL ;
     GrB_Monoid Add = NULL ;
-    GrB_Matrix FW = NULL, BW = NULL;
+    GrB_Matrix FW = NULL, BW = NULL, D = NULL;
     LG_ASSERT(result != NULL, GrB_NULL_POINTER);
     LG_ASSERT(A != NULL, GrB_NULL_POINTER);
 
@@ -214,6 +219,7 @@ int LAGraph_scc
     GRB_TRY (GrB_Vector_new (&f, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&b, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&mask, GrB_BOOL, n));
+    GRB_TRY (GrB_Vector_new (&m2, GrB_BOOL, n));
     GRB_TRY (GrB_Vector_new (&x, GrB_BOOL, n));
     GRB_TRY (GxB_Type_new (
         &contx_type, sizeof(sccContext), "sccContext", SCCCONTEXT)) ;
@@ -236,7 +242,7 @@ int LAGraph_scc
     GRB_TRY (GrB_Matrix_assign_BOOL(
         FW, A, NULL, true, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
     GRB_TRY (GrB_transpose (BW, 0, 0, FW, 0));     // BW = FW'
-
+       
     // check format
     int32_t A_format, AT_format;
     GRB_TRY (GrB_get (FW, &A_format , GrB_STORAGE_ORIENTATION_HINT));
@@ -246,9 +252,9 @@ int LAGraph_scc
     LG_ASSERT (is_csr, GrB_INVALID_VALUE) ;
 
     // remove trivial SCCs
-    GRB_TRY (GrB_reduce (f, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, FW, 0));
-    GRB_TRY (GrB_reduce (b, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, BW, 0));
-    GRB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_ONEB_BOOL, f, b, NULL));
+    GRB_TRY (GrB_Vector_assign_BOOL (x, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_mxv (m2, NULL, NULL, GxB_ANY_PAIR_BOOL, FW, x, NULL)) ;
+    GRB_TRY (GrB_mxv (mask, m2, NULL, GxB_ANY_PAIR_BOOL, BW, x, GrB_DESC_S)) ;
     GRB_TRY (GrB_Vector_nvals (&nvals, mask));
 
     GRB_TRY (GrB_assign (scc, 0, 0, ind, GrB_ALL, 0, 0));
@@ -256,6 +262,7 @@ int LAGraph_scc
 
     if (nvals < n)
     {
+        // GRB_TRY (GrB_Matrix_diag(&D, mask, 0)) ;
         // TODO this should be a single mxm with a diagonal mask matrix.
         // No reason for context. 
         GRB_TRY (GrB_Vector_extractTuples (NULL, contx.F, &n, scc));
@@ -263,6 +270,7 @@ int LAGraph_scc
             FW, NULL, NULL, sel1, FW, &contx, NULL)) ;
         GRB_TRY (GrB_Matrix_select_UDT (
             BW, NULL, NULL, sel1, BW, &contx, NULL)) ;
+        // GRB_TRY (GrB_free(&D)) ;
     }
 
     GRB_TRY (GrB_Matrix_nvals (&nvals, FW));
@@ -281,16 +289,33 @@ int LAGraph_scc
 
         GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, f, b, 0));
         GRB_TRY (GrB_assign (scc, mask, GrB_MIN_UINT64, f, GrB_ALL, 0, 0));
-
-        GRB_TRY (GrB_Vector_extractTuples_UINT64 (NULL, contx.F, &n, f));
-        GRB_TRY (GrB_Vector_extractTuples_UINT64 (NULL, contx.B, &n, b));
-        GRB_TRY (GrB_Vector_extractTuples_BOOL (NULL, contx.M, &n, mask));
+        #if LG_SUITESPARSE_GRAPHBLAS_V10 && 0
+            GRB_TRY(GxB_Vector_unload(
+                f, (void **) &contx.F, &type_F, &n_F, &size_F, &hand_F, NULL)) ;
+            GRB_TRY(GxB_Vector_unload(
+                b, (void **) &contx.B, &type_B, &n_B, &size_B, &hand_B, NULL)) ;
+            GRB_TRY(GxB_Vector_unload(
+                mask, (void **) &contx.M, &type_M, &n_M, &size_M, &hand_M, NULL
+            )) ;
+        #else
+            GRB_TRY (GrB_Vector_extractTuples_UINT64 (NULL, contx.F, &n, f));
+            GRB_TRY (GrB_Vector_extractTuples_UINT64 (NULL, contx.B, &n, b));
+            GRB_TRY (GrB_Vector_extractTuples_BOOL (NULL, contx.M, &n, mask));
+        #endif
 
         GRB_TRY (GrB_Matrix_select_UDT (
             FW, NULL, NULL, sel2, FW, &contx, NULL)) ;
         GRB_TRY (GrB_Matrix_select_UDT (
             BW, NULL, NULL, sel2, BW, &contx, NULL)) ;
-
+        #if LG_SUITESPARSE_GRAPHBLAS_V10 && 0
+            GRB_TRY(GxB_Vector_load(
+                f, (void **) &contx.F, type_F, n_F, size_F, hand_F, NULL)) ;
+            GRB_TRY(GxB_Vector_load(
+                b, (void **) &contx.B, type_B, n_B, size_B, hand_B, NULL)) ;
+            GRB_TRY(GxB_Vector_load(
+                mask, (void **) &contx.M, type_M, n_M, size_M, hand_M, NULL
+            )) ;
+        #endif
         GRB_TRY (GrB_Matrix_nvals (&nvals, FW));
     }
     GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64 (
