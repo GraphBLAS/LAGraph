@@ -17,7 +17,7 @@
     GrB_free(&Seed) ; \
     GrB_free(&degree) ; \
 }
-#define DEBUG 1
+#define DEBUG 0
 #define dbg(x) if (DEBUG) GxB_print(x,5)
 typedef GrB_Matrix mat;
 typedef GrB_Vector vec ;
@@ -49,7 +49,7 @@ int LAGraph_IsolateSets(
     GrB_Vector degree = NULL ;          // (float) G->out_degree
     GrB_Matrix A ;                      // G->A, the adjacency matrix
     GrB_Index n ;                       // # of nodes
-    printf("in Isolate set algorithm");
+    // printf("in Isolate set algorithm");
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT(isolate_set != NULL, GrB_NULL_POINTER);
     A = G->A;
@@ -69,8 +69,8 @@ int LAGraph_IsolateSets(
     GRB_TRY (GrB_Vector_new (&scoreA, GrB_FP32, n)) ;
 
     //rand
-    seed = 123;
-    printf("%ld",seed);
+    // seed = 6247;
+    // printf("%ld",seed);
     GRB_TRY (GrB_assign (Seed, NULL, NULL, 1, GrB_ALL, n, NULL));
     GRB_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
     dbg(Seed);
@@ -101,7 +101,7 @@ int LAGraph_IsolateSets(
     dbg(new_members);
     GRB_TRY (GrB_assign (iset, new_members, NULL,true,GrB_ALL,n,NULL)) ;
     (*isolate_set) = iset;
-    printf("done iset");
+    // printf("done iset");
     iset = NULL;
     LG_FREE_ALL;
     return 0;

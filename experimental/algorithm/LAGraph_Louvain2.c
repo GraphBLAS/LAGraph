@@ -38,8 +38,8 @@
         GrB_free (&t) ;                 \
         GrB_free (&t_q) ;               \
         GrB_free (&Theta) ;             \
-        GrB_free (&Semiring) ;          \
-        GrB_free (&Mon) ;               \
+        GrB_free (&IBop_MAX) ;          \
+        GrB_free (&MAXFP64_mon) ;               \
         GrB_free (&Tuple) ;             \
         GrB_free (&dS) ;                \
         GrB_free (&dSTk) ;               \
@@ -49,12 +49,8 @@
         GrB_free (&max_q1) ;            \
         GrB_free (&za) ;                \
         GrB_free (&z_dSTk) ;            \
-        LAGraph_Free ((void *) &Sp, NULL) ;     \
-        LAGraph_Free ((void *) &Sj, NULL) ;     \
-        LAGraph_Free ((void *) &dSp, NULL) ;     \
-        LAGraph_Free ((void *) &dSj, NULL) ;     \
     }
-#define DEBUG 0
+#define DEBUG 1
 #define dbg(x) if (DEBUG) GxB_print(x,5)
 // uint64_t seed = 213;
 typedef struct tuple_fp64{
@@ -71,8 +67,10 @@ void make_fp64(tuple_fp64 *z,
     z->k = (int64_t)jx;
     z->v = (*x);
     uint64_t seed = (*y + ix + iy + jy);
-    uint64_t tb = LG_Random64(&seed);
-    z->tb = tb;
+    seed ^= seed << 13 ;
+    seed ^= seed >> 7 ;
+    seed ^= seed << 17 ;
+    z->tb = seed;
 }
 void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
 
@@ -100,16 +98,18 @@ void max_fp64(tuple_fp64 *z, const tuple_fp64 *x, const tuple_fp64 *y){
 "    }                                                                   \n" \
 "}"          
 #define MAKE_FP64                                                \
-"void make_fp64(tuple_fp64 *z,                               \n" \
-"               const double *x, GrB_Index ix, GrB_Index jx, \n" \
-"               const uint64_t *y, GrB_Index iy, GrB_Index jy,    \n" \
-"               const void *theta)                           \n" \
-"{                                                           \n" \
-"    z->k = (int64_t)jx;                                     \n" \
-"    z->v = (*x);                   \n" \ 
+"void make_fp64(tuple_fp64 *z,                               \n"\
+"               const double *x, GrB_Index ix, GrB_Index jx, \n"\
+"               const uint64_t *y, GrB_Index iy, GrB_Index jy,    \n"\
+"               const void *theta)                           \n"\
+"{                                                           \n"\
+"    z->k = (int64_t)jx;                                     \n"\
+"    z->v = (*x);                   \n"\ 
 "    uint64_t seed = (*y + ix + iy + jy); \n"\
-"    uint64_t tb = LG_Random64(&seed);\n"\
-"    z->tb = tb;\n"\
+"    seed ^= seed << 13 ; \n"\
+"    seed ^= seed >> 7 ;\n"\
+"    seed ^= seed << 17 ;\n"\
+"    z->tb = seed;      \n"\
 "}"
 
 
@@ -126,7 +126,7 @@ int LAGraph_Louvain2(
 
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
     if (DEBUG)
-        GrB_set (GrB_GLOBAL, true, GxB_BURBLE);
+        GrB_set (GrB_GLOBAL, false, GxB_BURBLE);
 
     //assignment of monoids, bops, and semis   
     GrB_Monoid plusmon = GrB_PLUS_MONOID_FP64;
@@ -140,9 +140,6 @@ int LAGraph_Louvain2(
     GrB_Semiring stdmxm = GrB_PLUS_TIMES_SEMIRING_FP64;
     GrB_Semiring anypB = GxB_ANY_PAIR_FP64 ;
 
-    double *Sx = NULL ; //try S as double not bool
-    GrB_Index *Sp = NULL , *Sj = NULL, Sp_size = 0, Sj_size = 0, Sx_size = 0 ;
-    bool S_jumbled = false, S_iso = false;
     GrB_Vector t_q = NULL, q1=NULL, t=NULL,v=NULL;
     GrB_Vector k = NULL ;
     GrB_Vector x = NULL ;
@@ -151,8 +148,8 @@ int LAGraph_Louvain2(
     GrB_Vector z_dSTk = NULL;
     GrB_Index n,b;
     GrB_Matrix S = NULL;
+    GrB_Matrix dS= NULL;
     GrB_Vector sr = NULL;
-    GrB_Semiring Semiring = NULL ;
     GrB_Vector srxq = NULL;
     GrB_Index vals_srxq;
     GrB_Matrix dS = NULL ;
@@ -160,15 +157,17 @@ int LAGraph_Louvain2(
     GrB_Vector temp = NULL ;
     GrB_Vector y_rand = NULL ;
     GrB_Vector max_q1 = NULL ;
-    GxB_IndexBinaryOp Iop = NULL ;
-    GrB_BinaryOp Bop = NULL, MonOp = NULL ;
+
+    GrB_Semiring IBop_MAX = NULL ;
+    GxB_IndexBinaryOp MAKEFP64_op = NULL ;
+    GrB_BinaryOp MAKEFP64_Bop = NULL, MAXFP64_op = NULL ;
     GrB_Scalar Theta = NULL ;
     GrB_Type Tuple = NULL ;
-    GrB_Monoid Mon = NULL ;
+    GrB_Monoid MAXFP64_mon = NULL ;
+
+
     GxB_Container S_container = NULL;
-    double *dSx = NULL ; 
-    GrB_Index *dSp = NULL, *dSj = NULL, dSp_size, dSj_size, dSx_size ;
-    bool dS_jumbled = false, dS_iso = false ;
+    GxB_Container dS_container = NULL;
     GrB_Index q1_size;
     //GrB_Container
     tuple_fp64 o;
@@ -187,15 +186,15 @@ int LAGraph_Louvain2(
     GRB_TRY(GrB_Scalar_new(&Theta, GrB_BOOL));
     GRB_TRY(GrB_Scalar_setElement_BOOL(Theta, 0));
     GRB_TRY(GxB_Type_new(&Tuple, sizeof(tuple_fp64), "tuple_fp64", FP64_K));
-    GRB_TRY(GxB_IndexBinaryOp_new(&Iop,(GxB_index_binary_function)make_fp64, Tuple, GrB_FP64, GrB_UINT64, GrB_BOOL,"make_fp64", MAKE_FP64));
-    GRB_TRY(GxB_BinaryOp_new_IndexOp(&Bop, Iop, Theta));
+    GRB_TRY(GxB_IndexBinaryOp_new(&MAKEFP64_op,(GxB_index_binary_function)make_fp64, Tuple, GrB_FP64, GrB_UINT64, GrB_BOOL,"make_fp64", MAKE_FP64));
+    GRB_TRY(GxB_BinaryOp_new_IndexOp(&MAKEFP64_Bop, MAKEFP64_op, Theta));
     tuple_fp64 id;
     memset(&id, 0, sizeof(tuple_fp64));
     id.k = INT64_MAX;
     id.v = (double)(-INFINITY);
-    GRB_TRY(GxB_BinaryOp_new(&MonOp,(GxB_binary_function)max_fp64, Tuple, Tuple, Tuple, "max_fp64", MAX_FP64));
-    GRB_TRY(GrB_Monoid_new_UDT(&Mon, MonOp, &id));
-    GRB_TRY(GrB_Semiring_new(&Semiring, Mon, Bop));
+    GRB_TRY(GxB_BinaryOp_new(&MAXFP64_op,(GxB_binary_function)max_fp64, Tuple, Tuple, Tuple, "max_fp64", MAX_FP64));
+    GRB_TRY(GrB_Monoid_new_UDT(&MAXFP64_mon, MAXFP64_op, &id));
+    GRB_TRY(GrB_Semiring_new(&IBop_MAX, MAXFP64_mon, MAKEFP64_Bop));
 //------------------------------------------------------------------------------------------------------------------
 
 
@@ -245,7 +244,7 @@ int LAGraph_Louvain2(
     bool changed = true;
     int max_iter = 20;
     int iter =0;
-    uint64_t seed = 231;
+    uint64_t seed = 12314;
     
     // GxB_print(y_rand,5);
     GRB_TRY(GrB_mxv(z,NULL,NULL,stdmxm,S,k,NULL));
@@ -269,28 +268,29 @@ int LAGraph_Louvain2(
 
             //sr = S(i,:)
             GRB_TRY(GrB_Col_extract(sr,NULL,NULL,S,GrB_ALL,1,i,GrB_DESC_T0));
-            // GxB_print(sr,5);
+            GxB_print(sr,5);
 
-            //S(i,:) = empty
+            //S(i,:) = 0/false
             GRB_TRY(GxB_unload_Matrix_into_Container(S,S_container,NULL));
             GRB_TRY(GrB_Vector_setElement_BOOL(S_container->x,false,i));
             GRB_TRY(GxB_load_Matrix_from_Container(S,S_container,NULL));
-
+            dbg(S);
 
 
 ////////////////////////////////////////////////////////////
 //-------------q1<t_q> = a(kTS)+vTS----------- -----------//
+//-------------q1<t_q> = z+vTS----------------------------//
             // double alpha_p = 1;
             double alpha = -k_i/m;
 
             GRB_TRY(GrB_Vector_apply_BinaryOp2nd_FP64(za,NULL,NULL,timesf64,z,alpha,GrB_DESC_T0));
-
+            dbg(za);
             
             GRB_TRY(GrB_eWiseAdd(za,NULL,NULL,plusf64,za,v,NULL));
             // printf("z*alpha + v\n");
-            // GxB_print(za,5);
+            dbg(za);
             GRB_TRY(GrB_vxm(q1,t_q,NULL,stdmxm,za,S,GrB_DESC_R));
-            // dbg(q1);
+            dbg(q1);
 ///////////////////////////////////////////////////////////
             
 ///////////////////////////////////////////////////////////
@@ -303,7 +303,7 @@ int LAGraph_Louvain2(
             GRB_TRY (GrB_assign (y_rand, t_q, NULL, seed, GrB_ALL, n, GrB_DESC_S));
 
             // GxB_print(q1,5); 
-            GRB_TRY(GrB_mxv(max_q1,NULL,NULL,Semiring,(GrB_Matrix)q1,y_rand,GrB_DESC_T0));
+            GRB_TRY(GrB_mxv(max_q1,NULL,NULL,IBop_MAX,(GrB_Matrix)q1,y_rand,GrB_DESC_T0));
             // GxB_print(q1,5);
 
             GRB_TRY(GrB_Vector_extractElement_UDT((void*)&o,max_q1,0));
@@ -327,14 +327,14 @@ int LAGraph_Louvain2(
             if(vals_srxq==0){
                 changed  = true;
             }
-            // if(i==0)break;
+            // if(i==3)break;
             
         }
         iter++;
         // break;
         // printf("changed: %i\n", changed);
     }
-    // GxB_print(S,5);
+    GxB_print(S,5);
     double Q;
     double gamma = 1;
     GRB_TRY(LAGr_Modularity2(&Q,gamma,A,S,msg));

@@ -1410,16 +1410,6 @@ int LAGr_BreadthFirstSearch_Extended
                         // node is reached
     char *msg
 ) ;
-
-LAGRAPHX_PUBLIC
-int LAGraph_Louvain2
-(
-    //ouptut
-    GrB_Matrix *S_result,
-    // input
-    LAGraph_Graph G,
-    char* msg
-);
 LAGRAPHX_PUBLIC
 int LAGraph_IsolateSets(
     //output
@@ -1437,9 +1427,6 @@ int LAGraph_LouvainMIS(
     LAGraph_Graph G,
     char* msg
 );
-LAGRAPHX_PUBLIC
-uint64_t LG_Random64 (uint64_t *state);
-
 
 #if defined ( __cplusplus )
 }
