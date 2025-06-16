@@ -43,8 +43,8 @@ void test_IsolateSets(void){
         
         GrB_Vector Iset;
         double tsimple = LAGraph_WallClockTime ( ) ;
-        uint64_t seed = 122 ^ (uint64_t)tsimple << 2044542;
-        OK(LAGraph_IsolateSets(&Iset,G,seed,msg));
+        
+        OK(LAGraph_IsolateSets(&Iset,G,5123,msg));
         GxB_print(Iset,5);
         tsimple = LAGraph_WallClockTime ( ) - tsimple ;
         printf(" time: %f\n",tsimple);

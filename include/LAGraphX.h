@@ -1546,22 +1546,15 @@ int LAGr_BreadthFirstSearch_Extended
     char *msg
 ) ;
 
-//------------------------------------------------------------------------------
-// coloring algorithms
-//------------------------------------------------------------------------------
-
 LAGRAPHX_PUBLIC
-int LAGraph_coloring_independent_set
+int LAGraph_Louvain2
 (
-    // output
-    GrB_Vector *color,
-    int *num_colors,
-
+    //ouptut
+    GrB_Matrix *S_result,
     // input
     LAGraph_Graph G,
-    char *msg
-) ;
-
+    char* msg
+);
 LAGRAPHX_PUBLIC
 int LAGraph_coloring_MIS
 (
@@ -1594,9 +1587,6 @@ int LAGraph_LouvainMIS(
     LAGraph_Graph G,
     char* msg
 );
-LAGRAPHX_PUBLIC
-uint64_t LG_Random64 (uint64_t *state);
-
 
 #if defined ( __cplusplus )
 }

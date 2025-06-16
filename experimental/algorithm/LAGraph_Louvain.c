@@ -53,7 +53,7 @@ int LAGraph_Louvain(
 )
 {
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
-    GrB_set (GrB_GLOBAL, true, GxB_BURBLE);
+    GrB_set (GrB_GLOBAL, false, GxB_BURBLE);
     //assignment of monoids, bops, and semis   
     GrB_Monoid plusmon = GrB_PLUS_MONOID_FP64;
     GrB_Monoid maxmon = GrB_MAX_MONOID_FP64;
@@ -103,6 +103,8 @@ int LAGraph_Louvain(
     GRB_TRY(GrB_assign (x, NULL, NULL, 1, GrB_ALL, n, NULL)) ;
     // GxB_print(i,5);
     GRB_TRY(GrB_Matrix_diag(&S,x,0));
+    GRB_TRY(GrB_set(S,false,GxB_ISO));
+    GrB_set (S, GxB_SPARSE, GxB_SPARSITY_CONTROL);
     GxB_print(S,5);
 
     //var used in for loop
@@ -116,6 +118,7 @@ int LAGraph_Louvain(
     GRB_TRY(GrB_Vector_new(&q1, GrB_FP64, n)); 
     GRB_TRY(GrB_Vector_new(&t, GrB_BOOL, n));
     GRB_TRY(GrB_Vector_new(&p,GrB_FP64,n));
+    GRB_TRY(GxB_Container_new(&S_container));
 
     // int64_t vc = vertices_changed;
     bool changed = true;
@@ -127,7 +130,7 @@ int LAGraph_Louvain(
         for(int i=0;i<n;i++){//extract tuples
             // v = A(i,:)
             GRB_TRY (GrB_Col_extract (v, NULL, NULL, A, GrB_ALL, b, i,GrB_DESC_T0));
-            // GxB_print(v,5);
+            GxB_print(v,5);
 
             // -- extract k_i
             GRB_TRY(GrB_Vector_extractElement_FP64(&k_i,k,i));
@@ -139,7 +142,7 @@ int LAGraph_Louvain(
             // sr = S(i,:)
 
             GRB_TRY(GrB_Col_extract(sr,NULL,NULL,S,GrB_ALL,1,i,GrB_DESC_T0));
-            // GxB_print(sr,5);
+            GxB_print(sr,5);
 
             //S(i,:) = empty
             GRB_TRY(GxB_unload_Matrix_into_Container(S,S_container,NULL));
@@ -159,18 +162,19 @@ int LAGraph_Louvain(
 
             //q += v
             GRB_TRY(GrB_eWiseAdd(q,NULL,NULL,plusf64,q,v,NULL));
-            // GxB_print(q,5);
+            GxB_print(q,5);
 
             //q_1<t_q> = q +.x S O(n)
             GRB_TRY(GrB_Vector_clear(q1));
-            GRB_TRY(GrB_vxm(q1,t_q,NULL,stdmxm,q,S,GrB_DESC_R));
-            // GxB_print(q1,5);
-
+            GxB_print(S,5);
+            GRB_TRY(GrB_vxm(q1,t_q,NULL,stdmxm,q,S,GrB_DESC_S));
+            GxB_print(q1,5);
             //t = (q1 == [max_i q_1(i)])
-            double max_q1;
-            GRB_TRY(GrB_Vector_reduce_FP64(&max_q1,NULL,maxmon,q1,NULL));
+            double max_q1=0;
+            GRB_TRY(GrB_Vector_reduce_FP64(&max_q1,NULL,GrB_MAX_MONOID_FP64,q1,NULL));
+            printf("%ld",max_q1);
             GRB_TRY(GrB_Vector_select_FP64(t,NULL,NULL,GrB_VALUEEQ_FP64,q1,max_q1,NULL));
-            // GxB_print(t,5);
+            GxB_print(t,5);
 
             
             GRB_TRY(GrB_Vector_nvals(&nvals_t,t));
@@ -185,13 +189,13 @@ int LAGraph_Louvain(
                     double y = rd();
                     GRB_TRY(GrB_Vector_setElement_FP64(p,y*p_vals[j],p_cs[j]));
                 }
-                // GxB_print(p,5);
+                GxB_print(p,5);
                 //t = (p== [max_i p_1(i)])
                 double max_p;
                 GRB_TRY(GrB_Vector_reduce_FP64(&max_p,NULL,maxmon,p,NULL));
                 // printf("max_p:%f\n",max_p);
                 GRB_TRY(GrB_Vector_select_FP64(t,NULL,NULL,GrB_VALUEEQ_FP64,p,max_p,NULL));
-                // GxB_print(t,5);
+                GxB_print(t,5);
                 GRB_TRY(GrB_Vector_nvals(&nvals_t,t));
                 free(p_cs);
                 free(p_vals);
