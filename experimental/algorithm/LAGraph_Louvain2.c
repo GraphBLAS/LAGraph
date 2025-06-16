@@ -152,7 +152,7 @@ int LAGraph_Louvain2(
     GrB_Vector sr = NULL;
     GrB_Vector srxq = NULL;
     GrB_Index vals_srxq;
-    GrB_Matrix dS = NULL ;
+    // GrB_Matrix dS = NULL ;
     GrB_Vector dSTk = NULL, vtS = NULL ;
     GrB_Vector temp = NULL ;
     GrB_Vector y_rand = NULL ;
