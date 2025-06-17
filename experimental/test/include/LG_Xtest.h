@@ -116,6 +116,12 @@ int LG_check_argminmax
     int dim,                    // dim=1: cols of A, dim=2: rows of A
     bool is_min,
     char *msg
+)
+
+int LG_check_flow
+(
+   const GrB_Matrix *flow_mtx,
+   char* msg
 ) ;
 
 #endif

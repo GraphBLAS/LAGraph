@@ -1492,6 +1492,7 @@ int LAGraph_coloring_MIS
     char *msg
 ) ;
 
+LAGRAPHX_PUBLIC
 int LAGr_MaxFlow(
     //outputs
     double* f,

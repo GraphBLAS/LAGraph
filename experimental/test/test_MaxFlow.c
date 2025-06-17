@@ -1,9 +1,9 @@
+
 #include <acutest.h>
 #include <LAGraphX.h>
 #include <LAGraph_test.h>
 #include <stdio.h>
-
-#include "LG_Xtest.h"
+#include <LG_Xtest.h>
 #include "LG_internal.h"
 
 
@@ -63,4 +63,45 @@ void test_MaxFlow(void) {
   LAGraph_Finalize(msg);
 }
 
-TEST_LIST = {{"MaxFlow", test_MaxFlow}, {NULL, NULL}};
+void test_MaxFlowMtx(void) {
+  LAGraph_Init(msg);
+//OK(LG_SET_BURBLE(1));
+  OK(LG_SET_BURBLE(0));
+  OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, 4));
+  for(uint8_t test = 0; test < NTESTS; test++){
+    GrB_Matrix A=NULL;
+    TEST_CASE(tests[test].filename);
+    snprintf(filename, LEN, LG_DATA_DIR "%s", tests[test].filename);
+    FILE* f = fopen(filename, "r");
+    TEST_CHECK(f != NULL);
+    OK(LAGraph_MMRead(&A, f, msg));
+
+    //create flow mtx
+    GrB_Matrix flow_mtx=NULL;
+    GrB_Index n;
+    OK(GrB_Matrix_nrows(&n, A));
+    OK(GrB_Matrix_new(&flow_mtx, GrB_FP64, n, n));
+    
+    OK(fclose(f));
+    OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
+    OK(LAGraph_Cached_AT(G, msg));
+    OK(LAGraph_Cached_EMin(G, msg));
+
+    //begin test
+    double flow = 0;
+    OK(LAGr_MaxFlow(&flow, &flow_mtx, G, tests[test].S, tests[test].T, msg));
+    int status = LG_check_flow(&flow_mtx, msg);
+    printf("%d", status);
+    printf("%s\n", msg);
+    TEST_CHECK(flow == tests[test].F);
+    printf("flow is: %lf\n", flow);
+
+    //free work
+    GrB_free(&flow_mtx);
+    OK(LAGraph_Delete(&G, msg));
+  }
+  LAGraph_Finalize(msg);
+}
+
+
+TEST_LIST = {{"MaxFlow", test_MaxFlow}, {"MaxFlowMtx", test_MaxFlowMtx}, {NULL, NULL}};
