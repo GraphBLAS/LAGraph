@@ -638,7 +638,6 @@ int LAGraph_FastGraphletTransform
     GrB_Vector f_net = NULL ;
     GRB_TRY (GrB_Vector_new (&f_net, GrB_INT64, 16)) ;
     GRB_TRY (GrB_reduce (f_net, NULL, NULL, GrB_PLUS_INT64, *F_net, NULL)) ;
-    GRB_TRY (GxB_print (f_net, 3)) ;
     GRB_TRY (GrB_free (&f_net)) ;
 
     //--------------------------------------------------------------------------
