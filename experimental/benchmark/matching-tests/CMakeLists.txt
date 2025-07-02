@@ -5,22 +5,22 @@ cmake_policy ( SET CMP0042 NEW )    # enable MACOSX_RPATH by default
 cmake_policy ( SET CMP0048 NEW )    # VERSION variable policy
 cmake_policy ( SET CMP0054 NEW )    # if ( expression ) handling policy
 cmake_policy ( SET CMP0104 NEW )    # initialize CUDA architectures
+cmake_policy ( SET CMP0144 NEW )    # uppercase find_package names
 
 set ( CMAKE_MACOSX_RPATH TRUE )
 enable_language ( C CXX )
 include ( GNUInstallDirs )
 
-message (STATUS  "source: ${CMAKE_SOURCE_DIR}" )
 set ( LAGRAPH_ROOT "../../..")
 set ( LAGRAPHX_ROOT "../../..")
 set ( GRAPHBLAS_ROOT "../../../../GraphBLAS")
+set ( GraphBLAS_CUDA_DIR "../../../../GraphBLAS/build/CUDA")
 
 # set the module path for all Find*.cmake files.
 set ( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     ${CMAKE_SOURCE_DIR}/cmake_modules
-    ${CMAKE_SOURCE_DIR}/../cmake_modules
     ${CMAKE_SOURCE_DIR}/../../../cmake_modules
-    ${CMAKE_SOURCE_DIR}/../LAGraph/cmake_modules )
+	${CMAKE_SOURCE_DIR}/../../../../GraphBLAS/cmake_modules ) 
 
 include ( SuiteSparsePolicy )
 
@@ -37,8 +37,10 @@ add_executable ( verify_matching "verify_matching.cpp")
 # look for all SuiteSparse packages:
 find_package ( LAGraph 
     PATHS ${LAGRAPH_ROOT}/build NO_DEFAULT_PATH REQUIRED )
-# find_package ( LAGraphX
-#     PATHS ${LAGRAPHX_ROOT}/build/experimental NO_DEFAULT_PATH REQUIRED )
+
+find_library ( LAGRAPHX lagraphx PATHS ../../../build/experimental REQUIRED ) 
+set ( LAGRAPHX_INCLUDE_DIR ${LAGRAPHX_ROOT}/include )
+
 find_package ( GraphBLAS REQUIRED
     PATHS ${GRAPHBLAS_ROOT}/build NO_DEFAULT_PATH REQUIRED )
 
@@ -77,8 +79,6 @@ target_link_libraries ( gen_general PUBLIC ${LAGRAPH_LIBRARIES} )
 include_directories ( ${LAGRAPH_INCLUDE_DIR} )
 
 # LAGraphX:
-message ( "LAGraphX libraries: " ${LAGRAPHX_LIBRARIES} )
-target_link_libraries ( gen_bipartite PUBLIC ${LAGRAPHX_LIBRARIES} )
-target_link_libraries ( gen_general PUBLIC ${LAGRAPHX_LIBRARIES} )
+target_link_libraries ( gen_bipartite PUBLIC ${LAGRAPHX} )
+target_link_libraries ( gen_general PUBLIC ${LAGRAPHX} )
 include_directories ( ${LAGRAPHX_INCLUDE_DIR} )
-
