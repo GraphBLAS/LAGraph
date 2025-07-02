@@ -118,4 +118,10 @@ int LG_check_argminmax
     char *msg
 ) ;
 
+int LG_check_flow
+(
+   const GrB_Matrix *flow_mtx,
+   char* msg
+) ;
+
 #endif

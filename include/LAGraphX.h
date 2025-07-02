@@ -1492,6 +1492,20 @@ int LAGraph_coloring_MIS
     char *msg
 ) ;
 
+LAGRAPHX_PUBLIC
+int LAGr_MaxFlow(
+    //outputs
+    double* f,
+    GrB_Matrix* flow_mtx,
+    //inputs
+    LAGraph_Graph G,
+    GrB_Index src, //source node index
+    GrB_Index sink, // sink node index
+    //inout
+    char* msg
+);
+
+
 #if defined ( __cplusplus )
 }
 #endif
