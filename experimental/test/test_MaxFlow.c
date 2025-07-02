@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+// experimental/test/test_MaxFlow: tests for LAGr_MaxFlow
+//------------------------------------------------------------------------------
+
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
+
+// Contributed by Darin Peries and Tim Davis, Texas A&M University
+
+//------------------------------------------------------------------------------
 
 #include <acutest.h>
 #include <LAGraphX.h>
@@ -34,6 +50,7 @@ test_info tests[] = {
 //399 11098623877 alt sink and src for test 6
 
 void test_MaxFlow(void) {
+#if LG_SUITESPARSE_GRAPHBLAS_V10
   LAGraph_Init(msg);
 //OK(LG_SET_BURBLE(1));
   OK(LG_SET_BURBLE(0));
@@ -61,10 +78,12 @@ void test_MaxFlow(void) {
     OK(LAGraph_Delete(&G, msg));
   }
   LAGraph_Finalize(msg);
+#endif
 }
 
 void test_MaxFlowMtx(void) {
   LAGraph_Init(msg);
+#if LG_SUITESPARSE_GRAPHBLAS_V10
 //OK(LG_SET_BURBLE(1));
   OK(LG_SET_BURBLE(0));
   OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, 4));
@@ -100,6 +119,7 @@ void test_MaxFlowMtx(void) {
     GrB_free(&flow_mtx);
     OK(LAGraph_Delete(&G, msg));
   }
+#endif
   LAGraph_Finalize(msg);
 }
 
