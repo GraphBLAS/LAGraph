@@ -1,7 +1,25 @@
+//------------------------------------------------------------------------------
+// LAGr_MaxFlow: max flow
+//------------------------------------------------------------------------------
+
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
+
+// Contributed by Darin Peries and Tim Davis, Texas A&M University
+
+//------------------------------------------------------------------------------
 
 #include <LAGraphX.h>
 #include "LG_internal.h"
 #include <LAGraph.h>
+
+#if LG_SUITESPARSE_GRAPHBLAS_V10
 
 //------------------------------------------------------------------------------
 // LG_augment_maxflow
@@ -9,7 +27,6 @@
 
 // LG_augment_maxflow is a function used to sum the current excess flow of the
 // sink into the output variable f for each iteration.
-
 
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL ;
@@ -450,12 +467,15 @@ JIT_STR(void MF_getResidual(double * res, const MF_flowEdge * flow_edge){
 JIT_STR(void MF_extractMatrixFlow(double* flow, const MF_flowEdge* edge){*flow = edge->flow;}, GRB_EMFLOW_STR)
 
   
+#endif
   
 //------------------------------------------------------------------------------
 // LAGraph_MaxFlow
 //------------------------------------------------------------------------------
 
 int LAGr_MaxFlow(double* f, GrB_Matrix* flow_mtx, LAGraph_Graph G, GrB_Index src, GrB_Index sink, char *msg){
+
+#if LG_SUITESPARSE_GRAPHBLAS_V10
 
   //types
   GrB_Type GrB_FlowEdge = NULL ;
@@ -930,4 +950,7 @@ int LAGr_MaxFlow(double* f, GrB_Matrix* flow_mtx, LAGraph_Graph G, GrB_Index src
 
   LG_FREE_ALL;
   return GrB_SUCCESS;
+#else
+  return GrB_NOT_IMPLEMENTED ;
+#endif
 }
