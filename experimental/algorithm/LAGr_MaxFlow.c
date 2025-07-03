@@ -15,6 +15,9 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: the GrB_ and GRB_ prefixes should be reserved for GraphBLAS itself,
+// and not used for new matrices and operators here.  Rename them.
+
 #include <LAGraphX.h>
 #include "LG_internal.h"
 #include <LAGraph.h>
@@ -394,6 +397,7 @@ JIT_STR(void MF_MxeMult32(MF_resultTuple32 * z, const MF_compareTuple32 * x,
   }, GRB_MXEMULT_STR32)
 
 
+// FIXME: x will always be non-NULL in the test below:
 JIT_STR(void MF_MxeAdd64(MF_resultTuple64 * z,
 		       const MF_resultTuple64 * x, const MF_resultTuple64 * y){
   if(x != NULL){
@@ -404,6 +408,7 @@ JIT_STR(void MF_MxeAdd64(MF_resultTuple64 * z,
   }
   }, GRB_MXEADD_STR64)
 
+// FIXME: x will always be non-NULL in the test below:
 JIT_STR(void MF_MxeAdd32(MF_resultTuple32 * z,
 		       const MF_resultTuple32 * x, const MF_resultTuple32 * y){
   if(x != NULL){
@@ -449,6 +454,7 @@ JIT_STR(void MF_MakeFlow(MF_flowEdge * flow_edge, const double * flow){
   flow_edge->flow = (*flow);
   }, GRB_MAKEF_STR)
 
+#ifdef DBG
 JIT_STR(void MF_CheckInvariant64(bool *z, const int64_t *height,
 			       const MF_resultTuple64 *result) {
   (*z) = ((*height) == result->d+1);
@@ -458,7 +464,7 @@ JIT_STR(void MF_CheckInvariant32(bool *z, const int32_t *height,
 			       const MF_resultTuple32 *result) {
   (*z) = ((*height) == result->d+1);
   }, GRB_INV_STR32)
-
+#endif
   
 JIT_STR(void MF_getResidual(double * res, const MF_flowEdge * flow_edge){
     (*res) = flow_edge->capacity - flow_edge->flow;     /* FLOP */
@@ -502,7 +508,7 @@ int LAGr_MaxFlow(double* f, GrB_Matrix* flow_mtx, LAGraph_Graph G, GrB_Index src
 
   //src and sink mask vec and n_active
   GrB_Vector src_and_sink = NULL ;
-  GrB_Index n_active = INT32_MAX ;
+  GrB_Index n_active = INT64_MAX ;
 
   //semiring and vectors for y<e, struct> = R x d
   GrB_Vector y = NULL ;
@@ -605,7 +611,7 @@ int LAGr_MaxFlow(double* f, GrB_Matrix* flow_mtx, LAGraph_Graph G, GrB_Index src
 			  "MF_CreateResidualBackward", GRB_CRB_STR));
   GRB_TRY(GrB_Matrix_new(&R, GrB_FlowEdge, n, n));
   GRB_TRY(GrB_apply(R, NULL, NULL, GrB_CreateResidualForward, A, NULL));
-  GRB_TRY(GrB_apply(R, A, NULL, GrB_CreateResidualBackward, G->AT, GrB_DESC_SC));
+  GRB_TRY(GrB_apply(R, A, NULL, GrB_CreateResidualBackward, AT, GrB_DESC_SC));
 
   //init R with initial saturated flows
   GRB_TRY(GxB_BinaryOp_new(&GrB_InitForwardFlows,
@@ -644,25 +650,34 @@ int LAGr_MaxFlow(double* f, GrB_Matrix* flow_mtx, LAGraph_Graph G, GrB_Index src
   //create scalars
   GRB_TRY(GrB_Scalar_new(&zero, GrB_FP64));
   GRB_TRY(GrB_Scalar_setElement(zero, 0));
-  GRB_TRY(GrB_Scalar_new (&empty, GrB_FP64)) ;\
+  GRB_TRY(GrB_Scalar_new (&empty, GrB_FP64)) ;
 
   GRB_TRY(GxB_UnaryOp_new(&GrB_extractMatrixFlows,
 			  F_UNARY(MF_extractMatrixFlow),
 			  GrB_FP64, GrB_FlowEdge, "MF_extractMatrixFlow", GRB_EMFLOW_STR));
 
-  if(n > INT32_MAX){
-  
-    //create 64 bit types for computation
+  #ifdef COVERAGE
+  // Just for test coverage, use 64-bit ints for n > 100.  Do not use this
+  // rule in production!
+  #define NBIG 100
+  #else
+  // For production use: 64-bit integers if n > 2^31
+  #define NBIG INT32_MAX
+  #endif
+  if (n > NBIG){
+    //create types for computation
     GRB_TRY(GxB_Type_new(&GrB_ResultTuple, sizeof(MF_resultTuple64),
 			 "MF_resultTuple64", GRB_RESULTTUPLE_STR64));
     GRB_TRY(GxB_Type_new(&GrB_CompareTuple, sizeof(MF_compareTuple64),
 			 "MF_compareTuple64", GRB_COMPARETUPLE_STR64));
 
     //invariant check
+    #ifdef DBG
     GRB_TRY(GrB_Vector_new(&invariant, GrB_BOOL, n));
     GRB_TRY(GxB_BinaryOp_new(&GrB_InvariantCheck, F_BINARY(MF_CheckInvariant64),
 			     GrB_BOOL, GrB_INT64,
 			     GrB_ResultTuple, "MF_CheckInvariant64", GRB_INV_STR64));
+    #endif
 
     //create and init d vector
     GRB_TRY(GrB_Vector_new(&d, GrB_INT64, n));
@@ -737,10 +752,12 @@ int LAGr_MaxFlow(double* f, GrB_Matrix* flow_mtx, LAGraph_Graph G, GrB_Index src
 			 "MF_compareTuple32", GRB_COMPARETUPLE_STR32));
 
     //invariant check
+    #ifdef DBG
     GRB_TRY(GrB_Vector_new(&invariant, GrB_BOOL, n));
     GRB_TRY(GxB_BinaryOp_new(&GrB_InvariantCheck, F_BINARY(MF_CheckInvariant32),
 			     GrB_BOOL, GrB_INT32,
 			     GrB_ResultTuple, "MF_CheckInvariant32", GRB_INV_STR32));
+    #endif
 
     GRB_TRY(GxB_UnaryOp_new(&GrB_extractFlows,
 			  F_UNARY(MF_extractFlow32),
@@ -947,6 +964,35 @@ int LAGr_MaxFlow(double* f, GrB_Matrix* flow_mtx, LAGraph_Graph G, GrB_Index src
     GRB_TRY(GrB_apply(*flow_mtx, NULL, NULL, GrB_extractMatrixFlows, R, NULL));
     GRB_TRY(GrB_select(*flow_mtx, NULL, NULL, GrB_VALUEGE_FP64, *flow_mtx, 0, NULL));
   }
+
+  #ifdef COVERAGE
+  // The GrB_MxeAdd operator is not tested via the call to GrB_mxv with the
+  // GrB_MxeSemiring above, so test it via the GrB_MxeAddMonoid.
+  GrB_free(&y);
+  GRB_TRY(GrB_Vector_new(&y, GrB_ResultTuple, 3));
+  if (n > NBIG)
+  {
+    MF_resultTuple64 a = {.d = 1, .j = 2, .residual = 3};
+    MF_resultTuple64 b = {.d = 4, .j = 5, .residual = 6};
+    GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &a, 0)) ;
+    GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &b, 0)) ;
+    MF_resultTuple64 c = {.d = 0, .j = 0, .residual = 0};
+    GRB_TRY (GrB_Vector_reduce_UDT ((void *) &c, NULL, GrB_MxeAddMonoid, y, NULL)) ;
+//  printf ("c: resid %g j %g d %g\n", c.residual, (double) c.j, (double) c.d) ;
+    LG_ASSERT ((c.residual == 6 && c.j == 5 && c.d == 4), GrB_PANIC) ;
+  }
+  else
+  {
+    MF_resultTuple32 a = {.d = 1, .j = 2, .residual = 3};
+    MF_resultTuple32 b = {.d = 4, .j = 5, .residual = 6};
+    GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &a, 0)) ;
+    GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &b, 0)) ;
+    MF_resultTuple32 c = {.d = 0, .j = 0, .residual = 0};
+    GRB_TRY (GrB_Vector_reduce_UDT ((void *) &c, NULL, GrB_MxeAddMonoid, y, NULL)) ;
+//  printf ("c: resid %g j %g d %g\n", c.residual, (double) c.j, (double) c.d) ;
+    LG_ASSERT ((c.residual == 6 && c.j == 5 && c.d == 4), GrB_PANIC) ;
+  }
+  #endif
 
   LG_FREE_ALL;
   return GrB_SUCCESS;
