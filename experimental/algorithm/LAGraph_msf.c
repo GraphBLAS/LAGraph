@@ -21,6 +21,11 @@
 
 // TODO: is this ready for src?
 
+// TODO: a "sanitize" input is fine for now in the experimental folder, but it
+// doesn't fit with the standard LAGraph API.  It will need to be removed when
+// this method is moved to the src folder.  The input will also become an
+// LAGraph_Graph, not a plain GrB_Matrix A.
+
 #include "LG_internal.h"
 #include <LAGraph.h>
 #include <LAGraphX.h>
@@ -42,7 +47,7 @@ typedef struct
 "        double wFp;\n"     \
 "    };\n"                  \
 "    uint64_t idx;\n"       \
-"} pairW;\n"       
+"} pairW;\n"
 
 typedef struct
 {
@@ -64,7 +69,7 @@ typedef struct
 "        };\n"                  \
 "        uint64_t idx;\n"       \
 "    } *w_partner;\n"           \
-"} MSF_context;\n"      
+"} MSF_context;\n"
 
 
 //****************************************************************************
@@ -135,8 +140,8 @@ static void get_snd (uint64_t *y, const pairW *x)
 static void tupleMinInt(pairW *z, const pairW *x, const pairW *y)
 {
     bool xSmaller = x->wInt < y->wInt || (x->wInt == y->wInt && x->idx < y->idx);
-    z->wInt = (xSmaller)? x->wInt: y->wInt; 
-    z->idx = (xSmaller)? x->idx: y->idx; 
+    z->wInt = (xSmaller)? x->wInt: y->wInt;
+    z->idx = (xSmaller)? x->idx: y->idx;
 }
 #define TUPLEMININT \
 "void tupleMinInt(pairW *z, const pairW *x, const pairW *y)\n"\
@@ -148,8 +153,8 @@ static void tupleMinInt(pairW *z, const pairW *x, const pairW *y)
 static void tupleMinFp(pairW *z, const pairW *x, const pairW *y)
 {
     bool xSmaller = x->wFp < y->wFp || (x->wFp == y->wFp && x->idx < y->idx);
-    z->wFp = (xSmaller)? x->wFp: y->wFp; 
-    z->idx = (xSmaller)? x->idx: y->idx; 
+    z->wFp = (xSmaller)? x->wFp: y->wFp;
+    z->idx = (xSmaller)? x->idx: y->idx;
 }
 #define TUPLEMINFP \
 "void tupleMinFp(pairW *z, const pairW *x, const pairW *y)\n"\
@@ -162,8 +167,8 @@ static void tupleMinFp(pairW *z, const pairW *x, const pairW *y)
 // Set z to the second -- sets bits regardless of weight type.
 static void tuple2nd(pairW *z, const void *x, const pairW *y)
 {
-    z->wInt = y->wInt; 
-    z->idx = y->idx; 
+    z->wInt = y->wInt;
+    z->idx = y->idx;
 }
 #define TUPLE2ND \
 "void tuple2nd(pairW *z, const void *x, const pairW *y)\n"\
@@ -200,7 +205,7 @@ static void tupleEq(bool *z, const pairW *x, const pairW *y)
     GrB_free (&cedge);                              \
     GrB_free (&tedge);                              \
     GrB_free (&mask);                               \
-    GrB_free (&index_v);                              \
+    GrB_free (&index_v);                            \
     GrB_free (&comb);                               \
     GrB_free (&minComb);                            \
     GrB_free (&fst);                                \
@@ -228,7 +233,7 @@ int LAGraph_msf
     #if LG_SUITESPARSE_GRAPHBLAS_V10
     LG_CLEAR_MSG ;
     MSF_context context = {
-        .parent = NULL, .w_partner = NULL, 
+        .parent = NULL, .w_partner = NULL,
         // .type = GrB_UINT64_CODE
     };
     GrB_Info info;
@@ -238,21 +243,21 @@ int LAGraph_msf
         edge = NULL, cedge = NULL, mask = NULL, index_v = NULL, ramp = NULL;
 
     GrB_Index *SI = NULL, *SJ = NULL;
-    int64_t *SX = NULL;
+    void *SX = NULL;
     GrB_Type contx_type = NULL, lg_pair = NULL, weight_type = NULL;
     GrB_BinaryOp comb = NULL, pairMin = NULL, pairSec = NULL, pairEq = NULL;
     GrB_Monoid pairMin_monoid = NULL;
     GrB_Semiring minComb = NULL, pairMin2nd = NULL;
     GrB_UnaryOp fst = NULL, snd = NULL;
     int edge_h = GrB_DEFAULT;
-    uint64_t edge_size = 0, edge_n = 0; 
+    uint64_t edge_size = 0, edge_n = 0;
     GrB_IndexUnaryOp s1 = NULL, s2 = NULL;
 
 
     //--------------------------------------------------------------------------
     // Check inputs
     //--------------------------------------------------------------------------
-    
+
     if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
     GrB_Index ncols ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
@@ -277,30 +282,30 @@ int LAGraph_msf
             case GrB_UINT64_CODE:
                 tcode = GrB_INT64_CODE;
                 GRB_TRY (GrB_Matrix_new (&S, GrB_INT64, n, n)) ;
-                GRB_TRY (GrB_Matrix_eWiseAdd_BinaryOp 
+                GRB_TRY (GrB_Matrix_eWiseAdd_BinaryOp
                     (S, NULL, NULL, GrB_MIN_INT64, A, A, GrB_DESC_T1)) ;
                 break;
             case GrB_FP32_CODE:
             case GrB_FP64_CODE:
                 tcode = GrB_FP64_CODE;
                 GRB_TRY (GrB_Matrix_new (&S, GrB_FP64, n, n)) ;
-                GRB_TRY (GrB_Matrix_eWiseAdd_BinaryOp 
+                GRB_TRY (GrB_Matrix_eWiseAdd_BinaryOp
                     (S, NULL, NULL, GrB_MIN_FP64, A, A, GrB_DESC_T1)) ;
                 break;
             default:
                 LG_ASSERT(false, GrB_DOMAIN_MISMATCH) ;
                 break;
         }
-        weight_type = tcode == GrB_INT64_CODE? GrB_INT64: GrB_FP64;
+        weight_type = (tcode == GrB_INT64_CODE) ? GrB_INT64 : GrB_FP64 ;
     }
     else
     {
         // Use the input as-is, and assume it is symmetric
         GrB_Matrix_get_INT32(A, (int *) &(tcode), GrB_EL_TYPE_CODE) ;
         LG_ASSERT(tcode < 12 && tcode > 0, GrB_DOMAIN_MISMATCH) ;
-        tcode = (tcode == GrB_FP32_CODE || tcode == GrB_FP64_CODE)? 
+        tcode = (tcode == GrB_FP32_CODE || tcode == GrB_FP64_CODE)?
             GrB_FP64_CODE: GrB_INT64_CODE;
-        weight_type = tcode == GrB_INT64_CODE? GrB_INT64: GrB_FP64;
+        weight_type = (tcode == GrB_INT64_CODE) ? GrB_INT64 : GrB_FP64 ;
         GRB_TRY (GrB_Matrix_new (&S, weight_type, n, n)) ;
         GRB_TRY (GrB_Matrix_assign
                 (S, NULL, NULL, A, GrB_ALL, n, GrB_ALL, n, NULL)) ;
@@ -319,10 +324,11 @@ int LAGraph_msf
 
     LG_TRY (LAGraph_Malloc  ((void **) &SI, 2*n, sizeof (GrB_Index), msg)) ;
     LG_TRY (LAGraph_Malloc  ((void **) &SJ, 2*n, sizeof (GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc  ((void **) &SX, 2*n, sizeof (GrB_Index), msg)) ;
+    size_t sx_size = (tcode == GrB_INT64_CODE) ? sizeof (int64_t) : sizeof (double) ;
+    LG_TRY (LAGraph_Malloc  (&SX, 2*n, sx_size, msg)) ;
 
     // context arrays
-    LG_TRY (LAGraph_Malloc 
+    LG_TRY (LAGraph_Malloc
         ((void **) &context.parent, n, sizeof (uint64_t), msg)) ;
 
     // prepare vectors
@@ -337,7 +343,7 @@ int LAGraph_msf
         ramp, NULL, NULL, (uint64_t) 0, GrB_ALL, n + 1, NULL)) ;
     GRB_TRY (GrB_Vector_apply_IndexOp_INT64 (
         ramp, NULL, NULL, GrB_ROWINDEX_INT64, ramp, (int64_t) 0, NULL)) ;
-    GRB_TRY (GxB_Vector_load(parent_v, (void **) &context.parent, 
+    GRB_TRY (GxB_Vector_load(parent_v, (void **) &context.parent,
         GrB_UINT64, n, 3 * n * sizeof (uint64_t), GxB_IS_READONLY, NULL)) ;
     // semiring & monoid
     pairW inf = {.wInt = INT64_MAX, .idx = UINT64_MAX};
@@ -350,31 +356,31 @@ int LAGraph_msf
     if(tcode == GrB_INT64_CODE)
     {
         GRB_TRY (GxB_BinaryOp_new (
-            &pairMin, (GxB_binary_function) tupleMinInt, 
+            &pairMin, (GxB_binary_function) tupleMinInt,
             lg_pair, lg_pair, lg_pair, "tupleMinInt", TUPLEMININT
         )) ;
     }
     else
     {
         GRB_TRY (GxB_BinaryOp_new (
-            &pairMin, (GxB_binary_function) tupleMinFp, 
+            &pairMin, (GxB_binary_function) tupleMinFp,
             lg_pair, lg_pair, lg_pair, "tupleMinFp", TUPLEMINFP
         )) ;
     }
-    
+
     GRB_TRY (GxB_BinaryOp_new (
-        &pairSec, (GxB_binary_function) tuple2nd, 
+        &pairSec, (GxB_binary_function) tuple2nd,
         lg_pair, GrB_BOOL, lg_pair, "tuple2nd", TUPLE2ND
     )) ;
     GRB_TRY (GxB_BinaryOp_new (
-        &pairEq, (GxB_binary_function) tupleEq, 
+        &pairEq, (GxB_binary_function) tupleEq,
         GrB_BOOL, lg_pair, lg_pair, "tupleEq", TUPLEEQ
     )) ;
     GRB_TRY (GrB_Monoid_new_UDT (&pairMin_monoid, pairMin, (void *) &inf)) ;
     GRB_TRY (GrB_Semiring_new (&minComb, pairMin_monoid, comb)) ;
     GRB_TRY (GrB_Semiring_new (&pairMin2nd, pairMin_monoid, pairSec)) ;
     GRB_TRY (GxB_UnaryOp_new (
-        &fst, (GxB_unary_function) get_fst, weight_type, lg_pair, 
+        &fst, (GxB_unary_function) get_fst, weight_type, lg_pair,
         "get_fst", GETFST)) ;
     GRB_TRY (GxB_UnaryOp_new (
         &snd, (GxB_unary_function) get_snd, GrB_UINT64, lg_pair,
@@ -383,14 +389,14 @@ int LAGraph_msf
     // context type
     GRB_TRY (GxB_Type_new (
         &contx_type, sizeof (MSF_context), "MSF_context", MSF_CONT)) ;
-        
+
     // ops for GrB_select
     GRB_TRY(GxB_IndexUnaryOp_new (
-        &s1, (GxB_index_unary_function) selectEdge, GrB_BOOL, weight_type, 
+        &s1, (GxB_index_unary_function) selectEdge, GrB_BOOL, weight_type,
         contx_type, "selectEdge", SELECTEDGE
     )) ;
     GRB_TRY(GxB_IndexUnaryOp_new (
-        &s2, (void *) removeEdge, GrB_BOOL, GrB_UINT64, contx_type, 
+        &s2, (void *) removeEdge, GrB_BOOL, GrB_UINT64, contx_type,
         "removeEdge", REMOVEEDGE
     )) ;
 
@@ -440,7 +446,7 @@ int LAGraph_msf
         GRB_TRY (GrB_assign (index_v, mask, 0, I, GrB_ALL, 0, NULL)) ;
         GRB_TRY (GrB_assign (t, NULL, NULL, n, GrB_ALL, 0, NULL)) ;
         LG_TRY (LAGraph_FastAssign_Semiring(
-            t, NULL, GrB_MIN_UINT64, parent_v, index_v, ramp, 
+            t, NULL, GrB_MIN_UINT64, parent_v, index_v, ramp,
             GrB_MIN_SECOND_SEMIRING_UINT64, NULL, msg
         )) ;
         GRB_TRY (GxB_Vector_extract_Vector (
@@ -464,11 +470,11 @@ int LAGraph_msf
         GRB_TRY (GrB_Vector_nvals (&num, edge)) ;
         GRB_TRY (GrB_apply (t, NULL, NULL, snd, edge, NULL)) ;
         GRB_TRY (GrB_Vector_extractTuples (NULL, SJ + ntuples, &num, t)) ;
-        if(tcode == GrB_UINT64_CODE)
+        if(tcode == GrB_INT64_CODE)
         {
             GRB_TRY (GrB_apply (t, NULL, NULL, fst, edge, NULL)) ;
             GRB_TRY (GrB_Vector_extractTuples_INT64 (
-                SI + ntuples, SX + ntuples, &num, t)) ;
+                SI + ntuples, ((int64_t *) SX) + ntuples, &num, t)) ;
             GRB_TRY (GrB_Vector_clear (t)) ;
         }
         else
@@ -477,12 +483,12 @@ int LAGraph_msf
             GRB_TRY (GrB_Vector_new(&t, weight_type, n)) ;
             GRB_TRY (GrB_apply (t, NULL, NULL, fst, edge, NULL)) ;
             GRB_TRY (GrB_Vector_extractTuples_FP64 (
-                SI + ntuples, (double *) SX + ntuples, &num, t)) ;
+                SI + ntuples, ((double *) SX) + ntuples, &num, t)) ;
             GRB_TRY (GrB_Vector_clear (t)) ;
             GRB_TRY (GrB_free(&t)) ;
             GRB_TRY (GrB_Vector_new(&t, GrB_UINT64, n)) ;
         }
-        
+
         ntuples += num;
 
         // path halving until every vertex points on a root
@@ -503,7 +509,7 @@ int LAGraph_msf
     }
 
     GRB_TRY (GrB_Matrix_clear (T)) ;
-    if(tcode == GrB_UINT64_CODE)
+    if(tcode == GrB_INT64_CODE)
     {
         GRB_TRY (GrB_Matrix_build_INT64 (
             T, SI, SJ, (int64_t *)SX, ntuples, GxB_IGNORE_DUP)) ;
