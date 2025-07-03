@@ -98,10 +98,10 @@ int main (int argc, char **argv)
 
     printf ("\n===============================The result matrix:\n") ;
     LG_TRY (LAGraph_Matrix_Print (A, LAGraph_SHORT, stdout, msg)) ;
-    long long highest_index = 0 ;
+    int64_t highest_index = 0 ;
     LG_TRY(GrB_Matrix_reduce_INT64
         (&highest_index, NULL, GrB_PLUS_MONOID_INT64, A, NULL)) ;
-    printf ("highest index: %lld\n", highest_index) ;
+    printf ("highest index: %lld\n", (long long int) highest_index) ;
     //--------------------------------------------------------------------------
     // free everyting and finish
     //--------------------------------------------------------------------------

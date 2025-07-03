@@ -51,13 +51,12 @@ const uint64_t mtx8_i [] = {1, 2, 3, 4, 5, 6};
 const uint64_t mtx8_j [] = {4, 3, 0, 6, 2, 3};
 const matrix_info files [ ] =
 {
+    #if LG_SUITESPARSE_GRAPHBLAS_V10 
     { 1, "A.mtx", 6, A_mtx_i, A_mtx_j},
     { 1, "jagmesh7.mtx", 1137, NULL, NULL},
     { 0, "west0067.mtx", 66, NULL, NULL}, // unsymmetric
-    #if LG_SUITESPARSE_GRAPHBLAS_V10 
     { 1, "bcsstk13.mtx", 2002, NULL, NULL}, // overflows an INT32
     { 0, "matrix_int8.mtx", 6, mtx8_i, mtx8_j},
-    #endif 
     { 0, "matrix_uint8.mtx", 6, mtx8u_i, mtx8u_j},
     { 1, "karate.mtx", 33, NULL, NULL},
     { 1, "ldbc-cdlp-undirected-example.mtx", 7, NULL, NULL},
@@ -65,6 +64,7 @@ const matrix_info files [ ] =
     { 1, "ldbc-undirected-example-unweighted.mtx", 8, NULL, NULL},
     { 1, "ldbc-undirected-example.mtx", 8, NULL, NULL},
     { 1, "ldbc-wcc-example.mtx", 9, NULL, NULL},
+    #endif 
     { 0, "" },
 } ;
 
@@ -184,7 +184,7 @@ void test_msf (void)
 
 void test_errors (void)
 {
-    #if LAGRAPH_SUITESPARSE
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init (msg) ;
 
     // C and A are NULL
