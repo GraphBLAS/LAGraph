@@ -221,6 +221,7 @@ static void tupleEq(bool *z, const pairW *x, const pairW *y)
     GrB_free (&pairMin_monoid);                     \
     GrB_free (&pairMin2nd);                         \
     GrB_free (&lg_pair);                            \
+    GrB_free (&max_weight);                         \
 }
 int LAGraph_msf
 (
@@ -249,6 +250,7 @@ int LAGraph_msf
     GrB_Monoid pairMin_monoid = NULL;
     GrB_Semiring minComb = NULL, pairMin2nd = NULL;
     GrB_UnaryOp fst = NULL, snd = NULL;
+    GrB_Scalar max_weight = NULL;
     int edge_h = GrB_DEFAULT;
     uint64_t edge_size = 0, edge_n = 0;
     GrB_IndexUnaryOp s1 = NULL, s2 = NULL;
@@ -349,12 +351,17 @@ int LAGraph_msf
     pairW inf = {.wInt = INT64_MAX, .idx = UINT64_MAX};
     if(tcode == GrB_FP64_CODE) inf.wFp = INFINITY;
 
+    GRB_TRY (GxB_Scalar_new(&max_weight, weight_type)) ;
+
+
     GRB_TRY (GxB_BinaryOp_new (
         &comb, (GxB_binary_function) combine,
         lg_pair, weight_type, GrB_UINT64, "combine", COMBINE
     )) ;
+
     if(tcode == GrB_INT64_CODE)
     {
+        GRB_TRY (GxB_Scalar_setElement_INT64(max_weight, INT64_MAX)) ;
         GRB_TRY (GxB_BinaryOp_new (
             &pairMin, (GxB_binary_function) tupleMinInt,
             lg_pair, lg_pair, lg_pair, "tupleMinInt", TUPLEMININT
@@ -362,6 +369,7 @@ int LAGraph_msf
     }
     else
     {
+        GRB_TRY (GxB_Scalar_setElement_FP64(max_weight, INFINITY)) ;
         GRB_TRY (GxB_BinaryOp_new (
             &pairMin, (GxB_binary_function) tupleMinFp,
             lg_pair, lg_pair, lg_pair, "tupleMinFp", TUPLEMINFP
@@ -372,13 +380,16 @@ int LAGraph_msf
         &pairSec, (GxB_binary_function) tuple2nd,
         lg_pair, GrB_BOOL, lg_pair, "tuple2nd", TUPLE2ND
     )) ;
+
     GRB_TRY (GxB_BinaryOp_new (
         &pairEq, (GxB_binary_function) tupleEq,
         GrB_BOOL, lg_pair, lg_pair, "tupleEq", TUPLEEQ
     )) ;
+    
     GRB_TRY (GrB_Monoid_new_UDT (&pairMin_monoid, pairMin, (void *) &inf)) ;
     GRB_TRY (GrB_Semiring_new (&minComb, pairMin_monoid, comb)) ;
     GRB_TRY (GrB_Semiring_new (&pairMin2nd, pairMin_monoid, pairSec)) ;
+
     GRB_TRY (GxB_UnaryOp_new (
         &fst, (GxB_unary_function) get_fst, weight_type, lg_pair,
         "get_fst", GETFST)) ;
@@ -413,11 +424,12 @@ int LAGraph_msf
         // edge[u] = u's minimum edge (weight and index are encoded together)
         GRB_TRY (GrB_Vector_assign_UDT (
             edge, NULL, NULL, (void *) &inf, GrB_ALL, 0, NULL)) ;
-        GRB_TRY (GrB_mxv (edge, 0, pairMin, minComb, S, f, NULL)) ;
+        GRB_TRY (GrB_mxv (edge, NULL, pairMin, minComb, S, f, NULL)) ;
+
         // cedge[u] = children's minimum edge  | if u is a root
-        //          = (INT_MAX, u)             | otherwise
-        GRB_TRY (GrB_assign (t, NULL, NULL, (uint64_t) INT_MAX, GrB_ALL, 0, NULL)) ;
-        GRB_TRY (GrB_eWiseMult (cedge, NULL, NULL, comb, t, I, NULL)) ;
+        //          = (max_weight, u)          | otherwise
+        GRB_TRY (GrB_Vector_apply_BinaryOp1st_Scalar (
+            cedge, NULL, NULL, comb, max_weight, I, NULL)) ;
         LG_TRY (LAGraph_FastAssign_Semiring(
             cedge, NULL, pairMin, parent_v, edge, ramp, pairMin2nd, NULL, msg
         )) ;
@@ -443,7 +455,7 @@ int LAGraph_msf
 
         // 3. each root picks a vertex from its children to generate the solution
         GRB_TRY (GrB_assign (index_v, NULL, NULL, n, GrB_ALL, 0, NULL)) ;
-        GRB_TRY (GrB_assign (index_v, mask, 0, I, GrB_ALL, 0, NULL)) ;
+        GRB_TRY (GrB_assign (index_v, mask, NULL, I, GrB_ALL, 0, NULL)) ;
         GRB_TRY (GrB_assign (t, NULL, NULL, n, GrB_ALL, 0, NULL)) ;
         LG_TRY (LAGraph_FastAssign_Semiring(
             t, NULL, GrB_MIN_UINT64, parent_v, index_v, ramp,
