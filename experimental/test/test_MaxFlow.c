@@ -35,16 +35,17 @@ typedef struct{
   GrB_Index S;
   GrB_Index T;
   double F;
+  LAGraph_Kind kind ;
 }test_info;
 
 test_info tests[] = {
-  {"wiki.mtx", 0, 5, 4},
-  {"matrix_random_flow.mtx", 0,9, 22},
-  {"rand.mtx", 0, 19, 37}, 
-  {"mcl.mtx", 0, 9, 0}, 
-  {"cycle_flow.mtx", 0, 89, 1},
-  {"random_weighted_general2.mtx", 0, 299, 11098623877},
-  {"random_weighted_general1.mtx", 0, 499, 6264009335}
+  {"wiki.mtx", 0, 5, 4, LAGraph_ADJACENCY_DIRECTED},
+  {"matrix_random_flow.mtx", 0,9, 22, LAGraph_ADJACENCY_DIRECTED},
+  {"rand.mtx", 0, 19, 37, LAGraph_ADJACENCY_DIRECTED},
+  {"mcl.mtx", 0, 9, 0, LAGraph_ADJACENCY_DIRECTED},
+  {"cycle_flow.mtx", 0, 89, 1, LAGraph_ADJACENCY_DIRECTED},
+  {"random_weighted_general2.mtx", 0, 299, 11098623877, LAGraph_ADJACENCY_UNDIRECTED},
+  {"random_weighted_general1.mtx", 0, 499, 6264009335, LAGraph_ADJACENCY_UNDIRECTED}
 };
 
 //399 11098623877 alt sink and src for test 6
@@ -54,25 +55,37 @@ void test_MaxFlow(void) {
   LAGraph_Init(msg);
 //OK(LG_SET_BURBLE(1));
   OK(LG_SET_BURBLE(0));
-  OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, 4));
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A=NULL;
+    printf ("\nMatrix: %s\n", tests[test].filename);
     TEST_CASE(tests[test].filename);
     snprintf(filename, LEN, LG_DATA_DIR "%s", tests[test].filename);
     FILE* f = fopen(filename, "r");
     TEST_CHECK(f != NULL);
     OK(LAGraph_MMRead(&A, f, msg));
     OK(fclose(f));
-    OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
-    OK(LAGraph_Cached_AT(G, msg));
+    LAGraph_Kind kind = tests [test].kind ;
+    OK(LAGraph_New(&G, &A, kind, msg));
+    if (kind == LAGraph_ADJACENCY_DIRECTED)
+    {
+        OK(LAGraph_Cached_AT(G, msg));
+    }
+
     OK(LAGraph_Cached_EMin(G, msg));
 
-    //begin test
+    // test with JIT
+    OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
     double flow = 0;
     OK(LAGr_MaxFlow(&flow, NULL, G, tests[test].S, tests[test].T, msg));
     printf("%s\n", msg);
-    TEST_CHECK(flow == tests[test].F);
     printf("flow is: %lf\n", flow);
+    TEST_CHECK(flow == tests[test].F);
+
+    // test without JIT
+    OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_OFF));
+    OK(LAGr_MaxFlow(&flow, NULL, G, tests[test].S, tests[test].T, msg));
+    TEST_CHECK(flow == tests[test].F);
+    OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
 
     //free work
     OK(LAGraph_Delete(&G, msg));
@@ -86,9 +99,9 @@ void test_MaxFlowMtx(void) {
 #if LG_SUITESPARSE_GRAPHBLAS_V10
 //OK(LG_SET_BURBLE(1));
   OK(LG_SET_BURBLE(0));
-  OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, 4));
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A=NULL;
+    printf ("\nMatrix: %s\n", tests[test].filename);
     TEST_CASE(tests[test].filename);
     snprintf(filename, LEN, LG_DATA_DIR "%s", tests[test].filename);
     FILE* f = fopen(filename, "r");
@@ -100,20 +113,34 @@ void test_MaxFlowMtx(void) {
     GrB_Index n;
     OK(GrB_Matrix_nrows(&n, A));
     OK(GrB_Matrix_new(&flow_mtx, GrB_FP64, n, n));
-    
+
     OK(fclose(f));
-    OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
-    OK(LAGraph_Cached_AT(G, msg));
+    // treat all matrices as directed graphs
+    LAGraph_Kind kind = LAGraph_ADJACENCY_DIRECTED ;
+//  LAGraph_Kind kind = tests [test].kind ;
+    OK(LAGraph_New(&G, &A, kind, msg));
+    if (kind == LAGraph_ADJACENCY_DIRECTED)
+    {
+        OK(LAGraph_Cached_AT(G, msg));
+    }
     OK(LAGraph_Cached_EMin(G, msg));
 
-    //begin test
+    // test with JIT
+    OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
     double flow = 0;
     OK(LAGr_MaxFlow(&flow, &flow_mtx, G, tests[test].S, tests[test].T, msg));
     int status = LG_check_flow(&flow_mtx, msg);
-    printf("%d", status);
+    printf("status: %d ", status);
     printf("%s\n", msg);
-    TEST_CHECK(flow == tests[test].F);
     printf("flow is: %lf\n", flow);
+    TEST_CHECK(flow == tests[test].F);
+
+    // test without JIT
+    OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_OFF));
+    OK(LAGr_MaxFlow(&flow, &flow_mtx, G, tests[test].S, tests[test].T, msg));
+    status = LG_check_flow(&flow_mtx, msg);
+    TEST_CHECK(flow == tests[test].F);
+    OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
 
     //free work
     GrB_free(&flow_mtx);
