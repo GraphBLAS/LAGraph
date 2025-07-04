@@ -52,7 +52,6 @@ const uint64_t mtx8_i [] = {1, 2, 3, 4, 5, 6};
 const uint64_t mtx8_j [] = {4, 3, 0, 6, 2, 3};
 const matrix_info files [ ] =
 {
-    #if LG_SUITESPARSE_GRAPHBLAS_V10 
     { 1, "A.mtx", 6, A_mtx_i, A_mtx_j, NAN},
     { 1, "jagmesh7.mtx", 1137, NULL, NULL, NAN},
     { 0, "west0067.mtx", 66, NULL, NULL, -63.9103636}, // unsymmetric
@@ -65,14 +64,12 @@ const matrix_info files [ ] =
     { 1, "ldbc-undirected-example-unweighted.mtx", 8, NULL, NULL, NAN},
     { 1, "ldbc-undirected-example.mtx", 8, NULL, NULL, NAN},
     { 1, "ldbc-wcc-example.mtx", 9, NULL, NULL, NAN},
-    #endif 
     { 0, "" },
 } ;
 
 //****************************************************************************
 void test_msf (void)
 {
-    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
     GrB_Scalar zeroB = NULL;
     GrB_Scalar_new(&zeroB, GrB_BOOL);
@@ -180,7 +177,6 @@ void test_msf (void)
     }
     GrB_free(&zeroB);
     LAGraph_Finalize (msg) ;
-    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -189,7 +185,6 @@ void test_msf (void)
 
 void test_inf_msf (void)
 {
-    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
     GrB_Scalar zeroB = NULL;
     GrB_Scalar_new(&zeroB, GrB_BOOL);
@@ -240,7 +235,6 @@ void test_inf_msf (void)
     OK (GrB_free (&A)) ;
     GrB_free(&zeroB);
     LAGraph_Finalize (msg) ;
-    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -249,9 +243,9 @@ void test_inf_msf (void)
 
 void test_errors (void)
 {
-    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init (msg) ;
 
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     // C and A are NULL
     int result = LAGraph_msf (NULL, NULL, true, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
@@ -262,21 +256,29 @@ void test_errors (void)
     TEST_CHECK (result == GrB_DIMENSION_MISMATCH) ;
     OK (GrB_free (&A)) ;
 
-    // A must be square
+    // A must real
     OK (GrB_Matrix_new (&A, GxB_FC32, 4, 4)) ;
     result = LAGraph_msf (&C, A, true, msg) ;
     TEST_CHECK (result == GrB_DOMAIN_MISMATCH) ;
+    
+    #else 
+    // Not implemented
+    OK (GrB_Matrix_new (&A, GrB_BOOL, 4, 4)) ;
+    int result = LAGraph_msf (&C, A, true, msg) ;
+    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
+    #endif
 
     OK (GrB_free (&A)) ;
     LAGraph_Finalize (msg) ;
-    #endif
 }
 
 //****************************************************************************
 
 TEST_LIST = {
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     {"msf", test_msf},
     {"inf_msf", test_inf_msf},
+    #endif
     {"msf_errors", test_errors},
     {NULL, NULL}
 };
