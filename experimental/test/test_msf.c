@@ -41,6 +41,7 @@ typedef struct
     uint64_t ans_n;
     const uint64_t *ans_i;
     const uint64_t *ans_j;
+    double ans_w;
 }
 matrix_info ;
 const uint64_t A_mtx_i [] = {1, 2, 3, 4, 5, 6};
@@ -51,27 +52,24 @@ const uint64_t mtx8_i [] = {1, 2, 3, 4, 5, 6};
 const uint64_t mtx8_j [] = {4, 3, 0, 6, 2, 3};
 const matrix_info files [ ] =
 {
-    #if LG_SUITESPARSE_GRAPHBLAS_V10 
-    { 1, "A.mtx", 6, A_mtx_i, A_mtx_j},
-    { 1, "jagmesh7.mtx", 1137, NULL, NULL},
-    { 0, "west0067.mtx", 66, NULL, NULL}, // unsymmetric
-    { 1, "bcsstk13.mtx", 2002, NULL, NULL}, // overflows an INT32
-    { 0, "matrix_int8.mtx", 6, mtx8_i, mtx8_j},
-    { 0, "matrix_uint8.mtx", 6, mtx8u_i, mtx8u_j},
-    { 1, "karate.mtx", 33, NULL, NULL},
-    { 1, "ldbc-cdlp-undirected-example.mtx", 7, NULL, NULL},
-    { 1, "ldbc-undirected-example-bool.mtx", 8, NULL, NULL},
-    { 1, "ldbc-undirected-example-unweighted.mtx", 8, NULL, NULL},
-    { 1, "ldbc-undirected-example.mtx", 8, NULL, NULL},
-    { 1, "ldbc-wcc-example.mtx", 9, NULL, NULL},
-    #endif 
+    { 1, "A.mtx", 6, A_mtx_i, A_mtx_j, NAN},
+    { 1, "jagmesh7.mtx", 1137, NULL, NULL, NAN},
+    { 0, "west0067.mtx", 66, NULL, NULL, -63.9103636}, // unsymmetric
+    { 1, "bcsstk13.mtx", 2002, NULL, NULL, -27812381075940.4},
+    { 0, "matrix_int8.mtx", 6, mtx8_i, mtx8_j, -120.0},
+    { 0, "matrix_uint8.mtx", 6, mtx8u_i, mtx8u_j, 8.0},
+    { 1, "karate.mtx", 33, NULL, NULL, NAN},
+    { 1, "ldbc-cdlp-undirected-example.mtx", 7, NULL, NULL, NAN},
+    { 1, "ldbc-undirected-example-bool.mtx", 8, NULL, NULL, NAN},
+    { 1, "ldbc-undirected-example-unweighted.mtx", 8, NULL, NULL, NAN},
+    { 1, "ldbc-undirected-example.mtx", 8, NULL, NULL, NAN},
+    { 1, "ldbc-wcc-example.mtx", 9, NULL, NULL, NAN},
     { 0, "" },
 } ;
 
 //****************************************************************************
 void test_msf (void)
 {
-    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
     GrB_Scalar zeroB = NULL;
     GrB_Scalar_new(&zeroB, GrB_BOOL);
@@ -163,6 +161,10 @@ void test_msf (void)
             }
 
             printf ("\nmsf:\n") ;
+            double tot_weight, ans_w = files[k].ans_w;
+            OK (GrB_Matrix_reduce_FP64(&tot_weight, NULL, GrB_PLUS_MONOID_FP64, C, NULL)) ;
+            TEST_CHECK (isnan(files[k].ans_w) || 
+                    fabs(tot_weight - ans_w) <= 1E-10 * fabs(ans_w)) ;           
             OK (LAGraph_Matrix_Print (C, pr, stdout, msg)) ;
             OK (LAGraph_Delete (&G, msg)) ;
             OK (LAGraph_Delete (&G_C, msg)) ;
@@ -175,7 +177,64 @@ void test_msf (void)
     }
     GrB_free(&zeroB);
     LAGraph_Finalize (msg) ;
-    #endif
+}
+
+//------------------------------------------------------------------------------
+// infinity test
+//------------------------------------------------------------------------------
+
+void test_inf_msf (void)
+{
+    LAGraph_Init (msg) ;
+    GrB_Scalar zeroB = NULL;
+    GrB_Scalar_new(&zeroB, GrB_BOOL);
+    GrB_Scalar_setElement_BOOL(zeroB, false);
+
+    // load the matrix as A
+    const char *aname = "bcsstk13.mtx" ;
+    bool symmetric = 1 ;
+    printf ("\n================================== %s:\n", aname) ;
+    TEST_CASE (aname) ;
+    snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    fclose (f) ;
+
+    GrB_Index n = 0;
+    OK (GrB_Matrix_nrows (&n, A)) ;
+    OK (GrB_Matrix_new(&S, GrB_BOOL, n, n)) ;
+
+    // Make A be iso infinity and S iso true.
+    OK (GrB_Matrix_assign_FP64(
+        A, A, NULL, INFINITY, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+    OK (GrB_Matrix_assign_BOOL(
+        S, A, NULL, (bool) true, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+
+    // compute the min spanning forest
+    S_C = C = NULL ;
+    // GxB_Global_Option_set(GxB_BURBLE, true);
+    int result = LAGraph_msf (&C, A, false, msg) ;
+    // GxB_Global_Option_set(GxB_BURBLE, false);
+    printf ("result: %d\n", result) ;
+    OK(result);
+
+    // GxB_Global_Option_set(GxB_BURBLE, true);
+    result = LAGraph_msf (&S_C, S, false, msg) ;
+    // GxB_Global_Option_set(GxB_BURBLE, false);
+    printf ("result: %d\n", result) ;
+    OK(result);
+
+    bool ok = false ;
+    // check structure is equal.
+    OK (LAGraph_Matrix_IsEqualOp(&ok, C, S_C, GrB_ONEB_BOOL, msg));
+    TEST_CHECK(ok);
+    OK (GrB_free (&S)) ;
+    OK (GrB_free (&S_C)) ;
+    OK (GrB_free (&C)) ;
+    OK (GrB_free (&A)) ;
+    GrB_free(&zeroB);
+    LAGraph_Finalize (msg) ;
 }
 
 //------------------------------------------------------------------------------
@@ -184,9 +243,9 @@ void test_msf (void)
 
 void test_errors (void)
 {
-    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init (msg) ;
 
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     // C and A are NULL
     int result = LAGraph_msf (NULL, NULL, true, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
@@ -197,20 +256,29 @@ void test_errors (void)
     TEST_CHECK (result == GrB_DIMENSION_MISMATCH) ;
     OK (GrB_free (&A)) ;
 
-    // A must be square
+    // A must real
     OK (GrB_Matrix_new (&A, GxB_FC32, 4, 4)) ;
     result = LAGraph_msf (&C, A, true, msg) ;
     TEST_CHECK (result == GrB_DOMAIN_MISMATCH) ;
+    
+    #else 
+    // Not implemented
+    OK (GrB_Matrix_new (&A, GrB_BOOL, 4, 4)) ;
+    int result = LAGraph_msf (&C, A, true, msg) ;
+    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
+    #endif
 
     OK (GrB_free (&A)) ;
     LAGraph_Finalize (msg) ;
-    #endif
 }
 
 //****************************************************************************
 
 TEST_LIST = {
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     {"msf", test_msf},
+    {"inf_msf", test_inf_msf},
+    #endif
     {"msf_errors", test_errors},
     {NULL, NULL}
 };
