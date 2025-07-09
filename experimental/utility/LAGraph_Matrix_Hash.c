@@ -22,49 +22,65 @@
 #undef LG_FREE_ALL
 #define LG_FREE_ALL               \
 {                                 \
-    GrB_free(&x);                 \
-    GrB_free(&s);                 \
+    GrB_free(&C);                 \
     GrB_free(&lg_hash_edge);      \
-    GrB_free(&lg_hash_edge_biop); \
-    GrB_free(&lg_xor_hash);       \
 }
 
-static void hash_edge(
-    uint64_t *z, 
-    uint64_t *x,
-    GrB_Index ix, 
-    GrB_Index jx, 
-    uint64_t *y,
-    GrB_Index iy, 
-    GrB_Index jy, 
-    uint64_t thunk
+#define GOLDEN_GAMMA 0x9E3779B97F4A7C15LL
+
+// The init function computes a cheesy hash based on splitmix64t
+void hash_edge (uint64_t *z, const uint64_t *x,
+    GrB_Index i, GrB_Index j, const uint64_t *seed)
+{
+    uint64_t result = (i + j * i  + GOLDEN_GAMMA) ;
+    result = (result ^ (*x)) * 0xBF58476D1CE4E5B9LL ;
+    result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9LL ;
+    result = (result ^ (result >> 27)) * 0x94D049BB133111EBLL ;
+    result = (result ^ (result >> 31)) ;
+    (*z) = result ;
+}
+
+#define HASH_EDGE_DEF \
+"void hash_edge (uint64_t *z, const uint64_t *x,\n"                            \
+"    GrB_Index i, GrB_Index j, const uint64_t *seed)\n"                        \
+"{\n"                                                                          \
+"    uint64_t result = (i + j * i  + 0x9E3779B97F4A7C15LL) ;\n"                \
+"    result = (result ^ (*x)) * 0xBF58476D1CE4E5B9LL ;\n"                      \
+"    result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9LL ;\n"            \
+"    result = (result ^ (result >> 27)) * 0x94D049BB133111EBLL ;\n"            \
+"    result = (result ^ (result >> 31)) ;\n"                                   \
+"    (*z) = result ;\n"                                                        \
+"}\n"
+
+GrB_Info LAGraph_Hash_Matrix(
+    uint64_t *hash,      // [output] hash
+    const GrB_Matrix A,  // matrix to hash
+    char *msg
 ) {
-    uint64_t a = *x;
-    a ^= ix + 0x9e3779b97f4a7c15ULL;
-    a = (a << 13) | (a >> (64 - 13));
-    a ^= jx + 0x9e3779b97f4a7c15ULL;
-    a = (a << 17) | (a >> (64 - 17));
-    *z = a;
-}
-
-GrB_Info LAGraph_Hash_Vector(uint64_t *hash, GrB_Vector v, char *msg){
-    GrB_Vector x = NULL;
-    GrB_Scalar s = NULL;
-    GxB_IndexBinaryOp lg_hash_edge = NULL;
-    GrB_BinaryOp lg_hash_edge_biop = NULL;
-    GrB_Semiring lg_xor_hash = NULL;
-    GrB_Index nrows;
-    GRB_TRY (GrB_Vector_size(&nrows, v)) ;
-    GRB_TRY (GrB_Scalar_new(&s, GrB_UINT64)) ;
-    GRB_TRY (GrB_Scalar_setElement_UINT64(s, 0)) ;
-    GRB_TRY (GrB_Vector_new(&x, GrB_UINT64, nrows)) ;
-    GRB_TRY (GrB_Vector_assign_UINT64(x, NULL, NULL, (uint64_t) 0, GrB_ALL, 0, NULL)) ;
-    GRB_TRY (GxB_IndexBinaryOp_new(&lg_hash_edge, (GxB_index_binary_function) hash_edge,
-        GrB_UINT64, GrB_UINT64, GrB_UINT64, GrB_UINT64, NULL, NULL)) ;
-    GRB_TRY (GxB_BinaryOp_new_IndexOp(&lg_hash_edge_biop, lg_hash_edge, s)) ;
-    GRB_TRY (GrB_Semiring_new (&lg_xor_hash, GxB_BXOR_UINT64_MONOID, lg_hash_edge_biop)) ;
-    GRB_TRY (GrB_mxv((GrB_Vector) s, NULL, NULL, lg_xor_hash, (GrB_Matrix) v, x, GrB_DESC_T0)) ;
-    GRB_TRY (GrB_Scalar_extractElement_UINT64(hash, s)) ;
+    GrB_Matrix C = NULL;
+    GrB_IndexUnaryOp lg_hash_edge = NULL;
+    GrB_Index nrows, ncols;
+    GRB_TRY (GrB_Matrix_nrows(&nrows, A)) ;
+    GRB_TRY (GrB_Matrix_ncols(&ncols, A)) ;
+    GRB_TRY (GrB_Matrix_new(&C, GrB_UINT64, nrows, ncols)) ;
+    GRB_TRY (GxB_IndexUnaryOp_new(
+        &lg_hash_edge, (GxB_index_unary_function) hash_edge,
+        GrB_UINT64, GrB_UINT64, GrB_UINT64, "hash_edge", HASH_EDGE_DEF)) ;
+    
+    // TODO: C takes extra memory which is not nessesary for this computation.
+    // Compute without extra memory if possible.
+    GRB_TRY (GrB_Matrix_apply_IndexOp_UINT64(
+        C, NULL, NULL, lg_hash_edge, A, (uint64_t) 0, NULL));
+    GRB_TRY (GrB_Matrix_reduce_UINT64(
+        hash, GrB_BXOR_UINT64, GxB_BXOR_UINT64_MONOID, C, NULL)) ;
     LG_FREE_ALL;
     return GrB_SUCCESS;
+}
+
+GrB_Info LAGraph_Hash_Vector(
+    uint64_t *hash,       // [output] hash
+    const GrB_Vector v,   // Vector to hash
+    char *msg
+) {
+    return LAGraph_Hash_Matrix(hash, (GrB_Matrix) v, NULL);
 }

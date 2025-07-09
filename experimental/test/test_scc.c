@@ -42,66 +42,65 @@ int scc_cover [7] = { 0, 0, 2, 0, 4, 2, 0 } ;
 
 const matrix_info files [ ] =
 {
-    { "A2.mtx", 1, 6493938657738929428ull},
-    { "A.mtx", 1, 6493938657738929428ull},
-    { "bcsstk13.mtx", 1, 4873650117803742346ull},
-    { "cover.mtx", 3, 848279640410529436ull},
-    { "cover_structure.mtx", 3, 848279640410529436ull},
-    { "cryg2500.mtx", 1, 8070599988610413093ull},
-    { "full.mtx", 1, 15769435293242772098ull},
-    { "full_noheader.mtx", 1, 15769435293242772098ull},
-    { "full_symmetric.mtx", 1, 7920595475144714245ull},
-    { "jagmesh7.mtx", 1, 5114200449021899176ull},
-    { "karate.mtx", 1, 4176608668907330736ull},
-    { "ldbc-cdlp-directed-example.mtx", 2, 11183292771650049706ull},
-    { "ldbc-cdlp-undirected-example.mtx", 1, 4918287057298807835ull},
-    { "ldbc-directed-example-bool.mtx", 7, 11304580677056001228ull},
-    { "ldbc-directed-example.mtx", 7, 11304580677056001228ull},
-    { "ldbc-directed-example-unweighted.mtx", 7, 11304580677056001228ull},
-    { "ldbc-undirected-example-bool.mtx", 1, 9158223257798130275ull},
-    { "ldbc-undirected-example.mtx", 1, 9158223257798130275ull},
-    { "ldbc-undirected-example-unweighted.mtx", 1, 9158223257798130275ull},
-    { "ldbc-wcc-example.mtx", 1, 4317729120311459500ull},
-    { "LFAT5.mtx", 3, 17553140753101484131ull},
-    { "LFAT5_two.mtx", 6, 7979561620824911ull},
-    { "matrix_bool.mtx", 3, 848279640410529436ull},
-    { "matrix_fp32.mtx", 3, 848279640410529436ull},
-    { "matrix_fp32_structure.mtx", 3, 848279640410529436ull},
-    { "matrix_fp64.mtx", 3, 848279640410529436ull},
-    { "matrix_int16.mtx", 3, 848279640410529436ull},
-    { "matrix_int32.mtx", 3, 848279640410529436ull},
-    { "matrix_int64.mtx", 3, 848279640410529436ull},
-    { "matrix_int8.mtx", 3, 848279640410529436ull},
-    { "matrix_uint16.mtx", 3, 848279640410529436ull},
-    { "matrix_uint32.mtx", 3, 848279640410529436ull},
-    { "matrix_uint64.mtx", 3, 848279640410529436ull},
-    { "matrix_uint8.mtx", 3, 848279640410529436ull},
-    { "msf1.mtx", 4, 3301616701375337755ull},
-    { "msf2.mtx", 8, 11227097946539390519ull},
-    { "msf3.mtx", 5, 5965767602828141907ull},
-    { "olm1000.mtx", 1, 14473458856538426155ull},
-    { "pushpull.mtx", 1, 14764381483900318255ull},
-    { "sample2.mtx", 1, 4918287057298807835ull},
-    { "sample.mtx", 8, 11227097946539390519ull},
-    { "structure.mtx", 3, 848279640410529436ull},
-    { "test_BF.mtx", 3, 848279640410529436ull},
-    { "test_FW_1000.mtx", 1, 14473458856538426155ull},
-    { "test_FW_2003.mtx", 485, 13924889949050000093ull},
-    { "test_FW_2500.mtx", 646, 9579946550331191330ull},
-    { "tree-example.mtx", 1, 16959292359894689422ull},
-    { "west0067_jumbled.mtx", 1, 15563611237648677666ull},
-    { "west0067.mtx", 1, 15563611237648677666ull},
-    { "west0067_noheader.mtx", 1, 15563611237648677666ull},
-    { "zenios.mtx", 1391, 10773678236411609506ull},
+    { "A2.mtx", 1, 0x2de8d717be626313},
+    { "A.mtx", 1, 0x2de8d717be626313},
+    { "bcsstk13.mtx", 1, 0x41d903f08b46b543},
+    { "cover.mtx", 3, 0x30ae8cb78a807691},
+    { "cover_structure.mtx", 3, 0x30ae8cb78a807691},
+    { "cryg2500.mtx", 1, 0xd1cb8e3cc6be967},
+    { "full.mtx", 1, 0x99971e4f016b4644},
+    { "full_noheader.mtx", 1, 0x99971e4f016b4644},
+    { "full_symmetric.mtx", 1, 0x278859fec1de1f7f},
+    { "jagmesh7.mtx", 1, 0x66b315eea17941c8},
+    { "karate.mtx", 1, 0x8bad7c50644c4aa9},
+    { "ldbc-cdlp-directed-example.mtx", 2, 0x3a61ac294b7bb114},
+    { "ldbc-cdlp-undirected-example.mtx", 1, 0x4072e255fd8e310a},
+    { "ldbc-directed-example-bool.mtx", 7, 0xc66f5ecf1b7f6876},
+    { "ldbc-directed-example.mtx", 7, 0xc66f5ecf1b7f6876},
+    { "ldbc-directed-example-unweighted.mtx", 7, 0xc66f5ecf1b7f6876},
+    { "ldbc-undirected-example-bool.mtx", 1, 0xf53db7dbbeff3283},
+    { "ldbc-undirected-example.mtx", 1, 0xf53db7dbbeff3283},
+    { "ldbc-undirected-example-unweighted.mtx", 1, 0xf53db7dbbeff3283},
+    { "ldbc-wcc-example.mtx", 1, 0x36a78022528a2101},
+    { "LFAT5.mtx", 3, 0x79d4d8de0a22a863},
+    { "LFAT5_two.mtx", 6, 0xac369d0362d73d6},
+    { "matrix_bool.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_fp32.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_fp32_structure.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_fp64.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_int16.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_int32.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_int64.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_int8.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_uint16.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_uint32.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_uint64.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_uint8.mtx", 3, 0x30ae8cb78a807691},
+    { "msf1.mtx", 4, 0x6445d984131a9555},
+    { "msf2.mtx", 8, 0x72d532720c54b673},
+    { "msf3.mtx", 5, 0xf57eb057beb5a5c7},
+    { "olm1000.mtx", 1, 0x15cf9ea2db88ab18},
+    { "pushpull.mtx", 1, 0x1816384cd04f7e01},
+    { "sample2.mtx", 1, 0x4072e255fd8e310a},
+    { "sample.mtx", 8, 0x72d532720c54b673},
+    { "structure.mtx", 3, 0x30ae8cb78a807691},
+    { "test_BF.mtx", 3, 0x30ae8cb78a807691},
+    { "test_FW_1000.mtx", 1, 0x15cf9ea2db88ab18},
+    { "test_FW_2003.mtx", 485, 0xf79ad45d3a704eec},
+    { "test_FW_2500.mtx", 646, 0x4fa83d60352e7e19},
+    { "tree-example.mtx", 1, 0x8857b82baeba129},
+    { "west0067_jumbled.mtx", 1, 0xa861dc7526128ac7},
+    { "west0067.mtx", 1, 0xa861dc7526128ac7},
+    { "west0067_noheader.mtx", 1, 0xa861dc7526128ac7},
+    { "zenios.mtx", 1391, 0x15b2b99a80c3480e},
     { "", 0, 0},
 } ;
+
 //------------------------------------------------------------------------------
 // count_connected_components: count the # of components in a component vector
 //------------------------------------------------------------------------------
 
-int count_connected_components (GrB_Vector C, uint64_t *vector_hash) ;
-
-int count_connected_components (GrB_Vector C, uint64_t *vector_hash)
+int count_connected_components (GrB_Vector C)
 {
     GrB_Index n = 0 ;
     OK (GrB_Vector_size (&n, C)) ;
@@ -111,12 +110,6 @@ int count_connected_components (GrB_Vector C, uint64_t *vector_hash)
         int64_t comp = -1 ;
         int result = GrB_Vector_extractElement (&comp, C, i) ;
         if (result == GrB_SUCCESS && comp == i) ncomponents++ ;
-        //hash all of the values into one number
-        if (result == GrB_SUCCESS && vector_hash) 
-        {
-            (*vector_hash) *= 89734512321ull;
-            (*vector_hash) += comp + i;
-        }
     }
     return (ncomponents) ;
 }
@@ -173,15 +166,13 @@ void test_scc (void)
                 TEST_CHECK (ok) ;
                 OK (GrB_free (&cgood)) ;
             }
-            uint64_t hash = 9238018047ull;
-            int result_cc_count = count_connected_components(c, &hash);
+            int result_cc_count = count_connected_components(c);
             TEST_CHECK(result_cc_count == files[k].cc_count);
-            TEST_CHECK(hash == files[k].hash);
             OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
-            uint64_t hash2;
-            int hash_info = LAGraph_Hash_Vector(&hash2, c, msg); 
+            uint64_t hash = 0;
+            int hash_info = LAGraph_Hash_Vector(&hash, c, msg); 
             OK (hash_info);
-            printf("%lx\n", hash2);
+            TEST_CHECK(hash == files[k].hash);
             OK (GrB_free (&c)) ;
         }
         OK (GrB_free (&A)) ;
