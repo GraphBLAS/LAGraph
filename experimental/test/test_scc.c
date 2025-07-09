@@ -178,6 +178,10 @@ void test_scc (void)
             TEST_CHECK(result_cc_count == files[k].cc_count);
             TEST_CHECK(hash == files[k].hash);
             OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
+            uint64_t hash2;
+            int hash_info = LAGraph_Hash_Vector(&hash2, c, msg); 
+            OK (hash_info);
+            printf("%lx\n", hash2);
             OK (GrB_free (&c)) ;
         }
         OK (GrB_free (&A)) ;
