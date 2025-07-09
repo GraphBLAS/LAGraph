@@ -123,6 +123,8 @@ static GrB_Info LG_augment_maxflow
     GrB_free(&residual_vec);                \
     GrB_free(&MakeFlow);                    \
     GrB_free(&GetResidual);                 \
+    GrB_free(&lvl) ;                        \
+    LAGraph_Delete(&G2, msg);               \
   }
 
 #define LG_FREE_ALL     \
@@ -561,7 +563,7 @@ int LAGr_MaxFlow
   GrB_Vector lvl = NULL ;
   GrB_UnaryOp GetResidual = NULL ;
   GrB_Matrix C = NULL, T = NULL ;
-  LAGraph_Graph res_graph = NULL ;
+  LAGraph_Graph G2 = NULL ;
 
   // to create R
   GrB_UnaryOp CreateResidualForward = NULL, CreateResidualBackward = NULL ;
@@ -924,13 +926,13 @@ int LAGr_MaxFlow
       GRB_TRY(GrB_select(C, NULL, NULL, GrB_VALUEGT_FP64, C, 0, NULL)) ;
       // T = C'
       GRB_TRY(GrB_transpose(T, NULL, NULL, C, NULL));
-      // construct the res_graph and its cached transpose and outdegree
-      LG_TRY(LAGraph_New(&res_graph, &T, LAGraph_ADJACENCY_DIRECTED, msg));
-      res_graph->AT = C ;
+      // construct G2 and its cached transpose and outdegree
+      LG_TRY(LAGraph_New(&G2, &T, LAGraph_ADJACENCY_DIRECTED, msg));
+      G2->AT = C ;
       C = NULL ;
-      LG_TRY(LAGraph_Cached_OutDegree(res_graph, msg));
-      // compute lvl using bfs on res_graph, starting at sink node
-      LG_TRY(LAGr_BreadthFirstSearch(&lvl, NULL, res_graph, sink, msg));
+      LG_TRY(LAGraph_Cached_OutDegree(G2, msg));
+      // compute lvl using bfs on G2, starting at sink node
+      LG_TRY(LAGr_BreadthFirstSearch(&lvl, NULL, G2, sink, msg));
 
       // d<!struct([src,sink])> = lvl
       GRB_TRY(GrB_assign(d, src_and_sink, NULL, lvl, GrB_ALL, n, GrB_DESC_SC));
@@ -956,7 +958,7 @@ int LAGr_MaxFlow
       }
 
       GrB_free(&lvl);
-      LG_TRY(LAGraph_Delete(&res_graph, msg));
+      LG_TRY(LAGraph_Delete(&G2, msg));
       GRB_TRY(GrB_Vector_nvals(&n_active, e));
       if(n_active == 0){
         break;
