@@ -143,38 +143,43 @@ void test_scc (void)
 
         GrB_Vector c = NULL ;
 
-        // find the strongly connected components with LAGraph_scc
-        // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-        OK (LAGraph_scc (&c, A, msg)) ;
-        // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-
-        GrB_Index n ;
-        OK (GrB_Vector_size (&n, c)) ;
-        LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
-
-        // check result c for cover
-        if (strcmp (aname, "cover.mtx") == 0)
+        for (int jit = 0 ; jit <= 1 ; jit++)
         {
-            GrB_Vector cgood = NULL ;
-            OK (GrB_Vector_new (&cgood, GrB_UINT64, n)) ;
-            for (int k = 0 ; k < n ; k++)
+            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
+                jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+            // find the strongly connected components with LAGraph_scc
+            // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+            OK (LAGraph_scc (&c, A, msg)) ;
+            // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+
+            GrB_Index n ;
+            OK (GrB_Vector_size (&n, c)) ;
+            LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
+
+            // check result c for cover
+            if (strcmp (aname, "cover.mtx") == 0)
             {
-                OK (GrB_Vector_setElement (cgood, scc_cover [k], k)) ;
+                GrB_Vector cgood = NULL ;
+                OK (GrB_Vector_new (&cgood, GrB_UINT64, n)) ;
+                for (int k = 0 ; k < n ; k++)
+                {
+                    OK (GrB_Vector_setElement (cgood, scc_cover [k], k)) ;
+                }
+                OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
+                printf ("\nscc (known result):\n") ;
+                OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;
+                bool ok = false ;
+                OK (LAGraph_Vector_IsEqual (&ok, c, cgood, msg)) ;
+                TEST_CHECK (ok) ;
+                OK (GrB_free (&cgood)) ;
             }
-            OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
-            printf ("\nscc (known result):\n") ;
-            OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;
-            bool ok = false ;
-            OK (LAGraph_Vector_IsEqual (&ok, c, cgood, msg)) ;
-            TEST_CHECK (ok) ;
-            OK (GrB_free (&cgood)) ;
+            uint64_t hash = 9238018047ull;
+            int result_cc_count = count_connected_components(c, &hash);
+            TEST_CHECK(result_cc_count == files[k].cc_count);
+            TEST_CHECK(hash == files[k].hash);
+            OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
+            OK (GrB_free (&c)) ;
         }
-        uint64_t hash = 9238018047ull;
-        int result_cc_count = count_connected_components(c, &hash);
-        TEST_CHECK(result_cc_count == files[k].cc_count);
-        TEST_CHECK(hash == files[k].hash);
-        OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
-        OK (GrB_free (&c)) ;
         OK (GrB_free (&A)) ;
     }
 

@@ -105,55 +105,17 @@ void trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContex
 
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL    \
+{                      \
     GrB_free (&s) ;    \
     GrB_free (&t) ;    \
-    GrB_free (&con_s)
-
-#if LG_SUITESPARSE_GRAPHBLAS_V10 && 0
-static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
-        const GrB_Matrix A, const GrB_Matrix AT, GrB_Index n, char *msg)
-{
-    GrB_Info info;
-    // semirings
-    GrB_Vector s = NULL, t = NULL;
-    GxB_Container con_s = NULL;
-    GRB_TRY (GxB_Container_new (&con_s));
-    GRB_TRY (GxB_unload_Vector_into_Container(label, con_s, NULL));
-    con_s->format = GxB_BITMAP;
-    GRB_TRY (GrB_free(&con_s->b)) ;
-    con_s->b = mask;
-    mask = NULL;
-    GRB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
-    GRB_TRY (GrB_assign (t, 0, 0, con_s->x, GrB_ALL, 0, 0));
-    GRB_TRY (GrB_wait(A, GrB_MATERIALIZE));
-
-    bool active;
-    while (true)
-    {
-        GRB_TRY (GxB_load_Vector_from_Container(label, con_s, NULL)) ;
-        GRB_TRY (GrB_vxm (t, 0, GrB_MIN_UINT64,
-                                 GrB_MIN_FIRST_SEMIRING_UINT64, s, A, 0));
-        GRB_TRY (GxB_unload_Vector_into_Container(label, con_s, NULL));
-        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_NE_UINT64, t, con_s->x, 0));
-        GRB_TRY (GrB_assign (con_s->x, NULL, NULL, t, GrB_ALL, n, NULL));
-        GRB_TRY (GrB_reduce (&active, 0, GrB_LOR_MONOID_BOOL, co, 0));
-        if (!active) break;
-        GRB_TRY (GrB_Vector_clear(s));
-        GRB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
-        GRB_TRY (GrB_wait(s, GrB_MATERIALIZE));
-    }
-
-    LG_FREE_ALL ;
-    return GrB_SUCCESS;
 }
-#else
+
 static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
         const GrB_Matrix A, const GrB_Matrix AT, GrB_Index n, char *msg)
 {
     GrB_Info info;
     // semirings
     GrB_Vector s = NULL, t = NULL;
-    GrB_Scalar con_s = NULL;
     GRB_TRY (GrB_Vector_new (&s, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
     GRB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
@@ -180,7 +142,6 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     LG_FREE_ALL ;
     return GrB_SUCCESS;
 }
-#endif
 //****************************************************************************
 
 #undef  LG_FREE_ALL
@@ -193,6 +154,7 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     GrB_free (&f);                          \
     GrB_free (&b);                          \
     GrB_free (&D);                          \
+    GrB_free (&x);                          \
     GrB_free (&mask);                       \
     GrB_free (&m2);                         \
     GrB_free (&FW);                         \
@@ -247,12 +209,13 @@ int LAGraph_scc
     GRB_TRY (GrB_Vector_new (&scc, GrB_UINT64, n));
     // vector of indices: ind[i] == i
     GRB_TRY (GrB_Vector_new (&ind, GrB_UINT64, n));
-    GRB_TRY (GrB_Vector_assign_UINT64 (ind, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_Vector_assign_UINT64 (
+        ind, NULL, NULL, (uint64_t) 0, GrB_ALL, n, NULL)) ;
     GRB_TRY (GrB_Vector_apply_IndexOp_UINT64 (
         ind, NULL, NULL, GrB_ROWINDEX_INT64, ind, 0, NULL)) ;
     // vector of infinite value: inf[i] == n
     GRB_TRY (GrB_Vector_new (&inf, GrB_UINT64, n));
-    GRB_TRY (GrB_assign (inf, 0, 0, n, GrB_ALL, 0, 0));
+    GRB_TRY (GrB_assign (inf, NULL, NULL, n, GrB_ALL, 0, NULL));
     // other vectors
     GRB_TRY (GrB_Vector_new (&f, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&b, GrB_UINT64, n));
@@ -261,6 +224,7 @@ int LAGraph_scc
     GRB_TRY (GrB_Vector_new (&x, GrB_BOOL, n));
     GRB_TRY (GxB_Type_new (
         &contx_type, sizeof(sccContext), "sccContext", SCCCONTEXT)) ;
+
     GRB_TRY (GxB_IndexUnaryOp_new (
         &sel1, (GxB_index_unary_function) trim_one, 
         GrB_BOOL, GrB_UINT64, contx_type, 
@@ -279,7 +243,7 @@ int LAGraph_scc
     GRB_TRY (GrB_Matrix_new (&BW, GrB_BOOL, n, n));
     GRB_TRY (GrB_Matrix_assign_BOOL(
         FW, A, NULL, true, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
-    GRB_TRY (GrB_transpose (BW, 0, 0, FW, 0));     // BW = FW'
+    GRB_TRY (GrB_transpose (BW, NULL, NULL, FW, NULL));     // BW = FW'
        
     // check format
     int32_t A_format, AT_format;
@@ -295,13 +259,11 @@ int LAGraph_scc
     GRB_TRY (GrB_mxv (mask, m2, NULL, GxB_ANY_PAIR_BOOL, BW, x, GrB_DESC_S)) ;
     GRB_TRY (GrB_Vector_nvals (&nvals, mask));
 
-    GRB_TRY (GrB_assign (scc, 0, 0, ind, GrB_ALL, 0, 0));
-    GRB_TRY (GrB_assign (scc, mask, 0, n, GrB_ALL, 0, 0));
+    GRB_TRY (GrB_assign (scc, NULL, NULL, ind, GrB_ALL, 0, NULL));
+    GRB_TRY (GrB_assign (scc, mask, NULL, n, GrB_ALL, 0, NULL));
 
     if (nvals < n)
     {
-        // GRB_TRY (GrB_Matrix_diag(&D, mask, 0)) ;
-        // TODO this should be a single mxm with a diagonal mask matrix.
         // No reason for context. 
         #if LG_SUITESPARSE_GRAPHBLAS_V10
         GRB_TRY(GxB_Vector_unload(
@@ -324,17 +286,17 @@ int LAGraph_scc
     {
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64 (
             mask, NULL, NULL, GrB_EQ_UINT64, scc, n, NULL));
-        GRB_TRY (GrB_assign (f, 0, 0, ind, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_assign (f, NULL, NULL, ind, GrB_ALL, 0, NULL));
         LG_TRY (propagate (f, mask, FW, BW, n, msg));
 
-        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, f, ind, 0));
+        GRB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_EQ_UINT64, f, ind, NULL));
         GRB_TRY (GrB_Vector_assign_UINT64 (
             b, NULL, NULL, n, GrB_ALL, 0, NULL)) ;
-        GRB_TRY (GrB_assign (b, mask, 0, ind, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_assign (b, mask, NULL, ind, GrB_ALL, 0, NULL));
         LG_TRY (propagate (b, mask, BW, FW, n, msg));
 
-        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GrB_EQ_UINT64, f, b, 0));
-        GRB_TRY (GrB_assign (scc, mask, GrB_MIN_UINT64, f, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_EQ_UINT64, f, b, NULL));
+        GRB_TRY (GrB_assign (scc, mask, GrB_MIN_UINT64, f, GrB_ALL, 0, NULL));
 
         #if LG_SUITESPARSE_GRAPHBLAS_V10
             GRB_TRY(GxB_Vector_unload(
@@ -367,7 +329,7 @@ int LAGraph_scc
     }
     GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64 (
             mask, NULL, NULL, GrB_EQ_UINT64, scc, n, NULL));
-    GRB_TRY (GrB_assign (scc, mask, 0, ind, GrB_ALL, 0, 0));
+    GRB_TRY (GrB_assign (scc, mask, NULL, ind, GrB_ALL, 0, NULL));
 
     *result = scc;
     scc = NULL;
