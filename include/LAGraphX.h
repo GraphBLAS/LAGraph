@@ -261,6 +261,14 @@ int LAGraph_Incidence_Matrix
 ) ;
 
 LAGRAPHX_PUBLIC
+int LAGraph_Hash_Vector
+(
+    uint64_t *hash,
+    GrB_Vector v,
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
 int LAGraph_FastAssign_Monoid
 (
     // output
