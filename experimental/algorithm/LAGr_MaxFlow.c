@@ -93,8 +93,8 @@ static GrB_Info LG_augment_maxflow
     GrB_free(&Jvec);                        \
     GrB_free(&Prune);                       \
     GrB_free(&UpdateFlow);                  \
-    GrB_free(&UpdateHeight);                \
-    GrB_free(&ExtractResidualFlow);         \
+    GrB_free(&Relabel);                     \
+    GrB_free(&ResidualFlow);                \
     GrB_free(&MxeIndexMult);                \
     GrB_free(&MxeMult);                     \
     GrB_free(&MxeAdd);                      \
@@ -109,11 +109,11 @@ static GrB_Info LG_augment_maxflow
     GrB_free(&RxdMult);                     \
     GrB_free(&InitForwardFlow);             \
     GrB_free(&InitBackwardFlow);            \
-    GrB_free(&CreateResidualForward);       \
-    GrB_free(&CreateResidualBackward);      \
+    GrB_free(&ResidualForward);             \
+    GrB_free(&ResidualBackward);            \
     GrB_free(&zero);                        \
     GrB_free(&empty);                       \
-    GrB_free(&Re);                          \
+    GrB_free(&t);                           \
     GrB_free(&invariant);                   \
     GrB_free(&CheckInvariant);              \
     GrB_free(&check);                       \
@@ -183,14 +183,14 @@ JIT_STR(typedef struct{
 // unary ops to create R from input adjacency matrix G->A and G->AT
 //------------------------------------------------------------------------------
 
-// unary op for R = CreateResidualForward (A)
-JIT_STR(void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {
+// unary op for R = ResidualForward (A)
+JIT_STR(void MF_ResidualForward(MF_flowEdge *z, const double *y) {
   z->capacity = (*y);
   z->flow = 0;
   }, CRF_STR)
 
-// unary op for R<!struct(A)> = CreateResidualBackward (AT)
-JIT_STR(void MF_CreateResidualBackward(MF_flowEdge *z, const double *y) {
+// unary op for R<!struct(A)> = ResidualBackward (AT)
+JIT_STR(void MF_ResidualBackward(MF_flowEdge *z, const double *y) {
   z->capacity = 0;
   z->flow = 0;
   }, CRB_STR)
@@ -291,13 +291,13 @@ JIT_STR(void MF_RxdAdd32(MF_resultTuple32 * z,
   }, RXDADD_STR32)
 
 //------------------------------------------------------------------------------
-// unary ops for delta_vec = ExtractResidualFlow (y)
+// unary ops for delta_vec = ResidualFlow (y)
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_ExtractResidualFlow64(double *z, const MF_resultTuple64 *x)
+JIT_STR(void MF_ResidualFlow64(double *z, const MF_resultTuple64 *x)
     { (*z) = x->residual; }, EXTRACTRESIDUALFLOW_STR64)
 
-JIT_STR(void MF_ExtractResidualFlow32(double *z, const MF_resultTuple32 *x)
+JIT_STR(void MF_ResidualFlow32(double *z, const MF_resultTuple32 *x)
     { (*z) = x->residual; }, EXTRACTRESIDUALFLOW_STR32)
 
 //------------------------------------------------------------------------------
@@ -311,10 +311,10 @@ JIT_STR(void MF_UpdateFlow(MF_flowEdge *z,
   }, UPDATEFLOW_STR)
 
 //------------------------------------------------------------------------------
-// binary op for d<struct(y)> = UpdateHeight (d, y) using eWiseMult
+// binary op for d<struct(y)> = Relabel (d, y) using eWiseMult
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_UpdateHeight64(int64_t *z,
+JIT_STR(void MF_Relabel64(int64_t *z,
     const int64_t *x, const MF_resultTuple64 *y) {
   if((*x) < y->d+1){
     (*z) = y->d + 1;
@@ -322,9 +322,9 @@ JIT_STR(void MF_UpdateHeight64(int64_t *z,
   else {
     (*z) = (*x);
   }
-  }, UPDATEHEIGHT_STR64)
+  }, RELABEL_STR64)
 
-JIT_STR(void MF_UpdateHeight32(int32_t *z,
+JIT_STR(void MF_Relabel32(int32_t *z,
     const int32_t *x, const MF_resultTuple32 *y) {
   if((*x) < y->d+1){
     (*z) = y->d + 1;
@@ -332,7 +332,7 @@ JIT_STR(void MF_UpdateHeight32(int32_t *z,
   else {
     (*z) = (*x);
   }
-  }, UPDATEHEIGHT_STR32)
+  }, RELABEL_STR32)
 
 //------------------------------------------------------------------------------
 // unary op for Jvec = extractJ (yd), where Jvec(i) = yd(i)->j
@@ -351,7 +351,7 @@ JIT_STR(void MF_extractYJ64(int64_t *z, const MF_resultTuple64 *x) { (*z) = x->j
 JIT_STR(void MF_extractYJ32(int32_t *z, const MF_resultTuple32 *x) { (*z) = x->j; }, EXTRACTYJ_STR32)
 
 //------------------------------------------------------------------------------
-// binary op for R(src,:) = InitForwardFlow (R (src,:), Re')
+// binary op for R(src,:) = InitForwardFlow (R (src,:), t')
 //------------------------------------------------------------------------------
 
 JIT_STR(void MF_InitForwardFlow(MF_flowEdge * z,
@@ -361,7 +361,7 @@ JIT_STR(void MF_InitForwardFlow(MF_flowEdge * z,
   }, INITFLOWF_STR)
 
 //------------------------------------------------------------------------------
-// binary op for R(:,src) = InitBackwardFlow (R (:,src), Re)
+// binary op for R(:,src) = InitBackwardFlow (R (:,src), t)
 //------------------------------------------------------------------------------
 
 JIT_STR(void MF_InitBackwardFlow(MF_flowEdge * z,
@@ -470,7 +470,7 @@ JIT_STR(void MF_Prune32(bool * z, const MF_resultTuple32 * x,
   }, PRUNE_STR32)
 
 //------------------------------------------------------------------------------
-// unary op for Re = MakeFlow (e), where Re(i) = (0, e(i))
+// unary op for t = MakeFlow (e), where t(i) = (0, e(i))
 //------------------------------------------------------------------------------
 
 JIT_STR(void MF_MakeFlow(MF_flowEdge * flow_edge, const double * flow){
@@ -544,11 +544,11 @@ int LAGr_MaxFlow
   LAGraph_Graph G2 = NULL ;
 
   // to create R
-  GrB_UnaryOp CreateResidualForward = NULL, CreateResidualBackward = NULL ;
+  GrB_UnaryOp ResidualForward = NULL, ResidualBackward = NULL ;
   GrB_Matrix R = NULL ;
 
   // to initialize R with initial saturated flows
-  GrB_Vector e = NULL, Re = NULL ;
+  GrB_Vector e = NULL, t = NULL ;
   GrB_UnaryOp MakeFlow = NULL ;
   GrB_BinaryOp InitForwardFlow = NULL, InitBackwardFlow = NULL ;
 
@@ -584,7 +584,7 @@ int LAGr_MaxFlow
   GxB_IndexBinaryOp MxeIndexMult = NULL ;
 
   // to extract the residual flow
-  GrB_UnaryOp ExtractResidualFlow = NULL ;
+  GrB_UnaryOp ResidualFlow = NULL ;
   GrB_UnaryOp ExtractMatrixFlow = NULL ;
 
   // Delta structures
@@ -592,7 +592,7 @@ int LAGr_MaxFlow
   GrB_Matrix Delta = NULL ;
 
   // update height
-  GrB_BinaryOp UpdateHeight = NULL ;
+  GrB_BinaryOp Relabel = NULL ;
 
   // update R structure
   GrB_BinaryOp UpdateFlow = NULL ;
@@ -657,17 +657,17 @@ int LAGr_MaxFlow
   #endif
 
   // create R from A
-  GRB_TRY(GxB_UnaryOp_new(&CreateResidualForward,
-        F_UNARY(MF_CreateResidualForward), FlowEdge , GrB_FP64,
-        "MF_CreateResidualForward", CRF_STR));
-  GRB_TRY(GxB_UnaryOp_new(&CreateResidualBackward,
-        F_UNARY(MF_CreateResidualBackward), FlowEdge , GrB_FP64,
-        "MF_CreateResidualBackward", CRB_STR));
+  GRB_TRY(GxB_UnaryOp_new(&ResidualForward,
+        F_UNARY(MF_ResidualForward), FlowEdge , GrB_FP64,
+        "MF_ResidualForward", CRF_STR));
+  GRB_TRY(GxB_UnaryOp_new(&ResidualBackward,
+        F_UNARY(MF_ResidualBackward), FlowEdge , GrB_FP64,
+        "MF_ResidualBackward", CRB_STR));
   GRB_TRY(GrB_Matrix_new(&R, FlowEdge, n, n));
-  // R = CreateResidualForward (A)
-  GRB_TRY(GrB_apply(R, NULL, NULL, CreateResidualForward, A, NULL));
-  // R<!struct(A)> = CreateResidualBackward (AT)
-  GRB_TRY(GrB_apply(R, A, NULL, CreateResidualBackward, AT, GrB_DESC_SC));
+  // R = ResidualForward (A)
+  GRB_TRY(GrB_apply(R, NULL, NULL, ResidualForward, A, NULL));
+  // R<!struct(A)> = ResidualBackward (AT)
+  GRB_TRY(GrB_apply(R, A, NULL, ResidualBackward, AT, GrB_DESC_SC));
 
   // ops to initialize R with initial saturated flows from the source node
   GRB_TRY(GxB_BinaryOp_new(&InitForwardFlow,
@@ -678,10 +678,9 @@ int LAGr_MaxFlow
         "MF_InitBackwardFlow", INITFLOWB_STR));
   GRB_TRY(GxB_UnaryOp_new(&MakeFlow, F_UNARY(MF_MakeFlow), FlowEdge, GrB_FP64,
         "MF_MakeFlow", MAKEFLOW_STR));
-  GRB_TRY(GrB_Vector_new(&Re, FlowEdge, n));
   GRB_TRY(GrB_Vector_new(&e, GrB_FP64, n));
 
-  //extract n_active from e masking sink and src then assign to e
+  // construct [src,sink] mask
   GRB_TRY(GrB_Vector_new(&src_and_sink, GrB_BOOL, n));
   GRB_TRY (GrB_Vector_setElement (src_and_sink, true, sink)) ;
   GRB_TRY (GrB_Vector_setElement (src_and_sink, true, src)) ;
@@ -737,9 +736,9 @@ int LAGr_MaxFlow
     GRB_TRY(GrB_assign(d, NULL, NULL, 0, GrB_ALL, n, NULL));
     GRB_TRY(GrB_assign(d, NULL, NULL, n, &src, 1, NULL));
 
-    GRB_TRY(GxB_UnaryOp_new(&ExtractResidualFlow,
-        F_UNARY(MF_ExtractResidualFlow64), GrB_FP64, ResultTuple,
-        "MF_ExtractResidualFlow64", EXTRACTRESIDUALFLOW_STR64));
+    GRB_TRY(GxB_UnaryOp_new(&ResidualFlow,
+        F_UNARY(MF_ResidualFlow64), GrB_FP64, ResultTuple,
+        "MF_ResidualFlow64", EXTRACTRESIDUALFLOW_STR64));
 
     // create semiring and vectors for y<struct(e)> = R*d
     GRB_TRY(GrB_Scalar_new(&theta, GrB_INT64));
@@ -784,9 +783,9 @@ int LAGr_MaxFlow
     GRB_TRY(GrB_Monoid_new_UDT(&MxeAddMonoid, MxeAdd, &id));
 
     // update height binary op
-    GRB_TRY(GxB_BinaryOp_new(&UpdateHeight,
-        F_BINARY(MF_UpdateHeight64), GrB_INT64, GrB_INT64, ResultTuple,
-        "MF_UpdateHeight64", UPDATEHEIGHT_STR64));
+    GRB_TRY(GxB_BinaryOp_new(&Relabel,
+        F_BINARY(MF_Relabel64), GrB_INT64, GrB_INT64, ResultTuple,
+        "MF_Relabel64", RELABEL_STR64));
 
   }else{
 
@@ -808,9 +807,9 @@ int LAGr_MaxFlow
         "MF_CheckInvariant32", CHECKINVARIANT_STR32));
     #endif
 
-    GRB_TRY(GxB_UnaryOp_new(&ExtractResidualFlow,
-        F_UNARY(MF_ExtractResidualFlow32), GrB_FP64, ResultTuple,
-        "MF_ExtractResidualFlow32", EXTRACTRESIDUALFLOW_STR32));
+    GRB_TRY(GxB_UnaryOp_new(&ResidualFlow,
+        F_UNARY(MF_ResidualFlow32), GrB_FP64, ResultTuple,
+        "MF_ResidualFlow32", EXTRACTRESIDUALFLOW_STR32));
 
     // create and init d vector
     GRB_TRY(GrB_Vector_new(&d, GrB_INT32, n));
@@ -861,9 +860,9 @@ int LAGr_MaxFlow
     GRB_TRY(GrB_Monoid_new_UDT(&MxeAddMonoid, MxeAdd, &id));
 
     // update height binary op
-    GRB_TRY(GxB_BinaryOp_new(&UpdateHeight,
-        F_BINARY(MF_UpdateHeight32), GrB_INT32, GrB_INT32, ResultTuple,
-        "MF_UpdateHeight32", UPDATEHEIGHT_STR32));
+    GRB_TRY(GxB_BinaryOp_new(&Relabel,
+        F_BINARY(MF_Relabel32), GrB_INT32, GrB_INT32, ResultTuple,
+        "MF_Relabel32", RELABEL_STR32));
   }
 
   GRB_TRY(GrB_Matrix_new(&Map, CompareTuple, n,n));
@@ -914,22 +913,33 @@ int LAGr_MaxFlow
       GRB_TRY(GrB_assign(d, lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC));
 
       if(iter == 0){
-        // e<struct(lvl)> = A (src,:)
-        GRB_TRY(GrB_extract(e, lvl, NULL, A, GrB_ALL, n, src, GrB_DESC_ST0));
-        // Re = MakeFlow (e), where Re(i) = (0, e(i))
-        GRB_TRY(GrB_apply(Re, NULL, NULL, MakeFlow, e, NULL));
-        // R(src,:) = InitForwardFlow (R (src,:), Re')
-        GRB_TRY(GrB_assign(R, NULL, InitForwardFlow, Re, src, GrB_ALL, n, NULL));
-        // R(:,src) = InitBackwardFlow (R (:,src), Re)
-        GRB_TRY(GrB_assign(R, NULL, InitBackwardFlow, Re, GrB_ALL, n, src, NULL));
+
+// OLD:
+//      // e<struct(lvl)> = A (src,:)
+//      GRB_TRY(GrB_extract(e, lvl, NULL, A, GrB_ALL, n, src, GrB_DESC_ST0));
+
+// FIXME: why not just do this? Then this code can be removed from here and
+// placed in the initializations, before the while loop:
+        // e = A (src,:)
+        GRB_TRY(GrB_extract(e, NULL, NULL, A, GrB_ALL, n, src, GrB_DESC_T0));
+
+        // t = MakeFlow (e), where t(i) = (0, e(i))
+        GRB_TRY(GrB_Vector_new(&t, FlowEdge, n));
+        GRB_TRY(GrB_apply(t, NULL, NULL, MakeFlow, e, NULL));
+        // R(src,:) = InitForwardFlow (R (src,:), t')
+        GRB_TRY(GrB_assign(R, NULL, InitForwardFlow, t, src, GrB_ALL, n, NULL));
+        // R(:,src) = InitBackwardFlow (R (:,src), t)
+        GRB_TRY(GrB_assign(R, NULL, InitBackwardFlow, t, GrB_ALL, n, src, NULL));
+        GrB_free(&t) ;
         // augment the maxflow with the initial flows
         LG_TRY (LG_augment_maxflow (f, e, sink, src_and_sink, &n_active, msg)) ;
       }
-      else{
+// FIXME: why not do this for iter 0?
+//      else{
         // delete nodes in e that cannot be reached from the sink
         // e<!struct(lvl)> = empty scalar
         GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
-      }
+//      }
 
       GrB_free(&lvl);
       LG_TRY(LAGraph_Delete(&G2, msg));
@@ -974,8 +984,8 @@ int LAGr_MaxFlow
     GRB_TRY(GrB_select(y, NULL, NULL, Prune, y, -1, NULL));
 
     // relabel, update heights
-    // d<struct(y)> = UpdateHeight (d, y) using eWiseMult
-    GRB_TRY(GrB_eWiseMult(d, y, NULL, UpdateHeight, d, y, GrB_DESC_S));
+    // d<struct(y)> = Relabel (d, y) using eWiseMult
+    GRB_TRY(GrB_eWiseMult(d, y, NULL, Relabel, d, y, GrB_DESC_S));
 
     #ifdef DBG
         // assert invariant for all labels
@@ -990,8 +1000,8 @@ int LAGr_MaxFlow
     //--------------------------------------------------------------------------
 
     // extract residual flows from y
-    // delta_vec = ExtractResidualFlow (y), obtaining just the residual flows
-    GRB_TRY(GrB_apply(delta_vec, NULL, NULL, ExtractResidualFlow, y, NULL));
+    // delta_vec = ResidualFlow (y), obtaining just the residual flows
+    GRB_TRY(GrB_apply(delta_vec, NULL, NULL, ResidualFlow, y, NULL));
 
     // delta_vec = min (delta_vec, e), where e is dense
     GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, delta_vec, e, NULL));
