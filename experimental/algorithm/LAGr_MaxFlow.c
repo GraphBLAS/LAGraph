@@ -84,9 +84,8 @@ static GrB_Info LG_augment_maxflow
     GrB_free(&d);                           \
     GrB_free(&theta);                       \
     GrB_free(&R);                           \
-    GrB_free(&delta);                       \
+    GrB_free(&Delta);                       \
     GrB_free(&delta_vec);                   \
-    GrB_free(&delta_mat);                   \
     GrB_free(&Map);                         \
     GrB_free(&y);                           \
     GrB_free(&yd);                          \
@@ -119,8 +118,7 @@ static GrB_Info LG_augment_maxflow
     GrB_free(&CheckInvariant);              \
     GrB_free(&check);                       \
     GrB_free(&extractYJ);                   \
-    GrB_free(&extract_desc);                \
-    GrB_free(&residual_vec);                \
+    GrB_free(&desc);                        \
     GrB_free(&MakeFlow);                    \
     GrB_free(&GetResidual);                 \
     GrB_free(&lvl) ;                        \
@@ -169,15 +167,15 @@ JIT_STR(typedef struct{
 // type of the Map matrix and yd vector: MF_compareTuple64/32 (CompareTuple)
 JIT_STR(typedef struct{
   double residual;      /* residual = capacity - flow for the edge (i,j) */
-  int64_t di;
-  int64_t y_dmin;
-  int64_t j;
+  int64_t di;           /* d(i) for node i */
+  int64_t dj;           /* d(j) for node j */
+  int64_t j;            /* node id for node j */
   } MF_compareTuple64;, COMPARETUPLE_STR64)
 JIT_STR(typedef struct{
   double residual;      /* residual = capacity - flow for the edge (i,j) */
-  int32_t di;
-  int32_t y_dmin;
-  int32_t j;
+  int32_t di;           /* d(i) for node i */
+  int32_t dj;           /* d(j) for node j */
+  int32_t j;            /* node id for node j */
   int32_t unused;       /* to pad the struct to 24 bytes */
   } MF_compareTuple32;, COMPARETUPLE_STR32) // 24 bytes: padded
 
@@ -187,30 +185,30 @@ JIT_STR(typedef struct{
 
 // unary op for R = CreateResidualForward (A)
 JIT_STR(void MF_CreateResidualForward(MF_flowEdge *z, const double *y) {
-  z->flow = 0;
   z->capacity = (*y);
+  z->flow = 0;
   }, CRF_STR)
 
 // unary op for R<!struct(A)> = CreateResidualBackward (AT)
 JIT_STR(void MF_CreateResidualBackward(MF_flowEdge *z, const double *y) {
-  z->flow = 0;
   z->capacity = 0;
+  z->flow = 0;
   }, CRB_STR)
 
 //------------------------------------------------------------------------------
 // R*d semiring
 //------------------------------------------------------------------------------
 
-// multiplicative operator, z = R(i,k) * d(k), 64-bit case
+// multiplicative operator, z = R(i,j) * d(j), 64-bit case
 JIT_STR(void MF_RxdMult64(MF_resultTuple64 *z,
-    const MF_flowEdge *x, GrB_Index ix, GrB_Index jx,
+    const MF_flowEdge *x, GrB_Index i, GrB_Index j,
     const int64_t *y, GrB_Index iy, GrB_Index jy,
     const int64_t* theta) {
   double r = x->capacity - x->flow;
   if(r > 0){
     z->residual = r;
-    z->d = *y;
-    z->j = jx;
+    z->d = (*y);
+    z->j = j;
   }
   else{
     z->residual = 0;
@@ -219,16 +217,16 @@ JIT_STR(void MF_RxdMult64(MF_resultTuple64 *z,
   }
 }, RXDMULT_STR64)
 
-// multiplicative operator, z = R(i,k) * d(k), 32-bit case
+// multiplicative operator, z = R(i,j) * d(j), 32-bit case
 JIT_STR(void MF_RxdMult32(MF_resultTuple32 *z,
-    const MF_flowEdge *x, GrB_Index ix, GrB_Index jx,
+    const MF_flowEdge *x, GrB_Index i, GrB_Index j,
     const int32_t *y, GrB_Index iy, GrB_Index jy,
     const int32_t* theta) {
   double r = x->capacity - x->flow;
   if(r > 0){
     z->residual = r;
-    z->d = *y;
-    z->j = jx;
+    z->d = (*y);
+    z->j = j;
   }
   else{
     z->residual = 0;
@@ -293,7 +291,7 @@ JIT_STR(void MF_RxdAdd32(MF_resultTuple32 * z,
   }, RXDADD_STR32)
 
 //------------------------------------------------------------------------------
-// unary ops for residual_vec = ExtractResidualFlow (y)
+// unary ops for delta_vec = ExtractResidualFlow (y)
 //------------------------------------------------------------------------------
 
 JIT_STR(void MF_ExtractResidualFlow64(double *z, const MF_resultTuple64 *x)
@@ -303,7 +301,7 @@ JIT_STR(void MF_ExtractResidualFlow32(double *z, const MF_resultTuple32 *x)
     { (*z) = x->residual; }, EXTRACTRESIDUALFLOW_STR32)
 
 //------------------------------------------------------------------------------
-// binary op for R<delta_mat> = UpdateFlow (R, delta_mat) using eWiseMult
+// binary op for R<Delta> = UpdateFlow (R, Delta) using eWiseMult
 //------------------------------------------------------------------------------
 
 JIT_STR(void MF_UpdateFlow(MF_flowEdge *z,
@@ -358,8 +356,8 @@ JIT_STR(void MF_extractYJ32(int32_t *z, const MF_resultTuple32 *x) { (*z) = x->j
 
 JIT_STR(void MF_InitForwardFlow(MF_flowEdge * z,
     const MF_flowEdge * x, const MF_flowEdge * y){
-  z->flow = y->flow + x->flow;
   z->capacity = x->capacity;
+  z->flow = y->flow + x->flow;
   }, INITFLOWF_STR)
 
 //------------------------------------------------------------------------------
@@ -368,79 +366,59 @@ JIT_STR(void MF_InitForwardFlow(MF_flowEdge * z,
 
 JIT_STR(void MF_InitBackwardFlow(MF_flowEdge * z,
     const MF_flowEdge * x, const MF_flowEdge * y){
-  z->flow = x->flow - y->flow;
   z->capacity = x->capacity;
+  z->flow = x->flow - y->flow;
   }, INITFLOWB_STR)
 
 //------------------------------------------------------------------------------
-// yd = Map*e semiring
+// y = Map*e semiring
 //------------------------------------------------------------------------------
 
+// multiplicative operator, z = Map(i,j)*e(j), 64-bit case
 JIT_STR(void MF_MxeMult64(MF_resultTuple64 * z,
-    const MF_compareTuple64 * x, GrB_Index ix, GrB_Index jx,
+    const MF_compareTuple64 * x, GrB_Index i, GrB_Index j,
     const double * y, GrB_Index iy, GrB_Index jy,
     const int64_t* theta){
-  if(x->di == x->y_dmin && (*y) > 0){
-    if(ix < jx){
-      z->d = x->y_dmin;
+  bool j_active = ((*y) > 0) ;
+  if ((x->di <  x->dj-1) /* case a */
+  ||  (x->di == x->dj-1 && !j_active) /* case b */
+  ||  (x->di == x->dj   && (!j_active || (j_active && (i < j)))) /* case c */
+  ||  (x->di == x->dj+1))   /* case d */
+  {
       z->residual = x->residual;
+      z->d = x->dj;
       z->j = x->j;
-    }
-    else{
-      z->d = INT64_MAX;
+  }
+  else
+  {
       z->residual = 0;
+      z->d = INT64_MAX;
       z->j = -1;
-    }
   }
-  else if(x->di == x->y_dmin - 1 && (*y) > 0){
-    z->d = INT64_MAX;
-    z->residual = 0;
-    z->j = -1;
-  }
-  else if(x->di <= x->y_dmin-1 || x->di == x->y_dmin+1 || x->di == x->y_dmin){
-    z->d = x->y_dmin;
-    z->residual = x->residual;
-    z->j = x->j;
-  }
-  else{
-    z->d = INT64_MAX;
-    z->residual = 0;
-    z->j = -1;
-  }
-  }, MXEMULT_STR64)
+}, MXEMULT_STR64)
 
+// multiplicative operator, z = Map(i,j)*e(j), 32-bit case
 JIT_STR(void MF_MxeMult32(MF_resultTuple32 * z,
-    const MF_compareTuple32 * x, GrB_Index ix, GrB_Index jx,
+    const MF_compareTuple32 * x, GrB_Index i, GrB_Index j,
     const double * y, GrB_Index iy, GrB_Index jy,
     const int32_t* theta){
-  if(x->di == x->y_dmin && (*y) > 0){
-    if(ix < jx){
-      z->d = x->y_dmin;
+  bool j_active = ((*y) > 0) ;
+  if ((x->di <  x->dj-1) /* case a */
+  ||  (x->di == x->dj-1 && !j_active) /* case b */
+  ||  (x->di == x->dj   && (!j_active || (j_active && (i < j)))) /* case c */
+  ||  (x->di == x->dj+1))   /* case d */
+  {
       z->residual = x->residual;
+      z->d = x->dj;
       z->j = x->j;
-    }
-    else{
-      z->d = INT32_MAX;
+  }
+  else
+  {
       z->residual = 0;
+      z->d = INT32_MAX;
       z->j = -1;
-    }
   }
-  else if(x->di == x->y_dmin - 1 && (*y) > 0){
-    z->d = INT32_MAX;
-    z->residual = 0;
-    z->j = -1;
-  }
-  else if(x->di <= x->y_dmin-1 || x->di == x->y_dmin+1 || x->di == x->y_dmin){
-    z->d = x->y_dmin;
-    z->residual = x->residual;
-    z->j = x->j;
-  }
-  else{
-    z->d = INT32_MAX;
-    z->residual = 0;
-    z->j = -1;
-  }
-  }, MXEMULT_STR32)
+}, MXEMULT_STR32)
 
 // Note: the additive monoid is not actually used in the call to GrB_mxv below,
 // because any given node only pushes to one neighbor at a time.  As a result,
@@ -463,32 +441,32 @@ JIT_STR(void MF_MxeAdd32(MF_resultTuple32 * z,
 JIT_STR(void MF_CreateCompareVec64(MF_compareTuple64 *comp,
     const MF_resultTuple64 *res, const int64_t *height) {
   comp->di = (*height);
-  comp->j = res->j;
   comp->residual = res->residual;
-  comp->y_dmin = res->d;
+  comp->dj = res->d;
+  comp->j = res->j;
   }, CREATECOMPAREVEC_STR64)
 
 JIT_STR(void MF_CreateCompareVec32(MF_compareTuple32 *comp,
     const MF_resultTuple32 *res, const int32_t *height) {
   comp->di = (*height);
-  comp->j = res->j;
   comp->residual = res->residual;
-  comp->y_dmin = res->d;
+  comp->dj = res->d;
+  comp->j = res->j;
   comp->unused = 0 ;
   }, CREATECOMPAREVEC_STR32)
 
 //------------------------------------------------------------------------------
-// select op to remove empty tuples from y (for which y->j is -1)
+// index unary op to remove empty tuples from y (for which y->j is -1)
 //------------------------------------------------------------------------------
 
 JIT_STR(void MF_Prune64(bool * z, const MF_resultTuple64 * x,
   GrB_Index ix, GrB_Index jx, const int64_t * theta){
-  *z = (x->j != *theta) ;
+  *z = (x->j != -1) ;
   }, PRUNE_STR64)
 
 JIT_STR(void MF_Prune32(bool * z, const MF_resultTuple32 * x,
   GrB_Index ix, GrB_Index jx, const int32_t * theta){
-  *z = (x->j != *theta) ;
+  *z = (x->j != -1) ;
   }, PRUNE_STR32)
 
 //------------------------------------------------------------------------------
@@ -605,14 +583,13 @@ int LAGr_MaxFlow
   GrB_BinaryOp MxeAdd = NULL, MxeMult = NULL ;
   GxB_IndexBinaryOp MxeIndexMult = NULL ;
 
-  // residual flow vector
-  GrB_Vector residual_vec = NULL ;
+  // to extract the residual flow
   GrB_UnaryOp ExtractResidualFlow = NULL ;
   GrB_UnaryOp ExtractMatrixFlow = NULL ;
 
-  // delta structures
+  // Delta structures
   GrB_Vector delta_vec = NULL ;
-  GrB_Matrix delta = NULL, delta_mat = NULL ;
+  GrB_Matrix Delta = NULL ;
 
   // update height
   GrB_BinaryOp UpdateHeight = NULL ;
@@ -631,7 +608,7 @@ int LAGr_MaxFlow
   bool check_raw;
 
   // descriptor for matrix building
-  GrB_Descriptor extract_desc = NULL ;
+  GrB_Descriptor desc = NULL ;
 
   //----------------------------------------------------------------------------
   // check inputs
@@ -709,11 +686,8 @@ int LAGr_MaxFlow
   GRB_TRY (GrB_Vector_setElement (src_and_sink, true, sink)) ;
   GRB_TRY (GrB_Vector_setElement (src_and_sink, true, src)) ;
 
-  //create flow vec
-  GRB_TRY(GrB_Vector_new(&residual_vec, GrB_FP64, n));
-
-  GRB_TRY(GrB_Matrix_new(&delta_mat, GrB_FP64, n, n));
-  GRB_TRY(GrB_Matrix_new(&delta, GrB_FP64, n, n));
+  // create delta vector and Delta matrix
+  GRB_TRY(GrB_Matrix_new(&Delta, GrB_FP64, n, n));
   GRB_TRY(GrB_Vector_new(&delta_vec, GrB_FP64, n));
 
   // operator to update R structure
@@ -899,9 +873,9 @@ int LAGr_MaxFlow
 
   int64_t iter = 0;
 
-  // create descriptor for building the Map and delta matrices
-  GRB_TRY(GrB_Descriptor_new(&extract_desc));
-  GRB_TRY(GrB_set(extract_desc, GxB_USE_INDICES, GxB_ROWINDEX_LIST));
+  // create descriptor for building the Map and Delta matrices
+  GRB_TRY(GrB_Descriptor_new(&desc));
+  GRB_TRY(GrB_set(desc, GxB_USE_INDICES, GxB_ROWINDEX_LIST));
 
   //----------------------------------------------------------------------------
   // compute the max flow
@@ -972,8 +946,8 @@ int LAGr_MaxFlow
     // y<struct(e),replace> = R*d using the RxdSemiring
     GRB_TRY(GrB_mxv(y, e, NULL, RxdSemiring, R, d, GrB_DESC_RS));
 
-    // remove empty tuples from y
-    GRB_TRY(GrB_select(y, NULL, NULL, Prune, y, -1, NULL));
+    // remove empty tuples (0,inf,-1) from y
+    GRB_TRY(GrB_select(y, NULL, NULL, Prune, y, 0, NULL));
 
     //--------------------------------------------------------------------------
     // Part 3: verifying the pushes
@@ -986,7 +960,7 @@ int LAGr_MaxFlow
     // Jvec = extractJ (yd), where Jvec(i) = yd(i)->j
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, extractJ, yd, NULL));
     GRB_TRY(GrB_Matrix_clear(Map));
-    GRB_TRY(GxB_Matrix_build_Vector(Map, yd, Jvec, yd, GxB_IGNORE_DUP, extract_desc));
+    GRB_TRY(GrB_Matrix_build(Map, yd, Jvec, yd, GxB_IGNORE_DUP, desc));
 
     // make e dense for Map computation
     // TODO: consider keeping e in bitmap/full format only,
@@ -1016,30 +990,30 @@ int LAGr_MaxFlow
     //--------------------------------------------------------------------------
 
     // extract residual flows from y
-    // residual_vec = ExtractResidualFlow (y), obtaining just the residual flows
-    GRB_TRY(GrB_apply(residual_vec, NULL, NULL, ExtractResidualFlow, y, NULL));
+    // delta_vec = ExtractResidualFlow (y), obtaining just the residual flows
+    GRB_TRY(GrB_apply(delta_vec, NULL, NULL, ExtractResidualFlow, y, NULL));
 
-    // delta_vec = min (residual_vec, e), where e is dense
-    GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, residual_vec, e, NULL));
+    // delta_vec = min (delta_vec, e), where e is dense
+    GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, delta_vec, e, NULL));
 
-    // create the delta matrix from delta_vec and y
+    // create the Delta matrix from delta_vec and y
     // note that delta_vec has the same structure as y
     // Jvec = extractYJ (y), where Jvec(i) = y(i)->j
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, extractYJ, y, NULL));
-    GRB_TRY(GrB_Matrix_clear(delta));
-    GRB_TRY(GxB_Matrix_build_Vector(delta, delta_vec, Jvec, delta_vec, GxB_IGNORE_DUP, extract_desc));
+    GRB_TRY(GrB_Matrix_clear(Delta));
+    GRB_TRY(GrB_Matrix_build(Delta, delta_vec, Jvec, delta_vec, GxB_IGNORE_DUP, desc));
 
-    // make delta anti-symmetric
-    // delta_mat = (delta - delta')
-    GRB_TRY(GxB_eWiseUnion(delta_mat, NULL, NULL, GrB_MINUS_FP64, delta, zero, delta, zero, GrB_DESC_T1));
+    // make Delta anti-symmetric
+    // Delta = (Delta - Delta')
+    GRB_TRY(GxB_eWiseUnion(Delta, NULL, NULL, GrB_MINUS_FP64, Delta, zero, Delta, zero, GrB_DESC_T1));
 
     // update R
-    // R<delta_mat> = UpdateFlow (R, delta_mat) using eWiseMult
-    GRB_TRY(GrB_eWiseMult(R, delta_mat, NULL, UpdateFlow, R, delta_mat, GrB_DESC_S));
+    // R<Delta> = UpdateFlow (R, Delta) using eWiseMult
+    GRB_TRY(GrB_eWiseMult(R, Delta, NULL, UpdateFlow, R, Delta, GrB_DESC_S));
 
-    // reduce delta_mat to delta_vec
-    // delta_vec = sum (delta_mat), summing up each row of delta_mat
-    GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, delta_mat, GrB_DESC_T0));
+    // reduce Delta to delta_vec
+    // delta_vec = sum (Delta), summing up each row of Delta
+    GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, Delta, GrB_DESC_T0));
 
     // add delta_vec to e
     // e<struct(delta_vec)> += delta_vec
