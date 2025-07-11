@@ -980,10 +980,10 @@ int LAGr_MaxFlow
     // y = Map*e using the MxeSemiring
     GRB_TRY(GrB_mxv(y, NULL, NULL, MxeSemiring, Map, e, NULL));
 
-    // remove empty tuples from y
+    // remove empty tuples (0,inf,-1) from y
     GRB_TRY(GrB_select(y, NULL, NULL, Prune, y, -1, NULL));
 
-    // relabel, update heights
+    // relabel, updating the height/label vector d
     // d<struct(y)> = Relabel (d, y) using eWiseMult
     GRB_TRY(GrB_eWiseMult(d, y, NULL, Relabel, d, y, GrB_DESC_S));
 
