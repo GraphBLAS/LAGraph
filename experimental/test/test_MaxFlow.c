@@ -112,7 +112,6 @@ void test_MaxFlowMtx(void) {
     GrB_Matrix flow_mtx=NULL;
     GrB_Index n;
     OK(GrB_Matrix_nrows(&n, A));
-    OK(GrB_Matrix_new(&flow_mtx, GrB_FP64, n, n));
 
     OK(fclose(f));
     // treat all matrices as directed graphs
@@ -129,16 +128,22 @@ void test_MaxFlowMtx(void) {
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
     double flow = 0;
     OK(LAGr_MaxFlow(&flow, &flow_mtx, G, tests[test].S, tests[test].T, msg));
-    int status = LG_check_flow(&flow_mtx, msg);
+    TEST_CHECK (flow_mtx != NULL) ;
+    GxB_print (flow_mtx, 2) ;
+    int status = LG_check_flow(flow_mtx, msg);
     printf("status: %d ", status);
     printf("%s\n", msg);
     printf("flow is: %lf\n", flow);
+    TEST_CHECK (status == GrB_SUCCESS) ;
     TEST_CHECK(flow == tests[test].F);
+    GrB_free(&flow_mtx);
 
     // test without JIT
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_OFF));
     OK(LAGr_MaxFlow(&flow, &flow_mtx, G, tests[test].S, tests[test].T, msg));
-    status = LG_check_flow(&flow_mtx, msg);
+    TEST_CHECK (flow_mtx != NULL) ;
+    status = LG_check_flow(flow_mtx, msg);
+    TEST_CHECK (status == GrB_SUCCESS) ;
     TEST_CHECK(flow == tests[test].F);
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
 

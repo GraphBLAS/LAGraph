@@ -120,7 +120,7 @@ int LG_check_argminmax
 
 int LG_check_flow
 (
-   const GrB_Matrix *flow_mtx,
+   const GrB_Matrix flow_mtx,
    char* msg
 ) ;
 
