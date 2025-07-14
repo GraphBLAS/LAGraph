@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Random_Matrix: generate a random matrix
+// LAGraph_Matrix_Hash: generate a single hash value for an entire matrix
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -57,6 +57,7 @@ GrB_Info LAGraph_Hash_Matrix(
     const GrB_Matrix A,  // matrix to hash
     char *msg
 ) {
+#if LG_SUITESPARSE_GRAPHBLAS_V10
     GrB_Matrix C = NULL;
     GrB_IndexUnaryOp lg_hash_edge = NULL;
     GrB_Index nrows, ncols;
@@ -75,6 +76,9 @@ GrB_Info LAGraph_Hash_Matrix(
         hash, GrB_BXOR_UINT64, GxB_BXOR_UINT64_MONOID, C, NULL)) ;
     LG_FREE_ALL;
     return GrB_SUCCESS;
+#else
+    return GrB_NOT_IMPLEMENTED;
+#endif
 }
 
 GrB_Info LAGraph_Hash_Vector(
@@ -82,5 +86,9 @@ GrB_Info LAGraph_Hash_Vector(
     const GrB_Vector v,   // Vector to hash
     char *msg
 ) {
+#if LG_SUITESPARSE_GRAPHBLAS_V10
     return LAGraph_Hash_Matrix(hash, (GrB_Matrix) v, NULL);
+#else
+    return GrB_NOT_IMPLEMENTED;
+#endif
 }
