@@ -257,7 +257,7 @@ JIT_STR(void MF_ResidualBackward(MF_flowEdge *z, const double *y) {
 JIT_STR(void MF_RxdMult64(MF_resultTuple64 *z,
     const MF_flowEdge *x, GrB_Index i, GrB_Index j,
     const int64_t *y, GrB_Index iy, GrB_Index jy,
-    const int64_t* theta) {
+    const bool* theta) {
   double r = x->capacity - x->flow;
   if(r > 0){
     z->residual = r;
@@ -275,7 +275,7 @@ JIT_STR(void MF_RxdMult64(MF_resultTuple64 *z,
 JIT_STR(void MF_RxdMult32(MF_resultTuple32 *z,
     const MF_flowEdge *x, GrB_Index i, GrB_Index j,
     const int32_t *y, GrB_Index iy, GrB_Index jy,
-    const int32_t* theta) {
+    const bool* theta) {
   double r = x->capacity - x->flow;
   if(r > 0){
     z->residual = r;
@@ -432,7 +432,7 @@ JIT_STR(void MF_InitBack(MF_flowEdge * z,
 JIT_STR(void MF_MxeMult64(MF_resultTuple64 * z,
     const MF_compareTuple64 * x, GrB_Index i, GrB_Index j,
     const double * y, GrB_Index iy, GrB_Index jy,
-    const int64_t* theta){
+    const bool* theta){
   bool j_active = ((*y) > 0) ;
   if ((x->di <  x->dj-1) /* case a */
   ||  (x->di == x->dj-1 && !j_active) /* case b */
@@ -455,7 +455,7 @@ JIT_STR(void MF_MxeMult64(MF_resultTuple64 * z,
 JIT_STR(void MF_MxeMult32(MF_resultTuple32 * z,
     const MF_compareTuple32 * x, GrB_Index i, GrB_Index j,
     const double * y, GrB_Index iy, GrB_Index jy,
-    const int32_t* theta){
+    const bool* theta){
   bool j_active = ((*y) > 0) ;
   if ((x->di <  x->dj-1) /* case a */
   ||  (x->di == x->dj-1 && !j_active) /* case b */
@@ -514,12 +514,12 @@ JIT_STR(void MF_CreateCompareVec32(MF_compareTuple32 *comp,
 //------------------------------------------------------------------------------
 
 JIT_STR(void MF_Prune64(bool * z, const MF_resultTuple64 * x,
-  GrB_Index ix, GrB_Index jx, const int64_t * theta){
+  GrB_Index ix, GrB_Index jx, const bool * theta){
   *z = (x->j != -1) ;
   }, PRUNE_STR64)
 
 JIT_STR(void MF_Prune32(bool * z, const MF_resultTuple32 * x,
-  GrB_Index ix, GrB_Index jx, const int32_t * theta){
+  GrB_Index ix, GrB_Index jx, const bool * theta){
   *z = (x->j != -1) ;
   }, PRUNE_STR32)
 
@@ -749,6 +749,8 @@ int LAGr_MaxFlow
   GRB_TRY(GrB_Scalar_new(&zero, GrB_FP64));
   GRB_TRY(GrB_Scalar_setElement(zero, 0));
   GRB_TRY(GrB_Scalar_new (&empty, GrB_FP64)) ;
+  GRB_TRY(GrB_Scalar_new(&theta, GrB_BOOL));        // unused placeholder
+  GRB_TRY(GrB_Scalar_setElement_BOOL(theta, false));
 
   // create op for optional output flow_mtx
   if (flow_mtx != NULL)
@@ -798,10 +800,9 @@ int LAGr_MaxFlow
         "MF_ResidualFlow64", RESIDUALFLOW_STR64));
 
     // create ops for R*d semiring
-    GRB_TRY(GrB_Scalar_new(&theta, GrB_INT64));
-    GRB_TRY(GrB_Scalar_setElement_INT64(theta, 0));
+
     GRB_TRY(GxB_IndexBinaryOp_new(&RxdIndexMult,
-        F_INDEX_BINARY(MF_RxdMult64), ResultTuple, FlowEdge, GrB_INT64, GrB_INT64,
+        F_INDEX_BINARY(MF_RxdMult64), ResultTuple, FlowEdge, GrB_INT64, GrB_BOOL,
         "MF_RxdMult64", RXDMULT_STR64));
     GRB_TRY(GxB_BinaryOp_new_IndexOp(&RxdMult, RxdIndexMult, theta));
     GRB_TRY(GxB_BinaryOp_new(&RxdAdd,
@@ -817,7 +818,7 @@ int LAGr_MaxFlow
 
     // create op to prune empty tuples
     GRB_TRY(GxB_IndexUnaryOp_new(&Prune,
-        (GxB_index_unary_function) MF_Prune64, GrB_BOOL, ResultTuple, GrB_INT64,
+        (GxB_index_unary_function) MF_Prune64, GrB_BOOL, ResultTuple, GrB_BOOL,
         "MF_Prune64", PRUNE_STR64));
 
     // create ops for mapping
@@ -830,7 +831,7 @@ int LAGr_MaxFlow
 
     // create ops for Map*e semiring
     GRB_TRY(GxB_IndexBinaryOp_new(&MxeIndexMult,
-        F_INDEX_BINARY(MF_MxeMult64), ResultTuple, CompareTuple, GrB_FP64, GrB_INT64,
+        F_INDEX_BINARY(MF_MxeMult64), ResultTuple, CompareTuple, GrB_FP64, GrB_BOOL,
         "MF_MxeMult64", MXEMULT_STR64));
     GRB_TRY(GxB_BinaryOp_new_IndexOp(&MxeMult, MxeIndexMult, theta));
     GRB_TRY(GxB_BinaryOp_new(&MxeAdd,
@@ -869,10 +870,8 @@ int LAGr_MaxFlow
         "MF_ResidualFlow32", RESIDUALFLOW_STR32));
 
     // create ops for R*d semiring
-    GRB_TRY(GrB_Scalar_new(&theta, GrB_INT32));
-    GRB_TRY(GrB_Scalar_setElement_INT32(theta, 0));
     GRB_TRY(GxB_IndexBinaryOp_new(&RxdIndexMult,
-        F_INDEX_BINARY(MF_RxdMult32), ResultTuple, FlowEdge, GrB_INT32, GrB_INT32,
+        F_INDEX_BINARY(MF_RxdMult32), ResultTuple, FlowEdge, GrB_INT32, GrB_BOOL,
         "MF_RxdMult32", RXDMULT_STR32));
     GRB_TRY(GxB_BinaryOp_new_IndexOp(&RxdMult, RxdIndexMult, theta));
     GRB_TRY(GxB_BinaryOp_new(&RxdAdd,
@@ -888,7 +887,7 @@ int LAGr_MaxFlow
 
     // create op to prune empty tuples
     GRB_TRY(GxB_IndexUnaryOp_new(&Prune,
-        (GxB_index_unary_function) MF_Prune32, GrB_BOOL, ResultTuple, GrB_INT32,
+        (GxB_index_unary_function) MF_Prune32, GrB_BOOL, ResultTuple, GrB_BOOL,
         "MF_Prune32", PRUNE_STR32));
 
     // create ops for mapping
@@ -901,7 +900,7 @@ int LAGr_MaxFlow
 
     // create ops for Map*e semiring
     GRB_TRY(GxB_IndexBinaryOp_new(&MxeIndexMult,
-        F_INDEX_BINARY(MF_MxeMult32), ResultTuple, CompareTuple, GrB_FP64, GrB_INT32,
+        F_INDEX_BINARY(MF_MxeMult32), ResultTuple, CompareTuple, GrB_FP64, GrB_BOOL,
         "MF_MxeMult32", MXEMULT_STR32));
     GRB_TRY(GxB_BinaryOp_new_IndexOp(&MxeMult, MxeIndexMult, theta));
     GRB_TRY(GxB_BinaryOp_new(&MxeAdd,
