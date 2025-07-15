@@ -117,7 +117,7 @@ int count_connected_components (GrB_Vector C)
 //****************************************************************************
 void test_scc (void)
 {
-    #if LAGRAPH_SUITESPARSE
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init (msg) ;
 
     for (int k = 0 ; ; k++)
@@ -188,7 +188,7 @@ void test_scc (void)
 
 void test_errors (void)
 {
-    #if LAGRAPH_SUITESPARSE
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init (msg) ;
 
     GrB_Vector c = NULL ;
