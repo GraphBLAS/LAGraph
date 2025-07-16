@@ -231,24 +231,24 @@ void get_first_fp (double *y, const tuple_fp *x)
 // get_second:  get second item in a tuple (the index)
 //------------------------------------------------------------------------------
 
-void get_second_int (int64_t *y, const tuple_int *x)
+void get_second_int (uint64_t *y, const tuple_int *x)
 {
     *y = x->idx;
 }
 
 #define GET_SECOND_INT \
-"void get_second_int (int64_t *y, const tuple_int *x)   \n" \
+"void get_second_int (uint64_t *y, const tuple_int *x)  \n" \
 "{                                                      \n" \
 "    *y = x->idx;                                       \n" \
 "}"
 
-void get_second_fp (int64_t *y, const tuple_fp *x)
+void get_second_fp (uint64_t *y, const tuple_fp *x)
 {
     *y = x->idx;
 }
 
 #define GET_SECOND_FP \
-"void get_second_fp (int64_t *y, const tuple_fp *x)     \n" \
+"void get_second_fp (uint64_t *y, const tuple_fp *x)    \n" \
 "{                                                      \n" \
 "    *y = x->idx;                                       \n" \
 "}"
