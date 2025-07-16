@@ -200,51 +200,51 @@ static GrB_Info LG_global_relabel
 // custom types
 //------------------------------------------------------------------------------
 
-// type of the R matrix: MF_flowEdge (FlowEdge)
+// type of the R matrix: LG_MF_flowEdge (FlowEdge)
 JIT_STR(typedef struct{
   double capacity;      /* original edge weight A(i,j), always positive */
   double flow;          /* current flow along this edge (i,j); can be negative */
-  } MF_flowEdge;, FLOWEDGE_STR)
+  } LG_MF_flowEdge;, FLOWEDGE_STR)
 
-// type of the y vector for y = R*d: MF_resultTuple64/32 (ResultTuple)
+// type of the y vector for y = R*d: LG_MF_resultTuple64/32 (ResultTuple)
 JIT_STR(typedef struct{
   double residual;      /* residual = capacity - flow for the edge (i,j) */
   int64_t d;            /* d(j) of the target node j */
   int64_t j;            /* node id of the target node j */
-  } MF_resultTuple64;, RESULTTUPLE_STR64)
+  } LG_MF_resultTuple64;, RESULTTUPLE_STR64)
 JIT_STR(typedef struct{
   double residual;      /* residual = capacity - flow for the edge (i,j) */
   int32_t d;            /* d(j) of the target node j */
   int32_t j;            /* node id of the target node j */
-  } MF_resultTuple32;, RESULTTUPLE_STR32)
+  } LG_MF_resultTuple32;, RESULTTUPLE_STR32)
 
-// type of the Map matrix and yd vector: MF_compareTuple64/32 (CompareTuple)
+// type of the Map matrix and yd vector: LG_MF_compareTuple64/32 (CompareTuple)
 JIT_STR(typedef struct{
   double residual;      /* residual = capacity - flow for the edge (i,j) */
   int64_t di;           /* d(i) for node i */
   int64_t dj;           /* d(j) for node j */
   int64_t j;            /* node id for node j */
-  } MF_compareTuple64;, COMPARETUPLE_STR64)
+  } LG_MF_compareTuple64;, COMPARETUPLE_STR64)
 JIT_STR(typedef struct{
   double residual;      /* residual = capacity - flow for the edge (i,j) */
   int32_t di;           /* d(i) for node i */
   int32_t dj;           /* d(j) for node j */
   int32_t j;            /* node id for node j */
   int32_t unused;       /* to pad the struct to 24 bytes */
-  } MF_compareTuple32;, COMPARETUPLE_STR32) // 24 bytes: padded
+  } LG_MF_compareTuple32;, COMPARETUPLE_STR32) // 24 bytes: padded
 
 //------------------------------------------------------------------------------
 // unary ops to create R from input adjacency matrix G->A and G->AT
 //------------------------------------------------------------------------------
 
 // unary op for R = ResidualForward (A)
-JIT_STR(void MF_ResidualForward(MF_flowEdge *z, const double *y) {
+JIT_STR(void LG_MF_ResidualForward(LG_MF_flowEdge *z, const double *y) {
   z->capacity = (*y);
   z->flow = 0;
   }, CRF_STR)
 
 // unary op for R<!struct(A)> = ResidualBackward (AT)
-JIT_STR(void MF_ResidualBackward(MF_flowEdge *z, const double *y) {
+JIT_STR(void LG_MF_ResidualBackward(LG_MF_flowEdge *z, const double *y) {
   z->capacity = 0;
   z->flow = 0;
   }, CRB_STR)
@@ -254,8 +254,8 @@ JIT_STR(void MF_ResidualBackward(MF_flowEdge *z, const double *y) {
 //------------------------------------------------------------------------------
 
 // multiplicative operator, z = R(i,j) * d(j), 64-bit case
-JIT_STR(void MF_RxdMult64(MF_resultTuple64 *z,
-    const MF_flowEdge *x, GrB_Index i, GrB_Index j,
+JIT_STR(void LG_MF_RxdMult64(LG_MF_resultTuple64 *z,
+    const LG_MF_flowEdge *x, GrB_Index i, GrB_Index j,
     const int64_t *y, GrB_Index iy, GrB_Index jy,
     const bool* theta) {
   double r = x->capacity - x->flow;
@@ -272,8 +272,8 @@ JIT_STR(void MF_RxdMult64(MF_resultTuple64 *z,
 }, RXDMULT_STR64)
 
 // multiplicative operator, z = R(i,j) * d(j), 32-bit case
-JIT_STR(void MF_RxdMult32(MF_resultTuple32 *z,
-    const MF_flowEdge *x, GrB_Index i, GrB_Index j,
+JIT_STR(void LG_MF_RxdMult32(LG_MF_resultTuple32 *z,
+    const LG_MF_flowEdge *x, GrB_Index i, GrB_Index j,
     const int32_t *y, GrB_Index iy, GrB_Index jy,
     const bool* theta) {
   double r = x->capacity - x->flow;
@@ -290,9 +290,9 @@ JIT_STR(void MF_RxdMult32(MF_resultTuple32 *z,
 }, RXDMULT_STR32)
 
 // additive monoid: z = the best tuple, x or y, 64-bit case
-JIT_STR(void MF_RxdAdd64(MF_resultTuple64 * z,
-    const MF_resultTuple64 * x,
-    const MF_resultTuple64 * y) {
+JIT_STR(void LG_MF_RxdAdd64(LG_MF_resultTuple64 * z,
+    const LG_MF_resultTuple64 * x,
+    const LG_MF_resultTuple64 * y) {
   if(x->d < y->d){
     (*z) = (*x) ;
   }
@@ -318,8 +318,8 @@ JIT_STR(void MF_RxdAdd64(MF_resultTuple64 * z,
   }, RXDADD_STR64)
 
 // additive monoid: z = the best tuple, x or y, 32-bit case
-JIT_STR(void MF_RxdAdd32(MF_resultTuple32 * z,
-    const MF_resultTuple32 * x, const MF_resultTuple32 * y) {
+JIT_STR(void LG_MF_RxdAdd32(LG_MF_resultTuple32 * z,
+    const LG_MF_resultTuple32 * x, const LG_MF_resultTuple32 * y) {
   if(x->d < y->d){
     (*z) = (*x) ;
   }
@@ -348,18 +348,18 @@ JIT_STR(void MF_RxdAdd32(MF_resultTuple32 * z,
 // unary ops for delta_vec = ResidualFlow (y)
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_ResidualFlow64(double *z, const MF_resultTuple64 *x)
+JIT_STR(void LG_MF_ResidualFlow64(double *z, const LG_MF_resultTuple64 *x)
     { (*z) = x->residual; }, RESIDUALFLOW_STR64)
 
-JIT_STR(void MF_ResidualFlow32(double *z, const MF_resultTuple32 *x)
+JIT_STR(void LG_MF_ResidualFlow32(double *z, const LG_MF_resultTuple32 *x)
     { (*z) = x->residual; }, RESIDUALFLOW_STR32)
 
 //------------------------------------------------------------------------------
 // binary op for R<Delta> = UpdateFlow (R, Delta) using eWiseMult
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_UpdateFlow(MF_flowEdge *z,
-    const MF_flowEdge *x, const double *y) {
+JIT_STR(void LG_MF_UpdateFlow(LG_MF_flowEdge *z,
+    const LG_MF_flowEdge *x, const double *y) {
   z->capacity = x->capacity;
   z->flow = x->flow + (*y);
   }, UPDATEFLOW_STR)
@@ -368,8 +368,8 @@ JIT_STR(void MF_UpdateFlow(MF_flowEdge *z,
 // binary op for d<struct(y)> = Relabel (d, y) using eWiseMult
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_Relabel64(int64_t *z,
-    const int64_t *x, const MF_resultTuple64 *y) {
+JIT_STR(void LG_MF_Relabel64(int64_t *z,
+    const int64_t *x, const LG_MF_resultTuple64 *y) {
   if((*x) < y->d+1){
     (*z) = y->d + 1;
   }
@@ -378,8 +378,8 @@ JIT_STR(void MF_Relabel64(int64_t *z,
   }
   }, RELABEL_STR64)
 
-JIT_STR(void MF_Relabel32(int32_t *z,
-    const int32_t *x, const MF_resultTuple32 *y) {
+JIT_STR(void LG_MF_Relabel32(int32_t *z,
+    const int32_t *x, const LG_MF_resultTuple32 *y) {
   if((*x) < y->d+1){
     (*z) = y->d + 1;
   }
@@ -392,24 +392,24 @@ JIT_STR(void MF_Relabel32(int32_t *z,
 // unary op for Jvec = ExtractJ (yd), where Jvec(i) = yd(i)->j
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_ExtractJ64(int64_t *z, const MF_compareTuple64 *x) { (*z) = x->j; }, EXTRACTJ_STR64)
+JIT_STR(void LG_MF_ExtractJ64(int64_t *z, const LG_MF_compareTuple64 *x) { (*z) = x->j; }, EXTRACTJ_STR64)
 
-JIT_STR(void MF_ExtractJ32(int32_t *z, const MF_compareTuple32 *x) { (*z) = x->j; }, EXTRACTJ_STR32)
+JIT_STR(void LG_MF_ExtractJ32(int32_t *z, const LG_MF_compareTuple32 *x) { (*z) = x->j; }, EXTRACTJ_STR32)
 
 //------------------------------------------------------------------------------
 // unary op for Jvec = ExtractYJ (y), where Jvec(i) = y(i)->j
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_ExtractYJ64(int64_t *z, const MF_resultTuple64 *x) { (*z) = x->j; }, EXTRACTYJ_STR64)
+JIT_STR(void LG_MF_ExtractYJ64(int64_t *z, const LG_MF_resultTuple64 *x) { (*z) = x->j; }, EXTRACTYJ_STR64)
 
-JIT_STR(void MF_ExtractYJ32(int32_t *z, const MF_resultTuple32 *x) { (*z) = x->j; }, EXTRACTYJ_STR32)
+JIT_STR(void LG_MF_ExtractYJ32(int32_t *z, const LG_MF_resultTuple32 *x) { (*z) = x->j; }, EXTRACTYJ_STR32)
 
 //------------------------------------------------------------------------------
 // binary op for R(src,:) = InitForw (R (src,:), t')
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_InitForw(MF_flowEdge * z,
-    const MF_flowEdge * x, const MF_flowEdge * y){
+JIT_STR(void LG_MF_InitForw(LG_MF_flowEdge * z,
+    const LG_MF_flowEdge * x, const LG_MF_flowEdge * y){
   z->capacity = x->capacity;
   z->flow = y->flow + x->flow;
   }, INITFORW_STR)
@@ -418,8 +418,8 @@ JIT_STR(void MF_InitForw(MF_flowEdge * z,
 // binary op for R(:,src) = InitBack (R (:,src), t)
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_InitBack(MF_flowEdge * z,
-    const MF_flowEdge * x, const MF_flowEdge * y){
+JIT_STR(void LG_MF_InitBack(LG_MF_flowEdge * z,
+    const LG_MF_flowEdge * x, const LG_MF_flowEdge * y){
   z->capacity = x->capacity;
   z->flow = x->flow - y->flow;
   }, INITBACK_STR)
@@ -429,8 +429,8 @@ JIT_STR(void MF_InitBack(MF_flowEdge * z,
 //------------------------------------------------------------------------------
 
 // multiplicative operator, z = Map(i,j)*e(j), 64-bit case
-JIT_STR(void MF_MxeMult64(MF_resultTuple64 * z,
-    const MF_compareTuple64 * x, GrB_Index i, GrB_Index j,
+JIT_STR(void LG_MF_MxeMult64(LG_MF_resultTuple64 * z,
+    const LG_MF_compareTuple64 * x, GrB_Index i, GrB_Index j,
     const double * y, GrB_Index iy, GrB_Index jy,
     const bool* theta){
   bool j_active = ((*y) > 0) ;
@@ -452,8 +452,8 @@ JIT_STR(void MF_MxeMult64(MF_resultTuple64 * z,
 }, MXEMULT_STR64)
 
 // multiplicative operator, z = Map(i,j)*e(j), 32-bit case
-JIT_STR(void MF_MxeMult32(MF_resultTuple32 * z,
-    const MF_compareTuple32 * x, GrB_Index i, GrB_Index j,
+JIT_STR(void LG_MF_MxeMult32(LG_MF_resultTuple32 * z,
+    const LG_MF_compareTuple32 * x, GrB_Index i, GrB_Index j,
     const double * y, GrB_Index iy, GrB_Index jy,
     const bool* theta){
   bool j_active = ((*y) > 0) ;
@@ -478,13 +478,13 @@ JIT_STR(void MF_MxeMult32(MF_resultTuple32 * z,
 // because any given node only pushes to one neighbor at a time.  As a result,
 // no reduction is needed in GrB_mxv.  The semiring still needs a monoid,
 // however.
-JIT_STR(void MF_MxeAdd64(MF_resultTuple64 * z,
-    const MF_resultTuple64 * x, const MF_resultTuple64 * y){
+JIT_STR(void LG_MF_MxeAdd64(LG_MF_resultTuple64 * z,
+    const LG_MF_resultTuple64 * x, const LG_MF_resultTuple64 * y){
     (*z) = (*y) ;
   }, MXEADD_STR64)
 
-JIT_STR(void MF_MxeAdd32(MF_resultTuple32 * z,
-    const MF_resultTuple32 * x, const MF_resultTuple32 * y){
+JIT_STR(void LG_MF_MxeAdd32(LG_MF_resultTuple32 * z,
+    const LG_MF_resultTuple32 * x, const LG_MF_resultTuple32 * y){
     (*z) = (*y) ;
   }, MXEADD_STR32)
 
@@ -492,16 +492,16 @@ JIT_STR(void MF_MxeAdd32(MF_resultTuple32 * z,
 // binary op for yd = CreateCompareVec (y,d) using eWiseMult
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_CreateCompareVec64(MF_compareTuple64 *comp,
-    const MF_resultTuple64 *res, const int64_t *height) {
+JIT_STR(void LG_MF_CreateCompareVec64(LG_MF_compareTuple64 *comp,
+    const LG_MF_resultTuple64 *res, const int64_t *height) {
   comp->di = (*height);
   comp->residual = res->residual;
   comp->dj = res->d;
   comp->j = res->j;
   }, CREATECOMPAREVEC_STR64)
 
-JIT_STR(void MF_CreateCompareVec32(MF_compareTuple32 *comp,
-    const MF_resultTuple32 *res, const int32_t *height) {
+JIT_STR(void LG_MF_CreateCompareVec32(LG_MF_compareTuple32 *comp,
+    const LG_MF_resultTuple32 *res, const int32_t *height) {
   comp->di = (*height);
   comp->residual = res->residual;
   comp->dj = res->d;
@@ -513,12 +513,12 @@ JIT_STR(void MF_CreateCompareVec32(MF_compareTuple32 *comp,
 // index unary op to remove empty tuples from y (for which y->j is -1)
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_Prune64(bool * z, const MF_resultTuple64 * x,
+JIT_STR(void LG_MF_Prune64(bool * z, const LG_MF_resultTuple64 * x,
   GrB_Index ix, GrB_Index jx, const bool * theta){
   *z = (x->j != -1) ;
   }, PRUNE_STR64)
 
-JIT_STR(void MF_Prune32(bool * z, const MF_resultTuple32 * x,
+JIT_STR(void LG_MF_Prune32(bool * z, const LG_MF_resultTuple32 * x,
   GrB_Index ix, GrB_Index jx, const bool * theta){
   *z = (x->j != -1) ;
   }, PRUNE_STR32)
@@ -527,7 +527,7 @@ JIT_STR(void MF_Prune32(bool * z, const MF_resultTuple32 * x,
 // unary op for t = MakeFlow (e), where t(i) = (0, e(i))
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_MakeFlow(MF_flowEdge * flow_edge, const double * flow){
+JIT_STR(void LG_MF_MakeFlow(LG_MF_flowEdge * flow_edge, const double * flow){
   flow_edge->capacity = 0;
   flow_edge->flow = (*flow);
   }, MAKEFLOW_STR)
@@ -537,13 +537,13 @@ JIT_STR(void MF_MakeFlow(MF_flowEdge * flow_edge, const double * flow){
 //------------------------------------------------------------------------------
 
 #ifdef DBG
-JIT_STR(void MF_CheckInvariant64(bool *z, const int64_t *height,
-    const MF_resultTuple64 *result) {
+JIT_STR(void LG_MF_CheckInvariant64(bool *z, const int64_t *height,
+    const LG_MF_resultTuple64 *result) {
   (*z) = ((*height) == result->d+1);
   }, CHECKINVARIANT_STR64)
 
-JIT_STR(void MF_CheckInvariant32(bool *z, const int32_t *height,
-    const MF_resultTuple32 *result) {
+JIT_STR(void LG_MF_CheckInvariant32(bool *z, const int32_t *height,
+    const LG_MF_resultTuple32 *result) {
   (*z) = ((*height) == result->d+1);
   }, CHECKINVARIANT_STR32)
 #endif
@@ -552,7 +552,7 @@ JIT_STR(void MF_CheckInvariant32(bool *z, const int32_t *height,
 // binary op for C = GetResidual (R), computing the residual of each edge
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_GetResidual(double * res, const MF_flowEdge * flow_edge){
+JIT_STR(void LG_MF_GetResidual(double * res, const LG_MF_flowEdge * flow_edge){
     (*res) = flow_edge->capacity - flow_edge->flow;
 }, GETRESIDUAL_STR)
 
@@ -560,7 +560,7 @@ JIT_STR(void MF_GetResidual(double * res, const MF_flowEdge * flow_edge){
 // unary op for flow_mtx = ExtractMatrixFlow (R)
 //------------------------------------------------------------------------------
 
-JIT_STR(void MF_ExtractMatrixFlow(double* flow, const MF_flowEdge* edge){*flow = edge->flow;}, EMFLOW_STR)
+JIT_STR(void LG_MF_ExtractMatrixFlow(double* flow, const LG_MF_flowEdge* edge){*flow = edge->flow;}, EMFLOW_STR)
 
 #endif
 
@@ -702,10 +702,10 @@ int LAGr_MaxFlow
   //----------------------------------------------------------------------------
 
   // create types for computation
-  GRB_TRY(GxB_Type_new(&FlowEdge, sizeof(MF_flowEdge), "MF_flowEdge", FLOWEDGE_STR));
+  GRB_TRY(GxB_Type_new(&FlowEdge, sizeof(LG_MF_flowEdge), "LG_MF_flowEdge", FLOWEDGE_STR));
 
-  GRB_TRY(GxB_UnaryOp_new(&GetResidual, F_UNARY(MF_GetResidual), GrB_FP64, FlowEdge,
-        "MF_GetResidual", GETRESIDUAL_STR));
+  GRB_TRY(GxB_UnaryOp_new(&GetResidual, F_UNARY(LG_MF_GetResidual), GrB_FP64, FlowEdge,
+        "LG_MF_GetResidual", GETRESIDUAL_STR));
 
   #ifdef DBG
   GRB_TRY(GrB_Scalar_new(&check, GrB_BOOL));
@@ -715,21 +715,21 @@ int LAGr_MaxFlow
 
   // ops create R from A
   GRB_TRY(GxB_UnaryOp_new(&ResidualForward,
-        F_UNARY(MF_ResidualForward), FlowEdge , GrB_FP64,
-        "MF_ResidualForward", CRF_STR));
+        F_UNARY(LG_MF_ResidualForward), FlowEdge , GrB_FP64,
+        "LG_MF_ResidualForward", CRF_STR));
   GRB_TRY(GxB_UnaryOp_new(&ResidualBackward,
-        F_UNARY(MF_ResidualBackward), FlowEdge , GrB_FP64,
-        "MF_ResidualBackward", CRB_STR));
+        F_UNARY(LG_MF_ResidualBackward), FlowEdge , GrB_FP64,
+        "LG_MF_ResidualBackward", CRB_STR));
 
   // ops to initialize R with initial saturated flows from the source node
   GRB_TRY(GxB_BinaryOp_new(&InitForw,
-        F_BINARY(MF_InitForw), FlowEdge, FlowEdge, FlowEdge,
-        "MF_InitForw", INITFORW_STR));
+        F_BINARY(LG_MF_InitForw), FlowEdge, FlowEdge, FlowEdge,
+        "LG_MF_InitForw", INITFORW_STR));
   GRB_TRY(GxB_BinaryOp_new(&InitBack,
-        F_BINARY(MF_InitBack), FlowEdge, FlowEdge, FlowEdge,
-        "MF_InitBack", INITBACK_STR));
-  GRB_TRY(GxB_UnaryOp_new(&MakeFlow, F_UNARY(MF_MakeFlow), FlowEdge, GrB_FP64,
-        "MF_MakeFlow", MAKEFLOW_STR));
+        F_BINARY(LG_MF_InitBack), FlowEdge, FlowEdge, FlowEdge,
+        "LG_MF_InitBack", INITBACK_STR));
+  GRB_TRY(GxB_UnaryOp_new(&MakeFlow, F_UNARY(LG_MF_MakeFlow), FlowEdge, GrB_FP64,
+        "LG_MF_MakeFlow", MAKEFLOW_STR));
 
   // construct [src,sink] mask
   GRB_TRY(GrB_Vector_new(&src_and_sink, GrB_BOOL, n));
@@ -742,8 +742,8 @@ int LAGr_MaxFlow
 
   // operator to update R structure
   GRB_TRY(GxB_BinaryOp_new(&UpdateFlow,
-        F_BINARY(MF_UpdateFlow), FlowEdge, FlowEdge, GrB_FP64,
-        "MF_UpdateFlow", UPDATEFLOW_STR));
+        F_BINARY(LG_MF_UpdateFlow), FlowEdge, FlowEdge, GrB_FP64,
+        "LG_MF_UpdateFlow", UPDATEFLOW_STR));
 
   // create scalars
   GRB_TRY(GrB_Scalar_new(&zero, GrB_FP64));
@@ -756,8 +756,8 @@ int LAGr_MaxFlow
   if (flow_mtx != NULL)
   {
     GRB_TRY(GxB_UnaryOp_new(&ExtractMatrixFlow,
-        F_UNARY(MF_ExtractMatrixFlow), GrB_FP64, FlowEdge,
-        "MF_ExtractMatrixFlow", EMFLOW_STR));
+        F_UNARY(LG_MF_ExtractMatrixFlow), GrB_FP64, FlowEdge,
+        "LG_MF_ExtractMatrixFlow", EMFLOW_STR));
   }
 
   //----------------------------------------------------------------------------
@@ -783,66 +783,66 @@ int LAGr_MaxFlow
     Integer_Type = GrB_INT64 ;
 
     // create types for computation
-    GRB_TRY(GxB_Type_new(&ResultTuple, sizeof(MF_resultTuple64),
-        "MF_resultTuple64", RESULTTUPLE_STR64));
-    GRB_TRY(GxB_Type_new(&CompareTuple, sizeof(MF_compareTuple64),
-        "MF_compareTuple64", COMPARETUPLE_STR64));
+    GRB_TRY(GxB_Type_new(&ResultTuple, sizeof(LG_MF_resultTuple64),
+        "LG_MF_resultTuple64", RESULTTUPLE_STR64));
+    GRB_TRY(GxB_Type_new(&CompareTuple, sizeof(LG_MF_compareTuple64),
+        "LG_MF_compareTuple64", COMPARETUPLE_STR64));
 
     // invariant check
     #ifdef DBG
     GRB_TRY(GxB_BinaryOp_new(&CheckInvariant,
-        F_BINARY(MF_CheckInvariant64), GrB_BOOL, GrB_INT64, ResultTuple,
-        "MF_CheckInvariant64", CHECKINVARIANT_STR64));
+        F_BINARY(LG_MF_CheckInvariant64), GrB_BOOL, GrB_INT64, ResultTuple,
+        "LG_MF_CheckInvariant64", CHECKINVARIANT_STR64));
     #endif
 
     GRB_TRY(GxB_UnaryOp_new(&ResidualFlow,
-        F_UNARY(MF_ResidualFlow64), GrB_FP64, ResultTuple,
-        "MF_ResidualFlow64", RESIDUALFLOW_STR64));
+        F_UNARY(LG_MF_ResidualFlow64), GrB_FP64, ResultTuple,
+        "LG_MF_ResidualFlow64", RESIDUALFLOW_STR64));
 
     // create ops for R*d semiring
 
     GRB_TRY(GxB_IndexBinaryOp_new(&RxdIndexMult,
-        F_INDEX_BINARY(MF_RxdMult64), ResultTuple, FlowEdge, GrB_INT64, GrB_BOOL,
-        "MF_RxdMult64", RXDMULT_STR64));
+        F_INDEX_BINARY(LG_MF_RxdMult64), ResultTuple, FlowEdge, GrB_INT64, GrB_BOOL,
+        "LG_MF_RxdMult64", RXDMULT_STR64));
     GRB_TRY(GxB_BinaryOp_new_IndexOp(&RxdMult, RxdIndexMult, theta));
     GRB_TRY(GxB_BinaryOp_new(&RxdAdd,
-        F_BINARY(MF_RxdAdd64), ResultTuple, ResultTuple, ResultTuple,
-        "MF_RxdAdd64", RXDADD_STR64));
-    MF_resultTuple64 id = {.d = INT64_MAX, .j = -1, .residual = 0};
+        F_BINARY(LG_MF_RxdAdd64), ResultTuple, ResultTuple, ResultTuple,
+        "LG_MF_RxdAdd64", RXDADD_STR64));
+    LG_MF_resultTuple64 id = {.d = INT64_MAX, .j = -1, .residual = 0};
     GRB_TRY(GrB_Monoid_new_UDT(&RxdAddMonoid, RxdAdd, &id));
 
     // create binary op for yd
     GRB_TRY(GxB_BinaryOp_new(&CreateCompareVec,
-        F_BINARY(MF_CreateCompareVec64), CompareTuple, ResultTuple, GrB_INT64,
-        "MF_CreateCompareVec64", CREATECOMPAREVEC_STR64));
+        F_BINARY(LG_MF_CreateCompareVec64), CompareTuple, ResultTuple, GrB_INT64,
+        "LG_MF_CreateCompareVec64", CREATECOMPAREVEC_STR64));
 
     // create op to prune empty tuples
     GRB_TRY(GxB_IndexUnaryOp_new(&Prune,
-        (GxB_index_unary_function) MF_Prune64, GrB_BOOL, ResultTuple, GrB_BOOL,
-        "MF_Prune64", PRUNE_STR64));
+        (GxB_index_unary_function) LG_MF_Prune64, GrB_BOOL, ResultTuple, GrB_BOOL,
+        "LG_MF_Prune64", PRUNE_STR64));
 
     // create ops for mapping
     GRB_TRY(GxB_UnaryOp_new(&ExtractJ,
-        F_UNARY(MF_ExtractJ64), GrB_INT64, CompareTuple,
-        "MF_ExtractJ64", EXTRACTJ_STR64));
+        F_UNARY(LG_MF_ExtractJ64), GrB_INT64, CompareTuple,
+        "LG_MF_ExtractJ64", EXTRACTJ_STR64));
     GRB_TRY(GxB_UnaryOp_new(&ExtractYJ,
-        F_UNARY(MF_ExtractYJ64), GrB_INT64, ResultTuple,
-        "MF_ExtractYJ64", EXTRACTYJ_STR64));
+        F_UNARY(LG_MF_ExtractYJ64), GrB_INT64, ResultTuple,
+        "LG_MF_ExtractYJ64", EXTRACTYJ_STR64));
 
     // create ops for Map*e semiring
     GRB_TRY(GxB_IndexBinaryOp_new(&MxeIndexMult,
-        F_INDEX_BINARY(MF_MxeMult64), ResultTuple, CompareTuple, GrB_FP64, GrB_BOOL,
-        "MF_MxeMult64", MXEMULT_STR64));
+        F_INDEX_BINARY(LG_MF_MxeMult64), ResultTuple, CompareTuple, GrB_FP64, GrB_BOOL,
+        "LG_MF_MxeMult64", MXEMULT_STR64));
     GRB_TRY(GxB_BinaryOp_new_IndexOp(&MxeMult, MxeIndexMult, theta));
     GRB_TRY(GxB_BinaryOp_new(&MxeAdd,
-        F_BINARY(MF_MxeAdd64), ResultTuple, ResultTuple, ResultTuple,
-        "MF_MxeAdd64", MXEADD_STR64));
+        F_BINARY(LG_MF_MxeAdd64), ResultTuple, ResultTuple, ResultTuple,
+        "LG_MF_MxeAdd64", MXEADD_STR64));
     GRB_TRY(GrB_Monoid_new_UDT(&MxeAddMonoid, MxeAdd, &id));
 
     // update height binary op
     GRB_TRY(GxB_BinaryOp_new(&Relabel,
-        F_BINARY(MF_Relabel64), GrB_INT64, GrB_INT64, ResultTuple,
-        "MF_Relabel64", RELABEL_STR64));
+        F_BINARY(LG_MF_Relabel64), GrB_INT64, GrB_INT64, ResultTuple,
+        "LG_MF_Relabel64", RELABEL_STR64));
 
   }else{
 
@@ -853,65 +853,65 @@ int LAGr_MaxFlow
     Integer_Type = GrB_INT32 ;
 
     // create types for computation
-    GRB_TRY(GxB_Type_new(&ResultTuple, sizeof(MF_resultTuple32),
-        "MF_resultTuple32", RESULTTUPLE_STR32));
-    GRB_TRY(GxB_Type_new(&CompareTuple, sizeof(MF_compareTuple32),
-        "MF_compareTuple32", COMPARETUPLE_STR32));
+    GRB_TRY(GxB_Type_new(&ResultTuple, sizeof(LG_MF_resultTuple32),
+        "LG_MF_resultTuple32", RESULTTUPLE_STR32));
+    GRB_TRY(GxB_Type_new(&CompareTuple, sizeof(LG_MF_compareTuple32),
+        "LG_MF_compareTuple32", COMPARETUPLE_STR32));
 
     // invariant check
     #ifdef DBG
     GRB_TRY(GxB_BinaryOp_new(&CheckInvariant,
-        F_BINARY(MF_CheckInvariant32), GrB_BOOL, GrB_INT32, ResultTuple,
-        "MF_CheckInvariant32", CHECKINVARIANT_STR32));
+        F_BINARY(LG_MF_CheckInvariant32), GrB_BOOL, GrB_INT32, ResultTuple,
+        "LG_MF_CheckInvariant32", CHECKINVARIANT_STR32));
     #endif
 
     GRB_TRY(GxB_UnaryOp_new(&ResidualFlow,
-        F_UNARY(MF_ResidualFlow32), GrB_FP64, ResultTuple,
-        "MF_ResidualFlow32", RESIDUALFLOW_STR32));
+        F_UNARY(LG_MF_ResidualFlow32), GrB_FP64, ResultTuple,
+        "LG_MF_ResidualFlow32", RESIDUALFLOW_STR32));
 
     // create ops for R*d semiring
     GRB_TRY(GxB_IndexBinaryOp_new(&RxdIndexMult,
-        F_INDEX_BINARY(MF_RxdMult32), ResultTuple, FlowEdge, GrB_INT32, GrB_BOOL,
-        "MF_RxdMult32", RXDMULT_STR32));
+        F_INDEX_BINARY(LG_MF_RxdMult32), ResultTuple, FlowEdge, GrB_INT32, GrB_BOOL,
+        "LG_MF_RxdMult32", RXDMULT_STR32));
     GRB_TRY(GxB_BinaryOp_new_IndexOp(&RxdMult, RxdIndexMult, theta));
     GRB_TRY(GxB_BinaryOp_new(&RxdAdd,
-        F_BINARY(MF_RxdAdd32), ResultTuple, ResultTuple, ResultTuple,
-        "MF_RxdAdd32", RXDADD_STR32));
-    MF_resultTuple32 id = {.d = INT32_MAX, .j = -1, .residual = 0};
+        F_BINARY(LG_MF_RxdAdd32), ResultTuple, ResultTuple, ResultTuple,
+        "LG_MF_RxdAdd32", RXDADD_STR32));
+    LG_MF_resultTuple32 id = {.d = INT32_MAX, .j = -1, .residual = 0};
     GRB_TRY(GrB_Monoid_new_UDT(&RxdAddMonoid, RxdAdd, &id));
 
     // create binary op for yd
     GRB_TRY(GxB_BinaryOp_new(&CreateCompareVec,
-        F_BINARY(MF_CreateCompareVec32), CompareTuple, ResultTuple, GrB_INT32,
-        "MF_CreateCompareVec32", CREATECOMPAREVEC_STR32));
+        F_BINARY(LG_MF_CreateCompareVec32), CompareTuple, ResultTuple, GrB_INT32,
+        "LG_MF_CreateCompareVec32", CREATECOMPAREVEC_STR32));
 
     // create op to prune empty tuples
     GRB_TRY(GxB_IndexUnaryOp_new(&Prune,
-        (GxB_index_unary_function) MF_Prune32, GrB_BOOL, ResultTuple, GrB_BOOL,
-        "MF_Prune32", PRUNE_STR32));
+        (GxB_index_unary_function) LG_MF_Prune32, GrB_BOOL, ResultTuple, GrB_BOOL,
+        "LG_MF_Prune32", PRUNE_STR32));
 
     // create ops for mapping
     GRB_TRY(GxB_UnaryOp_new(&ExtractJ,
-        F_UNARY(MF_ExtractJ32), GrB_INT32, CompareTuple,
-        "MF_ExtractJ32", EXTRACTJ_STR32));
+        F_UNARY(LG_MF_ExtractJ32), GrB_INT32, CompareTuple,
+        "LG_MF_ExtractJ32", EXTRACTJ_STR32));
     GRB_TRY(GxB_UnaryOp_new(&ExtractYJ,
-        F_UNARY(MF_ExtractYJ32), GrB_INT32, ResultTuple,
-        "MF_ExtractYJ32", EXTRACTYJ_STR32));
+        F_UNARY(LG_MF_ExtractYJ32), GrB_INT32, ResultTuple,
+        "LG_MF_ExtractYJ32", EXTRACTYJ_STR32));
 
     // create ops for Map*e semiring
     GRB_TRY(GxB_IndexBinaryOp_new(&MxeIndexMult,
-        F_INDEX_BINARY(MF_MxeMult32), ResultTuple, CompareTuple, GrB_FP64, GrB_BOOL,
-        "MF_MxeMult32", MXEMULT_STR32));
+        F_INDEX_BINARY(LG_MF_MxeMult32), ResultTuple, CompareTuple, GrB_FP64, GrB_BOOL,
+        "LG_MF_MxeMult32", MXEMULT_STR32));
     GRB_TRY(GxB_BinaryOp_new_IndexOp(&MxeMult, MxeIndexMult, theta));
     GRB_TRY(GxB_BinaryOp_new(&MxeAdd,
-        F_BINARY(MF_MxeAdd32), ResultTuple, ResultTuple, ResultTuple,
-        "MF_MxeAdd32", MXEADD_STR32));
+        F_BINARY(LG_MF_MxeAdd32), ResultTuple, ResultTuple, ResultTuple,
+        "LG_MF_MxeAdd32", MXEADD_STR32));
     GRB_TRY(GrB_Monoid_new_UDT(&MxeAddMonoid, MxeAdd, &id));
 
     // update height binary op
     GRB_TRY(GxB_BinaryOp_new(&Relabel,
-        F_BINARY(MF_Relabel32), GrB_INT32, GrB_INT32, ResultTuple,
-        "MF_Relabel32", RELABEL_STR32));
+        F_BINARY(LG_MF_Relabel32), GrB_INT32, GrB_INT32, ResultTuple,
+        "LG_MF_Relabel32", RELABEL_STR32));
   }
 
   //----------------------------------------------------------------------------
@@ -1091,21 +1091,21 @@ int LAGr_MaxFlow
   GRB_TRY(GrB_Vector_new(&y, ResultTuple, 3));
   if (n > NBIG)
   {
-    MF_resultTuple64 a = {.d = 1, .j = 2, .residual = 3};
-    MF_resultTuple64 b = {.d = 4, .j = 5, .residual = 6};
+    LG_MF_resultTuple64 a = {.d = 1, .j = 2, .residual = 3};
+    LG_MF_resultTuple64 b = {.d = 4, .j = 5, .residual = 6};
     GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &a, 0)) ;
     GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &b, 0)) ;
-    MF_resultTuple64 c = {.d = 0, .j = 0, .residual = 0};
+    LG_MF_resultTuple64 c = {.d = 0, .j = 0, .residual = 0};
     GRB_TRY (GrB_Vector_reduce_UDT ((void *) &c, NULL, MxeAddMonoid, y, NULL)) ;
     LG_ASSERT ((c.residual == 6 && c.j == 5 && c.d == 4), GrB_PANIC) ;
   }
   else
   {
-    MF_resultTuple32 a = {.d = 1, .j = 2, .residual = 3};
-    MF_resultTuple32 b = {.d = 4, .j = 5, .residual = 6};
+    LG_MF_resultTuple32 a = {.d = 1, .j = 2, .residual = 3};
+    LG_MF_resultTuple32 b = {.d = 4, .j = 5, .residual = 6};
     GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &a, 0)) ;
     GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &b, 0)) ;
-    MF_resultTuple32 c = {.d = 0, .j = 0, .residual = 0};
+    LG_MF_resultTuple32 c = {.d = 0, .j = 0, .residual = 0};
     GRB_TRY (GrB_Vector_reduce_UDT ((void *) &c, NULL, MxeAddMonoid, y, NULL)) ;
     LG_ASSERT ((c.residual == 6 && c.j == 5 && c.d == 4), GrB_PANIC) ;
   }

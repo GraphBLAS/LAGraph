@@ -88,7 +88,7 @@ This method requires O(n + e) space for an undirected graph with e edges and n n
 
 #if LAGRAPH_SUITESPARSE
 
-void valueeq_index_func (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const void *y) {
+void LG_CM_valueeq_index_func (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const void *y) {
     (*z) = ((*x) == i) ;
 }
 
@@ -162,7 +162,7 @@ static int LAGraph_Parent_to_S
                 - This fills in the new parents for discarded nodes
         */
         
-        GRB_TRY (GrB_IndexUnaryOp_new (&VALUEEQ_ROWINDEX_UINT64, F_INDEX_UNARY(valueeq_index_func), GrB_BOOL, GrB_UINT64, GrB_UINT64)) ;
+        GRB_TRY (GrB_IndexUnaryOp_new (&VALUEEQ_ROWINDEX_UINT64, F_INDEX_UNARY(LG_CM_valueeq_index_func), GrB_BOOL, GrB_UINT64, GrB_UINT64)) ;
 
         // identify preserved nodes
         GRB_TRY (GrB_select (parent_cpy, NULL, NULL, VALUEEQ_ROWINDEX_UINT64, parent, 0, NULL)) ;

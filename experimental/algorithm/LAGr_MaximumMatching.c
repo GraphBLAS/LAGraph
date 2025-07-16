@@ -46,7 +46,7 @@ typedef struct
 {
     uint64_t parentC;
     uint64_t rootC;
-} vertex;
+} LG_MM_vertex;
 
 // repeat the typedef as a string, to give to GraphBLAS
 #define VERTEX_DEFN         \
@@ -54,71 +54,71 @@ typedef struct
 "{                      \n" \
 "    uint64_t parentC;  \n" \
 "    uint64_t rootC;    \n" \
-"} vertex;"
+"} LG_MM_vertex;"
 
-void initFrontier(vertex *z, const bool *x, uint64_t i, uint64_t j, const bool *y)
+void LG_MM_initFrontier(LG_MM_vertex *z, const bool *x, uint64_t i, uint64_t j, const bool *y)
 {
     z->parentC = i;
     z->rootC = i;
 }
 
 #define INIT_FRONTIER_DEFN  \
-"void initFrontier(vertex *z, const bool *x, uint64_t i, uint64_t j, const bool *y) \n" \
+"void LG_MM_initFrontier(LG_MM_vertex *z, const bool *x, uint64_t i, uint64_t j, const bool *y) \n" \
 "{                      \n" \
 "    z->parentC = i;    \n" \
 "    z->rootC = i;      \n" \
 "}"
 
-void minparent(vertex *z, const vertex *x, const vertex *y)
+void LG_MM_minparent(LG_MM_vertex *z, const LG_MM_vertex *x, const LG_MM_vertex *y)
 {
     *z = x->parentC < y->parentC ? *x : *y;
 }
 
 #define MIN_PARENT_DEFN                                             \
-"void minparent(vertex *z, const vertex *x, const vertex *y)    \n" \
+"void LG_MM_minparent(LG_MM_vertex *z, const LG_MM_vertex *x, const LG_MM_vertex *y)    \n" \
 "{                                                              \n" \
 "    *z = x->parentC < y->parentC ? *x : *y;                    \n" \
 "}"
 
-// TODO: revise GraphBLAS so we can tell it that the select2nd operator
+// TODO: revise GraphBLAS so we can tell it that the LG_MM_select2nd operator
 // does not use the 'x' input.
-void select2nd(vertex *z, const bool *x, const vertex *y)
+void LG_MM_select2nd(LG_MM_vertex *z, const bool *x, const LG_MM_vertex *y)
 {
     z->parentC = y->parentC;
     z->rootC = y->rootC;
 }
 
 #define SELECT_2ND_DEFN                                             \
-"void select2nd(vertex *z, const bool *x, const vertex *y)      \n" \
+"void LG_MM_select2nd(LG_MM_vertex *z, const bool *x, const LG_MM_vertex *y)      \n" \
 "{                                                              \n" \
 "    z->parentC = y->parentC;                                   \n" \
 "    z->rootC = y->rootC;                                       \n" \
 "}"
 
-void select1st(vertex *z, const vertex *x, const bool *y)
+void LG_MM_select1st(LG_MM_vertex *z, const LG_MM_vertex *x, const bool *y)
 {
     z->parentC = x->parentC;
     z->rootC = x->rootC;
 }
 
 #define SELECT_1ST_DEFN                                             \
-"void select1st(vertex *z, const vertex *x, const bool *y)      \n" \
+"void LG_MM_select1st(LG_MM_vertex *z, const LG_MM_vertex *x, const bool *y)      \n" \
 "{                                                              \n" \
 "    z->parentC = x->parentC;                                   \n" \
 "    z->rootC = x->rootC;                                       \n" \
 "}"
 
-void keepParents(uint64_t *z, const vertex *x) { *z = x->parentC; }
+void LG_MM_keepParents(uint64_t *z, const LG_MM_vertex *x) { *z = x->parentC; }
 
 #define KEEP_PARENTS_DEFN                                           \
-"void keepParents(uint64_t *z, const vertex *x) { *z = x->parentC; }\n"
+"void LG_MM_keepParents(uint64_t *z, const LG_MM_vertex *x) { *z = x->parentC; }\n"
 
-void keepRoots(uint64_t *z, const vertex *x) { *z = x->rootC; }
+void LG_MM_keepRoots(uint64_t *z, const LG_MM_vertex *x) { *z = x->rootC; }
 
 #define KEEP_ROOTS_DEFN                                                        \
-"void keepRoots(uint64_t *z, const vertex *x) { *z = x->rootC; }\n"
+"void LG_MM_keepRoots(uint64_t *z, const LG_MM_vertex *x) { *z = x->rootC; }\n"
 
-void buildfCTuples(vertex *z, const uint64_t *x, uint64_t i, uint64_t j,
+void LG_MM_buildfCTuples(LG_MM_vertex *z, const uint64_t *x, uint64_t i, uint64_t j,
                    const bool *y)
 {
     z->parentC = i;
@@ -126,34 +126,34 @@ void buildfCTuples(vertex *z, const uint64_t *x, uint64_t i, uint64_t j,
 }
 
 #define BUILT_FC_TUPLES_DEFN                                        \
-"void buildfCTuples(vertex *z, const uint64_t *x, uint64_t i, uint64_t j,   \n" \
+"void LG_MM_buildfCTuples(LG_MM_vertex *z, const uint64_t *x, uint64_t i, uint64_t j,   \n" \
 "                   const bool *y)                              \n" \
 "{                                                              \n" \
 "    z->parentC = i;                                            \n" \
 "    z->rootC = *x;                                             \n" \
 "}"
 
-void vertexTypecast(vertex *z, const uint64_t *x)
+void LG_MM_vertexTypecast(LG_MM_vertex *z, const uint64_t *x)
 {
     z->parentC = *x;
     z->rootC = *x;
 }
 
 #define VERTEX_TYPECAST_DEFN                                        \
-"void vertexTypecast(vertex *z, const uint64_t *x)              \n" \
+"void LG_MM_vertexTypecast(LG_MM_vertex *z, const uint64_t *x)              \n" \
 "{                                                              \n" \
 "    z->parentC = *x;                                           \n" \
 "    z->rootC = *x;                                             \n" \
 "}"
 
-void setParentsMates(vertex *z, const vertex *x, const vertex *y)
+void LG_MM_setParentsMates(LG_MM_vertex *z, const LG_MM_vertex *x, const LG_MM_vertex *y)
 {
     z->parentC = y->parentC;
     z->rootC = x->rootC;
 }
 
 #define SET_PARENTS_MATES_DEFN                                          \
-"void setParentsMates(vertex *z, const vertex *x, const vertex *y)  \n" \
+"void LG_MM_setParentsMates(LG_MM_vertex *z, const LG_MM_vertex *x, const LG_MM_vertex *y)  \n" \
 "{                                                                  \n" \
 "    z->parentC = y->parentC;                                       \n" \
 "    z->rootC = x->rootC;                                           \n" \
@@ -397,8 +397,8 @@ invert_2(GrB_Vector out,  // input/output
     GRB_TRY(GrB_Vector_wait(in1, GrB_MATERIALIZE));
     if (udt)
     {
-        vertex *X1_V = NULL;
-        LG_TRY(LAGraph_Malloc((void **)&X1_V, nvals2, sizeof(vertex), msg));
+        LG_MM_vertex *X1_V = NULL;
+        LG_TRY(LAGraph_Malloc((void **)&X1_V, nvals2, sizeof(LG_MM_vertex), msg));
         for (uint64_t i = 0; i < nvals2; i++)
         {
             GRB_TRY(GrB_Vector_extractElement_UDT(
@@ -570,9 +570,9 @@ int LAGr_MaximumMatching(
     GRB_TRY(GrB_Vector_new(&parentsR, GrB_UINT64, nrows));
 
 #if LAGRAPH_SUITESPARSE
-    GRB_TRY(GxB_Type_new(&Vertex, sizeof(vertex), "vertex", VERTEX_DEFN));
+    GRB_TRY(GxB_Type_new(&Vertex, sizeof(LG_MM_vertex), "LG_MM_vertex", VERTEX_DEFN));
 #else
-    GRB_TRY(GrB_Type_new(&Vertex, sizeof(vertex)));
+    GRB_TRY(GrB_Type_new(&Vertex, sizeof(LG_MM_vertex)));
 #endif
 
     GRB_TRY(GrB_Vector_new(&frontierC, Vertex, ncols));
@@ -580,11 +580,11 @@ int LAGr_MaximumMatching(
     GRB_TRY(GrB_Vector_new(&frontierR, Vertex, nrows));
 
 #if LAGRAPH_SUITESPARSE
-    GRB_TRY(GxB_IndexUnaryOp_new(&initFrontierOp, (void *)initFrontier, Vertex,
-                                 GrB_BOOL, GrB_BOOL, "initFrontier",
+    GRB_TRY(GxB_IndexUnaryOp_new(&initFrontierOp, (void *)LG_MM_initFrontier, Vertex,
+                                 GrB_BOOL, GrB_BOOL, "LG_MM_initFrontier",
                                  INIT_FRONTIER_DEFN));
 #else
-    GRB_TRY(GrB_IndexUnaryOp_new(&initFrontierOp, (void *)initFrontier, Vertex,
+    GRB_TRY(GrB_IndexUnaryOp_new(&initFrontierOp, (void *)LG_MM_initFrontier, Vertex,
                                  GrB_BOOL, GrB_BOOL));
 #endif
 
@@ -592,20 +592,20 @@ int LAGr_MaximumMatching(
     GRB_TRY(GrB_Vector_assign_BOOL(I, NULL, NULL, 1, GrB_ALL, ncols, NULL));
 
 #if LAGRAPH_SUITESPARSE
-    GRB_TRY(GxB_BinaryOp_new(&MinParent, (void *)minparent, Vertex, Vertex,
-                             Vertex, "minparent", MIN_PARENT_DEFN));
+    GRB_TRY(GxB_BinaryOp_new(&MinParent, (void *)LG_MM_minparent, Vertex, Vertex,
+                             Vertex, "LG_MM_minparent", MIN_PARENT_DEFN));
 #else
-    GRB_TRY(GrB_BinaryOp_new(&MinParent, (void *)minparent, Vertex, Vertex,
+    GRB_TRY(GrB_BinaryOp_new(&MinParent, (void *)LG_MM_minparent, Vertex, Vertex,
                              Vertex));
 #endif
-    vertex infinityParent = {GrB_INDEX_MAX + 1, 0};
+    LG_MM_vertex infinityParent = {GrB_INDEX_MAX + 1, 0};
     GRB_TRY(GrB_Monoid_new_UDT(&MinParent_Monoid, MinParent, &infinityParent));
 
 #if LAGRAPH_SUITESPARSE
-    GRB_TRY(GxB_BinaryOp_new(&Select2ndOp, (void *)select2nd, Vertex, GrB_BOOL,
-                             Vertex, "select2nd", SELECT_2ND_DEFN));
+    GRB_TRY(GxB_BinaryOp_new(&Select2ndOp, (void *)LG_MM_select2nd, Vertex, GrB_BOOL,
+                             Vertex, "LG_MM_select2nd", SELECT_2ND_DEFN));
 #else
-    GRB_TRY(GrB_BinaryOp_new(&Select2ndOp, (void *)select2nd, Vertex, GrB_BOOL,
+    GRB_TRY(GrB_BinaryOp_new(&Select2ndOp, (void *)LG_MM_select2nd, Vertex, GrB_BOOL,
                              Vertex));
 #endif
 
@@ -613,10 +613,10 @@ int LAGr_MaximumMatching(
                              Select2ndOp));
 
 #if LAGRAPH_SUITESPARSE
-    GRB_TRY(GxB_BinaryOp_new(&Select1stOp, (void *)select1st, Vertex, Vertex,
-                             GrB_BOOL, "select1st", SELECT_1ST_DEFN));
+    GRB_TRY(GxB_BinaryOp_new(&Select1stOp, (void *)LG_MM_select1st, Vertex, Vertex,
+                             GrB_BOOL, "LG_MM_select1st", SELECT_1ST_DEFN));
 #else
-    GRB_TRY(GrB_BinaryOp_new(&Select1stOp, (void *)select1st, Vertex, Vertex,
+    GRB_TRY(GrB_BinaryOp_new(&Select1stOp, (void *)LG_MM_select1st, Vertex, Vertex,
                              GrB_BOOL));
 #endif
 
@@ -624,19 +624,19 @@ int LAGr_MaximumMatching(
                              Select1stOp));
 
 #if LAGRAPH_SUITESPARSE
-    GRB_TRY(GxB_UnaryOp_new(&getParentsOp, (void *)keepParents, GrB_UINT64,
-                            Vertex, "keepParents", KEEP_PARENTS_DEFN));
+    GRB_TRY(GxB_UnaryOp_new(&getParentsOp, (void *)LG_MM_keepParents, GrB_UINT64,
+                            Vertex, "LG_MM_keepParents", KEEP_PARENTS_DEFN));
 #else
-    GRB_TRY(GrB_UnaryOp_new(&getParentsOp, (void *)keepParents, GrB_UINT64,
+    GRB_TRY(GrB_UnaryOp_new(&getParentsOp, (void *)LG_MM_keepParents, GrB_UINT64,
                             Vertex));
 #endif
 
 #if LAGRAPH_SUITESPARSE
-    GRB_TRY(GxB_UnaryOp_new(&getRootsOp, (void *)keepRoots, GrB_UINT64, Vertex,
-                            "keepRoots", KEEP_ROOTS_DEFN));
+    GRB_TRY(GxB_UnaryOp_new(&getRootsOp, (void *)LG_MM_keepRoots, GrB_UINT64, Vertex,
+                            "LG_MM_keepRoots", KEEP_ROOTS_DEFN));
 #else
     GRB_TRY(
-        GrB_UnaryOp_new(&getRootsOp, (void *)keepRoots, GrB_UINT64, Vertex));
+        GrB_UnaryOp_new(&getRootsOp, (void *)LG_MM_keepRoots, GrB_UINT64, Vertex));
 #endif
 
     GRB_TRY(GrB_Vector_new(&parentsUpdate, GrB_UINT64, nrows));
@@ -654,29 +654,29 @@ int LAGr_MaximumMatching(
     GRB_TRY(GrB_Vector_new(&rootfRIndexes, GrB_UINT64, ncols));
 
 #if LAGRAPH_SUITESPARSE
-    GRB_TRY(GxB_IndexUnaryOp_new(&buildfCTuplesOp, (void *)buildfCTuples,
-                                 Vertex, GrB_UINT64, GrB_BOOL, "buildfCTuples",
+    GRB_TRY(GxB_IndexUnaryOp_new(&buildfCTuplesOp, (void *)LG_MM_buildfCTuples,
+                                 Vertex, GrB_UINT64, GrB_BOOL, "LG_MM_buildfCTuples",
                                  BUILT_FC_TUPLES_DEFN));
 #else
-    GRB_TRY(GrB_IndexUnaryOp_new(&buildfCTuplesOp, (void *)buildfCTuples,
+    GRB_TRY(GrB_IndexUnaryOp_new(&buildfCTuplesOp, (void *)LG_MM_buildfCTuples,
                                  Vertex, GrB_UINT64, GrB_BOOL));
 #endif
 
 #if LAGRAPH_SUITESPARSE
-    GRB_TRY(GxB_UnaryOp_new(&vertexTypecastOp, (void *)vertexTypecast, Vertex,
-                            GrB_UINT64, "vertexTypecast",
+    GRB_TRY(GxB_UnaryOp_new(&vertexTypecastOp, (void *)LG_MM_vertexTypecast, Vertex,
+                            GrB_UINT64, "LG_MM_vertexTypecast",
                             VERTEX_TYPECAST_DEFN));
 #else
-    GRB_TRY(GrB_UnaryOp_new(&vertexTypecastOp, (void *)vertexTypecast, Vertex,
+    GRB_TRY(GrB_UnaryOp_new(&vertexTypecastOp, (void *)LG_MM_vertexTypecast, Vertex,
                             GrB_UINT64));
 #endif
 
 #if LAGRAPH_SUITESPARSE
-    GRB_TRY(GxB_BinaryOp_new(&setParentsMatesOp, (void *)setParentsMates,
-                             Vertex, Vertex, Vertex, "setParentsMates",
+    GRB_TRY(GxB_BinaryOp_new(&setParentsMatesOp, (void *)LG_MM_setParentsMates,
+                             Vertex, Vertex, Vertex, "LG_MM_setParentsMates",
                              SET_PARENTS_MATES_DEFN));
 #else
-    GRB_TRY(GrB_BinaryOp_new(&setParentsMatesOp, (void *)setParentsMates,
+    GRB_TRY(GrB_BinaryOp_new(&setParentsMatesOp, (void *)LG_MM_setParentsMates,
                              Vertex, Vertex, Vertex));
 #endif
 

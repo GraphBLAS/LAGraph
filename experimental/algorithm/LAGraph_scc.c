@@ -39,16 +39,16 @@ typedef struct
 {
     uint64_t *F, *B;
     bool *M;
-} sccContext;
+} LG_SCC_Context;
 #define SCCCONTEXT \
 "typedef struct \n"             \
 "{\n"                           \
 "    uint64_t *F, *B;\n"    \
 "    bool *M;\n"                \
-"} sccContext;\n"               
+"} LG_SCC_Context;\n"               
 
 
-// edge_removal:
+// LG_SCC_edge_removal:
 //  - remove the edges connected to newly identified SCCs (vertices u with M[u]==1)
 //  - remove the edges (u, v) where u and v can never be in the same SCC.
 //
@@ -61,16 +61,16 @@ typedef struct
 // an edge (u, v) if either F[u]!=F[v] or B[u]!=B[v] holds, which can accelerate
 // the SCC computation in the future rounds.
 
-void edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk) ;
-void edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk)
+void LG_SCC_edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk) ;
+void LG_SCC_edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk)
 {
     (*z) = (!thunk->M[i] && !thunk->M[j] 
         && thunk->F[i] == thunk->F[j] 
         && thunk->B[i] == thunk->B[j]) ;
 }
 #define EDGE_REMOVAL \
-"void edge_removal \n"                                                          \
-"(bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk)\n" \
+"void LG_SCC_edge_removal \n"                                                          \
+"(bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk)\n" \
 "{\n"                                                                           \
 "    (*z) = (!thunk->M[i] && !thunk->M[j] \n"                                   \
 "        && thunk->F[i] == thunk->F[j] \n"                                      \
@@ -78,19 +78,19 @@ void edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const sccCo
 "}\n"                                                                           
 
 //****************************************************************************
-// trim_one: remove the edges connected to trivial SCCs
+// LG_SCC_trim_one: remove the edges connected to trivial SCCs
 //  - A vertex is a trivial SCC if it has no incoming or outgoing edges.
 //  - M[i] = i   | if vertex i is a trivial SCC
 //    M[i] = n   | otherwise
 
-void trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk) ;
-void trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk)
+void LG_SCC_trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk) ;
+void LG_SCC_trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk)
 {
     (*z) = (thunk->F[i] == thunk->F[j]) ;
 }
 #define TRIM_ONE \
-"void trim_one\n"                                                               \
-"(bool *z, const void *x, GrB_Index i, GrB_Index j, const sccContext *thunk)\n" \
+"void LG_SCC_trim_one\n"                                                               \
+"(bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk)\n" \
 "{\n"                                                                           \
 "    (*z) = (thunk->F[i] == thunk->F[j]) ;\n"                                   \
 "}\n"
@@ -177,7 +177,7 @@ int LAGraph_scc
 #if LAGRAPH_SUITESPARSE
 
     LG_CLEAR_MSG ;
-    sccContext contx = {NULL, NULL, NULL};
+    LG_SCC_Context contx = {NULL, NULL, NULL};
     GrB_Info info = GrB_SUCCESS;
     GrB_Type contx_type = NULL;
     GrB_Type type_F = NULL, type_B = NULL, type_M = NULL;
@@ -223,19 +223,19 @@ int LAGraph_scc
     GRB_TRY (GrB_Vector_new (&m2, GrB_BOOL, n));
     GRB_TRY (GrB_Vector_new (&x, GrB_BOOL, n));
     GRB_TRY (GxB_Type_new (
-        &contx_type, sizeof(sccContext), "sccContext", SCCCONTEXT)) ;
+        &contx_type, sizeof(LG_SCC_Context), "LG_SCC_Context", SCCCONTEXT)) ;
 
     GRB_TRY (GxB_IndexUnaryOp_new (
-        &sel1, (GxB_index_unary_function) trim_one, 
+        &sel1, (GxB_index_unary_function) LG_SCC_trim_one, 
         GrB_BOOL, GrB_UINT64, contx_type, 
         // NULL, NULL
-        "trim_one", TRIM_ONE
+        "LG_SCC_trim_one", TRIM_ONE
     ));
     GRB_TRY (GxB_IndexUnaryOp_new (
-        &sel2, (GxB_index_unary_function) edge_removal, 
+        &sel2, (GxB_index_unary_function) LG_SCC_edge_removal, 
         GrB_BOOL, GrB_UINT64, contx_type,
         // NULL, NULL
-        "edge_removal", EDGE_REMOVAL
+        "LG_SCC_edge_removal", EDGE_REMOVAL
     ));
 
     // store the graph in both directions (forward / backward)
