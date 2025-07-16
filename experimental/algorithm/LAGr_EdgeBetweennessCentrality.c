@@ -66,7 +66,7 @@
 // (1+x)/y function for double: z = (1 + x) / y
 //------------------------------------------------------------------------------
 
-void add_one_divide_function (double *z, const double *x, const double *y)
+void LG_EBC_add_one_divide_function (double *z, const double *x, const double *y)
 {
     double a = (*(x)) ;
     double b = (*(y)) ;
@@ -74,7 +74,7 @@ void add_one_divide_function (double *z, const double *x, const double *y)
 }
 
 #define ADD_ONE_DIVIDE_FUNCTION_DEFN                                           \
-"void add_one_divide_function (double *z, const double *x, const double *y)\n" \
+"void LG_EBC_add_one_divide_function (double *z, const double *x, const double *y)\n" \
 "{                                                                         \n" \
 "    double a = (*(x)) ;                                                   \n" \
 "    double b = (*(y)) ;                                                   \n" \
@@ -203,9 +203,9 @@ int LAGr_EdgeBetweennessCentrality
     // =========================================================================
 
     GRB_TRY (GxB_BinaryOp_new (&Add_One_Divide,
-        (GxB_binary_function) add_one_divide_function,
+        (GxB_binary_function) LG_EBC_add_one_divide_function,
         GrB_FP64, GrB_FP64, GrB_FP64,
-        "add_one_divide_function", ADD_ONE_DIVIDE_FUNCTION_DEFN)) ;
+        "LG_EBC_add_one_divide_function", ADD_ONE_DIVIDE_FUNCTION_DEFN)) ;
 
     // Initialize the frontier, paths, Update, and bc_vertex_flow
     GRB_TRY (GrB_Vector_new (&paths,    GrB_FP64, n)) ;

@@ -47,8 +47,8 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-void mod32 (int32_t *z, const int32_t *x, const int32_t *y) ;
-void mod32 (int32_t *z, const int32_t *x, const int32_t *y)
+void LG_ED_mod32 (int32_t *z, const int32_t *x, const int32_t *y) ;
+void LG_ED_mod32 (int32_t *z, const int32_t *x, const int32_t *y)
 {
     /* make sure x is positive */
     int32_t t = ((*x) > 0) ? (*x) : -(*x) ;
@@ -56,15 +56,15 @@ void mod32 (int32_t *z, const int32_t *x, const int32_t *y)
 }
 
 #define MOD32_DEFN                                                  \
-"void mod32 (int32_t *z, const int32_t *x, const int32_t *y)    \n" \
+"void LG_ED_mod32 (int32_t *z, const int32_t *x, const int32_t *y)    \n" \
 "{                                                              \n" \
 "    /* make sure x is positive */                              \n" \
 "    int32_t t = ((*x) > 0) ? (*x) : -(*x) ;                    \n" \
 "    (*z) = t % (*y) ;                                          \n" \
 "}"
 
-void mod64 (int64_t *z, const int64_t *x, const int64_t *y) ;
-void mod64 (int64_t *z, const int64_t *x, const int64_t *y)
+void LG_ED_mod64 (int64_t *z, const int64_t *x, const int64_t *y) ;
+void LG_ED_mod64 (int64_t *z, const int64_t *x, const int64_t *y)
 {
     /* make sure x is positive */
     int64_t t = ((*x) > 0) ? (*x) : -(*x) ;
@@ -72,7 +72,7 @@ void mod64 (int64_t *z, const int64_t *x, const int64_t *y)
 }
 
 #define MOD64_DEFN                                                  \
-"void mod64 (int64_t *z, const int64_t *x, const int64_t *y)    \n" \
+"void LG_ED_mod64 (int64_t *z, const int64_t *x, const int64_t *y)    \n" \
 "{                                                              \n" \
 "    /* make sure x is positive */                              \n" \
 "    int64_t t = ((*x) > 0) ? (*x) : -(*x) ;                    \n" \
@@ -162,10 +162,10 @@ int LAGraph_EstimateDiameter
         // least one out-going edge.
         LAGRAPH_TRY (LAGraph_Random_Seed (srcs, seed, msg)) ;
         GRB_TRY (GxB_BinaryOp_new (&Mod,
-            (n > INT32_MAX) ? ((GxB_binary_function)mod64) :
-                              ((GxB_binary_function)mod32),
+            (n > INT32_MAX) ? ((GxB_binary_function)LG_ED_mod64) :
+                              ((GxB_binary_function)LG_ED_mod32),
             int_type, int_type, int_type,
-            (n > INT32_MAX) ? "mod64" : "mod32",
+            (n > INT32_MAX) ? "LG_ED_mod64" : "LG_ED_mod32",
             (n > INT32_MAX) ? MOD64_DEFN : MOD32_DEFN)) ;
         GRB_TRY (GrB_apply (srcs, NULL, NULL, Mod, srcs, n, NULL)) ;
         GrB_free (&Mod) ;
