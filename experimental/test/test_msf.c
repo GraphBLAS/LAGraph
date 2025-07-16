@@ -71,6 +71,7 @@ const matrix_info files [ ] =
 void test_msf (void)
 {
     LAGraph_Init (msg) ;
+    bool burble = false ;
     GrB_Scalar zeroB = NULL;
     GrB_Scalar_new(&zeroB, GrB_BOOL);
     GrB_Scalar_setElement_BOOL(zeroB, false);
@@ -107,16 +108,17 @@ void test_msf (void)
                 Ans, files[k].ans_i, files[k].ans_j, zeroB, files[k].ans_n
             )) ;
         }
-        
+
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
+            if (jit) printf ("\nJIT is enabled\n") ; else printf ("\nJIT is disabled\n") ;
             OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
                 jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
             // compute the min spanning forest
             C = NULL ;
-            // GxB_Global_Option_set(GxB_BURBLE, true);
+            OK (LG_SET_BURBLE (burble)) ;
             int result = LAGraph_msf (&C, A, sanitize, msg) ;
-            // GxB_Global_Option_set(GxB_BURBLE, false);
+            OK (LG_SET_BURBLE (false)) ;
             printf ("result: %d\n", result) ;
             OK(result);
             GrB_Matrix_nvals(&branches, C);
@@ -171,6 +173,8 @@ void test_msf (void)
             OK (GrB_free (&cc0)) ;
             OK (GrB_free (&cc1)) ;
             OK (GrB_free (&C)) ;
+
+            printf ("JIT test is done\n") ;
         }
         OK (GrB_free(&Ans)) ;
         OK (GrB_free (&A)) ;
@@ -186,6 +190,7 @@ void test_msf (void)
 void test_inf_msf (void)
 {
     LAGraph_Init (msg) ;
+    bool burble = false ;
     GrB_Scalar zeroB = NULL;
     GrB_Scalar_new(&zeroB, GrB_BOOL);
     GrB_Scalar_setElement_BOOL(zeroB, false);
@@ -213,15 +218,15 @@ void test_inf_msf (void)
 
     // compute the min spanning forest
     S_C = C = NULL ;
-    // GxB_Global_Option_set(GxB_BURBLE, true);
+    OK (LG_SET_BURBLE (burble)) ;
     int result = LAGraph_msf (&C, A, false, msg) ;
-    // GxB_Global_Option_set(GxB_BURBLE, false);
+    OK (LG_SET_BURBLE (false)) ;
     printf ("result: %d\n", result) ;
     OK(result);
 
-    // GxB_Global_Option_set(GxB_BURBLE, true);
+    OK (LG_SET_BURBLE (burble)) ;
     result = LAGraph_msf (&S_C, S, false, msg) ;
-    // GxB_Global_Option_set(GxB_BURBLE, false);
+    OK (LG_SET_BURBLE (false)) ;
     printf ("result: %d\n", result) ;
     OK(result);
 
