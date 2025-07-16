@@ -79,7 +79,7 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
     printf("Starting MSF\n\n") ;
     t = LAGraph_WallClockTime ( ) ;
-    LG_TRY (LAGraph_msf (&A, G->A, false, msg)) ;
+    LG_TRY (LAGraph_msf (&A, NULL, G->A, false, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("LAGraph_msf took %g sec\n", t) ;
     
