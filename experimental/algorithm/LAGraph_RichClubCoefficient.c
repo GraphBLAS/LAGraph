@@ -66,21 +66,21 @@
 typedef void (*LAGraph_binary_function) (void *, const void *, const void *) ;
 
 #define ISEQ_2ISLT                                                          \
-    "void iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)            \n"\
-    "{                                                                          \n"\
-        "(*z) = (int64_t)((*x < *y) + (*x <= *y)) ;                             \n"\
+    "void LG_RCC_iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y) \n"\
+    "{                                                                      \n"\
+        "(*z) = (int64_t)((*x < *y) + (*x <= *y)) ;                         \n"\
     "}"
-void iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)
+void LG_RCC_iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)
 {
     (*z) = (int64_t)((*x < *y) + (*x <= *y)) ;
 }
 
 #define RICH_CLUB_FORMULA                                                      \
-    "void rich_club_formula(double *z, const int64_t *x, const int64_t *y)      \n"\
-    "{                                                                          \n"\
-    "   (*z) = ((double)(*x)) / (((double)(*y)) * (((double)(*y)) - 1.0)) ;     \n"\
+    "void LG_RCC_rich_club_formula(double *z, const int64_t *x, const int64_t *y) \n"\
+    "{                                                                      \n"\
+    "   (*z) = ((double)(*x)) / (((double)(*y)) * (((double)(*y)) - 1.0)) ; \n"\
     "}"
-void rich_club_formula(double *z, const int64_t *x, const int64_t *y)
+void LG_RCC_rich_club_formula(double *z, const int64_t *x, const int64_t *y)
 {
     (*z) = ((double)(*x)) / (((double)(*y)) * (((double)(*y)) - 1.0));
 } 
@@ -187,18 +187,18 @@ int LAGraph_RichClubCoefficient
     GRB_TRY (GrB_Vector_new(&node_edges, GrB_INT64, n)) ;
     #if LAGRAPH_SUITESPARSE
     GRB_TRY (GxB_BinaryOp_new(
-        &iseq_2lt, (LAGraph_binary_function) (&iseq_2islt), 
-        GrB_INT64, GrB_INT64, GrB_INT64, "iseq_2islt", ISEQ_2ISLT)) ;
+        &iseq_2lt, (LAGraph_binary_function) (&LG_RCC_iseq_2islt), 
+        GrB_INT64, GrB_INT64, GrB_INT64, "LG_RCC_iseq_2islt", ISEQ_2ISLT)) ;
     GRB_TRY (GxB_BinaryOp_new(
-        &rcCalculation, (LAGraph_binary_function) (&rich_club_formula), 
+        &rcCalculation, (LAGraph_binary_function) (&LG_RCC_rich_club_formula), 
         GrB_FP64, GrB_INT64, GrB_INT64, 
-        "rich_club_formula", RICH_CLUB_FORMULA)) ;
+        "LG_RCC_rich_club_formula", RICH_CLUB_FORMULA)) ;
     #else
     GRB_TRY (GrB_BinaryOp_new(
-        &iseq_2lt, (LAGraph_binary_function) (&iseq_2islt), 
+        &iseq_2lt, (LAGraph_binary_function) (&LG_RCC_iseq_2islt), 
         GrB_INT64, GrB_INT64, GrB_INT64)) ;
     GRB_TRY (GrB_BinaryOp_new(
-        &rcCalculation, (LAGraph_binary_function) (&rich_club_formula), 
+        &rcCalculation, (LAGraph_binary_function) (&LG_RCC_rich_club_formula), 
         GrB_FP64, GrB_INT64, GrB_INT64 )) ;
     #endif
 

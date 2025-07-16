@@ -25,12 +25,12 @@
 #include "LG_internal.h"
 #include "LG_Xtest.h"
 
-void LG_rcc_iseq(bool *z, const double *x, const double *y)
+void LG_rcc_iseq_demo(bool *z, const double *x, const double *y)
 {
     (*z) = (isnan(*x) && isnan(*y)) ||*x == *y ;
 }
 #define ISEQ \
-"   void LG_rcc_iseq(bool *z, const double *x, const double *y) \n"\
+"   void LG_rcc_iseq_demo(bool *z, const double *x, const double *y) \n"\
 "   {                                                           \n"\
 "       (*z) = (isnan(*x) && isnan(*y)) || *x == *y ;           \n"\
 "   }"
@@ -60,8 +60,8 @@ int main (int argc, char **argv)
     bool burble = true ;               // set true for diagnostic outputs
     demo_init (burble) ;
     GRB_TRY (GxB_BinaryOp_new (
-        &iseqFP, (GxB_binary_function) LG_rcc_iseq, 
-        GrB_BOOL, GrB_FP64, GrB_FP64, "LG_rcc_iseq", ISEQ)) ;
+        &iseqFP, (GxB_binary_function) LG_rcc_iseq_demo, 
+        GrB_BOOL, GrB_FP64, GrB_FP64, "LG_rcc_iseq_demo", ISEQ)) ;
     //--------------------------------------------------------------------------
     // read in the graph: this method is defined in LAGraph_demo.h
     //--------------------------------------------------------------------------

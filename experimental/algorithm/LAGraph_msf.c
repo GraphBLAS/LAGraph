@@ -82,7 +82,7 @@ typedef struct
     } *w_partner;          // partner vertex in the spanning forest
 } LG_MSF_context_int;
 
-#define LG_MSF_CONTEXT_INT       \
+#define LG_MSF_CONTEXT_INT    \
 "typedef struct           \n" \
 "{                        \n" \
 "    uint64_t    *parent; \n" \
@@ -103,7 +103,7 @@ typedef struct
     } *w_partner;          // partner vertex in the spanning forest
 } LG_MSF_context_fp;
 
-#define LG_MSF_CONTEXT_FP        \
+#define LG_MSF_CONTEXT_FP     \
 "typedef struct           \n" \
 "{                        \n" \
 "    uint64_t    *parent; \n" \
@@ -544,25 +544,30 @@ int LAGraph_msf
         // types and ops for INT64 weights
         //-----------------------------------------------------------------------
 
-        GRB_TRY (GxB_Type_new (&tuple, sizeof (LG_MSF_tuple_int), "LG_MSF_tuple_int", TUPLE_INT)) ;
+        GRB_TRY (GxB_Type_new (&tuple, sizeof (LG_MSF_tuple_int),
+            "LG_MSF_tuple_int", TUPLE_INT)) ;
 
         GRB_TRY (GxB_BinaryOp_new (
             &combine, (GxB_binary_function) LG_MSF_combine_int,
-            tuple, weight_type, GrB_UINT64, "LG_MSF_combine_int", COMBINE_INT)) ;
+            tuple, weight_type, GrB_UINT64,
+            "LG_MSF_combine_int", COMBINE_INT)) ;
 
         GRB_TRY (GxB_Scalar_setElement_INT64(max_weight, INT64_MAX)) ;
 
         GRB_TRY (GxB_BinaryOp_new (
             &tupleMin, (GxB_binary_function) LG_MSF_tupleMin_int,
-            tuple, tuple, tuple, "LG_MSF_tupleMin_int", TUPLEMIN_INT)) ;
+            tuple, tuple, tuple,
+            "LG_MSF_tupleMin_int", TUPLEMIN_INT)) ;
 
         GRB_TRY (GxB_BinaryOp_new (
             &tuple2nd, (GxB_binary_function) LG_MSF_tuple2nd_int,
-            tuple, GrB_BOOL, tuple, "LG_MSF_tuple2nd_int", TUPLE2ND_INT)) ;
+            tuple, GrB_BOOL, tuple,
+            "LG_MSF_tuple2nd_int", TUPLE2ND_INT)) ;
 
         GRB_TRY (GxB_BinaryOp_new (
             &tupleEq, (GxB_binary_function) LG_MSF_tupleEq_int,
-            GrB_BOOL, tuple, tuple, "LG_MSF_tupleEq_int", TUPLEEQ_INT)) ;
+            GrB_BOOL, tuple, tuple,
+            "LG_MSF_tupleEq_int", TUPLEEQ_INT)) ;
 
         inf = (void *) (&inf_int) ;
 
@@ -576,12 +581,14 @@ int LAGraph_msf
 
         // context type
         GRB_TRY (GxB_Type_new (
-            &context_type, sizeof (LG_MSF_context_int), "LG_MSF_context_int", LG_MSF_CONTEXT_INT)) ;
+            &context_type, sizeof (LG_MSF_context_int),
+            "LG_MSF_context_int", LG_MSF_CONTEXT_INT)) ;
 
         // ops for GrB_select
         GRB_TRY(GxB_IndexUnaryOp_new (
             &selectEdge, (GxB_index_unary_function) LG_MSF_selectEdge_int, GrB_BOOL, weight_type,
-            context_type, "LG_MSF_selectEdge_int", SELECTEDGE_INT)) ;
+            context_type,
+            "LG_MSF_selectEdge_int", SELECTEDGE_INT)) ;
 
         GRB_TRY(GxB_IndexUnaryOp_new (
             &removeEdge, (void *) LG_MSF_removeEdge_int, GrB_BOOL, weight_type, context_type,
@@ -595,25 +602,30 @@ int LAGraph_msf
         // types and ops for FP64 weights
         //-----------------------------------------------------------------------
 
-        GRB_TRY (GxB_Type_new (&tuple, sizeof (LG_MSF_tuple_fp), "LG_MSF_tuple_fp", TUPLE_FP)) ;
+        GRB_TRY (GxB_Type_new (&tuple, sizeof (LG_MSF_tuple_fp),
+            "LG_MSF_tuple_fp", TUPLE_FP)) ;
 
         GRB_TRY (GxB_BinaryOp_new (
             &combine, (GxB_binary_function) LG_MSF_combine_fp,
-            tuple, weight_type, GrB_UINT64, "LG_MSF_combine_fp", COMBINE_FP)) ;
+            tuple, weight_type, GrB_UINT64,
+            "LG_MSF_combine_fp", COMBINE_FP)) ;
 
         GRB_TRY (GxB_Scalar_setElement_FP64(max_weight, INFINITY)) ;
 
         GRB_TRY (GxB_BinaryOp_new (
             &tupleMin, (GxB_binary_function) LG_MSF_tupleMin_fp,
-            tuple, tuple, tuple, "LG_MSF_tupleMin_fp", TUPLEMIN_FP)) ;
+            tuple, tuple, tuple,
+            "LG_MSF_tupleMin_fp", TUPLEMIN_FP)) ;
 
         GRB_TRY (GxB_BinaryOp_new (
             &tuple2nd, (GxB_binary_function) LG_MSF_tuple2nd_fp,
-            tuple, GrB_BOOL, tuple, "LG_MSF_tuple2nd_fp", TUPLE2ND_FP)) ;
+            tuple, GrB_BOOL, tuple,
+            "LG_MSF_tuple2nd_fp", TUPLE2ND_FP)) ;
 
         GRB_TRY (GxB_BinaryOp_new (
             &tupleEq, (GxB_binary_function) LG_MSF_tupleEq_fp,
-            GrB_BOOL, tuple, tuple, "LG_MSF_tupleEq_fp", TUPLEEQ_FP)) ;
+            GrB_BOOL, tuple, tuple,
+            "LG_MSF_tupleEq_fp", TUPLEEQ_FP)) ;
 
         inf = (void *) (&inf_fp) ;
 
@@ -626,12 +638,14 @@ int LAGraph_msf
             "LG_MSF_get_second_fp", GET_SECOND_FP)) ;
 
         GRB_TRY (GxB_Type_new (
-            &context_type, sizeof (LG_MSF_context_fp), "LG_MSF_context_fp", LG_MSF_CONTEXT_FP)) ;
+            &context_type, sizeof (LG_MSF_context_fp),
+            "LG_MSF_context_fp", LG_MSF_CONTEXT_FP)) ;
 
         // ops for GrB_select
         GRB_TRY(GxB_IndexUnaryOp_new (
             &selectEdge, (GxB_index_unary_function) LG_MSF_selectEdge_fp, GrB_BOOL, weight_type,
-            context_type, "LG_MSF_selectEdge_fp", SELECTEDGE_FP)) ;
+            context_type,
+            "LG_MSF_selectEdge_fp", SELECTEDGE_FP)) ;
 
         GRB_TRY(GxB_IndexUnaryOp_new (
             &removeEdge, (void *) LG_MSF_removeEdge_fp, GrB_BOOL, weight_type, context_type,
