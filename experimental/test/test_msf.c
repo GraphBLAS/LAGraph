@@ -70,6 +70,7 @@ const matrix_info files [ ] =
 //****************************************************************************
 void test_msf (void)
 {
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init (msg) ;
     bool burble = false ;
     GrB_Scalar zeroB = NULL;
@@ -139,15 +140,17 @@ void test_msf (void)
                     S, NULL, NULL, GxB_ANY_BOOL, S, S, GrB_DESC_T1)) ;
             }
             OK(LAGraph_New(&G, &S, LAGraph_ADJACENCY_UNDIRECTED, msg));
-
-            
+ 
             //Check that the graph has all the same ccs.
             OK (LAGr_ConnectedComponents(&cc1, G, msg)) ;
             bool ok = false ;
             OK (GrB_Vector_new(&cc2, GrB_UINT64, n)) ;
+            // cc1 and cc0 should have the same structure as cc2. 
+            // make their values equal and then compare them.
+            // msf does not guarentee that the lower node is used as componentId
             OK (GxB_Vector_extract_Vector(cc2, NULL, NULL, cc0, cc1, NULL)) ;
-            GxB_print(cc2, GxB_SHORT);
             OK (LAGraph_Vector_IsEqual(&ok, cc2, cc0, msg)) ;
+
             if(!ok)
             {
                 GxB_print(cc2, GxB_SHORT);
@@ -176,6 +179,7 @@ void test_msf (void)
             OK (LAGraph_Delete (&G, msg)) ;
             OK (GrB_free (&cc0)) ;
             OK (GrB_free (&cc1)) ;
+            OK (GrB_free (&cc2)) ;
             OK (GrB_free (&C)) ;
 
             printf ("JIT test is done\n") ;
@@ -185,6 +189,7 @@ void test_msf (void)
     }
     GrB_free(&zeroB);
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------

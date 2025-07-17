@@ -88,7 +88,7 @@
 
 // z = x * (x - 1), used by LAGraph_lcc.
 // This operator calculates the 2-permutation of d(v).
-void LAGraph_comb_dir_fp64
+void LG_lcc_comb_dir_fp64
 (
     void *z,
     const void *x
@@ -99,21 +99,21 @@ void LAGraph_comb_dir_fp64
     (*zd) = ((xd) * (xd - 1)) ;
 }
 
-#define LAGRAPH_COMB_DIR_FP64                                                 \
-"void LAGraph_comb_dir_fp64                                               \n" \
-"(                                                                        \n" \
-"    void *z,                                                             \n" \
-"    const void *x                                                        \n" \
-")                                                                        \n" \
-"{                                                                        \n" \
-"    double xd = *(double *) x ;                                          \n" \
-"    double *zd = (double *) z ;                                          \n" \
-"    (*zd) = ((xd) * (xd - 1));                                           \n" \
+#define LAGRAPH_COMB_DIR_FP64               \
+"void LG_lcc_comb_dir_fp64              \n" \
+"(                                      \n" \
+"    void *z,                           \n" \
+"    const void *x                      \n" \
+")                                      \n" \
+"{                                      \n" \
+"    double xd = *(double *) x ;        \n" \
+"    double *zd = (double *) z ;        \n" \
+"    (*zd) = ((xd) * (xd - 1));         \n" \
 "}"
 
 // z = x * (x - 1) / 2, used by LAGraph_lcc.
 // This operator calculates the 2-combination of d(v).
-void LAGraph_comb_undir_fp64
+void LG_lcc_comb_undir_fp64
 (
     void *z,
     const void *x
@@ -124,16 +124,16 @@ void LAGraph_comb_undir_fp64
     (*zd) = ((xd) * (xd - 1)) / 2;
 }
 
-#define LAGRAPH_COMB_UNDIR_FP64                                               \
-"void LAGraph_comb_undir_fp64                                             \n" \
-"(                                                                        \n" \
-"    void *z,                                                             \n" \
-"    const void *x                                                        \n" \
-")                                                                        \n" \
-"{                                                                        \n" \
-"    double xd = *(double *) x ;                                          \n" \
-"    double *zd = (double *) z ;                                          \n" \
-"    (*zd) = ((xd) * (xd - 1)) / 2;                                       \n" \
+#define LAGRAPH_COMB_UNDIR_FP64             \
+"void LG_lcc_comb_undir_fp64            \n" \
+"(                                      \n" \
+"    void *z,                           \n" \
+"    const void *x                      \n" \
+")                                      \n" \
+"{                                      \n" \
+"    double xd = *(double *) x ;        \n" \
+"    double *zd = (double *) z ;        \n" \
+"    (*zd) = ((xd) * (xd - 1)) / 2;     \n" \
 "}"
 
 //------------------------------------------------------------------------------
@@ -192,28 +192,28 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 #if LAGRAPH_SUITESPARSE
     if (G->is_symmetric_structure == LAGraph_TRUE) {
         GRB_TRY (GxB_UnaryOp_new(&LAGraph_COMB_FP64,
-                                 F_UNARY(LAGraph_comb_undir_fp64),
+                                 F_UNARY(LG_lcc_comb_undir_fp64),
                                  GrB_FP64, GrB_FP64,
-                                 "LAGraph_comb_undir_fp64",
+                                 "LG_lcc_comb_undir_fp64",
                                  LAGRAPH_COMB_UNDIR_FP64
         ));
     } else {
         GRB_TRY (GxB_UnaryOp_new(&LAGraph_COMB_FP64,
-                                 F_UNARY(LAGraph_comb_dir_fp64),
+                                 F_UNARY(LG_lcc_comb_dir_fp64),
                                  GrB_FP64, GrB_FP64,
-                                 "LAGraph_comb_dir_fp64",
+                                 "LG_lcc_comb_dir_fp64",
                                  LAGRAPH_COMB_DIR_FP64
         ));
     }
 #else
     if (G->is_symmetric_structure == LAGraph_TRUE) {
         GRB_TRY (GrB_UnaryOp_new(&LAGraph_COMB_FP64,
-                                 F_UNARY(LAGraph_comb_undir_fp64),
+                                 F_UNARY(LG_lcc_comb_undir_fp64),
                                  GrB_FP64, GrB_FP64
         ));
     } else {
         GRB_TRY (GrB_UnaryOp_new(&LAGraph_COMB_FP64,
-                                 F_UNARY(LAGraph_comb_dir_fp64),
+                                 F_UNARY(LG_lcc_comb_dir_fp64),
                                  GrB_FP64, GrB_FP64
         ));
     }

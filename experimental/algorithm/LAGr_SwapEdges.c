@@ -75,14 +75,14 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
-void shift_and 
+void LG_SE_shift_and 
     (uint16_t *z, const uint16_t *x)
     {
         (*z) = (*x) & ((*x) << 8);
         (*z) |= (*z) >> 8;
     }
 #define SHIFT_AND                                                               \
-"void shift_and                                                              \n"\
+"void LG_SE_shift_and                                                        \n"\
 "   (uint16_t *z, const uint16_t *x)                                         \n"\
 "   {                                                                        \n"\
 "       (*z) = (*x) & ((*x) << 8);                                           \n"\
@@ -92,41 +92,41 @@ void shift_and
 typedef struct {
     uint64_t a; 
     uint64_t b;
-} edge_type64;
+} LG_SE_edge_type64;
 #define EDGE_TYPE64                                                             \
-"typedef struct { uint64_t a; uint64_t b; } edge_type64;"
+"typedef struct { uint64_t a; uint64_t b; } LG_SE_edge_type64;"
 
 typedef struct {
     uint64_t a; 
     uint64_t b;
     uint64_t c; 
     uint64_t d;
-} swap_type64;
+} LG_SE_swap_type64;
 #define SWAP_TYPE64                                                             \
 "typedef struct {                                                            \n"\
 "   uint64_t a; uint64_t b; uint64_t c; uint64_t d;                          \n"\
-"} swap_type64;"
+"} LG_SE_swap_type64;"
 
 typedef struct {
     uint32_t a; 
     uint32_t b;
-} edge_type32;
+} LG_SE_edge_type32;
 #define EDGE_TYPE32                                                             \
-"typedef struct { uint32_t a; uint32_t b; } edge_type32;"
+"typedef struct { uint32_t a; uint32_t b; } LG_SE_edge_type32;"
 
 typedef struct {
     uint32_t a; 
     uint32_t b;
     uint32_t c; 
     uint32_t d;
-} swap_type32;
+} LG_SE_swap_type32;
 #define SWAP_TYPE32                                                             \
 "typedef struct {                                                            \n"\
 "   uint32_t a; uint32_t b; uint32_t c; uint32_t d;                          \n"\
-"}swap_type32;"
+"}LG_SE_swap_type32;"
 
-void swap_bc64
-(swap_type64 *z, const swap_type64 *x, GrB_Index I, GrB_Index J, const bool *y)
+void LG_SE_swap_bc64
+(LG_SE_swap_type64 *z, const LG_SE_swap_type64 *x, GrB_Index I, GrB_Index J, const bool *y)
 {
     memcpy(z, x, sizeof(*z)) ; //unnessesary when aliassed but done for safety.
     if(z->a == z->c || z->b == z->c || z->a == z->d || z->b == z->d ) return;
@@ -143,8 +143,8 @@ void swap_bc64
         z->b = temp; 
     }    
 }
-void swap_bc32
-(swap_type32 *z, const swap_type32 *x, GrB_Index I, GrB_Index J, const bool *y)
+void LG_SE_swap_bc32
+(LG_SE_swap_type32 *z, const LG_SE_swap_type32 *x, GrB_Index I, GrB_Index J, const bool *y)
 {
     memcpy(z, x, sizeof(*z)) ; //unnessesary when aliassed but done for safety.
     if(z->a == z->c || z->b == z->c || z->a == z->d || z->b == z->d ) return;
@@ -161,9 +161,9 @@ void swap_bc32
         z->b = temp; 
     }    
 }
-#define SWAP_BC64                                                                 \
-"void swap_bc64                                                                 \n"\
-"(swap_type64 *z, const swap_type64 *x, GrB_Index I, GrB_Index J, const bool *y)\n"\
+#define SWAP_BC64                                                                  \
+"void LG_SE_swap_bc64                                                           \n"\
+"(LG_SE_swap_type64 *z, const LG_SE_swap_type64 *x, GrB_Index I, GrB_Index J, const bool *y)\n"\
 "{                                                                              \n"\
 "    memcpy(z, x, sizeof(*z)) ; //unnessesary when aliassed but done for safety.\n"\
 "    if(z->a == z->c || z->b == z->c || z->a == z->d || z->b == z->d ) return;  \n"\
@@ -180,9 +180,9 @@ void swap_bc32
 "        z->b = temp;                                                           \n"\
 "    }                                                                          \n"\
 "}"
-#define SWAP_BC32                                                                 \
-"void swap_bc32                                                                 \n"\
-"(swap_type32 *z, const swap_type32 *x, GrB_Index I, GrB_Index J, const bool *y)\n"\
+#define SWAP_BC32                                                                  \
+"void LG_SE_swap_bc32                                                           \n"\
+"(LG_SE_swap_type32 *z, const LG_SE_swap_type32 *x, GrB_Index I, GrB_Index J, const bool *y)\n"\
 "{                                                                              \n"\
 "    memcpy(z, x, sizeof(*z)) ; //unnessesary when aliassed but done for safety.\n"\
 "    if(z->a == z->c || z->b == z->c || z->a == z->d || z->b == z->d ) return;  \n"\
@@ -202,8 +202,8 @@ void swap_bc32
 
 // using xorshift, from https://en.wikipedia.org/wiki/Xorshift
 // with a state of uint64_t, or xorshift64star.
-void hash_edge64
-(uint64_t *z, const edge_type64 *x, const uint64_t *mask)
+void LG_SE_hash_edge64
+(uint64_t *z, const LG_SE_edge_type64 *x, const uint64_t *mask)
 {
     (*z) = x->a ^ x->b;
 	(*z) ^= (*z) << 13;
@@ -212,8 +212,8 @@ void hash_edge64
 	(*z) ^= (*z) << 17;
     (*z) &= (*mask);
 }
-void hash_edge32
-(uint64_t *z, const edge_type32 *x, const uint64_t *mask)
+void LG_SE_hash_edge32
+(uint64_t *z, const LG_SE_edge_type32 *x, const uint64_t *mask)
 {
     (*z) = x->a ^ x->b;
 	(*z) ^= (*z) << 13;
@@ -223,91 +223,91 @@ void hash_edge32
     (*z) &= (*mask);
 }
 #define HASH_EDGE64                                                              \
-"void hash_edge64                                                             \n"\
-"(uint64_t *z, const edge_type64 *x, const uint64_t *mask)                    \n"\
+"void LG_SE_hash_edge64                                                       \n"\
+"(uint64_t *z, const LG_SE_edge_type64 *x, const uint64_t *mask)              \n"\
 "{                                                                            \n"\
 "   (*z) = x->a ^ x->b;                                                       \n"\
-"	(*z) ^= (*z) << 13;                                                       \n"\
-"	(*z) ^= (*z) >> 7;                                                        \n"\
+"	(*z) ^= (*z) << 13;                                                   \n"\
+"	(*z) ^= (*z) >> 7;                                                    \n"\
 "   (*z) ^= (uint64_t)((x->a < x->b)? x->a: x->b);                            \n"\
-"	(*z) ^= (*z) << 17;                                                       \n"\
+"	(*z) ^= (*z) << 17;                                                   \n"\
 "   (*z) &= (*mask);                                                          \n"\
 "}"
 #define HASH_EDGE32                                                              \
-"void hash_edge32                                                             \n"\
-"(uint64_t *z, const edge_type32 *x, const uint64_t *mask)                    \n"\
+"void LG_SE_hash_edge32                                                       \n"\
+"(uint64_t *z, const LG_SE_edge_type32 *x, const uint64_t *mask)              \n"\
 "{                                                                            \n"\
 "   (*z) = x->a ^ x->b;                                                       \n"\
-"	(*z) ^= (*z) << 13;                                                       \n"\
-"	(*z) ^= (*z) >> 7;                                                        \n"\
+"	(*z) ^= (*z) << 13;                                                   \n"\
+"	(*z) ^= (*z) >> 7;                                                    \n"\
 "   (*z) ^= (uint64_t)((x->a < x->b)? x->a: x->b);                            \n"\
-"	(*z) ^= (*z) << 17;                                                       \n"\
+"	(*z) ^= (*z) << 17;                                                   \n"\
 "   (*z) &= (*mask);                                                          \n"\
 "}"
 
-void add_term
+void LG_SE_add_term
     (int8_t *z, const int8_t *x, const int8_t *y)
 {
     (*z) = (*x) | (*y) + ((int8_t)1 & (*x) & (*y)) ;
 }
-#define ADD_TERM                                                               \
-"void add_term                                                                \n"\
+#define ADD_TERM                                                                 \
+"void LG_SE_add_term                                                          \n"\
 "(int8_t *z, const int8_t *x, const int8_t *y)                                \n"\
 "{                                                                            \n"\
 "    (*z) = (*x) | (*y) + ((int8_t)1 & (*x) & (*y)) ;                         \n"\
 "}"
 
-void edge2nd64_bool
-    (edge_type64 *z, const bool *x, const edge_type64 *y)
+void LG_SE_edge2nd64_bool
+    (LG_SE_edge_type64 *z, const bool *x, const LG_SE_edge_type64 *y)
 {
     z->a = y->a;
     z->b = y->b;
 }
-void edge2nd32_bool
-    (edge_type32 *z, const bool *x, const edge_type32 *y)
+void LG_SE_edge2nd32_bool
+    (LG_SE_edge_type32 *z, const bool *x, const LG_SE_edge_type32 *y)
 {
     z->a = y->a;
     z->b = y->b;
 }
-void edge2nd64_edge
-    (edge_type64 *z, const edge_type64 *x, const edge_type64 *y)
+void LG_SE_edge2nd64_edge
+    (LG_SE_edge_type64 *z, const LG_SE_edge_type64 *x, const LG_SE_edge_type64 *y)
 {
     z->a = y->a;
     z->b = y->b;
 }
-void edge2nd32_edge
-    (edge_type32 *z, const edge_type32 *x, const edge_type32 *y)
+void LG_SE_edge2nd32_edge
+    (LG_SE_edge_type32 *z, const LG_SE_edge_type32 *x, const LG_SE_edge_type32 *y)
 {
     z->a = y->a;
     z->b = y->b;
 }
-#define EDGE2ND32_BOOL                                                          \
-"void edge2nd32_bool                                                          \n"\
-"(edge_type32 *z, const bool *x, const edge_type32 *y)                        \n"\
+#define EDGE2ND32_BOOL                                                           \
+"void LG_SE_edge2nd32_bool                                                    \n"\
+"(LG_SE_edge_type32 *z, const bool *x, const LG_SE_edge_type32 *y)            \n"\
 "{                                                                            \n"\
 "    //if(y->a == 0 && y->b == 0) return;                                     \n"\
 "    z->a = y->a;                                                             \n"\
 "    z->b = y->b;                                                             \n"\
 "}"
-#define EDGE2ND64_BOOL                                                          \
-"void edge2nd64_bool                                                          \n"\
-"(edge_type64 *z, const bool *x, const edge_type64 *y)                        \n"\
+#define EDGE2ND64_BOOL                                                           \
+"void LG_SE_edge2nd64_bool                                                    \n"\
+"(LG_SE_edge_type64 *z, const bool *x, const LG_SE_edge_type64 *y)            \n"\
 "{                                                                            \n"\
 "    //if(y->a == 0 && y->b == 0) return;                                     \n"\
 "    z->a = y->a;                                                             \n"\
 "    z->b = y->b;                                                             \n"\
 "}"
-#define EDGE2ND32_EDGE                                                          \
-"void edge2nd32_edge                                                          \n"\
-"(edge_type32 *z, const edge_type32 *x, const edge_type32 *y)                 \n"\
+#define EDGE2ND32_EDGE                                                           \
+"void LG_SE_edge2nd32_edge                                                    \n"\
+"(LG_SE_edge_type32 *z, const LG_SE_edge_type32 *x, const LG_SE_edge_type32 *y)\n"\
 "{                                                                            \n"\
 "    //if(y->a == 0 && y->b == 0) return;                                     \n"\
 "    z->a = y->a;                                                             \n"\
 "    z->b = y->b;                                                             \n"\
 "}"
-#define EDGE2ND64_EDGE                                                          \
-"void edge2nd64_edge                                                          \n"\
-"(edge_type64 *z, const edge_type64 *x, const edge_type64 *y)                 \n"\
+#define EDGE2ND64_EDGE                                                           \
+"void LG_SE_edge2nd64_edge                                                    \n"\
+"(LG_SE_edge_type64 *z, const LG_SE_edge_type64 *x, const LG_SE_edge_type64 *y)\n"\
 "{                                                                            \n"\
 "    //if(y->a == 0 && y->b == 0) return;                                     \n"\
 "    z->a = y->a;                                                             \n"\
@@ -484,64 +484,64 @@ int LAGr_SwapEdges
     if(codei == GrB_UINT32_CODE) // Use uint32 if possible 
     {
         GRB_TRY (GxB_Type_new(
-            &lg_edge, sizeof(edge_type32), "edge_type32", EDGE_TYPE32)) ;
+            &lg_edge, sizeof(LG_SE_edge_type32), "LG_SE_edge_type32", EDGE_TYPE32)) ;
         GRB_TRY (GxB_Type_new(
-            &lg_swap, sizeof(swap_type32), "swap_type32", SWAP_TYPE32)) ;
+            &lg_swap, sizeof(LG_SE_swap_type32), "LG_SE_swap_type32", SWAP_TYPE32)) ;
         GRB_TRY(GxB_BinaryOp_new(
-            &hash_seed_e, (GxB_binary_function) (&hash_edge32),
-            GrB_UINT64, lg_edge, GrB_UINT64, "hash_edge32", HASH_EDGE32
+            &hash_seed_e, (GxB_binary_function) (&LG_SE_hash_edge32),
+            GrB_UINT64, lg_edge, GrB_UINT64, "LG_SE_hash_edge32", HASH_EDGE32
         )) ;
         GRB_TRY (GxB_IndexUnaryOp_new (
-            &swap_pair, (GxB_index_unary_function) (&swap_bc32),
-            lg_swap, lg_swap, GrB_BOOL, "swap_bc32", SWAP_BC32
+            &swap_pair, (GxB_index_unary_function) (&LG_SE_swap_bc32),
+            lg_swap, lg_swap, GrB_BOOL, "LG_SE_swap_bc32", SWAP_BC32
         )) ;
         GRB_TRY(GxB_BinaryOp_new(
-            &second_edge, (GxB_binary_function) (&edge2nd32_edge), 
-            lg_edge, lg_edge, lg_edge, "edge2nd32_edge", EDGE2ND32_EDGE
+            &second_edge, (GxB_binary_function) (&LG_SE_edge2nd32_edge), 
+            lg_edge, lg_edge, lg_edge, "LG_SE_edge2nd32_edge", EDGE2ND32_EDGE
         )) ;
         GRB_TRY(GxB_BinaryOp_new(
-            &second_bool_edge, (GxB_binary_function) (&edge2nd32_bool), 
-            lg_edge, GrB_BOOL, lg_edge, "edge2nd32_bool", EDGE2ND32_BOOL
+            &second_bool_edge, (GxB_binary_function) (&LG_SE_edge2nd32_bool), 
+            lg_edge, GrB_BOOL, lg_edge, "LG_SE_edge2nd32_bool", EDGE2ND32_BOOL
         )) ;
     }
     else //uint64 types
     {
         GRB_TRY (GxB_Type_new(
-            &lg_edge, sizeof(edge_type64), "edge_type64", EDGE_TYPE64)) ;
+            &lg_edge, sizeof(LG_SE_edge_type64), "LG_SE_edge_type64", EDGE_TYPE64)) ;
         GRB_TRY (GxB_Type_new(
-            &lg_swap, sizeof(swap_type64), "swap_type64", SWAP_TYPE64)) ;
+            &lg_swap, sizeof(LG_SE_swap_type64), "LG_SE_swap_type64", SWAP_TYPE64)) ;
         GRB_TRY(GxB_BinaryOp_new(
-            &hash_seed_e, (GxB_binary_function) (&hash_edge64),
-            GrB_UINT64, lg_edge, GrB_UINT64, "hash_edge64", HASH_EDGE64
+            &hash_seed_e, (GxB_binary_function) (&LG_SE_hash_edge64),
+            GrB_UINT64, lg_edge, GrB_UINT64, "LG_SE_hash_edge64", HASH_EDGE64
         )) ;
         GRB_TRY (GxB_IndexUnaryOp_new (
-            &swap_pair, (GxB_index_unary_function) (&swap_bc64),
-            lg_swap, lg_swap, GrB_BOOL, "swap_bc64", SWAP_BC64
+            &swap_pair, (GxB_index_unary_function) (&LG_SE_swap_bc64),
+            lg_swap, lg_swap, GrB_BOOL, "LG_SE_swap_bc64", SWAP_BC64
         )) ;
         GRB_TRY(GxB_BinaryOp_new(
-            &second_edge, (GxB_binary_function) (&edge2nd64_edge), 
-            lg_edge, lg_edge, lg_edge, "edge2nd64_edge", EDGE2ND64_EDGE
+            &second_edge, (GxB_binary_function) (&LG_SE_edge2nd64_edge), 
+            lg_edge, lg_edge, lg_edge, "LG_SE_edge2nd64_edge", EDGE2ND64_EDGE
         )) ;
         GRB_TRY(GxB_BinaryOp_new(
-            &second_bool_edge, (GxB_binary_function) (&edge2nd64_bool), 
-            lg_edge, GrB_BOOL, lg_edge, "edge2nd64_bool", EDGE2ND64_BOOL
+            &second_bool_edge, (GxB_binary_function) (&LG_SE_edge2nd64_bool), 
+            lg_edge, GrB_BOOL, lg_edge, "LG_SE_edge2nd64_bool", EDGE2ND64_BOOL
         )) ;
     }
     
     GRB_TRY (GxB_UnaryOp_new (
-        &lg_shiftland, (GxB_unary_function) (&shift_and),
-        GrB_UINT16, GrB_UINT16, "shift_and", SHIFT_AND
+        &lg_shiftland, (GxB_unary_function) (&LG_SE_shift_and),
+        GrB_UINT16, GrB_UINT16, "LG_SE_shift_and", SHIFT_AND
     )) ;
     GRB_TRY(GxB_BinaryOp_new(
-        &add_term_biop, (GxB_binary_function) (&add_term), 
-        GrB_INT8, GrB_INT8, GrB_INT8, "add_term", ADD_TERM
+        &add_term_biop, (GxB_binary_function) (&LG_SE_add_term), 
+        GrB_INT8, GrB_INT8, GrB_INT8, "LG_SE_add_term", ADD_TERM
     )) ;
 
     GRB_TRY (GxB_Monoid_terminal_new_INT8(
         &add_term_monoid, add_term_biop, (int8_t) 0, (int8_t) 2
     )) ;
 
-    edge_type64 iden_second = {0,0};
+    LG_SE_edge_type64 iden_second = {0,0};
     GRB_TRY (GrB_Monoid_new_UDT(
         &second_edge_monoid, second_edge, (void *) &iden_second
     )) ;

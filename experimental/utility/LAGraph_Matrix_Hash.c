@@ -29,7 +29,7 @@
 #define GOLDEN_GAMMA 0x9E3779B97F4A7C15LL
 
 // The init function computes a cheesy hash based on splitmix64t
-void hash_edge (uint64_t *z, const uint64_t *x,
+void LG_HM_hash_edge (uint64_t *z, const uint64_t *x,
     GrB_Index i, GrB_Index j, const uint64_t *seed)
 {
     uint64_t result = (i + j * i  + GOLDEN_GAMMA) ;
@@ -41,7 +41,7 @@ void hash_edge (uint64_t *z, const uint64_t *x,
 }
 
 #define HASH_EDGE_DEF \
-"void hash_edge (uint64_t *z, const uint64_t *x,\n"                            \
+"void LG_HM_hash_edge (uint64_t *z, const uint64_t *x,\n"                      \
 "    GrB_Index i, GrB_Index j, const uint64_t *seed)\n"                        \
 "{\n"                                                                          \
 "    uint64_t result = (i + j * i  + 0x9E3779B97F4A7C15LL) ;\n"                \
@@ -65,8 +65,8 @@ GrB_Info LAGraph_Hash_Matrix(
     GRB_TRY (GrB_Matrix_ncols(&ncols, A)) ;
     GRB_TRY (GrB_Matrix_new(&C, GrB_UINT64, nrows, ncols)) ;
     GRB_TRY (GxB_IndexUnaryOp_new(
-        &lg_hash_edge, (GxB_index_unary_function) hash_edge,
-        GrB_UINT64, GrB_UINT64, GrB_UINT64, "hash_edge", HASH_EDGE_DEF)) ;
+        &lg_hash_edge, (GxB_index_unary_function) LG_HM_hash_edge,
+        GrB_UINT64, GrB_UINT64, GrB_UINT64, "LG_HM_hash_edge", HASH_EDGE_DEF)) ;
     
     // TODO: C takes extra memory which is not nessesary for this computation.
     // Compute without extra memory if possible.

@@ -56,7 +56,7 @@
 // mod function for uint64: z = x % y
 //------------------------------------------------------------------------------
 
-void mod_function (void *z, const void *x, const void *y)
+void LG_randmat_mod (void *z, const void *x, const void *y)
 {
     uint64_t a = (*((uint64_t *) x)) ;
     uint64_t b = (*((uint64_t *) y)) ;
@@ -64,7 +64,7 @@ void mod_function (void *z, const void *x, const void *y)
 }
 
 #define MOD_FUNCTION_DEFN                                           \
-"void mod_function (void *z, const void *x, const void *y)      \n" \
+"void LG_randmat_mod (void *z, const void *x, const void *y)    \n" \
 "{                                                              \n" \
 "    uint64_t a = (*((uint64_t *) x)) ;                         \n" \
 "    uint64_t b = (*((uint64_t *) y)) ;                         \n" \
@@ -124,11 +124,11 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     //--------------------------------------------------------------------------
 
     #if LAGRAPH_SUITESPARSE
-    GRB_TRY (GxB_BinaryOp_new (&Mod, mod_function,
+    GRB_TRY (GxB_BinaryOp_new (&Mod, LG_randmat_mod,
         GrB_UINT64, GrB_UINT64, GrB_UINT64,
-        "mod_function", MOD_FUNCTION_DEFN)) ;
+        "LG_randmat_mod", MOD_FUNCTION_DEFN)) ;
     #else
-    GRB_TRY (GrB_BinaryOp_new (&Mod, mod_function,
+    GRB_TRY (GrB_BinaryOp_new (&Mod, LG_randmat_mod,
         GrB_UINT64, GrB_UINT64, GrB_UINT64)) ;
     #endif
 
