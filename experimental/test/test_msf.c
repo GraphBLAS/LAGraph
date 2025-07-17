@@ -70,6 +70,7 @@ const matrix_info files [ ] =
 //****************************************************************************
 void test_msf (void)
 {
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init (msg) ;
     bool burble = false ;
     GrB_Scalar zeroB = NULL;
@@ -112,13 +113,18 @@ void test_msf (void)
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
             if (jit) printf ("\nJIT is enabled\n") ; else printf ("\nJIT is disabled\n") ;
+
+            // connected components
+            GrB_Vector cc0 = NULL, cc1 = NULL, cc2 = NULL;
+
             OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
                 jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
             // compute the min spanning forest
             C = NULL ;
             OK (LG_SET_BURBLE (burble)) ;
-            int result = LAGraph_msf (&C, A, sanitize, msg) ;
+            int result = LAGraph_msf (&C, &cc0, A, sanitize, msg) ;
             OK (LG_SET_BURBLE (false)) ;
+
             printf ("result: %d\n", result) ;
             OK(result);
             GrB_Matrix_nvals(&branches, C);
@@ -133,22 +139,24 @@ void test_msf (void)
                 OK (GrB_Matrix_eWiseAdd_BinaryOp(
                     S, NULL, NULL, GxB_ANY_BOOL, S, S, GrB_DESC_T1)) ;
             }
-            OK (GrB_Matrix_new(&S_C, GrB_BOOL, n, n)) ;
-            OK (GrB_Matrix_assign_BOOL(
-                S_C, C, NULL, (bool) true, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
-            OK (GrB_Matrix_eWiseAdd_BinaryOp(
-                S_C, NULL, NULL, GxB_ANY_BOOL, S_C, S_C, GrB_DESC_T1)) ;
             OK(LAGraph_New(&G, &S, LAGraph_ADJACENCY_UNDIRECTED, msg));
-            OK(LAGraph_New(&G_C, &S_C, LAGraph_ADJACENCY_UNDIRECTED, msg));
-
-            
+ 
             //Check that the graph has all the same ccs.
-            GrB_Vector cc0 = NULL, cc1 = NULL;
-            OK (LAGr_ConnectedComponents(&cc0, G, msg));
-            OK (LAGr_ConnectedComponents(&cc1, G_C, msg));
+            OK (LAGr_ConnectedComponents(&cc1, G, msg)) ;
             bool ok = false ;
-            OK (LAGraph_Vector_IsEqual(&ok, cc0, cc1, msg));
-            TEST_CHECK(ok);
+            OK (GrB_Vector_new(&cc2, GrB_UINT64, n)) ;
+            // cc1 and cc0 should have the same structure as cc2. 
+            // make their values equal and then compare them.
+            // msf does not guarentee that the lower node is used as componentId
+            OK (GxB_Vector_extract_Vector(cc2, NULL, NULL, cc0, cc1, NULL)) ;
+            OK (LAGraph_Vector_IsEqual(&ok, cc2, cc0, msg)) ;
+
+            if(!ok)
+            {
+                GxB_print(cc2, GxB_SHORT);
+                GxB_print(cc0, GxB_SHORT);
+            }
+            TEST_ASSERT(ok) ;
             // check result C for A.mtx
             if (files[k].ans_i && files[k].ans_j)
             {
@@ -169,9 +177,9 @@ void test_msf (void)
                     fabs(tot_weight - ans_w) <= 1E-10 * fabs(ans_w)) ;           
             OK (LAGraph_Matrix_Print (C, pr, stdout, msg)) ;
             OK (LAGraph_Delete (&G, msg)) ;
-            OK (LAGraph_Delete (&G_C, msg)) ;
             OK (GrB_free (&cc0)) ;
             OK (GrB_free (&cc1)) ;
+            OK (GrB_free (&cc2)) ;
             OK (GrB_free (&C)) ;
 
             printf ("JIT test is done\n") ;
@@ -181,6 +189,7 @@ void test_msf (void)
     }
     GrB_free(&zeroB);
     LAGraph_Finalize (msg) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -219,13 +228,13 @@ void test_inf_msf (void)
     // compute the min spanning forest
     S_C = C = NULL ;
     OK (LG_SET_BURBLE (burble)) ;
-    int result = LAGraph_msf (&C, A, false, msg) ;
+    int result = LAGraph_msf (&C, NULL, A, false, msg) ;
     OK (LG_SET_BURBLE (false)) ;
     printf ("result: %d\n", result) ;
     OK(result);
 
     OK (LG_SET_BURBLE (burble)) ;
-    result = LAGraph_msf (&S_C, S, false, msg) ;
+    result = LAGraph_msf (&S_C, NULL, S, false, msg) ;
     OK (LG_SET_BURBLE (false)) ;
     printf ("result: %d\n", result) ;
     OK(result);
@@ -252,24 +261,24 @@ void test_errors (void)
 
     #if LG_SUITESPARSE_GRAPHBLAS_V10
     // C and A are NULL
-    int result = LAGraph_msf (NULL, NULL, true, msg) ;
+    int result = LAGraph_msf (NULL, NULL, NULL, true, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     // A must be square
     OK (GrB_Matrix_new (&A, GrB_UINT64, 3, 4)) ;
-    result = LAGraph_msf (&C, A, true, msg) ;
+    result = LAGraph_msf (&C, NULL, A, true, msg) ;
     TEST_CHECK (result == GrB_DIMENSION_MISMATCH) ;
     OK (GrB_free (&A)) ;
 
     // A must real
     OK (GrB_Matrix_new (&A, GxB_FC32, 4, 4)) ;
-    result = LAGraph_msf (&C, A, true, msg) ;
+    result = LAGraph_msf (&C, NULL, A, true, msg) ;
     TEST_CHECK (result == GrB_DOMAIN_MISMATCH) ;
     
     #else 
     // Not implemented
     OK (GrB_Matrix_new (&A, GrB_BOOL, 4, 4)) ;
-    int result = LAGraph_msf (&C, A, true, msg) ;
+    int result = LAGraph_msf (&C, NULL, A, true, msg) ;
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
     #endif
 

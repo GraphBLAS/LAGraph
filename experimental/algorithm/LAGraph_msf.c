@@ -359,6 +359,7 @@ void LG_MSF_tupleEq_fp (bool *z, const LG_MSF_tuple_fp *x, const LG_MSF_tuple_fp
     LAGraph_Free ((void **) &context_int.parent, msg);      \
     LAGraph_Free ((void **) &context_fp.parent, msg);       \
     GrB_free (&f);                                  \
+    GrB_free (&w);                                  \
     GrB_free (&I);                                  \
     GrB_free (&t);                                  \
     GrB_free (&edge);                               \
@@ -452,6 +453,7 @@ int LAGraph_msf
 (
     GrB_Matrix *forest_edges, // output: an unsymmetrical matrix, containing
                         // the edges in the spanning forest
+    GrB_Vector *componentId,  // output: The connected component of each node
     GrB_Matrix A,       // input matrix
     bool sanitize,      // if true, ensure A is symmetric
     char *msg
@@ -707,19 +709,17 @@ int LAGraph_msf
     {
         LG_TRY (LAGraph_Malloc
             ((void **) &context_int.parent, n, sizeof (uint64_t), msg)) ;
-        for (uint64_t i = 0; i < n; i++)
-            context_int.parent[i] = i;
+        GRB_TRY (GrB_Vector_extractTuples (NULL, context_int.parent, &n, f)) ;
         GRB_TRY (GxB_Vector_load(parent_v, (void **) &context_int.parent,
-            GrB_UINT64, n, 3 * n * sizeof (uint64_t), GxB_IS_READONLY, NULL)) ;
+            GrB_UINT64, n, n * sizeof (uint64_t), GxB_IS_READONLY, NULL)) ;
     }
     else
     {
         LG_TRY (LAGraph_Malloc
-            ((void **) &context_fp.parent, n, sizeof (uint64_t), msg)) ;
-        for (uint64_t i = 0; i < n; i++)
-            context_fp.parent[i] = i;
+            ((void **) &context_fp.parent, n, sizeof (double), msg)) ;
+        GRB_TRY (GrB_Vector_extractTuples (NULL, context_fp.parent, &n, f)) ;
         GRB_TRY (GxB_Vector_load(parent_v, (void **) &context_fp.parent,
-            GrB_UINT64, n, 3 * n * sizeof (uint64_t), GxB_IS_READONLY, NULL)) ;
+            GrB_UINT64, n,  n * sizeof (double), GxB_IS_READONLY, NULL)) ;
     }
 
     //--------------------------------------------------------------------------
@@ -862,6 +862,13 @@ int LAGraph_msf
 
     *forest_edges = T;
     T = NULL ;
+
+    if(componentId)
+    {
+        *componentId = f;
+        f = NULL;
+    }
+
     LG_FREE_ALL;
     return (GrB_SUCCESS) ;
     #else
