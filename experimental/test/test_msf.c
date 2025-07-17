@@ -151,11 +151,11 @@ void test_msf (void)
             OK (GxB_Vector_extract_Vector(cc2, NULL, NULL, cc0, cc1, NULL)) ;
             OK (LAGraph_Vector_IsEqual(&ok, cc2, cc0, msg)) ;
 
-            if(!ok)
-            {
-                GxB_print(cc2, GxB_SHORT);
-                GxB_print(cc0, GxB_SHORT);
-            }
+//          if(!ok)
+//          {
+//              GxB_print(cc2, GxB_SHORT);
+//              GxB_print(cc0, GxB_SHORT);
+//          }
             TEST_ASSERT(ok) ;
             // check result C for A.mtx
             if (files[k].ans_i && files[k].ans_j)
