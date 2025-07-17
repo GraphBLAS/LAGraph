@@ -815,7 +815,9 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 LAGRAPHX_PUBLIC
 int LAGraph_msf
 (
-    GrB_Matrix *result, // output: an unsymmetrical matrix, the spanning forest
+    GrB_Matrix *forest_edges, // output: an unsymmetrical matrix, containing
+                        // the edges in the spanning forest
+    GrB_Vector *componentId,  // output: The connected component of each node
     GrB_Matrix A,       // input matrix
     bool sanitize,      // if true, ensure A is symmetric
     char *msg
