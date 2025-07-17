@@ -863,7 +863,7 @@ int LAGraph_msf
     *forest_edges = T;
     T = NULL ;
 
-    if(componentId)
+    if(componentId != NULL)
     {
         *componentId = f;
         f = NULL;
