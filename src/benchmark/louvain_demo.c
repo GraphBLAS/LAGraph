@@ -73,7 +73,7 @@ int main(int argc,char** argv){
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
             total_time += t1 ;
         }
-
+        //boop
         double t = total_time / ntrials ;
         printf ("GAP: %3d: avg time: %10.3f (sec), "
                 "rate: %10.3f iters: %d\n", nthreads,
