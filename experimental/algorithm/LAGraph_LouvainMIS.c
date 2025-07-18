@@ -32,16 +32,16 @@
 
 typedef struct Theta
 {
-    GrB_Vector d;
-    GrB_Vector c;
+    GrB_Vector* d;
+    GrB_Vector* c; //c arrays
     double m;
+    uint64_t seed;
 } Theta;
 
 typedef struct argmax_tup
 {
-    double score;
-    int64_t k;
-    uint64_t tb;
+    double score; // change in modularity
+    int64_t k; //who
 } argmax_tup;
 
 #define AM_TUP "typedef struct argmax_tup{ double score; int64t k; } argmax_tup;"
@@ -54,25 +54,11 @@ void make_argmax_tup(argmax_tup *z,
     Theta *_theta = (Theta *)theta;
     double _d;
     uint64_t _c;
-    GrB_Info info = GrB_Vector_extractElement_UINT64(&_d, _theta->d, ix);
-    if (!(info == GrB_SUCCESS || info == GrB_NO_VALUE))
-    {
-        char *err;
-        GrB_error(&err, _theta->d);
-        printf("\ninfo: %d error: %s\n", info, err);
-    }
-    info = GrB_Vector_extractElement_UINT64(&_c, _theta->c, ix);
-    if (!(info == GrB_SUCCESS || info == GrB_NO_VALUE))
-    {
-        char *err;
-        GrB_error(&err, _theta->c);
-        printf("\ninfo: %d error: %s\n", info, err);
-    }
-    uint64_t seed = (*y + ix + iy + jy);
+
+    uint64_t seed = _theta->seed;
     seed ^= seed << 13;
     seed ^= seed >> 7;
     seed ^= seed << 17;
-    z->tb = seed;
     z->k = (int64_t)jx;
     z->score = (*x) - (_d) / (2 * _theta->m) * (*y);
 }
@@ -177,6 +163,7 @@ int LAGraph_LouvainMIS(
     LAGraph_Graph G,
     char *msg)
 {
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LG_CLEAR_MSG;
 
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
@@ -226,6 +213,7 @@ int LAGraph_LouvainMIS(
 
     A = G->A;
     dbg(A);
+    uint64_t seed= 1231245; 
     // printf("here");
     // -----------------------------Index Binary OP: AM--------------------------//
 
@@ -262,8 +250,8 @@ int LAGraph_LouvainMIS(
     dbg(x);
 
     GRB_TRY(GrB_Matrix_diag(&S, x, 0));
-    GRB_TRY(GrB_set(S, false, GxB_ISO));
-    GrB_set(S, GxB_SPARSE, GxB_SPARSITY_CONTROL);
+    // GRB_TRY(GrB_set(S, false, GxB_ISO));
+    GRB_TRY(GrB_set(S, GxB_SPARSE, GxB_SPARSITY_CONTROL));
     dbg(S);
     GRB_TRY(GxB_unload_Matrix_into_Container(S, S_container, NULL));
     dbg(S_container->x);
@@ -275,8 +263,8 @@ int LAGraph_LouvainMIS(
     dbg(iset);
 
     // Compute max change in modularity for each node in the isolate set
-    GRB_TRY(GrB_set(iset, false, GxB_ISO));
-    GrB_set(iset, GxB_SPARSE, GxB_SPARSITY_CONTROL);
+    // GRB_TRY(GrB_set(iset, false, GxB_ISO));
+    GRB_TRY(GrB_set(iset, GxB_SPARSE, GxB_SPARSITY_CONTROL));
     // GRB_TRY(GxB_unload_Vector_into_Container(iset,iset_container,NULL));
     dbg(iset);
 
@@ -329,12 +317,14 @@ int LAGraph_LouvainMIS(
     GRB_TRY(GrB_vxm(y, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, k, S, GrB_DESC_T0));
     dbg(y);
 
-    theta.d = k;
-    theta.c = k;
+    theta->d = &k;
+    // theta.c = k;
+    theta.seed = seed;
     theta.m = m;
 
-    GRB_TRY(GrB_Scalar_new(&argmax_0, GrB_UDT_CODE));
-    GRB_TRY(GrB_Scalar_setElement_UDT(argmax_0, &theta));
+    GRB_TRY(GrB_Scalar_new(&argmax_0, Theta));
+    //theta_scalar = {d = c = }
+    GRB_TRY(GrB_Scalar_setElement_UDT(argmax_0, &theta));//(argmax_0,(void *)theta_scalar);
 
     GRB_TRY(GxB_IndexBinaryOp_new(&MAKEAMTUP_op, (GxB_index_binary_function)make_argmax_tup, Tuple, GrB_FP64, GrB_FP64, GrB_UDT_CODE, "make_argmax_tup", MAKE_AM_TUP));
     GRB_TRY(GxB_BinaryOp_new_IndexOp(&MAKEAMTUP_Bop, MAKEAMTUP_op, argmax_0));
@@ -374,6 +364,8 @@ int LAGraph_LouvainMIS(
         S = NULL;
     }
     LG_FREE_ALL;
+#elif 
+
     return 0;
 
 }
