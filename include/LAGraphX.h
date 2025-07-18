@@ -1414,6 +1414,7 @@ int LAGraph_Louvain2
     LAGraph_Graph G,
     char* msg
 );
+<<<<<<< HEAD
 ) ; 
 LAGRAPHX_PUBLIC
 int LAGr_Modularity2(
@@ -1447,6 +1448,8 @@ int LAGraph_Louvain2
     LAGraph_Graph G,
     char* msg
 );
+=======
+>>>>>>> a24957d9560765ff37b0fd1d2a3a4dc5c1bf9f71
 LAGRAPHX_PUBLIC
 int LAGraph_IsolateSets(
     //output
@@ -1545,6 +1548,23 @@ int LAGr_BreadthFirstSearch_Extended
                         // and level) is expected to be very sparse.
     char *msg
 ) ;
+LAGRAPHX_PUBLIC
+int LAGraph_IsolateSets(
+    //output
+    GrB_Vector *isolate_set,
+    //input
+    LAGraph_Graph G,
+    uint64_t seed,
+    char* msg
+);
+LAGRAPHX_PUBLIC
+int LAGraph_LouvainMIS(
+    //output
+    GrB_Matrix *S_result,
+    //input 
+    LAGraph_Graph G,
+    char* msg
+);
 
 LAGRAPHX_PUBLIC
 int LAGraph_Louvain2
