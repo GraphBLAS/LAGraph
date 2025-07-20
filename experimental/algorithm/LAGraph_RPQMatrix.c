@@ -25,24 +25,24 @@
         }                                                   \
     }
 
-typedef enum RpqMatrixOp
-{
-    RPQ_MATRIX_OP_LABEL,
-    RPQ_MATRIX_OP_LOR,
-    RPQ_MATRIX_OP_CONCAT,
-    RPQ_MATRIX_OP_KLEENE,
-    RPQ_MATRIX_OP_KLEENE_L,
-    RPQ_MATRIX_OP_KLEENE_R,
-} RpqMatrixOp;
+// typedef enum RpqMatrixOp
+// {
+//     RPQ_MATRIX_OP_LABEL,
+//     RPQ_MATRIX_OP_LOR,
+//     RPQ_MATRIX_OP_CONCAT,
+//     RPQ_MATRIX_OP_KLEENE,
+//     RPQ_MATRIX_OP_KLEENE_L,
+//     RPQ_MATRIX_OP_KLEENE_R,
+// } RpqMatrixOp;
 
-typedef struct RpqMatrixPlan
-{
-    RpqMatrixOp op;
-    struct RpqMatrixPlan *lhs;
-    struct RpqMatrixPlan *rhs;
-    GrB_Matrix mat;
-    GrB_Matrix res_mat;
-} RpqMatrixPlan;
+// typedef struct RpqMatrixPlan
+// {
+//     RpqMatrixOp op;
+//     struct RpqMatrixPlan *lhs;
+//     struct RpqMatrixPlan *rhs;
+//     GrB_Matrix mat;
+//     GrB_Matrix res_mat;
+// } RpqMatrixPlan;
 
 static GrB_Semiring sr;
 static GrB_Monoid op;
