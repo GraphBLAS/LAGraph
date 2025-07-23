@@ -66,6 +66,7 @@ set ( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     ${PROJECT_SOURCE_DIR}/../SuiteSparse_config/cmake_modules
     )
 
+set ( SUITESPARSE_USE_FORTRAN OFF )
 include ( SuiteSparsePolicy )
 
 enable_language ( C )
