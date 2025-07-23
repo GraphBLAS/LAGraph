@@ -40,19 +40,36 @@
 typedef struct Theta
 {
     uint32_t *d;
-    uint32_t *c; // c arrays
+    uint32_t *c; /* c arrays */
     double m;
     uint64_t seed;
 } Theta;
 
+#define THETA_DEFN                      \
+"typedef struct Theta"                  \
+"{"                                     \
+"    uint32_t *d;"                      \
+"    uint32_t *c; /* c arrays */"       \
+"    double m;"                         \
+"    uint64_t seed;"                    \
+"} Theta;"
+
 typedef struct argmax_tup
 {
-    double score; // change in modularity
-    int64_t k;    // who
+    double score; /* change in modularity */
+    int64_t k;    /* who */
     double tb;
 } argmax_tup;
 
-#define AM_TUP "typedef struct argmax_tup{ double score; int64t k; } argmax_tup;"
+#define AM_TUP                                      \
+"typedef struct argmax_tup"                         \
+"{"                                                 \
+"    double score; /* change in modularity */"      \
+"    int64_t k;    /* who */"                       \
+"    double tb;"                                    \
+"} argmax_tup;"
+
+// #define AM_TUP "typedef struct argmax_tup{ double score; int64t k; } argmax_tup;"
 
 void make_argmax_tup(argmax_tup *z,
                      const double *x, GrB_Index ix, GrB_Index jx,
@@ -335,7 +352,7 @@ int LAGraph_LouvainMIS(
     theta.m = m;
     // theta.c = NULL;
     GrB_Type Theta_UDT = NULL;
-    GRB_TRY(GxB_Type_new(&Theta_UDT, sizeof(Theta), "Theta", NULL));
+    GRB_TRY(GxB_Type_new(&Theta_UDT, sizeof(Theta), "Theta", THETA_DEFN));
     GRB_TRY(GrB_Scalar_new(&argmax_0, Theta_UDT));
     Theta theta_scalar;
     double *d_buffer = malloc(x_size * sizeof(double));
