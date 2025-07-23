@@ -18,6 +18,11 @@
 
 /**
  * Code is based on Boruvka's minimum spanning forest algorithm
+ * 
+ * The algorithm calculates the minimum spanning forest of a graph represented 
+ * by matrix A. It outputs a matrix containing lowest weight edges which connect 
+ * the nodes in the forest, and a vector indicating the connected component 
+ * "tree" which each node belongs to.
  */
 
 // TODO: not ready for src but getting close.
@@ -123,26 +128,58 @@ typedef struct
 //   1. weight[i] == A(i, j)    -- where weight[i] stores i's minimum edge weight
 //   2. parent[j] == partner[i] -- j belongs to the specified connected component
 
-void LG_MSF_selectEdge_int (bool *z, const int64_t *x, GrB_Index i, GrB_Index j, const LG_MSF_context_int *theta)
+void LG_MSF_selectEdge_int 
+(
+    bool *z, 
+    const int64_t *x, 
+    GrB_Index i, 
+    GrB_Index j, 
+    const LG_MSF_context_int *theta
+)
 {
-    (*z) = (theta->w_partner[i].wInt == *x) && (theta->parent[j] == theta->w_partner[i].idx);
+    (*z) = (theta->w_partner[i].wInt == *x) && 
+        (theta->parent[j] == theta->w_partner[i].idx);
 }
 
 #define SELECTEDGE_INT \
-"void LG_MSF_selectEdge_int (bool *z, const int64_t *x, GrB_Index i, GrB_Index j, const LG_MSF_context_int *theta)\n" \
-"{                                                                                                          \n" \
-"    (*z) = (theta->w_partner[i].wInt == *x) && (theta->parent[j] == theta->w_partner[i].idx);              \n" \
+"void LG_MSF_selectEdge_int                            \n"\
+"(                                                     \n"\
+"    bool *z,                                          \n"\
+"    const int64_t *x,                                 \n"\
+"    GrB_Index i,                                      \n"\
+"    GrB_Index j,                                      \n"\
+"    const LG_MSF_context_int *theta                   \n"\
+")                                                     \n"\
+"{                                                     \n"\
+"    (*z) = (theta->w_partner[i].wInt == *x) &&        \n"\
+"        (theta->parent[j] == theta->w_partner[i].idx);\n"\
 "}"
 
-void LG_MSF_selectEdge_fp (bool *z, const double *x, GrB_Index i, GrB_Index j, const LG_MSF_context_fp *theta)
+void LG_MSF_selectEdge_fp 
+(
+    bool *z, 
+    const double *x, 
+    GrB_Index i, 
+    GrB_Index j, 
+    const LG_MSF_context_fp *theta
+)
 {
-    (*z) = (theta->w_partner[i].wFp == *x) && (theta->parent[j] == theta->w_partner[i].idx);
+    (*z) = (theta->w_partner[i].wFp == *x) && 
+        (theta->parent[j] == theta->w_partner[i].idx);
 }
 
 #define SELECTEDGE_FP \
-"void LG_MSF_selectEdge_fp (bool *z, const double *x, GrB_Index i, GrB_Index j, const LG_MSF_context_fp *theta)   \n" \
-"{                                                                                                          \n" \
-"    (*z) = (theta->w_partner[i].wFp == *x) && (theta->parent[j] == theta->w_partner[i].idx);               \n" \
+"void LG_MSF_selectEdge_fp                             \n"\
+"(                                                     \n"\
+"    bool *z,                                          \n"\
+"    const double *x,                                  \n"\
+"    GrB_Index i,                                      \n"\
+"    GrB_Index j,                                      \n"\
+"    const LG_MSF_context_fp *theta                    \n"\
+")                                                     \n"\
+"{                                                     \n"\
+"    (*z) = (theta->w_partner[i].wFp == *x) &&         \n"\
+"        (theta->parent[j] == theta->w_partner[i].idx);\n"\
 "}"
 
 //------------------------------------------------------------------------------
@@ -152,56 +189,104 @@ void LG_MSF_selectEdge_fp (bool *z, const double *x, GrB_Index i, GrB_Index j, c
 // edge removal:
 // A(i, j) is removed when parent[i] == parent[j]
 
-void LG_MSF_removeEdge_int (bool *z, const int64_t *x, GrB_Index i, GrB_Index j, const LG_MSF_context_int *theta)
+void LG_MSF_removeEdge_int 
+(
+    bool *z, 
+    const int64_t *x, 
+    GrB_Index i, 
+    GrB_Index j, 
+    const LG_MSF_context_int *theta
+)
 {
     (*z) = (theta->parent[i] != theta->parent[j]);
 }
 
 #define REMOVEEDGE_INT \
-"void LG_MSF_removeEdge_int (bool *z, const int64_t *x, GrB_Index i, GrB_Index j, const LG_MSF_context_int *theta)\n" \
-"{                                                                                                          \n" \
-"    (*z) = (theta->parent[i] != theta->parent[j]);                                                         \n" \
+"void LG_MSF_removeEdge_int                        \n"\
+"(                                                 \n"\
+"    bool *z,                                      \n"\
+"    const int64_t *x,                             \n"\
+"    GrB_Index i,                                  \n"\
+"    GrB_Index j,                                  \n"\
+"    const LG_MSF_context_int *theta               \n"\
+")                                                 \n"\
+"{                                                 \n"\
+"    (*z) = (theta->parent[i] != theta->parent[j]);\n"\
 "}"
 
-void LG_MSF_removeEdge_fp (bool *z, const double *x, GrB_Index i, GrB_Index j, const LG_MSF_context_fp *theta)
+void LG_MSF_removeEdge_fp 
+(
+    bool *z, 
+    const double *x, 
+    GrB_Index i, 
+    GrB_Index j, 
+    const LG_MSF_context_fp *theta
+)
 {
     (*z) = (theta->parent[i] != theta->parent[j]);
 }
 
 #define REMOVEEDGE_FP \
-"void LG_MSF_removeEdge_fp (bool *z, const double *x, GrB_Index i, GrB_Index j, const LG_MSF_context_fp *theta)   \n" \
-"{                                                                                                          \n" \
-"    (*z) = (theta->parent[i] != theta->parent[j]);                                                         \n" \
+"void LG_MSF_removeEdge_fp                         \n"\
+"(                                                 \n"\
+"    bool *z,                                      \n"\
+"    const double *x,                              \n"\
+"    GrB_Index i,                                  \n"\
+"    GrB_Index j,                                  \n"\
+"    const LG_MSF_context_fp *theta                \n"\
+")                                                 \n"\
+"{                                                 \n"\
+"    (*z) = (theta->parent[i] != theta->parent[j]);\n"\
 "}"
 
 //------------------------------------------------------------------------------
 // combine: create a tuple from a weight and an index
 //------------------------------------------------------------------------------
 
-void LG_MSF_combine_int (LG_MSF_tuple_int *z, const int64_t *x, const uint64_t *y)
+void LG_MSF_combine_int 
+(
+    LG_MSF_tuple_int *z, 
+    const int64_t *x, 
+    const uint64_t *y
+)
 {
     z->wInt = *x;
     z->idx = *y;
 }
 
 #define COMBINE_INT \
-"void LG_MSF_combine_int (LG_MSF_tuple_int *z, const int64_t *x, const uint64_t *y)   \n" \
-"{                                                                              \n" \
-"    z->wInt = *x;                                                              \n" \
-"    z->idx = *y;                                                               \n" \
+"void LG_MSF_combine_int  \n"\
+"(                        \n"\
+"    LG_MSF_tuple_int *z, \n"\
+"    const int64_t *x,    \n"\
+"    const uint64_t *y    \n"\
+")                        \n"\
+"{                        \n"\
+"    z->wInt = *x;        \n"\
+"    z->idx = *y;         \n"\
 "}"
 
-void LG_MSF_combine_fp (LG_MSF_tuple_fp *z, const double *x, const uint64_t *y)
+void LG_MSF_combine_fp 
+(
+    LG_MSF_tuple_fp *z, 
+    const double *x, 
+    const uint64_t *y
+)
 {
     z->wFp = *x;
     z->idx = *y;
 }
 
 #define COMBINE_FP \
-"void LG_MSF_combine_fp (LG_MSF_tuple_fp *z, const double *x, const uint64_t *y)      \n" \
-"{                                                                              \n" \
-"    z->wFp = *x;                                                               \n" \
-"    z->idx = *y;                                                               \n" \
+"void LG_MSF_combine_fp  \n"\
+"(                       \n"\
+"    LG_MSF_tuple_fp *z, \n"\
+"    const double *x,    \n"\
+"    const uint64_t *y   \n"\
+")                       \n"\
+"{                       \n"\
+"    z->wFp = *x;        \n"\
+"    z->idx = *y;        \n"\
 "}"
 
 //------------------------------------------------------------------------------
@@ -214,9 +299,9 @@ void LG_MSF_get_first_int (int64_t *y, const LG_MSF_tuple_int *x)
 }
 
 #define GET_FIRST_INT \
-"void LG_MSF_get_first_int (int64_t *y, const LG_MSF_tuple_int *x)    \n" \
-"{                                                              \n" \
-"    *y = x->wInt;                                              \n" \
+"void LG_MSF_get_first_int (int64_t *y, const LG_MSF_tuple_int *x)  \n" \
+"{                                                                  \n" \
+"    *y = x->wInt;                                                  \n" \
 "}"
 
 void LG_MSF_get_first_fp (double *y, const LG_MSF_tuple_fp *x)
@@ -226,8 +311,8 @@ void LG_MSF_get_first_fp (double *y, const LG_MSF_tuple_fp *x)
 
 #define GET_FIRST_FP \
 "void LG_MSF_get_first_fp (double *y, const LG_MSF_tuple_fp *x)   \n" \
-"{                                                          \n" \
-"    *y = x->wFp;                                           \n" \
+"{                                                                \n" \
+"    *y = x->wFp;                                                 \n" \
 "}"
 
 //------------------------------------------------------------------------------
@@ -241,8 +326,8 @@ void LG_MSF_get_second_int (uint64_t *y, const LG_MSF_tuple_int *x)
 
 #define GET_SECOND_INT \
 "void LG_MSF_get_second_int (uint64_t *y, const LG_MSF_tuple_int *x)  \n" \
-"{                                                              \n" \
-"    *y = x->idx;                                               \n" \
+"{                                                                    \n" \
+"    *y = x->idx;                                                     \n" \
 "}"
 
 void LG_MSF_get_second_fp (uint64_t *y, const LG_MSF_tuple_fp *x)
@@ -252,30 +337,47 @@ void LG_MSF_get_second_fp (uint64_t *y, const LG_MSF_tuple_fp *x)
 
 #define GET_SECOND_FP \
 "void LG_MSF_get_second_fp (uint64_t *y, const LG_MSF_tuple_fp *x)    \n" \
-"{                                                              \n" \
-"    *y = x->idx;                                               \n" \
+"{                                                                    \n" \
+"    *y = x->idx;                                                     \n" \
 "}"
 
 //------------------------------------------------------------------------------
 // tupleMin: z = the min tuple of x and y
 //------------------------------------------------------------------------------
 
-void LG_MSF_tupleMin_int (LG_MSF_tuple_int *z, const LG_MSF_tuple_int *x, const LG_MSF_tuple_int *y)
+void LG_MSF_tupleMin_int 
+(
+    LG_MSF_tuple_int *z, 
+    const LG_MSF_tuple_int *x, 
+    const LG_MSF_tuple_int *y
+)
 {
-    bool xSmaller = x->wInt < y->wInt || (x->wInt == y->wInt && x->idx < y->idx);
+    bool xSmaller = x->wInt < y->wInt || 
+        (x->wInt == y->wInt && x->idx < y->idx);
     z->wInt = (xSmaller)? x->wInt: y->wInt;
     z->idx = (xSmaller)? x->idx: y->idx;
 }
 
 #define TUPLEMIN_INT \
-"void LG_MSF_tupleMin_int (LG_MSF_tuple_int *z, const LG_MSF_tuple_int *x, const LG_MSF_tuple_int *y)   \n" \
-"{                                                                                          \n" \
-"    bool xSmaller = x->wInt < y->wInt || (x->wInt == y->wInt && x->idx < y->idx);          \n" \
-"    z->wInt = (xSmaller)? x->wInt: y->wInt;                                                \n" \
-"    z->idx = (xSmaller)? x->idx: y->idx;                                                   \n" \
+"void LG_MSF_tupleMin_int                        \n"\
+"(                                               \n"\
+"    LG_MSF_tuple_int *z,                        \n"\
+"    const LG_MSF_tuple_int *x,                  \n"\
+"    const LG_MSF_tuple_int *y                   \n"\
+")                                               \n"\
+"{                                               \n"\
+"    bool xSmaller = x->wInt < y->wInt ||        \n"\
+"        (x->wInt == y->wInt && x->idx < y->idx);\n"\
+"    z->wInt = (xSmaller)? x->wInt: y->wInt;     \n"\
+"    z->idx = (xSmaller)? x->idx: y->idx;        \n"\
 "}"
 
-void LG_MSF_tupleMin_fp (LG_MSF_tuple_fp *z, const LG_MSF_tuple_fp *x, const LG_MSF_tuple_fp *y)
+void LG_MSF_tupleMin_fp 
+(
+    LG_MSF_tuple_fp *z, 
+    const LG_MSF_tuple_fp *x, 
+    const LG_MSF_tuple_fp *y
+)
 {
     bool xSmaller = x->wFp < y->wFp || (x->wFp == y->wFp && x->idx < y->idx);
     z->wFp = (xSmaller)? x->wFp: y->wFp;
@@ -283,67 +385,112 @@ void LG_MSF_tupleMin_fp (LG_MSF_tuple_fp *z, const LG_MSF_tuple_fp *x, const LG_
 }
 
 #define TUPLEMIN_FP \
-"void LG_MSF_tupleMin_fp (LG_MSF_tuple_fp *z, const LG_MSF_tuple_fp *x, const LG_MSF_tuple_fp *y)       \n" \
-"{                                                                                          \n" \
-"    bool xSmaller = x->wFp < y->wFp || (x->wFp == y->wFp && x->idx < y->idx);              \n" \
-"    z->wFp = (xSmaller)? x->wFp: y->wFp;                                                   \n" \
-"    z->idx = (xSmaller)? x->idx: y->idx;                                                   \n" \
+"void LG_MSF_tupleMin_fp                                                      \n"\
+"(                                                                            \n"\
+"    LG_MSF_tuple_fp *z,                                                      \n"\
+"    const LG_MSF_tuple_fp *x,                                                \n"\
+"    const LG_MSF_tuple_fp *y                                                 \n"\
+")                                                                            \n"\
+"{                                                                            \n"\
+"    bool xSmaller = x->wFp < y->wFp || (x->wFp == y->wFp && x->idx < y->idx);\n"\
+"    z->wFp = (xSmaller)? x->wFp: y->wFp;                                     \n"\
+"    z->idx = (xSmaller)? x->idx: y->idx;                                     \n"\
 "}"
 
 //------------------------------------------------------------------------------
 // tuple2nd: z = y
 //------------------------------------------------------------------------------
 
-void LG_MSF_tuple2nd_int (LG_MSF_tuple_int *z, const void *x, const LG_MSF_tuple_int *y)
+void LG_MSF_tuple2nd_int 
+(
+    LG_MSF_tuple_int *z, 
+    const void *x, 
+    const LG_MSF_tuple_int *y
+)
 {
     z->wInt = y->wInt;
     z->idx = y->idx;
 }
 
 #define TUPLE2ND_INT \
-"void LG_MSF_tuple2nd_int (LG_MSF_tuple_int *z, const void *x, const LG_MSF_tuple_int *y)    \n" \
-"{                                                                                  \n" \
-"    z->wInt = y->wInt;                                                             \n" \
-"    z->idx = y->idx;                                                               \n" \
+"void LG_MSF_tuple2nd_int     \n"\
+"(                            \n"\
+"    LG_MSF_tuple_int *z,     \n"\
+"    const void *x,           \n"\
+"    const LG_MSF_tuple_int *y\n"\
+")                            \n"\
+"{                            \n"\
+"    z->wInt = y->wInt;       \n"\
+"    z->idx = y->idx;         \n"\
 "}"
 
-void LG_MSF_tuple2nd_fp (LG_MSF_tuple_fp *z, const void *x, const LG_MSF_tuple_fp *y)
+void LG_MSF_tuple2nd_fp 
+(
+    LG_MSF_tuple_fp *z, 
+    const void *x, 
+    const LG_MSF_tuple_fp *y
+)
 {
     z->wFp = y->wFp;
     z->idx = y->idx;
 }
 
 #define TUPLE2ND_FP \
-"void LG_MSF_tuple2nd_fp (LG_MSF_tuple_fp *z, const void *x, const LG_MSF_tuple_fp *y)       \n" \
-"{                                                                                  \n" \
-"    z->wFp = y->wFp;                                                               \n" \
-"    z->idx = y->idx;                                                               \n" \
+"void LG_MSF_tuple2nd_fp     \n"\
+"(                           \n"\
+"    LG_MSF_tuple_fp *z,     \n"\
+"    const void *x,          \n"\
+"    const LG_MSF_tuple_fp *y\n"\
+")                           \n"\
+"{                           \n"\
+"    z->wFp = y->wFp;        \n"\
+"    z->idx = y->idx;        \n"\
 "}"
 
 //------------------------------------------------------------------------------
 // tupleEq: true if two tuples are equal
 //------------------------------------------------------------------------------
 
-void LG_MSF_tupleEq_int (bool *z, const LG_MSF_tuple_int *x, const LG_MSF_tuple_int *y)
+void LG_MSF_tupleEq_int 
+(
+    bool *z, 
+    const LG_MSF_tuple_int *x, 
+    const LG_MSF_tuple_int *y
+)
 {
     *z = (x->wInt == y->wInt) && (x->idx == y->idx);
 }
 
 #define TUPLEEQ_INT \
-"void LG_MSF_tupleEq_int (bool *z, const LG_MSF_tuple_int *x, const LG_MSF_tuple_int *y) \n" \
-"{                                                                              \n" \
-"    *z = (x->wInt == y->wInt) && (x->idx == y->idx);                           \n" \
+"void LG_MSF_tupleEq_int                             \n"\
+"(                                                   \n"\
+"    bool *z,                                        \n"\
+"    const LG_MSF_tuple_int *x,                      \n"\
+"    const LG_MSF_tuple_int *y                       \n"\
+")                                                   \n"\
+"{                                                   \n"\
+"    *z = (x->wInt == y->wInt) && (x->idx == y->idx);\n"\
 "}"
 
-void LG_MSF_tupleEq_fp (bool *z, const LG_MSF_tuple_fp *x, const LG_MSF_tuple_fp *y)
+void LG_MSF_tupleEq_fp 
+(
+    bool *z, 
+    const LG_MSF_tuple_fp *x, 
+    const LG_MSF_tuple_fp *y
+)
 {
     *z = (x->wFp == y->wFp) && (x->idx == y->idx);
 }
 
 #define TUPLEEQ_FP \
-"void LG_MSF_tupleEq_fp (bool *z, const LG_MSF_tuple_fp *x, const LG_MSF_tuple_fp *y)    \n" \
-"{                                                                              \n" \
-"    *z = (x->wFp == y->wFp) && (x->idx == y->idx);                             \n" \
+"void LG_MSF_tupleEq_fp                            \n"\
+"(                                                 \n"\
+"    bool *z,                                      \n"\
+"    const LG_MSF_tuple_fp *x,                     \n"\
+"    const LG_MSF_tuple_fp *y                      \n"\
+")                                                 \n"\
+"{                                                 \n"\
+"    *z = (x->wFp == y->wFp) && (x->idx == y->idx);\n"\
 "}"
 
 //------------------------------------------------------------------------------
@@ -454,6 +601,8 @@ int LAGraph_msf
     GrB_Matrix *forest_edges, // output: an unsymmetrical matrix, containing
                         // the edges in the spanning forest
     GrB_Vector *componentId,  // output: The connected component of each node
+                        // componentId[i] is the representative node of the 
+                        // component set that i is in.
     GrB_Matrix A,       // input matrix
     bool sanitize,      // if true, ensure A is symmetric
     char *msg
@@ -476,8 +625,10 @@ int LAGraph_msf
 
     GrB_Index *SI = NULL, *SJ = NULL;
     void *SX = NULL;
-    GrB_Type context_type = NULL, tuple = NULL, weight_type = NULL, ignore = NULL ;
-    GrB_BinaryOp combine = NULL, tupleMin = NULL, tuple2nd = NULL, tupleEq = NULL;
+    GrB_Type context_type = NULL, tuple = NULL, weight_type = NULL, 
+        ignore = NULL ;
+    GrB_BinaryOp combine = NULL, tupleMin = NULL, tuple2nd = NULL, 
+        tupleEq = NULL;
     GrB_Monoid tupleMin_monoid = NULL;
     GrB_Semiring minComb = NULL, tupleMin2nd = NULL;
     GrB_UnaryOp get_first = NULL, get_second = NULL;
@@ -542,9 +693,9 @@ int LAGraph_msf
     if (weight_type == GrB_INT64)
     {
 
-        //-----------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // types and ops for INT64 weights
-        //-----------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
         GRB_TRY (GxB_Type_new (&tuple, sizeof (LG_MSF_tuple_int),
             "LG_MSF_tuple_int", TUPLE_INT)) ;
@@ -574,12 +725,12 @@ int LAGraph_msf
         inf = (void *) (&inf_int) ;
 
         GRB_TRY (GxB_UnaryOp_new (
-            &get_first, (GxB_unary_function) LG_MSF_get_first_int, weight_type, tuple,
-            "LG_MSF_get_first_int", GET_FIRST_INT)) ;
+            &get_first, (GxB_unary_function) LG_MSF_get_first_int, weight_type, 
+            tuple, "LG_MSF_get_first_int", GET_FIRST_INT)) ;
 
         GRB_TRY (GxB_UnaryOp_new (
-            &get_second, (GxB_unary_function) LG_MSF_get_second_int, GrB_UINT64, tuple,
-            "LG_MSF_get_second_int", GET_SECOND_INT)) ;
+            &get_second, (GxB_unary_function) LG_MSF_get_second_int, GrB_UINT64, 
+            tuple, "LG_MSF_get_second_int", GET_SECOND_INT)) ;
 
         // context type
         GRB_TRY (GxB_Type_new (
@@ -588,21 +739,21 @@ int LAGraph_msf
 
         // ops for GrB_select
         GRB_TRY(GxB_IndexUnaryOp_new (
-            &selectEdge, (GxB_index_unary_function) LG_MSF_selectEdge_int, GrB_BOOL, weight_type,
-            context_type,
+            &selectEdge, (GxB_index_unary_function) LG_MSF_selectEdge_int, 
+            GrB_BOOL, weight_type, context_type, 
             "LG_MSF_selectEdge_int", SELECTEDGE_INT)) ;
 
         GRB_TRY(GxB_IndexUnaryOp_new (
-            &removeEdge, (void *) LG_MSF_removeEdge_int, GrB_BOOL, weight_type, context_type,
-            "LG_MSF_removeEdge_int", REMOVEEDGE_INT)) ;
+            &removeEdge, (void *) LG_MSF_removeEdge_int, GrB_BOOL, weight_type, 
+            context_type, "LG_MSF_removeEdge_int", REMOVEEDGE_INT)) ;
 
     }
     else
     {
 
-        //-----------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // types and ops for FP64 weights
-        //-----------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
         GRB_TRY (GxB_Type_new (&tuple, sizeof (LG_MSF_tuple_fp),
             "LG_MSF_tuple_fp", TUPLE_FP)) ;
@@ -632,12 +783,12 @@ int LAGraph_msf
         inf = (void *) (&inf_fp) ;
 
         GRB_TRY (GxB_UnaryOp_new (
-            &get_first, (GxB_unary_function) LG_MSF_get_first_fp, weight_type, tuple,
-            "LG_MSF_get_first_fp", GET_FIRST_FP)) ;
+            &get_first, (GxB_unary_function) LG_MSF_get_first_fp, weight_type, 
+            tuple, "LG_MSF_get_first_fp", GET_FIRST_FP)) ;
 
         GRB_TRY (GxB_UnaryOp_new (
-            &get_second, (GxB_unary_function) LG_MSF_get_second_fp, GrB_UINT64, tuple,
-            "LG_MSF_get_second_fp", GET_SECOND_FP)) ;
+            &get_second, (GxB_unary_function) LG_MSF_get_second_fp, GrB_UINT64, 
+            tuple, "LG_MSF_get_second_fp", GET_SECOND_FP)) ;
 
         GRB_TRY (GxB_Type_new (
             &context_type, sizeof (LG_MSF_context_fp),
@@ -645,13 +796,13 @@ int LAGraph_msf
 
         // ops for GrB_select
         GRB_TRY(GxB_IndexUnaryOp_new (
-            &selectEdge, (GxB_index_unary_function) LG_MSF_selectEdge_fp, GrB_BOOL, weight_type,
-            context_type,
+            &selectEdge, (GxB_index_unary_function) LG_MSF_selectEdge_fp, 
+            GrB_BOOL, weight_type, context_type,
             "LG_MSF_selectEdge_fp", SELECTEDGE_FP)) ;
 
         GRB_TRY(GxB_IndexUnaryOp_new (
-            &removeEdge, (void *) LG_MSF_removeEdge_fp, GrB_BOOL, weight_type, context_type,
-            "LG_MSF_removeEdge_fp", REMOVEEDGE_FP)) ;
+            &removeEdge, (void *) LG_MSF_removeEdge_fp, GrB_BOOL, weight_type, 
+            context_type, "LG_MSF_removeEdge_fp", REMOVEEDGE_FP)) ;
     }
 
     GRB_TRY (GrB_Monoid_new_UDT (&tupleMin_monoid, tupleMin, inf)) ;
@@ -733,7 +884,12 @@ int LAGraph_msf
     {
         // every vertex points to a root vertex at the beginning
         // edge[u] = u's minimum edge (weight and index are encoded together)
-        GRB_TRY (GrB_Vector_assign_UDT (edge, NULL, NULL, inf, GrB_ALL, 0, NULL)) ;
+        GRB_TRY (GrB_Vector_assign_UDT (
+            edge, NULL, NULL, inf, GrB_ALL, 0, NULL)) ;
+
+        // each edge looks at its adjacent edges and picks the one with the 
+        // minimum weight. This weight is put into a tuple with the 
+        // representative value of the connected componect the edge connects to
         GRB_TRY (GrB_mxv (edge, NULL, tupleMin, minComb, S, f, NULL)) ;
 
         // cedge[u] = children's minimum edge  | if u is a root
@@ -743,9 +899,12 @@ int LAGraph_msf
         LG_TRY (LAGraph_FastAssign_Semiring(
             cedge, NULL, tupleMin, parent_v, edge, ramp, tupleMin2nd, NULL, msg
         )) ;
-        // if (f[u] == u) f[u] := get_second(cedge[u])  -- the index part of the edge
+
+        // if (f[u] == u) f[u] := get_second(cedge[u])  -- the index
         GRB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_EQ_UINT64, f, I, NULL)) ;
-        GRB_TRY (GrB_apply (f, mask, GrB_SECOND_UINT64, get_second, cedge, NULL)) ;
+        GRB_TRY (GrB_apply (
+            f, mask, GrB_SECOND_UINT64, get_second, cedge, NULL)) ;
+
         // identify all the vertex pairs (u, v) where f[u] == v and f[v] == u
         // and then select the minimum of u, v as the new root;
         // if (f[f[i]] == i) f[i] = min(f[i], i)
@@ -763,7 +922,8 @@ int LAGraph_msf
             tedge, NULL, NULL, cedge, parent_v, NULL)) ;
         GRB_TRY (GrB_eWiseMult (mask ,NULL, NULL, tupleEq, edge, tedge, NULL)) ;
 
-        // 3. each root picks a vertex from its children to generate the solution
+        // 3. each root picks a vertex from its children to 
+        // generate the solution
         GRB_TRY (GrB_assign (index_v, NULL, NULL, n, GrB_ALL, 0, NULL)) ;
         GRB_TRY (GrB_assign (index_v, mask, NULL, I, GrB_ALL, 0, NULL)) ;
         GRB_TRY (GrB_assign (t, NULL, NULL, n, GrB_ALL, 0, NULL)) ;
@@ -773,25 +933,28 @@ int LAGraph_msf
         )) ;
         GRB_TRY (GxB_Vector_extract_Vector (
             index_v, NULL, NULL, t, parent_v, NULL)) ;
-        GRB_TRY (GrB_eWiseMult (mask ,NULL, NULL, GrB_EQ_UINT64, I, index_v, NULL)) ;
+        GRB_TRY (GrB_eWiseMult (
+            mask ,NULL, NULL, GrB_EQ_UINT64, I, index_v, NULL)) ;
 
-        // 4. generate the select function (set the global pointers)
+        // 4. generate the select function
         if (weight_type == GrB_INT64)
         {
             GRB_TRY (GxB_Vector_unload(
-                edge, (void **) &context_int.w_partner, &ignore, &edge_n, &edge_size,
-                &edge_handling, NULL)) ;
-            GRB_TRY (GrB_Matrix_select_UDT (T, NULL, NULL, selectEdge, S, &context_int, NULL)) ;
+                edge, (void **) &context_int.w_partner, &ignore, &edge_n,
+                &edge_size, &edge_handling, NULL)) ;
+            GRB_TRY (GrB_Matrix_select_UDT (T, NULL, NULL, selectEdge, S,
+                &context_int, NULL)) ;
             GRB_TRY (GxB_Vector_load(
-                edge, (void **) &context_int.w_partner, tuple, edge_n, edge_size,
-                edge_handling, NULL)) ;
+                edge, (void **) &context_int.w_partner, tuple, edge_n,
+                edge_size, edge_handling, NULL)) ;
         }
         else
         {
             GRB_TRY (GxB_Vector_unload(
-                edge, (void **) &context_fp.w_partner, &ignore, &edge_n, &edge_size,
-                &edge_handling, NULL)) ;
-            GRB_TRY (GrB_Matrix_select_UDT (T, NULL, NULL, selectEdge, S, &context_fp, NULL)) ;
+                edge, (void **) &context_fp.w_partner, &ignore, &edge_n, 
+                &edge_size, &edge_handling, NULL)) ;
+            GRB_TRY (GrB_Matrix_select_UDT (
+                T, NULL, NULL, selectEdge, S, &context_fp, NULL)) ;
             GRB_TRY (GxB_Vector_load(
                 edge, (void **) &context_fp.w_partner, tuple, edge_n, edge_size,
                 edge_handling, NULL)) ;
@@ -799,14 +962,15 @@ int LAGraph_msf
 
         GRB_TRY (GrB_Vector_clear (t)) ;
 
-        // 5. the generated matrix may still have redundant edges
-        //    remove the duplicates by GrB_mxv and store them as tuples in (SI,SJ,SX)
+        // 5. the generated matrix may still have redundant edges remove the 
+        //  duplicates by GrB_mxv and store them as tuples in (SI,SJ,SX)
         GRB_TRY (GrB_Vector_clear (edge)) ;
         GRB_TRY (GrB_mxv (edge, mask, tupleMin, minComb, T, I, NULL)) ;
         GRB_TRY (GrB_Vector_nvals (&num, edge)) ;
         GRB_TRY (GrB_apply (t, NULL, NULL, get_second, edge, NULL)) ;
         GRB_TRY (GrB_Vector_extractTuples (NULL, SJ + ntuples, &num, t)) ;
         GRB_TRY (GrB_apply (w, NULL, NULL, get_first, edge, NULL)) ;
+
         if (weight_type == GrB_INT64)
         {
             GRB_TRY (GrB_Vector_extractTuples_INT64 (
