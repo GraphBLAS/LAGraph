@@ -1359,16 +1359,6 @@ int LAGr_PartitionQuality(
     char *msg
 );
 
-LAGRAPHX_PUBLIC
-int LAGr_Modularity(
-    // Outputs
-    double *mod_handle, // Modularity
-    // Inputs
-    double gamma,       // Resolution parameter
-    GrB_Vector c,       // Cluster vector where c[i] = j means vertex i is in cluster j
-    LAGraph_Graph G,    // original graph
-    char *msg
-) ;
 
 LAGRAPHX_PUBLIC
 int LAGraph_argminmax
@@ -1382,83 +1372,7 @@ int LAGraph_argminmax
     bool is_min,
     char *msg
 ) ; 
-LAGRAPHX_PUBLIC
-int LAGr_Modularity2(
-    //output
-    double *Q, //modularity Q
-    // GrB_Matrix B,
-    //input
-    double gamma, //Optional resolution limit: default is 1
-    // LAGraph_Graph G, TODO
-    GrB_Matrix A, //adjacency matrix
-    GrB_Matrix S, //community matrix
-    char* msg
-);
 
-LAGRAPHX_PUBLIC
-int LAGraph_Louvain
-(
-    //ouptut
-    GrB_Matrix S,
-    // input
-    LAGraph_Graph G,
-    char* msg
-);
-
-LAGRAPHX_PUBLIC
-int LAGraph_Louvain2
-(
-    //ouptut
-    GrB_Matrix *S_result,
-    // input
-    LAGraph_Graph G,
-    char* msg
-);
-<<<<<<< HEAD
-) ; 
-LAGRAPHX_PUBLIC
-int LAGr_Modularity2(
-    //output
-    double *Q, //modularity Q
-    // GrB_Matrix B,
-    //input
-    double gamma, //Optional resolution limit: default is 1
-    // LAGraph_Graph G, TODO
-    GrB_Matrix A, //adjacency matrix
-    GrB_Matrix S, //community matrix
-    char* msg
-);
-
-LAGRAPHX_PUBLIC
-int LAGraph_Louvain
-(
-    //ouptut
-    GrB_Matrix S,
-    // input
-    LAGraph_Graph G,
-    char* msg
-);
-
-LAGRAPHX_PUBLIC
-int LAGraph_Louvain2
-(
-    //ouptut
-    GrB_Matrix *S_result,
-    // input
-    LAGraph_Graph G,
-    char* msg
-);
-=======
->>>>>>> a24957d9560765ff37b0fd1d2a3a4dc5c1bf9f71
-LAGRAPHX_PUBLIC
-int LAGraph_IsolateSets(
-    //output
-    GrB_Vector *isolate_set,
-    //input
-    LAGraph_Graph G,
-    uint64_t seed,
-    char* msg
-);
 LAGRAPHX_PUBLIC
 int LAGr_MaximumMatching(
     // outputs
@@ -1558,10 +1472,24 @@ int LAGraph_IsolateSets(
     char* msg
 );
 LAGRAPHX_PUBLIC
-int LAGraph_LouvainMIS(
+int LAGr_Modularity2(
     //output
-    GrB_Matrix *S_result,
-    //input 
+    double *Q, //modularity Q
+    // GrB_Matrix B,
+    //input
+    double gamma, //Optional resolution limit: default is 1
+    // LAGraph_Graph G, TODO
+    GrB_Matrix A, //adjacency matrix
+    GrB_Matrix S, //community matrix
+    char* msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_Louvain
+(
+    //ouptut
+    GrB_Matrix S,
+    // input
     LAGraph_Graph G,
     char* msg
 );
@@ -1575,6 +1503,38 @@ int LAGraph_Louvain2
     LAGraph_Graph G,
     char* msg
 );
+
+
+LAGRAPHX_PUBLIC
+int LAGraph_Louvain
+(
+    //ouptut
+    GrB_Matrix S,
+    // input
+    LAGraph_Graph G,
+    char* msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_Louvain2
+(
+    //ouptut
+    GrB_Matrix *S_result,
+    // input
+    LAGraph_Graph G,
+    char* msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_IsolateSets(
+    //output
+    GrB_Vector *isolate_set,
+    //input
+    LAGraph_Graph G,
+    uint64_t seed,
+    char* msg
+);
+
 LAGRAPHX_PUBLIC
 int LAGraph_coloring_MIS
 (
