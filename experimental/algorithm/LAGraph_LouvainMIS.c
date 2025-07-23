@@ -10,8 +10,8 @@
 #define err(x, info)                                    \
     if (!(info == GrB_SUCCESS || info == GrB_NO_VALUE)) \
     {                                                   \
-        char *err;                                      \
-        GrB_error(&err, x);                             \
+        char **err;                                      \
+        GrB_error(err, x);                             \
         printf("\ninfo: %lu error: %s\n", info, err);   \
     }
 #undef LG_FREE_ALL
@@ -68,7 +68,7 @@ void make_argmax_tup(argmax_tup *z,
     seed ^= seed << 17;
     z->k = (int64_t)jx;
     printf("%ld or %ld\n", _theta->d[iy], _theta->d[ix]);
-    z->score = (*x) - ((_theta->d[jx]) * (*y)) / (2 * _theta->m);
+    z->score = (*x) - ((_theta->d[ix]) * (*y)) / (2*_theta->m);
     z->tb = seed;
     printf("z: %f,%lu,%f\n\n\n", z->score, z->k, z->tb);
 }
@@ -362,9 +362,9 @@ int LAGraph_LouvainMIS(
 
     info = GrB_mxv(Wy, NULL, NULL, AM_Semiring, W, y, NULL);
     dbg(Wy);
-    err(Wy, info);
+    // err(Wy, info);
     argmax_tup test;
-    GRB_TRY(GrB_Vector_extractElement_UDT((void*)&test, Wy, 0));
+    GRB_TRY(GrB_Vector_extractElement_UDT((void*)&test, Wy, 17));
     printf("test score: %f, k: %ld, tb: %f", test.score, test.k, test.tb);
 
     // Aggregate Graph
