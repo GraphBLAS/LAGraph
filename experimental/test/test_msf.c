@@ -99,7 +99,7 @@ void test_msf (void)
         // construct a directed graph G with adjacency matrix S
         TEST_CHECK (S == NULL) ;
 
-        OK (LAGraph_Matrix_Print (A, GxB_SHORT, stdout, msg)) ;
+        OK (LAGraph_Matrix_Print (A, LAGraph_SHORT, stdout, msg)) ;
         bool sanitize = (!symmetric) ;
 
         if (files[k].ans_i && files[k].ans_j)
