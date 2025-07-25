@@ -16,8 +16,6 @@
 include_directories ( ${PROJECT_SOURCE_DIR}/src/test/include
     ${PROJECT_SOURCE_DIR}/src/algorithm )
 
-find_package ( OpenMP COMPONENTS C )
-
 file( GLOB DEMO_SOURCES LIST_DIRECTORIES false *_demo.c )
 foreach( demosourcefile ${DEMO_SOURCES} )
     get_filename_component(justname ${demosourcefile} NAME)
@@ -35,5 +33,4 @@ foreach( demosourcefile ${DEMO_SOURCES} )
     if ( NOT NO_LIBM )
         target_link_libraries ( ${demoname} m )
     endif ( )
-    target_link_libraries ( ${demoname} OpenMP::OpenMP_C )
 endforeach( demosourcefile ${DEMO_SOURCES} )

@@ -27,7 +27,6 @@
 //      road:       438804
 
 #include "LAGraph_demo.h"
-#include <omp.h>
 
 // to run just once, with p = omp_get_max_threads() threads
 #define NTHREAD_LIST 1
@@ -101,15 +100,12 @@ int main (int argc, char **argv)
     int ntrials = 3 ;
     // ntrials = 1 ;        // HACK
     printf ("# of trials: %d\n", ntrials) ;
-    printf ("omp max threads %d\n", omp_get_max_threads ( )) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max, nthreads_outer, nthreads_inner ;
     LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, msg)) ;
     nthreads_max = nthreads_outer * nthreads_inner ;
-    printf ("nthreads_outer %d\n", nthreads_outer) ;
-    printf ("nthreads_inner %d\n", nthreads_inner) ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
