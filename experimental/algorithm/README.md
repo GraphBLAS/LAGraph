@@ -22,6 +22,8 @@
 * LAGraph_msf: Minimum spanning forest
 * LAGraph_scc: Strongly connected components
 
+* LAGraph_MaxFlow: maximum flow
+
 * LAGraph_AllKCore: all K-cores of a graph
 * LAGraph_KCore: a single K-core of a graph
 * LAGraph_KCoreDecompose:

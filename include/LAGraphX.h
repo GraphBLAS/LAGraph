@@ -261,6 +261,14 @@ int LAGraph_Incidence_Matrix
 ) ;
 
 LAGRAPHX_PUBLIC
+int LAGraph_Hash_Vector
+(
+    uint64_t *hash,
+    GrB_Vector v,
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
 int LAGraph_FastAssign_Monoid
 (
     // output
@@ -807,7 +815,9 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 LAGRAPHX_PUBLIC
 int LAGraph_msf
 (
-    GrB_Matrix *result, // output: an unsymmetrical matrix, the spanning forest
+    GrB_Matrix *forest_edges, // output: an unsymmetrical matrix, containing
+                        // the edges in the spanning forest
+    GrB_Vector *componentId,  // output: The connected component of each node
     GrB_Matrix A,       // input matrix
     bool sanitize,      // if true, ensure A is symmetric
     char *msg
@@ -1491,6 +1501,20 @@ int LAGraph_coloring_MIS
     LAGraph_Graph G,
     char *msg
 ) ;
+
+LAGRAPHX_PUBLIC
+int LAGr_MaxFlow(
+    //outputs
+    double* f,
+    GrB_Matrix* flow_mtx,
+    //inputs
+    LAGraph_Graph G,
+    GrB_Index src, //source node index
+    GrB_Index sink, // sink node index
+    //inout
+    char* msg
+);
+
 
 #if defined ( __cplusplus )
 }

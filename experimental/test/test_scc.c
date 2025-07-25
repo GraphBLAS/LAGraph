@@ -33,6 +33,8 @@ char filename [LEN+1] ;
 typedef struct
 {
     const char *name ;
+    int cc_count;
+    uint64_t hash;
 }
 matrix_info ;
 
@@ -40,64 +42,82 @@ int scc_cover [7] = { 0, 0, 2, 0, 4, 2, 0 } ;
 
 const matrix_info files [ ] =
 {
-    { "A2.mtx" },
-    { "A.mtx" },
-    { "bcsstk13.mtx" },
-    { "cover.mtx" },
-    { "cover_structure.mtx" },
-    { "cryg2500.mtx" },
-    { "full.mtx" },
-    { "full_noheader.mtx" },
-    { "full_symmetric.mtx" },
-    { "jagmesh7.mtx" },
-    { "karate.mtx" },
-    { "ldbc-cdlp-directed-example.mtx" },
-    { "ldbc-cdlp-undirected-example.mtx" },
-    { "ldbc-directed-example-bool.mtx" },
-    { "ldbc-directed-example.mtx" },
-    { "ldbc-directed-example-unweighted.mtx" },
-    { "ldbc-undirected-example-bool.mtx" },
-    { "ldbc-undirected-example.mtx" },
-    { "ldbc-undirected-example-unweighted.mtx" },
-    { "ldbc-wcc-example.mtx" },
-    { "LFAT5.mtx" },
-    { "LFAT5_two.mtx" },
-    { "matrix_bool.mtx" },
-    { "matrix_fp32.mtx" },
-    { "matrix_fp32_structure.mtx" },
-    { "matrix_fp64.mtx" },
-    { "matrix_int16.mtx" },
-    { "matrix_int32.mtx" },
-    { "matrix_int64.mtx" },
-    { "matrix_int8.mtx" },
-    { "matrix_uint16.mtx" },
-    { "matrix_uint32.mtx" },
-    { "matrix_uint64.mtx" },
-    { "matrix_uint8.mtx" },
-    { "msf1.mtx" },
-    { "msf2.mtx" },
-    { "msf3.mtx" },
-    { "olm1000.mtx" },
-    { "pushpull.mtx" },
-    { "sample2.mtx" },
-    { "sample.mtx" },
-    { "structure.mtx" },
-    { "test_BF.mtx" },
-    { "test_FW_1000.mtx" },
-    { "test_FW_2003.mtx" },
-    { "test_FW_2500.mtx" },
-    { "tree-example.mtx" },
-    { "west0067_jumbled.mtx" },
-    { "west0067.mtx" },
-    { "west0067_noheader.mtx" },
-    { "zenios.mtx" },
-    { "" },
+    { "A2.mtx", 1, 0x2de8d717be626313},
+    { "A.mtx", 1, 0x2de8d717be626313},
+    { "bcsstk13.mtx", 1, 0x41d903f08b46b543},
+    { "cover.mtx", 3, 0x30ae8cb78a807691},
+    { "cover_structure.mtx", 3, 0x30ae8cb78a807691},
+    { "cryg2500.mtx", 1, 0xd1cb8e3cc6be967},
+    { "full.mtx", 1, 0x99971e4f016b4644},
+    { "full_noheader.mtx", 1, 0x99971e4f016b4644},
+    { "full_symmetric.mtx", 1, 0x278859fec1de1f7f},
+    { "jagmesh7.mtx", 1, 0x66b315eea17941c8},
+    { "karate.mtx", 1, 0x8bad7c50644c4aa9},
+    { "ldbc-cdlp-directed-example.mtx", 2, 0x3a61ac294b7bb114},
+    { "ldbc-cdlp-undirected-example.mtx", 1, 0x4072e255fd8e310a},
+    { "ldbc-directed-example-bool.mtx", 7, 0xc66f5ecf1b7f6876},
+    { "ldbc-directed-example.mtx", 7, 0xc66f5ecf1b7f6876},
+    { "ldbc-directed-example-unweighted.mtx", 7, 0xc66f5ecf1b7f6876},
+    { "ldbc-undirected-example-bool.mtx", 1, 0xf53db7dbbeff3283},
+    { "ldbc-undirected-example.mtx", 1, 0xf53db7dbbeff3283},
+    { "ldbc-undirected-example-unweighted.mtx", 1, 0xf53db7dbbeff3283},
+    { "ldbc-wcc-example.mtx", 1, 0x36a78022528a2101},
+    { "LFAT5.mtx", 3, 0x79d4d8de0a22a863},
+    { "LFAT5_two.mtx", 6, 0xac369d0362d73d6},
+    { "matrix_bool.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_fp32.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_fp32_structure.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_fp64.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_int16.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_int32.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_int64.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_int8.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_uint16.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_uint32.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_uint64.mtx", 3, 0x30ae8cb78a807691},
+    { "matrix_uint8.mtx", 3, 0x30ae8cb78a807691},
+    { "msf1.mtx", 4, 0x6445d984131a9555},
+    { "msf2.mtx", 8, 0x72d532720c54b673},
+    { "msf3.mtx", 5, 0xf57eb057beb5a5c7},
+    { "olm1000.mtx", 1, 0x15cf9ea2db88ab18},
+    { "pushpull.mtx", 1, 0x1816384cd04f7e01},
+    { "sample2.mtx", 1, 0x4072e255fd8e310a},
+    { "sample.mtx", 8, 0x72d532720c54b673},
+    { "structure.mtx", 3, 0x30ae8cb78a807691},
+    { "test_BF.mtx", 3, 0x30ae8cb78a807691},
+    { "test_FW_1000.mtx", 1, 0x15cf9ea2db88ab18},
+    { "test_FW_2003.mtx", 485, 0xf79ad45d3a704eec},
+    { "test_FW_2500.mtx", 646, 0x4fa83d60352e7e19},
+    { "tree-example.mtx", 1, 0x8857b82baeba129},
+    { "west0067_jumbled.mtx", 1, 0xa861dc7526128ac7},
+    { "west0067.mtx", 1, 0xa861dc7526128ac7},
+    { "west0067_noheader.mtx", 1, 0xa861dc7526128ac7},
+    { "zenios.mtx", 1391, 0x15b2b99a80c3480e},
+    { "", 0, 0},
 } ;
+
+//------------------------------------------------------------------------------
+// count_connected_components: count the # of components in a component vector
+//------------------------------------------------------------------------------
+
+int count_connected_components (GrB_Vector C)
+{
+    GrB_Index n = 0 ;
+    OK (GrB_Vector_size (&n, C)) ;
+    int ncomponents = 0 ;
+    for (int i = 0 ; i < n ; i++)
+    {
+        int64_t comp = -1 ;
+        int result = GrB_Vector_extractElement (&comp, C, i) ;
+        if (result == GrB_SUCCESS && comp == i) ncomponents++ ;
+    }
+    return (ncomponents) ;
+}
 
 //****************************************************************************
 void test_scc (void)
 {
-    #if LAGRAPH_SUITESPARSE
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init (msg) ;
 
     for (int k = 0 ; ; k++)
@@ -114,41 +134,48 @@ void test_scc (void)
         OK (LAGraph_MMRead (&A, f, msg)) ;
         fclose (f) ;
 
-        // construct a directed graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
-        TEST_CHECK (A == NULL) ;
-
         GrB_Vector c = NULL ;
 
-        // find the strongly connected components with LAGraph_scc
-        OK (LAGraph_scc (&c, G->A, msg)) ;
-
-        GrB_Index n ;
-        OK (GrB_Vector_size (&n, c)) ;
-        LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
-
-        // check result c for cover
-        if (strcmp (aname, "cover.mtx") == 0)
+        for (int jit = 0 ; jit <= 1 ; jit++)
         {
-            GrB_Vector cgood = NULL ;
-            OK (GrB_Vector_new (&cgood, GrB_UINT64, n)) ;
-            for (int k = 0 ; k < n ; k++)
-            {
-                OK (GrB_Vector_setElement (cgood, scc_cover [k], k)) ;
-            }
-            OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
-            printf ("\nscc (known result):\n") ;
-            OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;
-            bool ok = false ;
-            OK (LAGraph_Vector_IsEqual (&ok, c, cgood, msg)) ;
-            TEST_CHECK (ok) ;
-            OK (GrB_free (&cgood)) ;
-        }
+            OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL,
+                jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+            // find the strongly connected components with LAGraph_scc
+            // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+            OK (LAGraph_scc (&c, A, msg)) ;
+            // GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
 
-        printf ("\nscc:\n") ;
-        OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
-        OK (GrB_free (&c)) ;
-        OK (LAGraph_Delete (&G, msg)) ;
+            GrB_Index n ;
+            OK (GrB_Vector_size (&n, c)) ;
+            LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
+
+            // check result c for cover
+            if (strcmp (aname, "cover.mtx") == 0)
+            {
+                GrB_Vector cgood = NULL ;
+                OK (GrB_Vector_new (&cgood, GrB_UINT64, n)) ;
+                for (int k = 0 ; k < n ; k++)
+                {
+                    OK (GrB_Vector_setElement (cgood, scc_cover [k], k)) ;
+                }
+                OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
+                printf ("\nscc (known result):\n") ;
+                OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;
+                bool ok = false ;
+                OK (LAGraph_Vector_IsEqual (&ok, c, cgood, msg)) ;
+                TEST_CHECK (ok) ;
+                OK (GrB_free (&cgood)) ;
+            }
+            int result_cc_count = count_connected_components(c);
+            TEST_CHECK(result_cc_count == files[k].cc_count);
+            OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
+            uint64_t hash = 0;
+            int hash_info = LAGraph_Hash_Vector(&hash, c, msg); 
+            OK (hash_info);
+            TEST_CHECK(hash == files[k].hash);
+            OK (GrB_free (&c)) ;
+        }
+        OK (GrB_free (&A)) ;
     }
 
     LAGraph_Finalize (msg) ;
@@ -161,7 +188,7 @@ void test_scc (void)
 
 void test_errors (void)
 {
-    #if LAGRAPH_SUITESPARSE
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init (msg) ;
 
     GrB_Vector c = NULL ;

@@ -19,7 +19,7 @@
 #
 # To compile with an alternate compiler:
 #
-#       make CC=gcc CXX=g++
+#       make CC=gcc CXX=g++ FC=gfortran
 #
 # To compile/install for system-wide usage (typically in /usr/local):
 #
@@ -48,28 +48,30 @@
 
 JOBS ?= 8
 
+F = -DSUITESPARSE_USE_FORTRAN=OFF
+
 default: library
 
 library:
-	( cd build && cmake $(CMAKE_OPTIONS) .. && cmake --build . --config Release -j${JOBS} )
+	( cd build && cmake $(F) $(CMAKE_OPTIONS) .. && cmake --build . --config Release -j${JOBS} )
 
 # install only in SuiteSparse/lib and SuiteSparse/include
 local:
-	( cd build && cmake $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DSUITESPARSE_LOCAL_INSTALL=1 .. && cmake --build . --config Release -j${JOBS} )
+	( cd build && cmake $(F) $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DSUITESPARSE_LOCAL_INSTALL=1 .. && cmake --build . --config Release -j${JOBS} )
 
 # install CMAKE_INSTALL_PREFIX
 global:
-	( cd build && cmake $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DSUITESPARSE_LOCAL_INSTALL=0 .. && cmake --build . --config Release -j${JOBS} )
+	( cd build && cmake $(F) $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DSUITESPARSE_LOCAL_INSTALL=0 .. && cmake --build . --config Release -j${JOBS} )
 
 vanilla:
-	( cd build && cmake $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DLAGRAPH_VANILLA=1 .. && cmake --build . --config Release -j${JOBS} )
+	( cd build && cmake $(F) $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DLAGRAPH_VANILLA=1 .. && cmake --build . --config Release -j${JOBS} )
 
 # compile with -g for debugging
 debug:
-	( cd build && cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . --config Release -j${JOBS} )
+	( cd build && cmake $(F) $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . --config Release -j${JOBS} )
 
 vanilla_debug:
-	( cd build && cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug -USUITESPARSE_PKGFILEDIR -DLAGRAPH_VANILLA=1 .. && cmake --build . --config Release -j${JOBS} )
+	( cd build && cmake $(F) $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug -USUITESPARSE_PKGFILEDIR -DLAGRAPH_VANILLA=1 .. && cmake --build . --config Release -j${JOBS} )
 
 all: library
 
@@ -83,7 +85,7 @@ verbose_test: library
 # dlopen and dlinit), and run the tests with valgrind.  For best results,
 # compile GraphBLAS without OpenMP and with the JIT disabled.
 memcheck: distclean
-	( cd build && cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug -DLAGRAPH_USE_OPENMP=0 .. )
+	( cd build && cmake $(F) $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug -DLAGRAPH_USE_OPENMP=0 .. )
 	( cd build && cmake --build . --config Release -j${JOBS} )
 	( cd build && ctest . -T memcheck )
 
@@ -96,7 +98,7 @@ remake:
 
 # just run cmake to set things up
 setup:
-	( cd build && cmake $(CMAKE_OPTIONS) .. )
+	( cd build && cmake $(F) $(CMAKE_OPTIONS) .. )
 
 install:
 	( cd build && cmake --install . )
@@ -107,7 +109,7 @@ uninstall:
 
 # clean, compile, and run test coverage
 cov: distclean
-	( cd build && cmake -DCOVERAGE=1 .. && cmake --build . --config Release -j${JOBS} && cmake --build . --target test_coverage )
+	( cd build && cmake $(F) -DCOVERAGE=1 .. && cmake --build . --config Release -j${JOBS} && cmake --build . --target test_coverage )
 
 # remove all files not in the distribution
 clean: distclean

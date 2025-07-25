@@ -102,9 +102,9 @@ int main (int argc, char **argv)
     int ntrials = 5 ;
     // ntrials = 1 ;        // HACK
     printf ("# of trials: %d\n", ntrials) ;
-    printf ("sizeof (clock_t): %d\n", sizeof (clock_t)) ;
-    printf ("sizeof (long long int): %d\n", sizeof (long long int)) ;
-    printf ("sizeof (long): %d\n", sizeof (long)) ;
+    printf ("sizeof (clock_t): %d\n", (int) sizeof (clock_t)) ;
+    printf ("sizeof (long long int): %d\n", (int) sizeof (long long int)) ;
+    printf ("sizeof (long): %d\n", (int) sizeof (long)) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
