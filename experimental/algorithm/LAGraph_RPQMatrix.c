@@ -61,8 +61,8 @@ static GrB_Info LAGraph_RpqMatrixLor(RpqMatrixPlan *plan, char *msg)
     LG_ASSERT(lhs != NULL, GrB_NULL_POINTER);
     LG_ASSERT(rhs != NULL, GrB_NULL_POINTER);
 
-    OK(LAGraph_RpqMatrix(lhs, msg));
-    OK(LAGraph_RpqMatrix(rhs, msg));
+    OK(LAGraph_RPQMatrix(lhs, msg));
+    OK(LAGraph_RPQMatrix(rhs, msg));
 
     GrB_Matrix lhs_mat = lhs->res_mat;
     GrB_Matrix rhs_mat = rhs->res_mat;
@@ -75,6 +75,7 @@ static GrB_Info LAGraph_RpqMatrixLor(RpqMatrixPlan *plan, char *msg)
 
 static GrB_Info LAGraph_RpqMatrixConcat(RpqMatrixPlan *plan, char *msg)
 {
+
     LG_ASSERT(plan != NULL, GrB_NULL_POINTER);
     LG_ASSERT(plan->op == RPQ_MATRIX_OP_CONCAT, GrB_INVALID_VALUE);
     LG_ASSERT(plan->res_mat == NULL, GrB_INVALID_VALUE);
@@ -82,17 +83,36 @@ static GrB_Info LAGraph_RpqMatrixConcat(RpqMatrixPlan *plan, char *msg)
     RpqMatrixPlan *lhs = plan->lhs;
     RpqMatrixPlan *rhs = plan->rhs;
 
+    GrB_Index nvalsA, nvalsB;
+    GrB_Matrix_nvals(&nvalsA, lhs->mat);
+    GrB_Matrix_nvals(&nvalsB, rhs->mat);
+    fprintf(stderr, "\nDEBUG: A:%lu and B:%lu in Concat\n", nvalsA, nvalsB);
+
     LG_ASSERT(lhs != NULL, GrB_NULL_POINTER);
     LG_ASSERT(rhs != NULL, GrB_NULL_POINTER);
 
-    OK(LAGraph_RpqMatrix(lhs, msg));
-    OK(LAGraph_RpqMatrix(rhs, msg));
+    OK(LAGraph_RPQMatrix(lhs, msg));
+    OK(LAGraph_RPQMatrix(rhs, msg));
 
     GrB_Matrix lhs_mat = lhs->res_mat;
     GrB_Matrix rhs_mat = rhs->res_mat;
 
-    GRB_TRY(GrB_mxm(plan->res_mat, GrB_NULL, GrB_NULL,
+    GrB_Matrix_nvals(&nvalsA, lhs_mat);
+    GrB_Matrix_nvals(&nvalsB, rhs_mat);
+    fprintf(stderr, "\nDEBUG: A:%lu and B:%lu in Concat after traversal\n", nvalsA, nvalsB);
+    fprintf(stderr, "\nDEBUG: before mxm\n");
+
+    GrB_Index width, height;
+    GrB_Matrix_nrows(&height, rhs_mat);
+    GrB_Matrix_ncols(&width, lhs_mat);
+    GrB_Matrix res;
+    GrB_Matrix_new(&res, GrB_BOOL, height, width);
+    GRB_TRY(GrB_mxm(res, GrB_NULL, GrB_NULL,
                     sr, lhs_mat, rhs_mat, GrB_DESC_R));
+    // GrB_mxm(plan->res_mat, GrB_NULL, GrB_NULL, GrB_LOR_LAND_SEMIRING_BOOL, lhs_mat, rhs_mat, GrB_NULL);
+    plan->res_mat = res;
+    GrB_Matrix_nvals(&nvalsA, plan->res_mat);
+    fprintf(stderr, "\nDEBUG: A:%lu after mxm in Concat\n", nvalsA);
 
     return (GrB_SUCCESS);
 }
@@ -110,7 +130,7 @@ static GrB_Info LAGraph_RpqMatrixKleene(RpqMatrixPlan *plan, char *msg)
     LG_ASSERT(lhs == NULL, GrB_NULL_POINTER);
     LG_ASSERT(rhs != NULL, GrB_NULL_POINTER);
 
-    OK(LAGraph_RpqMatrix(rhs, msg));
+    OK(LAGraph_RPQMatrix(rhs, msg));
 
     GrB_Matrix B = rhs->res_mat;
 
@@ -144,7 +164,7 @@ static GrB_Info LAGraph_RpqMatrixKleene(RpqMatrixPlan *plan, char *msg)
         // T = S * (B + E)
         GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n));
         GRB_TRY(GrB_mxm(T, GrB_NULL, GrB_NULL,
-                    sr, S, BPE, GrB_DESC_R));
+                        sr, S, BPE, GrB_DESC_R));
 
         GRB_TRY(GrB_Matrix_nvals(&nnz_T, T));
         if (nnz_T != nnz_S)
@@ -167,15 +187,23 @@ static GrB_Info LAGraph_RpqMatrixKleene(RpqMatrixPlan *plan, char *msg)
     return (GrB_SUCCESS);
 }
 
-GrB_Info LAGraph_RpqMatrix(RpqMatrixPlan *plan, char *msg)
+GrB_Info LAGraph_RPQMatrix(RpqMatrixPlan *plan, char *msg)
 {
     if (plan->res_mat != NULL)
+    {
+        GrB_Index result;
+        GrB_Matrix_nvals(&result, plan->res_mat);
+        fprintf(stderr, "\nDEBUG: res_mat in LAGraph_RPQMatrix: %lu", result);
         return (GrB_SUCCESS);
+    }
 
     switch (plan->op)
     {
     case RPQ_MATRIX_OP_LABEL:
         LG_ASSERT(plan->lhs == NULL && plan->rhs == NULL, GrB_INVALID_VALUE);
+        GrB_Index result;
+        GrB_Matrix_nvals(&result, plan->mat);
+        fprintf(stderr, "\nDEBUG: res_mat in LAGraph_RPQMatrix switch: %lu", result);
         plan->res_mat = plan->mat;
         return (GrB_SUCCESS);
     case RPQ_MATRIX_OP_LOR:
@@ -187,6 +215,9 @@ GrB_Info LAGraph_RpqMatrix(RpqMatrixPlan *plan, char *msg)
     default:
         LG_ASSERT(false, GrB_INVALID_VALUE);
     }
+    GrB_Index result;
+    GrB_Matrix_nvals(&result, plan->res_mat);
+    fprintf(stderr, "\nDEBUG: res_mat in LAGraph_RPQMatrix end: %lu", result);
     return (GrB_SUCCESS);
 }
 

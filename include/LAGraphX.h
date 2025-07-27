@@ -163,11 +163,12 @@ typedef struct RpqMatrixPlan
 } RpqMatrixPlan;
 
 LAGRAPHX_PUBLIC
-GrB_Info LAGraph_Rpq_Matrix(
+GrB_Info LAGraph_RPQMatrix(
     RpqMatrixPlan *plan,
      char *msg
     );
-
+LAGRAPHX_PUBLIC
+GrB_Info LAGraph_RpqMatrix_initialize();
 LAGRAPHX_PUBLIC
 int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
 (
@@ -850,29 +851,6 @@ int LAGraph_scc (
 //****************************************************************************
 LAGRAPHX_PUBLIC
 int LAGraph_RegularPathQuery    // nodes reachable from the starting by the
-                                // path satisfying regular expression
-(
-    // output:
-    GrB_Vector *reachable,      // reachable(i) = true if node i is reachable
-                                // from one of the starting nodes by a path
-                                // satisfying regular constraints
-    // input:
-    LAGraph_Graph *R,           // input non-deterministic finite automaton
-                                // adjacency matrix decomposition
-    size_t nl,                  // total label count, # of matrices graph and
-                                // NFA adjacency matrix decomposition
-    const GrB_Index *QS,        // starting states in NFA
-    size_t nqs,                 // number of starting states in NFA
-    const GrB_Index *QF,        // final states in NFA
-    size_t nqf,                 // number of final states in NFA
-    LAGraph_Graph *G,           // input graph adjacency matrix decomposition
-    const GrB_Index *S,         // source vertices to start searching paths
-    size_t ns,                  // number of source vertices
-    char *msg                   // LAGraph output message
-);
-//****************************************************************************
-LAGRAPHX_PUBLIC
-int LAGraph_RPQMatrix    // nodes reachable from the starting by the
                                 // path satisfying regular expression
 (
     // output:

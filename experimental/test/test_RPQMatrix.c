@@ -42,7 +42,7 @@ char msg[LAGRAPH_MSG_LEN];
 void test_RPQMatrixConc(void)
 {
     LAGraph_Init(msg);
-    fprintf(stderr,"start\n");
+    LAGraph_RpqMatrix_initialize();
     const char *nameA = "rpq_data/a.mtx";
     const char *nameB = "rpq_data/b.mtx";
     char filenameA [LEN+1] ;
@@ -52,13 +52,16 @@ void test_RPQMatrixConc(void)
     FILE *fA = fopen(filenameA, "r");
     FILE *fB = fopen(filenameB, "r");
     GrB_Matrix A, B;
-    fprintf(stderr,"before read\n");
-
     OK(LAGraph_MMRead(&A, fA, msg));
     OK(LAGraph_MMRead(&B, fB, msg));
     OK(fclose(fA));
     OK(fclose(fB));
-    fprintf(stderr,"before init\n");
+
+    GrB_Index nvalsA, nvalsB;
+    GrB_Matrix_nvals(&nvalsA,A);
+    GrB_Matrix_nvals(&nvalsB,B);
+    fprintf(stderr,"\nDEBUG: A:%lu and B:%lu\n",nvalsA,nvalsB);
+
     RpqMatrixPlan graphA = {
         .op = RPQ_MATRIX_OP_LABEL,
         .lhs = NULL,
@@ -80,11 +83,20 @@ void test_RPQMatrixConc(void)
         .mat = NULL,
         .res_mat = NULL
     };
-    fprintf(stderr,"before run\n");
-    GrB_Info res = LAGraph_RpqMatrix(&graphConcat,msg);
+    RpqMatrixPlan graphKleene = {
+        .op = RPQ_MATRIX_OP_KLEENE,
+        .lhs = NULL,
+        .rhs = &graphConcat,
+        .mat = NULL,
+        .res_mat = NULL
+    };    
+    GrB_Index expected_nvasl = 3;
+    GrB_Info res = LAGraph_RPQMatrix(&graphKleene,msg);
     GrB_Matrix result_matrix = graphConcat.res_mat;
     GrB_Index result;
     GrB_Matrix_nvals(&result,result_matrix);
+    fprintf(stderr,"\nDEBUG: result: %lu",result);
+    TEST_CHECK(result == expected_nvasl);
     LAGraph_Finalize(msg);
 }
 
