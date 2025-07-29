@@ -1494,26 +1494,6 @@ int LAGraph_Louvain
     char* msg
 );
 
-LAGRAPHX_PUBLIC
-int LAGraph_Louvain2
-(
-    //ouptut
-    GrB_Matrix *S_result,
-    // input
-    LAGraph_Graph G,
-    char* msg
-);
-
-
-LAGRAPHX_PUBLIC
-int LAGraph_Louvain
-(
-    //ouptut
-    GrB_Matrix S,
-    // input
-    LAGraph_Graph G,
-    char* msg
-);
 
 LAGRAPHX_PUBLIC
 int LAGraph_Louvain2
