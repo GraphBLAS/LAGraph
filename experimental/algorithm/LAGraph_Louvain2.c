@@ -348,7 +348,7 @@ int LAGraph_Louvain2(
         // break;
         // printf("changed: %i\n", changed);
     }
-    // GxB_print(S,5);
+    GxB_print(S,5);
     double Q;
     double gamma = 1;
     GRB_TRY(LAGr_Modularity2(&Q, gamma, A, S, msg));
