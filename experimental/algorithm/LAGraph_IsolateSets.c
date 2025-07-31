@@ -31,6 +31,7 @@ int LAGraph_IsolateSets(
     uint64_t seed,
     char* msg
 ){
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LG_CLEAR_MSG ;
 
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
@@ -104,5 +105,8 @@ int LAGraph_IsolateSets(
     // printf("done iset");
     iset = NULL;
     LG_FREE_ALL;
+#else
+    LG_ASSERT(false, GrB_NOT_IMPLEMENTED);
+#endif
     return 0;
 }

@@ -138,6 +138,7 @@ int LAGraph_Louvain2(
     LAGraph_Graph G,
     char *msg)
 {
+#if LG_SUITESPARSE_GRAPHBLAS_V10
     LG_CLEAR_MSG;
 
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
@@ -357,5 +358,8 @@ int LAGraph_Louvain2(
     (*S_result) = S;
     S = NULL;
     LG_FREE_ALL;
+#else
+    LG_ASSERT(false, GrB_NOT_IMPLEMENTED);
+#endif
     return 0;
 }
