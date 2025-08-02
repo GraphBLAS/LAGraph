@@ -257,7 +257,7 @@ static GrB_Info LAGraph_RpqMatrixKleene_R(RpqMatrixPlan *plan, char *msg)
     OK(LAGraph_RPQMatrix(lhs, msg));
 
     GrB_Matrix B = lhs->res_mat;
-    GrB_Matrix A = rhs->res_mat
+    GrB_Matrix A = rhs->res_mat;
 
                        // Creating identity matrix.
                        GrB_Index n;
@@ -335,7 +335,7 @@ GrB_Info LAGraph_RPQMatrix(RpqMatrixPlan *plan, char *msg)
     case RPQ_MATRIX_OP_KLEENE_L:
         return LAGraph_RpqMatrixKleene_L(plan, msg);
     case RPQ_MATRIX_OP_KLEENE_R:
-        return LAGraph_RPQMatrixKleene_R(plan, msg);
+        return LAGraph_RpqMatrixKleene_R(plan, msg);
     default:
         LG_ASSERT(false, GrB_INVALID_VALUE);
     }
@@ -345,5 +345,5 @@ GrB_Info LAGraph_RPQMatrix(RpqMatrixPlan *plan, char *msg)
 GrB_Info LAGraph_RpqMatrix_initialize()
 {
     sr = GrB_LOR_LAND_SEMIRING_BOOL;
-    op = GrB_LOR;
+    op = GxB_LOR_BOOL_MONOID;
 }
