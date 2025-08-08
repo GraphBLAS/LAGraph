@@ -27,6 +27,7 @@
 #include "LG_internal.h"
 #include <LAGraph.h>
 
+#define DBG
 #if LG_SUITESPARSE_GRAPHBLAS_V10
 
 //------------------------------------------------------------------------------
@@ -1057,7 +1058,19 @@ int LAGr_MaxFlow
 
     // reduce Delta to delta_vec
     // delta_vec = sum (Delta), summing up each row of Delta
-    GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, Delta, GrB_DESC_T0));
+    GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_MONOID_FP64, Delta, GrB_DESC_T0));
+
+    double total_delta ;
+
+    GRB_TRY(GrB_reduce(&total_delta, NULL, GrB_PLUS_MONOID_FP64, delta_vec, NULL));
+    printf ("iter %ld, delta %g\n", iter, total_delta) ;
+    GxB_print (delta_vec, 5) ;
+    if (iter > 1000)
+    {
+        GxB_print (R, 2) ;
+        GxB_print (Delta, 5) ;
+        LG_ASSERT (false, LAGRAPH_CONVERGENCE_FAILURE) ;
+    }
 
     // add delta_vec to e
     // e<struct(delta_vec)> += delta_vec
