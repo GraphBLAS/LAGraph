@@ -974,7 +974,7 @@ int LAGr_MaxFlow
     // Part 1: global relabeling
     //--------------------------------------------------------------------------
 
-    if ((iter > 0) && (flow_mtx != NULL) && (iter % 12 == 0))
+    if ((iter > 0) && (flow_mtx == NULL) && (iter % 12 == 0))
     {
       LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, &d, &lvl, msg)) ;
       // delete nodes in e that cannot be reached from the sink
