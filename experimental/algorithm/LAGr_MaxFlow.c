@@ -969,6 +969,7 @@ int LAGr_MaxFlow
 
   for (int64_t iter = 0 ; n_active > 0 ; iter++)
   {
+  printf ("iter: %ld, n_active %ld\n", iter, n_active) ;
 
     //--------------------------------------------------------------------------
     // Part 1: global relabeling
@@ -976,6 +977,7 @@ int LAGr_MaxFlow
 
     if ((iter > 0) && (flow_mtx == NULL) && (iter % 12 == 0))
     {
+  printf ("relabel at : %ld\n", iter) ;
       LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, &d, &lvl, msg)) ;
       // delete nodes in e that cannot be reached from the sink
       // e<!struct(lvl)> = empty scalar
@@ -1078,6 +1080,8 @@ int LAGr_MaxFlow
 
     // augment maxflow for all active nodes
     LG_TRY (LG_augment_maxflow (f, e, sink, src_and_sink, &n_active, msg)) ;
+
+  printf ("end of iter: %ld, n_active %ld\n", iter, n_active) ;
   }
 
   //----------------------------------------------------------------------------

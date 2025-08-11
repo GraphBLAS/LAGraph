@@ -7,6 +7,7 @@
 
 #define LAGRAPH_CATCH(info)                                                    \
   {                                                                            \
+    printf ("result: %d %s\n", info, msg) ;                                    \
     LAGraph_Delete(&G, msg);                                                   \
     return (info);                                                             \
   }
@@ -21,7 +22,8 @@ int main (int argc, char ** argv){
   LAGraph_Graph G = NULL;
 
   double flow = 0;
-  GrB_Index T=0, S=0;
+  GrB_Index T=0, S=0, nflow ;
+  GrB_Matrix flow_matrix = NULL ;
 
   LAGRAPH_TRY(LAGraph_Init(msg));
 
@@ -60,6 +62,15 @@ int main (int argc, char ** argv){
   time = LAGraph_WallClockTime() - time;
   printf("Time for LAGraph_MaxFlow: %g sec\n", time);
   printf("Max Flow is: %lf\n", flow);
+
+  printf("Starting max flow from %ld to %ld, with flow_matrix returned\n", S, T);
+  time = LAGraph_WallClockTime();
+  LAGRAPH_TRY(LAGr_MaxFlow(&flow, &flow_matrix, G, S, T, msg));
+  time = LAGraph_WallClockTime() - time;
+  printf("Time for LAGraph_MaxFlow with flow matrix: %g sec\n", time);
+  printf("Max Flow is: %lf\n", flow);
+  GRB_TRY (GrB_Matrix_nvals (&nflow, flow_matrix)) ;
+  printf("# of entries in flow matrix: %lu\n", nflow);
 
   LAGraph_Delete(&G, msg);
   LAGRAPH_TRY(LAGraph_Finalize(msg));

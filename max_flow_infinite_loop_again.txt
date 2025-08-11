@@ -1,0 +1,2115 @@
+matrix: /home/davis/matrices/com-Youtube.mtx
+[.mtx]
+Reading matrix market file: /home/davis/matrices/com-Youtube.mtx
+A converted to 32-bit
+read time: 0.375306
+read in the problem
+cached AT, time 1.76951e-07
+cached EMin, time 3.69069e-05
+nthreads: 1 32
+Starting max flow from 4 to 275
+iter: 0, n_active 192
+end of iter: 0, n_active 138
+iter: 1, n_active 138
+end of iter: 1, n_active 95
+iter: 2, n_active 95
+end of iter: 2, n_active 60
+iter: 3, n_active 60
+end of iter: 3, n_active 47
+iter: 4, n_active 47
+end of iter: 4, n_active 35
+iter: 5, n_active 35
+end of iter: 5, n_active 33
+iter: 6, n_active 33
+end of iter: 6, n_active 30
+iter: 7, n_active 30
+end of iter: 7, n_active 26
+iter: 8, n_active 26
+end of iter: 8, n_active 19
+iter: 9, n_active 19
+end of iter: 9, n_active 17
+iter: 10, n_active 17
+end of iter: 10, n_active 14
+iter: 11, n_active 14
+end of iter: 11, n_active 13
+iter: 12, n_active 13
+relabel at : 12
+end of iter: 12, n_active 5
+iter: 13, n_active 5
+end of iter: 13, n_active 3
+iter: 14, n_active 3
+end of iter: 14, n_active 2
+iter: 15, n_active 2
+end of iter: 15, n_active 2
+iter: 16, n_active 2
+end of iter: 16, n_active 2
+iter: 17, n_active 2
+end of iter: 17, n_active 2
+iter: 18, n_active 2
+end of iter: 18, n_active 4
+iter: 19, n_active 4
+end of iter: 19, n_active 4
+iter: 20, n_active 4
+end of iter: 20, n_active 2
+iter: 21, n_active 2
+end of iter: 21, n_active 0
+Time for LAGraph_MaxFlow: 0.149183 sec
+Max Flow is: 154.000000
+Starting max flow from 4 to 275, with flow_matrix returned
+iter: 0, n_active 192
+end of iter: 0, n_active 138
+iter: 1, n_active 138
+end of iter: 1, n_active 95
+iter: 2, n_active 95
+end of iter: 2, n_active 60
+iter: 3, n_active 60
+end of iter: 3, n_active 47
+iter: 4, n_active 47
+end of iter: 4, n_active 35
+iter: 5, n_active 35
+end of iter: 5, n_active 33
+iter: 6, n_active 33
+end of iter: 6, n_active 30
+iter: 7, n_active 30
+end of iter: 7, n_active 26
+iter: 8, n_active 26
+end of iter: 8, n_active 19
+iter: 9, n_active 19
+end of iter: 9, n_active 17
+iter: 10, n_active 17
+end of iter: 10, n_active 14
+iter: 11, n_active 14
+end of iter: 11, n_active 13
+iter: 12, n_active 13
+end of iter: 12, n_active 12
+iter: 13, n_active 12
+end of iter: 13, n_active 11
+iter: 14, n_active 11
+end of iter: 14, n_active 9
+iter: 15, n_active 9
+end of iter: 15, n_active 10
+iter: 16, n_active 10
+end of iter: 16, n_active 9
+iter: 17, n_active 9
+end of iter: 17, n_active 9
+iter: 18, n_active 9
+end of iter: 18, n_active 9
+iter: 19, n_active 9
+end of iter: 19, n_active 9
+iter: 20, n_active 9
+end of iter: 20, n_active 9
+iter: 21, n_active 9
+end of iter: 21, n_active 9
+iter: 22, n_active 9
+end of iter: 22, n_active 9
+iter: 23, n_active 9
+end of iter: 23, n_active 9
+iter: 24, n_active 9
+end of iter: 24, n_active 9
+iter: 25, n_active 9
+end of iter: 25, n_active 9
+iter: 26, n_active 9
+end of iter: 26, n_active 8
+iter: 27, n_active 8
+end of iter: 27, n_active 8
+iter: 28, n_active 8
+end of iter: 28, n_active 7
+iter: 29, n_active 7
+end of iter: 29, n_active 7
+iter: 30, n_active 7
+end of iter: 30, n_active 7
+iter: 31, n_active 7
+end of iter: 31, n_active 7
+iter: 32, n_active 7
+end of iter: 32, n_active 7
+iter: 33, n_active 7
+end of iter: 33, n_active 7
+iter: 34, n_active 7
+end of iter: 34, n_active 7
+iter: 35, n_active 7
+end of iter: 35, n_active 7
+iter: 36, n_active 7
+end of iter: 36, n_active 7
+iter: 37, n_active 7
+end of iter: 37, n_active 7
+iter: 38, n_active 7
+end of iter: 38, n_active 7
+iter: 39, n_active 7
+end of iter: 39, n_active 7
+iter: 40, n_active 7
+end of iter: 40, n_active 7
+iter: 41, n_active 7
+end of iter: 41, n_active 7
+iter: 42, n_active 7
+end of iter: 42, n_active 7
+iter: 43, n_active 7
+end of iter: 43, n_active 7
+iter: 44, n_active 7
+end of iter: 44, n_active 7
+iter: 45, n_active 7
+end of iter: 45, n_active 7
+iter: 46, n_active 7
+end of iter: 46, n_active 7
+iter: 47, n_active 7
+end of iter: 47, n_active 7
+iter: 48, n_active 7
+end of iter: 48, n_active 7
+iter: 49, n_active 7
+end of iter: 49, n_active 7
+iter: 50, n_active 7
+end of iter: 50, n_active 7
+iter: 51, n_active 7
+end of iter: 51, n_active 7
+iter: 52, n_active 7
+end of iter: 52, n_active 7
+iter: 53, n_active 7
+end of iter: 53, n_active 7
+iter: 54, n_active 7
+end of iter: 54, n_active 7
+iter: 55, n_active 7
+end of iter: 55, n_active 7
+iter: 56, n_active 7
+end of iter: 56, n_active 7
+iter: 57, n_active 7
+end of iter: 57, n_active 7
+iter: 58, n_active 7
+end of iter: 58, n_active 7
+iter: 59, n_active 7
+end of iter: 59, n_active 7
+iter: 60, n_active 7
+end of iter: 60, n_active 7
+iter: 61, n_active 7
+end of iter: 61, n_active 7
+iter: 62, n_active 7
+end of iter: 62, n_active 7
+iter: 63, n_active 7
+end of iter: 63, n_active 7
+iter: 64, n_active 7
+end of iter: 64, n_active 7
+iter: 65, n_active 7
+end of iter: 65, n_active 7
+iter: 66, n_active 7
+end of iter: 66, n_active 7
+iter: 67, n_active 7
+end of iter: 67, n_active 7
+iter: 68, n_active 7
+end of iter: 68, n_active 7
+iter: 69, n_active 7
+end of iter: 69, n_active 7
+iter: 70, n_active 7
+end of iter: 70, n_active 7
+iter: 71, n_active 7
+end of iter: 71, n_active 7
+iter: 72, n_active 7
+end of iter: 72, n_active 7
+iter: 73, n_active 7
+end of iter: 73, n_active 7
+iter: 74, n_active 7
+end of iter: 74, n_active 7
+iter: 75, n_active 7
+end of iter: 75, n_active 7
+iter: 76, n_active 7
+end of iter: 76, n_active 7
+iter: 77, n_active 7
+end of iter: 77, n_active 7
+iter: 78, n_active 7
+end of iter: 78, n_active 7
+iter: 79, n_active 7
+end of iter: 79, n_active 7
+iter: 80, n_active 7
+end of iter: 80, n_active 7
+iter: 81, n_active 7
+end of iter: 81, n_active 7
+iter: 82, n_active 7
+end of iter: 82, n_active 7
+iter: 83, n_active 7
+end of iter: 83, n_active 7
+iter: 84, n_active 7
+end of iter: 84, n_active 7
+iter: 85, n_active 7
+end of iter: 85, n_active 7
+iter: 86, n_active 7
+end of iter: 86, n_active 7
+iter: 87, n_active 7
+end of iter: 87, n_active 7
+iter: 88, n_active 7
+end of iter: 88, n_active 7
+iter: 89, n_active 7
+end of iter: 89, n_active 7
+iter: 90, n_active 7
+end of iter: 90, n_active 7
+iter: 91, n_active 7
+end of iter: 91, n_active 7
+iter: 92, n_active 7
+end of iter: 92, n_active 7
+iter: 93, n_active 7
+end of iter: 93, n_active 7
+iter: 94, n_active 7
+end of iter: 94, n_active 7
+iter: 95, n_active 7
+end of iter: 95, n_active 7
+iter: 96, n_active 7
+end of iter: 96, n_active 7
+iter: 97, n_active 7
+end of iter: 97, n_active 7
+iter: 98, n_active 7
+end of iter: 98, n_active 7
+iter: 99, n_active 7
+end of iter: 99, n_active 7
+iter: 100, n_active 7
+end of iter: 100, n_active 7
+iter: 101, n_active 7
+end of iter: 101, n_active 7
+iter: 102, n_active 7
+end of iter: 102, n_active 7
+iter: 103, n_active 7
+end of iter: 103, n_active 7
+iter: 104, n_active 7
+end of iter: 104, n_active 7
+iter: 105, n_active 7
+end of iter: 105, n_active 7
+iter: 106, n_active 7
+end of iter: 106, n_active 7
+iter: 107, n_active 7
+end of iter: 107, n_active 7
+iter: 108, n_active 7
+end of iter: 108, n_active 7
+iter: 109, n_active 7
+end of iter: 109, n_active 7
+iter: 110, n_active 7
+end of iter: 110, n_active 7
+iter: 111, n_active 7
+end of iter: 111, n_active 7
+iter: 112, n_active 7
+end of iter: 112, n_active 7
+iter: 113, n_active 7
+end of iter: 113, n_active 7
+iter: 114, n_active 7
+end of iter: 114, n_active 7
+iter: 115, n_active 7
+end of iter: 115, n_active 7
+iter: 116, n_active 7
+end of iter: 116, n_active 7
+iter: 117, n_active 7
+end of iter: 117, n_active 7
+iter: 118, n_active 7
+end of iter: 118, n_active 7
+iter: 119, n_active 7
+end of iter: 119, n_active 7
+iter: 120, n_active 7
+end of iter: 120, n_active 7
+iter: 121, n_active 7
+end of iter: 121, n_active 7
+iter: 122, n_active 7
+end of iter: 122, n_active 7
+iter: 123, n_active 7
+end of iter: 123, n_active 7
+iter: 124, n_active 7
+end of iter: 124, n_active 7
+iter: 125, n_active 7
+end of iter: 125, n_active 7
+iter: 126, n_active 7
+end of iter: 126, n_active 7
+iter: 127, n_active 7
+end of iter: 127, n_active 7
+iter: 128, n_active 7
+end of iter: 128, n_active 7
+iter: 129, n_active 7
+end of iter: 129, n_active 7
+iter: 130, n_active 7
+end of iter: 130, n_active 7
+iter: 131, n_active 7
+end of iter: 131, n_active 7
+iter: 132, n_active 7
+end of iter: 132, n_active 7
+iter: 133, n_active 7
+end of iter: 133, n_active 7
+iter: 134, n_active 7
+end of iter: 134, n_active 7
+iter: 135, n_active 7
+end of iter: 135, n_active 7
+iter: 136, n_active 7
+end of iter: 136, n_active 7
+iter: 137, n_active 7
+end of iter: 137, n_active 7
+iter: 138, n_active 7
+end of iter: 138, n_active 7
+iter: 139, n_active 7
+end of iter: 139, n_active 7
+iter: 140, n_active 7
+end of iter: 140, n_active 7
+iter: 141, n_active 7
+end of iter: 141, n_active 7
+iter: 142, n_active 7
+end of iter: 142, n_active 7
+iter: 143, n_active 7
+end of iter: 143, n_active 7
+iter: 144, n_active 7
+end of iter: 144, n_active 7
+iter: 145, n_active 7
+end of iter: 145, n_active 7
+iter: 146, n_active 7
+end of iter: 146, n_active 7
+iter: 147, n_active 7
+end of iter: 147, n_active 7
+iter: 148, n_active 7
+end of iter: 148, n_active 7
+iter: 149, n_active 7
+end of iter: 149, n_active 7
+iter: 150, n_active 7
+end of iter: 150, n_active 7
+iter: 151, n_active 7
+end of iter: 151, n_active 7
+iter: 152, n_active 7
+end of iter: 152, n_active 7
+iter: 153, n_active 7
+end of iter: 153, n_active 7
+iter: 154, n_active 7
+end of iter: 154, n_active 7
+iter: 155, n_active 7
+end of iter: 155, n_active 7
+iter: 156, n_active 7
+end of iter: 156, n_active 7
+iter: 157, n_active 7
+end of iter: 157, n_active 7
+iter: 158, n_active 7
+end of iter: 158, n_active 7
+iter: 159, n_active 7
+end of iter: 159, n_active 7
+iter: 160, n_active 7
+end of iter: 160, n_active 7
+iter: 161, n_active 7
+end of iter: 161, n_active 7
+iter: 162, n_active 7
+end of iter: 162, n_active 7
+iter: 163, n_active 7
+end of iter: 163, n_active 7
+iter: 164, n_active 7
+end of iter: 164, n_active 7
+iter: 165, n_active 7
+end of iter: 165, n_active 7
+iter: 166, n_active 7
+end of iter: 166, n_active 7
+iter: 167, n_active 7
+end of iter: 167, n_active 7
+iter: 168, n_active 7
+end of iter: 168, n_active 7
+iter: 169, n_active 7
+end of iter: 169, n_active 7
+iter: 170, n_active 7
+end of iter: 170, n_active 7
+iter: 171, n_active 7
+end of iter: 171, n_active 7
+iter: 172, n_active 7
+end of iter: 172, n_active 7
+iter: 173, n_active 7
+end of iter: 173, n_active 7
+iter: 174, n_active 7
+end of iter: 174, n_active 7
+iter: 175, n_active 7
+end of iter: 175, n_active 7
+iter: 176, n_active 7
+end of iter: 176, n_active 7
+iter: 177, n_active 7
+end of iter: 177, n_active 7
+iter: 178, n_active 7
+end of iter: 178, n_active 7
+iter: 179, n_active 7
+end of iter: 179, n_active 7
+iter: 180, n_active 7
+end of iter: 180, n_active 7
+iter: 181, n_active 7
+end of iter: 181, n_active 7
+iter: 182, n_active 7
+end of iter: 182, n_active 7
+iter: 183, n_active 7
+end of iter: 183, n_active 7
+iter: 184, n_active 7
+end of iter: 184, n_active 7
+iter: 185, n_active 7
+end of iter: 185, n_active 7
+iter: 186, n_active 7
+end of iter: 186, n_active 7
+iter: 187, n_active 7
+end of iter: 187, n_active 7
+iter: 188, n_active 7
+end of iter: 188, n_active 7
+iter: 189, n_active 7
+end of iter: 189, n_active 7
+iter: 190, n_active 7
+end of iter: 190, n_active 7
+iter: 191, n_active 7
+end of iter: 191, n_active 7
+iter: 192, n_active 7
+end of iter: 192, n_active 7
+iter: 193, n_active 7
+end of iter: 193, n_active 7
+iter: 194, n_active 7
+end of iter: 194, n_active 7
+iter: 195, n_active 7
+end of iter: 195, n_active 7
+iter: 196, n_active 7
+end of iter: 196, n_active 7
+iter: 197, n_active 7
+end of iter: 197, n_active 7
+iter: 198, n_active 7
+end of iter: 198, n_active 7
+iter: 199, n_active 7
+end of iter: 199, n_active 7
+iter: 200, n_active 7
+end of iter: 200, n_active 7
+iter: 201, n_active 7
+end of iter: 201, n_active 7
+iter: 202, n_active 7
+end of iter: 202, n_active 7
+iter: 203, n_active 7
+end of iter: 203, n_active 7
+iter: 204, n_active 7
+end of iter: 204, n_active 7
+iter: 205, n_active 7
+end of iter: 205, n_active 7
+iter: 206, n_active 7
+end of iter: 206, n_active 7
+iter: 207, n_active 7
+end of iter: 207, n_active 7
+iter: 208, n_active 7
+end of iter: 208, n_active 7
+iter: 209, n_active 7
+end of iter: 209, n_active 7
+iter: 210, n_active 7
+end of iter: 210, n_active 7
+iter: 211, n_active 7
+end of iter: 211, n_active 7
+iter: 212, n_active 7
+end of iter: 212, n_active 7
+iter: 213, n_active 7
+end of iter: 213, n_active 7
+iter: 214, n_active 7
+end of iter: 214, n_active 7
+iter: 215, n_active 7
+end of iter: 215, n_active 7
+iter: 216, n_active 7
+end of iter: 216, n_active 7
+iter: 217, n_active 7
+end of iter: 217, n_active 7
+iter: 218, n_active 7
+end of iter: 218, n_active 7
+iter: 219, n_active 7
+end of iter: 219, n_active 7
+iter: 220, n_active 7
+end of iter: 220, n_active 7
+iter: 221, n_active 7
+end of iter: 221, n_active 7
+iter: 222, n_active 7
+end of iter: 222, n_active 7
+iter: 223, n_active 7
+end of iter: 223, n_active 7
+iter: 224, n_active 7
+end of iter: 224, n_active 7
+iter: 225, n_active 7
+end of iter: 225, n_active 7
+iter: 226, n_active 7
+end of iter: 226, n_active 7
+iter: 227, n_active 7
+end of iter: 227, n_active 7
+iter: 228, n_active 7
+end of iter: 228, n_active 7
+iter: 229, n_active 7
+end of iter: 229, n_active 7
+iter: 230, n_active 7
+end of iter: 230, n_active 7
+iter: 231, n_active 7
+end of iter: 231, n_active 7
+iter: 232, n_active 7
+end of iter: 232, n_active 7
+iter: 233, n_active 7
+end of iter: 233, n_active 7
+iter: 234, n_active 7
+end of iter: 234, n_active 7
+iter: 235, n_active 7
+end of iter: 235, n_active 7
+iter: 236, n_active 7
+end of iter: 236, n_active 7
+iter: 237, n_active 7
+end of iter: 237, n_active 7
+iter: 238, n_active 7
+end of iter: 238, n_active 7
+iter: 239, n_active 7
+end of iter: 239, n_active 7
+iter: 240, n_active 7
+end of iter: 240, n_active 7
+iter: 241, n_active 7
+end of iter: 241, n_active 7
+iter: 242, n_active 7
+end of iter: 242, n_active 7
+iter: 243, n_active 7
+end of iter: 243, n_active 7
+iter: 244, n_active 7
+end of iter: 244, n_active 7
+iter: 245, n_active 7
+end of iter: 245, n_active 7
+iter: 246, n_active 7
+end of iter: 246, n_active 7
+iter: 247, n_active 7
+end of iter: 247, n_active 7
+iter: 248, n_active 7
+end of iter: 248, n_active 7
+iter: 249, n_active 7
+end of iter: 249, n_active 7
+iter: 250, n_active 7
+end of iter: 250, n_active 7
+iter: 251, n_active 7
+end of iter: 251, n_active 7
+iter: 252, n_active 7
+end of iter: 252, n_active 7
+iter: 253, n_active 7
+end of iter: 253, n_active 7
+iter: 254, n_active 7
+end of iter: 254, n_active 7
+iter: 255, n_active 7
+end of iter: 255, n_active 7
+iter: 256, n_active 7
+end of iter: 256, n_active 7
+iter: 257, n_active 7
+end of iter: 257, n_active 7
+iter: 258, n_active 7
+end of iter: 258, n_active 7
+iter: 259, n_active 7
+end of iter: 259, n_active 7
+iter: 260, n_active 7
+end of iter: 260, n_active 7
+iter: 261, n_active 7
+end of iter: 261, n_active 7
+iter: 262, n_active 7
+end of iter: 262, n_active 7
+iter: 263, n_active 7
+end of iter: 263, n_active 7
+iter: 264, n_active 7
+end of iter: 264, n_active 7
+iter: 265, n_active 7
+end of iter: 265, n_active 7
+iter: 266, n_active 7
+end of iter: 266, n_active 7
+iter: 267, n_active 7
+end of iter: 267, n_active 7
+iter: 268, n_active 7
+end of iter: 268, n_active 7
+iter: 269, n_active 7
+end of iter: 269, n_active 7
+iter: 270, n_active 7
+end of iter: 270, n_active 7
+iter: 271, n_active 7
+end of iter: 271, n_active 7
+iter: 272, n_active 7
+end of iter: 272, n_active 7
+iter: 273, n_active 7
+end of iter: 273, n_active 7
+iter: 274, n_active 7
+end of iter: 274, n_active 7
+iter: 275, n_active 7
+end of iter: 275, n_active 7
+iter: 276, n_active 7
+end of iter: 276, n_active 7
+iter: 277, n_active 7
+end of iter: 277, n_active 7
+iter: 278, n_active 7
+end of iter: 278, n_active 7
+iter: 279, n_active 7
+end of iter: 279, n_active 7
+iter: 280, n_active 7
+end of iter: 280, n_active 7
+iter: 281, n_active 7
+end of iter: 281, n_active 7
+iter: 282, n_active 7
+end of iter: 282, n_active 7
+iter: 283, n_active 7
+end of iter: 283, n_active 7
+iter: 284, n_active 7
+end of iter: 284, n_active 7
+iter: 285, n_active 7
+end of iter: 285, n_active 7
+iter: 286, n_active 7
+end of iter: 286, n_active 7
+iter: 287, n_active 7
+end of iter: 287, n_active 7
+iter: 288, n_active 7
+end of iter: 288, n_active 7
+iter: 289, n_active 7
+end of iter: 289, n_active 7
+iter: 290, n_active 7
+end of iter: 290, n_active 7
+iter: 291, n_active 7
+end of iter: 291, n_active 7
+iter: 292, n_active 7
+end of iter: 292, n_active 7
+iter: 293, n_active 7
+end of iter: 293, n_active 7
+iter: 294, n_active 7
+end of iter: 294, n_active 7
+iter: 295, n_active 7
+end of iter: 295, n_active 7
+iter: 296, n_active 7
+end of iter: 296, n_active 7
+iter: 297, n_active 7
+end of iter: 297, n_active 7
+iter: 298, n_active 7
+end of iter: 298, n_active 7
+iter: 299, n_active 7
+end of iter: 299, n_active 7
+iter: 300, n_active 7
+end of iter: 300, n_active 7
+iter: 301, n_active 7
+end of iter: 301, n_active 7
+iter: 302, n_active 7
+end of iter: 302, n_active 7
+iter: 303, n_active 7
+end of iter: 303, n_active 7
+iter: 304, n_active 7
+end of iter: 304, n_active 7
+iter: 305, n_active 7
+end of iter: 305, n_active 7
+iter: 306, n_active 7
+end of iter: 306, n_active 7
+iter: 307, n_active 7
+end of iter: 307, n_active 7
+iter: 308, n_active 7
+end of iter: 308, n_active 7
+iter: 309, n_active 7
+end of iter: 309, n_active 7
+iter: 310, n_active 7
+end of iter: 310, n_active 7
+iter: 311, n_active 7
+end of iter: 311, n_active 7
+iter: 312, n_active 7
+end of iter: 312, n_active 7
+iter: 313, n_active 7
+end of iter: 313, n_active 7
+iter: 314, n_active 7
+end of iter: 314, n_active 7
+iter: 315, n_active 7
+end of iter: 315, n_active 7
+iter: 316, n_active 7
+end of iter: 316, n_active 7
+iter: 317, n_active 7
+end of iter: 317, n_active 7
+iter: 318, n_active 7
+end of iter: 318, n_active 7
+iter: 319, n_active 7
+end of iter: 319, n_active 7
+iter: 320, n_active 7
+end of iter: 320, n_active 7
+iter: 321, n_active 7
+end of iter: 321, n_active 7
+iter: 322, n_active 7
+end of iter: 322, n_active 7
+iter: 323, n_active 7
+end of iter: 323, n_active 7
+iter: 324, n_active 7
+end of iter: 324, n_active 7
+iter: 325, n_active 7
+end of iter: 325, n_active 7
+iter: 326, n_active 7
+end of iter: 326, n_active 7
+iter: 327, n_active 7
+end of iter: 327, n_active 7
+iter: 328, n_active 7
+end of iter: 328, n_active 7
+iter: 329, n_active 7
+end of iter: 329, n_active 7
+iter: 330, n_active 7
+end of iter: 330, n_active 7
+iter: 331, n_active 7
+end of iter: 331, n_active 7
+iter: 332, n_active 7
+end of iter: 332, n_active 7
+iter: 333, n_active 7
+end of iter: 333, n_active 7
+iter: 334, n_active 7
+end of iter: 334, n_active 7
+iter: 335, n_active 7
+end of iter: 335, n_active 7
+iter: 336, n_active 7
+end of iter: 336, n_active 7
+iter: 337, n_active 7
+end of iter: 337, n_active 7
+iter: 338, n_active 7
+end of iter: 338, n_active 7
+iter: 339, n_active 7
+end of iter: 339, n_active 7
+iter: 340, n_active 7
+end of iter: 340, n_active 7
+iter: 341, n_active 7
+end of iter: 341, n_active 7
+iter: 342, n_active 7
+end of iter: 342, n_active 7
+iter: 343, n_active 7
+end of iter: 343, n_active 7
+iter: 344, n_active 7
+end of iter: 344, n_active 7
+iter: 345, n_active 7
+end of iter: 345, n_active 7
+iter: 346, n_active 7
+end of iter: 346, n_active 7
+iter: 347, n_active 7
+end of iter: 347, n_active 7
+iter: 348, n_active 7
+end of iter: 348, n_active 7
+iter: 349, n_active 7
+end of iter: 349, n_active 7
+iter: 350, n_active 7
+end of iter: 350, n_active 7
+iter: 351, n_active 7
+end of iter: 351, n_active 7
+iter: 352, n_active 7
+end of iter: 352, n_active 7
+iter: 353, n_active 7
+end of iter: 353, n_active 7
+iter: 354, n_active 7
+end of iter: 354, n_active 7
+iter: 355, n_active 7
+end of iter: 355, n_active 7
+iter: 356, n_active 7
+end of iter: 356, n_active 7
+iter: 357, n_active 7
+end of iter: 357, n_active 7
+iter: 358, n_active 7
+end of iter: 358, n_active 7
+iter: 359, n_active 7
+end of iter: 359, n_active 7
+iter: 360, n_active 7
+end of iter: 360, n_active 7
+iter: 361, n_active 7
+end of iter: 361, n_active 7
+iter: 362, n_active 7
+end of iter: 362, n_active 7
+iter: 363, n_active 7
+end of iter: 363, n_active 7
+iter: 364, n_active 7
+end of iter: 364, n_active 7
+iter: 365, n_active 7
+end of iter: 365, n_active 7
+iter: 366, n_active 7
+end of iter: 366, n_active 7
+iter: 367, n_active 7
+end of iter: 367, n_active 7
+iter: 368, n_active 7
+end of iter: 368, n_active 7
+iter: 369, n_active 7
+end of iter: 369, n_active 7
+iter: 370, n_active 7
+end of iter: 370, n_active 7
+iter: 371, n_active 7
+end of iter: 371, n_active 7
+iter: 372, n_active 7
+end of iter: 372, n_active 7
+iter: 373, n_active 7
+end of iter: 373, n_active 7
+iter: 374, n_active 7
+end of iter: 374, n_active 7
+iter: 375, n_active 7
+end of iter: 375, n_active 7
+iter: 376, n_active 7
+end of iter: 376, n_active 7
+iter: 377, n_active 7
+end of iter: 377, n_active 7
+iter: 378, n_active 7
+end of iter: 378, n_active 7
+iter: 379, n_active 7
+end of iter: 379, n_active 7
+iter: 380, n_active 7
+end of iter: 380, n_active 7
+iter: 381, n_active 7
+end of iter: 381, n_active 7
+iter: 382, n_active 7
+end of iter: 382, n_active 7
+iter: 383, n_active 7
+end of iter: 383, n_active 7
+iter: 384, n_active 7
+end of iter: 384, n_active 7
+iter: 385, n_active 7
+end of iter: 385, n_active 7
+iter: 386, n_active 7
+end of iter: 386, n_active 7
+iter: 387, n_active 7
+end of iter: 387, n_active 7
+iter: 388, n_active 7
+end of iter: 388, n_active 7
+iter: 389, n_active 7
+end of iter: 389, n_active 7
+iter: 390, n_active 7
+end of iter: 390, n_active 7
+iter: 391, n_active 7
+end of iter: 391, n_active 7
+iter: 392, n_active 7
+end of iter: 392, n_active 7
+iter: 393, n_active 7
+end of iter: 393, n_active 7
+iter: 394, n_active 7
+end of iter: 394, n_active 7
+iter: 395, n_active 7
+end of iter: 395, n_active 7
+iter: 396, n_active 7
+end of iter: 396, n_active 7
+iter: 397, n_active 7
+end of iter: 397, n_active 7
+iter: 398, n_active 7
+end of iter: 398, n_active 7
+iter: 399, n_active 7
+end of iter: 399, n_active 7
+iter: 400, n_active 7
+end of iter: 400, n_active 7
+iter: 401, n_active 7
+end of iter: 401, n_active 7
+iter: 402, n_active 7
+end of iter: 402, n_active 7
+iter: 403, n_active 7
+end of iter: 403, n_active 7
+iter: 404, n_active 7
+end of iter: 404, n_active 7
+iter: 405, n_active 7
+end of iter: 405, n_active 7
+iter: 406, n_active 7
+end of iter: 406, n_active 7
+iter: 407, n_active 7
+end of iter: 407, n_active 7
+iter: 408, n_active 7
+end of iter: 408, n_active 7
+iter: 409, n_active 7
+end of iter: 409, n_active 7
+iter: 410, n_active 7
+end of iter: 410, n_active 7
+iter: 411, n_active 7
+end of iter: 411, n_active 7
+iter: 412, n_active 7
+end of iter: 412, n_active 7
+iter: 413, n_active 7
+end of iter: 413, n_active 7
+iter: 414, n_active 7
+end of iter: 414, n_active 7
+iter: 415, n_active 7
+end of iter: 415, n_active 7
+iter: 416, n_active 7
+end of iter: 416, n_active 7
+iter: 417, n_active 7
+end of iter: 417, n_active 7
+iter: 418, n_active 7
+end of iter: 418, n_active 7
+iter: 419, n_active 7
+end of iter: 419, n_active 7
+iter: 420, n_active 7
+end of iter: 420, n_active 7
+iter: 421, n_active 7
+end of iter: 421, n_active 7
+iter: 422, n_active 7
+end of iter: 422, n_active 7
+iter: 423, n_active 7
+end of iter: 423, n_active 7
+iter: 424, n_active 7
+end of iter: 424, n_active 7
+iter: 425, n_active 7
+end of iter: 425, n_active 7
+iter: 426, n_active 7
+end of iter: 426, n_active 7
+iter: 427, n_active 7
+end of iter: 427, n_active 7
+iter: 428, n_active 7
+end of iter: 428, n_active 7
+iter: 429, n_active 7
+end of iter: 429, n_active 7
+iter: 430, n_active 7
+end of iter: 430, n_active 7
+iter: 431, n_active 7
+end of iter: 431, n_active 7
+iter: 432, n_active 7
+end of iter: 432, n_active 7
+iter: 433, n_active 7
+end of iter: 433, n_active 7
+iter: 434, n_active 7
+end of iter: 434, n_active 7
+iter: 435, n_active 7
+end of iter: 435, n_active 7
+iter: 436, n_active 7
+end of iter: 436, n_active 7
+iter: 437, n_active 7
+end of iter: 437, n_active 7
+iter: 438, n_active 7
+end of iter: 438, n_active 7
+iter: 439, n_active 7
+end of iter: 439, n_active 7
+iter: 440, n_active 7
+end of iter: 440, n_active 7
+iter: 441, n_active 7
+end of iter: 441, n_active 7
+iter: 442, n_active 7
+end of iter: 442, n_active 7
+iter: 443, n_active 7
+end of iter: 443, n_active 7
+iter: 444, n_active 7
+end of iter: 444, n_active 7
+iter: 445, n_active 7
+end of iter: 445, n_active 7
+iter: 446, n_active 7
+end of iter: 446, n_active 7
+iter: 447, n_active 7
+end of iter: 447, n_active 7
+iter: 448, n_active 7
+end of iter: 448, n_active 7
+iter: 449, n_active 7
+end of iter: 449, n_active 7
+iter: 450, n_active 7
+end of iter: 450, n_active 7
+iter: 451, n_active 7
+end of iter: 451, n_active 7
+iter: 452, n_active 7
+end of iter: 452, n_active 7
+iter: 453, n_active 7
+end of iter: 453, n_active 7
+iter: 454, n_active 7
+end of iter: 454, n_active 7
+iter: 455, n_active 7
+end of iter: 455, n_active 7
+iter: 456, n_active 7
+end of iter: 456, n_active 7
+iter: 457, n_active 7
+end of iter: 457, n_active 7
+iter: 458, n_active 7
+end of iter: 458, n_active 7
+iter: 459, n_active 7
+end of iter: 459, n_active 7
+iter: 460, n_active 7
+end of iter: 460, n_active 7
+iter: 461, n_active 7
+end of iter: 461, n_active 7
+iter: 462, n_active 7
+end of iter: 462, n_active 7
+iter: 463, n_active 7
+end of iter: 463, n_active 7
+iter: 464, n_active 7
+end of iter: 464, n_active 7
+iter: 465, n_active 7
+end of iter: 465, n_active 7
+iter: 466, n_active 7
+end of iter: 466, n_active 7
+iter: 467, n_active 7
+end of iter: 467, n_active 7
+iter: 468, n_active 7
+end of iter: 468, n_active 7
+iter: 469, n_active 7
+end of iter: 469, n_active 7
+iter: 470, n_active 7
+end of iter: 470, n_active 7
+iter: 471, n_active 7
+end of iter: 471, n_active 7
+iter: 472, n_active 7
+end of iter: 472, n_active 7
+iter: 473, n_active 7
+end of iter: 473, n_active 7
+iter: 474, n_active 7
+end of iter: 474, n_active 7
+iter: 475, n_active 7
+end of iter: 475, n_active 7
+iter: 476, n_active 7
+end of iter: 476, n_active 7
+iter: 477, n_active 7
+end of iter: 477, n_active 7
+iter: 478, n_active 7
+end of iter: 478, n_active 7
+iter: 479, n_active 7
+end of iter: 479, n_active 7
+iter: 480, n_active 7
+end of iter: 480, n_active 7
+iter: 481, n_active 7
+end of iter: 481, n_active 7
+iter: 482, n_active 7
+end of iter: 482, n_active 7
+iter: 483, n_active 7
+end of iter: 483, n_active 7
+iter: 484, n_active 7
+end of iter: 484, n_active 7
+iter: 485, n_active 7
+end of iter: 485, n_active 7
+iter: 486, n_active 7
+end of iter: 486, n_active 7
+iter: 487, n_active 7
+end of iter: 487, n_active 7
+iter: 488, n_active 7
+end of iter: 488, n_active 7
+iter: 489, n_active 7
+end of iter: 489, n_active 7
+iter: 490, n_active 7
+end of iter: 490, n_active 7
+iter: 491, n_active 7
+end of iter: 491, n_active 7
+iter: 492, n_active 7
+end of iter: 492, n_active 7
+iter: 493, n_active 7
+end of iter: 493, n_active 7
+iter: 494, n_active 7
+end of iter: 494, n_active 7
+iter: 495, n_active 7
+end of iter: 495, n_active 7
+iter: 496, n_active 7
+end of iter: 496, n_active 7
+iter: 497, n_active 7
+end of iter: 497, n_active 7
+iter: 498, n_active 7
+end of iter: 498, n_active 7
+iter: 499, n_active 7
+end of iter: 499, n_active 7
+iter: 500, n_active 7
+end of iter: 500, n_active 7
+iter: 501, n_active 7
+end of iter: 501, n_active 7
+iter: 502, n_active 7
+end of iter: 502, n_active 7
+iter: 503, n_active 7
+end of iter: 503, n_active 7
+iter: 504, n_active 7
+end of iter: 504, n_active 7
+iter: 505, n_active 7
+end of iter: 505, n_active 7
+iter: 506, n_active 7
+end of iter: 506, n_active 7
+iter: 507, n_active 7
+end of iter: 507, n_active 7
+iter: 508, n_active 7
+end of iter: 508, n_active 7
+iter: 509, n_active 7
+end of iter: 509, n_active 7
+iter: 510, n_active 7
+end of iter: 510, n_active 7
+iter: 511, n_active 7
+end of iter: 511, n_active 7
+iter: 512, n_active 7
+end of iter: 512, n_active 7
+iter: 513, n_active 7
+end of iter: 513, n_active 7
+iter: 514, n_active 7
+end of iter: 514, n_active 7
+iter: 515, n_active 7
+end of iter: 515, n_active 7
+iter: 516, n_active 7
+end of iter: 516, n_active 7
+iter: 517, n_active 7
+end of iter: 517, n_active 7
+iter: 518, n_active 7
+end of iter: 518, n_active 7
+iter: 519, n_active 7
+end of iter: 519, n_active 7
+iter: 520, n_active 7
+end of iter: 520, n_active 7
+iter: 521, n_active 7
+end of iter: 521, n_active 7
+iter: 522, n_active 7
+end of iter: 522, n_active 7
+iter: 523, n_active 7
+end of iter: 523, n_active 7
+iter: 524, n_active 7
+end of iter: 524, n_active 7
+iter: 525, n_active 7
+end of iter: 525, n_active 7
+iter: 526, n_active 7
+end of iter: 526, n_active 7
+iter: 527, n_active 7
+end of iter: 527, n_active 7
+iter: 528, n_active 7
+end of iter: 528, n_active 7
+iter: 529, n_active 7
+end of iter: 529, n_active 7
+iter: 530, n_active 7
+end of iter: 530, n_active 7
+iter: 531, n_active 7
+end of iter: 531, n_active 7
+iter: 532, n_active 7
+end of iter: 532, n_active 7
+iter: 533, n_active 7
+end of iter: 533, n_active 7
+iter: 534, n_active 7
+end of iter: 534, n_active 7
+iter: 535, n_active 7
+end of iter: 535, n_active 7
+iter: 536, n_active 7
+end of iter: 536, n_active 7
+iter: 537, n_active 7
+end of iter: 537, n_active 7
+iter: 538, n_active 7
+end of iter: 538, n_active 7
+iter: 539, n_active 7
+end of iter: 539, n_active 7
+iter: 540, n_active 7
+end of iter: 540, n_active 7
+iter: 541, n_active 7
+end of iter: 541, n_active 7
+iter: 542, n_active 7
+end of iter: 542, n_active 7
+iter: 543, n_active 7
+end of iter: 543, n_active 7
+iter: 544, n_active 7
+end of iter: 544, n_active 7
+iter: 545, n_active 7
+end of iter: 545, n_active 7
+iter: 546, n_active 7
+end of iter: 546, n_active 7
+iter: 547, n_active 7
+end of iter: 547, n_active 7
+iter: 548, n_active 7
+end of iter: 548, n_active 7
+iter: 549, n_active 7
+end of iter: 549, n_active 7
+iter: 550, n_active 7
+end of iter: 550, n_active 7
+iter: 551, n_active 7
+end of iter: 551, n_active 7
+iter: 552, n_active 7
+end of iter: 552, n_active 7
+iter: 553, n_active 7
+end of iter: 553, n_active 7
+iter: 554, n_active 7
+end of iter: 554, n_active 7
+iter: 555, n_active 7
+end of iter: 555, n_active 7
+iter: 556, n_active 7
+end of iter: 556, n_active 7
+iter: 557, n_active 7
+end of iter: 557, n_active 7
+iter: 558, n_active 7
+end of iter: 558, n_active 7
+iter: 559, n_active 7
+end of iter: 559, n_active 7
+iter: 560, n_active 7
+end of iter: 560, n_active 7
+iter: 561, n_active 7
+end of iter: 561, n_active 7
+iter: 562, n_active 7
+end of iter: 562, n_active 7
+iter: 563, n_active 7
+end of iter: 563, n_active 7
+iter: 564, n_active 7
+end of iter: 564, n_active 7
+iter: 565, n_active 7
+end of iter: 565, n_active 7
+iter: 566, n_active 7
+end of iter: 566, n_active 7
+iter: 567, n_active 7
+end of iter: 567, n_active 7
+iter: 568, n_active 7
+end of iter: 568, n_active 7
+iter: 569, n_active 7
+end of iter: 569, n_active 7
+iter: 570, n_active 7
+end of iter: 570, n_active 7
+iter: 571, n_active 7
+end of iter: 571, n_active 7
+iter: 572, n_active 7
+end of iter: 572, n_active 7
+iter: 573, n_active 7
+end of iter: 573, n_active 7
+iter: 574, n_active 7
+end of iter: 574, n_active 7
+iter: 575, n_active 7
+end of iter: 575, n_active 7
+iter: 576, n_active 7
+end of iter: 576, n_active 7
+iter: 577, n_active 7
+end of iter: 577, n_active 7
+iter: 578, n_active 7
+end of iter: 578, n_active 7
+iter: 579, n_active 7
+end of iter: 579, n_active 7
+iter: 580, n_active 7
+end of iter: 580, n_active 7
+iter: 581, n_active 7
+end of iter: 581, n_active 7
+iter: 582, n_active 7
+end of iter: 582, n_active 7
+iter: 583, n_active 7
+end of iter: 583, n_active 7
+iter: 584, n_active 7
+end of iter: 584, n_active 7
+iter: 585, n_active 7
+end of iter: 585, n_active 7
+iter: 586, n_active 7
+end of iter: 586, n_active 7
+iter: 587, n_active 7
+end of iter: 587, n_active 7
+iter: 588, n_active 7
+end of iter: 588, n_active 7
+iter: 589, n_active 7
+end of iter: 589, n_active 7
+iter: 590, n_active 7
+end of iter: 590, n_active 7
+iter: 591, n_active 7
+end of iter: 591, n_active 7
+iter: 592, n_active 7
+end of iter: 592, n_active 7
+iter: 593, n_active 7
+end of iter: 593, n_active 7
+iter: 594, n_active 7
+end of iter: 594, n_active 7
+iter: 595, n_active 7
+end of iter: 595, n_active 7
+iter: 596, n_active 7
+end of iter: 596, n_active 7
+iter: 597, n_active 7
+end of iter: 597, n_active 7
+iter: 598, n_active 7
+end of iter: 598, n_active 7
+iter: 599, n_active 7
+end of iter: 599, n_active 7
+iter: 600, n_active 7
+end of iter: 600, n_active 7
+iter: 601, n_active 7
+end of iter: 601, n_active 7
+iter: 602, n_active 7
+end of iter: 602, n_active 7
+iter: 603, n_active 7
+end of iter: 603, n_active 7
+iter: 604, n_active 7
+end of iter: 604, n_active 7
+iter: 605, n_active 7
+end of iter: 605, n_active 7
+iter: 606, n_active 7
+end of iter: 606, n_active 7
+iter: 607, n_active 7
+end of iter: 607, n_active 7
+iter: 608, n_active 7
+end of iter: 608, n_active 7
+iter: 609, n_active 7
+end of iter: 609, n_active 7
+iter: 610, n_active 7
+end of iter: 610, n_active 7
+iter: 611, n_active 7
+end of iter: 611, n_active 7
+iter: 612, n_active 7
+end of iter: 612, n_active 7
+iter: 613, n_active 7
+end of iter: 613, n_active 7
+iter: 614, n_active 7
+end of iter: 614, n_active 7
+iter: 615, n_active 7
+end of iter: 615, n_active 7
+iter: 616, n_active 7
+end of iter: 616, n_active 7
+iter: 617, n_active 7
+end of iter: 617, n_active 7
+iter: 618, n_active 7
+end of iter: 618, n_active 7
+iter: 619, n_active 7
+end of iter: 619, n_active 7
+iter: 620, n_active 7
+end of iter: 620, n_active 7
+iter: 621, n_active 7
+end of iter: 621, n_active 7
+iter: 622, n_active 7
+end of iter: 622, n_active 7
+iter: 623, n_active 7
+end of iter: 623, n_active 7
+iter: 624, n_active 7
+end of iter: 624, n_active 7
+iter: 625, n_active 7
+end of iter: 625, n_active 7
+iter: 626, n_active 7
+end of iter: 626, n_active 7
+iter: 627, n_active 7
+end of iter: 627, n_active 7
+iter: 628, n_active 7
+end of iter: 628, n_active 7
+iter: 629, n_active 7
+end of iter: 629, n_active 7
+iter: 630, n_active 7
+end of iter: 630, n_active 7
+iter: 631, n_active 7
+end of iter: 631, n_active 7
+iter: 632, n_active 7
+end of iter: 632, n_active 7
+iter: 633, n_active 7
+end of iter: 633, n_active 7
+iter: 634, n_active 7
+end of iter: 634, n_active 7
+iter: 635, n_active 7
+end of iter: 635, n_active 7
+iter: 636, n_active 7
+end of iter: 636, n_active 7
+iter: 637, n_active 7
+end of iter: 637, n_active 7
+iter: 638, n_active 7
+end of iter: 638, n_active 7
+iter: 639, n_active 7
+end of iter: 639, n_active 7
+iter: 640, n_active 7
+end of iter: 640, n_active 7
+iter: 641, n_active 7
+end of iter: 641, n_active 7
+iter: 642, n_active 7
+end of iter: 642, n_active 7
+iter: 643, n_active 7
+end of iter: 643, n_active 7
+iter: 644, n_active 7
+end of iter: 644, n_active 7
+iter: 645, n_active 7
+end of iter: 645, n_active 7
+iter: 646, n_active 7
+end of iter: 646, n_active 7
+iter: 647, n_active 7
+end of iter: 647, n_active 7
+iter: 648, n_active 7
+end of iter: 648, n_active 7
+iter: 649, n_active 7
+end of iter: 649, n_active 7
+iter: 650, n_active 7
+end of iter: 650, n_active 7
+iter: 651, n_active 7
+end of iter: 651, n_active 7
+iter: 652, n_active 7
+end of iter: 652, n_active 7
+iter: 653, n_active 7
+end of iter: 653, n_active 7
+iter: 654, n_active 7
+end of iter: 654, n_active 7
+iter: 655, n_active 7
+end of iter: 655, n_active 7
+iter: 656, n_active 7
+end of iter: 656, n_active 7
+iter: 657, n_active 7
+end of iter: 657, n_active 7
+iter: 658, n_active 7
+end of iter: 658, n_active 7
+iter: 659, n_active 7
+end of iter: 659, n_active 7
+iter: 660, n_active 7
+end of iter: 660, n_active 7
+iter: 661, n_active 7
+end of iter: 661, n_active 7
+iter: 662, n_active 7
+end of iter: 662, n_active 7
+iter: 663, n_active 7
+end of iter: 663, n_active 7
+iter: 664, n_active 7
+end of iter: 664, n_active 7
+iter: 665, n_active 7
+end of iter: 665, n_active 7
+iter: 666, n_active 7
+end of iter: 666, n_active 7
+iter: 667, n_active 7
+end of iter: 667, n_active 7
+iter: 668, n_active 7
+end of iter: 668, n_active 7
+iter: 669, n_active 7
+end of iter: 669, n_active 7
+iter: 670, n_active 7
+end of iter: 670, n_active 7
+iter: 671, n_active 7
+end of iter: 671, n_active 7
+iter: 672, n_active 7
+end of iter: 672, n_active 7
+iter: 673, n_active 7
+end of iter: 673, n_active 7
+iter: 674, n_active 7
+end of iter: 674, n_active 7
+iter: 675, n_active 7
+end of iter: 675, n_active 7
+iter: 676, n_active 7
+end of iter: 676, n_active 7
+iter: 677, n_active 7
+end of iter: 677, n_active 7
+iter: 678, n_active 7
+end of iter: 678, n_active 7
+iter: 679, n_active 7
+end of iter: 679, n_active 7
+iter: 680, n_active 7
+end of iter: 680, n_active 7
+iter: 681, n_active 7
+end of iter: 681, n_active 7
+iter: 682, n_active 7
+end of iter: 682, n_active 7
+iter: 683, n_active 7
+end of iter: 683, n_active 7
+iter: 684, n_active 7
+end of iter: 684, n_active 7
+iter: 685, n_active 7
+end of iter: 685, n_active 7
+iter: 686, n_active 7
+end of iter: 686, n_active 7
+iter: 687, n_active 7
+end of iter: 687, n_active 7
+iter: 688, n_active 7
+end of iter: 688, n_active 7
+iter: 689, n_active 7
+end of iter: 689, n_active 7
+iter: 690, n_active 7
+end of iter: 690, n_active 7
+iter: 691, n_active 7
+end of iter: 691, n_active 7
+iter: 692, n_active 7
+end of iter: 692, n_active 7
+iter: 693, n_active 7
+end of iter: 693, n_active 7
+iter: 694, n_active 7
+end of iter: 694, n_active 7
+iter: 695, n_active 7
+end of iter: 695, n_active 7
+iter: 696, n_active 7
+end of iter: 696, n_active 7
+iter: 697, n_active 7
+end of iter: 697, n_active 7
+iter: 698, n_active 7
+end of iter: 698, n_active 7
+iter: 699, n_active 7
+end of iter: 699, n_active 7
+iter: 700, n_active 7
+end of iter: 700, n_active 7
+iter: 701, n_active 7
+end of iter: 701, n_active 7
+iter: 702, n_active 7
+end of iter: 702, n_active 7
+iter: 703, n_active 7
+end of iter: 703, n_active 7
+iter: 704, n_active 7
+end of iter: 704, n_active 7
+iter: 705, n_active 7
+end of iter: 705, n_active 7
+iter: 706, n_active 7
+end of iter: 706, n_active 7
+iter: 707, n_active 7
+end of iter: 707, n_active 7
+iter: 708, n_active 7
+end of iter: 708, n_active 7
+iter: 709, n_active 7
+end of iter: 709, n_active 7
+iter: 710, n_active 7
+end of iter: 710, n_active 7
+iter: 711, n_active 7
+end of iter: 711, n_active 7
+iter: 712, n_active 7
+end of iter: 712, n_active 7
+iter: 713, n_active 7
+end of iter: 713, n_active 7
+iter: 714, n_active 7
+end of iter: 714, n_active 7
+iter: 715, n_active 7
+end of iter: 715, n_active 7
+iter: 716, n_active 7
+end of iter: 716, n_active 7
+iter: 717, n_active 7
+end of iter: 717, n_active 7
+iter: 718, n_active 7
+end of iter: 718, n_active 7
+iter: 719, n_active 7
+end of iter: 719, n_active 7
+iter: 720, n_active 7
+end of iter: 720, n_active 7
+iter: 721, n_active 7
+end of iter: 721, n_active 7
+iter: 722, n_active 7
+end of iter: 722, n_active 7
+iter: 723, n_active 7
+end of iter: 723, n_active 7
+iter: 724, n_active 7
+end of iter: 724, n_active 7
+iter: 725, n_active 7
+end of iter: 725, n_active 7
+iter: 726, n_active 7
+end of iter: 726, n_active 7
+iter: 727, n_active 7
+end of iter: 727, n_active 7
+iter: 728, n_active 7
+end of iter: 728, n_active 7
+iter: 729, n_active 7
+end of iter: 729, n_active 7
+iter: 730, n_active 7
+end of iter: 730, n_active 7
+iter: 731, n_active 7
+end of iter: 731, n_active 7
+iter: 732, n_active 7
+end of iter: 732, n_active 7
+iter: 733, n_active 7
+end of iter: 733, n_active 7
+iter: 734, n_active 7
+end of iter: 734, n_active 7
+iter: 735, n_active 7
+end of iter: 735, n_active 7
+iter: 736, n_active 7
+end of iter: 736, n_active 7
+iter: 737, n_active 7
+end of iter: 737, n_active 7
+iter: 738, n_active 7
+end of iter: 738, n_active 7
+iter: 739, n_active 7
+end of iter: 739, n_active 7
+iter: 740, n_active 7
+end of iter: 740, n_active 7
+iter: 741, n_active 7
+end of iter: 741, n_active 7
+iter: 742, n_active 7
+end of iter: 742, n_active 7
+iter: 743, n_active 7
+end of iter: 743, n_active 7
+iter: 744, n_active 7
+end of iter: 744, n_active 7
+iter: 745, n_active 7
+end of iter: 745, n_active 7
+iter: 746, n_active 7
+end of iter: 746, n_active 7
+iter: 747, n_active 7
+end of iter: 747, n_active 7
+iter: 748, n_active 7
+end of iter: 748, n_active 7
+iter: 749, n_active 7
+end of iter: 749, n_active 7
+iter: 750, n_active 7
+end of iter: 750, n_active 7
+iter: 751, n_active 7
+end of iter: 751, n_active 7
+iter: 752, n_active 7
+end of iter: 752, n_active 7
+iter: 753, n_active 7
+end of iter: 753, n_active 7
+iter: 754, n_active 7
+end of iter: 754, n_active 7
+iter: 755, n_active 7
+end of iter: 755, n_active 7
+iter: 756, n_active 7
+end of iter: 756, n_active 7
+iter: 757, n_active 7
+end of iter: 757, n_active 7
+iter: 758, n_active 7
+end of iter: 758, n_active 7
+iter: 759, n_active 7
+end of iter: 759, n_active 7
+iter: 760, n_active 7
+end of iter: 760, n_active 7
+iter: 761, n_active 7
+end of iter: 761, n_active 7
+iter: 762, n_active 7
+end of iter: 762, n_active 7
+iter: 763, n_active 7
+end of iter: 763, n_active 7
+iter: 764, n_active 7
+end of iter: 764, n_active 7
+iter: 765, n_active 7
+end of iter: 765, n_active 7
+iter: 766, n_active 7
+end of iter: 766, n_active 7
+iter: 767, n_active 7
+end of iter: 767, n_active 7
+iter: 768, n_active 7
+end of iter: 768, n_active 7
+iter: 769, n_active 7
+end of iter: 769, n_active 7
+iter: 770, n_active 7
+end of iter: 770, n_active 7
+iter: 771, n_active 7
+end of iter: 771, n_active 7
+iter: 772, n_active 7
+end of iter: 772, n_active 7
+iter: 773, n_active 7
+end of iter: 773, n_active 7
+iter: 774, n_active 7
+end of iter: 774, n_active 7
+iter: 775, n_active 7
+end of iter: 775, n_active 7
+iter: 776, n_active 7
+end of iter: 776, n_active 7
+iter: 777, n_active 7
+end of iter: 777, n_active 7
+iter: 778, n_active 7
+end of iter: 778, n_active 7
+iter: 779, n_active 7
+end of iter: 779, n_active 7
+iter: 780, n_active 7
+end of iter: 780, n_active 7
+iter: 781, n_active 7
+end of iter: 781, n_active 7
+iter: 782, n_active 7
+end of iter: 782, n_active 7
+iter: 783, n_active 7
+end of iter: 783, n_active 7
+iter: 784, n_active 7
+end of iter: 784, n_active 7
+iter: 785, n_active 7
+end of iter: 785, n_active 7
+iter: 786, n_active 7
+end of iter: 786, n_active 7
+iter: 787, n_active 7
+end of iter: 787, n_active 7
+iter: 788, n_active 7
+end of iter: 788, n_active 7
+iter: 789, n_active 7
+end of iter: 789, n_active 7
+iter: 790, n_active 7
+end of iter: 790, n_active 7
+iter: 791, n_active 7
+end of iter: 791, n_active 7
+iter: 792, n_active 7
+end of iter: 792, n_active 7
+iter: 793, n_active 7
+end of iter: 793, n_active 7
+iter: 794, n_active 7
+end of iter: 794, n_active 7
+iter: 795, n_active 7
+end of iter: 795, n_active 7
+iter: 796, n_active 7
+end of iter: 796, n_active 7
+iter: 797, n_active 7
+end of iter: 797, n_active 7
+iter: 798, n_active 7
+end of iter: 798, n_active 7
+iter: 799, n_active 7
+end of iter: 799, n_active 7
+iter: 800, n_active 7
+end of iter: 800, n_active 7
+iter: 801, n_active 7
+end of iter: 801, n_active 7
+iter: 802, n_active 7
+end of iter: 802, n_active 7
+iter: 803, n_active 7
+end of iter: 803, n_active 7
+iter: 804, n_active 7
+end of iter: 804, n_active 7
+iter: 805, n_active 7
+end of iter: 805, n_active 7
+iter: 806, n_active 7
+end of iter: 806, n_active 7
+iter: 807, n_active 7
+end of iter: 807, n_active 7
+iter: 808, n_active 7
+end of iter: 808, n_active 7
+iter: 809, n_active 7
+end of iter: 809, n_active 7
+iter: 810, n_active 7
+end of iter: 810, n_active 7
+iter: 811, n_active 7
+end of iter: 811, n_active 7
+iter: 812, n_active 7
+end of iter: 812, n_active 7
+iter: 813, n_active 7
+end of iter: 813, n_active 7
+iter: 814, n_active 7
+end of iter: 814, n_active 7
+iter: 815, n_active 7
+end of iter: 815, n_active 7
+iter: 816, n_active 7
+end of iter: 816, n_active 7
+iter: 817, n_active 7
+end of iter: 817, n_active 7
+iter: 818, n_active 7
+end of iter: 818, n_active 7
+iter: 819, n_active 7
+end of iter: 819, n_active 7
+iter: 820, n_active 7
+end of iter: 820, n_active 7
+iter: 821, n_active 7
+end of iter: 821, n_active 7
+iter: 822, n_active 7
+end of iter: 822, n_active 7
+iter: 823, n_active 7
+end of iter: 823, n_active 7
+iter: 824, n_active 7
+end of iter: 824, n_active 7
+iter: 825, n_active 7
+end of iter: 825, n_active 7
+iter: 826, n_active 7
+end of iter: 826, n_active 7
+iter: 827, n_active 7
+end of iter: 827, n_active 7
+iter: 828, n_active 7
+end of iter: 828, n_active 7
+iter: 829, n_active 7
+end of iter: 829, n_active 7
+iter: 830, n_active 7
+end of iter: 830, n_active 7
+iter: 831, n_active 7
+end of iter: 831, n_active 7
+iter: 832, n_active 7
+end of iter: 832, n_active 7
+iter: 833, n_active 7
+end of iter: 833, n_active 7
+iter: 834, n_active 7
+end of iter: 834, n_active 7
+iter: 835, n_active 7
+end of iter: 835, n_active 7
+iter: 836, n_active 7
+end of iter: 836, n_active 7
+iter: 837, n_active 7
+end of iter: 837, n_active 7
+iter: 838, n_active 7
+end of iter: 838, n_active 7
+iter: 839, n_active 7
+end of iter: 839, n_active 7
+iter: 840, n_active 7
+end of iter: 840, n_active 7
+iter: 841, n_active 7
+end of iter: 841, n_active 7
+iter: 842, n_active 7
+end of iter: 842, n_active 7
+iter: 843, n_active 7
+end of iter: 843, n_active 7
+iter: 844, n_active 7
+end of iter: 844, n_active 7
+iter: 845, n_active 7
+end of iter: 845, n_active 7
+iter: 846, n_active 7
+end of iter: 846, n_active 7
+iter: 847, n_active 7
+end of iter: 847, n_active 7
+iter: 848, n_active 7
+end of iter: 848, n_active 7
+iter: 849, n_active 7
+end of iter: 849, n_active 7
+iter: 850, n_active 7
+end of iter: 850, n_active 7
+iter: 851, n_active 7
+end of iter: 851, n_active 7
+iter: 852, n_active 7
+end of iter: 852, n_active 7
+iter: 853, n_active 7
+end of iter: 853, n_active 7
+iter: 854, n_active 7
+end of iter: 854, n_active 7
+iter: 855, n_active 7
+end of iter: 855, n_active 7
+iter: 856, n_active 7
+end of iter: 856, n_active 7
+iter: 857, n_active 7
+end of iter: 857, n_active 7
+iter: 858, n_active 7
+end of iter: 858, n_active 7
+iter: 859, n_active 7
+end of iter: 859, n_active 7
+iter: 860, n_active 7
+end of iter: 860, n_active 7
+iter: 861, n_active 7
+end of iter: 861, n_active 7
+iter: 862, n_active 7
+end of iter: 862, n_active 7
+iter: 863, n_active 7
+end of iter: 863, n_active 7
+iter: 864, n_active 7
+end of iter: 864, n_active 7
+iter: 865, n_active 7
+end of iter: 865, n_active 7
+iter: 866, n_active 7
+end of iter: 866, n_active 7
+iter: 867, n_active 7
+end of iter: 867, n_active 7
+iter: 868, n_active 7
+end of iter: 868, n_active 7
+iter: 869, n_active 7
+end of iter: 869, n_active 7
+iter: 870, n_active 7
+end of iter: 870, n_active 7
+iter: 871, n_active 7
+end of iter: 871, n_active 7
+iter: 872, n_active 7
+end of iter: 872, n_active 7
+iter: 873, n_active 7
+end of iter: 873, n_active 7
+iter: 874, n_active 7
+end of iter: 874, n_active 7
+iter: 875, n_active 7
+end of iter: 875, n_active 7
+iter: 876, n_active 7
+end of iter: 876, n_active 7
+iter: 877, n_active 7
+end of iter: 877, n_active 7
+iter: 878, n_active 7
+end of iter: 878, n_active 7
+iter: 879, n_active 7
+end of iter: 879, n_active 7
+iter: 880, n_active 7
+end of iter: 880, n_active 7
+iter: 881, n_active 7
+end of iter: 881, n_active 7
+iter: 882, n_active 7
+end of iter: 882, n_active 7
+iter: 883, n_active 7
+end of iter: 883, n_active 7
+iter: 884, n_active 7
+end of iter: 884, n_active 7
+iter: 885, n_active 7
+end of iter: 885, n_active 7
+iter: 886, n_active 7
+end of iter: 886, n_active 7
+iter: 887, n_active 7
+end of iter: 887, n_active 7
+iter: 888, n_active 7
+end of iter: 888, n_active 7
+iter: 889, n_active 7
+end of iter: 889, n_active 7
+iter: 890, n_active 7
+end of iter: 890, n_active 7
+iter: 891, n_active 7
+end of iter: 891, n_active 7
+iter: 892, n_active 7
+end of iter: 892, n_active 7
+iter: 893, n_active 7
+end of iter: 893, n_active 7
+iter: 894, n_active 7
+end of iter: 894, n_active 7
+iter: 895, n_active 7
+end of iter: 895, n_active 7
+iter: 896, n_active 7
+end of iter: 896, n_active 7
+iter: 897, n_active 7
+end of iter: 897, n_active 7
+iter: 898, n_active 7
+end of iter: 898, n_active 7
+iter: 899, n_active 7
+end of iter: 899, n_active 7
+iter: 900, n_active 7
+end of iter: 900, n_active 7
+iter: 901, n_active 7
+end of iter: 901, n_active 7
+iter: 902, n_active 7
+end of iter: 902, n_active 7
+iter: 903, n_active 7
+end of iter: 903, n_active 7
+iter: 904, n_active 7
+end of iter: 904, n_active 7
+iter: 905, n_active 7
+end of iter: 905, n_active 7
+iter: 906, n_active 7
+end of iter: 906, n_active 7
+iter: 907, n_active 7
+end of iter: 907, n_active 7
+iter: 908, n_active 7
+end of iter: 908, n_active 7
+iter: 909, n_active 7
+end of iter: 909, n_active 7
+iter: 910, n_active 7
+end of iter: 910, n_active 7
+iter: 911, n_active 7
+end of iter: 911, n_active 7
+iter: 912, n_active 7
+end of iter: 912, n_active 7
+iter: 913, n_active 7
+end of iter: 913, n_active 7
+iter: 914, n_active 7
+end of iter: 914, n_active 7
+iter: 915, n_active 7
+end of iter: 915, n_active 7
+iter: 916, n_active 7
+end of iter: 916, n_active 7
+iter: 917, n_active 7
+end of iter: 917, n_active 7
+iter: 918, n_active 7
+end of iter: 918, n_active 7
+iter: 919, n_active 7
+end of iter: 919, n_active 7
+iter: 920, n_active 7
+end of iter: 920, n_active 7
+iter: 921, n_active 7
+end of iter: 921, n_active 7
+iter: 922, n_active 7
+end of iter: 922, n_active 7
+iter: 923, n_active 7
+end of iter: 923, n_active 7
+iter: 924, n_active 7
+end of iter: 924, n_active 7
+iter: 925, n_active 7
+end of iter: 925, n_active 7
+iter: 926, n_active 7
+end of iter: 926, n_active 7
+iter: 927, n_active 7
+end of iter: 927, n_active 7
+iter: 928, n_active 7
+end of iter: 928, n_active 7
+iter: 929, n_active 7
+end of iter: 929, n_active 7
+iter: 930, n_active 7
+end of iter: 930, n_active 7
+iter: 931, n_active 7
+end of iter: 931, n_active 7
+iter: 932, n_active 7
+end of iter: 932, n_active 7
+iter: 933, n_active 7
+end of iter: 933, n_active 7
+iter: 934, n_active 7
+end of iter: 934, n_active 7
+iter: 935, n_active 7
+end of iter: 935, n_active 7
+iter: 936, n_active 7
+end of iter: 936, n_active 7
+iter: 937, n_active 7
+end of iter: 937, n_active 7
+iter: 938, n_active 7
+end of iter: 938, n_active 7
+iter: 939, n_active 7
+end of iter: 939, n_active 7
+iter: 940, n_active 7
+end of iter: 940, n_active 7
+iter: 941, n_active 7
+end of iter: 941, n_active 7
+iter: 942, n_active 7
+end of iter: 942, n_active 7
+iter: 943, n_active 7
+end of iter: 943, n_active 7
+iter: 944, n_active 7
+end of iter: 944, n_active 7
+iter: 945, n_active 7
+end of iter: 945, n_active 7
+iter: 946, n_active 7
+end of iter: 946, n_active 7
+iter: 947, n_active 7
+end of iter: 947, n_active 7
+iter: 948, n_active 7
+end of iter: 948, n_active 7
+iter: 949, n_active 7
+end of iter: 949, n_active 7
+iter: 950, n_active 7
+end of iter: 950, n_active 7
+iter: 951, n_active 7
+end of iter: 951, n_active 7
+iter: 952, n_active 7
+end of iter: 952, n_active 7
+iter: 953, n_active 7
+end of iter: 953, n_active 7
+iter: 954, n_active 7
+end of iter: 954, n_active 7
+iter: 955, n_active 7
+end of iter: 955, n_active 7
+iter: 956, n_active 7
+end of iter: 956, n_active 7
+iter: 957, n_active 7
+end of iter: 957, n_active 7
+iter: 958, n_active 7
+end of iter: 958, n_active 7
+iter: 959, n_active 7
+end of iter: 959, n_active 7
+iter: 960, n_active 7
+end of iter: 960, n_active 7
+iter: 961, n_active 7
+end of iter: 961, n_active 7
+iter: 962, n_active 7
+end of iter: 962, n_active 7
+iter: 963, n_active 7
+end of iter: 963, n_active 7
+iter: 964, n_active 7
+end of iter: 964, n_active 7
+iter: 965, n_active 7
+end of iter: 965, n_active 7
+iter: 966, n_active 7
+end of iter: 966, n_active 7
+iter: 967, n_active 7
+end of iter: 967, n_active 7
+iter: 968, n_active 7
+end of iter: 968, n_active 7
+iter: 969, n_active 7
+end of iter: 969, n_active 7
+iter: 970, n_active 7
+end of iter: 970, n_active 7
+iter: 971, n_active 7
+end of iter: 971, n_active 7
+iter: 972, n_active 7
+end of iter: 972, n_active 7
+iter: 973, n_active 7
+end of iter: 973, n_active 7
+iter: 974, n_active 7
+end of iter: 974, n_active 7
+iter: 975, n_active 7
+end of iter: 975, n_active 7
+iter: 976, n_active 7
+end of iter: 976, n_active 7
+iter: 977, n_active 7
+end of iter: 977, n_active 7
+iter: 978, n_active 7
+end of iter: 978, n_active 7
+iter: 979, n_active 7
+end of iter: 979, n_active 7
+iter: 980, n_active 7
+end of iter: 980, n_active 7
+iter: 981, n_active 7
+end of iter: 981, n_active 7
+iter: 982, n_active 7
+end of iter: 982, n_active 7
+iter: 983, n_active 7
+end of iter: 983, n_active 7
+iter: 984, n_active 7
+end of iter: 984, n_active 7
+iter: 985, n_active 7
+end of iter: 985, n_active 7
+iter: 986, n_active 7
+end of iter: 986, n_active 7
+iter: 987, n_active 7
+end of iter: 987, n_active 7
+iter: 988, n_active 7
+end of iter: 988, n_active 7
+iter: 989, n_active 7
+end of iter: 989, n_active 7
+iter: 990, n_active 7
+end of iter: 990, n_active 7
+iter: 991, n_active 7
+end of iter: 991, n_active 7
+iter: 992, n_active 7
+end of iter: 992, n_active 7
+iter: 993, n_active 7
+end of iter: 993, n_active 7
+iter: 994, n_active 7
+end of iter: 994, n_active 7
+iter: 995, n_active 7
+end of iter: 995, n_active 7
+iter: 996, n_active 7
+end of iter: 996, n_active 7
+iter: 997, n_active 7
+end of iter: 997, n_active 7
+iter: 998, n_active 7
+end of iter: 998, n_active 7
+iter: 999, n_active 7
+end of iter: 999, n_active 7
+iter: 1000, n_active 7
+end of iter: 1000, n_active 7
+iter: 1001, n_active 7
+
+  1134890x1134890 GraphBLAS LG_MF_flowEdge matrix, sparse by row, ints: 32/32/32
+  R, 5975248 entries, memory: 118.3 MB
+
+    (0,1) [user-defined value]
+    (0,2) [user-defined value]
+    (0,3) [user-defined value]
+    (0,4) [user-defined value]
+    (0,5) [user-defined value]
+    (0,6) [user-defined value]
+    (0,7) [user-defined value]
+    (0,8) [user-defined value]
+    (0,9) [user-defined value]
+    (0,10) [user-defined value]
+    (0,11) [user-defined value]
+    (0,12) [user-defined value]
+    (0,13) [user-defined value]
+    (0,14) [user-defined value]
+    (0,15) [user-defined value]
+    (0,16) [user-defined value]
+    (0,17) [user-defined value]
+    (0,18) [user-defined value]
+    (0,19) [user-defined value]
+    (0,20) [user-defined value]
+    (0,21) [user-defined value]
+    (0,375) [user-defined value]
+    (0,1218) [user-defined value]
+    (0,268634) [user-defined value]
+    (0,317879) [user-defined value]
+    (0,644185) [user-defined value]
+    (0,644186) [user-defined value]
+    (0,644187) [user-defined value]
+    (0,644188) [user-defined value]
+    ...
+
+  1134890x1134890 GraphBLAS double matrix, hypersparse by row, ints: 32/32/32
+  Delta, 14 entries, memory: 524 bytes
+
+    (544,1001873)    -1
+    (570,33838)    -1
+    (587,31494)    -1
+    (599,33540)    -1
+    (627,33458)    -1
+    (29734,711614)    1
+    (31494,587)    1
+    (33458,627)    1
+    (33540,599)    1
+    (33838,570)    1
+    (642636,872966)    -1
+    (711614,29734)    -1
+    (872966,642636)    1
+    (1001873,544)    1
+
+result: -1005 LAGraph assertion "0" failed (file /home/davis/dev2/LAGraph/experimental/algorithm/LAGr_MaxFlow.c, line 1074): status: -1005
