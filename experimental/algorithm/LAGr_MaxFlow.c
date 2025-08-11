@@ -27,7 +27,7 @@
 #include "LG_internal.h"
 #include <LAGraph.h>
 
-#define DBG
+//#define DBG
 #if LG_SUITESPARSE_GRAPHBLAS_V10
 
 //------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ static GrB_Info LG_global_relabel
     GrB_Vector src_and_sink,    // mask vector, with just [src sink]
     GrB_UnaryOp GetResidual,    // unary op to compute resid=capacity-flow
     // input/output:
-    GrB_Vector d,       // d(i) = height/label of node i
+    GrB_Vector *d,       // d(i) = height/label of node i
     // outputs:
     GrB_Vector *lvl,    // lvl(i) = distance of node i from sink, if reachable
     char *msg
@@ -118,9 +118,9 @@ static GrB_Info LG_global_relabel
     // compute lvl using bfs on G2, starting at sink node
     LG_TRY(LAGr_BreadthFirstSearch(lvl, NULL, G2, sink, msg));
     // d<!struct([src,sink])> = lvl
-    GRB_TRY(GrB_assign(d, src_and_sink, NULL, *lvl, GrB_ALL, n, GrB_DESC_SC));
+    GRB_TRY(GrB_assign(*d, src_and_sink, NULL, *lvl, GrB_ALL, n, GrB_DESC_SC));
     // d<!struct(lvl)> = n
-    GRB_TRY(GrB_assign(d, *lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC));
+    GRB_TRY(GrB_assign(*d, *lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC));
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
@@ -944,7 +944,7 @@ int LAGr_MaxFlow
   GRB_TRY(GrB_apply(R, A, NULL, ResidualBackward, AT, GrB_DESC_SC));
 
   // initial global relabeling
-  LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, d, &lvl, msg)) ;
+  LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, &d, &lvl, msg)) ;
 
   // create excess vector e and initial flows from the src to its neighbors
   // e<struct(lvl)> = A (src,:)
@@ -974,9 +974,9 @@ int LAGr_MaxFlow
     // Part 1: global relabeling
     //--------------------------------------------------------------------------
 
-    if ((iter > 0) && (flow_mtx != NULL) && (iter % 12 == 0))
+    if ((iter > 0) && (flow_mtx == NULL) && (iter % 12 == 0))
     {
-      LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, d, &lvl, msg)) ;
+      LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, &d, &lvl, msg)) ;
       // delete nodes in e that cannot be reached from the sink
       // e<!struct(lvl)> = empty scalar
       GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
@@ -1063,8 +1063,8 @@ int LAGr_MaxFlow
     double total_delta ;
 
     GRB_TRY(GrB_reduce(&total_delta, NULL, GrB_PLUS_MONOID_FP64, delta_vec, NULL));
-    printf ("iter %ld, delta %g\n", iter, total_delta) ;
-    GxB_print (delta_vec, 5) ;
+    //printf ("iter %ld, delta %g\n", iter, total_delta) ;
+    //GxB_print (delta_vec, 5) ;
     if (iter > 1000)
     {
         GxB_print (R, 2) ;
