@@ -565,6 +565,27 @@ JIT_STR(void LG_MF_ExtractMatrixFlow(double* flow, const LG_MF_flowEdge* edge){*
 
 #endif
 
+
+void print_compareVec(const GrB_Vector vec) {
+  GxB_Iterator iter;
+  GxB_Iterator_new(&iter);
+  GrB_Info info = GxB_Vector_Iterator_attach(iter, vec, NULL);
+  if(info < 0){
+    printf("error with matrix passed in");
+  }
+  info = GxB_Vector_Iterator_seek(iter, 0);
+  while(info != GxB_EXHAUSTED){
+    GrB_Index i;
+    i = GxB_Vector_Iterator_getIndex(iter);
+    LG_MF_compareTuple32 e;
+    GxB_Iterator_get_UDT(iter, &e);
+    printf("(%ld, 0)         (di: %d, dj: %d, J: %d, residual: %lf) \n", i, e.di, e.dj, e.j, e.residual);
+    info = GxB_Vector_Iterator_next(iter);
+  }
+  GrB_free(&iter);
+}
+
+
 //------------------------------------------------------------------------------
 // LAGraph_MaxFlow
 //------------------------------------------------------------------------------
@@ -1004,6 +1025,12 @@ int LAGr_MaxFlow
     // create Map matrix from pattern and values of yd
     // yd = CreateCompareVec (y,d) using eWiseMult
     GRB_TRY(GrB_eWiseMult(yd, NULL, NULL, CreateCompareVec, y,  d, NULL));
+
+    //DBG
+    //DBG
+    if(iter > 100)
+      print_compareVec(y);
+
     // Jvec = ExtractJ (yd), where Jvec(i) = yd(i)->j
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, ExtractJ, yd, NULL));
     GRB_TRY(GrB_Matrix_clear(Map));
