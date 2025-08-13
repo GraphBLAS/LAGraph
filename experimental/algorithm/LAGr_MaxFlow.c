@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: work in progress (flow_matrix and global relabel)
+
 // LAGr_MaxFlow is a GraphBLAS implementation of the push-relabel algorithm
 // of Baumstark et al. [1]
 //

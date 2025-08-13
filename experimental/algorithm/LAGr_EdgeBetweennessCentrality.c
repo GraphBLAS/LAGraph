@@ -16,6 +16,9 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: ready for src, except need vanilla, and the method is a bit slow
+// because of the internal kernels it uses in SuiteSparse:GraphBLAS need work.
+
 // LAGr_EdgeBetweennessCentrality: Exact algorithm for computing
 // betweeness centrality.
 

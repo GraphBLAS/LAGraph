@@ -16,6 +16,9 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: replace pack/upack with load/unload
+// TODO: need a bipartite LAGraph_Graph
+
 // This implmentation is based on the algorithm described in the following
 // paper: "Distributed-Memory Algorithms for Maximum Cardinality Matching in
 // Bipartite Graphs" by A. Azad and A. Buluç.

@@ -1,3 +1,7 @@
+// TODO: ready for consider for src but need to consider the API.
+// TODO: See also LAGraph_coloring_independent_set.c
+// TODO: add comment/copyright header.
+
 #include "LG_internal.h" // contains all internal grb operations
 #include "LAGraphX.h"    // algorithm added to LAGraphX.h
 

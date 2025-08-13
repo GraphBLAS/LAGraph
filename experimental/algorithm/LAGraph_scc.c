@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: not ready for src; uses global variables
+// TODO: almost ready for src; but vanilla method would be hard.
 
 /**
  * Code is based on the Min-Label algorithm described in the following paper:

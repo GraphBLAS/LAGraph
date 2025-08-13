@@ -1,3 +1,7 @@
+// TODO: ready for consider for src but need to consider the API.
+// TODO: See also LAGraph_coloring_MIS.c
+// TODO: add comment/copyright header.
+
 #include "LG_internal.h" // contains all internal grb operations
 #include "LAGraphX.h"    // algorithm added to LAGraphX.h
 
@@ -106,6 +110,7 @@ int LAGraph_coloring_independent_set
     LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
 #else
+    // TODO: the above should be OK with vanilla GraphBLAS
     return (GrB_NOT_IMPLEMENTED) ;
 #endif
 }

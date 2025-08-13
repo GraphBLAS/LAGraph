@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: ready for src
+
 // Get the rich club coefficient of a graph.
 
 // Given a Symetric Graph with no self edges, LAGraph_RichClubCoefficient will

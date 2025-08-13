@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: ready to consider for src
+// TODO: ready to consider for src, but need vanilla
 
 // The modularity (Q) of a graph clustering C is defined as (directed case):
 //

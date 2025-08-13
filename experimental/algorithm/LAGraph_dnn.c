@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: ready for src, but is the problem statement general enough?
+
 // LAGraph_dnn: sparse deep neural network.
 // Based on inferenceReLUvec.m by Jeremy Kepner, MIT.
 

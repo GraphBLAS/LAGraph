@@ -208,6 +208,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
 
     while (ncandidates > 0)
     {
+        // TODO: can combine the 2 calls below and use the JIT:
         // compute the score for each node; scale the Seed by degree
         // score = (float) Seed
         GRB_TRY (GrB_assign (score, NULL, NULL, Seed, GrB_ALL, n, NULL)) ;

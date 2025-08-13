@@ -113,6 +113,9 @@
 // (1, 2) - because there exists a path (1-5-2) that forms the word "ab"
 // (0, 3) - because there exists a path (0-1-5-2-3) that forms the word "aabb"
 
+// TODO: discussion needed for src:  LAGraph_rule_WCNF would need to be added.
+// TODO: do we need a "vanilla" version with no GxB?
+
 GrB_Info LAGraph_CFL_reachability
 (
     // Output

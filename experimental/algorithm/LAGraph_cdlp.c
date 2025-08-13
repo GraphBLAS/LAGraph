@@ -23,6 +23,9 @@
 // the Rapids Memory Manager methods when using CUDA, and those
 // methods are not yet thread-safe).
 
+// TODO: not ready for src.  Need container load/unload not pack/unpack.
+// TODO: Need a different calloc/free (not done in parallel)
+
 //------------------------------------------------------------------------------
 
 // ## Background

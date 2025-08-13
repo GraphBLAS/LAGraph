@@ -18,7 +18,7 @@
 // LAGraph_FastGraphletTransform: computes the Fast Graphlet Transform of
 // an undirected graph.  No self edges are allowed on the input graph.
 
-// TODO: rename this, and add to src (but it uses GxB)
+// TODO: rename this, and add to src (but it requires GxB)
 
 // https://arxiv.org/pdf/2007.11111.pdf
 

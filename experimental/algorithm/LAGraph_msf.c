@@ -26,6 +26,7 @@
  */
 
 // TODO: not ready for src but getting close.
+// TODO: a GxB variant would be difficult however.
 
 // TODO: a "sanitize" input is fine for now in the experimental folder, but it
 // doesn't fit with the standard LAGraph API.  It will need to be removed when
