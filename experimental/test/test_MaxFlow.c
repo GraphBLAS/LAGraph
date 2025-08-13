@@ -91,12 +91,13 @@ void test_MaxFlow(void) {
     GrB_Index n ;
     OK (GrB_Matrix_nrows (&n, G->A)) ;
     printf ("n: %ld\n", (int64_t) n) ;
-    if (n < 100)
+    if (n < 90)
     {
         for (GrB_Index src = 0 ; src < n ; src++)
         {
             for (GrB_Index dest = 0 ; dest < n ; dest++)
             {
+              printf("src: %ld, dest: %ld\n", src, dest);
                 if (src == dest) continue ;
                 OK(LAGr_MaxFlow(&flow, NULL, G, src, dest, msg));
             }

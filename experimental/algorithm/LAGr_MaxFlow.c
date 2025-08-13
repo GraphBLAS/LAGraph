@@ -460,7 +460,7 @@ JIT_STR(void LG_MF_MxeMult32(LG_MF_resultTuple32 * z,
   bool j_active = ((*y) > 0) ;
   if ((x->di <  x->dj-1) /* case a */
   ||  (x->di == x->dj-1 && !j_active) /* case b */
-  ||  (x->di == x->dj   && (!j_active || (j_active && (i < j)))) /* case c */
+  ||  (x->di == x->dj && (!j_active || (j_active && (i < j)))) /* case c */
   ||  (x->di == x->dj+1))   /* case d */
   {
       z->residual = x->residual;
@@ -965,12 +965,12 @@ int LAGr_MaxFlow
   GRB_TRY(GrB_apply(R, A, NULL, ResidualBackward, AT, GrB_DESC_SC));
 
   // initial global relabeling
-  LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, &d, &lvl, msg)) ;
+  //LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, &d, &lvl, msg)) ;
 
   // create excess vector e and initial flows from the src to its neighbors
   // e<struct(lvl)> = A (src,:)
   GRB_TRY(GrB_Vector_new(&e, GrB_FP64, n));
-  GRB_TRY(GrB_extract(e, lvl, NULL, A, GrB_ALL, n, src, GrB_DESC_ST0));
+  GRB_TRY(GrB_extract(e, /* lvl */NULL, NULL, A, GrB_ALL, n, src, GrB_DESC_ST0));
   GrB_free(&lvl);
   // t = MakeFlow (e), where t(i) = (0, e(i))
   GRB_TRY(GrB_Vector_new(&t, FlowEdge, n));
@@ -991,21 +991,20 @@ int LAGr_MaxFlow
   for (int64_t iter = 0 ; n_active > 0 ; iter++)
   {
   printf ("iter: %ld, n_active %ld\n", iter, n_active) ;
-
     //--------------------------------------------------------------------------
     // Part 1: global relabeling
     //--------------------------------------------------------------------------
 
     if ((iter > 0) && (flow_mtx == NULL) && (iter % 12 == 0))
     {
-  printf ("relabel at : %ld\n", iter) ;
-      LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, &d, &lvl, msg)) ;
+      printf ("relabel at : %ld\n", iter) ;
+      //LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, &d, &lvl, msg)) ;
       // delete nodes in e that cannot be reached from the sink
-      // e<!struct(lvl)> = empty scalar
-      GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
-      GrB_free(&lvl);
-      GRB_TRY(GrB_Vector_nvals(&n_active, e));
-      if(n_active == 0) break;
+      //  e<!struct(lvl)> = empty scalar
+      //GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
+      //GrB_free(&lvl);
+      //GRB_TRY(GrB_Vector_nvals(&n_active, e));
+      //if(n_active == 0) break;
     }
 
     //--------------------------------------------------------------------------
@@ -1028,9 +1027,11 @@ int LAGr_MaxFlow
 
     //DBG
     //DBG
-    if(iter > 100)
-      print_compareVec(y);
-
+    print_compareVec(yd);
+    //GxB_print(d, 5);
+    //GxB_print(e, 5);
+    
+    
     // Jvec = ExtractJ (yd), where Jvec(i) = yd(i)->j
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, ExtractJ, yd, NULL));
     GRB_TRY(GrB_Matrix_clear(Map));
@@ -1074,6 +1075,9 @@ int LAGr_MaxFlow
     // note that delta_vec has the same structure as y
     // Jvec = ExtractYJ (y), where Jvec(i) = y(i)->j
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, ExtractYJ, y, NULL));
+    GrB_Index J_n;
+    GRB_TRY(GrB_Vector_nvals(&J_n, Jvec));
+    if(J_n == 0) break;
     GRB_TRY(GrB_Matrix_clear(Delta));
     GRB_TRY(GrB_Matrix_build(Delta, delta_vec, Jvec, delta_vec, GxB_IGNORE_DUP, desc));
 
@@ -1093,7 +1097,7 @@ int LAGr_MaxFlow
 
     GRB_TRY(GrB_reduce(&total_delta, NULL, GrB_PLUS_MONOID_FP64, delta_vec, NULL));
     //printf ("iter %ld, delta %g\n", iter, total_delta) ;
-    //GxB_print (delta_vec, 5) ;
+    GxB_print (delta_vec, 5) ;
     if (iter > 1000)
     {
         GxB_print (R, 2) ;
