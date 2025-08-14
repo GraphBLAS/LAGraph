@@ -988,7 +988,7 @@ int LAGr_MaxFlow
   // create excess vector e and initial flows from the src to its neighbors
   // e<struct(lvl)> = A (src,:)
   GRB_TRY(GrB_Vector_new(&e, GrB_FP64, n));
-  GRB_TRY(GrB_extract(e, /* lvl */NULL, NULL, A, GrB_ALL, n, src, GrB_DESC_ST0));
+  GRB_TRY(GrB_extract(e, lvl, NULL, A, GrB_ALL, n, src, GrB_DESC_ST0));
   GrB_free(&lvl);
   // t = MakeFlow (e), where t(i) = (0, e(i))
   GRB_TRY(GrB_Vector_new(&t, FlowEdge, n));
@@ -1021,7 +1021,7 @@ int LAGr_MaxFlow
         printf ("relabel at : %ld\n", iter) ;
       #endif
       LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, global_relabel_accum, relabel_value, d, &lvl, msg)) ;
-      if(flow_mtx == NULL){
+      if(flow_mtx != NULL){
         // delete nodes in e that cannot be reached from the sink
 	//  e<!struct(lvl)> = empty scalar
 	GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
