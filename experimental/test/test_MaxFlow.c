@@ -53,7 +53,7 @@ test_info tests[] = {
 void test_MaxFlow(void) {
 #if LG_SUITESPARSE_GRAPHBLAS_V10
   LAGraph_Init(msg);
-//OK(LG_SET_BURBLE(1));
+  //OK(LG_SET_BURBLE(1));
   OK(LG_SET_BURBLE(0));
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A=NULL;
@@ -91,7 +91,7 @@ void test_MaxFlow(void) {
     GrB_Index n ;
     OK (GrB_Matrix_nrows (&n, G->A)) ;
     printf ("n: %ld\n", (int64_t) n) ;
-    if (n < 90)
+    if (n < 100)
     {
         for (GrB_Index src = 0 ; src < n ; src++)
         {
