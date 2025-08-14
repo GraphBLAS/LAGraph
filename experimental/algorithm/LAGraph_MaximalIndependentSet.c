@@ -58,7 +58,6 @@
 
 // TODO: rename LAGr_MaximalIndependentSet (this is expert)
 // TODO: add a basic method
-// vanilla OK: no GxB used
 
 int LAGraph_MaximalIndependentSet       // maximal independent set
 (

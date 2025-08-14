@@ -227,11 +227,7 @@ int LAGr_TriangleCount_GPU
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-    #if LAGRAPH_SUITESPARSE
-    GrB_Semiring semiring = GxB_PLUS_PAIR_INT64 ;
-    #else
     GrB_Semiring semiring = LAGraph_plus_one_int64 ;
-    #endif
     GrB_Monoid monoid = GrB_PLUS_MONOID_INT64 ;
 
     //--------------------------------------------------------------------------

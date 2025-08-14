@@ -297,7 +297,7 @@ GrB_Info LAGraph_CFL_reachability
         }
 
         GxB_eWiseUnion(
-            T[term_rule.nonterm], GrB_NULL, GrB_NULL, GxB_PAIR_BOOL,
+            T[term_rule.nonterm], GrB_NULL, GrB_NULL, GrB_ONEB_BOOL,
             T[term_rule.nonterm], true_scalar, adj_matrices[term_rule.prod_A], true_scalar, GrB_NULL
         );
 
@@ -320,7 +320,7 @@ GrB_Info LAGraph_CFL_reachability
         LAGraph_rule_WCNF eps_rule = rules[eps_rules[i]];
 
         GxB_eWiseUnion (
-            T[eps_rule.nonterm],GrB_NULL,GxB_PAIR_BOOL,GxB_PAIR_BOOL,
+            T[eps_rule.nonterm],GrB_NULL,GrB_ONEB_BOOL,GrB_ONEB_BOOL,
             T[eps_rule.nonterm],true_scalar,identity_matrix,true_scalar,GrB_NULL
         );
         

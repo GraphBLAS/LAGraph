@@ -150,7 +150,7 @@ int LAGr_Modularity(
 
     // vmask (i) = 0 if cluster i is non-empty (has any vertices)
     GRB_TRY(GrB_reduce(vmask, NULL, NULL, GrB_LOR_MONOID_BOOL, C, NULL));
-    GRB_TRY(GrB_apply(vmask, vmask, NULL, GxB_LNOT_BOOL, vmask, NULL));
+    GRB_TRY(GrB_apply(vmask, vmask, NULL, GrB_LNOT, vmask, NULL));
 
     // If any of the above vectors have fewer entries than nclusters, this means
     // that there are singleton clusters with one vertex/no out-degree/no

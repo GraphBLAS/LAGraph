@@ -74,6 +74,7 @@ GrB_Info LAGraph_Hash_Matrix(
     // Compute without extra memory if possible.
     GRB_TRY (GrB_Matrix_apply_IndexOp_UINT64(
         C, NULL, NULL, lg_hash_edge, A, (uint64_t) 0, NULL));
+    // FIXME: could make the monoid instead of using GxB:
     GRB_TRY (GrB_Matrix_reduce_UINT64(
         hash, GrB_BXOR_UINT64, GxB_BXOR_UINT64_MONOID, C, NULL)) ;
     LG_FREE_ALL;

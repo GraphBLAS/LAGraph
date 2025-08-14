@@ -326,9 +326,8 @@ int LAGr_EdgeBetweennessCentrality
             //----------------------------------------------------------------------
             
             GRB_TRY (LG_SET_FORMAT_HINT (frontier, LG_SPARSE)) ;
-            GRB_TRY (GrB_vxm (frontier, paths, NULL, /* LAGraph_plus_first_fp64 */
-                GxB_PLUS_FIRST_FP64, frontier, 
-                A, GrB_DESC_RSC )) ;
+            GRB_TRY (GrB_vxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
+                frontier, A, GrB_DESC_RSC )) ;
 
             //----------------------------------------------------------------------
             // Get size of current frontier: frontier_size = nvals(frontier)
