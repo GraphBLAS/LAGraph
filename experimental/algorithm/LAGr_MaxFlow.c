@@ -1021,7 +1021,7 @@ int LAGr_MaxFlow
         printf ("relabel at : %ld\n", iter) ;
       #endif
       LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, global_relabel_accum, relabel_value, d, &lvl, msg)) ;
-      if(flow_mtx != NULL){
+      if(flow_mtx == NULL){
         // delete nodes in e that cannot be reached from the sink
 	//  e<!struct(lvl)> = empty scalar
 	GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
