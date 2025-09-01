@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: work in progress (flow_matrix and global relabel)
+
 // LAGr_MaxFlow is a GraphBLAS implementation of the push-relabel algorithm
 // of Baumstark et al. [1]
 //
@@ -27,6 +29,7 @@
 #include "LG_internal.h"
 #include <LAGraph.h>
 
+//#define DBG
 #if LG_SUITESPARSE_GRAPHBLAS_V10
 
 //------------------------------------------------------------------------------
@@ -90,6 +93,8 @@ static GrB_Info LG_global_relabel
     GrB_Index sink,             // sink node
     GrB_Vector src_and_sink,    // mask vector, with just [src sink]
     GrB_UnaryOp GetResidual,    // unary op to compute resid=capacity-flow
+    GrB_BinaryOp global_relabel_accum, // accum for the disconnected assign
+    GrB_Index relabel_value, // value to relabel the disconnected nodes
     // input/output:
     GrB_Vector d,       // d(i) = height/label of node i
     // outputs:
@@ -116,10 +121,10 @@ static GrB_Info LG_global_relabel
     LG_TRY(LAGraph_Cached_OutDegree(G2, msg));
     // compute lvl using bfs on G2, starting at sink node
     LG_TRY(LAGr_BreadthFirstSearch(lvl, NULL, G2, sink, msg));
-    // d<!struct([src,sink])> = lvl
-    GRB_TRY(GrB_assign(d, src_and_sink, NULL, *lvl, GrB_ALL, n, GrB_DESC_SC));
-    // d<!struct(lvl)> = n
-    GRB_TRY(GrB_assign(d, *lvl, NULL, n, GrB_ALL, n, GrB_DESC_SC));
+    // d<!struct([src,sink])> = max(d(i), lvl)
+    GRB_TRY(GrB_assign(d, src_and_sink, global_relabel_accum, *lvl, GrB_ALL, n, GrB_DESC_SC));
+    // d<!struct(lvl)> = max(d(i), relabel_value)
+    GRB_TRY(GrB_assign(d, *lvl, global_relabel_accum, relabel_value, GrB_ALL, n, GrB_DESC_SC));
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
@@ -459,7 +464,7 @@ JIT_STR(void LG_MF_MxeMult32(LG_MF_resultTuple32 * z,
   bool j_active = ((*y) > 0) ;
   if ((x->di <  x->dj-1) /* case a */
   ||  (x->di == x->dj-1 && !j_active) /* case b */
-  ||  (x->di == x->dj   && (!j_active || (j_active && (i < j)))) /* case c */
+  ||  (x->di == x->dj && (!j_active || (j_active && (i < j)))) /* case c */
   ||  (x->di == x->dj+1))   /* case d */
   {
       z->residual = x->residual;
@@ -563,6 +568,28 @@ JIT_STR(void LG_MF_GetResidual(double * res, const LG_MF_flowEdge * flow_edge){
 JIT_STR(void LG_MF_ExtractMatrixFlow(double* flow, const LG_MF_flowEdge* edge){*flow = edge->flow;}, EMFLOW_STR)
 
 #endif
+
+#ifdef DBG
+void print_compareVec(const GrB_Vector vec) {
+  GxB_Iterator iter;
+  GxB_Iterator_new(&iter);
+  GrB_Info info = GxB_Vector_Iterator_attach(iter, vec, NULL);
+  if(info < 0){
+    printf("error with matrix passed in");
+  }
+  info = GxB_Vector_Iterator_seek(iter, 0);
+  while(info != GxB_EXHAUSTED){
+    GrB_Index i;
+    i = GxB_Vector_Iterator_getIndex(iter);
+    LG_MF_compareTuple32 e;
+    GxB_Iterator_get_UDT(iter, &e);
+    printf("(%ld, 0)         (di: %d, dj: %d, J: %d, residual: %lf) \n", i, e.di, e.dj, e.j, e.residual);
+    info = GxB_Vector_Iterator_next(iter);
+  }
+  GrB_free(&iter);
+}
+#endif
+
 
 //------------------------------------------------------------------------------
 // LAGraph_MaxFlow
@@ -766,6 +793,9 @@ int LAGr_MaxFlow
 
   GrB_Type Integer_Type = NULL ;
 
+  //accum operator for the global relabel
+  GrB_BinaryOp global_relabel_accum = NULL ;
+
   #ifdef COVERAGE
   // Just for test coverage, use 64-bit ints for n > 100.  Do not use this
   // rule in production!
@@ -781,6 +811,9 @@ int LAGr_MaxFlow
     //--------------------------------------------------------------------------
 
     Integer_Type = GrB_INT64 ;
+
+    // use the 64 bit max operator 
+    global_relabel_accum = GrB_MAX_INT64 ;
 
     // create types for computation
     GRB_TRY(GxB_Type_new(&ResultTuple, sizeof(LG_MF_resultTuple64),
@@ -851,6 +884,9 @@ int LAGr_MaxFlow
     //--------------------------------------------------------------------------
 
     Integer_Type = GrB_INT32 ;
+
+    // use 32 bit max op
+    global_relabel_accum = GrB_MAX_INT32 ;
 
     // create types for computation
     GRB_TRY(GxB_Type_new(&ResultTuple, sizeof(LG_MF_resultTuple32),
@@ -943,8 +979,14 @@ int LAGr_MaxFlow
   GRB_TRY(GrB_apply(R, A, NULL, ResidualBackward, AT, GrB_DESC_SC));
 
   // initial global relabeling
-  LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, d, &lvl, msg)) ;
+  // relabel to 2*n to prevent any flow from going to the
+  // disconnected nodes.
+  GrB_Index relabel_value = 2*n ;
+  LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, global_relabel_accum, relabel_value, d, &lvl, msg)) ;
 
+  // reset to n
+  relabel_value = n ;
+  
   // create excess vector e and initial flows from the src to its neighbors
   // e<struct(lvl)> = A (src,:)
   GRB_TRY(GrB_Vector_new(&e, GrB_FP64, n));
@@ -968,20 +1010,27 @@ int LAGr_MaxFlow
 
   for (int64_t iter = 0 ; n_active > 0 ; iter++)
   {
-
+    #ifdef DBG
+      printf ("iter: %ld, n_active %ld\n", iter, n_active) ;
+    #endif
     //--------------------------------------------------------------------------
     // Part 1: global relabeling
     //--------------------------------------------------------------------------
 
-    if ((iter > 0) && (flow_mtx != NULL) && (iter % 12 == 0))
+    if ((iter > 0)  && (iter % 12 == 0))
     {
-      LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, d, &lvl, msg)) ;
-      // delete nodes in e that cannot be reached from the sink
-      // e<!struct(lvl)> = empty scalar
-      GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
+      #ifdef DBG
+        printf ("relabel at : %ld\n", iter) ;
+      #endif
+      LG_TRY (LG_global_relabel (R, sink, src_and_sink, GetResidual, global_relabel_accum, relabel_value, d, &lvl, msg)) ;
+      if(flow_mtx == NULL){
+        // delete nodes in e that cannot be reached from the sink
+	//  e<!struct(lvl)> = empty scalar
+	GrB_assign (e, lvl, NULL, empty, GrB_ALL, n, GrB_DESC_SC) ;
+	GRB_TRY(GrB_Vector_nvals(&n_active, e));
+	if(n_active == 0) break;
+      }
       GrB_free(&lvl);
-      GRB_TRY(GrB_Vector_nvals(&n_active, e));
-      if(n_active == 0) break;
     }
 
     //--------------------------------------------------------------------------
@@ -1001,6 +1050,14 @@ int LAGr_MaxFlow
     // create Map matrix from pattern and values of yd
     // yd = CreateCompareVec (y,d) using eWiseMult
     GRB_TRY(GrB_eWiseMult(yd, NULL, NULL, CreateCompareVec, y,  d, NULL));
+
+    #ifdef DBG
+      print_compareVec(yd);
+      GxB_print(d, 3);
+      GxB_print(e, 3);
+    #endif
+    
+    
     // Jvec = ExtractJ (yd), where Jvec(i) = yd(i)->j
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, ExtractJ, yd, NULL));
     GRB_TRY(GrB_Matrix_clear(Map));
@@ -1043,7 +1100,12 @@ int LAGr_MaxFlow
     // create the Delta matrix from delta_vec and y
     // note that delta_vec has the same structure as y
     // Jvec = ExtractYJ (y), where Jvec(i) = y(i)->j
+    // if Jvec has no values, then there is no possible
+    // candidates to push to, so the algorithm terminates
     GRB_TRY(GrB_apply(Jvec, NULL, NULL, ExtractYJ, y, NULL));
+    GrB_Index J_n;
+    GRB_TRY(GrB_Vector_nvals(&J_n, Jvec));
+    if(J_n == 0) break;
     GRB_TRY(GrB_Matrix_clear(Delta));
     GRB_TRY(GrB_Matrix_build(Delta, delta_vec, Jvec, delta_vec, GxB_IGNORE_DUP, desc));
 
@@ -1057,7 +1119,7 @@ int LAGr_MaxFlow
 
     // reduce Delta to delta_vec
     // delta_vec = sum (Delta), summing up each row of Delta
-    GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_FP64, Delta, GrB_DESC_T0));
+    GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_MONOID_FP64, Delta, GrB_DESC_T0));
 
     // add delta_vec to e
     // e<struct(delta_vec)> += delta_vec
@@ -1065,6 +1127,7 @@ int LAGr_MaxFlow
 
     // augment maxflow for all active nodes
     LG_TRY (LG_augment_maxflow (f, e, sink, src_and_sink, &n_active, msg)) ;
+
   }
 
   //----------------------------------------------------------------------------
