@@ -387,7 +387,7 @@ int LAGraph_FastGraphletTransform
 
     int i_tile;
     GrB_Info info1 = GrB_SUCCESS ;
-    #pragma omp parallel for num_threads(omp_get_max_threads()) schedule(dynamic,1)
+    #pragma omp parallel for num_threads(save_nthreads_outer) schedule(dynamic,1)
     for (i_tile = 0; i_tile < tile_cnt; ++i_tile)
     {
         GrB_Matrix A_i = NULL, e = NULL ;
