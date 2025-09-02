@@ -131,7 +131,6 @@ static GrB_Info LG_global_relabel
 
 #define LG_FREE_WORK_EXCEPT_R               \
 {                                           \
-    GrB_free(&FlowEdge);                    \
     GrB_free(&CompareTuple);                \
     GrB_free(&ResultTuple);                 \
     GrB_free(&e);                           \
@@ -181,6 +180,7 @@ static GrB_Info LG_global_relabel
 #define LG_FREE_WORK                        \
 {                                           \
     LG_FREE_WORK_EXCEPT_R                   \
+    GrB_free(&FlowEdge);                    \
     GrB_free(&ExtractMatrixFlow);           \
     GrB_free(&R);                           \
 }
