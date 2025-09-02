@@ -15,8 +15,6 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: work in progress (flow_matrix and global relabel)
-
 // LAGr_MaxFlow is a GraphBLAS implementation of the push-relabel algorithm
 // of Baumstark et al. [1]
 //
@@ -78,8 +76,8 @@ static GrB_Info LG_augment_maxflow
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK                        \
 {                                           \
-    GrB_free(&C);                           \
-    GrB_free(&T);                           \
+    GrB_free(&R_hat);                       \
+    GrB_free(&R_hat_transpose);             \
     LAGraph_Delete(&G2, msg);               \
 }
 
@@ -102,22 +100,22 @@ static GrB_Info LG_global_relabel
     char *msg
 )
 {
-    GrB_Matrix C = NULL, T = NULL ;
+    GrB_Matrix R_hat = NULL, R_hat_transpose = NULL ;
     LAGraph_Graph G2 = NULL ;
     GrB_Index n ;
     GRB_TRY(GrB_Matrix_nrows(&n, R)) ;
-    GRB_TRY(GrB_Matrix_new(&T, GrB_FP64, n, n));
-    GRB_TRY(GrB_Matrix_new(&C, GrB_FP64, n, n));
-    // C = GetResidual (R), computing the residual of each edge
-    GRB_TRY(GrB_apply(C, NULL, NULL, GetResidual, R, NULL)) ;
-    // prune zeros and negative entries from C
-    GRB_TRY(GrB_select(C, NULL, NULL, GrB_VALUEGT_FP64, C, 0, NULL)) ;
-    // T = C'
-    GRB_TRY(GrB_transpose(T, NULL, NULL, C, NULL));
+    GRB_TRY(GrB_Matrix_new(&R_hat_transpose, GrB_FP64, n, n));
+    GRB_TRY(GrB_Matrix_new(&R_hat, GrB_FP64, n, n));
+    // R_hat = GetResidual (R), computing the residual of each edge
+    GRB_TRY(GrB_apply(R_hat, NULL, NULL, GetResidual, R, NULL)) ;
+    // prune zeros and negative entries from R_hat
+    GRB_TRY(GrB_select(R_hat, NULL, NULL, GrB_VALUEGT_FP64, R_hat, 0, NULL)) ;
+    // R_hat_transpose = R_hat'
+    GRB_TRY(GrB_transpose(R_hat_transpose, NULL, NULL, R_hat, NULL));
     // construct G2 and its cached transpose and outdegree
-    LG_TRY(LAGraph_New(&G2, &T, LAGraph_ADJACENCY_DIRECTED, msg));
-    G2->AT = C ;
-    C = NULL ;
+    LG_TRY(LAGraph_New(&G2, &R_hat_transpose, LAGraph_ADJACENCY_DIRECTED, msg));
+    G2->AT = R_hat ;
+    R_hat = NULL ;
     LG_TRY(LAGraph_Cached_OutDegree(G2, msg));
     // compute lvl using bfs on G2, starting at sink node
     LG_TRY(LAGr_BreadthFirstSearch(lvl, NULL, G2, sink, msg));
@@ -131,8 +129,7 @@ static GrB_Info LG_global_relabel
 
 //------------------------------------------------------------------------------
 
-#undef  LG_FREE_WORK
-#define LG_FREE_WORK                        \
+#define LG_FREE_WORK_EXCEPT_R               \
 {                                           \
     GrB_free(&FlowEdge);                    \
     GrB_free(&CompareTuple);                \
@@ -140,12 +137,11 @@ static GrB_Info LG_global_relabel
     GrB_free(&e);                           \
     GrB_free(&d);                           \
     GrB_free(&theta);                       \
-    GrB_free(&R);                           \
     GrB_free(&Delta);                       \
     GrB_free(&delta_vec);                   \
-    GrB_free(&Map);                         \
-    GrB_free(&y);                           \
-    GrB_free(&yd);                          \
+    GrB_free(&C);                           \
+    GrB_free(&push_vector);                 \
+    GrB_free(&pd);                          \
     GrB_free(&src_and_sink);                \
     GrB_free(&Jvec);                        \
     GrB_free(&Prune);                       \
@@ -179,7 +175,14 @@ static GrB_Info LG_global_relabel
     GrB_free(&MakeFlow);                    \
     GrB_free(&GetResidual);                 \
     GrB_free(&lvl) ;                        \
+}
+
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK                        \
+{                                           \
+    LG_FREE_WORK_EXCEPT_R                   \
     GrB_free(&ExtractMatrixFlow);           \
+    GrB_free(&R);                           \
 }
 
 #undef  LG_FREE_ALL
@@ -211,7 +214,7 @@ JIT_STR(typedef struct{
   double flow;          /* current flow along this edge (i,j); can be negative */
   } LG_MF_flowEdge;, FLOWEDGE_STR)
 
-// type of the y vector for y = R*d: LG_MF_resultTuple64/32 (ResultTuple)
+// type of the push_vector vector for push_vector = R*d: LG_MF_resultTuple64/32 (ResultTuple)
 JIT_STR(typedef struct{
   double residual;      /* residual = capacity - flow for the edge (i,j) */
   int64_t d;            /* d(j) of the target node j */
@@ -223,7 +226,7 @@ JIT_STR(typedef struct{
   int32_t j;            /* node id of the target node j */
   } LG_MF_resultTuple32;, RESULTTUPLE_STR32)
 
-// type of the Map matrix and yd vector: LG_MF_compareTuple64/32 (CompareTuple)
+// type of the C matrix and pd vector: LG_MF_compareTuple64/32 (CompareTuple)
 JIT_STR(typedef struct{
   double residual;      /* residual = capacity - flow for the edge (i,j) */
   int64_t di;           /* d(i) for node i */
@@ -350,7 +353,7 @@ JIT_STR(void LG_MF_RxdAdd32(LG_MF_resultTuple32 * z,
   }, RXDADD_STR32)
 
 //------------------------------------------------------------------------------
-// unary ops for delta_vec = ResidualFlow (y)
+// unary ops for delta_vec = ResidualFlow (push_vector)
 //------------------------------------------------------------------------------
 
 JIT_STR(void LG_MF_ResidualFlow64(double *z, const LG_MF_resultTuple64 *x)
@@ -370,7 +373,7 @@ JIT_STR(void LG_MF_UpdateFlow(LG_MF_flowEdge *z,
   }, UPDATEFLOW_STR)
 
 //------------------------------------------------------------------------------
-// binary op for d<struct(y)> = Relabel (d, y) using eWiseMult
+// binary op for d<struct(push_vector)> = Relabel (d, push_vector)
 //------------------------------------------------------------------------------
 
 JIT_STR(void LG_MF_Relabel64(int64_t *z,
@@ -394,7 +397,7 @@ JIT_STR(void LG_MF_Relabel32(int32_t *z,
   }, RELABEL_STR32)
 
 //------------------------------------------------------------------------------
-// unary op for Jvec = ExtractJ (yd), where Jvec(i) = yd(i)->j
+// unary op for Jvec = ExtractJ (pd), where Jvec(i) = pd(i)->j
 //------------------------------------------------------------------------------
 
 JIT_STR(void LG_MF_ExtractJ64(int64_t *z, const LG_MF_compareTuple64 *x) { (*z) = x->j; }, EXTRACTJ_STR64)
@@ -402,7 +405,7 @@ JIT_STR(void LG_MF_ExtractJ64(int64_t *z, const LG_MF_compareTuple64 *x) { (*z) 
 JIT_STR(void LG_MF_ExtractJ32(int32_t *z, const LG_MF_compareTuple32 *x) { (*z) = x->j; }, EXTRACTJ_STR32)
 
 //------------------------------------------------------------------------------
-// unary op for Jvec = ExtractYJ (y), where Jvec(i) = y(i)->j
+// unary op for Jvec = ExtractYJ(push_vector), where Jvec(i) = push_vector(i)->j
 //------------------------------------------------------------------------------
 
 JIT_STR(void LG_MF_ExtractYJ64(int64_t *z, const LG_MF_resultTuple64 *x) { (*z) = x->j; }, EXTRACTYJ_STR64)
@@ -430,10 +433,10 @@ JIT_STR(void LG_MF_InitBack(LG_MF_flowEdge * z,
   }, INITBACK_STR)
 
 //------------------------------------------------------------------------------
-// y = Map*e semiring
+// push_vector = C*e semiring
 //------------------------------------------------------------------------------
 
-// multiplicative operator, z = Map(i,j)*e(j), 64-bit case
+// multiplicative operator, z = C(i,j)*e(j), 64-bit case
 JIT_STR(void LG_MF_MxeMult64(LG_MF_resultTuple64 * z,
     const LG_MF_compareTuple64 * x, GrB_Index i, GrB_Index j,
     const double * y, GrB_Index iy, GrB_Index jy,
@@ -456,7 +459,7 @@ JIT_STR(void LG_MF_MxeMult64(LG_MF_resultTuple64 * z,
   }
 }, MXEMULT_STR64)
 
-// multiplicative operator, z = Map(i,j)*e(j), 32-bit case
+// multiplicative operator, z = C(i,j)*e(j), 32-bit case
 JIT_STR(void LG_MF_MxeMult32(LG_MF_resultTuple32 * z,
     const LG_MF_compareTuple32 * x, GrB_Index i, GrB_Index j,
     const double * y, GrB_Index iy, GrB_Index jy,
@@ -494,7 +497,7 @@ JIT_STR(void LG_MF_MxeAdd32(LG_MF_resultTuple32 * z,
   }, MXEADD_STR32)
 
 //------------------------------------------------------------------------------
-// binary op for yd = CreateCompareVec (y,d) using eWiseMult
+// binary op for pd = CreateCompareVec (push_vector,d) using eWiseMult
 //------------------------------------------------------------------------------
 
 JIT_STR(void LG_MF_CreateCompareVec64(LG_MF_compareTuple64 *comp,
@@ -515,7 +518,7 @@ JIT_STR(void LG_MF_CreateCompareVec32(LG_MF_compareTuple32 *comp,
   }, CREATECOMPAREVEC_STR32)
 
 //------------------------------------------------------------------------------
-// index unary op to remove empty tuples from y (for which y->j is -1)
+// index unary op to remove empty tuples from push_vector (for which y->j is -1)
 //------------------------------------------------------------------------------
 
 JIT_STR(void LG_MF_Prune64(bool * z, const LG_MF_resultTuple64 * x,
@@ -554,7 +557,7 @@ JIT_STR(void LG_MF_CheckInvariant32(bool *z, const int32_t *height,
 #endif
 
 //------------------------------------------------------------------------------
-// binary op for C = GetResidual (R), computing the residual of each edge
+// binary op for R_hat = GetResidual (R), computing the residual of each edge
 //------------------------------------------------------------------------------
 
 JIT_STR(void LG_MF_GetResidual(double * res, const LG_MF_flowEdge * flow_edge){
@@ -565,7 +568,9 @@ JIT_STR(void LG_MF_GetResidual(double * res, const LG_MF_flowEdge * flow_edge){
 // unary op for flow_mtx = ExtractMatrixFlow (R)
 //------------------------------------------------------------------------------
 
-JIT_STR(void LG_MF_ExtractMatrixFlow(double* flow, const LG_MF_flowEdge* edge){*flow = edge->flow;}, EMFLOW_STR)
+JIT_STR(void LG_MF_ExtractMatrixFlow(double* flow, const LG_MF_flowEdge* edge){
+    *flow = edge->flow;
+}, EMFLOW_STR)
 
 #endif
 
@@ -638,8 +643,8 @@ int LAGr_MaxFlow
   GrB_Vector src_and_sink = NULL ;
   GrB_Index n_active = INT64_MAX ;
 
-  // semiring and vectors for y<struct(e)> = R x d
-  GrB_Vector y = NULL ;
+  // semiring and vectors for push_vector<struct(e)> = R*d
+  GrB_Vector push_vector = NULL ;
   GrB_IndexUnaryOp Prune = NULL ;
   GxB_IndexBinaryOp RxdIndexMult = NULL ;
   GrB_BinaryOp RxdAdd = NULL, RxdMult = NULL ;
@@ -647,16 +652,16 @@ int LAGr_MaxFlow
   GrB_Semiring RxdSemiring = NULL ;
   GrB_Scalar theta = NULL ;
 
-  // binary op and yd
-  GrB_Vector yd = NULL ;
+  // binary op and pd
+  GrB_Vector pd = NULL ;
   GrB_BinaryOp CreateCompareVec = NULL ;
 
   // utility vectors, Matrix, and ops for mapping
-  GrB_Matrix Map = NULL ;
+  GrB_Matrix C = NULL ;         // matrix of candidate pushes
   GrB_Vector Jvec = NULL ;
   GrB_UnaryOp ExtractJ = NULL, ExtractYJ = NULL ;
 
-  // Map*e semiring
+  // C*e semiring
   GrB_Semiring MxeSemiring = NULL ;
   GrB_Monoid MxeAddMonoid = NULL ;
   GrB_BinaryOp MxeAdd = NULL, MxeMult = NULL ;
@@ -664,6 +669,8 @@ int LAGr_MaxFlow
 
   // to extract the residual flow
   GrB_UnaryOp ResidualFlow = NULL ;
+
+  // to extract the final flows for the flow matrix
   GrB_UnaryOp ExtractMatrixFlow = NULL ;
 
   // Delta structures
@@ -779,14 +786,6 @@ int LAGr_MaxFlow
   GRB_TRY(GrB_Scalar_new(&theta, GrB_BOOL));        // unused placeholder
   GRB_TRY(GrB_Scalar_setElement_BOOL(theta, false));
 
-  // create op for optional output flow_mtx
-  if (flow_mtx != NULL)
-  {
-    GRB_TRY(GxB_UnaryOp_new(&ExtractMatrixFlow,
-        F_UNARY(LG_MF_ExtractMatrixFlow), GrB_FP64, FlowEdge,
-        "LG_MF_ExtractMatrixFlow", EMFLOW_STR));
-  }
-
   //----------------------------------------------------------------------------
   // determine the integer type to use for the problem
   //----------------------------------------------------------------------------
@@ -844,7 +843,7 @@ int LAGr_MaxFlow
     LG_MF_resultTuple64 id = {.d = INT64_MAX, .j = -1, .residual = 0};
     GRB_TRY(GrB_Monoid_new_UDT(&RxdAddMonoid, RxdAdd, &id));
 
-    // create binary op for yd
+    // create binary op for pd
     GRB_TRY(GxB_BinaryOp_new(&CreateCompareVec,
         F_BINARY(LG_MF_CreateCompareVec64), CompareTuple, ResultTuple, GrB_INT64,
         "LG_MF_CreateCompareVec64", CREATECOMPAREVEC_STR64));
@@ -862,7 +861,7 @@ int LAGr_MaxFlow
         F_UNARY(LG_MF_ExtractYJ64), GrB_INT64, ResultTuple,
         "LG_MF_ExtractYJ64", EXTRACTYJ_STR64));
 
-    // create ops for Map*e semiring
+    // create ops for C*e semiring
     GRB_TRY(GxB_IndexBinaryOp_new(&MxeIndexMult,
         F_INDEX_BINARY(LG_MF_MxeMult64), ResultTuple, CompareTuple, GrB_FP64, GrB_BOOL,
         "LG_MF_MxeMult64", MXEMULT_STR64));
@@ -916,7 +915,7 @@ int LAGr_MaxFlow
     LG_MF_resultTuple32 id = {.d = INT32_MAX, .j = -1, .residual = 0};
     GRB_TRY(GrB_Monoid_new_UDT(&RxdAddMonoid, RxdAdd, &id));
 
-    // create binary op for yd
+    // create binary op for pd
     GRB_TRY(GxB_BinaryOp_new(&CreateCompareVec,
         F_BINARY(LG_MF_CreateCompareVec32), CompareTuple, ResultTuple, GrB_INT32,
         "LG_MF_CreateCompareVec32", CREATECOMPAREVEC_STR32));
@@ -934,7 +933,7 @@ int LAGr_MaxFlow
         F_UNARY(LG_MF_ExtractYJ32), GrB_INT32, ResultTuple,
         "LG_MF_ExtractYJ32", EXTRACTYJ_STR32));
 
-    // create ops for Map*e semiring
+    // create ops for C*e semiring
     GRB_TRY(GxB_IndexBinaryOp_new(&MxeIndexMult,
         F_INDEX_BINARY(LG_MF_MxeMult32), ResultTuple, CompareTuple, GrB_FP64, GrB_BOOL,
         "LG_MF_MxeMult32", MXEMULT_STR32));
@@ -954,15 +953,15 @@ int LAGr_MaxFlow
   // create remaining vectors, matrices, descriptor, and semirings
   //----------------------------------------------------------------------------
 
-  GRB_TRY(GrB_Matrix_new(&Map, CompareTuple, n,n));
+  GRB_TRY(GrB_Matrix_new(&C, CompareTuple, n,n));
   GRB_TRY(GrB_Vector_new(&Jvec, Integer_Type, n));
-  GRB_TRY(GrB_Vector_new(&yd, CompareTuple, n));
-  GRB_TRY(GrB_Vector_new(&y, ResultTuple, n));
+  GRB_TRY(GrB_Vector_new(&pd, CompareTuple, n));
+  GRB_TRY(GrB_Vector_new(&push_vector, ResultTuple, n));
 
   GRB_TRY(GrB_Semiring_new(&RxdSemiring, RxdAddMonoid, RxdMult));
   GRB_TRY(GrB_Semiring_new(&MxeSemiring, MxeAddMonoid, MxeMult));
 
-  // create descriptor for building the Map and Delta matrices
+  // create descriptor for building the C and Delta matrices
   GRB_TRY(GrB_Descriptor_new(&desc));
   GRB_TRY(GrB_set(desc, GxB_USE_INDICES, GxB_ROWINDEX_LIST));
 
@@ -1037,50 +1036,52 @@ int LAGr_MaxFlow
     // Part 2: deciding where to push
     //--------------------------------------------------------------------------
 
-    // y<struct(e),replace> = R*d using the RxdSemiring
-    GRB_TRY(GrB_mxv(y, e, NULL, RxdSemiring, R, d, GrB_DESC_RS));
+    // push_vector<struct(e),replace> = R*d using the RxdSemiring
+    GRB_TRY(GrB_mxv(push_vector, e, NULL, RxdSemiring, R, d, GrB_DESC_RS));
 
-    // remove empty tuples (0,inf,-1) from y
-    GRB_TRY(GrB_select(y, NULL, NULL, Prune, y, 0, NULL));
+    // remove empty tuples (0,inf,-1) from push_vector
+    GRB_TRY(GrB_select(push_vector, NULL, NULL, Prune, push_vector, 0, NULL));
 
     //--------------------------------------------------------------------------
     // Part 3: verifying the pushes
     //--------------------------------------------------------------------------
 
-    // create Map matrix from pattern and values of yd
-    // yd = CreateCompareVec (y,d) using eWiseMult
-    GRB_TRY(GrB_eWiseMult(yd, NULL, NULL, CreateCompareVec, y,  d, NULL));
+    // create C matrix (Candidate pushes) from pattern and values of pd
+    // pd = CreateCompareVec (push_vector,d) using eWiseMult
+    GRB_TRY(GrB_eWiseMult(pd, NULL, NULL, CreateCompareVec, push_vector, d, NULL));
 
     #ifdef DBG
-      print_compareVec(yd);
+      print_compareVec(pd);
       GxB_print(d, 3);
       GxB_print(e, 3);
     #endif
     
-    
-    // Jvec = ExtractJ (yd), where Jvec(i) = yd(i)->j
-    GRB_TRY(GrB_apply(Jvec, NULL, NULL, ExtractJ, yd, NULL));
-    GRB_TRY(GrB_Matrix_clear(Map));
-    GRB_TRY(GrB_Matrix_build(Map, yd, Jvec, yd, GxB_IGNORE_DUP, desc));
+    // Jvec = ExtractJ (pd), where Jvec(i) = pd(i)->j
+    GRB_TRY(GrB_apply(Jvec, NULL, NULL, ExtractJ, pd, NULL));
+    GRB_TRY(GrB_Matrix_clear(C));
+    GRB_TRY(GrB_Matrix_build(C, pd, Jvec, pd, GxB_IGNORE_DUP, desc));
+    GRB_TRY(GrB_Vector_clear(pd));
+    GRB_TRY(GrB_Vector_clear(Jvec));
 
-    // make e dense for Map computation
+    // make e dense for C computation
     // TODO: consider keeping e in bitmap/full format only,
     // or always full with e(i)=0 denoting a non-active node.
     GRB_TRY(GrB_assign(e, e, NULL, 0, GrB_ALL, n, GrB_DESC_SC));
 
-    // y = Map*e using the MxeSemiring
-    GRB_TRY(GrB_mxv(y, NULL, NULL, MxeSemiring, Map, e, NULL));
+    // push_vector = C*e using the MxeSemiring
+    GRB_TRY(GrB_mxv(push_vector, NULL, NULL, MxeSemiring, C, e, NULL));
+    GRB_TRY(GrB_Matrix_clear(C));
 
-    // remove empty tuples (0,inf,-1) from y
-    GRB_TRY(GrB_select(y, NULL, NULL, Prune, y, -1, NULL));
+    // remove empty tuples (0,inf,-1) from push_vector
+    GRB_TRY(GrB_select(push_vector, NULL, NULL, Prune, push_vector, -1, NULL));
 
     // relabel, updating the height/label vector d
-    // d<struct(y)> = Relabel (d, y) using eWiseMult
-    GRB_TRY(GrB_eWiseMult(d, y, NULL, Relabel, d, y, GrB_DESC_S));
+    // d<struct(push_vector)> = Relabel (d, push_vector) using eWiseMult
+    GRB_TRY(GrB_eWiseMult(d, push_vector, NULL, Relabel, d, push_vector, GrB_DESC_S));
 
     #ifdef DBG
         // assert invariant for all labels
-        GRB_TRY(GrB_eWiseMult(invariant, y, NULL, CheckInvariant, d, y, GrB_DESC_RS));
+        GRB_TRY(GrB_eWiseMult(invariant, push_vector, NULL, CheckInvariant, d, push_vector, GrB_DESC_RS));
         GRB_TRY(GrB_reduce(check, NULL, GrB_LAND_MONOID_BOOL, invariant, NULL));
         GRB_TRY(GrB_Scalar_extractElement(&check_raw, check));
         ASSERT(check_raw == true);
@@ -1090,24 +1091,25 @@ int LAGr_MaxFlow
     // Part 4: executing the pushes
     //--------------------------------------------------------------------------
 
-    // extract residual flows from y
-    // delta_vec = ResidualFlow (y), obtaining just the residual flows
-    GRB_TRY(GrB_apply(delta_vec, NULL, NULL, ResidualFlow, y, NULL));
+    // extract residual flows from push_vector
+    // delta_vec = ResidualFlow (push_vector), obtaining just the residual flows
+    GRB_TRY(GrB_apply(delta_vec, NULL, NULL, ResidualFlow, push_vector, NULL));
 
     // delta_vec = min (delta_vec, e), where e is dense
     GRB_TRY(GrB_eWiseMult(delta_vec, NULL, NULL, GrB_MIN_FP64, delta_vec, e, NULL));
 
-    // create the Delta matrix from delta_vec and y
-    // note that delta_vec has the same structure as y
-    // Jvec = ExtractYJ (y), where Jvec(i) = y(i)->j
+    // create the Delta matrix from delta_vec and push_vector
+    // note that delta_vec has the same structure as push_vector
+    // Jvec = ExtractYJ (push_vector), where Jvec(i) = push_vector(i)->j
     // if Jvec has no values, then there is no possible
     // candidates to push to, so the algorithm terminates
-    GRB_TRY(GrB_apply(Jvec, NULL, NULL, ExtractYJ, y, NULL));
+    GRB_TRY(GrB_apply(Jvec, NULL, NULL, ExtractYJ, push_vector, NULL));
     GrB_Index J_n;
     GRB_TRY(GrB_Vector_nvals(&J_n, Jvec));
     if(J_n == 0) break;
     GRB_TRY(GrB_Matrix_clear(Delta));
     GRB_TRY(GrB_Matrix_build(Delta, delta_vec, Jvec, delta_vec, GxB_IGNORE_DUP, desc));
+    GRB_TRY(GrB_Vector_clear(Jvec));
 
     // make Delta anti-symmetric
     // Delta = (Delta - Delta')
@@ -1120,6 +1122,7 @@ int LAGr_MaxFlow
     // reduce Delta to delta_vec
     // delta_vec = sum (Delta), summing up each row of Delta
     GRB_TRY(GrB_reduce(delta_vec, NULL, NULL, GrB_PLUS_MONOID_FP64, Delta, GrB_DESC_T0));
+    GRB_TRY(GrB_Matrix_clear(Delta));
 
     // add delta_vec to e
     // e<struct(delta_vec)> += delta_vec
@@ -1130,12 +1133,19 @@ int LAGr_MaxFlow
 
   }
 
+
   //----------------------------------------------------------------------------
   // optionally construct the output flow matrix, if requested
   //----------------------------------------------------------------------------
 
   if (flow_mtx != NULL)
   {
+    // free all workspace except R
+    LG_FREE_WORK_EXCEPT_R ;
+    // create the ExtractMatrixFlow op to compute the flow matrix
+    GRB_TRY(GxB_UnaryOp_new(&ExtractMatrixFlow,
+        F_UNARY(LG_MF_ExtractMatrixFlow), GrB_FP64, FlowEdge,
+        "LG_MF_ExtractMatrixFlow", EMFLOW_STR));
     // flow_mtx = ExtractMatrixFlow (R)
     GRB_TRY(GrB_Matrix_new(flow_mtx, GrB_FP64, n, n));
     GRB_TRY(GrB_apply(*flow_mtx, NULL, NULL, ExtractMatrixFlow, R, NULL));
@@ -1150,26 +1160,26 @@ int LAGr_MaxFlow
   #ifdef COVERAGE
   // The MxeAdd operator is not tested via the call to GrB_mxv with the
   // MxeSemiring above, so test it via the MxeAddMonoid.
-  GrB_free(&y);
-  GRB_TRY(GrB_Vector_new(&y, ResultTuple, 3));
+  GrB_free(&push_vector);
+  GRB_TRY(GrB_Vector_new(&push_vector, ResultTuple, 3));
   if (n > NBIG)
   {
     LG_MF_resultTuple64 a = {.d = 1, .j = 2, .residual = 3};
     LG_MF_resultTuple64 b = {.d = 4, .j = 5, .residual = 6};
-    GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &a, 0)) ;
-    GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &b, 0)) ;
+    GRB_TRY (GrB_Vector_setElement_UDT (push_vector, (void *) &a, 0)) ;
+    GRB_TRY (GrB_Vector_setElement_UDT (push_vector, (void *) &b, 0)) ;
     LG_MF_resultTuple64 c = {.d = 0, .j = 0, .residual = 0};
-    GRB_TRY (GrB_Vector_reduce_UDT ((void *) &c, NULL, MxeAddMonoid, y, NULL)) ;
+    GRB_TRY (GrB_Vector_reduce_UDT ((void *) &c, NULL, MxeAddMonoid, push_vector, NULL)) ;
     LG_ASSERT ((c.residual == 6 && c.j == 5 && c.d == 4), GrB_PANIC) ;
   }
   else
   {
     LG_MF_resultTuple32 a = {.d = 1, .j = 2, .residual = 3};
     LG_MF_resultTuple32 b = {.d = 4, .j = 5, .residual = 6};
-    GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &a, 0)) ;
-    GRB_TRY (GrB_Vector_setElement_UDT (y, (void *) &b, 0)) ;
+    GRB_TRY (GrB_Vector_setElement_UDT (push_vector, (void *) &a, 0)) ;
+    GRB_TRY (GrB_Vector_setElement_UDT (push_vector, (void *) &b, 0)) ;
     LG_MF_resultTuple32 c = {.d = 0, .j = 0, .residual = 0};
-    GRB_TRY (GrB_Vector_reduce_UDT ((void *) &c, NULL, MxeAddMonoid, y, NULL)) ;
+    GRB_TRY (GrB_Vector_reduce_UDT ((void *) &c, NULL, MxeAddMonoid, push_vector, NULL)) ;
     LG_ASSERT ((c.residual == 6 && c.j == 5 && c.d == 4), GrB_PANIC) ;
   }
   #endif
