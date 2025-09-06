@@ -23,6 +23,13 @@
 // (eds) Algorithms - ESA 2015. Lecture Notes in Computer Science(), vol 9294.
 // Springer, Berlin, Heidelberg.  https://doi.org/10.1007/978-3-662-48350-3 10.
 
+// [2] D. Peries and T. Davis, "A parallel push-relabel maximum flow algorithm
+// in LAGraph and GraphBLAS", IEEE HPEC'25, Sept 2025.
+
+// TODO: return the (optional) flow matrix can be costly in terms of run time.
+// The HPEC'25 results only benchmark the computation of the max flow, f.
+// Future work:  we plan on revising how the flow matrix is constructed.
+
 #include <LAGraphX.h>
 #include "LG_internal.h"
 #include <LAGraph.h>
