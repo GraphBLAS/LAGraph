@@ -90,14 +90,14 @@ void test_MaxFlow(void) {
     // test all source/destination pairs for small problems
     GrB_Index n ;
     OK (GrB_Matrix_nrows (&n, G->A)) ;
-    printf ("n: %ld\n", (int64_t) n) ;
+    printf ("n: %d\n", (int) n) ;
     if (n < 100)
     {
         for (GrB_Index src = 0 ; src < n ; src++)
         {
             for (GrB_Index dest = 0 ; dest < n ; dest++)
             {
-              printf("src: %ld, dest: %ld\n", src, dest);
+              printf("src: %d, dest: %d\n", (int) src, (int) dest);
                 if (src == dest) continue ;
                 OK(LAGr_MaxFlow(&flow, NULL, G, src, dest, msg));
             }
