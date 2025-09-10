@@ -54,7 +54,7 @@ int main (int argc, char ** argv){
   if(end1 == 0 || end2 == 0){
     printf("values for source and sink are incorrect.\n");
   }
-  printf("Starting max flow from %ld to %ld\n", S, T);
+  printf("Starting max flow from %" PRIu64 " to %" PRIu64 "\n", S, T);
 
   // LG_SET_BURBLE(1);
   double time = LAGraph_WallClockTime();
@@ -63,16 +63,18 @@ int main (int argc, char ** argv){
   printf("Time for LAGraph_MaxFlow: %g sec\n", time);
   printf("Max Flow is: %lf\n", flow);
 
-  /* printf("Starting max flow from %ld to %ld, with flow_matrix returned\n", S, T); */
-  /* time = LAGraph_WallClockTime(); */
-  /* LAGRAPH_TRY(LAGr_MaxFlow(&flow, &flow_matrix, G, S, T, msg)); */
-  /* time = LAGraph_WallClockTime() - time; */
-  /* printf("Time for LAGraph_MaxFlow with flow matrix: %g sec\n", time); */
-  /* printf("Max Flow is: %lf\n", flow); */
-  /* GRB_TRY (GrB_Matrix_nvals (&nflow, flow_matrix)) ; */
-  /* printf("# of entries in flow matrix: %lu\n", nflow); */
+  printf("Starting max flow from %" PRIu64 " to %" PRIu64
+    ", with flow_matrix returned\n", S, T);
+  time = LAGraph_WallClockTime();
+  LAGRAPH_TRY(LAGr_MaxFlow(&flow, &flow_matrix, G, S, T, msg));
+  time = LAGraph_WallClockTime() - time;
+  printf("Time for LAGraph_MaxFlow with flow matrix: %g sec\n", time);
+  printf("Max Flow is: %lf\n", flow);
+  GRB_TRY (GrB_Matrix_nvals (&nflow, flow_matrix)) ;
+  printf("# of entries in flow matrix: %" PRIu64 "\n", nflow);
 
   LAGraph_Delete(&G, msg);
+  GrB_free (&flow_matrix) ;
   LAGRAPH_TRY(LAGraph_Finalize(msg));
 
   return GrB_SUCCESS;
