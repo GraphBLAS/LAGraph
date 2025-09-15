@@ -252,7 +252,6 @@ int LAGraph_FastAssign_Semiring
     // Load P and do the mxv
     //----------------------------------------------------------------------
     GRB_TRY (GxB_load_Matrix_from_Container(P, con, NULL));
-    // GRB_TRY (GxB_fprint(P, GxB_SHORT, stdout));
     GRB_TRY (GrB_mxv(c, mask, accum, semiring, P, X_vec, desc));
     //----------------------------------------------------------------------
     // Free work. 

@@ -257,7 +257,7 @@ int LAGr_Betweenness
             GrB_DESC_RS)) ;
 
         //----------------------------------------------------------------------
-        // W<S[i−1]> = W * A'
+        // W<S[i-1]> = W * A'
         //----------------------------------------------------------------------
 
         // pull if W is more than 10% dense and nnz(W)/nnz(S[i-1]) > 1
@@ -272,14 +272,14 @@ int LAGr_Betweenness
 
         if (do_pull)
         {
-            // W<S[i−1]> = W * A'
+            // W<S[i-1]> = W * A'
             GRB_TRY (LG_SET_FORMAT_HINT (W, LG_BITMAP)) ;
             GRB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, A,
                 GrB_DESC_RST1)) ;
         }
         else // push
         {
-            // W<S[i−1]> = W * AT
+            // W<S[i-1]> = W * AT
             GRB_TRY (LG_SET_FORMAT_HINT (W, LG_SPARSE)) ;
             GRB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, AT,
                 GrB_DESC_RS)) ;

@@ -22,8 +22,7 @@
 // Code is based on Boruvka's minimum spanning forest algorithm.
 
 // This method relies solely on GrB* methods in the V2.0 C API, but it much
-// slower in general than LG_CC_FastSV6, which uses GxB pack/unpack methods
-// for faster access to the contents of the matrices and vectors.
+// slower in general than LG_CC_FastSV7.
 
 #include <stdint.h>
 

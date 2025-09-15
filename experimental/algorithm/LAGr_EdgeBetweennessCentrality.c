@@ -16,6 +16,9 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: ready for src, except need vanilla, and the method is a bit slow
+// because of the internal kernels it uses in SuiteSparse:GraphBLAS need work.
+
 // LAGr_EdgeBetweennessCentrality: Exact algorithm for computing
 // betweeness centrality.
 
@@ -323,9 +326,8 @@ int LAGr_EdgeBetweennessCentrality
             //----------------------------------------------------------------------
             
             GRB_TRY (LG_SET_FORMAT_HINT (frontier, LG_SPARSE)) ;
-            GRB_TRY (GrB_vxm (frontier, paths, NULL, /* LAGraph_plus_first_fp64 */
-                GxB_PLUS_FIRST_FP64, frontier, 
-                A, GrB_DESC_RSC )) ;
+            GRB_TRY (GrB_vxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
+                frontier, A, GrB_DESC_RSC )) ;
 
             //----------------------------------------------------------------------
             // Get size of current frontier: frontier_size = nvals(frontier)

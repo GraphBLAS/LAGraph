@@ -36,6 +36,7 @@
 
 // TODO: need both basic and expert; this is advanced
 // TODO: this should return D as an LAGraph_Graph, not as a GrB_Matrix
+// TODO: has GxB; need a vanilla version
 
 int LAGraph_KCore_Decompose
 (

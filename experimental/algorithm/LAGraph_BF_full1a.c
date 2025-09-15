@@ -257,7 +257,7 @@ GrB_Info LAGraph_BF_full1a
     todo: GraphBLAS could use a new kind of unary operator, not z=f(x), but
 
     [z,flag] = f (aij, i, j, k, nrows, ncols, nvals, etc, ...)
-    flag: keep or discard.  Combines GrB_apply and GxB_select.
+    flag: keep or discard.  Combines GrB_apply and GrB_select.
 
     builtins:
         f(...) =
@@ -265,7 +265,7 @@ GrB_Info LAGraph_BF_full1a
             j, bool is true
             i+j*nrows, etc.
             k
-            tril, triu (like GxB_select): return aij, and true/false boolean
+            tril, triu (like GrB_select): return aij, and true/false boolean
 
         z=f(x,i).  x: double, z:tuple3, i:GrB_Index with the row index of x
         // z = (BF_Tuple3_struct) { .w = x, .h = 1, .pi = i + 1 };

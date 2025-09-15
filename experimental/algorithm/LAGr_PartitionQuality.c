@@ -16,7 +16,7 @@
 //------------------------------------------------------------------------------
 
 // TODO: ready to consider for src
-// TODO: define the input vector c that defines the cluster assignment
+// TODO: document the input vector c that defines the cluster assignment
 
 // The coverage of a graph clustering C ( Cov(C) ) is defined as the ratio of
 // intra-cluster edges to the total edges in a graph. The performance of a graph

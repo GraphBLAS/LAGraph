@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: ready for src
+
 // Get the rich club coefficient of a graph.
 
 // Given a Symetric Graph with no self edges, LAGraph_RichClubCoefficient will
@@ -282,11 +284,11 @@ int LAGraph_RichClubCoefficient
 
         LG_TRY (LAGraph_FastAssign_Semiring (
             edges_per_deg, NULL, GrB_PLUS_INT64, deg_x, node_edges_x, ramp_v,
-            GxB_PLUS_SECOND_INT64, NULL, msg
+            LAGraph_plus_second_int64, NULL, msg
         )) ;
         LG_TRY (LAGraph_FastAssign_Semiring (
             verts_per_deg, NULL, GrB_PLUS_INT64, deg_x, ones_v, ramp_v,
-            GxB_PLUS_PAIR_INT64, NULL, msg
+            LAGraph_plus_one_int64, NULL, msg
         )) ;
 
         GRB_TRY (GxB_Vector_unload(

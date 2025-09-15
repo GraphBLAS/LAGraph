@@ -18,6 +18,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: this is specialized; is it ever to appear in src?
+
 // This is an Advanced algorithm (G->AT and G->out_degree are required).
 
 // PageRank for the LDBC Graphalytics (GX) benchmark.

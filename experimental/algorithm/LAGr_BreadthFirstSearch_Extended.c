@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: ready for src
+
 // Breadth-first-search via push/pull method if using SuiteSparse:GraphBLAS
 // and its GxB extensions, or a push-only method otherwise.  The former is
 // much faster.

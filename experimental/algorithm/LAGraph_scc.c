@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: not ready for src; uses global variables
+// TODO: almost ready for src; but vanilla method would be hard.
 
 /**
  * Code is based on the Min-Label algorithm described in the following paper:
@@ -119,7 +119,6 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     GRB_TRY (GrB_Vector_new (&s, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
     GRB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
-    // GxB_fprint(s, GxB_SHORT, stdout);
     GRB_TRY (GrB_assign (t, 0, 0, label, GrB_ALL, 0, 0));
     GRB_TRY (GrB_wait(A, GrB_MATERIALIZE));
 

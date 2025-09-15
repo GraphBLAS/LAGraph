@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: almost ready for src; need to handle GxB
+// TODO: almost ready for src; need to handle GxB.  Consider API.
 
 // Takes in a graph and estimates the diameter 
 // and optionally also finds pseudo-peripheral nodes of the graph

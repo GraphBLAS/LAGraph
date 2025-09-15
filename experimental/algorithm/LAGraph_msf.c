@@ -687,7 +687,7 @@ int LAGraph_msf
     // create types and operators
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GxB_Scalar_new(&max_weight, weight_type)) ;
+    GRB_TRY (GrB_Scalar_new(&max_weight, weight_type)) ;
     void *inf = NULL ;
 
     if (weight_type == GrB_INT64)
@@ -705,7 +705,7 @@ int LAGraph_msf
             tuple, weight_type, GrB_UINT64,
             "LG_MSF_combine_int", COMBINE_INT)) ;
 
-        GRB_TRY (GxB_Scalar_setElement_INT64(max_weight, INT64_MAX)) ;
+        GRB_TRY (GrB_Scalar_setElement_INT64(max_weight, INT64_MAX)) ;
 
         GRB_TRY (GxB_BinaryOp_new (
             &tupleMin, (GxB_binary_function) LG_MSF_tupleMin_int,
@@ -763,7 +763,7 @@ int LAGraph_msf
             tuple, weight_type, GrB_UINT64,
             "LG_MSF_combine_fp", COMBINE_FP)) ;
 
-        GRB_TRY (GxB_Scalar_setElement_FP64(max_weight, INFINITY)) ;
+        GRB_TRY (GrB_Scalar_setElement_FP64(max_weight, INFINITY)) ;
 
         GRB_TRY (GxB_BinaryOp_new (
             &tupleMin, (GxB_binary_function) LG_MSF_tupleMin_fp,

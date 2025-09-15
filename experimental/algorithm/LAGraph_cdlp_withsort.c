@@ -16,6 +16,8 @@
 // and B\'{a}lint Hegyi, using LaTeX syntax).
 // https://inf.mit.bme.hu/en/members/szarnyasg .
 
+// TODO: ready for src?  Except it is slow.
+
 //------------------------------------------------------------------------------
 
 // ## Background
