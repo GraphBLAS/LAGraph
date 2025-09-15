@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGr_BreadthFirstSearch:  breadth-first search dispatch
+// LAGr_BreadthFirstSearch_Extended:  breadth-first search dispatch
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
