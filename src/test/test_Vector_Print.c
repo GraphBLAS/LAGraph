@@ -21,6 +21,22 @@ char msg [LAGRAPH_MSG_LEN] ;
 GrB_Vector v = NULL ;
 GrB_Index n = 40 ;
 
+#if LG_SUITESPARSE_GRAPHBLAS_V10_2
+int64_t my_int_print
+(
+    // output:
+    char *string,           // value is printed to the string
+    // input:
+    size_t string_size,     // size of the string array
+    const void *value,      // value to print
+    int verbose             // if >0, print verbosely; else tersely
+)
+{
+    int *x = (int *) value ;
+    return ((int64_t) snprintf (string, string_size, "(my int: %d)", (*x))) ;
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // test_print
 //-----------------------------------------------------------------------------
@@ -101,14 +117,27 @@ void test_print (void)
     TEST_CHECK (result == GrB_NULL_POINTER) ;
     OK (GrB_Vector_free (&v)) ;
 
-    // attempt to print a vector with a user-defined type, which should fail
+    // attempt to print a vector with a user-defined type,
+    // which requires SuiteSparse:GraphBLAS v10.2.0 or later.
     GrB_Type type = NULL ;
     OK (GrB_Type_new (&type, sizeof (int))) ;
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
+    OK (GrB_Type_set_VOID (type, &my_int_print, GxB_PRINT_FUNCTION,
+        sizeof (&my_int_print))) ;
+    #endif
     OK (GrB_Vector_new (&v, type, n)) ;
+    for (int k = 0 ; k < 4 ; k++)
+    {
+        OK (GrB_Vector_setElement_UDT (v, (void *) (&k), k)) ;
+    }
     result = LAGraph_Vector_Print (v, pr, stdout, msg) ;
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
+    TEST_CHECK (result == GrB_SUCCESS) ;
+    #else
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
-    OK (GrB_Vector_free (&v)) ;
+    #endif
 
+    OK (GrB_Vector_free (&v)) ;
     OK (GrB_Type_free (&type)) ;
     OK (LAGraph_Finalize (msg)) ;
 }

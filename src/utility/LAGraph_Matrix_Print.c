@@ -19,6 +19,8 @@
 
 #include "LG_internal.h"
 
+#if !LG_SUITESPARSE_GRAPHBLAS_V10_2
+
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK                    \
 {                                       \
@@ -99,6 +101,7 @@ LG_MATRIX_PRINT (FP32  , float   , GrB_FP32  , "%g"  , "%0.7g" ) ;
 LG_MATRIX_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g") ;
 // LG_MATRIX_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...) ;
 // LG_MATRIX_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
+#endif
 
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK ;
@@ -138,6 +141,13 @@ int LAGraph_Matrix_Print
     // print the matrix
     //--------------------------------------------------------------------------
 
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
+
+    // GraphBLAS v10.2.0 or later, with support for user-defined types
+    return (GxB_Matrix_fprint (A, "", (int) pr, f)) ;
+
+    #else
+
     switch (typecode)
     {
         case GrB_BOOL_CODE   : return (LG_Matrix_Print_BOOL (A, pr, f, msg)) ;
@@ -158,5 +168,6 @@ int LAGraph_Matrix_Print
                 GrB_NOT_IMPLEMENTED, "user-defined types not supported") ;
             return (GrB_NOT_IMPLEMENTED) ;
     }
+    #endif
 }
 

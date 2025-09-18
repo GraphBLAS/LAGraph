@@ -272,15 +272,25 @@ typedef unsigned char LG_void ;
 
 #endif
 
-// GraphBLAS version 10 flag
+// SuiteSparse:GraphBLAS version 10 and v10.2 flags
 #if LAGRAPH_SUITESPARSE 
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,2,0)
+        // GraphBLAS v10.2.0 or later
         #define LG_SUITESPARSE_GRAPHBLAS_V10 1
+        #define LG_SUITESPARSE_GRAPHBLAS_V10_2 1
+    #elif GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+        // GraphBLAS v10.0.0 to v10.1.x
+        #define LG_SUITESPARSE_GRAPHBLAS_V10 1
+        #define LG_SUITESPARSE_GRAPHBLAS_V10_2 0
     #else
+        // GraphBLAS v9.x
         #define LG_SUITESPARSE_GRAPHBLAS_V10 0
+        #define LG_SUITESPARSE_GRAPHBLAS_V10_2 0
     #endif
 #else
+    // not SuiteSparse:GraphBLAS
     #define LG_SUITESPARSE_GRAPHBLAS_V10 0
+    #define LG_SUITESPARSE_GRAPHBLAS_V10_2 0
 #endif
 
 //------------------------------------------------------------------------------
