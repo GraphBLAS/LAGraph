@@ -135,19 +135,19 @@ int LAGr_EdgeBetweennessCentrality
 
     // Temporary vectors and matrices for intermediate calculations
     // Diagonal values for J_matrix
-    GrB_Vector J_vec = NULL ;      
+    GrB_Vector J_vec = NULL ;
 
     // Diagonal values for I_matrix
-    GrB_Vector I_vec = NULL ;      
+    GrB_Vector I_vec = NULL ;
 
     // Matrix for previous level contributions
-    GrB_Matrix I_matrix = NULL ;   
+    GrB_Matrix I_matrix = NULL ;
 
     // Matrix for current level contributions
-    GrB_Matrix J_matrix = NULL ;  
-    
+    GrB_Matrix J_matrix = NULL ;
+
     // Intermediate product matrix
-    GrB_Matrix Fd1A = NULL ;       
+    GrB_Matrix Fd1A = NULL ;
 
     // Temporary vector for centrality updates
     GrB_Vector temp_update = NULL ;
@@ -216,7 +216,6 @@ int LAGr_EdgeBetweennessCentrality
     GRB_TRY (GrB_Matrix_new (&Update, GrB_FP64, n, n)) ;
     GRB_TRY (GrB_Vector_new (&bc_vertex_flow, GrB_FP64, n)) ;
 
-    
     // Initialize centrality matrix with zeros using A as structural mask
     LG_TRY (GrB_Matrix_new(centrality, GrB_FP64, n, n)) ;
     GRB_TRY (GrB_assign (*centrality, A, NULL, 0.0, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
@@ -277,7 +276,7 @@ int LAGr_EdgeBetweennessCentrality
     for (GrB_Index i = 0; i < nsources; i++)
     {
         GRB_TRY (GrB_Vector_extractElement(&root, sources, i)) ;
-        
+
         // Verify the root index is valid
         LG_ASSERT (root < n, GrB_INVALID_VALUE) ;
 
@@ -324,7 +323,7 @@ int LAGr_EdgeBetweennessCentrality
             //----------------------------------------------------------------------
             // frontier<!paths> = frontier * A
             //----------------------------------------------------------------------
-            
+
             GRB_TRY (LG_SET_FORMAT_HINT (frontier, LG_SPARSE)) ;
             GRB_TRY (GrB_vxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
                 frontier, A, GrB_DESC_RSC )) ;
@@ -353,14 +352,11 @@ int LAGr_EdgeBetweennessCentrality
         GRB_TRY (GrB_Vector_clear (I_vec)) ;
         GRB_TRY (GrB_Vector_clear (temp_update)) ;
 
-
-
-
         // Backtrack through the BFS and compute centrality updates for each vertex
         // GrB_Index fd1_size;
 
         while (depth >= 1)
-        {        
+        {
             GrB_Vector f_d = Search [depth] ;
             GrB_Vector f_d1 = Search [depth - 1] ;
 
@@ -383,7 +379,7 @@ int LAGr_EdgeBetweennessCentrality
             GRB_TRY (GrB_Matrix_diag(&I_matrix, I_vec, 0)) ;
 
             //----------------------------------------------------------------------
-            // Update = I × A × J 
+            // Update = I × A × J
             // Compute edge updates based on current level weights
             //----------------------------------------------------------------------
 
@@ -408,7 +404,7 @@ int LAGr_EdgeBetweennessCentrality
             #ifdef useAssign
                 // centrality{A} += Update, using assign
                 double t3 = LAGraph_WallClockTime();
-                
+
                 if (G->kind == LAGraph_ADJACENCY_UNDIRECTED) {
                     // First divide the Update matrix by 2 for symmetric distribution
                     GrB_apply(HalfUpdate, NULL, NULL, GrB_DIV_FP64, Update, 2.0, NULL);
@@ -424,7 +420,7 @@ int LAGr_EdgeBetweennessCentrality
 
                 }
                 else {
-                    GRB_TRY (GrB_assign(*centrality, A, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n, 
+                    GRB_TRY (GrB_assign(*centrality, A, GrB_PLUS_FP64, Update, GrB_ALL, n, GrB_ALL, n,
                         GrB_DESC_S));
                 }
 
@@ -451,7 +447,7 @@ int LAGr_EdgeBetweennessCentrality
             // 24 d = d − 1
             depth-- ;
         }
-        
+
     }
 
     #ifdef debug
