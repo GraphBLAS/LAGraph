@@ -139,8 +139,6 @@ GrB_Info LAGraph_RPQMatrix_check(RPQMatrixPlan *plan, GrB_Index *dimension, char
         GrB_Index nrows, ncols;
         OK(GrB_Matrix_nrows(&nrows, plan->mat));
         OK(GrB_Matrix_ncols(&ncols, plan->mat));
-        GrB_Index nvals;
-        GrB_Matrix_nvals(&nvals, plan->mat);
         if (*dimension == -1)
         {
             *dimension = nrows;
@@ -152,7 +150,6 @@ GrB_Info LAGraph_RPQMatrix_check(RPQMatrixPlan *plan, GrB_Index *dimension, char
                           "all the matrices in the graph adjacency matrix decomposition "
                           "should have the same dimensions and be square");
         }
-        return true;
 
         return GrB_SUCCESS;
     }
@@ -167,13 +164,6 @@ GrB_Info LAGraph_RPQMatrix_check(RPQMatrixPlan *plan, GrB_Index *dimension, char
 
 static GrB_Semiring sr;
 static GrB_Monoid op;
-
-GrB_Info LAGraph_RPQMatrix_label(GrB_Matrix *mat, GrB_Index x, GrB_Index i, GrB_Index j)
-{
-    GrB_Matrix_new(mat, GrB_BOOL, i, j);
-    GrB_Matrix_setElement(*mat, true, x, x);
-    return (GrB_SUCCESS);
-}
 
 GrB_Info LAGraph_RPQMatrix_solver(RPQMatrixPlan *plan, char *msg);
 
