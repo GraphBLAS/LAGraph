@@ -865,7 +865,7 @@ typedef struct RPQMatrixPlan
     GrB_Matrix res_mat;
 } RPQMatrixPlan;
 
-// LAGraph_RPQMatrix_solver: regular path query algortithm
+// LAGraph_RPQMatrix: regular path query algortithm
 //
 // For an edge-labelled directed graph the algorithm computes the nubmer of
 // nonzero elements in its reachability matrix.
@@ -914,7 +914,6 @@ typedef struct RPQMatrixPlan
 // performs the operations corresponding to each node on the children of that
 // node. As a result of the algorithm's execution, the reachability
 // matrix will be stored at the root.
-//
 //
 // Example of regular expression and its corresponding AST:
 //

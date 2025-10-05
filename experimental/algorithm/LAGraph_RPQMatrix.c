@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_RPQMatrix_solver: regular path query algortithm
+// LAGraph_RPQMatrix: regular path query algortithm
 //------------------------------------------------------------------------------
 //
 // LAGraph, (c) 2019-2024 by The LAGraph Contributors, All Rights Reserved.
@@ -16,7 +16,7 @@
 //  * URL: https://link.springer.com/article/10.1007/s00778-024-00885-6
 
 //------------------------------------------------------------------------------
-// LAGraph_RPQMatrix_solver: regular path query algortithm
+// LAGraph_RPQMatrix: regular path query algortithm
 //
 // For an edge-labelled directed graph the algorithm computes the nubmer of
 // nonzero elements in its reachability matrix.
@@ -65,7 +65,6 @@
 // performs the operations corresponding to each node on the children of that
 // node. As a result of the algorithm's execution, the reachability
 // matrix will be stored at the root.
-//
 //
 // Example of regular expression and its corresponding AST:
 //
