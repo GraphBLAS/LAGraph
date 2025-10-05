@@ -123,7 +123,6 @@
         }                                                   \
     }
 
-#include "LAGraphX.h"
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -140,12 +139,14 @@ GrB_Info LAGraph_RPQMatrix_check(RPQMatrixPlan *plan, GrB_Index *dimension, char
         OK(GrB_Matrix_ncols(&ncols, plan->mat));
         if (*dimension == -1)
         {
-            *dimension = nrows;
+            LG_ASSERT_MSG(nrows == ncols, GrB_INVALID_VALUE,
+                          "all the matrices in the graph adjacency matrix decomposition "
+                          "should have the same dimensions and be square");
             *dimension = ncols;
         }
         else
         {
-            LG_ASSERT_MSG(nrows != *dimension || ncols != *dimension, GrB_INVALID_VALUE,
+            LG_ASSERT_MSG(nrows == *dimension || ncols == *dimension, GrB_INVALID_VALUE,
                           "all the matrices in the graph adjacency matrix decomposition "
                           "should have the same dimensions and be square");
         }
@@ -298,6 +299,7 @@ static GrB_Info LAGraph_RPQMatrixKleene(RPQMatrixPlan *plan, char *msg)
     GRB_TRY(GrB_Matrix_free(&BPE));
     return (GrB_SUCCESS);
 }
+
 static GrB_Info LAGraph_RPQMatrixKleene_L(RPQMatrixPlan *plan, char *msg)
 {
     LG_ASSERT(plan != NULL, GrB_NULL_POINTER);
@@ -330,12 +332,10 @@ static GrB_Info LAGraph_RPQMatrixKleene_L(RPQMatrixPlan *plan, char *msg)
 
     GRB_TRY(GrB_Vector_free(&v));
 
-    // B + E
     GrB_Matrix BPE;
     GRB_TRY(GrB_Matrix_new(&BPE, GrB_BOOL, n, n));
     GRB_TRY(GrB_eWiseAdd(BPE, GrB_NULL, GrB_NULL,
                          op, B, E, GrB_DESC_R));
-    // S <- S x (B + E)
     GrB_Matrix S, T;
     GRB_TRY(GrB_Matrix_dup(&S, A));
 
@@ -344,7 +344,6 @@ static GrB_Info LAGraph_RPQMatrixKleene_L(RPQMatrixPlan *plan, char *msg)
 
     while (changed)
     {
-        // T = S * (B + E)
         GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n));
         GRB_TRY(GrB_mxm(T, GrB_NULL, GrB_NULL,
                         sr, S, BPE, GrB_DESC_R));
@@ -402,12 +401,10 @@ static GrB_Info LAGraph_RPQMatrixKleene_R(RPQMatrixPlan *plan, char *msg)
 
     GRB_TRY(GrB_Vector_free(&v));
 
-    // B + E
     GrB_Matrix BPE;
     GRB_TRY(GrB_Matrix_new(&BPE, GrB_BOOL, n, n));
     GRB_TRY(GrB_eWiseAdd(BPE, GrB_NULL, GrB_NULL,
                          GrB_LOR, B, E, GrB_DESC_R));
-    // S <- S x (B + E)
     GrB_Matrix S, T;
     GRB_TRY(GrB_Matrix_dup(&S, A));
 
@@ -416,7 +413,6 @@ static GrB_Info LAGraph_RPQMatrixKleene_R(RPQMatrixPlan *plan, char *msg)
 
     while (changed)
     {
-        // T = S * (B + E)
         GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n));
         GRB_TRY(GrB_mxm(T, GrB_NULL, GrB_NULL,
                         sr, BPE, S, GrB_DESC_R));
@@ -495,9 +491,9 @@ GrB_Info LAGrah_RPQMatrix(
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG;
-    LG_ASSERT_MSG(plan != NULL, GrB_NULL_POINTER, "empty graph");
+    LG_ASSERT(plan == NULL, GrB_NULL_POINTER);
     GrB_Index dimension = -1;
-    GrB_Info info = LAGraph_RPQMatrix_check(plan, dimension, msg);
+    GrB_Info info = LAGraph_RPQMatrix_check(plan, &dimension, msg);
     LG_ASSERT_MSG(info == GrB_SUCCESS, info, msg);
 
     //--------------------------------------------------------------------------
@@ -511,7 +507,7 @@ GrB_Info LAGrah_RPQMatrix(
     //--------------------------------------------------------------------------
 
     info = LAGraph_RPQMatrix_solver(plan, msg);
-    LG_ASSERT_MSG(info = GrB_SUCCESS, info, msg);
+    LG_ASSERT_MSG(info == GrB_SUCCESS, info, msg);
     GrB_Matrinx_nvals(nnz, plan->res_mat);
     return GrB_SUCCESS;
 }
