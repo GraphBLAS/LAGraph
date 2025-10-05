@@ -25,10 +25,49 @@
         }                                                   \
     }
 
+#include "LAGraphX.h"
+#include <stdbool.h>
+#include <stdio.h>
+
+GrB_Info LAGraph_RPQMatrix_check(RPQMatrixPlan *plan, GrB_Index *dimension, char *msg)
+{
+    if (plan == NULL)
+    {
+        return GrB_SUCCESS;
+    }
+    if (plan->op == RPQ_MATRIX_OP_LABEL)
+    {
+        GrB_Index nrows, ncols;
+        OK(GrB_Matrix_nrows(&nrows, plan->mat));
+        OK(GrB_Matrix_ncols(&ncols, plan->mat));
+        GrB_Index nvals;
+        GrB_Matrix_nvals(&nvals, plan->mat);
+        if (*dimension == -1)
+        {
+            *dimension = nrows;
+            *dimension = ncols;
+        }
+        else
+        {
+            LG_ASSERT_MSG(nrows != *dimension || ncols != *dimension, GrB_INVALID_VALUE,
+                          "all the matrices in the graph adjacency matrix decomposition "
+                          "should have the same dimensions and be square");
+        }
+        return true;
+
+        return GrB_SUCCESS;
+    }
+    GrB_Info lstatus = LAGraph_RPQMatrix_check(plan->lhs, dimension, msg);
+    GrB_Info rstatus = LAGraph_RPQMatrix_check(plan->rhs, dimension, msg);
+    if (rstatus || lstatus)
+    {
+        return GrB_INVALID_VALUE;
+    }
+    return GrB_SUCCESS;
+}
+
 static GrB_Semiring sr;
 static GrB_Monoid op;
-
-GrB_Info LAGraph_RpqMatrix(RpqMatrixPlan *plan, char *msg);
 
 GrB_Info LAGraph_RPQMatrix_label(GrB_Matrix *mat, GrB_Index x, GrB_Index i, GrB_Index j)
 {
@@ -37,20 +76,22 @@ GrB_Info LAGraph_RPQMatrix_label(GrB_Matrix *mat, GrB_Index x, GrB_Index i, GrB_
     return (GrB_SUCCESS);
 }
 
-static GrB_Info LAGraph_RpqMatrixLor(RpqMatrixPlan *plan, char *msg)
+GrB_Info LAGraph_RPQMatrix_solver(RPQMatrixPlan *plan, char *msg);
+
+static GrB_Info LAGraph_RPQMatrixLor(RPQMatrixPlan *plan, char *msg)
 {
     LG_ASSERT(plan != NULL, GrB_NULL_POINTER);
     LG_ASSERT(plan->op == RPQ_MATRIX_OP_LOR, GrB_INVALID_VALUE);
     LG_ASSERT(plan->res_mat == NULL, GrB_INVALID_VALUE);
 
-    RpqMatrixPlan *lhs = plan->lhs;
-    RpqMatrixPlan *rhs = plan->rhs;
+    RPQMatrixPlan *lhs = plan->lhs;
+    RPQMatrixPlan *rhs = plan->rhs;
 
     LG_ASSERT(lhs != NULL, GrB_NULL_POINTER);
     LG_ASSERT(rhs != NULL, GrB_NULL_POINTER);
 
-    OK(LAGraph_RPQMatrix(lhs, msg));
-    OK(LAGraph_RPQMatrix(rhs, msg));
+    OK(LAGraph_RPQMatrix_solver(lhs, msg));
+    OK(LAGraph_RPQMatrix_solver(rhs, msg));
 
     GrB_Matrix lhs_mat = lhs->res_mat;
     GrB_Matrix rhs_mat = rhs->res_mat;
@@ -61,27 +102,27 @@ static GrB_Info LAGraph_RpqMatrixLor(RpqMatrixPlan *plan, char *msg)
     GrB_Matrix res;
     GrB_Matrix_new(&res, GrB_BOOL, height, width);
     GRB_TRY(GrB_eWiseAdd(res, GrB_NULL, GrB_NULL,
-                         GrB_LOR, lhs_mat, rhs_mat, GrB_DESC_R));
+                         op, lhs_mat, rhs_mat, GrB_DESC_R));
     plan->res_mat = res;
 
     return (GrB_SUCCESS);
 }
 
-static GrB_Info LAGraph_RpqMatrixConcat(RpqMatrixPlan *plan, char *msg)
+static GrB_Info LAGraph_RPQMatrixConcat(RPQMatrixPlan *plan, char *msg)
 {
 
     LG_ASSERT(plan != NULL, GrB_NULL_POINTER);
     LG_ASSERT(plan->op == RPQ_MATRIX_OP_CONCAT, GrB_INVALID_VALUE);
     LG_ASSERT(plan->res_mat == NULL, GrB_INVALID_VALUE);
 
-    RpqMatrixPlan *lhs = plan->lhs;
-    RpqMatrixPlan *rhs = plan->rhs;
+    RPQMatrixPlan *lhs = plan->lhs;
+    RPQMatrixPlan *rhs = plan->rhs;
 
     LG_ASSERT(lhs != NULL, GrB_NULL_POINTER);
     LG_ASSERT(rhs != NULL, GrB_NULL_POINTER);
 
-    OK(LAGraph_RPQMatrix(lhs, msg));
-    OK(LAGraph_RPQMatrix(rhs, msg));
+    OK(LAGraph_RPQMatrix_solver(lhs, msg));
+    OK(LAGraph_RPQMatrix_solver(rhs, msg));
 
     GrB_Matrix lhs_mat = lhs->res_mat;
     GrB_Matrix rhs_mat = rhs->res_mat;
@@ -92,27 +133,27 @@ static GrB_Info LAGraph_RpqMatrixConcat(RpqMatrixPlan *plan, char *msg)
     GrB_Matrix res;
     GrB_Matrix_new(&res, GrB_BOOL, height, width);
     GRB_TRY(GrB_mxm(res, GrB_NULL, GrB_NULL,
-                    GrB_LOR_LAND_SEMIRING_BOOL, lhs_mat, rhs_mat, GrB_DESC_R));
+                    sr, lhs_mat, rhs_mat, GrB_DESC_R));
     // GrB_mxm(plan->res_mat, GrB_NULL, GrB_NULL, GrB_LOR_LAND_SEMIRING_BOOL, lhs_mat, rhs_mat, GrB_NULL);
     plan->res_mat = res;
 
     return (GrB_SUCCESS);
 }
 
-static GrB_Info LAGraph_RpqMatrixKleene(RpqMatrixPlan *plan, char *msg)
+static GrB_Info LAGraph_RPQMatrixKleene(RPQMatrixPlan *plan, char *msg)
 {
     LG_ASSERT(plan != NULL, GrB_NULL_POINTER);
     LG_ASSERT(plan->op == RPQ_MATRIX_OP_KLEENE, GrB_INVALID_VALUE);
     LG_ASSERT(plan->res_mat == NULL, GrB_INVALID_VALUE);
 
-    RpqMatrixPlan *lhs = plan->lhs;
-    RpqMatrixPlan *rhs = plan->rhs;
+    RPQMatrixPlan *lhs = plan->lhs;
+    RPQMatrixPlan *rhs = plan->rhs;
 
     // Kleene star should have one child. Always right.
     LG_ASSERT(lhs == NULL, GrB_NULL_POINTER);
     LG_ASSERT(rhs != NULL, GrB_NULL_POINTER);
 
-    OK(LAGraph_RPQMatrix(rhs, msg));
+    OK(LAGraph_RPQMatrix_solver(rhs, msg));
 
     GrB_Matrix B = rhs->res_mat;
 
@@ -134,7 +175,7 @@ static GrB_Info LAGraph_RpqMatrixKleene(RpqMatrixPlan *plan, char *msg)
     GrB_Matrix BPE;
     GRB_TRY(GrB_Matrix_new(&BPE, GrB_BOOL, n, n));
     GRB_TRY(GrB_eWiseAdd(BPE, GrB_NULL, GrB_NULL,
-                         GrB_LOR, B, E, GrB_DESC_R));
+                         op, B, E, GrB_DESC_R));
     // S <- S x (B + E)
     GrB_Matrix S, T;
     GRB_TRY(GrB_Matrix_dup(&S, E));
@@ -147,7 +188,7 @@ static GrB_Info LAGraph_RpqMatrixKleene(RpqMatrixPlan *plan, char *msg)
         // T = S * (B + E)
         GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n));
         GRB_TRY(GrB_mxm(T, GrB_NULL, GrB_NULL,
-                        GrB_LOR_LAND_SEMIRING_BOOL, S, BPE, GrB_DESC_R));
+                        sr, S, BPE, GrB_DESC_R));
 
         GRB_TRY(GrB_Matrix_nvals(&nnz_T, T));
         if (nnz_T != nnz_S)
@@ -169,20 +210,20 @@ static GrB_Info LAGraph_RpqMatrixKleene(RpqMatrixPlan *plan, char *msg)
     GRB_TRY(GrB_Matrix_free(&BPE));
     return (GrB_SUCCESS);
 }
-static GrB_Info LAGraph_RpqMatrixKleene_L(RpqMatrixPlan *plan, char *msg)
+static GrB_Info LAGraph_RPQMatrixKleene_L(RPQMatrixPlan *plan, char *msg)
 {
     LG_ASSERT(plan != NULL, GrB_NULL_POINTER);
     LG_ASSERT(plan->op == RPQ_MATRIX_OP_KLEENE, GrB_INVALID_VALUE);
     LG_ASSERT(plan->res_mat == NULL, GrB_INVALID_VALUE);
 
-    RpqMatrixPlan *lhs = plan->lhs;
-    RpqMatrixPlan *rhs = plan->rhs;
+    RPQMatrixPlan *lhs = plan->lhs;
+    RPQMatrixPlan *rhs = plan->rhs;
 
     LG_ASSERT(lhs == NULL, GrB_NULL_POINTER);
     LG_ASSERT(rhs == NULL, GrB_NULL_POINTER);
 
-    OK(LAGraph_RPQMatrix(rhs, msg));
-    OK(LAGraph_RPQMatrix(lhs, msg));
+    OK(LAGraph_RPQMatrix_solver(rhs, msg));
+    OK(LAGraph_RPQMatrix_solver(lhs, msg));
 
     GrB_Matrix B = rhs->res_mat;
     GrB_Matrix A = lhs->res_mat;
@@ -205,7 +246,7 @@ static GrB_Info LAGraph_RpqMatrixKleene_L(RpqMatrixPlan *plan, char *msg)
     GrB_Matrix BPE;
     GRB_TRY(GrB_Matrix_new(&BPE, GrB_BOOL, n, n));
     GRB_TRY(GrB_eWiseAdd(BPE, GrB_NULL, GrB_NULL,
-                         GrB_LOR, B, E, GrB_DESC_R));
+                         op, B, E, GrB_DESC_R));
     // S <- S x (B + E)
     GrB_Matrix S, T;
     GRB_TRY(GrB_Matrix_dup(&S, A));
@@ -218,7 +259,7 @@ static GrB_Info LAGraph_RpqMatrixKleene_L(RpqMatrixPlan *plan, char *msg)
         // T = S * (B + E)
         GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n));
         GRB_TRY(GrB_mxm(T, GrB_NULL, GrB_NULL,
-                        GrB_LOR_LAND_SEMIRING_BOOL, S, BPE, GrB_DESC_R));
+                        sr, S, BPE, GrB_DESC_R));
 
         GRB_TRY(GrB_Matrix_nvals(&nnz_T, T));
         if (nnz_T != nnz_S)
@@ -241,26 +282,26 @@ static GrB_Info LAGraph_RpqMatrixKleene_L(RpqMatrixPlan *plan, char *msg)
     return (GrB_SUCCESS);
 }
 
-static GrB_Info LAGraph_RpqMatrixKleene_R(RpqMatrixPlan *plan, char *msg)
+static GrB_Info LAGraph_RPQMatrixKleene_R(RPQMatrixPlan *plan, char *msg)
 {
     LG_ASSERT(plan != NULL, GrB_NULL_POINTER);
     LG_ASSERT(plan->op == RPQ_MATRIX_OP_KLEENE, GrB_INVALID_VALUE);
     LG_ASSERT(plan->res_mat == NULL, GrB_INVALID_VALUE);
 
-    RpqMatrixPlan *lhs = plan->lhs;
-    RpqMatrixPlan *rhs = plan->rhs;
+    RPQMatrixPlan *lhs = plan->lhs;
+    RPQMatrixPlan *rhs = plan->rhs;
 
     LG_ASSERT(lhs != NULL, GrB_NULL_POINTER);
     LG_ASSERT(rhs != NULL, GrB_NULL_POINTER);
 
-    OK(LAGraph_RPQMatrix(rhs, msg));
-    OK(LAGraph_RPQMatrix(lhs, msg));
+    OK(LAGraph_RPQMatrix_solver(rhs, msg));
+    OK(LAGraph_RPQMatrix_solver(lhs, msg));
 
     GrB_Matrix B = lhs->res_mat;
     GrB_Matrix A = rhs->res_mat;
 
-                       // Creating identity matrix.
-                       GrB_Index n;
+    // Creating identity matrix.
+    GrB_Index n;
     GRB_TRY(GrB_Matrix_nrows(&n, B));
     GrB_Matrix E;
     GRB_TRY(GrB_Matrix_new(&E, GrB_BOOL, n, n));
@@ -290,7 +331,7 @@ static GrB_Info LAGraph_RpqMatrixKleene_R(RpqMatrixPlan *plan, char *msg)
         // T = S * (B + E)
         GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n));
         GRB_TRY(GrB_mxm(T, GrB_NULL, GrB_NULL,
-                        GrB_LOR_LAND_SEMIRING_BOOL, BPE, S, GrB_DESC_R));
+                        sr, BPE, S, GrB_DESC_R));
 
         GRB_TRY(GrB_Matrix_nvals(&nnz_T, T));
         if (nnz_T != nnz_S)
@@ -313,7 +354,7 @@ static GrB_Info LAGraph_RpqMatrixKleene_R(RpqMatrixPlan *plan, char *msg)
     return (GrB_SUCCESS);
 }
 
-GrB_Info LAGraph_RPQMatrix(RpqMatrixPlan *plan, char *msg)
+GrB_Info LAGraph_RPQMatrix_solver(RPQMatrixPlan *plan, char *msg)
 {
     if (plan->res_mat != NULL)
     {
@@ -323,27 +364,66 @@ GrB_Info LAGraph_RPQMatrix(RpqMatrixPlan *plan, char *msg)
     switch (plan->op)
     {
     case RPQ_MATRIX_OP_LABEL:
-        LG_ASSERT(plan->lhs == NULL && plan->rhs == NULL, GrB_INVALID_VALUE);
+        LG_ASSERT_MSG(plan->lhs == NULL && plan->rhs == NULL,
+             GrB_INVALID_VALUE, "label node should not have any children nodes");
         plan->res_mat = plan->mat;
         return (GrB_SUCCESS);
     case RPQ_MATRIX_OP_LOR:
-        return LAGraph_RpqMatrixLor(plan, msg);
+        return LAGraph_RPQMatrixLor(plan, msg);
     case RPQ_MATRIX_OP_CONCAT:
-        return LAGraph_RpqMatrixConcat(plan, msg);
+        return LAGraph_RPQMatrixConcat(plan, msg);
     case RPQ_MATRIX_OP_KLEENE:
-        return LAGraph_RpqMatrixKleene(plan, msg);
+        return LAGraph_RPQMatrixKleene(plan, msg);
     case RPQ_MATRIX_OP_KLEENE_L:
-        return LAGraph_RpqMatrixKleene_L(plan, msg);
+        return LAGraph_RPQMatrixKleene_L(plan, msg);
     case RPQ_MATRIX_OP_KLEENE_R:
-        return LAGraph_RpqMatrixKleene_R(plan, msg);
+        return LAGraph_RPQMatrixKleene_R(plan, msg);
     default:
-        LG_ASSERT(false, GrB_INVALID_VALUE);
+        LG_ASSERT_MSG(false, GrB_INVALID_VALUE, "invalid graph node type");
     }
     return (GrB_SUCCESS);
 }
 
-GrB_Info LAGraph_RpqMatrix_initialize()
+GrB_Info LAGraph_RPQMatrix_initialize()
 {
     sr = GrB_LOR_LAND_SEMIRING_BOOL;
     op = GxB_LOR_BOOL_MONOID;
+}
+
+GrB_Info LAGrah_RPQMatrix(
+    // output:
+    GrB_Index *nnz, // number of nonzero values in
+                    // result reachability matrix
+
+    // input:
+    RPQMatrixPlan *plan, // root of abstarct syntax tree of
+                         // regular expression
+    char *msg            // LAGraph output message
+)
+{
+
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
+    LG_CLEAR_MSG;
+    LG_ASSERT_MSG(plan != NULL, GrB_NULL_POINTER, "empty graph");
+    GrB_Index dimension = -1;
+    GrB_Info info = LAGraph_RPQMatrix_check(plan, dimension, msg);
+    LG_ASSERT_MSG(info == GrB_SUCCESS, info, msg);
+
+    //--------------------------------------------------------------------------
+    // initialize
+    //--------------------------------------------------------------------------
+
+    LAGraph_RPQMatrix_initialize();
+
+    //--------------------------------------------------------------------------
+    // run solver
+    //--------------------------------------------------------------------------
+
+    info = LAGraph_RPQMatrix_solver(plan, msg);
+    LG_ASSERT_MSG(info = GrB_SUCCESS, info, msg);
+    GrB_Matrinx_nvals(nnz, plan->res_mat);
+    return GrB_SUCCESS;
 }

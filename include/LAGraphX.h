@@ -143,44 +143,6 @@ typedef struct
 }
 LAGraph_Contents ;
 
-typedef enum RpqMatrixOp
-{
-    RPQ_MATRIX_OP_LABEL,
-    RPQ_MATRIX_OP_LOR,
-    RPQ_MATRIX_OP_CONCAT,
-    RPQ_MATRIX_OP_KLEENE,
-    RPQ_MATRIX_OP_KLEENE_L,
-    RPQ_MATRIX_OP_KLEENE_R,
-} RpqMatrixOp;
-
-typedef struct RpqMatrixPlan
-{
-    RpqMatrixOp op;
-    struct RpqMatrixPlan *lhs;
-    struct RpqMatrixPlan *rhs;
-    GrB_Matrix mat;
-    GrB_Matrix res_mat;
-} RpqMatrixPlan;
-
-LAGRAPHX_PUBLIC
-GrB_Info LAGraph_RPQMatrix(
-    RpqMatrixPlan *plan,
-     char *msg
-    );
-
-LAGRAPHX_PUBLIC
-GrB_Info LAGraph_RpqMatrix_initialize();
-
-LAGRAPHX_PUBLIC
-GrB_Info LAGraph_RPQMatrix_label
-(
-    GrB_Matrix *mat, 
-    GrB_Index x,
-    GrB_Index i, 
-    GrB_Index j
-) ;
-
-
 LAGRAPHX_PUBLIC
 int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
 (
@@ -883,6 +845,37 @@ int LAGraph_RegularPathQuery    // nodes reachable from the starting by the
     size_t ns,                  // number of source vertices
     char *msg                   // LAGraph output message
 );
+//****************************************************************************
+typedef enum RPQMatrixOp
+{
+    RPQ_MATRIX_OP_LABEL,
+    RPQ_MATRIX_OP_LOR,
+    RPQ_MATRIX_OP_CONCAT,
+    RPQ_MATRIX_OP_KLEENE, //reflexive-transitive closure
+    RPQ_MATRIX_OP_KLEENE_L,
+    RPQ_MATRIX_OP_KLEENE_R,
+} RPQMatrixOp;
+
+typedef struct RPQMatrixPlan
+{
+    RPQMatrixOp op;
+    struct RPQMatrixPlan *lhs;
+    struct RPQMatrixPlan *rhs;
+    GrB_Matrix mat;
+    GrB_Matrix res_mat;
+} RPQMatrixPlan;
+
+GrB_Info LAGrah_RPQMatrix(
+    // output:
+    GrB_Index *nnz, // number of nonzero values in
+                    // result reachability matrix
+
+    // input:
+    RPQMatrixPlan *plan, // root of abstarct syntax tree of
+                         // regular expression
+    char *msg            // LAGraph output message
+) ;
+
 //****************************************************************************
 LAGRAPHX_PUBLIC
 int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
