@@ -865,6 +865,87 @@ typedef struct RPQMatrixPlan
     GrB_Matrix res_mat;
 } RPQMatrixPlan;
 
+// LAGraph_RPQMatrix_solver: regular path query algortithm
+//
+// For an edge-labelled directed graph the algorithm computes the nubmer of
+// nonzero elements in its reachability matrix.
+// The reachability matrix created by following rules:
+// * A[i,j] = True if node with index j is reachable from node with index i
+//   and concatenation of labels over path between these two labels is a word
+//   from specified regular language.
+// * A[i,j] = False in other cases.
+//
+// The algorithm is based on the idea of ​​considering a regular constraint as
+// an abstract syntax tree, the leaves of which are matrices of adjacency matrix
+// decomposition of the graph, and the internal nodes are the operations of
+// conjunction, concatenation, etc.
+//
+// Example of adjacency matrix decomposition:
+//
+// Graph:
+// (0) --[a]-> (1)
+//  |           ^
+// [b]    [c]--/
+//  |  --/
+//  v /
+// (2) --[b]-> (3)
+//
+// Adjacency matrix decomposition of this graph consists of:
+// * Adjacency matrix for the label a:
+//       0   1   2   3
+//   0 |   | T |   |   |
+//   1 |   |   |   |   |
+//   2 |   |   |   |   |
+//   3 |   |   |   |   |
+// * Adjacency matrix for the label b:
+//       0   1   2   3
+//   0 |   |   | T |   |
+//   1 |   |   |   |   |
+//   2 |   |   |   | T |
+//   3 |   |   |   |   |
+// * Adjacency matrix for the label c:
+//       0   1   2   3
+//   0 |   |   |   |   |
+//   1 |   |   |   |   |
+//   2 |   | T |   |   |
+//   3 |   |   |   |   |
+//
+// The algorithm recursively starts from the root of the given tree and
+// performs the operations corresponding to each node on the children of that
+// node. As a result of the algorithm's execution, the reachability
+// matrix will be stored at the root.
+//
+//
+// Example of regular expression and its corresponding AST:
+//
+// Regular expression:
+// a/(b|c)*
+//
+// Abstract syntax tree:
+//    ┌─┐
+//    │/| (3)
+//    └┬┘
+// ┌─┬─┴─┬─┐
+// │a│   │*│ (2)
+// └─┘   └┬┘
+//       ┌┴┐
+//       │|│ (1)
+//       └┬┘
+//    ┌─┬─┴─┬─┐
+//    │b│   │c│
+//    └─┘   └─┘
+// The numbers next to the graph nodes show the order in which operations are
+// executed. For the decomposition and AST specified above, the resulting
+// matrix will have the following structure:
+//
+//      0   1   2   3
+//  0 |   | T |   |   |
+//  1 |   |   |   |   |
+//  2 |   |   |   |   |
+//  3 |   |   |   |   |
+//
+// So for this example LAGraph_RPQMatrix will return 1.
+
 GrB_Info LAGrah_RPQMatrix(
     // output:
     GrB_Index *nnz, // number of nonzero values in
