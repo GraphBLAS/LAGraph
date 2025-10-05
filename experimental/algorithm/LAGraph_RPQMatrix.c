@@ -249,54 +249,50 @@ static GrB_Info LAGraph_RPQMatrixKleene(RPQMatrixPlan *plan, char *msg)
     // Creating identity matrix.
     GrB_Index n;
     GRB_TRY(GrB_Matrix_nrows(&n, B));
-    GrB_Matrix E;
-    GRB_TRY(GrB_Matrix_new(&E, GrB_BOOL, n, n));
+    GrB_Matrix I;
+    GRB_TRY(GrB_Matrix_new(&I, GrB_BOOL, n, n));
 
     GrB_Vector v;
     GRB_TRY(GrB_Vector_new(&v, GrB_BOOL, n));
     GRB_TRY(GrB_Vector_assign_BOOL(v, NULL, NULL, true, GrB_ALL, n, NULL));
 
-    GRB_TRY(GrB_Matrix_diag(&E, v, 0));
+    GRB_TRY(GrB_Matrix_diag(&I, v, 0));
 
     GRB_TRY(GrB_Vector_free(&v));
 
-    // B + E
-    GrB_Matrix BPE;
-    GRB_TRY(GrB_Matrix_new(&BPE, GrB_BOOL, n, n));
-    GRB_TRY(GrB_eWiseAdd(BPE, GrB_NULL, GrB_NULL,
-                         op, B, E, GrB_DESC_R));
-    // S <- S x (B + E)
-    GrB_Matrix S, T;
-    GRB_TRY(GrB_Matrix_dup(&S, E));
+    // B + I
+    GrB_Matrix BPI;
+    GRB_TRY(GrB_Matrix_new(&BPI, GrB_BOOL, n, n));
+    GRB_TRY(GrB_eWiseAdd(BPI, GrB_NULL, GrB_NULL,
+                         op, B, I, GrB_DESC_R));
+    // S <- I
+    GrB_Matrix S;
+    GRB_TRY(GrB_Matrix_dup(&S, I));
 
     bool changed = true;
-    GrB_Index nnz_S = n, nnz_T = 0;
+    GrB_Index nnz_S = n, nnz_Sold = 0;
 
     while (changed)
     {
-        // T = S * (B + E)
-        GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n));
-        GRB_TRY(GrB_mxm(T, GrB_NULL, GrB_NULL,
-                        sr, S, BPE, GrB_DESC_R));
+        // S <- S x (B + I)
+        GRB_TRY(GrB_mxm(S, GrB_NULL, GrB_NULL,
+                        sr, S, BPI, GrB_DESC_R));
 
-        GRB_TRY(GrB_Matrix_nvals(&nnz_T, T));
-        if (nnz_T != nnz_S)
+        GRB_TRY(GrB_Matrix_nvals(&nnz_S, S));
+        if (nnz_S != nnz_Sold)
         {
             changed = true;
-            nnz_S = nnz_T;
-            GRB_TRY(GrB_Matrix_free(&S));
-            S = T;
+            nnz_Sold = nnz_S;
         }
         else
         {
             changed = false;
-            GRB_TRY(GrB_Matrix_free(&T));
         }
     }
     plan->res_mat = S;
 
-    GRB_TRY(GrB_Matrix_free(&E));
-    GRB_TRY(GrB_Matrix_free(&BPE));
+    GRB_TRY(GrB_Matrix_free(&I));
+    GRB_TRY(GrB_Matrix_free(&BPI));
     return (GrB_SUCCESS);
 }
 
@@ -310,8 +306,8 @@ static GrB_Info LAGraph_RPQMatrixKleene(RPQMatrixPlan *plan, char *msg)
 // ┌─┬─┴─┬─┐
 // │*│   │b│
 // └┬┘   └─┘
-// ┌┴┐      
-// │a│      
+// ┌┴┐
+// │a│
 // └─┘
 // If matrix B is sparse and A is dense, then instead of naive
 // way:
@@ -328,7 +324,7 @@ static GrB_Info LAGraph_RPQMatrixKleene(RPQMatrixPlan *plan, char *msg)
 //   └─┬─┘
 // ┌─┬─┴─┬─┐
 // │a│   │b│
-// └─┘   └─┘    
+// └─┘   └─┘
 static GrB_Info LAGraph_RPQMatrixKleene_L(RPQMatrixPlan *plan, char *msg)
 {
     LG_ASSERT(plan != NULL, GrB_NULL_POINTER);
@@ -347,43 +343,55 @@ static GrB_Info LAGraph_RPQMatrixKleene_L(RPQMatrixPlan *plan, char *msg)
     GrB_Matrix A = lhs->res_mat;
     GrB_Matrix B = rhs->res_mat;
 
+    // Creating identity matrix.
     GrB_Index n;
     GRB_TRY(GrB_Matrix_nrows(&n, A));
+    GrB_Matrix I;
+    GRB_TRY(GrB_Matrix_new(&I, GrB_BOOL, n, n));
+
+    GrB_Vector v;
+    GRB_TRY(GrB_Vector_new(&v, GrB_BOOL, n));
+    GRB_TRY(GrB_Vector_assign_BOOL(v, NULL, NULL, true, GrB_ALL, n, NULL));
+
+    GRB_TRY(GrB_Matrix_diag(&I, v, 0));
+
+    GRB_TRY(GrB_Vector_free(&v));
+
+    // B + I
+    GrB_Matrix API;
+    GRB_TRY(GrB_Matrix_new(&API, GrB_BOOL, n, n));
+    GRB_TRY(GrB_eWiseAdd(API, GrB_NULL, GrB_NULL,
+                         op, A, I, GrB_DESC_R));
 
     // S <- B
-    GrB_Matrix S, T;
+    GrB_Matrix S;
     GRB_TRY(GrB_Matrix_dup(&S, B));
-    GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n));
 
     bool changed = true;
-    GrB_Index nnz_S = 0, nnz_T = 0;
+    GrB_Index nnz_S = 0, nnz_Sold = 0;
 
     while (changed)
     {
-        // T <- A x S
-        GRB_TRY(GrB_mxm(T, NULL, NULL, sr, A, S, NULL));
-
-        // S <- S + T
-        GRB_TRY(GrB_eWiseAdd(S, NULL, NULL, op, S, T, NULL));
+        // T <- (A + I) x S
+        GRB_TRY(GrB_mxm(S, NULL, NULL, sr, API, S, NULL));
 
         GRB_TRY(GrB_Matrix_nvals(&nnz_S, S));
-        if (nnz_S == nnz_T)
+        if (nnz_S != nnz_Sold)
         {
-            changed = false;
+            changed = true;
+            nnz_Sold = nnz_S;
         }
         else
         {
-            changed = true;
-            nnz_T = nnz_S;
-
+            changed = false;
         }
     }
 
     plan->res_mat = S;
-    GRB_TRY(GrB_Matrix_free(&T));
+    GRB_TRY(GrB_Matrix_free(&I));
+    GRB_TRY(GrB_Matrix_free(&API));
     return GrB_SUCCESS;
 }
-
 
 // this function need to handle special case where some optimization
 // are available.
@@ -412,7 +420,7 @@ static GrB_Info LAGraph_RPQMatrixKleene_L(RPQMatrixPlan *plan, char *msg)
 //   └─┬─┘
 // ┌─┬─┴─┬─┐
 // │a│   │b│
-// └─┘   └─┘   
+// └─┘   └─┘
 
 static GrB_Info LAGraph_RPQMatrixKleene_R(RPQMatrixPlan *plan, char *msg)
 {
@@ -432,39 +440,53 @@ static GrB_Info LAGraph_RPQMatrixKleene_R(RPQMatrixPlan *plan, char *msg)
     GrB_Matrix A = lhs->res_mat;
     GrB_Matrix B = rhs->res_mat;
 
+    // Creating identity matrix.
     GrB_Index n;
-    GRB_TRY(GrB_Matrix_nrows(&n, A));
+    GRB_TRY(GrB_Matrix_nrows(&n, B));
+    GrB_Matrix I;
+    GRB_TRY(GrB_Matrix_new(&I, GrB_BOOL, n, n));
+
+    GrB_Vector v;
+    GRB_TRY(GrB_Vector_new(&v, GrB_BOOL, n));
+    GRB_TRY(GrB_Vector_assign_BOOL(v, NULL, NULL, true, GrB_ALL, n, NULL));
+
+    GRB_TRY(GrB_Matrix_diag(&I, v, 0));
+
+    GRB_TRY(GrB_Vector_free(&v));
+
+    // B + I
+    GrB_Matrix BPI;
+    GRB_TRY(GrB_Matrix_new(&BPI, GrB_BOOL, n, n));
+    GRB_TRY(GrB_eWiseAdd(BPI, GrB_NULL, GrB_NULL,
+                         op, B, I, GrB_DESC_R));
 
     // S <- A
-    GrB_Matrix S, T;
+    GrB_Matrix S;
     GRB_TRY(GrB_Matrix_dup(&S, A));
-    GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n));
 
     bool changed = true;
-    GrB_Index nnz_S = 0, nnz_T = 0;
+    GrB_Index nnz_S = 0, nnz_Sold = 0;
 
     while (changed)
     {
-        // T <- S × B
-        GRB_TRY(GrB_mxm(T, NULL, NULL, sr, S, B, NULL));
-
-        // S <- S + T
-        GRB_TRY(GrB_eWiseAdd(S, NULL, NULL, op, S, T, NULL));
+        // S <- S x (B + I)
+        GRB_TRY(GrB_mxm(S, NULL, NULL, sr, S, BPI, NULL));
 
         GRB_TRY(GrB_Matrix_nvals(&nnz_S, S));
-        if (nnz_S == nnz_T)
+        if (nnz_S != nnz_Sold)
         {
-            changed = false;
+            changed = true;
+            nnz_Sold = nnz_S;
         }
         else
         {
-            changed = true;
-            nnz_T = nnz_S;
+            changed = false;
         }
     }
 
     plan->res_mat = S;
-    GRB_TRY(GrB_Matrix_free(&T));
+    GRB_TRY(GrB_Matrix_free(&I));
+    GRB_TRY(GrB_Matrix_free(&BPI));
     return GrB_SUCCESS;
 }
 
@@ -479,7 +501,7 @@ GrB_Info LAGraph_RPQMatrix_solver(RPQMatrixPlan *plan, char *msg)
     {
     case RPQ_MATRIX_OP_LABEL:
         LG_ASSERT_MSG(plan->lhs == NULL && plan->rhs == NULL,
-             GrB_INVALID_VALUE, "label node should not have any children nodes");
+                      GrB_INVALID_VALUE, "label node should not have any children nodes");
         plan->res_mat = plan->mat;
         return (GrB_SUCCESS);
     case RPQ_MATRIX_OP_LOR:
