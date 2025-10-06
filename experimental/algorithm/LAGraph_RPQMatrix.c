@@ -370,7 +370,7 @@ static GrB_Info LAGraph_RPQMatrixKleene_L(RPQMatrixPlan *plan, char *msg)
 
     for (;;)
     {
-        // T = S x (A + I)
+        // T = (A + I) x S
         GRB_TRY(GrB_mxm(T, NULL, NULL, sr, API, S, NULL)) ;
 
         GrB_Index nnz_T ;
