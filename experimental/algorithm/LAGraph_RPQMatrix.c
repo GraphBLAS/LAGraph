@@ -4,10 +4,10 @@
 //
 // LAGraph, (c) 2019-2024 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-//
+
 // Contributed by Rodion Suvorov, Semyon Grigoriev, St. Petersburg State
 // University.
-//
+
 //------------------------------------------------------------------------------
 
 // Code is based on the algorithm described in the following paper:
@@ -106,22 +106,23 @@
 
 #define LG_FREE_ALL   \
     {                 \
-        LG_FREE_WORK; \
+        LG_FREE_WORK ; \
     }
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
 #include <assert.h>
 
-#define OK(s)                                                \
-    {                                                        \
-        GrB_Info info = s ;                                  \
-        if (!(info == GrB_SUCCESS))                          \
-        {                                                    \
-            printf("GraphBLAS error: %d\n", info) ;          \
-            fprintf(stderr, "GraphBLAS error: %d\n", info) ; \
-        }                                                    \
-    }
+#define OK(s)                                           \
+{                                                       \
+    GrB_Info info = (s);                                \
+    if (info != GrB_SUCCESS)                            \
+    {                                                   \
+        fprintf(stderr, "GraphBLAS error: %d\n", info); \
+        return info;                                    \
+    }                                                   \
+}
+
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -134,6 +135,7 @@ GrB_Info LAGraph_RPQMatrix_check(RPQMatrixPlan *plan, GrB_Index *dimension, char
     }
     if (plan->op == RPQ_MATRIX_OP_LABEL)
     {
+        LG_ASSERT(plan->mat != NULL, GrB_NULL_POINTER);
         GrB_Index nrows, ncols ;
         OK(GrB_Matrix_nrows(&nrows, plan->mat)) ;
         OK(GrB_Matrix_ncols(&ncols, plan->mat)) ;
@@ -146,7 +148,7 @@ GrB_Info LAGraph_RPQMatrix_check(RPQMatrixPlan *plan, GrB_Index *dimension, char
         }
         else
         {
-            LG_ASSERT_MSG(nrows == *dimension || ncols == *dimension, GrB_INVALID_VALUE,
+            LG_ASSERT_MSG(nrows == *dimension && ncols == *dimension, GrB_INVALID_VALUE,
                           "all the matrices in the graph adjacency matrix decomposition "
                           "should have the same dimensions and be square") ;
         }
@@ -185,11 +187,10 @@ static GrB_Info LAGraph_RPQMatrixLor(RPQMatrixPlan *plan, char *msg)
     GrB_Matrix lhs_mat = lhs->res_mat ;
     GrB_Matrix rhs_mat = rhs->res_mat ;
 
-    GrB_Index width, height ;
-    GrB_Matrix_nrows(&height, rhs_mat) ;
-    GrB_Matrix_ncols(&width, lhs_mat) ;
+    GrB_Index dimension ;
+    GrB_Matrix_ncols(&dimension, lhs_mat) ;
     GrB_Matrix res ;
-    GrB_Matrix_new(&res, GrB_BOOL, height, width) ;
+    GrB_Matrix_new(&res, GrB_BOOL, dimension, dimension) ;
     GRB_TRY(GrB_eWiseAdd(res, GrB_NULL, GrB_NULL,
                          op, lhs_mat, rhs_mat, GrB_DESC_R)) ;
     plan->res_mat = res ;
@@ -216,11 +217,10 @@ static GrB_Info LAGraph_RPQMatrixConcat(RPQMatrixPlan *plan, char *msg)
     GrB_Matrix lhs_mat = lhs->res_mat ;
     GrB_Matrix rhs_mat = rhs->res_mat ;
 
-    GrB_Index width, height ;
-    GrB_Matrix_nrows(&height, rhs_mat) ;
-    GrB_Matrix_ncols(&width, lhs_mat) ;
+    GrB_Index dimension ;
+    GrB_Matrix_ncols(&dimension, lhs_mat) ;
     GrB_Matrix res ;
-    GrB_Matrix_new(&res, GrB_BOOL, height, width) ;
+    GrB_Matrix_new(&res, GrB_BOOL, dimension, dimension) ;
     GRB_TRY(GrB_mxm(res, GrB_NULL, GrB_NULL,
                     sr, lhs_mat, rhs_mat, GrB_DESC_R)) ;
     plan->res_mat = res ;
@@ -540,7 +540,7 @@ GrB_Info LAGraph_RPQMatrix(
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_ASSERT(plan == NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT(plan != NULL, GrB_NULL_POINTER) ;
     GrB_Index dimension = -1 ;
     GrB_Info info = LAGraph_RPQMatrix_check(plan, &dimension, msg) ;
     LG_ASSERT_MSG(info == GrB_SUCCESS, info, msg) ;
@@ -557,6 +557,6 @@ GrB_Info LAGraph_RPQMatrix(
 
     info = LAGraph_RPQMatrix_solver(plan, msg) ;
     LG_ASSERT_MSG(info == GrB_SUCCESS, info, msg) ;
-    GrB_Matrinx_nvals(nnz, plan->res_mat) ;
+    GrB_Matrix_nvals(nnz, plan->res_mat) ;
     return GrB_SUCCESS ;
 }
