@@ -516,13 +516,14 @@ GrB_Info LAGraph_RPQMatrix_solver(RPQMatrixPlan *plan, char *msg)
     return (GrB_SUCCESS) ;
 }
 
-GrB_Info LAGraph_RPQMatrix_initialize()
+GrB_Info LAGraph_RPQMatrix_initialize(void)
 {
     sr = GrB_LOR_LAND_SEMIRING_BOOL ;
     op = GxB_LOR_BOOL_MONOID ;
+    return GrB_SUCCESS;
 }
 
-GrB_Info LAGrah_RPQMatrix(
+GrB_Info LAGraph_RPQMatrix(
     // output:
     GrB_Index *nnz, // number of nonzero values in
                     // result reachability matrix

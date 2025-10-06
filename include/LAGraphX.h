@@ -846,29 +846,6 @@ int LAGraph_RegularPathQuery    // nodes reachable from the starting by the
     char *msg                   // LAGraph output message
 );
 //****************************************************************************
-typedef enum RPQMatrixOp
-{
-    RPQ_MATRIX_OP_LABEL,    // edge label of input graph
-    RPQ_MATRIX_OP_LOR,      // alternation
-    RPQ_MATRIX_OP_CONCAT,   // concatenation
-    RPQ_MATRIX_OP_KLEENE,   // reflexive-transitive closure
-    RPQ_MATRIX_OP_KLEENE_L, // optimization for (A)*/B case,
-                            // when B is sparse and A is dense
-    RPQ_MATRIX_OP_KLEENE_R, // optimization for A/(B)* case,
-                            // when A is sparse and B is dense
-} RPQMatrixOp ;
-
-typedef struct RPQMatrixPlan
-{
-    RPQMatrixOp op ;            // type of tree node
-    struct RPQMatrixPlan *lhs ; // left subtree
-    struct RPQMatrixPlan *rhs ; // right subtree
-    GrB_Matrix mat ;            // adjacency matrix of label.
-                                // Only for leafes. Should be NULL
-                                // in other cases
-    GrB_Matrix res_mat ;        // result of subtree execution.
-                                // Should be NULL
-} RPQMatrixPlan ;
 
 // LAGraph_RPQMatrix: regular path query algortithm
 //
@@ -949,8 +926,32 @@ typedef struct RPQMatrixPlan
 //  3 |   |   |   |   |
 //
 // So for this example LAGraph_RPQMatrix will return 1.
+typedef enum RPQMatrixOp
+{
+    RPQ_MATRIX_OP_LABEL,    // edge label of input graph
+    RPQ_MATRIX_OP_LOR,      // alternation
+    RPQ_MATRIX_OP_CONCAT,   // concatenation
+    RPQ_MATRIX_OP_KLEENE,   // reflexive-transitive closure
+    RPQ_MATRIX_OP_KLEENE_L, // optimization for (A)*/B case,
+                            // when B is sparse and A is dense
+    RPQ_MATRIX_OP_KLEENE_R, // optimization for A/(B)* case,
+                            // when A is sparse and B is dense
+} RPQMatrixOp ;
 
-GrB_Info LAGrah_RPQMatrix(
+typedef struct RPQMatrixPlan
+{
+    RPQMatrixOp op ;            // type of tree node
+    struct RPQMatrixPlan *lhs ; // left subtree
+    struct RPQMatrixPlan *rhs ; // right subtree
+    GrB_Matrix mat ;            // adjacency matrix of label.
+                                // Only for leafes. Should be NULL
+                                // in other cases
+    GrB_Matrix res_mat ;        // result of subtree execution.
+                                // Should be NULL
+} RPQMatrixPlan ;
+
+LAGRAPHX_PUBLIC
+GrB_Info LAGraph_RPQMatrix(
     // output:
     GrB_Index *nnz, // number of nonzero values in
                     // result reachability matrix
