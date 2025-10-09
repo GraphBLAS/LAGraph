@@ -258,9 +258,12 @@ void test_diamonds_ebc (void)
     OK (GrB_free (&centrality)) ;
 
     // compute its betweenness centrality with GraphBLAS version
+    // LG_SET_BURBLE (true) ;
     t = LAGraph_WallClockTime() ;
     OK (LAGr_EdgeBetweennessCentrality (&centrality, G, NULL, msg)) ;
     t = LAGraph_WallClockTime() - t ;
+//  LG_SET_BURBLE (false) ;
+
     err = difference(centrality, &diamonds_ebc[0][0], 8, 8) ;
     printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
     printf ("  diamonds:   err: %e (pure GraphBLAS)\n", err) ;
@@ -310,9 +313,11 @@ void test_karate_ebc (void)
     OK (GrB_free (&centrality)) ;
 
     // compute its betweenness centrality (GraphBLAS version)
+    LG_SET_BURBLE (true) ;
     t = LAGraph_WallClockTime() ;
     OK (LAGr_EdgeBetweennessCentrality (&centrality, G, NULL, msg)) ;
     t = LAGraph_WallClockTime() - t ;
+//  LG_SET_BURBLE (false) ;
     err = difference(centrality, &karate_ebc[0][0], 34, 34) ;
     printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
     printf ("  karate:   err: %e (GraphBLAS version)\n", err) ;
@@ -369,10 +374,12 @@ void test_many(void)
         printf ("\n\n%s (%" PRIu64 " nodes, %" PRIu64 " edges)\n", files[i], n, nedges) ;
 
         // compute its betweenness centrality (GraphBLAS version)
+        // LG_SET_BURBLE (true) ;
         double t = LAGraph_WallClockTime() ;
         OK(LAGr_EdgeBetweennessCentrality(&centrality, G, NULL, msg));
         t = LAGraph_WallClockTime() - t ;
         printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+//      LG_SET_BURBLE (false) ;
 
         // compute its betweenness centrality (C version)
         t = LAGraph_WallClockTime() ;
@@ -450,9 +457,11 @@ void test_diamonds_ebc_approx (void)
     OK (GrB_free (&centrality)) ;
 
     // compute its betweenness centrality with GraphBLAS version
+    // LG_SET_BURBLE (true) ;
     t = LAGraph_WallClockTime() ;
     OK (LAGr_EdgeBetweennessCentrality (&centrality, G, sources, msg)) ;
     t = LAGraph_WallClockTime() - t ;
+//  LG_SET_BURBLE (false) ;
     err = difference(centrality, &diamonds_ebc_approx[0][0], 8, 8) ;
     printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
     printf ("  diamonds:   err: %e (pure GraphBLAS)\n", err) ;
@@ -518,9 +527,11 @@ void test_karate_ebc_approx (void)
     OK (GrB_free (&centrality)) ;
 
     // compute its betweenness centrality (GraphBLAS version)
+    // LG_SET_BURBLE (true) ;
     t = LAGraph_WallClockTime() ;
     OK (LAGr_EdgeBetweennessCentrality (&centrality, G, sources, msg)) ;
     t = LAGraph_WallClockTime() - t ;
+//  LG_SET_BURBLE (false) ;
     err = difference(centrality, &karate_ebc_approx[0][0], 34, 34) ;
     printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
     printf ("  karate:   err: %e (GraphBLAS version)\n", err) ;
@@ -602,10 +613,12 @@ void test_many_approx(void)
         OK (LAGraph_Free ((void **) &used, msg)) ;
 
         // compute its betweenness centrality (GraphBLAS version)
+        // LG_SET_BURBLE (true) ;
         t = LAGraph_WallClockTime() ;
         OK(LAGr_EdgeBetweennessCentrality(&centrality, G, randomSources, msg));
         t = LAGraph_WallClockTime() - t ;
         printf ("  Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
+//      LG_SET_BURBLE (false) ;
 
         // compute its betweenness centrality (C version)
         t = LAGraph_WallClockTime() ;

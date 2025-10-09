@@ -137,6 +137,15 @@ void test_print (void)
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
     #endif
 
+    // now do a wait first
+    OK (GrB_Vector_wait (v, GrB_MATERIALIZE)) ;
+    result = LAGraph_Vector_Print (v, pr, stdout, msg) ;
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
+    TEST_CHECK (result == GrB_SUCCESS) ;
+    #else
+    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
+    #endif
+
     OK (GrB_Vector_free (&v)) ;
     OK (GrB_Type_free (&type)) ;
     OK (LAGraph_Finalize (msg)) ;
