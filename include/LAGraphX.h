@@ -1530,6 +1530,17 @@ int LAGraph_MinCut(
     char *msg
 );
 
+LAGRAPHX_PUBLIC
+int LAGraph_Jaccard 
+(
+    //	output
+    GrB_Matrix *coefficients,
+    //  input
+	LAGraph_Graph G,
+    bool all_pairs, 
+	char *msg
+);     
+
 #if defined ( __cplusplus )
 }
 #endif
