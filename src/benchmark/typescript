@@ -1,0 +1,42 @@
+[?2004h[0;36mmit d-12-14-1 $[0m [K./do_gap_tc_gpu grb
+[?2004l 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Triangle Counting
+======================================================================
+d-12-14-1
+OMP_PLACES=cores
+OMP_PROC_BIND=spread
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+GB_cuda_get_device_count: 2, cudaError_t: 0
+GB_cuda_init: ngpus: 2
+
+Device: 0: memory: 34072559616 SMs: 80 compute: 7.0
+
+Device: 1: memory: 34072559616 SMs: 80 compute: 7.0
+CUDA_VISIBLE_DEVICES = 0,1
+getting cuda visible devices
+Found device_id 0
+Found device_id 1
+devices.size is 2
+cuda warmup 0
+cuda warmup 0 OK
+cuda warmup 1
+cuda warmup 1 OK
+JIT init, device 0
+library: SuiteSparse:GraphBLAS v10.2.0 [FIXME, 2025]
+# of trials: 5
+threads to test:  80
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+ [ GrB_set 
+   0.0218 sec ]
+ [ GrB_set 
+   1.1e-05 sec ]
+ [ GrB_set error: /home/gridsan/tdavis/dev2/LAGraph/src/benchmark/LAGraph_demo.h line: 899, status: -102
+error: /home/gridsan/tdavis/dev2/LAGraph/src/benchmark/tc_gpu_demo.c line: 135, status: -102
+GB_cuda_get_device_count: 2, cudaError_t: 0
+GB_cuda_init: ngpus: 2
+
+Device: 0: memo

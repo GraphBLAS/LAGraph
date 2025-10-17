@@ -1,0 +1,417 @@
+mit d-14-6-2 $  ./build/src/benchmark/tc_gpu_demo ~/GAP/GAP-twitter/GAP-twitter.grb 
+GB_cuda_get_device_count: 2, cudaError_t: 0
+GB_cuda_init: ngpus: 2
+
+Device: 0: memory: 34072559616 SMs: 80 compute: 7.0
+
+Device: 1: memory: 34072559616 SMs: 80 compute: 7.0
+CUDA_VISIBLE_DEVICES = 0,1
+getting cuda visible devices
+Found device_id 0
+Found device_id 1
+devices.size is 2
+cuda warmup 0
+cuda warmup 0 OK
+cuda warmup 1
+cuda warmup 1 OK
+JIT init, device 0
+library: SuiteSparse:GraphBLAS v10.2.0 [FIXME, 2025]
+# of trials: 5
+threads to test:  80
+matrix: /home/gridsan/tdavis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/gridsan/tdavis/GAP/GAP-twitter/GAP-twitter.grb
+ [ GrB_set 
+   0.0203 sec ]
+ [ GrB_set 
+   2.63e-05 sec ]
+ [ GrB_set 
+   0.339 sec ]
+ [ GrB_set 
+   0.0153 sec ]
+A converted to 32-bit
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.203 sec ]
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+(jit: cuda load) 
+select sparse phase1: 1.59109 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.00126922 sec (cpu: ChunkSum of Map)
+select sparse phase3: 1.24834 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0151948 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00232992 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0298075 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   2.94 sec ]
+ [ GrB_transpose (iso transpose) (80-thread atomic bucket transpose) 
+   8.69 sec ]
+ [ GrB_eWiseMult (iso wait:B 0 zombies, 0 pending, jumbled) (wait: unjumble only) emult:(S<.>=S.*S) (iso emult) 
+   1.44 sec ]
+ [ GrB_Matrix_nvals 
+   2.1e-06 sec ]
+ [ GrB_Matrix_nvals 
+   7.6e-08 sec ]
+ [ GrB_Matrix_nvals 
+   6.1e-08 sec ]
+ [ GrB_Matrix_nvals 
+   7.6e-08 sec ]
+ [ GrB_eWiseMult emult:(S<.>=S.*S) (iso emult) 
+   0.388 sec ]
+ [ GrB_Matrix_nvals 
+   3.3e-07 sec ]
+forcing G-> to be symmetric (via A = A+A')
+ [ GrB_eWiseAdd add:(S<.>=S+S) (iso add) 
+   0.805 sec ]
+read time: 30.681
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar 
+   2.47e-05 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (nthreads: 80 naslice 2560 nbslice 1) (dot B = S'*F) (jit: cpu load) 
+   0.037 sec ]
+ [ GrB_Matrix_nvals 
+   3.36e-07 sec ]
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   sort: none
+
+ [ GrB_select (iso select) 
+   0.251 sec ]
+ [ GrB_select (iso select) 
+   0.355 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:0 nthreads 80 ntasks 2560 (jit: cpu load) 
+   121 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:0 (jit: cpu load) 
+   0.135 sec ]
+Sandia_ULT (dot) time: 121.627
+# of triangles: 34824916864
+Sandia_ULT: sum ((U*L') .* U)   sort: none
+nthreads:  80 time:   122.232982 rate:  19.68 (Sandia_ULT, one trial)
+
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+(jit: cuda load) 
+select sparse phase1: 2.54506 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.00101765 sec (cpu: ChunkSum of Map)
+select sparse phase3: 1.03044 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0194239 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00168962 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0806297 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   3.71 sec ]
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+(jit: cuda load) 
+select sparse phase1: 4.43867 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.00124031 sec (cpu: ChunkSum of Map)
+select sparse phase3: 1.23072 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0124187 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00184936 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0730608 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   5.79 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:2 (GPU dot3) dot3 using cuda device 0
+(GPU C created and copied from M) (jit: cuda load) 
+mnz: 1202513046
+number_of_blocks_1: 10240
+threads_per_block: 32
+
+zombies: 0
+bucket 1: 87486104
+bucket 2: 359533770
+bucket 3: 755493172
+mnz: 1202513046 in buckets : 1202513046
+
+   62.4 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:2 has_cheeseburger 1
+(cuda reduce launch 320 threads in 14680 blocks)(jit: cuda load) 
+   0.0156 sec ]
+Sandia_ULT (dot) time: 62.3796
+# of triangles: 34824916864 (GPU)
+Sandia_ULT: sum ((U*L') .* U)   sort: none
+nthreads:  80 time:    71.879282 rate:  33.46 (Sandia_ULT, one trial)
+
+Method: GPU: 0 Sandia_ULT: sum ((U*L') .* U)   sort: none
+
+ [ GrB_select (iso select) 
+   0.821 sec ]
+ [ GrB_select (iso select) 
+   0.455 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:0 nthreads 80 ntasks 2560 
+   122 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:0 
+   0.139 sec ]
+Sandia_ULT (dot) time: 122.124
+trial  0:   123.399825 sec rate  19.49  # triangles: 3.48249e+10
+
+ [ GrB_select (iso select) 
+   0.27 sec ]
+ [ GrB_select (iso select) 
+   0.261 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:0 nthreads 80 ntasks 2560 
+   122 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:0 
+   0.145 sec ]
+Sandia_ULT (dot) time: 122.207
+trial  1:   122.739001 sec rate  19.59  # triangles: 3.48249e+10
+
+ [ GrB_select (iso select) 
+   0.239 sec ]
+ [ GrB_select (iso select) 
+   0.233 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:0 nthreads 80 ntasks 2560 
+   122 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:0 
+   0.144 sec ]
+Sandia_ULT (dot) time: 122.064
+trial  2:   122.537328 sec rate  19.63  # triangles: 3.48249e+10
+
+ [ GrB_select (iso select) 
+   0.239 sec ]
+ [ GrB_select (iso select) 
+   0.224 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:0 nthreads 80 ntasks 2560 
+   122 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:0 
+   0.137 sec ]
+Sandia_ULT (dot) time: 122.605
+trial  3:   123.068405 sec rate  19.54  # triangles: 3.48249e+10
+
+ [ GrB_select (iso select) 
+   0.236 sec ]
+ [ GrB_select (iso select) 
+   0.243 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:0 nthreads 80 ntasks 2560 
+   122 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:0 
+   0.141 sec ]
+Sandia_ULT (dot) time: 122.166
+trial  4:   122.645363 sec rate  19.61  # triangles: 3.48249e+10
+nthreads:  80 time:   122.877984 rate:  19.57   # of triangles: 34824916864 presort: 2
+
+Method used: Sandia_ULT: sum ((U*L') .* U)   sort: none
+Avg: TC method6.2  80:    122.878 sec: /home/gridsan/tdavis/GAP/GAP-twitter/GAP-twitter.grb
+
+Method: GPU: 1 Sandia_ULT: sum ((U*L') .* U)   sort: none
+
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+
+select sparse phase1: 2.91474 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.00103764 sec (cpu: ChunkSum of Map)
+select sparse phase3: 4.44086 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0188519 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00191434 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0829163 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   7.55 sec ]
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+
+select sparse phase1: 4.41345 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.00126304 sec (cpu: ChunkSum of Map)
+select sparse phase3: 1.22482 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0120183 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00186027 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0723456 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   5.76 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:2 (GPU dot3) dot3 using cuda device 0
+(GPU C created and copied from M) 
+mnz: 1202513046
+number_of_blocks_1: 10240
+threads_per_block: 32
+
+zombies: 0
+bucket 1: 87486104
+bucket 2: 359533770
+bucket 3: 755493172
+mnz: 1202513046 in buckets : 1202513046
+
+   76.2 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:2 has_cheeseburger 1
+(cuda reduce launch 320 threads in 14680 blocks)
+   0.0203 sec ]
+Sandia_ULT (dot) time: 76.2206
+trial  0:    89.541267 sec rate  26.86  # triangles: 3.48249e+10
+
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+
+select sparse phase1: 4.04189 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.00102363 sec (cpu: ChunkSum of Map)
+select sparse phase3: 0.664398 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0125391 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00186103 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0761663 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   4.83 sec ]
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+
+select sparse phase1: 0.124286 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.00120477 sec (cpu: ChunkSum of Map)
+select sparse phase3: 0.9789 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0404406 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00182547 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.074087 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   1.25 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:2 (GPU dot3) dot3 using cuda device 0
+(GPU C created and copied from M) 
+mnz: 1202513046
+number_of_blocks_1: 10240
+threads_per_block: 32
+
+zombies: 0
+bucket 1: 87486104
+bucket 2: 359533770
+bucket 3: 755493172
+mnz: 1202513046 in buckets : 1202513046
+
+   79.7 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:2 has_cheeseburger 1
+(cuda reduce launch 320 threads in 14680 blocks)
+   0.0151 sec ]
+Sandia_ULT (dot) time: 79.6934
+trial  1:    85.780582 sec rate  28.04  # triangles: 3.48249e+10
+
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+
+select sparse phase1: 4.01642 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.00105874 sec (cpu: ChunkSum of Map)
+select sparse phase3: 0.672281 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0401312 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00190356 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0780898 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   4.84 sec ]
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+
+select sparse phase1: 0.124423 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.00126809 sec (cpu: ChunkSum of Map)
+select sparse phase3: 0.92919 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0783038 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00187858 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0721656 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   1.24 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:2 (GPU dot3) dot3 using cuda device 0
+(GPU C created and copied from M) 
+mnz: 1202513046
+number_of_blocks_1: 10240
+threads_per_block: 32
+
+zombies: 0
+bucket 1: 87486104
+bucket 2: 359533770
+bucket 3: 755493172
+mnz: 1202513046 in buckets : 1202513046
+
+   80.3 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:2 has_cheeseburger 1
+(cuda reduce launch 320 threads in 14680 blocks)
+   0.0151 sec ]
+Sandia_ULT (dot) time: 80.278
+trial  2:    86.359329 sec rate  27.85  # triangles: 3.48249e+10
+
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+
+select sparse phase1: 4.04707 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.0010387 sec (cpu: ChunkSum of Map)
+select sparse phase3: 0.674919 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0335429 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.0018999 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.079003 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   4.87 sec ]
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+
+select sparse phase1: 0.12306 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.0012256 sec (cpu: ChunkSum of Map)
+select sparse phase3: 0.932687 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0729145 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.0018371 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0754697 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   1.24 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:2 (GPU dot3) dot3 using cuda device 0
+(GPU C created and copied from M) 
+mnz: 1202513046
+number_of_blocks_1: 10240
+threads_per_block: 32
+
+zombies: 0
+bucket 1: 87486104
+bucket 2: 359533770
+bucket 3: 755493172
+mnz: 1202513046 in buckets : 1202513046
+
+   80.4 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:2 has_cheeseburger 1
+(cuda reduce launch 320 threads in 14680 blocks)
+   0.0151 sec ]
+Sandia_ULT (dot) time: 80.4615
+trial  3:    86.570974 sec rate  27.78  # triangles: 3.48249e+10
+
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+
+select sparse phase1: 4.02353 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.0010419 sec (cpu: ChunkSum of Map)
+select sparse phase3: 0.65529 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0124778 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00187123 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0770688 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   4.8 sec ]
+ [ GrB_select (iso select) (select sparse on cuda) 
+blockdim1: 512 chunksize1: 4096
+blockdim2: 256 chunksize2: 1024
+
+select sparse phase1: 0.123263 sec (gpu: Map, with cumsum)
+select sparse phase2: 0.00126035 sec (cpu: ChunkSum of Map)
+select sparse phase3: 0.924266 sec (gpu: create Ci,Cx,Ck)
+select sparse phase4: 0.0988218 sec (gpu: Ck_Delta, with cumsum)
+select sparse phase5: 0.00181952 sec (cpu: ChunkSum for Ck_Delta
+select sparse phase6: 0.0777796 sec (gpu: Cp,Ch)
+(hyper to sparse) 
+   1.26 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S} = S'*S)  work:2.34829e+10 GPUs:2 (GPU dot3) dot3 using cuda device 0
+(GPU C created and copied from M) 
+mnz: 1202513046
+number_of_blocks_1: 10240
+threads_per_block: 32
+
+zombies: 0
+bucket 1: 87486104
+bucket 2: 359533770
+bucket 3: 755493172
+mnz: 1202513046 in buckets : 1202513046
+
+   80 sec ]
+ [ GrB_reduce  work:1.20251e+09 gpus:2 has_cheeseburger 1
+(cuda reduce launch 320 threads in 14680 blocks)
+   0.0151 sec ]
+Sandia_ULT (dot) time: 80.0279
+trial  4:    86.090744 sec rate  27.94  # triangles: 3.48249e+10
+nthreads:  80 time:    86.868579 rate:  27.69   # of triangles: 34824916864 presort: 2
+
+Method used: Sandia_ULT: sum ((U*L') .* U)   sort: none
+Avg: TC method6.2  80:     86.869 sec: /home/gridsan/tdavis/GAP/GAP-twitter/GAP-twitter.grb
+
+Best method: GPU: 1 Sandia_ULT: sum ((U*L') .* U)   sort: none
+nthreads:  80 time:    86.868579 rate:  27.69
