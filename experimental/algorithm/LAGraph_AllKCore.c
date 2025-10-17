@@ -130,25 +130,28 @@ int LAGraph_KCore_All
         //Assign values of deg into decomp (output)
         GRB_TRY (GrB_assign (*decomp, deg, NULL, level, GrB_ALL, n, GrB_NULL)) ;
 
-        int round = 0;
+        // int round = 0;
+
         // while q not empty
-        while(nvals > 0){
+        while (nvals > 0)
+        {
             // Decrease todo by number of nvals
             todo = todo - nvals ;
             //add anything in q as true into the done list
-            GRB_TRY (GrB_assign (done, q, NULL, (bool) true, GrB_ALL, n, GrB_DESC_S)) ; //structure to take care of 0-node cases
+            //structure to take care of 0-node cases
+            GRB_TRY (GrB_assign (done, q, NULL, (bool) true, GrB_ALL, n, GrB_DESC_S)) ;
 
             // Create delta (the nodes who lost friends, and how many they lost)
             GRB_TRY (GrB_vxm (delta, GrB_NULL, GrB_NULL, semiring, q, A, GrB_NULL));
 
             // Create new deg vector (keep anything not in done vector w/ replace command)
-            GRB_TRY (GrB_eWiseAdd(deg, done, GrB_NULL, minus_op, deg, delta, GrB_DESC_RSC /* try GrB_DESC_RSC */)) ;
+            GRB_TRY (GrB_eWiseAdd(deg, done, GrB_NULL, minus_op, deg, delta, GrB_DESC_RSC)) ;
 
             // Update q, set new nvals
             GRB_TRY (GrB_select (q, GrB_NULL, GrB_NULL, valueLE, deg, level, GrB_NULL)) ;
 
             GRB_TRY (GrB_Vector_nvals(&nvals, q)) ;
-            round++;
+            // round++;
         }
     }
     //set kmax
