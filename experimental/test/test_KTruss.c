@@ -176,7 +176,7 @@ void test_ktruss_errors (void)
     G->nself_edges = LAGRAPH_UNKNOWN ;
     result = LAGraph_KTruss (&C1, G, 3, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
-    TEST_CHECK (result == -1004) ;
+    TEST_CHECK (result == LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
     TEST_CHECK (C1 == NULL) ;
 
     // G is undirected
@@ -185,12 +185,12 @@ void test_ktruss_errors (void)
     G->is_symmetric_structure = LAGraph_FALSE ;
     result = LAGraph_KTruss (&C1, G, 3, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
-    TEST_CHECK (result == -1005) ;
+    TEST_CHECK (result == LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED) ;
     TEST_CHECK (C1 == NULL) ;
 
     result = LG_check_ktruss (&C1, G, 3, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
-    TEST_CHECK (result == -1005) ;
+    TEST_CHECK (result == LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED) ;
     TEST_CHECK (C1 == NULL) ;
 
     OK (LAGraph_Delete (&G, msg)) ;

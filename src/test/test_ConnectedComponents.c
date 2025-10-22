@@ -244,15 +244,15 @@ void test_cc_errors (void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     result = LG_CC_Boruvka (&C, G, msg) ;
-    TEST_CHECK (result == -1001) ;
+    TEST_CHECK (result == LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
     #if LAGRAPH_SUITESPARSE
     result = LG_CC_FastSV6 (&C, G, msg) ;
-    TEST_CHECK (result == -1001) ;
+    TEST_CHECK (result == LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
     #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
     result = LG_CC_FastSV7_FA (&C, G, msg) ;
-    TEST_CHECK (result == -1001) ;
+    TEST_CHECK (result == LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
     #endif
     #endif
