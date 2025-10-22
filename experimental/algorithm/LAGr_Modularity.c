@@ -178,6 +178,7 @@ int LAGr_Modularity(
     }
 
     // Extract actual values of l, k_out, and k_in for modularity calculations
+    // TODO: use GraphBLAS, not extractTuples and a for loop:
     LAGRAPH_TRY(
         LAGraph_Malloc((void **)&lX, nclusters, sizeof(GrB_Index), msg));
     LAGRAPH_TRY(
@@ -196,6 +197,7 @@ int LAGr_Modularity(
     double norm = 1.0 / (m * m);
 
     // compute modularity
+    // TODO: use GraphBLAS:  apply and reduce, not a for-loop:
     double mod = 0.0;
     for (int c = 0; c < nclusters; c++)
     {
@@ -203,6 +205,7 @@ int LAGr_Modularity(
                (resolution * ((k_outX[c] * k_inX[c]) * norm));
     }
 
+    // TODO: return a GrB_Scalar??
     (*mod_handle) = mod;
     LG_FREE_WORK;
     return (GrB_SUCCESS);
