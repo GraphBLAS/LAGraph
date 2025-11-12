@@ -20,8 +20,7 @@ void test_Jaccard (void)
     // start LAGraph
     //--------------------------------------------------------------------------
     LAGraph_Init (msg) ;
-    LAGraph_Graph G = NULL;
-    GrB_Matrix A = NULL, ABool = NULL, JC = NULL;
+    GrB_Matrix A = NULL, ABool = NULL;
 	GrB_Index n; 
 
     // create the graph
@@ -46,9 +45,9 @@ void test_Jaccard (void)
 	printf("\nExp 1 : Jaccard similarity\n");
 	bool all_pairs = true;	// if false it only computes jaccard weights(jaccard similarity for neighbors)
     OK (LAGraph_Jaccard(&JC, G, all_pairs, msg)) ;
-    FILE *fo = fopen ("LAGraph_Jaccard_all_pairs.txt", "w") ;
-	OK (GxB_Matrix_fprint(JC, "my matrix", LAGraph_COMPLETE, fo));
-	fclose(fo);
+    //FILE *fo = fopen ("LAGraph_Jaccard_all_pairs.txt", "w") ;
+//	OK (GxB_Matrix_fprint(JC, "my matrix", LAGraph_COMPLETE, fo));
+//	fclose(fo);
 	OK(GrB_free(&JC)); 
 	JC = NULL;
 
@@ -58,9 +57,9 @@ void test_Jaccard (void)
 	printf("Exp 2 : Jaccard weights\n");
 	all_pairs = false;	// if false it only computes jaccard weights(jaccard similarity for neighbors)
     OK (LAGraph_Jaccard(&JC, G, all_pairs, msg)) ;
-    fo = fopen ("LAGraph_Jaccard_weights.txt", "w") ;
-    OK (GxB_Matrix_fprint(JC, "my matrix", LAGraph_COMPLETE, fo));
-    fclose(fo);
+//    fo = fopen ("LAGraph_Jaccard_weights.txt", "w") ;
+//    OK (GxB_Matrix_fprint(JC, "my matrix", LAGraph_COMPLETE, fo));
+//    fclose(fo);
     TEST_CHECK(0 == GrB_free(&JC));
 
     // free everything

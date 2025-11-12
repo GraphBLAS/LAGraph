@@ -1,6 +1,5 @@
 //------------------------------------------------------------------------------
 // LAGraph_Jaccard - parallel jaccard similarity
-// our second approach to compute jaccard similarity
 //------------------------------------------------------------------------------
 
 #define LG_FREE_WORK                           \
@@ -8,7 +7,6 @@
     GrB_free(&deg);                             \
     GrB_free(&Au);                              \
     GrB_free(&R);                               \
-    GrB_free(&J);                               \
     GrB_free(&B);                               \
 }
 
@@ -33,13 +31,13 @@ int LAGraph_Jaccard // a simple algorithm, just for illustration
 (
     // output
     GrB_Matrix *JC,
-    // input: not modified
+    // input:
     LAGraph_Graph G,
 	bool all_pairs, 
     char *msg
 )
 {
-    GrB_Matrix B = NULL, J = NULL, Au = NULL, R = NULL;    
+    GrB_Matrix B = NULL, Au = NULL, R = NULL;    
     GrB_Index n;
     GrB_Vector deg = NULL;
     //--------------------------------------------------------------------------
@@ -54,28 +52,22 @@ int LAGraph_Jaccard // a simple algorithm, just for illustration
     (*JC) = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
-    GrB_Semiring semiring = NULL;
-
+    
     GrB_Matrix A = G->A ;
-    struct timeval stop, start, st_deg, en_deg, st_intersection, en_intersection, st_union, en_union, en_select;
-
-    gettimeofday(&start, NULL);
-
 	GRB_TRY( GrB_Matrix_nrows (&n, A) );
     //--------------------------------------------------------------------------
-    // calculating out degree matrix deg
+    // calculating degree vector deg
     //--------------------------------------------------------------------------
-    gettimeofday(&st_deg, NULL);
+    
     GrB_Type int_type  = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
     GRB_TRY (GrB_Vector_new (&deg, int_type, n)) ;
 	GRB_TRY( GrB_reduce(deg, NULL, NULL, (int_type == GrB_INT64) ? GrB_PLUS_INT64 : GrB_PLUS_INT32, A, NULL));
-    gettimeofday(&en_deg, NULL);
-
+    
 	// GRB_TRY (LAGraph_Vector_Print (deg, LAGraph_COMPLETE_VERBOSE, stdout, msg)) ;
     //--------------------------------------------------------------------------
     // B is intersection matrix 
     //--------------------------------------------------------------------------
-    gettimeofday(&st_intersection, NULL);
+    
 	GRB_TRY(GrB_Matrix_new(&B, GrB_FP32, n, n));
 
 	//make a copy of A
@@ -89,7 +81,8 @@ int LAGraph_Jaccard // a simple algorithm, just for illustration
 
 	
     //--------------------------------------------------------------------------
-    // S is jaccard index
+    // R has summation of degree of corresponding nodes
+    // B is jaccard index B <- B / (R-B)
     //--------------------------------------------------------------------------
 	// assign deg //
 	GrB_Matrix_new(&R, GrB_FP32, n, n);
@@ -103,18 +96,7 @@ int LAGraph_Jaccard // a simple algorithm, just for illustration
 
 	GRB_TRY(  GrB_eWiseAdd(R, B, NULL, GrB_MINUS_FP32, R, B, NULL) );
 	GRB_TRY(  GrB_eWiseMult(B, NULL, NULL, GrB_DIV_FP32, B, R, NULL) );
-    gettimeofday(&en_union, NULL);
 	GRB_TRY (GrB_Matrix_wait (B, GrB_COMPLETE)) ;
-
-    gettimeofday(&stop, NULL);
-
-    long duration_usec = (stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec;
-    printf("execute time is %lu microseconds\n", duration_usec);
-    printf("degree calculation time is %lu microseconds\n", ((en_deg.tv_sec - st_deg.tv_sec) * 1000000 + en_deg.tv_usec - st_deg.tv_usec));
-	printf("intesection and select time is %lu microseconds\n", 
-    ((en_select.tv_sec - st_intersection.tv_sec) * 1000000 + en_select.tv_usec - st_intersection.tv_usec));
-    printf("union time is %lu microseconds\n", ((en_union.tv_sec - st_union.tv_sec) * 1000000 + en_union.tv_usec - st_union.tv_usec));
-    
    
 	// GRB_TRY (LAGraph_Matrix_Print (B, LAGraph_COMPLETE, stdout, msg)) ;
     (*JC) = B;
