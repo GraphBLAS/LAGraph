@@ -27,8 +27,11 @@ char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 GrB_Matrix A = NULL;
 #define LEN 512
+#ifdef GRAPHBLAS_HAS_CUDA
 #define NTESTS 4
-// #define NTESTS 7
+#else
+#define NTESTS 7
+#endif
 char filename[LEN + 1];
 
 typedef struct{
@@ -44,10 +47,13 @@ test_info tests[] = {
   {"matrix_random_flow.mtx", 0,9, 22, LAGraph_ADJACENCY_DIRECTED},
   {"rand.mtx", 0, 19, 37, LAGraph_ADJACENCY_DIRECTED},
   {"mcl.mtx", 0, 9, 0, LAGraph_ADJACENCY_DIRECTED},
-// FIXME: re-enable these matrices:
-//{"cycle_flow.mtx", 0, 89, 1, LAGraph_ADJACENCY_DIRECTED},
-//{"random_weighted_general2.mtx", 0, 299, 11098623877, LAGraph_ADJACENCY_UNDIRECTED},
-//{"random_weighted_general1.mtx", 0, 499, 6264009335, LAGraph_ADJACENCY_UNDIRECTED}
+#ifndef GRAPHBLAS_HAS_CUDA
+// FIXME: the CUDA cases are currently very slow for these matrices,
+// when the GPU is hacked to always be used regardless of problem size:
+  {"cycle_flow.mtx", 0, 89, 1, LAGraph_ADJACENCY_DIRECTED},
+  {"random_weighted_general2.mtx", 0, 299, 11098623877, LAGraph_ADJACENCY_UNDIRECTED},
+  {"random_weighted_general1.mtx", 0, 499, 6264009335, LAGraph_ADJACENCY_UNDIRECTED}
+#endif
 };
 
 //399 11098623877 alt sink and src for test 6
