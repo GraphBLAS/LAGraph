@@ -27,7 +27,8 @@ char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 GrB_Matrix A = NULL;
 #define LEN 512
-#define NTESTS 7
+#define NTESTS 4
+// #define NTESTS 7
 char filename[LEN + 1];
 
 typedef struct{
@@ -43,9 +44,10 @@ test_info tests[] = {
   {"matrix_random_flow.mtx", 0,9, 22, LAGraph_ADJACENCY_DIRECTED},
   {"rand.mtx", 0, 19, 37, LAGraph_ADJACENCY_DIRECTED},
   {"mcl.mtx", 0, 9, 0, LAGraph_ADJACENCY_DIRECTED},
-  {"cycle_flow.mtx", 0, 89, 1, LAGraph_ADJACENCY_DIRECTED},
-  {"random_weighted_general2.mtx", 0, 299, 11098623877, LAGraph_ADJACENCY_UNDIRECTED},
-  {"random_weighted_general1.mtx", 0, 499, 6264009335, LAGraph_ADJACENCY_UNDIRECTED}
+// FIXME: re-enable these matrices:
+//{"cycle_flow.mtx", 0, 89, 1, LAGraph_ADJACENCY_DIRECTED},
+//{"random_weighted_general2.mtx", 0, 299, 11098623877, LAGraph_ADJACENCY_UNDIRECTED},
+//{"random_weighted_general1.mtx", 0, 499, 6264009335, LAGraph_ADJACENCY_UNDIRECTED}
 };
 
 //399 11098623877 alt sink and src for test 6

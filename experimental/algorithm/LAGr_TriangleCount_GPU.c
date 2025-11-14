@@ -86,22 +86,25 @@ static int tricount_prep
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
 
+    if (U != NULL)
+    {
+        // U = triu (A,1)
+        printf ("do U = triu (A,1) first:\n") ;
+        GRB_TRY (GrB_Matrix_new (U, GrB_BOOL, n, n)) ;
+        GRB_TRY (GrB_select (*U, NULL, NULL, GrB_TRIU, A, (int64_t) 1, NULL)) ;
+        GRB_TRY (GrB_Matrix_wait (*U, GrB_MATERIALIZE)) ;
+    }
+
     if (L != NULL)
     {
         // L = tril (A,-1)
+        printf ("do L = tril (A,-1) second:\n") ;
         GRB_TRY (GrB_Matrix_new (L, GrB_BOOL, n, n)) ;
         GRB_TRY (GrB_select (*L, NULL, NULL, GrB_TRIL, A, (int64_t) (-1),
             NULL)) ;
         GRB_TRY (GrB_Matrix_wait (*L, GrB_MATERIALIZE)) ;
     }
 
-    if (U != NULL)
-    {
-        // U = triu (A,1)
-        GRB_TRY (GrB_Matrix_new (U, GrB_BOOL, n, n)) ;
-        GRB_TRY (GrB_select (*U, NULL, NULL, GrB_TRIU, A, (int64_t) 1, NULL)) ;
-        GRB_TRY (GrB_Matrix_wait (*U, GrB_MATERIALIZE)) ;
-    }
     return (GrB_SUCCESS) ;
 }
 
