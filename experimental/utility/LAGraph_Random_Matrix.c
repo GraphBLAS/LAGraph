@@ -13,6 +13,9 @@
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
+// TODO: reconsider the API. Pass in int64_t nvals instead of density?
+// and use nvals = -1 for generating a full matrix, say?
+
 //------------------------------------------------------------------------------
 
 // Constructs a sparse roughly uniformly distributed random matrix with roughly

@@ -20,7 +20,7 @@ int LAGraph_coloring_independent_set
 (
     // output
     GrB_Vector *color,
-    int *num_colors,
+    int *num_colors,        // FIXME: should be int64_t
 
     // input
     LAGraph_Graph G,
