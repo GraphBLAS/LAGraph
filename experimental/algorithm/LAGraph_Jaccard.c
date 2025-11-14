@@ -4,7 +4,6 @@
 
 #define LG_FREE_WORK                           \
 {                                              \
-    GrB_free(&deg);                             \
     GrB_free(&Au);                              \
     GrB_free(&R);                               \
     GrB_free(&B);                               \
@@ -27,6 +26,7 @@
 #include <omp.h>
 #endif
 
+// rename LAGr_Jaccard
 int LAGraph_Jaccard // a simple algorithm, just for illustration
 (
     // output
@@ -39,30 +39,45 @@ int LAGraph_Jaccard // a simple algorithm, just for illustration
 {
     GrB_Matrix B = NULL, Au = NULL, R = NULL;    
     GrB_Index n;
-    GrB_Vector deg = NULL;
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
     LG_CLEAR_MSG ;
 
+    // error if G is directed (OK if G is directed but G->A is symmetric in structure
+    // error if G has self edges, or unknown
+
+
+ 
 	int nthreads = omp_get_max_threads() ;
 	printf("num of threads %d\n", nthreads);
 
     LG_ASSERT (JC != NULL, GrB_NULL_POINTER) ;
     (*JC) = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
+    LG_ASSERT (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
 
+    LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+       (G->kind == LAGraph_ADJACENCY_DIRECTED &&
+        G->is_symmetric_structure == LAGraph_TRUE)),
+        LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
+        "G->A must be known to be symmetric") ;
+
+    GrB_Vector deg = G->out_degree ;
+    LG_ASSERT_MSG (deg != NULL, LAGRAPH_NOT_CACHED, "G->out_degree is required") ;
     
     GrB_Matrix A = G->A ;
 	GRB_TRY( GrB_Matrix_nrows (&n, A) );
+
     //--------------------------------------------------------------------------
     // calculating degree vector deg
     //--------------------------------------------------------------------------
-    
+
     GrB_Type int_type  = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
-    GRB_TRY (GrB_Vector_new (&deg, int_type, n)) ;
-	GRB_TRY( GrB_reduce(deg, NULL, NULL, (int_type == GrB_INT64) ? GrB_PLUS_INT64 : GrB_PLUS_INT32, A, NULL));
-    
+//  GRB_TRY (GrB_Vector_new (&deg, int_type, n)) ;
+//  GRB_TRY( GrB_reduce(deg, NULL, NULL, (int_type == GrB_INT64) ? GrB_PLUS_INT64 : GrB_PLUS_INT32, A, NULL));
+
 	// GRB_TRY (LAGraph_Vector_Print (deg, LAGraph_COMPLETE_VERBOSE, stdout, msg)) ;
     //--------------------------------------------------------------------------
     // B is intersection matrix 
@@ -71,12 +86,23 @@ int LAGraph_Jaccard // a simple algorithm, just for illustration
 	GRB_TRY(GrB_Matrix_new(&B, GrB_FP32, n, n));
 
 	//make a copy of A
-	GRB_TRY(GrB_Matrix_new(&Au, GrB_UINT32, n, n));
-	GRB_TRY( GrB_select(Au, NULL, NULL, GrB_VALUENE_BOOL, A, 0, NULL));
-	GRB_TRY(GrB_mxm(B, all_pairs ? NULL : A, NULL, GxB_PLUS_TIMES_UINT32, Au, Au, NULL));
+//	GRB_TRY(GrB_Matrix_new(&Au, GrB_UINT32, n, n));
+//	GRB_TRY( GrB_select(Au, NULL, NULL, GrB_VALUENE_BOOL, A, 0, NULL));
+
+        if (!all_pairs)
+        {
+            GRB_TRY( GrB_select(B, NULL, NULL, GrB_TRIU, A, (int64_t)1, NULL));
+        }
+
+	GRB_TRY(GrB_mxm(B, all_pairs ? NULL : B, NULL, /* GxB_PLUS_TIMES_UINT32 */
+            LAGraph_plus_one_uint32, A, A, GrB_DESC_S));
 	
-	GRB_TRY( GrB_select(B, NULL, NULL, GrB_TRIU, B, (int64_t)1, NULL));
-    GRB_TRY (GrB_Matrix_wait (B, GrB_COMPLETE)) ;
+        if (all_pairs)
+        {
+            GRB_TRY( GrB_select(B, NULL, NULL, GrB_TRIU, B, (int64_t)1, NULL));
+        }
+
+//  GRB_TRY (GrB_Matrix_wait (B, GrB_COMPLETE)) ;
 
 	
     //--------------------------------------------------------------------------
