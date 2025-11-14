@@ -77,7 +77,6 @@ int LAGraph_Jaccard // a simple algorithm, just for illustration
 	
 	GRB_TRY( GrB_select(B, NULL, NULL, GrB_TRIU, B, (int64_t)1, NULL));
     GRB_TRY (GrB_Matrix_wait (B, GrB_COMPLETE)) ;
-    gettimeofday(&en_select, NULL);
 
 	
     //--------------------------------------------------------------------------
