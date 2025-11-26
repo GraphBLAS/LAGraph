@@ -1516,6 +1516,17 @@ int LAGr_MaxFlow(
     char* msg
 );
 
+// LAGRAPHX_PUBLIC
+// int LAGraph_Jaccard // algorithm 2 of jaccard
+// (
+// //	output
+//     GrB_Matrix *coefficients,
+// //  input
+// 	LAGraph_Graph G,
+//     bool all_pairs, 
+// 	char *msg//----------------------------------------------------------------------------
+// );     
+
 LAGRAPHX_PUBLIC
 int LAGraph_MinCut(
     //outputs
@@ -1531,8 +1542,7 @@ int LAGraph_MinCut(
 );
 
 LAGRAPHX_PUBLIC
-int LAGraph_Jaccard 
-(
+int LAGr_Jaccard(
     //	output
     GrB_Matrix *coefficients,
     //  input
