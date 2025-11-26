@@ -37,12 +37,15 @@ int LAGraph_DeleteSelfEdges
     }
 
     //--------------------------------------------------------------------------
-    // delete all cached properties not affected by the removal of the diagonal
+    // delete all cached properties affected by the removal of the diagonal
     //--------------------------------------------------------------------------
 
     LAGraph_Boolean is_symmetric_structure = G->is_symmetric_structure ;
     LG_TRY (LAGraph_DeleteCached (G, msg)) ;
     G->is_symmetric_structure = is_symmetric_structure ;
+
+    // TODO: consider removing the diag of G->AT if it exists, instead of
+    // simply freeing G->AT.
 
     //--------------------------------------------------------------------------
     // remove diagonal entries

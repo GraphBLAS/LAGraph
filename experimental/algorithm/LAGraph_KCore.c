@@ -19,6 +19,8 @@
 // adjacency matrix.  Edge weights are ignored.  On output, decomp(i) = k if
 // node i is in the k-core, or empty otherwise.
 
+// TODO: add references
+
 #define LG_FREE_WORK                \
 {                                   \
     GrB_free (&deg) ;               \
@@ -83,6 +85,7 @@ int LAGraph_KCore  // TODO: LAGr_KCore (expert), cache is_symmetric_structure
     GrB_Index n, qnvals, degnvals, maxDeg;
     GRB_TRY (GrB_Matrix_nrows(&n, A)) ;
 
+    // TODO: don't do this here; do it in the basic method
     //create deg vector using rowdegree property
     LG_TRY (LAGraph_Cached_OutDegree(G, msg)) ;
     GRB_TRY (GrB_Vector_dup(&deg, G->out_degree)) ; //original deg vector is technically 1-core since 0 is omitted
