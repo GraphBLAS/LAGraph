@@ -133,3 +133,4 @@ int LAGr_Modularity2(
 #else
     return (GrB_NOT_IMPLEMENTED);
 #endif
+}

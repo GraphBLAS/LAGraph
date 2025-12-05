@@ -373,3 +373,4 @@ int LAGraph_LouvainSeq(
 #else
     return (GrB_NOT_IMPLEMENTED);
 #endif
+}

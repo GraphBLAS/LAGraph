@@ -529,3 +529,4 @@ int LAGraph_LouvainIS(
 #else
     return (GrB_NOT_IMPLEMENTED);
 #endif	
+}
