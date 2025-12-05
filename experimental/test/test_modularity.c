@@ -29,7 +29,7 @@ const matrix_info files[] = {
     {"", "", -1, -1}};
 void test_modularity(void)
 {
-    #if LG_SUITESPARSE_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
     LAGraph_Init(msg);
     for (int k = 0;; k++)
     {

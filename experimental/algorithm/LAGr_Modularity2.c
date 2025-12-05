@@ -75,11 +75,11 @@ int LAGr_Modularity2(
     GrB_Matrix S,
     char *msg)
 {
-    #if LG_SUITESPARSE_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
     LG_CLEAR_MSG;
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
 
-    GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
+    // GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
 
     GrB_Index n;
     GrB_Matrix k = NULL;

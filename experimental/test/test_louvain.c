@@ -40,8 +40,9 @@ const matrix_info files[] = {
 
 void test_LouvainSeq(void)
 {
-    #if LG_SUITESPARSE_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
     LAGraph_Init(msg);
+    // LG_SET_BURBLE (false) ;
 
     for (int k = 0;; k++)
     {
@@ -89,8 +90,9 @@ void test_LouvainSeq(void)
 }
 void test_LouvainIS(void)
 {
-    #if LG_SUITESPARSE_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
     LAGraph_Init(msg);
+    // LG_SET_BURBLE (true) ;
 
     for (int k = 0;; k++)
     {
@@ -120,6 +122,9 @@ void test_LouvainIS(void)
 
             double tsimple = LAGraph_WallClockTime();
             OK(LAGraph_LouvainIS(&S,seed, G, msg));
+            // GrB_Info info = (LAGraph_LouvainIS(&S,seed, G, msg));
+            // printf ("info %d\nmsg: %s\n", info, msg) ;
+            // OK (info) ;
 
             // OK(LAGraph_Louvain_res(&S,G,.3,msg));
             tsimple = LAGraph_WallClockTime() - tsimple;

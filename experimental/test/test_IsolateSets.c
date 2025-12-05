@@ -23,7 +23,7 @@ const matrix_info files[] = {
 };
 
 void test_IsolateSets(void){
-    #if LG_SUITESPARSE_GRAPHBLAS_V10
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
     LAGraph_Init(msg);
     printf("\n");
     for(int k = 0;;k++)

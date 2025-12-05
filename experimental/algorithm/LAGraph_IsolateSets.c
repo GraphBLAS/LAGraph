@@ -62,11 +62,11 @@ int LAGraph_IsolateSet(
     uint64_t seed,
     char *msg)
 {
-#if LG_SUITESPARSE_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10_2
     LG_CLEAR_MSG;
 
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
-    GrB_set(GrB_GLOBAL, DEBUG, GxB_BURBLE);
+    // GrB_set(GrB_GLOBAL, DEBUG, GxB_BURBLE);
     GrB_Vector iset = NULL; // independent set (output vector)
     GrB_Vector score = NULL;
     GrB_Vector scoreA = NULL; // random score for each node
@@ -166,7 +166,7 @@ int LAGraph_IsolateSets(
     char *msg      // Error message buffer
 )
 {
-#if LG_SUITESPARSE_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10_2
     LG_CLEAR_MSG;
     // LG_TRY(LAGraph_CheckGraph(G, msg));
     LG_ASSERT(IsolateSets != NULL, GrB_NULL_POINTER);

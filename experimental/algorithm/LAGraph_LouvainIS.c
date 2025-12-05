@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#if LG_SUITESPARSE_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10_2
 
 // #define TIMING
 #define DEBUG 0
@@ -43,21 +43,21 @@
 #define err(x, info)
 #endif
 
-typedef struct Theta
+typedef struct // Theta
 {
     double *d;
     double m;
     uint64_t seed;
 } Theta;
 #define THETA_DEFN                    \
-    "typedef struct Theta"            \
+    "typedef struct /* Theta */"      \
     "{"                               \
     "    double *d;"                  \
     "    double m;"                   \
     "    uint64_t seed;"              \
     "} Theta;"
 
-typedef struct argmax_tup
+typedef struct // argmax_tup
 {
     double score; /* change in modularity */
     int64_t comm; /* who */
@@ -65,7 +65,7 @@ typedef struct argmax_tup
 } argmax_tup;
 
 #define AM_TUP                                       \
-    "typedef struct argmax_tup\n"                    \
+    "typedef struct /* argmax_tup */ \n"             \
     "{\n"                                            \
     "    double score; /* change in modularity */\n" \
     "    int64_t comm;    /* who */\n"               \
@@ -292,9 +292,9 @@ int LAGraph_LouvainIS(
     LAGraph_Graph G,
     char *msg)
 {
-#if LG_SUITESPARSE_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10_2
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
-    GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
+    // GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
 
     GrB_Descriptor ri = NULL;
     GrB_Descriptor rv = NULL;

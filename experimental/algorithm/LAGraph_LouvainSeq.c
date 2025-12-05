@@ -155,9 +155,9 @@ int LAGraph_LouvainSeq(
     uint64_t seed,
     char *msg)
 {
-#if LG_SUITESPARSE_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10_2
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
-    GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
+    // GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
 
 
     GrB_Vector t_q = NULL, q1 = NULL, t = NULL, v = NULL;
