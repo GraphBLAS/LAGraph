@@ -22,6 +22,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+
+#if LG_SUITESPARSE_GRAPHBLAS_V10
+
 // #define TIMING
 #define DEBUG 0
 
@@ -271,6 +274,8 @@ void extract_k_if_gain(void *out, const void *in)
         LAGraph_Free((void **)&d_copy, msg); \
         LAGraph_Free((void **)&c_copy, msg); \
     }
+#endif
+
 int LAGraph_LouvainIS(
     // output
     GrB_Matrix *S_result,
