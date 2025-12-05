@@ -40,7 +40,8 @@ const matrix_info files[] = {
 
 void test_LouvainSeq(void)
 {
-     LAGraph_Init(msg);
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
+    LAGraph_Init(msg);
 
     for (int k = 0;; k++)
     {
@@ -84,10 +85,12 @@ void test_LouvainSeq(void)
         OK(LAGraph_Delete(&G, msg));
     }
     LAGraph_Finalize(msg);
+    #endif
 }
 void test_LouvainIS(void)
 {
-     LAGraph_Init(msg);
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
+    LAGraph_Init(msg);
 
     for (int k = 0;; k++)
     {
@@ -136,6 +139,7 @@ void test_LouvainIS(void)
     }
 
     LAGraph_Finalize(msg);
+    #endif
 }
 
 TEST_LIST = {

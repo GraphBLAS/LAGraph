@@ -23,6 +23,7 @@ const matrix_info files[] = {
 };
 
 void test_IsolateSets(void){
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init(msg);
     printf("\n");
     for(int k = 0;;k++)
@@ -66,6 +67,7 @@ void test_IsolateSets(void){
         GrB_free (&MIset) ;
 
     }
+    #endif
 }
 TEST_LIST = {
     {"Isolate Set", test_IsolateSets},

@@ -29,6 +29,7 @@ const matrix_info files[] = {
     {"", "", -1, -1}};
 void test_modularity(void)
 {
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LAGraph_Init(msg);
     for (int k = 0;; k++)
     {
@@ -66,6 +67,7 @@ void test_modularity(void)
     OK(LAGraph_Delete(&G, msg));
 
     LAGraph_Finalize(msg);
+    #endif
 }
 
 //----------------------------------------------------------------------------
