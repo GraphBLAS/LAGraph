@@ -369,8 +369,7 @@ int LAGraph_LouvainSeq(
     (*S_result) = S;
     S = NULL;
     LG_FREE_ALL;
+    return (GrB_SUCCESS) ;
 #else
-    LG_ASSERT(false, GrB_NOT_IMPLEMENTED);
+    return (GrB_NOT_IMPLEMENTED);
 #endif
-    return 0;
-}

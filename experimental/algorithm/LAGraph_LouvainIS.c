@@ -525,8 +525,7 @@ int LAGraph_LouvainIS(
 
     LG_FREE_EXTRACT;
     LG_FREE_ALL;
+    return (GrB_SUCCESS) ;
 #else
-    LG_ASSERT(false, GrB_NOT_IMPLEMENTED);
-#endif
-    return 0;
-}	
+    return (GrB_NOT_IMPLEMENTED);
+#endif	

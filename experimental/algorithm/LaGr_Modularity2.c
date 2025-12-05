@@ -75,6 +75,7 @@ int LAGr_Modularity2(
     GrB_Matrix S,
     char *msg)
 {
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     LG_CLEAR_MSG;
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
 
@@ -128,5 +129,7 @@ int LAGr_Modularity2(
     *Q = Q_;
 
     LG_FREE_ALL;
-    return 0;
-}
+    return (GrB_SUCCESS) ;
+#else
+    return (GrB_NOT_IMPLEMENTED);
+#endif
