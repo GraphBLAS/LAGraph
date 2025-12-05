@@ -244,6 +244,7 @@ void extract_k_if_gain(void *out, const void *in)
     "        *k_out = a->comm;\n" \
     "    }\n"                                                       \
     "}\n"
+
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                          \
     {                                        \
@@ -271,9 +272,16 @@ void extract_k_if_gain(void *out, const void *in)
         GrB_free(&argmax_0);                 \
         GrB_free(&Theta_UDT);                \
         GrB_Type_free(&Tuple);               \
-        LAGraph_Free((void **)&d_copy, msg); \
-        LAGraph_Free((void **)&c_copy, msg); \
+        if (A_iset != NULL)                             \
+        {                                               \
+            for (int i = 0; i < loop; i++)              \
+            {                                           \
+                GrB_free(&A_iset[i]);                   \
+            }                                           \
+            LAGraph_Free ((void **) &A_iset, NULL) ;    \
+        }                                               \
     }
+
 #endif
 
 int LAGraph_LouvainIS(
@@ -321,9 +329,9 @@ int LAGraph_LouvainIS(
     GrB_Monoid AM_mon = NULL;
     GrB_Semiring AM_Semiring = NULL;
     GrB_Type Theta_UDT = NULL;
-
-    double *d_copy = NULL;
-    uint32_t *c_copy = NULL;
+ 
+    GrB_Matrix *A_iset = NULL ;
+    GrB_Index loop = 0 ;
 
     GRB_TRY(GxB_Type_new(&Theta_UDT, sizeof(Theta), "Theta", THETA_DEFN));
     GRB_TRY(GrB_Scalar_new(&argmax_0, Theta_UDT));
@@ -420,16 +428,12 @@ int LAGraph_LouvainIS(
     printf("Isolate Set calc time: %10.10f\n", tsimple);
     #endif
 
-    GrB_Index loop;
     GRB_TRY(GrB_Matrix_nrows(&loop, Miset));
 
     // allocate an array of GrB_Matrix handles
-    GrB_Matrix *A_iset = malloc(loop * sizeof(GrB_Matrix));
-    if (A_iset == NULL)
-    {
-        fprintf(stderr, "Out of memory allocating A_iset\n");
-        exit(1);
-    }
+    // GrB_Matrix *A_iset = malloc(loop * sizeof(GrB_Matrix));
+    LG_TRY (LAGraph_Calloc ((void **) &A_iset, loop, sizeof (GrB_Matrix), msg)) ;
+
     GrB_Index n_k_values;
     #ifdef TIMING
     double tsimple = LAGraph_WallClockTime();
@@ -521,10 +525,6 @@ int LAGraph_LouvainIS(
     printf("Iterations: %d\n", iter);
     #endif
 
-    for (int i = 0; i < loop; i++)
-    {
-        GrB_free(&A_iset[i]);
-    }
     (*S_result) = S;
     S = NULL;
 

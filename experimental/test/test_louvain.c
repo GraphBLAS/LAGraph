@@ -64,16 +64,23 @@ void test_LouvainSeq(void)
         // check if the pattern is symmetric - if it isn't make it.
         OK(LAGraph_Cached_IsSymmetricStructure(G, msg));
         GrB_Matrix S = NULL;
-        double tsimple = LAGraph_WallClockTime();
-        OK(LAGraph_LouvainSeq(&S, G,seed, msg));
 
-        // OK(LAGraph_Louvain_res(&S,G,.3,msg));
-        tsimple = LAGraph_WallClockTime() - tsimple;
-        double Q = 0.0;
-        OK(LAGr_Modularity2(&Q, 1.0, G->A, S, msg));
-        printf("Q:%f\n", Q);
-        // printf("Number of Communities: %d",comms);
-        printf(" time: %f\n", tsimple);
+        for (int jit = 0 ; jit <= 1 ; jit++)
+        {
+            OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+
+            double tsimple = LAGraph_WallClockTime();
+            OK(LAGraph_LouvainSeq(&S, G,seed, msg));
+
+            // OK(LAGraph_Louvain_res(&S,G,.3,msg));
+            tsimple = LAGraph_WallClockTime() - tsimple;
+            double Q = 0.0;
+            OK(LAGr_Modularity2(&Q, 1.0, G->A, S, msg));
+            printf("Q:%f\n", Q);
+            // printf("Number of Communities: %d",comms);
+            printf(" time: %f\n", tsimple);
+        }
+
         OK(LAGraph_Delete(&G, msg));
     }
     LAGraph_Finalize(msg);
@@ -103,20 +110,27 @@ void test_LouvainIS(void)
         // check if the pattern is symmetric - if it isn't make it.
         OK(LAGraph_Cached_IsSymmetricStructure(G, msg));
         GrB_Matrix S = NULL;
-        double tsimple = LAGraph_WallClockTime();
-        OK(LAGraph_LouvainIS(&S,seed, G, msg));
 
-        // OK(LAGraph_Louvain_res(&S,G,.3,msg));
-        tsimple = LAGraph_WallClockTime() - tsimple;
-        double Q = 0.0; 
-        double tsimple2 = LAGraph_WallClockTime();
-        OK(LAGr_Modularity2(&Q, 1.0, G->A, S, msg));
-        tsimple2 = LAGraph_WallClockTime() - tsimple2;
+        for (int jit = 0 ; jit <= 1 ; jit++)
+        {
+            OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
 
-        printf("Q:%f time to calc Q: %f\n", Q,tsimple2);
-        // printf("Number of Communities: %d",comms);
-        printf(" time: %f\n", tsimple);
-        GrB_free(&S);
+            double tsimple = LAGraph_WallClockTime();
+            OK(LAGraph_LouvainIS(&S,seed, G, msg));
+
+            // OK(LAGraph_Louvain_res(&S,G,.3,msg));
+            tsimple = LAGraph_WallClockTime() - tsimple;
+            double Q = 0.0; 
+            double tsimple2 = LAGraph_WallClockTime();
+            OK(LAGr_Modularity2(&Q, 1.0, G->A, S, msg));
+            tsimple2 = LAGraph_WallClockTime() - tsimple2;
+
+            printf("Q:%f time to calc Q: %f\n", Q,tsimple2);
+            // printf("Number of Communities: %d",comms);
+            printf(" time: %f\n", tsimple);
+            GrB_free(&S);
+        }
+
         OK(LAGraph_Delete(&G, msg));
 
     }

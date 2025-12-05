@@ -25,7 +25,8 @@ const matrix_info files[] = {
 void test_IsolateSets(void){
     LAGraph_Init(msg);
     printf("\n");
-    for(int k = 0;;k++){
+    for(int k = 0;;k++)
+    {
         if (strlen(files[k].matrix_file) == 0)
             break;
         snprintf (filename, LEN, LG_DATA_DIR "%s", files[k].matrix_file) ;
@@ -58,12 +59,11 @@ void test_IsolateSets(void){
         GrB_Vector ignore_node=NULL;
 
         double tsimple = LAGraph_WallClockTime ( ) ;
-        
         OK(LAGraph_IsolateSets(&MIset,G->A,1231245,msg));
         GxB_print(MIset,5);
         tsimple = LAGraph_WallClockTime ( ) - tsimple ;
         printf(" time: %f\n",tsimple);
-
+        GrB_free (&MIset) ;
 
     }
 }
