@@ -1515,7 +1515,61 @@ int LAGr_MaxFlow(
     char* msg
 );
 
+//------------------------------------------------------------------------------
+// Louvain sub-algorithms
+//------------------------------------------------------------------------------
 
+LAGRAPHX_PUBLIC
+int LAGr_Modularity2(
+    //output
+    double *Q,
+    //input
+    double gamma,
+    GrB_Matrix A,
+    GrB_Matrix S,
+    char* msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_IsolateSet(
+    //output
+    GrB_Vector *isolate_set,
+    //input
+    GrB_Matrix A,
+    GrB_Vector ignore_node,
+    uint64_t seed,
+    char* msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_IsolateSets(
+    GrB_Matrix *IsolateSets, 
+    // LAGraph_Graph G,         
+    GrB_Matrix A,
+    // GrB_Vector ignore_nodes,
+    uint64_t seed, 
+    char *msg      
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_LouvainSeq(
+    // output
+    GrB_Matrix *S_result, 
+    // input
+    LAGraph_Graph G,
+    uint64_t seed,
+    char *msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_LouvainIS(
+    // output
+    GrB_Matrix *S_result,
+    uint64_t seed,
+    // input
+    LAGraph_Graph G,
+    char *msg
+);
 #if defined ( __cplusplus )
 }
 #endif
