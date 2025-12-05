@@ -11,7 +11,7 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
-// Contributed by Elaheh Hassani, Texas A&M University
+// Contributed by Elaheh Hassani and Tim Davis, Texas A&M University
 
 //------------------------------------------------------------------------------
 
@@ -87,10 +87,18 @@ int main (int argc, char **argv)
     LG_TRY(LAGraph_Graph_Print (G, 1, stdout, msg));
     LG_TRY(LAGraph_Cached_OutDegree(G, msg));
 
+    burble = true ;
+    LG_SET_BURBLE (burble) ;
+
     for (int all_pairs = 0 ; all_pairs <= 1 ; all_pairs++)
     {
         for (int nthreads = inner ; nthreads >= 1 ; )
         {
+            if (burble)
+            {
+                printf ("\n--------------- nthreads %d, all_pairs %d ---------\n",
+                    nthreads, all_pairs) ;
+            }
             LAGRAPH_TRY (LAGraph_SetNumThreads (outer, nthreads, msg)) ;
             t = LAGraph_WallClockTime ( ) ;
             LG_TRY (LAGr_Jaccard (&JC, G, (bool) all_pairs, msg)) ;

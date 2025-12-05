@@ -11,7 +11,7 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
-// Contributed by Elaheh Hassani, Texas A&M University
+// Contributed by Elaheh Hassani and Tim Davis, Texas A&M University
 
 //------------------------------------------------------------------------------
 
@@ -23,9 +23,10 @@
 
 #define LG_FREE_WORK                           \
 {                                              \
-    GrB_free(&R);                               \
-    GrB_free(&B);                               \
-    GrB_free(&D);                               \
+    GrB_free(&R);                              \
+    GrB_free(&B);                              \
+    GrB_free(&D);                              \
+    GrB_free (&M) ;                            \
 }
 
 #define LG_FREE_ALL                            \
@@ -45,7 +46,7 @@ int LAGr_Jaccard
     char *msg
 )
 {
-    GrB_Matrix B = NULL, R = NULL, D = NULL;    
+    GrB_Matrix B = NULL, R = NULL, D = NULL, M = NULL ;    
     GrB_Index n;
 
     //--------------------------------------------------------------------------
@@ -83,32 +84,45 @@ int LAGr_Jaccard
 
     GRB_TRY(GrB_Matrix_new(&B, GrB_FP64, n, n));
 
-    if (!all_pairs)
-    {
-        GRB_TRY( GrB_select(B, NULL, NULL, GrB_TRIU, A, (int64_t)0, NULL));
-    }
-
-    GrB_Matrix M = all_pairs ? NULL : B ;
-
-    GRB_TRY(GrB_mxm(B, M, NULL, LAGraph_plus_one_fp64, A, A, GrB_DESC_S));
-    
     if (all_pairs)
     {
+        // B = triu (A*A)
+        GRB_TRY(GrB_mxm(B, NULL, NULL, LAGraph_plus_one_fp64, A, A, NULL));
         GRB_TRY( GrB_select(B, NULL, NULL, GrB_TRIU, B, (int64_t)0, NULL));
     }
-    
+    else
+    {
+        // B<triu(A)> = A*A'
+        GRB_TRY(GrB_Matrix_new(&M, GrB_BOOL, n, n));
+        GRB_TRY( GrB_select(M, NULL, NULL, GrB_TRIU, A, (int64_t)0, NULL));
+        GRB_TRY(GrB_mxm(B, M, NULL, LAGraph_plus_one_fp64, A, A, GrB_DESC_ST1));
+        GrB_free (&M) ;
+    }
+
     //--------------------------------------------------------------------------
     // R has summation of degree of corresponding nodes
     // B is jaccard index B <- B / (R-B)
     //--------------------------------------------------------------------------
+
+    // TODO: what if deg is sparse?  We could do
+    #if 0
+    if nvals(deg) < n
+        t = deg (via GrB_Vector_dup)
+        t < !t, struct> = 0
+        d = t
+    else
+        d = deg alias
+    when done, free the t vector
+    #endif
+
     // D is degree matrix
-    GRB_TRY(GrB_Matrix_diag(&D, deg, 0));
+    GRB_TRY(GrB_Matrix_diag(&D, deg, 0));   // use d here
     GrB_Matrix_new(&R, int_type, n, n);
 
     // R = B*D  -> R_ij = deg_j - b_ij
-    GRB_TRY(GrB_mxm(R, M, NULL, (int_type == GrB_INT64) ? GxB_PLUS_RMINUS_INT64 : GxB_PLUS_RMINUS_INT32, B, D, GrB_DESC_S));
+    GRB_TRY(GrB_mxm(R, NULL, NULL, (int_type == GrB_INT64) ? GxB_PLUS_RMINUS_INT64 : GxB_PLUS_RMINUS_INT32, B, D, GrB_DESC_S));
     // R = D*R  -> R_ij = deg_i + r_ij    
-    GRB_TRY(GrB_mxm(R, M, NULL, (int_type == GrB_INT64) ? GxB_PLUS_PLUS_INT64 : GxB_PLUS_PLUS_INT32, D, R, GrB_DESC_S));    
+    GRB_TRY(GrB_mxm(R, NULL, NULL, (int_type == GrB_INT64) ? GxB_PLUS_PLUS_INT64 : GxB_PLUS_PLUS_INT32, D, R, GrB_DESC_S));    
 
     GRB_TRY(  GrB_eWiseMult(B, NULL, NULL, GrB_DIV_FP64, B, R, NULL) );
     (*JC) = B;
