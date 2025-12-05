@@ -148,9 +148,9 @@ int LAGraph_IsolateSet(
     dbg(*isolate_set);
     LG_FREE_ALL;
 #else
-    LG_ASSERT(false, GrB_NOT_IMPLEMENTED);
+    return (GrB_NOT_IMPLEMENTED);
 #endif
-    return 0;
+    return (GrB_SUCCESS) ;
 }
 
 // #undef LG_FREE_WORK
@@ -215,9 +215,8 @@ int LAGraph_IsolateSets(
     GRB_TRY(GrB_Matrix_resize(result, k, n));
     *IsolateSets = result;
     GrB_free(&ignore_nodes);
-    return 0;
+    return (GrB_SUCCESS) ;
 #else
-    LG_ASSERT(false, GrB_NOT_IMPLEMENTED);
-    return 0;
+    return (GrB_NOT_IMPLEMENTED);
 #endif
 }
