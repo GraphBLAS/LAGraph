@@ -45,6 +45,10 @@ data/comments*.txt
 data/comments*.mtx
 **/.venv/*
 
+experimental/algorithm/LAGr_Jaccard_mine.c
+data/com-Youtube*.mtx
+data/com-LiveJournal*.mtx
+
 # Do not ignore this file
 !.gitignore
 
