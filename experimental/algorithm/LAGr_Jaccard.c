@@ -14,12 +14,48 @@
 // Contributed by Elaheh Hassani and Tim Davis, Texas A&M University
 
 //------------------------------------------------------------------------------
+// LAGr_Jaccard: compute Jaccard similarity (weight) coefficients for an undirected graph.
+//
+// Inputs:
+// G             - a valid LAGraph_Graph with:
+//                    * G->A structurally symmetric (undirected)
+//                    * no self-edges
+//                    * G->out_degree cached (no explicit zeros)
+// all_pairs     - if true, compute Jaccard for all pairs of nodes in the graph;
+//                 if false, compute only for neighboring nodes (current edges).
+//
+// Output:
+// JC            - an n-by-n matrix of Jaccard coefficients.  JC is always
+//                 returned as an upper-triangular matrix.  When all_pairs is
+//                 true, the diagonal entries are equal to 1. When all_pairs is
+//                 false, the diagonal is structurally empty.
+//
+// Jaccard similarity measures the overlap of neighbor sets.
+// For a pair of nodes i and j in the graph G:
+//         JC(i,j) = |N(i) ∩ N(j)| / |N(i) ∪ N(j)|
+// where N(i) is the set of neighbors of i in G.
+//
+// The computation proceeds in two stages.  First, an “intersection matrix” B
+// is formed where B(i,j) = |N(i) ∩ N(j)|.  Second, a degree-based denominator
+// matrix R is formed where
+//         R(i,j) = deg(i) + deg(j) − B(i,j).
+// Lastly, the output matrix JC is computed as the element-wise ratio
+//         JC = B ./ R.
+//
+// If all_pairs is true, B is computed for all structural entries in triu(A^2),
+// so JC contains Jaccard coefficients for all vertex pairs with at least one
+// common neighbor.  If all_pairs is false, the computation is restricted to
+// the upper triangular part of A, so JC(i,j) is computed only for edges
+// present in the original graph.
 
-// TODO: add a description, and citations
-
+//------------------------------------------------------------------------------
 // References:
-// (1) (your paper)
+// (1) "Parallel Algorithms for Computing Jaccard Weights on Graphs using Linear Algebra," 
+//     in Proc. IEEE High Performance Extreme Computing Conference (HPEC), 2023.
+//     https://doi.org/10.1109/HPEC58863.2023.10363558
+//
 // (2) https://en.wikipedia.org/wiki/Jaccard_index
+
 
 #define LG_FREE_WORK                           \
 {                                              \
@@ -104,19 +140,22 @@ int LAGr_Jaccard
     // B is jaccard index B <- B / (R-B)
     //--------------------------------------------------------------------------
 
-    // TODO: what if deg is sparse?  We could do
-    #if 0
-    if nvals(deg) < n
-        t = deg (via GrB_Vector_dup)
-        t < !t, struct> = 0
-        d = t
-    else
-        d = deg alias
-    when done, free the t vector
-    #endif
+    // If deg vectors is sparse, make it dense
+	GrB_Index deg_nnz = 0;
+	GrB_Vector d = NULL;
+    GRB_TRY(GrB_Vector_nvals(&deg_nnz, deg));
+	if (deg_nnz < n ) {
+		GrB_Vector t = NULL;
+		GRB_TRY (GrB_Vector_dup(&t, deg));
+		GRB_TRY (GrB_assign (t, t, NULL, 0, GrB_ALL, n, GrB_DESC_SC)) ;
+		GRB_TRY (GrB_Vector_dup(&d, t));
+	}
+	else {
+		GRB_TRY (GrB_Vector_dup(&d, deg));
+	}
 
     // D is degree matrix
-    GRB_TRY(GrB_Matrix_diag(&D, deg, 0));   // use d here
+    GRB_TRY(GrB_Matrix_diag(&D, d, 0));   // use d here
     GrB_Matrix_new(&R, int_type, n, n);
 
     // R = B*D  -> R_ij = deg_j - b_ij

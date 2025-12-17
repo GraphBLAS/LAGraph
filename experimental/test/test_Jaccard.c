@@ -1,3 +1,20 @@
+//----------------------------------------------------------------------------
+// LAGraph/experimental/test/test_Jaccard.c: test cases for Jaccard Similary
+// ----------------------------------------------------------------------------
+
+// LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
+
+// Contributed by Elaheh Hassani and Tim Davis, Texas A&M University
+
+//------------------------------------------------------------------------------
+
 #include <stdio.h>
 #include <acutest.h>
 #include <LAGraphX.h>
@@ -24,14 +41,14 @@ double A_jaccard_allpairs [28] =
 double ldbc_jaccard_allpairs [45] = 
 {
 	1.0, 0.2, 0.333333, 0.25, 0.0, 0.0,     0.25,     0.0,     0.0,  // (0,0..8)
-    1.0,  0.2, 0.166667, 0.285714, 0.0, 0.166667, 0.0, 0.0,                 // (1,1..8)
-    1.0,  0.25, 0.0, 0.0,      0.25,      0.0,  0.0,                     // (2,2..8)
-    1.0,  0.142857, 0.25, 0.5, 0.25,       0.333333,                                // (3,3..8)
-    1.0,  0.166667,     0.142857,      0.166667, 0.0,                                      // (4,4..8)
-    1.0, 0.25 ,  0.333333, 0.5,                                                   // (5,5..8)
-	1.0,  0.25,  0.333333,                                                 // (6,6..8)
-	1.0, 0.5,		                                                   // (7,7..8)
-	1.0						                                                   // (8,8)
+    1.0,  0.2, 0.166667, 0.285714, 0.0, 0.166667, 0.0, 0.0,          // (1,1..8)
+    1.0,  0.25, 0.0, 0.0,      0.25,      0.0,  0.0,                 // (2,2..8)
+    1.0,  0.142857, 0.25, 0.5, 0.25,       0.333333,                 // (3,3..8)
+    1.0,  0.166667,     0.142857,      0.166667, 0.0,                // (4,4..8)
+    1.0, 0.25 ,  0.333333, 0.5,                                      // (5,5..8)
+	1.0,  0.25,  0.333333,                                           // (6,6..8)
+	1.0, 0.5,		                                                 // (7,7..8)
+	1.0						                                         // (8,8)
 } ;
 
 double karate_jaccard_allpairs[595] = {
@@ -196,7 +213,7 @@ void run_jaccard (const char *input_mat, const double *results)
     //--------------------------------------------------------------------------
 	printf("\n Dataset : \"%s\" \nComputing Jaccard Weights for existing edges\n", input_mat);
 	all_pairs = false;	// if false it only computes jaccard weights(jaccard similarity for neighbors)
-    OK (LAGr_Jaccard(&JC, G, all_pairs, msg)) ;
+    OK (LAGr_Jaccard (&JC, G, all_pairs, msg)) ;
    	//check for correctness
 	err = matrix_difference (JC, results, A_mask, all_pairs) ;
     TEST_CHECK (err < 1e-6) ;   // adjust tolerance if needed
