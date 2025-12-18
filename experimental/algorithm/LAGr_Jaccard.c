@@ -25,8 +25,8 @@
 //                 if false, compute only for neighboring nodes (current edges).
 //
 // Output:
-// JC            - an n-by-n matrix of Jaccard coefficients.  JC is always
-//                 returned as an upper-triangular matrix.  When all_pairs is
+// JC            - an n-by-n matrix of Jaccard coefficients. JC is always
+//                 returned as an upper-triangular matrix. When all_pairs is
 //                 true, the diagonal entries are equal to 1. When all_pairs is
 //                 false, the diagonal is structurally empty.
 //
@@ -36,17 +36,12 @@
 // where N(i) is the set of neighbors of i in G.
 //
 // The computation proceeds in two stages.  First, an “intersection matrix” B
-// is formed where B(i,j) = |N(i) ∩ N(j)|.  Second, a degree-based denominator
-// matrix R is formed where
-//         R(i,j) = deg(i) + deg(j) − B(i,j).
+// is formed where B(i,j) = |N(i) ∩ N(j)|.  
+// Second, a degree-based denominator matrix R is formed where
+// R(i,j) = deg(i) + deg(j) − B(i,j).
 // Lastly, the output matrix JC is computed as the element-wise ratio
-//         JC = B ./ R.
+// JC = B ./ R.
 //
-// If all_pairs is true, B is computed for all structural entries in triu(A^2),
-// so JC contains Jaccard coefficients for all vertex pairs with at least one
-// common neighbor.  If all_pairs is false, the computation is restricted to
-// the upper triangular part of A, so JC(i,j) is computed only for edges
-// present in the original graph.
 
 //------------------------------------------------------------------------------
 // References:
