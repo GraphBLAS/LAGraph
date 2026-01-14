@@ -89,6 +89,7 @@ typedef unsigned char LG_void ;
     if (msg != NULL && msg [0] == '\0')                             \
     {                                                               \
         snprintf (msg, LAGRAPH_MSG_LEN, __VA_ARGS__) ;              \
+        msg [LAGRAPH_MSG_LEN-1] = '\0' ;                            \
     }                                                               \
 }
 
