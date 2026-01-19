@@ -35,10 +35,10 @@ int LAGraph_MinCut
   GRB_TRY(GrB_Vector_setElement(frontier, 1, s));
 
   //initial assign to S
-  GRB_TRY(GrB_assign(S, NULL, NULL, frontier, GrB_ALL, NULL));
+  GRB_TRY(GrB_assign(S, NULL, NULL, frontier, GrB_ALL, n, NULL));
   while(n_frontier > 0){
     GRB_TRY(GrB_mxv(frontier, NULL, NULL, GxB_ANY_PAIR_INT64, R, frontier, GrB_DESC_R));
-    GRB_TRY(GrB_assign(S, S, NULL, frontier, GrB_ALL, GrB_DESC_SC));
+    GRB_TRY(GrB_assign(S, S, NULL, frontier, GrB_ALL, n, GrB_DESC_SC));
     GRB_TRY(GrB_Vector_nvals(&n_frontier, frontier));
   }
 
