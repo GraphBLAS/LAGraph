@@ -1515,6 +1515,17 @@ int LAGr_MaxFlow(
     char* msg
 );
 
+LAGRAPHX_PUBLIC
+int LAGraph_MinCut(
+    //outputs
+    GrB_Vector S,
+    GrB_Vector S_bar,
+    // inputs
+    GrB_Matrix R, //residual graph
+    GrB_Index s, //source node index
+    GrB_Index t, //sink node index
+    char *msg
+);
 
 #if defined ( __cplusplus )
 }
