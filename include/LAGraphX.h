@@ -1507,6 +1507,7 @@ int LAGr_MaxFlow(
     //outputs
     double* f,
     GrB_Matrix* flow_mtx,
+    GrB_Matrix* res_mtx,
     //inputs
     LAGraph_Graph G,
     GrB_Index src, //source node index
@@ -1518,8 +1519,8 @@ int LAGr_MaxFlow(
 LAGRAPHX_PUBLIC
 int LAGraph_MinCut(
     //outputs
-    GrB_Vector S,
-    GrB_Vector S_bar,
+    GrB_Vector* S,
+    GrB_Vector* S_bar,
     // inputs
     GrB_Matrix R, //residual graph
     GrB_Index s, //source node index

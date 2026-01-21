@@ -2,22 +2,11 @@
 #include "LG_internal.h"
 #include <LAGraph.h>
 
-#undef LG_FREE_ALL
-#undef LG_FREE_WORK
-
-#define LG_FREE_WORK				\
-{						\
- GrB_free(&frontier);				\
-}
-
-#define LG_FREE_ALL				\
-  LG_FREE_WORK
-
 int LAGraph_MinCut
 (
     // outputs
-    GrB_Vector S,
-    GrB_Vector S_bar,
+    GrB_Vector* S,
+    GrB_Vector* S_bar,
     // inputs
     GrB_Matrix R,
     GrB_Index s,
@@ -26,24 +15,17 @@ int LAGraph_MinCut
 )
 {
   //do a bfs from the source to the sink, stop if the frontier is empty
-  //assign the frontier to S
-  GrB_Vector frontier = NULL;
-  GrB_Index n = 0, n_frontier = 1;
 
-  GRB_TRY(GrB_Matrix_nrows(&n, R));
-  GRB_TRY(GrB_Vector_new(&frontier, GrB_INT64, n));
-  GRB_TRY(GrB_Vector_setElement(frontier, 1, s));
+  LAGraph_Graph G = NULL;
+  GrB_Index n = 0;
+  GrB_Matrix_nrows(&n, R);
+  
+  LG_TRY(LAGraph_New(&G, &R, LAGraph_ADJACENCY_DIRECTED, msg));
+  LG_TRY(LAGr_BreadthFirstSearch(S, NULL, G, s, msg));
 
-  //initial assign to S
-  GRB_TRY(GrB_assign(S, NULL, NULL, frontier, GrB_ALL, n, NULL));
-  while(n_frontier > 0){
-    GRB_TRY(GrB_mxv(frontier, NULL, NULL, GxB_ANY_PAIR_INT64, R, frontier, GrB_DESC_R));
-    GRB_TRY(GrB_assign(S, S, NULL, frontier, GrB_ALL, n, GrB_DESC_SC));
-    GRB_TRY(GrB_Vector_nvals(&n_frontier, frontier));
-  }
+  LG_TRY(GrB_assign(*S_bar, *S, NULL, 1, GrB_ALL, n, GrB_DESC_SC));
+  LG_TRY(GrB_assign(*S, *S, NULL, 1, GrB_ALL, n, GrB_DESC_S));
 
-  GRB_TRY(GrB_assign(S_bar, S, NULL, 1, GrB_ALL, n, GrB_DESC_SC));
-
-  LG_FREE_ALL;
+  LAGraph_Delete(&G, msg);
   return (GrB_SUCCESS);
 }

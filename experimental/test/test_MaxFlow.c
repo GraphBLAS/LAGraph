@@ -84,14 +84,14 @@ void test_MaxFlow(void) {
     // test with JIT
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
     double flow = 0;
-    OK(LAGr_MaxFlow(&flow, NULL, G, tests[test].S, tests[test].T, msg));
+    OK(LAGr_MaxFlow(&flow, NULL, NULL, G, tests[test].S, tests[test].T, msg));
     printf("%s\n", msg);
     printf("flow is: %lf\n", flow);
     TEST_CHECK(flow == tests[test].F);
 
     // test without JIT
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_OFF));
-    OK(LAGr_MaxFlow(&flow, NULL, G, tests[test].S, tests[test].T, msg));
+    OK(LAGr_MaxFlow(&flow, NULL, NULL, G, tests[test].S, tests[test].T, msg));
     TEST_CHECK(flow == tests[test].F);
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
 
@@ -107,7 +107,7 @@ void test_MaxFlow(void) {
             {
               printf("src: %d, dest: %d\n", (int) src, (int) dest);
                 if (src == dest) continue ;
-                OK(LAGr_MaxFlow(&flow, NULL, G, src, dest, msg));
+                OK(LAGr_MaxFlow(&flow, NULL, NULL, G, src, dest, msg));
             }
         }
     }
@@ -152,7 +152,7 @@ void test_MaxFlowMtx(void) {
     // test with JIT
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
     double flow = 0;
-    OK(LAGr_MaxFlow(&flow, &flow_mtx, G, tests[test].S, tests[test].T, msg));
+    OK(LAGr_MaxFlow(&flow, &flow_mtx, NULL, G, tests[test].S, tests[test].T, msg));
     TEST_CHECK (flow_mtx != NULL) ;
     GxB_print (flow_mtx, 2) ;
     int status = LG_check_flow(flow_mtx, msg);
@@ -165,7 +165,7 @@ void test_MaxFlowMtx(void) {
 
     // test without JIT
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_OFF));
-    OK(LAGr_MaxFlow(&flow, &flow_mtx, G, tests[test].S, tests[test].T, msg));
+    OK(LAGr_MaxFlow(&flow, &flow_mtx, NULL, G, tests[test].S, tests[test].T, msg));
     TEST_CHECK (flow_mtx != NULL) ;
     status = LG_check_flow(flow_mtx, msg);
     TEST_CHECK (status == GrB_SUCCESS) ;
