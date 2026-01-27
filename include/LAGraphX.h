@@ -1521,7 +1521,9 @@ int LAGraph_MinCut(
     //outputs
     GrB_Vector* S,
     GrB_Vector* S_bar,
+    GrB_Matrix* cut_set,
     // inputs
+    LAGraph_Graph G_origin, //original graph with capacities
     GrB_Matrix R, //residual graph
     GrB_Index s, //source node index
     GrB_Index t, //sink node index

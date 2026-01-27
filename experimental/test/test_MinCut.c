@@ -9,7 +9,7 @@ char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 GrB_Matrix A = NULL;
 #define LEN 512
-#define NTESTS 4
+#define NTESTS 5
 char filename[LEN + 1];
 
 
@@ -38,7 +38,7 @@ void test_MinCut() {
   OK(LG_SET_BURBLE(0));
 
   for(uint8_t test = 0; test < NTESTS; test++){
-    GrB_Matrix A=NULL, R=NULL;
+    GrB_Matrix A=NULL, R=NULL, cut_set=NULL;
     GrB_Vector S=NULL, S_bar=NULL;
     GrB_Index n = 0;
     printf ("\nMatrix: %s\n", tests[test].filename);
@@ -51,7 +51,8 @@ void test_MinCut() {
     OK(LAGraph_MMRead(&A, f, msg));
     OK(GrB_Matrix_nrows(&n, A));
     OK(GrB_Matrix_new(&R, GrB_INT64, n, n));
-
+    OK(GrB_Matrix_new(&cut_set, GrB_INT64, n, n));
+    
     OK(GrB_Vector_new(&S, GrB_INT64, n));
     OK(GrB_Vector_new(&S_bar, GrB_INT64, n));
     
@@ -72,15 +73,19 @@ void test_MinCut() {
     printf("%s\n", msg);
     printf("flow is: %lf\n", flow);
 
-    OK(LAGraph_MinCut(&S, &S_bar, R, tests[test].s, tests[test].t, msg));
-
+    OK(LAGraph_MinCut(&S, &S_bar, &cut_set, G, R, tests[test].s, tests[test].t, msg));
+    printf("%s\n", msg);
+    
     GxB_print(S, 5);
     GxB_print(S_bar, 5);
+    GxB_print(cut_set, 5);
 
     GrB_free(&A);
     GrB_free(&R);
     GrB_free(&S);
     GrB_free(&S_bar);
+    GrB_free(&cut_set);
+    LAGraph_Delete(&G, msg);
   }
 
   LAGraph_Finalize(msg);
