@@ -9,7 +9,7 @@ char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 GrB_Matrix A = NULL;
 #define LEN 512
-#define NTESTS 5
+#define NTESTS 7
 char filename[LEN + 1];
 
 
@@ -40,6 +40,7 @@ void test_MinCut() {
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A=NULL, R=NULL, cut_set=NULL;
     GrB_Vector S=NULL, S_bar=NULL;
+    double min_cut = 0;
     GrB_Index n = 0;
     printf ("\nMatrix: %s\n", tests[test].filename);
     TEST_CASE(tests[test].filename);
@@ -76,9 +77,14 @@ void test_MinCut() {
     OK(LAGraph_MinCut(&S, &S_bar, &cut_set, G, R, tests[test].s, tests[test].t, msg));
     printf("%s\n", msg);
     
-    GxB_print(S, 5);
-    GxB_print(S_bar, 5);
-    GxB_print(cut_set, 5);
+    //GxB_print(S, 5);
+    //GxB_print(S_bar, 5);
+    //GxB_print(cut_set, 5);
+
+    OK(GrB_reduce(&min_cut, NULL, GrB_PLUS_MONOID_INT64, cut_set, NULL));
+
+    TEST_CHECK(flow == min_cut);
+    printf("The min cut: %lf\n", min_cut);
 
     GrB_free(&A);
     GrB_free(&R);
