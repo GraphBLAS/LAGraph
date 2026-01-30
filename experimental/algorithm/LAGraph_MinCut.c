@@ -47,7 +47,7 @@ int LAGraph_MinCut
   
   LG_TRY(GrB_Matrix_new(cut_set, GrB_FP64, n, n));
   LG_TRY(GrB_Vector_new(S_bar, GrB_INT64, n));
-  LG_TRY(GrB_Vector_new(S, GrB_INT64, n));
+  //S is allocated during the bfs
   
   LG_TRY(LAGraph_New(&G, &R, LAGraph_ADJACENCY_DIRECTED, msg));
   LG_TRY(LAGr_BreadthFirstSearch(S, NULL, G, s, msg));
