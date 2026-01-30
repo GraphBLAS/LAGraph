@@ -612,7 +612,7 @@ int LAGr_MaxFlow
     // output:
     double *f,              // max flow from src node to sink node
     GrB_Matrix *flow_mtx,   // optional output flow matrix
-    GrB_Matrix *res_mtx,    // optional output for min cut
+    GrB_Matrix *res_mtx,    // optional output for the residual matrix. Used in the min-cut
     // input:
     LAGraph_Graph G,        // graph to compute maxflow on
     GrB_Index src,          // source node
@@ -711,6 +711,10 @@ int LAGr_MaxFlow
   if (flow_mtx != NULL)
   {
     (*flow_mtx) = NULL ;
+  }
+  if (res_mtx != NULL)
+  {
+    (*res_mtx) = NULL ;
   }
   LG_TRY(LAGraph_CheckGraph(G, msg));
   LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
@@ -1162,6 +1166,7 @@ int LAGr_MaxFlow
   }
 
   if(res_mtx != NULL){
+   GRB_TRY(GrB_Matrix_new(res_mtx, GrB_FP64, n, n)); 
    GRB_TRY(GrB_apply(*res_mtx, NULL, NULL, GetResidual, R, NULL)) ;
     // prune zeros and negative entries from R_hat
    GRB_TRY(GrB_select(*res_mtx, NULL, NULL, GrB_VALUEGT_FP64, *res_mtx, 0, NULL)) ; 

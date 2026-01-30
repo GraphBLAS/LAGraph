@@ -34,9 +34,8 @@ test_case tests[] = {
 void test_MinCut() {
 
   LAGraph_Init(msg);
-  //OK(LG_SET_BURBLE(1));
+#if LG_SUITESPARSE_GRAPHBLAS_V10
   OK(LG_SET_BURBLE(0));
-
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A=NULL, R=NULL, cut_set=NULL;
     GrB_Vector S=NULL, S_bar=NULL;
@@ -50,12 +49,6 @@ void test_MinCut() {
     TEST_CHECK(f != NULL);
     
     OK(LAGraph_MMRead(&A, f, msg));
-    OK(GrB_Matrix_nrows(&n, A));
-    OK(GrB_Matrix_new(&R, GrB_INT64, n, n));
-    OK(GrB_Matrix_new(&cut_set, GrB_INT64, n, n));
-    
-    OK(GrB_Vector_new(&S, GrB_INT64, n));
-    OK(GrB_Vector_new(&S_bar, GrB_INT64, n));
     
     OK(fclose(f));
     LAGraph_Kind kind = tests [test].kind ;
@@ -76,12 +69,8 @@ void test_MinCut() {
 
     OK(LAGraph_MinCut(&S, &S_bar, &cut_set, G, R, tests[test].s, tests[test].t, msg));
     printf("%s\n", msg);
-    
-    //GxB_print(S, 5);
-    //GxB_print(S_bar, 5);
-    //GxB_print(cut_set, 5);
 
-    OK(GrB_reduce(&min_cut, NULL, GrB_PLUS_MONOID_INT64, cut_set, NULL));
+    OK(GrB_reduce(&min_cut, NULL, GrB_PLUS_MONOID_FP64, cut_set, NULL));
 
     TEST_CHECK(flow == min_cut);
     printf("The min cut: %lf\n", min_cut);
@@ -93,6 +82,9 @@ void test_MinCut() {
     GrB_free(&cut_set);
     LAGraph_Delete(&G, msg);
   }
+
+#endif
+  
 
   LAGraph_Finalize(msg);
   
