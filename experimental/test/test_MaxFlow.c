@@ -30,7 +30,7 @@ GrB_Matrix A = NULL;
 #ifdef GRAPHBLAS_HAS_CUDA
 #define NTESTS 4
 #else
-#define NTESTS 7
+#define NTESTS 8
 #endif
 char filename[LEN + 1];
 
@@ -47,6 +47,7 @@ test_info tests[] = {
   {"matrix_random_flow.mtx", 0,9, 22, LAGraph_ADJACENCY_DIRECTED},
   {"rand.mtx", 0, 19, 37, LAGraph_ADJACENCY_DIRECTED},
   {"mcl.mtx", 0, 9, 0, LAGraph_ADJACENCY_DIRECTED},
+  {"test_zero_cap.mtx", 0, 4, 0.5, LAGraph_ADJACENCY_DIRECTED},
 #ifndef GRAPHBLAS_HAS_CUDA
 // FIXME: the CUDA cases are currently very slow for these matrices,
 // when the GPU is hacked to always be used regardless of problem size:
