@@ -725,9 +725,9 @@ int LAGr_MaxFlow
   LG_ASSERT_MSG(nrows == n, GrB_INVALID_VALUE, "Matrix must be square");
   LG_ASSERT_MSG(src < n && src >= 0 && sink < n && sink >= 0,
         GrB_INVALID_VALUE, "src and sink must be a value between [0, n)");
+  LG_ASSERT(G->emin_state != LAGraph_BOOLEAN_UNKNOWN, GrB_UNINITIALIZED_OBJECT) ;
   LG_ASSERT_MSG(G->emin > 0, GrB_INVALID_VALUE,
         "the edge weights (capacities) must be greater than 0");
-  LG_ASSERT(G->emin_state != LAGraph_BOOLEAN_UNKNOWN, GrB_UNINITIALIZED_OBJECT) ;
 
   //get adjacency matrix and its transpose
   GrB_Matrix A = G->A;
