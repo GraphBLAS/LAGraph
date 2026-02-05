@@ -1507,6 +1507,7 @@ int LAGr_MaxFlow(
     //outputs
     double* f,
     GrB_Matrix* flow_mtx,
+    GrB_Matrix* res_mtx,
     //inputs
     LAGraph_Graph G,
     GrB_Index src, //source node index
@@ -1515,6 +1516,19 @@ int LAGr_MaxFlow(
     char* msg
 );
 
+LAGRAPHX_PUBLIC
+int LAGraph_MinCut(
+    //outputs
+    GrB_Vector* S,
+    GrB_Vector* S_bar,
+    GrB_Matrix* cut_set,
+    // inputs
+    LAGraph_Graph G_origin, //original graph with capacities
+    GrB_Matrix R, //residual graph
+    GrB_Index s, //source node index
+    GrB_Index t, //sink node index
+    char *msg
+);
 
 #if defined ( __cplusplus )
 }

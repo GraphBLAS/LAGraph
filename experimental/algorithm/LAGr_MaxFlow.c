@@ -612,6 +612,7 @@ int LAGr_MaxFlow
     // output:
     double *f,              // max flow from src node to sink node
     GrB_Matrix *flow_mtx,   // optional output flow matrix
+    GrB_Matrix *res_mtx,    // optional output for the residual matrix. Used in the min-cut
     // input:
     LAGraph_Graph G,        // graph to compute maxflow on
     GrB_Index src,          // source node
@@ -711,6 +712,10 @@ int LAGr_MaxFlow
   {
     (*flow_mtx) = NULL ;
   }
+  if (res_mtx != NULL)
+  {
+    (*res_mtx) = NULL ;
+  }
   LG_TRY(LAGraph_CheckGraph(G, msg));
   LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
   (*f) = 0;
@@ -720,6 +725,7 @@ int LAGr_MaxFlow
   LG_ASSERT_MSG(nrows == n, GrB_INVALID_VALUE, "Matrix must be square");
   LG_ASSERT_MSG(src < n && src >= 0 && sink < n && sink >= 0,
         GrB_INVALID_VALUE, "src and sink must be a value between [0, n)");
+  LG_ASSERT(G->emin_state != LAGraph_BOOLEAN_UNKNOWN, GrB_UNINITIALIZED_OBJECT) ;
   LG_ASSERT_MSG(G->emin > 0, GrB_INVALID_VALUE,
         "the edge weights (capacities) must be greater than 0");
 
@@ -1158,6 +1164,13 @@ int LAGr_MaxFlow
     GRB_TRY(GrB_apply(*flow_mtx, NULL, NULL, ExtractMatrixFlow, R, NULL));
     // delete any zero or negative flows from the flow_mtx
     GRB_TRY(GrB_select(*flow_mtx, NULL, NULL, GrB_VALUEGT_FP64, *flow_mtx, 0, NULL));
+  }
+
+  if(res_mtx != NULL){
+   GRB_TRY(GrB_Matrix_new(res_mtx, GrB_FP64, n, n)); 
+   GRB_TRY(GrB_apply(*res_mtx, NULL, NULL, GetResidual, R, NULL)) ;
+    // prune zeros and negative entries from R_hat
+   GRB_TRY(GrB_select(*res_mtx, NULL, NULL, GrB_VALUEGT_FP64, *res_mtx, 0, NULL)) ; 
   }
 
   //----------------------------------------------------------------------------
