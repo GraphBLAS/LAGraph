@@ -1,3 +1,38 @@
+//------------------------------------------------------------------------------
+// LAGraph_MinCut: min cut
+//------------------------------------------------------------------------------
+
+// LAGraph, (c) 2019-2026 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
+
+// Contributed by Darin Peries and Tim Davis, Texas A&M University
+
+//------------------------------------------------------------------------------
+
+// LAGraph_MinCut is a GraphBLAS implementation of the push-relabel algorithm
+// of Baumstark et al. [1], for computing the minimum cut.
+//
+// [1] N. Baumstark, G. E. Blelloch, and J. Shun, "Efficient Implementation of
+// a Synchronous Parallel Push-Relabel Algorithm." In: Bansal, N., Finocchi, I.
+// (eds) Algorithms - ESA 2015. Lecture Notes in Computer Science(), vol 9294.
+// Springer, Berlin, Heidelberg.  https://doi.org/10.1007/978-3-662-48350-3 10.
+
+// [2] D. Peries and T. Davis, "A parallel push-relabel maximum flow algorithm
+// in LAGraph and GraphBLAS", IEEE HPEC'25, Sept 2025.
+
+// FIXME: add more discussion here.  Something about the algorithm, and
+// document inputs and outputs.
+
+// Give example of use
+
+//------------------------------------------------------------------------------
+
 #include <LAGraph.h>
 #include "LG_internal.h"
 #include <LAGraph.h>
@@ -9,6 +44,8 @@
 {						\
  GrB_free(&S_diag);				\
  GrB_free(&S_bar_diag);				\
+ GrB_free(&S_bfs) ;     			\
+ G->A = NULL ;  /* do not delete; this is R */  \
  LAGraph_Delete(&G, msg);			\
 }
 
@@ -22,17 +59,21 @@ int LAGraph_MinCut
     GrB_Vector* S_bar,
     GrB_Matrix* cut_set,
     // inputs
-    LAGraph_Graph G_origin,
+    LAGraph_Graph G_origin, // swap G_origin and R
     GrB_Matrix R,
-    GrB_Index s,
-    GrB_Index t,
+
+    // inputs (also to MaxFlow):
+    // G_origin
+    GrB_Index s,    // src: FIXME
+    GrB_Index t,    // sink: FIXME  delete me!
     char *msg
 )
 {
   //do a bfs from the source to the sink, stop if the frontier is empty 
 
   LAGraph_Graph G = NULL;
-  GrB_Matrix S_diag=NULL, S_bar_diag=NULL;
+  GrB_Matrix S_diag=NULL, S_bar_diag=NULL ;
+  GrB_Vector S_bfs = NULL ;
   GrB_Index n = 0;
   GrB_Matrix_nrows(&n, R);
 
@@ -40,28 +81,27 @@ int LAGraph_MinCut
   LG_ASSERT (S != NULL, GrB_NULL_POINTER) ;
   LG_ASSERT (S_bar != NULL, GrB_NULL_POINTER) ;
   LG_ASSERT (cut_set != NULL, GrB_NULL_POINTER) ;
-  LG_ASSERT (s >= 0 && t >= 0, GrB_INVALID_VALUE) ;
+  LG_ASSERT (s < n && t < n, GrB_INVALID_VALUE) ;
 
-  //  printf("hit\n");
   GrB_Matrix A = G_origin->A;
   
   LG_TRY(GrB_Matrix_new(cut_set, GrB_FP64, n, n));
-  LG_TRY(GrB_Vector_new(S_bar, GrB_INT64, n));
-  //S is allocated during the bfs
-  
+  LG_TRY(GrB_Vector_new(S_bar, GrB_FP64, n));
+  LG_TRY(GrB_Vector_new(S, GrB_FP64, n));
+
   LG_TRY(LAGraph_New(&G, &R, LAGraph_ADJACENCY_DIRECTED, msg));
-  LG_TRY(LAGr_BreadthFirstSearch(S, NULL, G, s, msg));
 
+  //S_bfs is allocated during the bfs
+  LG_TRY(LAGr_BreadthFirstSearch(&S_bfs, NULL, G, s, msg));
 
-  LG_TRY(GrB_assign(*S_bar, *S, NULL, 1, GrB_ALL, n, GrB_DESC_SC));
-  LG_TRY(GrB_assign(*S, *S, NULL, 1, GrB_ALL, n, GrB_DESC_S));
+  LG_TRY(GrB_assign(*S_bar, S_bfs, NULL, 1, GrB_ALL, n, GrB_DESC_SC));
+  LG_TRY(GrB_assign(*S, S_bfs, NULL, 1, GrB_ALL, n, GrB_DESC_S));
 
   GRB_TRY(GrB_Matrix_diag(&S_diag, *S, 0));
   GRB_TRY(GrB_Matrix_diag(&S_bar_diag, *S_bar, 0));
 
-  
-  GRB_TRY(GrB_mxm(*cut_set, NULL, NULL, GxB_PLUS_TIMES_INT64, A, S_bar_diag, NULL));
-  GRB_TRY(GrB_mxm(*cut_set, NULL, NULL, GxB_PLUS_TIMES_INT64, S_diag, *cut_set, NULL));
+  GRB_TRY(GrB_mxm(*cut_set, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, S_bar_diag, NULL));
+  GRB_TRY(GrB_mxm(*cut_set, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, S_diag, *cut_set, NULL));
 
   
   LG_FREE_ALL;
