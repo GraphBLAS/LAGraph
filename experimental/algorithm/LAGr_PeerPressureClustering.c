@@ -49,6 +49,8 @@
 #include "LG_internal.h"
 #include <LAGraphX.h>
 
+// FIXME: make normalize, make_undirected, thesh, max_iter inputs GrB_Scalar
+
 int LAGr_PeerPressureClustering(
     // output:
     GrB_Vector *c_f, // output cluster vector

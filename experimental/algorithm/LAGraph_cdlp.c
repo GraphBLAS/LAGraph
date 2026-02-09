@@ -190,6 +190,9 @@ void ptable_reduce(ptable* table, GrB_Index* entry, GrB_Index* count, plist_redu
 }
 
 //****************************************************************************
+
+// FIXME: make itermax a GrB_Scalar?
+
 int LAGraph_cdlp
         (
                 GrB_Vector *CDLP_handle,    // output vector
@@ -251,6 +254,8 @@ int LAGraph_cdlp
         LAGRAPH_TRY (LAGraph_Free ((void *)&Tx, NULL)) ;
         GRB_TRY (GrB_free (&T)) ;
     }
+
+    // FIXME: this is not "else" part of the above if.  Why indent it??
 
     {
         void * Sx = NULL ;

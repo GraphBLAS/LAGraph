@@ -77,6 +77,8 @@ This method requires O(e) space for an undirected graph with e edges
 
 #define MAX_FAILURES 50
 
+// FIXME: make matching_type, seed input GrB_Scalar
+
 int LAGraph_MaximalMatching
 (
     // outputs:

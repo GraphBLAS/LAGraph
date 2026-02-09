@@ -42,6 +42,8 @@
 // LAGraph_KTruss: find the k-truss subgraph of a graph
 //------------------------------------------------------------------------------
 
+// FIXME: make k input GrB_Scalar
+
 int LAGraph_KTruss              // compute the k-truss of a graph
 (
     // outputs:

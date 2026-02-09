@@ -82,6 +82,8 @@
 // LAGr_Betweenness: vertex betweenness-centrality
 //------------------------------------------------------------------------------
 
+// FIXME: make (sources,ns) a GrB_Vector (with descriptor: indices/values)
+
 int LAGr_Betweenness
 (
     // output:

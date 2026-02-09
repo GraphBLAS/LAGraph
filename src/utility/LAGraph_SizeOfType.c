@@ -17,6 +17,8 @@
 
 #include "LG_internal.h"
 
+// FIXME: note output scalar: size
+
 int LAGraph_SizeOfType
 (
     // output:

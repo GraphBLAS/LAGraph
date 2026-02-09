@@ -79,6 +79,9 @@ void LG_ED_mod64 (int64_t *z, const int64_t *x, const int64_t *y)
 "    (*z) = t % (*y) ;                                          \n" \
 "}"
 
+// FIXME: scalar inputs (maxSrcs, maxLoops, seed): GrB_Scalar?
+// FIXME: scalar output (diameter): GrB_Scalar?
+
 int LAGraph_EstimateDiameter
 (
     // outputs:

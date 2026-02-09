@@ -17,6 +17,8 @@
 
 #include "LG_internal.h"
 
+// FIXME: note input scalar pr (an enum)
+
 int LAGraph_Graph_Print
 (
     // input:

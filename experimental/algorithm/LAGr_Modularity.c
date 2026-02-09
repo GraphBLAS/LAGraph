@@ -60,6 +60,9 @@
 #include "LG_internal.h"
 #include <LAGraphX.h>
 
+// FIXME: output modularity a GrB_Scalar
+// FIXME: input resolution a GrB_Scalar
+
 int LAGr_Modularity(
     // Outputs
     double *mod_handle, // output modularity

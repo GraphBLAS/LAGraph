@@ -52,6 +52,8 @@
 #define LG_FREE_ALL                             \
   { LG_FREE_WORK }
 
+// FIXME: make s input GrB_Scalar (remove t)
+
 int LAGraph_MinCut
 (
     // outputs

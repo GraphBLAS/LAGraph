@@ -96,7 +96,6 @@ int LAGr_EdgeBetweennessCentrality
     LAGraph_Graph G,            // input graph
     GrB_Vector sources,         // source vertices to compute shortest paths
                                 // (if NULL or empty, use all vertices)
-
     char *msg
 )
 {

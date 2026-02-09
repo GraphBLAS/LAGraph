@@ -596,6 +596,8 @@ static void dump_tuple_vector
 // LAGraph_msf
 //------------------------------------------------------------------------------
 
+// FIXME: remove sanitize arg, add LAGraph_Graph parameter
+
 int LAGraph_msf
 (
     GrB_Matrix *forest_edges, // output: an unsymmetrical matrix, containing

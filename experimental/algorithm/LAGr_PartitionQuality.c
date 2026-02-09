@@ -47,6 +47,8 @@
 #include "LG_internal.h"
 #include <LAGraphX.h>
 
+// FIXME: make cov, perf outputs GrB_Scalar
+
 int LAGr_PartitionQuality(
     // Outputs
     double *cov,  // coverage output, can be NULL

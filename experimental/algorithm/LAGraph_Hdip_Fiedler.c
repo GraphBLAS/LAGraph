@@ -618,6 +618,9 @@ int LAGraph_mypcg2
 // TODO: this method has many inputs; the basic method should use defaults
 // TODO: need to add error checking of inputs
 
+// FIXME: make scalar lambda output a GrB_Scalar
+// FIXME: make scalar infnorm, emax, tol GrB_Scalar
+
 int LAGraph_Hdip_Fiedler   // compute the Hdip_Fiedler
 (
     // outputs:

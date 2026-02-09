@@ -36,6 +36,9 @@
 
 // Check graph with error messages if it's empty
 
+// FIXME: make iters output a GrB_Scalar
+// FIXME: make tol, itermax inputs GrB_Scalar
+
 int LAGr_HITS
 (
     GrB_Vector *hubs,

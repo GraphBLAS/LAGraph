@@ -27,6 +27,8 @@
 
 #include "LG_alg_internal.h"
 
+// FIXME: make src, max_level, dest, many_expected inputs GrB_Scalar
+
 int LAGr_BreadthFirstSearch_Extended
 (
     // output:

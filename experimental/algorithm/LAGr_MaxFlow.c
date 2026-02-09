@@ -628,6 +628,9 @@ void print_compareVec(const GrB_Vector vec) {
 // LAGraph_MaxFlow
 //------------------------------------------------------------------------------
 
+// FIXME: make output f a GrB_Scalar
+// FIXME: make input src,sink GrB_Scalar
+
 int LAGr_MaxFlow
 (
     // output:

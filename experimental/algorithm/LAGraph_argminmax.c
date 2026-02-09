@@ -173,6 +173,8 @@ int argminmax
     GrB_free (p_result) ;   \
 }
 
+// FIXME: make input scalars dim, is_min, GrB_Scalar?
+
 int LAGraph_argminmax
 (
     // output
