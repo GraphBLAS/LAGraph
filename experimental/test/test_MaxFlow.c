@@ -62,8 +62,8 @@ test_info tests[] = {
 void test_MaxFlow(void) {
 #if LG_SUITESPARSE_GRAPHBLAS_V10
   LAGraph_Init(msg);
-  //OK(LG_SET_BURBLE(1));
-  OK(LG_SET_BURBLE(0));
+  OK(LG_SET_BURBLE(1)); // FIXME
+  // OK(LG_SET_BURBLE(0));
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A=NULL;
     printf ("\nMatrix: %s\n", tests[test].filename);
@@ -123,8 +123,8 @@ void test_MaxFlow(void) {
 void test_MaxFlowMtx(void) {
   LAGraph_Init(msg);
 #if LG_SUITESPARSE_GRAPHBLAS_V10
-//OK(LG_SET_BURBLE(1));
-  OK(LG_SET_BURBLE(0));
+  OK(LG_SET_BURBLE(1)); // FIXME
+  // OK(LG_SET_BURBLE(0));
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A=NULL;
     printf ("\nMatrix: %s\n", tests[test].filename);
