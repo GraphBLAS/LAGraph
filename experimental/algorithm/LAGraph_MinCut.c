@@ -87,6 +87,7 @@ int LAGraph_MinCut
   GrB_Index n = 0;
   GrB_Matrix_nrows(&n, R);
 
+  // Input checks
   LG_TRY(LAGraph_CheckGraph(G_origin, msg));
   LG_ASSERT (S != NULL, GrB_NULL_POINTER) ;
   LG_ASSERT (S_bar != NULL, GrB_NULL_POINTER) ;
@@ -94,22 +95,26 @@ int LAGraph_MinCut
   LG_ASSERT (src < n, GrB_INVALID_VALUE) ;
 
   GrB_Matrix A = G_origin->A;
-  
+
+  // construct the outputs
   LG_TRY(GrB_Matrix_new(cut_set, GrB_FP64, n, n));
   LG_TRY(GrB_Vector_new(S_bar, GrB_FP64, n));
   LG_TRY(GrB_Vector_new(S, GrB_FP64, n));
 
+  // create graph from R for the BFS
   LG_TRY(LAGraph_New(&G, &R, LAGraph_ADJACENCY_DIRECTED, msg));
 
-  //S_bfs is allocated during the bfs
+  // S_bfs is allocated during the bfs
   LG_TRY(LAGr_BreadthFirstSearch(&S_bfs, NULL, G, src, msg));
 
   LG_TRY(GrB_assign(*S_bar, S_bfs, NULL, 1, GrB_ALL, n, GrB_DESC_SC));
+  // set compliment for unreachable nodes.
   LG_TRY(GrB_assign(*S, S_bfs, NULL, 1, GrB_ALL, n, GrB_DESC_S));
 
   GRB_TRY(GrB_Matrix_diag(&S_diag, *S, 0));
   GRB_TRY(GrB_Matrix_diag(&S_bar_diag, *S_bar, 0));
 
+  // used to compute the set of cut edges.
   GRB_TRY(GrB_mxm(*cut_set, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, S_bar_diag, NULL));
   GRB_TRY(GrB_mxm(*cut_set, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, S_diag, *cut_set, NULL));
 
