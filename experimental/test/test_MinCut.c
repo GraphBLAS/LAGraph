@@ -67,7 +67,7 @@ void test_MinCut() {
     printf("%s\n", msg);
     printf("flow is: %lf\n", flow);
 
-    OK(LAGraph_MinCut(&S, &S_bar, &cut_set, G, R, tests[test].s, tests[test].t, msg));
+    OK(LAGraph_MinCut(&S, &S_bar, &cut_set, R, G, tests[test].s, msg));
     printf("%s\n", msg);
 
     OK(GrB_reduce(&min_cut, NULL, GrB_PLUS_MONOID_FP64, cut_set, NULL));
