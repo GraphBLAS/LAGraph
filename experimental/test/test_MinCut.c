@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// experimental/test/test_MinCut: tests for LAGr_MaxFlow
+// experimental/test/test_MinCut: tests for LAGraph_MinCut
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
