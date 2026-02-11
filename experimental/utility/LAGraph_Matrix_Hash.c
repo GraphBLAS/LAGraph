@@ -54,6 +54,8 @@ void LG_HM_hash_edge (uint64_t *z, const uint64_t *x,
 "    (*z) = result ;\n"                                                        \
 "}\n"
 
+// FIXME: Make hash output a GrB_Scalar
+
 GrB_Info LAGraph_Hash_Matrix(
     uint64_t *hash,      // [output] hash
     const GrB_Matrix A,  // matrix to hash
