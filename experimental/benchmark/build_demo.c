@@ -32,6 +32,7 @@
     LAGraph_Free ((void **) &J2, NULL) ;        \
     LAGraph_Free ((void **) &X2, NULL) ;        \
     GrB_free (&A) ;                             \
+    GrB_free (&B) ;                             \
     GrB_free (&I) ;                             \
     GrB_free (&J) ;                             \
     GrB_free (&X) ;                             \
@@ -48,7 +49,7 @@ int main (int argc, char **argv)
 
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
     LAGraph_Graph G = NULL ;
-    GrB_Matrix A = NULL ;
+    GrB_Matrix A = NULL, B = NULL ;
     GrB_Vector I = NULL, J = NULL, X = NULL ;
     void *I2 = NULL, *J2 = NULL, *X2 = NULL ;
     uint64_t I2_size = 0, J2_size = 0, X2_size = 0,
@@ -57,7 +58,7 @@ int main (int argc, char **argv)
     GrB_Type I2_type = NULL, J2_type = NULL, X2_type = NULL ;
 
     // start GraphBLAS and LAGraph
-    bool burble = false ;               // set true for diagnostic outputs
+    bool burble = true ;               // set true for diagnostic outputs
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------
@@ -124,6 +125,16 @@ int main (int argc, char **argv)
     printf ("Time for build:         %g sec\n", t) ;
 
     //--------------------------------------------------------------------------
+    // build a copy of G->A again using GrB_build, forcing hypersparse
+    //--------------------------------------------------------------------------
+
+    t = LAGraph_WallClockTime ( ) ;
+    GRB_TRY (GrB_Matrix_new (&B, atype, nrows, ncols)) ;
+    GRB_TRY (GxB_Matrix_build_Vector (B, I, J, X, GxB_IGNORE_DUP, NULL)) ;
+    t = LAGraph_WallClockTime ( ) - t ;
+    printf ("Time for build:         %g sec (2nd time)\n", t) ;
+
+    //--------------------------------------------------------------------------
     // check the results (make sure A is a copy of G->A)
     //--------------------------------------------------------------------------
 
@@ -132,6 +143,12 @@ int main (int argc, char **argv)
     LG_TRY (LAGraph_Matrix_IsEqual (&isequal, A, G->A, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time to check:          %g sec\n", t) ;
+    LG_ASSERT (isequal, GrB_INVALID_VALUE) ;
+
+    t = LAGraph_WallClockTime ( ) ;
+    LG_TRY (LAGraph_Matrix_IsEqual (&isequal, A, B, msg)) ;
+    t = LAGraph_WallClockTime ( ) - t ;
+    printf ("Time to check:          %g sec (A and B, B hypersparse\n", t) ;
     LG_ASSERT (isequal, GrB_INVALID_VALUE) ;
 
     //--------------------------------------------------------------------------
