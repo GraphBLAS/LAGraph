@@ -1582,7 +1582,7 @@ int LAGraph_Jaccard
     //	output
     GrB_Matrix *coefficients,
     //  input
-	LAGraph_Graph G,
+    LAGraph_Graph G,
     bool all_pairs, 
 	char *msg
 );     
