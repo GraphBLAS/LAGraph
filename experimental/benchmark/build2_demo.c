@@ -45,7 +45,7 @@
 // mod function for uint64: z = x % y
 //------------------------------------------------------------------------------
 
-void gb_randmat_mod (void *z, const void *x, const void *y)
+void build2_demo_mod (void *z, const void *x, const void *y)
 {
     uint64_t a = (*((uint64_t *) x)) ;
     uint64_t b = (*((uint64_t *) y)) ;
@@ -53,7 +53,7 @@ void gb_randmat_mod (void *z, const void *x, const void *y)
 }
 
 #define MOD_FUNCTION_DEFN                                           \
-"void gb_randmat_mod (void *z, const void *x, const void *y)    \n" \
+"void build2_demo_mod (void *z, const void *x, const void *y)   \n" \
 "{                                                              \n" \
 "    uint64_t a = (*((uint64_t *) x)) ;                         \n" \
 "    uint64_t b = (*((uint64_t *) y)) ;                         \n" \
@@ -62,7 +62,7 @@ void gb_randmat_mod (void *z, const void *x, const void *y)
 
 int main (int argc, char **argv)
 {
-#if LG_SUITESPARSE_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10_2
 
     //--------------------------------------------------------------------------
     // startup LAGraph and GraphBLAS
@@ -94,10 +94,11 @@ int main (int argc, char **argv)
     printf ("# OpenMP threads: %d\n", nthreads_max) ;
     GRB_TRY (GrB_Global_get_INT32 (GrB_GLOBAL, &ngpus_max, GxB_NGPUS)) ;
     printf ("# GPUs:           %d\n", ngpus_max) ;
+    if (ngpus_max > 1) ngpus_max = 1 ;
 
-    GRB_TRY (GxB_BinaryOp_new (&Mod, gb_randmat_mod,
+    GRB_TRY (GxB_BinaryOp_new (&Mod, build2_demo_mod,
         GrB_UINT64, GrB_UINT64, GrB_UINT64,
-        "gb_randmat_mod", MOD_FUNCTION_DEFN)) ;
+        "build2_demo_mod", MOD_FUNCTION_DEFN)) ;
 
     //--------------------------------------------------------------------------
     // construct the random tuples
