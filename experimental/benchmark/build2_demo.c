@@ -138,8 +138,8 @@ int main (int argc, char **argv)
     // build the matrix
     //--------------------------------------------------------------------------
 
-    double tbest [2] ;
-    for (int32_t ngpus = 0 ; ngpus <= 1 ; ngpus++)
+    double tbest [2] = { INFINITY, INFINITY } ;
+    for (int32_t ngpus = 0 ; ngpus <= ngpus_max ; ngpus++)
     {
         printf ("\n======================== Benchmark with %d GPUs:\n", ngpus) ;
         GRB_TRY (GrB_Global_set_INT32 (GrB_GLOBAL, ngpus, GxB_NGPUS)) ;
