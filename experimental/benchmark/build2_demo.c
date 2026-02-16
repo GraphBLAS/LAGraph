@@ -45,7 +45,7 @@
 // mod function for uint64: z = x % y
 //------------------------------------------------------------------------------
 
-void LG_randmat_mod (void *z, const void *x, const void *y)
+void gb_randmat_mod (void *z, const void *x, const void *y)
 {
     uint64_t a = (*((uint64_t *) x)) ;
     uint64_t b = (*((uint64_t *) y)) ;
@@ -53,7 +53,7 @@ void LG_randmat_mod (void *z, const void *x, const void *y)
 }
 
 #define MOD_FUNCTION_DEFN                                           \
-"void LG_randmat_mod (void *z, const void *x, const void *y)    \n" \
+"void gb_randmat_mod (void *z, const void *x, const void *y)    \n" \
 "{                                                              \n" \
 "    uint64_t a = (*((uint64_t *) x)) ;                         \n" \
 "    uint64_t b = (*((uint64_t *) y)) ;                         \n" \
@@ -85,13 +85,19 @@ int main (int argc, char **argv)
     if (argc > 1) nrows = atoi (argv [1]) ;
     if (argc > 2) ncols = atoi (argv [2]) ;
     if (argc > 3) nvals = atoi (argv [3]) ;
-    if (argc > 4) nvals = atoi (argv [3]) ;
+    if (argc > 4) seed  = atoi (argv [4]) ;
     printf ("Generating a random %lu-by-%lu matrix with %lu entries"
         " (seed: %lu)\n", nrows, ncols, nvals, seed) ;
 
-    GRB_TRY (GxB_BinaryOp_new (&Mod, LG_randmat_mod,
+    int32_t nthreads_max, ngpus_max ;
+    GRB_TRY (GrB_Global_get_INT32 (GrB_GLOBAL, &nthreads_max, GxB_NTHREADS)) ;
+    printf ("# OpenMP threads: %d\n", nthreads_max) ;
+    GRB_TRY (GrB_Global_get_INT32 (GrB_GLOBAL, &ngpus_max, GxB_NGPUS)) ;
+    printf ("# GPUs:           %d\n", ngpus_max) ;
+
+    GRB_TRY (GxB_BinaryOp_new (&Mod, gb_randmat_mod,
         GrB_UINT64, GrB_UINT64, GrB_UINT64,
-        "LG_randmat_mod", MOD_FUNCTION_DEFN)) ;
+        "gb_randmat_mod", MOD_FUNCTION_DEFN)) ;
 
     //--------------------------------------------------------------------------
     // construct the random tuples
@@ -132,30 +138,47 @@ int main (int argc, char **argv)
     // build the matrix
     //--------------------------------------------------------------------------
 
-    for (int k = 0 ; k < 3 ; k++)
+    double tbest [2] ;
+    for (int32_t ngpus = 0 ; ngpus <= 1 ; ngpus++)
     {
-        t = LAGraph_WallClockTime ( ) ;
-        GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, nrows, ncols)) ;
-        GRB_TRY (GrB_Matrix_set_INT32 (A, GxB_HYPERSPARSE,
-            GxB_SPARSITY_CONTROL)) ;
-        GRB_TRY (GxB_Matrix_build_Vector (A, I, J, X, GrB_PLUS_FP64, NULL)) ;
-        t = LAGraph_WallClockTime ( ) - t ;
-        printf ("Time for build (%d):         %g sec\n", k, t) ;
+        printf ("\n======================== Benchmark with %d GPUs:\n", ngpus) ;
+        GRB_TRY (GrB_Global_set_INT32 (GrB_GLOBAL, ngpus, GxB_NGPUS)) ;
+        int32_t ngpus_used = 0 ;
+        GRB_TRY (GrB_Global_get_INT32 (GrB_GLOBAL, &ngpus_used, GxB_NGPUS)) ;
+        tbest [ngpus] = INFINITY ;
 
-        // TODO: check the results, CPU vs GPU
-        // LG_TRY (LAGraph_Matrix_IsEqual (&isequal, A, B, msg)) ;
+        for (int32_t k = 0 ; k < 3 ; k++)
+        {
+            t = LAGraph_WallClockTime ( ) ;
+            GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, nrows, ncols)) ;
+            GRB_TRY (GrB_Matrix_set_INT32 (A, GxB_HYPERSPARSE,
+                GxB_SPARSITY_CONTROL)) ;
+            GRB_TRY (GxB_Matrix_build_Vector (A, I, J, X, GrB_PLUS_FP64,
+                NULL)) ;
+            t = LAGraph_WallClockTime ( ) - t ;
+            printf ("#gpus: %d, Time for build (%d):         %g sec\n",
+                ngpus_used, k, t) ;
+            tbest [ngpus] = fmin (tbest [ngpus], t) ;
 
-        GRB_TRY (GxB_print (A, 1)) ;
+            // TODO: check the results, CPU vs GPU
+            // LG_TRY (LAGraph_Matrix_IsEqual (&isequal, A, B, msg)) ;
 
-        t = LAGraph_WallClockTime ( ) ;
-        double sum = 0 ;
-        GRB_TRY (GrB_Matrix_reduce_FP64 (&sum, NULL, GrB_PLUS_MONOID_FP64, A,
-            NULL)) ;
-        t = LAGraph_WallClockTime ( ) - t ;
-        printf ("sum %g\n", sum) ;
-        printf ("Time for reduce (%d)         %g sec\n", k, t) ;
-        GrB_Matrix_free (&A) ;
+            GRB_TRY (GxB_print (A, 1)) ;
+
+            t = LAGraph_WallClockTime ( ) ;
+            double sum = 0 ;
+            GRB_TRY (GrB_Matrix_reduce_FP64 (&sum, NULL, GrB_PLUS_MONOID_FP64,
+                A, NULL)) ;
+            t = LAGraph_WallClockTime ( ) - t ;
+            printf ("sum %g\n", sum) ;
+            printf ("#gpus: %d, Time for reduce (%d)         %g sec\n",
+                ngpus_used, k, t) ;
+            GrB_Matrix_free (&A) ;
+        }
     }
+
+    printf ("Best times: CPU %g, GPU %g, speedup %g\n", tbest [0], tbest [1],
+        tbest [0] / tbest [1]) ;
 
     //--------------------------------------------------------------------------
     // free everyting and finish
