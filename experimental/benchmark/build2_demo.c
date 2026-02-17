@@ -34,11 +34,13 @@
 {                                               \
     GrB_free (&Mod) ;                           \
     GrB_free (&A) ;                             \
-    GrB_free (&B) ;                             \
     GrB_free (&I) ;                             \
     GrB_free (&J) ;                             \
     GrB_free (&X) ;                             \
+    GrB_free (&(Results [0])) ;                 \
+    GrB_free (&(Results [1])) ;                 \
     GrB_free (&State) ;                         \
+    GrB_free (&Zero) ;                          \
 }
 
 //------------------------------------------------------------------------------
@@ -70,8 +72,10 @@ int main (int argc, char **argv)
 
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
     GrB_BinaryOp Mod = NULL ;
-    GrB_Matrix A = NULL, B = NULL ;
+    GrB_Matrix A = NULL ;
+    GrB_Matrix Results [2] = { NULL, NULL } ;
     GrB_Vector I = NULL, J = NULL, X = NULL, State = NULL ;
+    GrB_Scalar Zero = NULL ;
 
     // start GraphBLAS and LAGraph
     bool burble = false ;              // set true for diagnostic outputs
@@ -161,10 +165,12 @@ int main (int argc, char **argv)
                 ngpus_used, k, t) ;
             tbest [ngpus] = fmin (tbest [ngpus], t) ;
 
-            // TODO: check the results, CPU vs GPU
-            // LG_TRY (LAGraph_Matrix_IsEqual (&isequal, A, B, msg)) ;
-
             GRB_TRY (GxB_print (A, 1)) ;
+
+            if (nvals <= (100 * 1000 * 1000) && k == 0)
+            {
+                GRB_TRY (GrB_Matrix_dup (&(Results [ngpus]), A)) ;
+            }
 
             t = LAGraph_WallClockTime ( ) ;
             double sum = 0 ;
@@ -180,6 +186,33 @@ int main (int argc, char **argv)
 
     printf ("Best times: CPU %g, GPU %g, speedup %g\n", tbest [0], tbest [1],
         tbest [0] / tbest [1]) ;
+
+    //--------------------------------------------------------------------------
+    // check results
+    //--------------------------------------------------------------------------
+
+    if (Results [0] != NULL && Results [1] != NULL)
+    {
+        bool ok = false ;
+        LG_TRY (LAGraph_Matrix_IsEqual (&ok, Results [0], Results [1], msg)) ;
+        // GRB_TRY (GxB_print (Results [0], 4)) ;
+        // GRB_TRY (GxB_print (Results [1], 4)) ;
+        printf ("CPU == GPU: %d\n", ok) ;
+        if (!ok)
+        {
+            // A = Results [0] - Results [1]
+            GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, nrows, ncols)) ;
+            GRB_TRY (GrB_Scalar_new (&Zero, GrB_FP64)) ;
+            GRB_TRY (GrB_Scalar_setElement_FP64 (Zero, (double) 0)) ;
+            GRB_TRY (GxB_Matrix_eWiseUnion (A, NULL, NULL, GrB_MINUS_FP64,
+                Results [0], Zero, Results [1], Zero, NULL)) ;
+            // drop explicit zeros from A
+            GRB_TRY (GrB_Matrix_select_Scalar (A, NULL, NULL,
+                GrB_VALUENE_FP64, A, Zero, NULL)) ;
+            printf ("mismatch: CPU results - GPU results:\n") ;
+            GRB_TRY (GxB_print (A, 5)) ;
+        }
+    }
 
     //--------------------------------------------------------------------------
     // free everyting and finish
