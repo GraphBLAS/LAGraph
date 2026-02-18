@@ -195,8 +195,6 @@ int main (int argc, char **argv)
     {
         bool ok = false ;
         LG_TRY (LAGraph_Matrix_IsEqual (&ok, Results [0], Results [1], msg)) ;
-        // GRB_TRY (GxB_print (Results [0], 4)) ;
-        // GRB_TRY (GxB_print (Results [1], 4)) ;
         printf ("CPU == GPU: %d\n", ok) ;
         if (!ok)
         {
