@@ -75,6 +75,7 @@ const matrix_info files [ ] =
 void test_export (void)
 {
     LAGraph_Init (msg);
+    OK (LG_SET_BURBLE (true)) ; // FIXME
     GrB_Matrix A = NULL, C = NULL ;
 
     for (int k = 0 ; ; k++)
