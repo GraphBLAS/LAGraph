@@ -140,75 +140,99 @@ int main (int argc, char **argv)
     printf ("Time to construct random tuples: %g sec\n", t) ;
 
     //--------------------------------------------------------------------------
-    // build the matrix
+    // build with duplicates/unsorted, and then with no duplicates/sorted
     //--------------------------------------------------------------------------
 
-    double tbest [2] = { INFINITY, INFINITY } ;
-    for (int32_t ngpus = 0 ; ngpus <= ngpus_max ; ngpus++)
+    for (int pass = 0 ; pass <= 1 ; pass++)
     {
-        printf ("\n======================== Benchmark with %d GPUs:\n", ngpus) ;
-        GRB_TRY (GrB_Global_set_INT32 (GrB_GLOBAL, ngpus, GxB_NGPUS)) ;
-        int32_t ngpus_used = 0 ;
-        GRB_TRY (GrB_Global_get_INT32 (GrB_GLOBAL, &ngpus_used, GxB_NGPUS)) ;
-        tbest [ngpus] = INFINITY ;
 
-        for (int32_t k = 0 ; k < 3 ; k++)
+        printf ("#### PASS: %d : %s\n", pass,
+            (pass == 0) ? "with duplicates/need sorting" :
+            "no duplicates and no sorting needed\n") ;
+
+        if (pass == 1)
         {
-            t = LAGraph_WallClockTime ( ) ;
+            // sort the tuples by constructing the matrix on the CPU
+            GRB_TRY (GrB_Global_set_INT32 (GrB_GLOBAL, 0, GxB_NGPUS)) ;
             GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, nrows, ncols)) ;
-            GRB_TRY (GrB_Matrix_set_INT32 (A, GxB_HYPERSPARSE,
-                GxB_SPARSITY_CONTROL)) ;
             GRB_TRY (GxB_Matrix_build_Vector (A, I, J, X, GrB_PLUS_FP64,
                 NULL)) ;
-            t = LAGraph_WallClockTime ( ) - t ;
-            printf ("#gpus: %d, Time for build (%d):         %g sec\n",
-                ngpus_used, k, t) ;
-            tbest [ngpus] = fmin (tbest [ngpus], t) ;
-
-            GRB_TRY (GxB_print (A, 1)) ;
-
-            if (nvals <= (100 * 1000 * 1000) && k == 0)
-            {
-                GRB_TRY (GrB_Matrix_dup (&(Results [ngpus]), A)) ;
-            }
-
-            t = LAGraph_WallClockTime ( ) ;
-            double sum = 0 ;
-            GRB_TRY (GrB_Matrix_reduce_FP64 (&sum, NULL, GrB_PLUS_MONOID_FP64,
-                A, NULL)) ;
-            t = LAGraph_WallClockTime ( ) - t ;
-            printf ("sum %g\n", sum) ;
-            printf ("#gpus: %d, Time for reduce (%d)         %g sec\n",
-                ngpus_used, k, t) ;
-            GrB_Matrix_free (&A) ;
+            GRB_TRY (GxB_Matrix_extractTuples_Vector (I, J, X, A, NULL)) ;
         }
-    }
 
-    printf ("Best times: CPU %g, GPU %g, speedup %g\n", tbest [0], tbest [1],
-        tbest [0] / tbest [1]) ;
+        //----------------------------------------------------------------------
+        // build the matrix
+        //----------------------------------------------------------------------
 
-    //--------------------------------------------------------------------------
-    // check results
-    //--------------------------------------------------------------------------
-
-    if (Results [0] != NULL && Results [1] != NULL)
-    {
-        bool ok = false ;
-        LG_TRY (LAGraph_Matrix_IsEqual (&ok, Results [0], Results [1], msg)) ;
-        printf ("CPU == GPU: %d\n", ok) ;
-        if (!ok)
+        double tbest [2] = { INFINITY, INFINITY } ;
+        for (int32_t ngpus = 0 ; ngpus <= ngpus_max ; ngpus++)
         {
-            // A = Results [0] - Results [1]
-            GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, nrows, ncols)) ;
-            GRB_TRY (GrB_Scalar_new (&Zero, GrB_FP64)) ;
-            GRB_TRY (GrB_Scalar_setElement_FP64 (Zero, (double) 0)) ;
-            GRB_TRY (GxB_Matrix_eWiseUnion (A, NULL, NULL, GrB_MINUS_FP64,
-                Results [0], Zero, Results [1], Zero, NULL)) ;
-            // drop explicit zeros from A
-            GRB_TRY (GrB_Matrix_select_Scalar (A, NULL, NULL,
-                GrB_VALUENE_FP64, A, Zero, NULL)) ;
-            printf ("mismatch: CPU results - GPU results:\n") ;
-            GRB_TRY (GxB_print (A, 5)) ;
+            printf ("\n======================== Benchmark with %d GPUs:\n",
+                ngpus) ;
+            GRB_TRY (GrB_Global_set_INT32 (GrB_GLOBAL, ngpus, GxB_NGPUS)) ;
+            int32_t ngpus_used = 0 ;
+            GRB_TRY (GrB_Global_get_INT32 (GrB_GLOBAL, &ngpus_used, GxB_NGPUS));
+            tbest [ngpus] = INFINITY ;
+
+            for (int32_t k = 0 ; k < 3 ; k++)
+            {
+                t = LAGraph_WallClockTime ( ) ;
+                GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, nrows, ncols)) ;
+                GRB_TRY (GrB_Matrix_set_INT32 (A, GxB_HYPERSPARSE,
+                    GxB_SPARSITY_CONTROL)) ;
+                GRB_TRY (GxB_Matrix_build_Vector (A, I, J, X, GrB_PLUS_FP64,
+                    NULL)) ;
+                t = LAGraph_WallClockTime ( ) - t ;
+                printf ("#gpus: %d, Time for build (%d):         %g sec\n",
+                    ngpus_used, k, t) ;
+                tbest [ngpus] = fmin (tbest [ngpus], t) ;
+
+                GRB_TRY (GxB_print (A, 1)) ;
+
+                if (nvals <= (100 * 1000 * 1000) && k == 0)
+                {
+                    GRB_TRY (GrB_Matrix_dup (&(Results [ngpus]), A)) ;
+                }
+
+                t = LAGraph_WallClockTime ( ) ;
+                double sum = 0 ;
+                GRB_TRY (GrB_Matrix_reduce_FP64 (&sum, NULL,
+                    GrB_PLUS_MONOID_FP64, A, NULL)) ;
+                t = LAGraph_WallClockTime ( ) - t ;
+                printf ("sum %g\n", sum) ;
+                printf ("#gpus: %d, Time for reduce (%d)         %g sec\n",
+                    ngpus_used, k, t) ;
+                GrB_Matrix_free (&A) ;
+            }
+        }
+
+        printf ("Best times: CPU %g, GPU %g, speedup %g\n",
+            tbest [0], tbest [1], tbest [0] / tbest [1]) ;
+
+        //----------------------------------------------------------------------
+        // check results (unless the matrices are too big)
+        //----------------------------------------------------------------------
+
+        if (Results [0] != NULL && Results [1] != NULL)
+        {
+            bool ok = false ;
+            LG_TRY (LAGraph_Matrix_IsEqual (&ok, Results [0], Results [1],
+                msg)) ;
+            printf ("CPU == GPU: %d\n", ok) ;
+            if (!ok)
+            {
+                // A = Results [0] - Results [1]
+                GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, nrows, ncols)) ;
+                GRB_TRY (GrB_Scalar_new (&Zero, GrB_FP64)) ;
+                GRB_TRY (GrB_Scalar_setElement_FP64 (Zero, (double) 0)) ;
+                GRB_TRY (GxB_Matrix_eWiseUnion (A, NULL, NULL, GrB_MINUS_FP64,
+                    Results [0], Zero, Results [1], Zero, NULL)) ;
+                // drop explicit zeros from A
+                GRB_TRY (GrB_Matrix_select_Scalar (A, NULL, NULL,
+                    GrB_VALUENE_FP64, A, Zero, NULL)) ;
+                printf ("mismatch: CPU results - GPU results:\n") ;
+                GRB_TRY (GxB_print (A, 5)) ;
+            }
         }
     }
 
