@@ -206,8 +206,10 @@ int main (int argc, char **argv)
             }
         }
 
-        printf ("Best times: CPU %g, GPU %g, speedup %g\n",
-            tbest [0], tbest [1], tbest [0] / tbest [1]) ;
+        printf ("\n------------------------------------------------------------\n") ;
+        printf ("PASS %d, Best times: CPU %g, GPU %g, speedup %g\n",
+            pass, tbest [0], tbest [1], tbest [0] / tbest [1]) ;
+        printf ("------------------------------------------------------------\n") ;
 
         //----------------------------------------------------------------------
         // check results (unless the matrices are too big)
