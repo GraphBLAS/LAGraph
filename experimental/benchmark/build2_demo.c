@@ -78,7 +78,7 @@ int main (int argc, char **argv)
     GrB_Scalar Zero = NULL ;
 
     // start GraphBLAS and LAGraph
-    bool burble = false ;              // set true for diagnostic outputs
+    bool burble = false ;
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------
@@ -86,10 +86,10 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     GrB_Index nrows = 4, ncols = 6, nvals = 10, seed = 1 ;
-    if (argc > 1) nrows = atoi (argv [1]) ;
-    if (argc > 2) ncols = atoi (argv [2]) ;
-    if (argc > 3) nvals = atoi (argv [3]) ;
-    if (argc > 4) seed  = atoi (argv [4]) ;
+    if (argc > 1) { sscanf (argv [1], "%lu", &nrows) ; }
+    if (argc > 2) { sscanf (argv [2], "%lu", &ncols) ; }
+    if (argc > 3) { sscanf (argv [3], "%lu", &nvals) ; }
+    if (argc > 4) { sscanf (argv [4], "%lu", &seed) ; }
     printf ("Generating a random %lu-by-%lu matrix with %lu entries"
         " (seed: %lu)\n", nrows, ncols, nvals, seed) ;
 
