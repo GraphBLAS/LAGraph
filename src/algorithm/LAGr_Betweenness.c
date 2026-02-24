@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------------
 
 // LAGr_Betweenness: Batch algorithm for computing
-// betweeness centrality, using push-pull optimization.
+// betweenness centrality, using push-pull optimization.
 
 // This is an Advanced algorithm (G->AT is required).
 
@@ -87,7 +87,7 @@
 int LAGr_Betweenness
 (
     // output:
-    GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
+    GrB_Vector *centrality,     // centrality(i): betweenness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
     const GrB_Index *sources,   // source vertices to compute shortest paths

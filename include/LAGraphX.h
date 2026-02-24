@@ -1310,7 +1310,7 @@ LAGRAPHX_PUBLIC
 int LAGr_EdgeBetweennessCentrality
 (
     // output:
-    GrB_Matrix *centrality,     // centrality(i): betweeness centrality of i
+    GrB_Matrix *centrality,     // centrality(i): betweenness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
     GrB_Vector sources,         // source vertices to compute shortest paths (if NULL or empty, use all vertices)
