@@ -1514,7 +1514,7 @@ int LAGr_MaxFlow(
     GrB_Index sink, // sink node index
     //inout
     char* msg
-);
+);   
 
 LAGRAPHX_PUBLIC
 int LAGraph_MinCut(
@@ -1529,6 +1529,16 @@ int LAGraph_MinCut(
     GrB_Index t, //sink node index
     char *msg
 );
+
+LAGRAPHX_PUBLIC
+int LAGr_Jaccard(
+    //  output
+    GrB_Matrix *coefficients,
+    //  input
+    LAGraph_Graph G,
+    bool all_pairs, 
+    char *msg
+); 
 
 #if defined ( __cplusplus )
 }
