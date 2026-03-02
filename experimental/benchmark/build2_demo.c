@@ -34,6 +34,8 @@
 {                                               \
     GrB_free (&Mod) ;                           \
     GrB_free (&A) ;                             \
+    GrB_free (&B) ;                             \
+    GrB_free (&C) ;                             \
     GrB_free (&I) ;                             \
     GrB_free (&J) ;                             \
     GrB_free (&X) ;                             \
@@ -72,7 +74,7 @@ int main (int argc, char **argv)
 
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
     GrB_BinaryOp Mod = NULL ;
-    GrB_Matrix A = NULL ;
+    GrB_Matrix A = NULL, B = NULL, C = NULL ;
     GrB_Matrix Results [2] = { NULL, NULL } ;
     GrB_Vector I = NULL, J = NULL, X = NULL, State = NULL ;
     GrB_Scalar Zero = NULL ;
@@ -176,6 +178,11 @@ int main (int argc, char **argv)
 
             for (int32_t k = 0 ; k < 3 ; k++)
             {
+
+                //--------------------------------------------------------------
+                // build
+                //--------------------------------------------------------------
+
                 t = LAGraph_WallClockTime ( ) ;
                 GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, nrows, ncols)) ;
                 GRB_TRY (GrB_Matrix_set_INT32 (A, GxB_HYPERSPARSE,
@@ -186,6 +193,10 @@ int main (int argc, char **argv)
                 printf ("#gpus: %d, Time for build (%d):         %g sec\n",
                     ngpus_used, k, t) ;
                 tbest [ngpus] = fmin (tbest [ngpus], t) ;
+
+                //--------------------------------------------------------------
+                // print the matrix and reduce to scalar
+                //--------------------------------------------------------------
 
                 GRB_TRY (GxB_print (A, 1)) ;
 
@@ -202,14 +213,40 @@ int main (int argc, char **argv)
                 printf ("sum %g\n", sum) ;
                 printf ("#gpus: %d, Time for reduce (%d)         %g sec\n",
                     ngpus_used, k, t) ;
+
+                //--------------------------------------------------------------
+                // test the transpose
+                //--------------------------------------------------------------
+
+                GRB_TRY (GrB_Matrix_new (&B, GrB_FP64, ncols, nrows)) ;
+                GRB_TRY (GrB_Matrix_new (&C, GrB_FP64, nrows, ncols)) ;
+
+                t = LAGraph_WallClockTime ( ) ;
+                GRB_TRY (GrB_transpose (B, NULL, NULL, A, NULL)) ;
+                t = LAGraph_WallClockTime ( ) - t ;
+
+                double t2 = LAGraph_WallClockTime ( ) ;
+                GRB_TRY (GrB_transpose (C, NULL, NULL, B, NULL)) ;
+                t2 = LAGraph_WallClockTime ( ) - t2 ;
+                GrB_Matrix_free (&B) ;
+
+                printf ("transpose times: %g %g\n", t, t2) ;
+
+                bool ok = false ;
+                LG_TRY (LAGraph_Matrix_IsEqual (&ok, A, C, msg)) ;
+
+                printf ("transpose OK: %d\n", ok) ;
+                fflush (stdout) ;
+                if (!ok) abort ( ) ;
                 GrB_Matrix_free (&A) ;
+                GrB_Matrix_free (&C) ;
             }
         }
 
-        printf ("\n------------------------------------------------------------\n") ;
+        printf ("\n-------------------------------------------------------\n") ;
         printf ("PASS %d, Best times: CPU %g, GPU %g, speedup %g\n",
             pass, tbest [0], tbest [1], tbest [0] / tbest [1]) ;
-        printf ("------------------------------------------------------------\n") ;
+        printf ("---------------------------------------------------------\n") ;
 
         //----------------------------------------------------------------------
         // check results (unless the matrices are too big)
@@ -233,7 +270,7 @@ int main (int argc, char **argv)
                 GRB_TRY (GrB_Matrix_select_Scalar (A, NULL, NULL,
                     GrB_VALUENE_FP64, A, Zero, NULL)) ;
                 printf ("mismatch: CPU results - GPU results:\n") ;
-                GRB_TRY (GxB_print (A, 5)) ;
+                GRB_TRY (GxB_print (A, 3)) ;
             }
         }
     }
