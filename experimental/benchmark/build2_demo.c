@@ -166,7 +166,7 @@ int main (int argc, char **argv)
         // build the matrix
         //----------------------------------------------------------------------
 
-        double tbest [2] = { INFINITY, INFINITY } ;
+        double tbest [8], ttran [8] ;
         for (int32_t ngpus = 0 ; ngpus <= ngpus_max ; ngpus++)
         {
             printf ("\n======================== Benchmark with %d GPUs:\n",
@@ -175,6 +175,7 @@ int main (int argc, char **argv)
             int32_t ngpus_used = 0 ;
             GRB_TRY (GrB_Global_get_INT32 (GrB_GLOBAL, &ngpus_used, GxB_NGPUS));
             tbest [ngpus] = INFINITY ;
+            ttran [ngpus] = INFINITY ;
 
             for (int32_t k = 0 ; k < 3 ; k++)
             {
@@ -224,13 +225,15 @@ int main (int argc, char **argv)
                 t = LAGraph_WallClockTime ( ) ;
                 GRB_TRY (GrB_transpose (B, NULL, NULL, A, NULL)) ;
                 t = LAGraph_WallClockTime ( ) - t ;
+                printf ("first transpose time: %g\n", t) ;
 
                 double t2 = LAGraph_WallClockTime ( ) ;
                 GRB_TRY (GrB_transpose (C, NULL, NULL, B, NULL)) ;
                 t2 = LAGraph_WallClockTime ( ) - t2 ;
                 GrB_Matrix_free (&B) ;
 
-                printf ("transpose times: %g %g\n", t, t2) ;
+                printf ("2nd   transpose time: %g\n", t2) ;
+                ttran [ngpus] = fmin (ttran [ngpus], t2) ;
 
                 bool ok = false ;
                 LG_TRY (LAGraph_Matrix_IsEqual (&ok, A, C, msg)) ;
@@ -244,8 +247,10 @@ int main (int argc, char **argv)
         }
 
         printf ("\n-------------------------------------------------------\n") ;
-        printf ("PASS %d, Best times: CPU %g, GPU %g, speedup %g\n",
+        printf ("PASS %d, Best build times: CPU %g, GPU %g, speedup %g\n",
             pass, tbest [0], tbest [1], tbest [0] / tbest [1]) ;
+        printf ("PASS %d, Best trans times: CPU %g, GPU %g, speedup %g\n",
+            pass, ttran [0], ttran [1], ttran [0] / ttran [1]) ;
         printf ("---------------------------------------------------------\n") ;
 
         //----------------------------------------------------------------------
