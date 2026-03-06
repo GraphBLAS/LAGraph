@@ -476,6 +476,9 @@ invert_2(GrB_Vector out,  // input/output
         GrB_free(&mateC);                                                      \
     }
 
+// FIXME: make col_init a GrB_Scalar?
+// FIXME need a bipartite LAGraph_Graph
+
 int LAGr_MaximumMatching(
     // outputs:
     GrB_Vector

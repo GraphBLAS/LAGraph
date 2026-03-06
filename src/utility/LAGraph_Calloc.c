@@ -17,6 +17,8 @@
 
 #include "LG_internal.h"
 
+// FIXME: note input scalars: nitems and size_of_item
+
 int LAGraph_Calloc
 (
     // output:

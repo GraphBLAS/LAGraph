@@ -40,6 +40,8 @@
 // TODO: revise and add to src
 // TODO: need both basic and expert methods; this is mixed
 
+// FIXME: make k input GrB_Scalar
+
 int LAGraph_KCore  // TODO: LAGr_KCore (expert), cache is_symmetric_structure
                    // TODO: cache nself_edges
                    // TODO: cache out degree

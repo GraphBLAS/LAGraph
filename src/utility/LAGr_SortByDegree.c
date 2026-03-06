@@ -51,6 +51,9 @@
 
 #include "LG_internal.h"
 
+// FIXME: make output vector P a GrB_Vector
+// FIXME: make inputs (byout, ascending) GrB_Scalar?
+
 int LAGr_SortByDegree
 (
     // output:

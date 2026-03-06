@@ -39,6 +39,8 @@
 
 #include "LG_internal.h"
 
+// FIXME: note input scalars nitems_old, _new, size_of_item
+
 int LAGraph_Realloc
 (
     // input/output:

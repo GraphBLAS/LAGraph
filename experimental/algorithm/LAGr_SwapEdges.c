@@ -316,6 +316,9 @@ void LG_SE_edge2nd32_edge
 "    z->b = y->b;                                                             \n"\
 "}"
 
+// FIXME: make loopTry, loopMin, totSwaps, seed inputs GrB_Scalar
+// FIXME: make pSwaps GrB_Scalar
+
 int LAGr_SwapEdges
 (
     // output

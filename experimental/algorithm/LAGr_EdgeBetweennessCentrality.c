@@ -21,7 +21,7 @@
 // FIXED in v10.2 but may need more work in GraphBLAS.
 
 // LAGr_EdgeBetweennessCentrality: Exact algorithm for computing
-// betweeness centrality.
+// betweenness centrality.
 
 // This is an Advanced algorithm (no self edges allowed)
 
@@ -91,12 +91,11 @@ void LG_EBC_add_one_divide_function (double *z, const double *x, const double *y
 int LAGr_EdgeBetweennessCentrality
 (
     // output:
-    GrB_Matrix *centrality,     // centrality(i): betweeness centrality of i
+    GrB_Matrix *centrality,     // centrality(i): betweenness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
     GrB_Vector sources,         // source vertices to compute shortest paths
                                 // (if NULL or empty, use all vertices)
-
     char *msg
 )
 {

@@ -99,6 +99,8 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
+// FIXME: make (QS,nqs), (QF,nqf), (S,ns) GrB_Vector inputs
+
 int LAGraph_RegularPathQuery
 (
     // output:

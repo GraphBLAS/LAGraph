@@ -40,6 +40,9 @@
 #include "LG_internal.h"
 #include <LAGraphX.h>
 
+// FIXME: make inputs e, i, pruning_threshold, convergence_threshold GrB_Scalar
+// and rename these parameters
+
 int LAGr_MarkovClustering(
     // output:
     GrB_Vector *c_f, // output cluster vector

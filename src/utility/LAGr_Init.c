@@ -114,6 +114,8 @@ LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_fp64   = NULL ;
 // LAGr_Init
 //------------------------------------------------------------------------------
 
+// FIXME: note input scalar: mode
+
 LAGRAPH_PUBLIC
 int LAGr_Init
 (

@@ -90,6 +90,11 @@
 // LAGraph_VertexCentrality_Triangle: vertex triangle-centrality
 //------------------------------------------------------------------------------
 
+// FIXME: final method will not have "method" parameter; methods 0,1, and 2
+// will be moved to experimental/test
+
+// FIXME: make ntriangles output GrB_Scalar
+
 int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 (
     // outputs:

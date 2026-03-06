@@ -59,6 +59,8 @@
 // TODO: rename LAGr_MaximalIndependentSet (this is expert)
 // TODO: add a basic method
 
+// FIXME: make seed input GrB_Scalar
+
 int LAGraph_MaximalIndependentSet       // maximal independent set
 (
     // outputs:

@@ -26,6 +26,8 @@
 // LAGraph_Matrix_IsEqualOp: compare two matrices using a given operator
 //------------------------------------------------------------------------------
 
+// FIXME: make output result a GrB_Scalar?
+
 int LAGraph_Matrix_IsEqualOp
 (
     // output:

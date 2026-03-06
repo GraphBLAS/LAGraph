@@ -27,7 +27,7 @@
 // The version_number array is set to LAGRAPH_VERSION_MAJOR,
 // LAGRAPH_VERSION_MINOR, and LAGRAPH_VERSION_UPDATE, in that order.
 // The LAGRAPH_DATE string is copied into the user-provided version_date
-// string, and is null-terminated.
+// string (of size at least LAGRAPH_MSG_LEN), and is null-terminated.
 
 #include "LG_internal.h"
 

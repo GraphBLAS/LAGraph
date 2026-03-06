@@ -38,6 +38,8 @@
 // TODO: this should return D as an LAGraph_Graph, not as a GrB_Matrix
 // TODO: has GxB; need a vanilla version
 
+// FIXME: make k input GrB_Scalar
+
 int LAGraph_KCore_Decompose
 (
     // outputs:

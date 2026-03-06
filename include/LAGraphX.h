@@ -1310,7 +1310,7 @@ LAGRAPHX_PUBLIC
 int LAGr_EdgeBetweennessCentrality
 (
     // output:
-    GrB_Matrix *centrality,     // centrality(i): betweeness centrality of i
+    GrB_Matrix *centrality,     // centrality(i): betweenness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
     GrB_Vector sources,         // source vertices to compute shortest paths (if NULL or empty, use all vertices)
@@ -1507,12 +1507,27 @@ int LAGr_MaxFlow(
     //outputs
     double* f,
     GrB_Matrix* flow_mtx,
+    GrB_Matrix* res_mtx,
     //inputs
     LAGraph_Graph G,
     GrB_Index src, //source node index
     GrB_Index sink, // sink node index
     //inout
     char* msg
+);   
+
+LAGRAPHX_PUBLIC
+int LAGraph_MinCut(
+    //outputs
+    GrB_Vector* S,
+    GrB_Vector* S_bar,
+    GrB_Matrix* cut_set,
+    // inputs
+    LAGraph_Graph G_origin, //original graph with capacities
+    GrB_Matrix R, //residual graph
+    GrB_Index s, //source node index
+    GrB_Index t, //sink node index
+    char *msg
 );
 
 //------------------------------------------------------------------------------
@@ -1529,6 +1544,15 @@ int LAGr_AdjModularity(
     GrB_Matrix S,
     char* msg
 );
+LAGRAPHX_PUBLIC
+int LAGr_Jaccard(
+    //  output
+    GrB_Matrix *coefficients,
+    //  input
+    LAGraph_Graph G,
+    bool all_pairs, 
+    char *msg
+); 
 
 LAGRAPHX_PUBLIC
 int LAGraph_IsolateSet(

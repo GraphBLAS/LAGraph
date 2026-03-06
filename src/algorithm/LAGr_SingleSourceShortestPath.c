@@ -74,6 +74,8 @@
     }                                                                         \
 }
 
+// FIXME: make source input a GrB_Scalar?  Note Delta already is GrB_Scalar
+
 int LAGr_SingleSourceShortestPath
 (
     // output:

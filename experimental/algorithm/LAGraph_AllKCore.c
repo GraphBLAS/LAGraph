@@ -35,6 +35,8 @@
 
 #include "LG_internal.h"
 
+// FIXME: make kmax output a GrB_Scalar
+
 // TODO: need both basic and expert methods; this is mixed
 // TODO: match filename to function name (this name is OK)
 

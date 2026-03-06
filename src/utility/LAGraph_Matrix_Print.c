@@ -112,6 +112,8 @@ LG_MATRIX_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g") ;
 // LAGraph_Matrix_Print: automatically determine the type
 //------------------------------------------------------------------------------
 
+// FIXME: note input enum: pr
+
 int LAGraph_Matrix_Print
 (
     // input:

@@ -78,6 +78,8 @@ void LG_randmat_mod (void *z, const void *x, const void *y)
 // LAGraph_Random_Matrix
 //------------------------------------------------------------------------------
 
+// FIXME: make inputs (nrows, ncols, density, seed) GrB_Scalar
+
 GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
 (
     // output

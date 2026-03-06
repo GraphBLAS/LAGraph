@@ -1,0 +1,13 @@
+%%MatrixMarket matrix coordinate real general
+% Example weighted directed graph adjacency (1-indexed)
+% All weights are positive; some edges explicitly have zero weight
+5 5 9
+1 2 0.500000
+1 4 0.000000
+2 3 1.250000
+2 5 2.000000
+3 1 0.000000
+3 4 3.141590
+4 2 0.750000
+5 4 0.125000
+5 5 1.000000

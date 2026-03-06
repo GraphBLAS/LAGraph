@@ -338,7 +338,7 @@ int LG_check_edgeBetweennessCentrality
     if (print_timings)
     {
         tt = LAGraph_WallClockTime ( ) - tt ;
-        printf ("LG_check_edgeBetweenessCentrality time: %g sec\n", tt) ;
+        printf ("LG_check_edgeBetweennessCentrality time: %g sec\n", tt) ;
         tt = LAGraph_WallClockTime ( ) ;
     }
 

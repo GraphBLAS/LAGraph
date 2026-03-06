@@ -69,6 +69,9 @@
 // C = LAGraph_AllKTruss: find all k-trusses a graph
 //------------------------------------------------------------------------------
 
+// FIXME: make outputs kmax, ntris, nedges, nstepps all GrB_Scalar
+// FIXME: this is an expert method, not basic; name is wrong
+
 int LAGraph_AllKTruss   // compute all k-trusses of a graph
 (
     // outputs

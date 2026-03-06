@@ -110,6 +110,8 @@ LG_VECTOR_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g")
 // LAGraph_Vector_Print: automatically determine the type
 //------------------------------------------------------------------------------
 
+// FIXME: note input scalar pr (an enum)
+
 int LAGraph_Vector_Print
 (
     // input:

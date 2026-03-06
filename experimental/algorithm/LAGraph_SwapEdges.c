@@ -23,6 +23,10 @@
 // uniform generation of random graphs with prescribed degree sequences,” 2004.
 #include "LG_internal.h"
 #include "LAGraphX.h"
+
+// FIXME: make pQ output GrB_Scalar
+// FIXME: make Q input GrB_Scalar
+
 int LAGraph_SwapEdges
 (
     // output

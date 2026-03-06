@@ -31,6 +31,8 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
+// FIXME: make src input GrB_Scalar
+
 int LAGraph_MultiSourceBFS
 (
     // outputs:

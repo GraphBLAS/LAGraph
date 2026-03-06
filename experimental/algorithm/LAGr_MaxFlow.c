@@ -2,7 +2,7 @@
 // LAGr_MaxFlow: max flow
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2026 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -25,6 +25,27 @@
 
 // [2] D. Peries and T. Davis, "A parallel push-relabel maximum flow algorithm
 // in LAGraph and GraphBLAS", IEEE HPEC'25, Sept 2025.
+
+// FIXME: add something like the following:
+
+// LAGr_MaxFlow computes the maximum flow from the src to sink nodes, returning
+// the total maximum flow result as a single double scalar (f).  It can
+// optionally return the flows on each each, as the flow_mtx parameter.  This
+// matrix has no pre-flows left in it (which appear during the computation of a
+// push/relabel maxflow method).  However, computing the flow_mtx is very
+// expensive.  If not needed, pass in NULL instead of &flow_mtx (say), so it is
+// not computed.
+
+// FIXME ... ditto describe: res_mtx
+
+// G can be directed or undirected.  It must have edge weights of type
+// GrB_FP64, or types that can be typecasting to FP64.  This includes all
+// built-in types of GraphBLAS.  All computations are done in FP64.
+
+// FIXME: say something about convergence failure
+
+// See also LAGraph_MinCut to compute the minimum cut, using the results
+// from this method.
 
 // TODO: return the (optional) flow matrix can be costly in terms of run time.
 // The HPEC'25 results only benchmark the computation of the max flow, f.
@@ -607,11 +628,15 @@ void print_compareVec(const GrB_Vector vec) {
 // LAGraph_MaxFlow
 //------------------------------------------------------------------------------
 
+// FIXME: make output f a GrB_Scalar
+// FIXME: make input src,sink GrB_Scalar
+
 int LAGr_MaxFlow
 (
     // output:
     double *f,              // max flow from src node to sink node
     GrB_Matrix *flow_mtx,   // optional output flow matrix
+    GrB_Matrix *res_mtx,    // optional output for the residual matrix. Used in the min-cut
     // input:
     LAGraph_Graph G,        // graph to compute maxflow on
     GrB_Index src,          // source node
@@ -711,6 +736,10 @@ int LAGr_MaxFlow
   {
     (*flow_mtx) = NULL ;
   }
+  if (res_mtx != NULL)
+  {
+    (*res_mtx) = NULL ;
+  }
   LG_TRY(LAGraph_CheckGraph(G, msg));
   LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
   (*f) = 0;
@@ -720,6 +749,7 @@ int LAGr_MaxFlow
   LG_ASSERT_MSG(nrows == n, GrB_INVALID_VALUE, "Matrix must be square");
   LG_ASSERT_MSG(src < n && src >= 0 && sink < n && sink >= 0,
         GrB_INVALID_VALUE, "src and sink must be a value between [0, n)");
+  LG_ASSERT(G->emin_state != LAGraph_BOOLEAN_UNKNOWN, GrB_UNINITIALIZED_OBJECT) ;
   LG_ASSERT_MSG(G->emin > 0, GrB_INVALID_VALUE,
         "the edge weights (capacities) must be greater than 0");
 
@@ -1016,9 +1046,23 @@ int LAGr_MaxFlow
 
   for (int64_t iter = 0 ; n_active > 0 ; iter++)
   {
+
+    //--------------------------------------------------------------------------
+    // check for convergence failure
+    //--------------------------------------------------------------------------
+
+    // FIXME: test this case, and check if 2n is correct
+
+    // If the edge weights are vastly different in magnitude, it might be
+    // possible for this method to get stuck in an infinite loop.  The maximum
+    // number of iterations in theory is 2*n, so check if this is exceeded with
+    // 3*n as the upper bound just for good measure.
+
     #ifdef DBG
       printf ("iter: %ld, n_active %ld\n", iter, n_active) ;
     #endif
+    LG_ASSERT (iter < 3*n, LAGRAPH_CONVERGENCE_FAILURE) ;
+
     //--------------------------------------------------------------------------
     // Part 1: global relabeling
     //--------------------------------------------------------------------------
@@ -1158,6 +1202,13 @@ int LAGr_MaxFlow
     GRB_TRY(GrB_apply(*flow_mtx, NULL, NULL, ExtractMatrixFlow, R, NULL));
     // delete any zero or negative flows from the flow_mtx
     GRB_TRY(GrB_select(*flow_mtx, NULL, NULL, GrB_VALUEGT_FP64, *flow_mtx, 0, NULL));
+  }
+
+  if(res_mtx != NULL){
+   GRB_TRY(GrB_Matrix_new(res_mtx, GrB_FP64, n, n)); 
+   GRB_TRY(GrB_apply(*res_mtx, NULL, NULL, GetResidual, R, NULL)) ;
+    // prune zeros and negative entries from R_hat
+   GRB_TRY(GrB_select(*res_mtx, NULL, NULL, GrB_VALUEGT_FP64, *res_mtx, 0, NULL)) ; 
   }
 
   //----------------------------------------------------------------------------
