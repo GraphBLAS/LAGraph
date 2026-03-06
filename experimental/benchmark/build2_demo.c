@@ -184,25 +184,32 @@ int main (int argc, char **argv)
                 // build
                 //--------------------------------------------------------------
 
-                t = LAGraph_WallClockTime ( ) ;
-                GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, nrows, ncols)) ;
-                GRB_TRY (GrB_Matrix_set_INT32 (A, GxB_HYPERSPARSE,
-                    GxB_SPARSITY_CONTROL)) ;
-                GRB_TRY (GxB_Matrix_build_Vector (A, I, J, X, GrB_PLUS_FP64,
-                    NULL)) ;
-                t = LAGraph_WallClockTime ( ) - t ;
-                printf ("#gpus: %d, Time for build (%d):         %g sec\n",
-                    ngpus_used, k, t) ;
+                printf ("\n\nBUILD (%d)================================:\n",k) ;
+                for (int kk = 0 ; kk <= 1 ; kk++)
+                {
+                    t = LAGraph_WallClockTime ( ) ;
+                    GrB_Matrix_free (&A) ;
+                    GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, nrows, ncols)) ;
+                    GRB_TRY (GrB_Matrix_set_INT32 (A, GxB_HYPERSPARSE,
+                        GxB_SPARSITY_CONTROL)) ;
+                    GRB_TRY (GxB_Matrix_build_Vector (A, I, J, X, GrB_PLUS_FP64,
+                        NULL)) ;
+                    t = LAGraph_WallClockTime ( ) - t ;
+                    printf ("#gpus: %d, Time for build (%d):         %g sec (kk: %d)\n",
+                        ngpus_used, k, t, kk) ;
+                }
+
                 tbest [ngpus] = fmin (tbest [ngpus], t) ;
 
                 //--------------------------------------------------------------
                 // print the matrix and reduce to scalar
                 //--------------------------------------------------------------
 
-                GRB_TRY (GxB_print (A, 1)) ;
+                // GRB_TRY (GxB_print (A, 1)) ;
 
                 if (nvals <= (100 * 1000 * 1000) && k == 0)
                 {
+                    printf ("DUP to check\n") ;
                     GRB_TRY (GrB_Matrix_dup (&(Results [ngpus]), A)) ;
                 }
 
@@ -211,7 +218,7 @@ int main (int argc, char **argv)
                 GRB_TRY (GrB_Matrix_reduce_FP64 (&sum, NULL,
                     GrB_PLUS_MONOID_FP64, A, NULL)) ;
                 t = LAGraph_WallClockTime ( ) - t ;
-                printf ("sum %g\n", sum) ;
+                // printf ("sum %g\n", sum) ;
                 printf ("#gpus: %d, Time for reduce (%d)         %g sec\n",
                     ngpus_used, k, t) ;
 
@@ -222,23 +229,24 @@ int main (int argc, char **argv)
                 GRB_TRY (GrB_Matrix_new (&B, GrB_FP64, ncols, nrows)) ;
                 GRB_TRY (GrB_Matrix_new (&C, GrB_FP64, nrows, ncols)) ;
 
+                printf ("\n\nTRANSPOSES (%d) ================================:\n",k) ;
                 t = LAGraph_WallClockTime ( ) ;
                 GRB_TRY (GrB_transpose (B, NULL, NULL, A, NULL)) ;
                 t = LAGraph_WallClockTime ( ) - t ;
-                printf ("first transpose time: %g\n", t) ;
+                // printf ("first transpose time: %g\n", t) ;
 
                 double t2 = LAGraph_WallClockTime ( ) ;
                 GRB_TRY (GrB_transpose (C, NULL, NULL, B, NULL)) ;
                 t2 = LAGraph_WallClockTime ( ) - t2 ;
                 GrB_Matrix_free (&B) ;
 
-                printf ("2nd   transpose time: %g\n", t2) ;
+                printf ("---- transpose times: %g and %g\n", t, t2) ;
                 ttran [ngpus] = fmin (ttran [ngpus], t2) ;
 
                 bool ok = false ;
                 LG_TRY (LAGraph_Matrix_IsEqual (&ok, A, C, msg)) ;
 
-                printf ("transpose OK: %d\n", ok) ;
+                // printf ("transpose OK: %d\n", ok) ;
                 fflush (stdout) ;
                 if (!ok) abort ( ) ;
                 GrB_Matrix_free (&A) ;
