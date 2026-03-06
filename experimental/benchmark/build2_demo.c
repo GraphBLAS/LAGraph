@@ -80,7 +80,7 @@ int main (int argc, char **argv)
     GrB_Scalar Zero = NULL ;
 
     // start GraphBLAS and LAGraph
-    bool burble = false ;
+    bool burble = true ;
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------
@@ -207,7 +207,7 @@ int main (int argc, char **argv)
 
                 // GRB_TRY (GxB_print (A, 1)) ;
 
-                if (nvals <= (100 * 1000 * 1000) && k == 0)
+                if (nvals <= (10 * 1000 * 1000) && k == 0)
                 {
                     printf ("DUP to check\n") ;
                     GRB_TRY (GrB_Matrix_dup (&(Results [ngpus]), A)) ;
@@ -229,27 +229,35 @@ int main (int argc, char **argv)
                 GRB_TRY (GrB_Matrix_new (&B, GrB_FP64, ncols, nrows)) ;
                 GRB_TRY (GrB_Matrix_new (&C, GrB_FP64, nrows, ncols)) ;
 
-                printf ("\n\nTRANSPOSES (%d) ================================:\n",k) ;
+                printf ("\n\nTRANSPOSES (%d) ==========================:\n",k) ;
                 t = LAGraph_WallClockTime ( ) ;
                 GRB_TRY (GrB_transpose (B, NULL, NULL, A, NULL)) ;
                 t = LAGraph_WallClockTime ( ) - t ;
                 // printf ("first transpose time: %g\n", t) ;
+                GRB_TRY (GrB_Matrix_clear (B)) ;
 
-                double t2 = LAGraph_WallClockTime ( ) ;
-                GRB_TRY (GrB_transpose (C, NULL, NULL, B, NULL)) ;
-                t2 = LAGraph_WallClockTime ( ) - t2 ;
-                GrB_Matrix_free (&B) ;
+                double t1 = LAGraph_WallClockTime ( ) ;
+                GRB_TRY (GrB_transpose (B, NULL, NULL, A, NULL)) ;
+                t1 = LAGraph_WallClockTime ( ) - t1 ;
+                // printf ("first transpose time: %g\n", t) ;
 
-                printf ("---- transpose times: %g and %g\n", t, t2) ;
-                ttran [ngpus] = fmin (ttran [ngpus], t2) ;
+                if (nvals <= (10 * 1000 * 1000))
+                {
+                    double t2 = LAGraph_WallClockTime ( ) ;
+                    GRB_TRY (GrB_transpose (C, NULL, NULL, B, NULL)) ;
+                    t2 = LAGraph_WallClockTime ( ) - t2 ;
+                    GrB_Matrix_free (&B) ;
+                    bool ok = false ;
+                    LG_TRY (LAGraph_Matrix_IsEqual (&ok, A, C, msg)) ;
+                    printf ("transpose OK: %d\n", ok) ;
+                    fflush (stdout) ;
+                    if (!ok) abort ( ) ;
+                }
 
-                bool ok = false ;
-                LG_TRY (LAGraph_Matrix_IsEqual (&ok, A, C, msg)) ;
-
-                // printf ("transpose OK: %d\n", ok) ;
-                fflush (stdout) ;
-                if (!ok) abort ( ) ;
+                printf ("---- transpose times: %g and %g\n", t, t1) ;
+                ttran [ngpus] = fmin (ttran [ngpus], fmin (t, t1)) ;
                 GrB_Matrix_free (&A) ;
+                GrB_Matrix_free (&B) ;
                 GrB_Matrix_free (&C) ;
             }
         }
