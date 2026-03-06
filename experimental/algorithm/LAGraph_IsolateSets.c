@@ -1,5 +1,6 @@
 //------------------------------------------------------------------------------
-// LAGraph_IsolateSets.c: Returns an Isolate Set
+// LAGraph_IsolateSets.c: Returns Isolate Sets or a covering 2-hop independent set of a 
+// of the giving adjacency matrix
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2024 by The LAGraph Contributors, All Rights Reserved.
@@ -12,7 +13,7 @@
 // DM22-0790
 
 // Contributed by Olumayowa Olowomeye, Texas A&M University
-
+// Test File: experimental/test/test_IsolateSets
 //------------------------------------------------------------------------------
 
 #include "LG_internal.h"
@@ -20,20 +21,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#undef LG_FREE_ALL
-#define LG_FREE_ALL               \
-    {                             \
-        GrB_free(&score);         \
-        GrB_free(&scoreA);        \
-        GrB_free(&neighbor_max);  \
-        GrB_free(&new_members);   \
-        GrB_free(&new_membersA);  \
-        GrB_free(&new_neighbors); \
-        GrB_free(&candidates);    \
-        GrB_free(&empty);         \
-        GrB_free(&Seed);          \
-        GrB_free(&degree);        \
-    }
 #define DEBUG 0
 #if DEBUG
 #define check() printf("here")
@@ -52,6 +39,21 @@
 #define dbg(x)
 #define err(x, info)
 #endif
+#undef LG_FREE_IS
+#define LG_FREE_IS                \
+    {                             \
+        GrB_free(&score);         \
+        GrB_free(&scoreA);        \
+        GrB_free(&neighbor_max);  \
+        GrB_free(&new_members);   \
+        GrB_free(&new_membersA);  \
+        GrB_free(&new_neighbors); \
+        GrB_free(&candidates);    \
+        GrB_free(&empty);         \
+        GrB_free(&Seed);          \
+        GrB_free(&degree);        \
+        GrB_free(&iset);          \
+    }
 
 int LAGraph_IsolateSet(
     // output
@@ -107,16 +109,8 @@ int LAGraph_IsolateSet(
     dbg(degree);
 
     GrB_Index ncandidates;
-    if (ignore_node == NULL)
-    {
-        GRB_TRY(GrB_assign(candidates, NULL, NULL, (bool)true, GrB_ALL, n, NULL));
-        GRB_TRY(GrB_assign(Seed, NULL, NULL, 1, GrB_ALL, n, NULL));
-    }
-    else
-    {
         GRB_TRY(GrB_assign(candidates, ignore_node, NULL, (bool)true, GrB_ALL, n, GrB_DESC_C));
         GRB_TRY(GrB_assign(Seed, candidates, NULL, 1, GrB_ALL, n, GrB_DESC_S));
-    }
     dbg(candidates);
     GRB_TRY(LAGraph_Random_Seed(Seed, seed, msg));
     dbg(Seed);
@@ -146,16 +140,19 @@ int LAGraph_IsolateSet(
     // printf("done iset");
     iset = NULL;
     dbg(*isolate_set);
-    LG_FREE_ALL;
+    LG_FREE_IS;
+    return (GrB_SUCCESS);
 #else
     return (GrB_NOT_IMPLEMENTED);
 #endif
-    return (GrB_SUCCESS) ;
 }
 
 // #undef LG_FREE_WORK
-#undef LG_FREE_ALL
-#define LG_FREE_ALL
+#undef LG_FREE_ISS
+#define LG_FREE_ISS              \
+    {                            \
+        GrB_free(&ignore_nodes); \
+    }
 
 int LAGraph_IsolateSets(
     GrB_Matrix *IsolateSets, // Output: k x n Boolean matrix
@@ -170,22 +167,31 @@ int LAGraph_IsolateSets(
     LG_CLEAR_MSG;
     // LG_TRY(LAGraph_CheckGraph(G, msg));
     LG_ASSERT(IsolateSets != NULL, GrB_NULL_POINTER);
-
+    LG_ASSERT(A != NULL, GrB_NULL_POINTER);
+    GrB_Index nvals;
+    GrB_Matrix_nvals(&nvals, A);
+    if (nvals == 0)
+    {
+        *IsolateSets = NULL;
+        return GrB_SUCCESS;
+    }
     // GrB_Matrix A = G->A;
+    // dbg(A);
     GrB_Index n;
-    GrB_Vector ignore_nodes = NULL;
-
-    GRB_TRY(GrB_Matrix_nrows(&n, A));
-    GRB_TRY(GrB_Vector_new(&ignore_nodes, GrB_BOOL, n));
-    GRB_TRY(GrB_assign(ignore_nodes, NULL, NULL, (bool)false, GrB_ALL, n, NULL));
-
-    GrB_Index max_k = n; // Max possible number of isolate sets is <= n
-    GrB_Matrix result = NULL;
-    GRB_TRY(GrB_Matrix_new(&result, GrB_BOOL, max_k, n));
-
-    GrB_Vector iset = NULL; // start NULL -- LAGraph_IsolateSet will allocate
+    // start NULL -- LAGraph_IsolateSet will allocate
     GrB_Index k = 0;
     GrB_Index vals_res = 0;
+    GrB_Vector ignore_nodes = NULL;
+    GrB_Matrix result = NULL;
+    GrB_Vector iset = NULL;
+
+    GRB_TRY(GrB_Matrix_nrows(&n, A));
+    GrB_Index max_k = n; // Max possible number of isolate sets is <= n
+
+    GRB_TRY(GrB_Vector_new(&ignore_nodes, GrB_BOOL, n));
+    GRB_TRY(GrB_Matrix_new(&result, GrB_BOOL, max_k, n));
+
+    GRB_TRY(GrB_assign(ignore_nodes, NULL, NULL, (bool)false, GrB_ALL, n, NULL));
 
     while (true)
     {
@@ -212,10 +218,12 @@ int LAGraph_IsolateSets(
 
         k++;
     }
+
     GRB_TRY(GrB_Matrix_resize(result, k, n));
     *IsolateSets = result;
-    GrB_free(&ignore_nodes);
-    return (GrB_SUCCESS) ;
+
+    LG_FREE_ISS;
+    return (GrB_SUCCESS);
 #else
     return (GrB_NOT_IMPLEMENTED);
 #endif

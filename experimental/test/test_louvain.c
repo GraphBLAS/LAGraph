@@ -25,16 +25,9 @@ typedef struct
 } matrix_info;
 
 const matrix_info files[] = {
-
+    {"empty.mtx",0},
     {"comm0.mtx", 0.357142857142857},
-    // {"karate.mtx", .42},
-    // {"50node.mtx", .0000},
-    // {"20000node.mtx", .42},
-    // {"50000node.mtx", .42},
-    // {"ca-GrQc.mtx", .42},
-    // {"email-Enron.mtx", .42},
-    // {"com-Amazon.mtx", .42},
-    // {"com-Youtube.mtx", .42},
+    {"karate.mtx", .42},
     {"", -1}};
 
 
@@ -66,7 +59,7 @@ void test_LouvainSeq(void)
         // check if the pattern is symmetric - if it isn't make it.
         OK(LAGraph_Cached_IsSymmetricStructure(G, msg));
         GrB_Matrix S = NULL;
-
+        printf("Sequntial Louvain");
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
             OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
@@ -77,7 +70,7 @@ void test_LouvainSeq(void)
             // OK(LAGraph_Louvain_res(&S,G,.3,msg));
             tsimple = LAGraph_WallClockTime() - tsimple;
             double Q = 0.0;
-            OK(LAGr_Modularity2(&Q, 1.0, G->A, S, msg));
+            OK(LAGr_ModularityMatrix(&Q, 1.0, G->A, S, msg));
             printf("Q:%f\n", Q);
             // printf("Number of Communities: %d",comms);
             printf(" time: %f\n", tsimple);
@@ -115,7 +108,7 @@ void test_LouvainIS(void)
         // check if the pattern is symmetric - if it isn't make it.
         OK(LAGraph_Cached_IsSymmetricStructure(G, msg));
         GrB_Matrix S = NULL;
-
+        printf("Isolate Sets Louvain\n");
         for (int jit = 0 ; jit <= 1 ; jit++)
         {
             OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
@@ -130,7 +123,7 @@ void test_LouvainIS(void)
             tsimple = LAGraph_WallClockTime() - tsimple;
             double Q = 0.0; 
             double tsimple2 = LAGraph_WallClockTime();
-            OK(LAGr_Modularity2(&Q, 1.0, G->A, S, msg));
+            OK(LAGr_ModularityMatrix(&Q, 1.0, G->A, S, msg));
             tsimple2 = LAGraph_WallClockTime() - tsimple2;
 
             printf("Q:%f time to calc Q: %f\n", Q,tsimple2);

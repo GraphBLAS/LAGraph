@@ -19,12 +19,11 @@ typedef struct
     const double gamma;      // resolution of communities 1 for now
     const double mod;        // expected modularity from Q = 1/2m (S^TBS)
 } matrix_info;
-/**
- * G = A+AT(symmetric), Community matrix,Gamma,Modularity
- */
-const matrix_info files[] = {
-    {"comm0.mtx", "comm0_S.mtx", 1, -0.173469387755102},
-    {"comm0.mtx", "comm0_Sa.mtx", 1, 0.357142857142857},
+
+const matrix_info files[] = {   
+    {"empty.mtx","empty.mtx",1,0},
+    {"comm0.mtx", "comm0_S.mtx", 1, -0.17347},
+    {"comm0.mtx", "comm0_Sa.mtx", 1, 0.35714},
     // {"com-Amazon.mtx", "comm0_Sa.mtx",1, -1},
     {"", "", -1, -1}};
 void test_modularity(void)
@@ -51,11 +50,11 @@ void test_modularity(void)
         printf("\nInput of Matrix S:\n");
         GxB_print(S, 3);
 
-        GrB_Matrix B = NULL;
         double gamma = files[k].gamma;
         double Q;
-        OK(LAGr_Modularity2(&Q, gamma, A, S, msg));
-
+        OK(LAGr_ModularityMatrix(&Q, gamma, A, S, msg));
+        Q = floor(100000*Q)/100000;
+        TEST_CHECK(Q == files[k].mod);
         printf("Q:%.15g\n", Q);
         OK(GrB_free(&A));
         OK(GrB_free(&S));

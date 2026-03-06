@@ -1,5 +1,7 @@
 //------------------------------------------------------------------------------
-// LAGraph_LouvainSeq.c: Runs the Louvain Algorithm with Isolate Sets on a given Graph
+// LAGraph_LouvainIS.c: Runs the first phase of the Louvain Algorithm with 
+// Isolate Sets on a given Graph
+// 
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2024 by The LAGraph Contributors, All Rights Reserved.
@@ -12,7 +14,6 @@
 // DM22-0790
 
 // Contributed by Olumayowa Olowomeye, Texas A&M University
-
 //------------------------------------------------------------------------------
 
 // Current Test File: experimental/test/test_louvain.c
@@ -370,7 +371,7 @@ int LAGraph_LouvainIS(
     GRB_TRY(GxB_Container_new(&k_container));
 
     double m = 0.0;
-
+    
     void *f = NULL;
     uint64_t f_size, f_nvals = 0, f_nheld = 0;
     GrB_Type ftype = NULL;
@@ -396,6 +397,12 @@ int LAGraph_LouvainIS(
     dbg(k);
     GRB_TRY(GrB_Vector_reduce_FP64(&m, NULL, GrB_PLUS_MONOID_FP64, k, NULL));
     m /= 2;
+    if (m == 0)
+    {
+        *S_result = NULL;
+        LG_FREE_ALL;
+        return 0;
+    }
     GRB_TRY(GxB_unload_Vector_into_Container(k, k_container, NULL));
     GRB_TRY(GxB_Vector_unload(k_container->x, &f, &ftype, &f_nheld, &f_size, &f_handling, NULL));
     GRB_TRY(GxB_unload_Matrix_into_Container(S, S_container, NULL));

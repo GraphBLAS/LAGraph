@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_LouvainSeq.c: Runs the Louvain Algorithm on a given graph
+// LAGraph_LouvainSeq.c: Runs the first phase of the Louvain Algorithm on a given graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2024 by The LAGraph Contributors, All Rights Reserved.
@@ -12,7 +12,10 @@
 // DM22-0790
 
 // Contributed by Olumayowa Olowomeye, Texas A&M University
-
+// Originally written by T. M. Low, D. G. Spampinato, S. McMillan, and M. Pelletier, “Linear Algebraic Louvain Method in Python,” in
+//  2020 IEEE International Parallel and Distributed Processing Symposium Workshops 
+//  (IPDPSW), New Orleans, LA, USA: IEEE, May 2020, pp. 223–226. doi: 10.1109/IPDPSW50202.2020.00050.
+// Modified to fit GraphBLAS
 //------------------------------------------------------------------------------
 
 // Current Test File: experimental/test/test_louvain.c

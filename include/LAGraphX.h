@@ -1520,7 +1520,7 @@ int LAGr_MaxFlow(
 //------------------------------------------------------------------------------
 
 LAGRAPHX_PUBLIC
-int LAGr_Modularity2(
+int LAGr_ModularityMatrix(
     //output
     double *Q,
     //input
