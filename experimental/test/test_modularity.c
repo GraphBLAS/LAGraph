@@ -52,7 +52,7 @@ void test_modularity(void)
 
         double gamma = files[k].gamma;
         double Q;
-        OK(LAGr_ModularityMatrix(&Q, gamma, A, S, msg));
+        OK(LAGr_AdjModularity(&Q, gamma, A, S, msg));
         Q = floor(100000*Q)/100000;
         TEST_CHECK(Q == files[k].mod);
         printf("Q:%.15g\n", Q);

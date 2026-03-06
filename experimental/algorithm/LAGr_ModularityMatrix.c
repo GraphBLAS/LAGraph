@@ -64,7 +64,7 @@
 #define err(x, info)
 #endif
 
-int LAGr_ModularityMatrix(
+int LAGr_AdjModularity(
     double *Q,
     double gamma,
     GrB_Matrix A,

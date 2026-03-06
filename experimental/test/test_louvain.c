@@ -70,7 +70,7 @@ void test_LouvainSeq(void)
             // OK(LAGraph_Louvain_res(&S,G,.3,msg));
             tsimple = LAGraph_WallClockTime() - tsimple;
             double Q = 0.0;
-            OK(LAGr_ModularityMatrix(&Q, 1.0, G->A, S, msg));
+            OK(LAGr_AdjModularity(&Q, 1.0, G->A, S, msg));
             printf("Q:%f\n", Q);
             // printf("Number of Communities: %d",comms);
             printf(" time: %f\n", tsimple);
@@ -123,7 +123,7 @@ void test_LouvainIS(void)
             tsimple = LAGraph_WallClockTime() - tsimple;
             double Q = 0.0; 
             double tsimple2 = LAGraph_WallClockTime();
-            OK(LAGr_ModularityMatrix(&Q, 1.0, G->A, S, msg));
+            OK(LAGr_AdjModularity(&Q, 1.0, G->A, S, msg));
             tsimple2 = LAGraph_WallClockTime() - tsimple2;
 
             printf("Q:%f time to calc Q: %f\n", Q,tsimple2);
