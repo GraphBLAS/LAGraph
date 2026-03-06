@@ -19,7 +19,7 @@ jobs:
         # if there are multiple items in this list, only use should
         # deployit=true for just one of them.
          - {grb_version: 9.0.0, deployit: false}
-         - {grb_version: 10.1.0, deployit: true}
+         - {grb_version: 10.2.0, deployit: true}
 
     steps:
 
@@ -69,7 +69,7 @@ jobs:
       matrix:
         config:
          - {grb_version: 9.0.0}
-         - {grb_version: 10.1.0}
+         - {grb_version: 10.2.0}
 
     steps:
 
@@ -99,5 +99,5 @@ jobs:
         cd build
         cmake ..
         JOBS=2 make
-        ctest .
+        ctest . --rerun-failed --output-on-failure
 
