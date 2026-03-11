@@ -37,9 +37,9 @@ static int DMRead(
     if (buff[0] == 'p')
     {
       ASSERT(scanf(buff, "p max %d %d", n_nodes, n_edges) != 2) ;
-      rows = (int32_t *) malloc(n_edges * sizeof(GrB_Index)) ;
-      cols = (int32_t *) malloc(n_edges * sizeof(GrB_Index)) ;
-      weights = (int32_t *) malloc(n_edges * sizeof(GrB_Index)) ;
+      rows = (GrB_Index *) malloc(n_edges * sizeof(GrB_Index)) ;
+      cols = (GrB_Index *) malloc(n_edges * sizeof(GrB_Index)) ;
+      weights = (GrB_Index *) malloc(n_edges * sizeof(GrB_Index)) ;
     }
 
     if (buff[0] == 'n')
