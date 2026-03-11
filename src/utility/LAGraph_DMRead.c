@@ -44,11 +44,20 @@ static int DMRead(
 
     if (buff[0] == 'n')
     {
-      if (buff[strlen(buff)-2] == 't')
-	ASSERT(scanf(buff, "n %d, t", *t) != 2) ;
+      GrB_Index value = 0 ;
+      char which = ' ';
+      ASSERT(scanf(buff, "n %d, %c", value, which) != 2) ;
 
-      if (buff[strlen(buff)-2] == 's')
-	ASSERT(scanf(buff, "n %d, s", *s) != 2) ;
+      switch (which) {
+      case 's':
+	*s = value ;
+	break ;
+      case 't':
+	*t = value ;
+	break;
+      default:
+	break;
+      }
     }
 
     if (buff[0] == 'a')
