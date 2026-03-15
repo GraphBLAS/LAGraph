@@ -13,7 +13,7 @@
   free(weights);				\
 }
 
-static int DMRead(
+static int LAGraph_DMRead(
 		  GrB_Matrix* A,
 		  GrB_Index* s,
 		  GrB_Index* t,
