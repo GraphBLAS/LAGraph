@@ -1318,6 +1318,25 @@ int LAGr_EdgeBetweennessCentrality
 ) ;
 
 //------------------------------------------------------------------------------
+// Katz centrality
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_KatzCentrality
+(
+    // output:
+    GrB_Vector *centrality,
+    // input:
+    LAGraph_Graph G,
+    double alpha,
+    double beta,
+    int max_iter,
+    double tol,
+    bool normalize,
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
 // graph clustering with quality metrics
 //------------------------------------------------------------------------------
 
