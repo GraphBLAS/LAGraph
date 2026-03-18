@@ -1318,6 +1318,22 @@ int LAGr_EdgeBetweennessCentrality
 ) ;
 
 //------------------------------------------------------------------------------
+// Closeness centrality
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_ClosenessCentrality
+(
+    // output:
+    GrB_Vector *centrality,
+    // input:
+    LAGraph_Graph G,
+    GrB_Vector sources,         // target vertices to score; NULL/empty => all
+    const GrB_Matrix D,         // optional APSP matrix, D(i,j)=dist(i->j), or NULL
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
 // Katz centrality
 //------------------------------------------------------------------------------
 
@@ -1326,13 +1342,15 @@ int LAGr_KatzCentrality
 (
     // output:
     GrB_Vector *centrality,
+    int64_t *iters,
     // input:
     LAGraph_Graph G,
     double alpha,
     double beta,
-    int max_iter,
+    int64_t max_iter,
     double tol,
     bool normalize,
+    bool use_weights,
     char *msg
 ) ;
 

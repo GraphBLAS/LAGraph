@@ -35,14 +35,16 @@
 int LAGr_KatzCentrality
 (
     // output:
-    GrB_Vector *centrality,     
+    GrB_Vector *centrality,  
+    int64_t *iters,   
     // input:
     LAGraph_Graph G,            
     double alpha,           
     double beta,            
-    int max_iter,           
+    int64_t max_iter,           
     double tol,
     bool normalize,
+    bool use_weights,               // uses edge weights if true, otherwise treats all edges as weight 1
     char* msg              
 )
 {
@@ -54,7 +56,7 @@ int LAGr_KatzCentrality
     GrB_Index n = 0;
     GrB_Vector x = NULL, x_prev = NULL, b = NULL, t = NULL;
 
-    LG_ASSERT(centrality != NULL, GrB_NULL_POINTER);
+    LG_ASSERT (centrality != NULL && iters != NULL, GrB_NULL_POINTER) ;
     (*centrality) = NULL;
     LG_TRY(LAGraph_CheckGraph(G, msg));
 
@@ -68,6 +70,24 @@ int LAGr_KatzCentrality
     {
         AT = G->AT ;
         LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
+    }
+
+    // compute correct semiring based on whether edge weights are used
+    GrB_Semiring semiring = use_weights ? GrB_PLUS_TIMES_SEMIRING_FP64 : GxB_PLUS_SECOND_FP64;
+
+    if (use_weights)
+    {
+        // ensure min edge weight is available and nonnegative
+        LG_TRY (LAGraph_Cached_EMin (G, msg)) ;
+        LG_ASSERT_MSG (G->emin != NULL &&
+            (G->emin_state == LAGraph_VALUE ||
+             G->emin_state == LAGraph_BOUND),
+            LAGRAPH_NOT_CACHED, "G->emin is required") ;
+
+        double emin = 0 ;
+        GRB_TRY (GrB_Scalar_extractElement_FP64 (&emin, G->emin)) ;
+        LG_ASSERT_MSG (emin >= 0, GrB_INVALID_VALUE,
+            "use_weights=true requires nonnegative edge weights") ;
     }
 
     //--------------------------------------------------------------------------
@@ -86,19 +106,20 @@ int LAGr_KatzCentrality
     GRB_TRY(GrB_assign(b, NULL, NULL, beta, GrB_ALL, n, NULL));
 
     // first iteration is always done
-    double rdiff = 1 ;       
+    double rdiff = 1 ;   
 
-    for (int iter = 0 ; rdiff >= n * tol ; iter++)
+    // TODO: determine best way to stop 
+    for ((*iters) = 0 ; ; (*iters)++)
     {
         // check for convergence failure
-        LG_ASSERT_MSGF (iter < max_iter, LAGRAPH_CONVERGENCE_FAILURE,
+        LG_ASSERT_MSGF ((*iters) < max_iter, LAGRAPH_CONVERGENCE_FAILURE,
             "katz centrality failed to converge in %d iterations", max_iter) ;
 
         // swap x and x_prev
         GrB_Vector temp = x_prev ; x_prev = x ; x = temp ;
 
         // x = A' * x_prev
-        GRB_TRY (GrB_mxv (x, NULL, NULL, GxB_PLUS_TIMES_FP64, AT, x_prev, NULL)) ;
+        GRB_TRY (GrB_mxv (x, NULL, NULL, semiring, AT, x_prev, NULL)) ;
 
         // x = alpha * x + beta
         GRB_TRY (GrB_apply (x, NULL, NULL, GrB_TIMES_FP64, alpha, x, NULL)) ;
@@ -110,6 +131,8 @@ int LAGr_KatzCentrality
         GRB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP64, t, NULL)) ;
         // rdiff = sum (t)
         GRB_TRY (GrB_reduce (&rdiff, NULL, GrB_PLUS_MONOID_FP64, t, NULL)) ;
+
+        if (rdiff < tol) break ;        // TODO: revisit
     }
 
     // normalize using the L2 norm if flag is set
@@ -123,8 +146,7 @@ int LAGr_KatzCentrality
 
         if (sumsq > 0)
         {
-            double scale = 1.0 / sqrt (sumsq) ;
-            GRB_TRY (GrB_apply (x, NULL, NULL, GrB_TIMES_FP64, x, scale, NULL)) ;
+            GRB_TRY (GrB_apply (x, NULL, NULL, GrB_DIV_FP64, x, sqrt(sumsq), NULL)) ;
         }
     }
 

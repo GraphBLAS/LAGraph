@@ -84,6 +84,7 @@ void test_katz_diamonds (void)
 	OK (LAGraph_Init (msg)) ;
     GrB_Matrix A = NULL ;
 	GrB_Vector centrality = NULL ;
+    int64_t niters = 0 ;
 
     // Create diamonds graph
     snprintf (filename, LEN, LG_DATA_DIR "%s", "diamonds.mtx") ;
@@ -108,9 +109,10 @@ void test_katz_diamonds (void)
 
     // Compute katz centrality
     double t = LAGraph_WallClockTime() ;
-    OK (LAGr_KatzCentrality (&centrality, G, alpha, 1.0, 1000, 1e-6, false, msg)) ;
+    OK (LAGr_KatzCentrality (&centrality, &niters, G, alpha, 1.0, 1000, 1e-6, false, false, msg)) ;
     t = LAGraph_WallClockTime() - t ;
     printf ("  Time for LAGr_KatzCentrality: %g sec\n", t) ;
+    printf ("  Iterations for LAGr_KatzCentrality: %" PRId64 "\n", niters) ;
 
 	// Compare with reference values.
 	GrB_Index cn = 0, cnvals = 0 ;
@@ -137,6 +139,7 @@ void test_katz_karate (void)
 	OK (LAGraph_Init (msg)) ;
     GrB_Matrix A = NULL ;
 	GrB_Vector centrality = NULL ;
+    int64_t niters = 0 ;
 
     // Create karate graph
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
@@ -162,9 +165,10 @@ void test_katz_karate (void)
 
     // Compute katz centrality
     double t = LAGraph_WallClockTime() ;
-    OK (LAGr_KatzCentrality (&centrality, G, alpha, 1.0, 1000, 1e-6, false, msg)) ;
+    OK (LAGr_KatzCentrality (&centrality, &niters, G, alpha, 1.0, 1000, 1e-6, false, false, msg)) ;
     t = LAGraph_WallClockTime() - t ;
     printf ("  Time for LAGr_KatzCentrality: %g sec\n", t) ;
+    printf ("  Iterations for LAGr_KatzCentrality: %" PRId64 "\n", niters) ;
 
 	// Compare with reference values.
 	GrB_Index cn = 0, cnvals = 0 ;

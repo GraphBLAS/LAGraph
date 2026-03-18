@@ -4,6 +4,7 @@
 
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LAGraphX.h"
+#include <stdlib.h>
 
 #define NTHREAD_LIST 1
 #define THREAD_LIST 0
@@ -60,10 +61,36 @@ int main(int argc, char **argv)
     printf("\n");
 
     //--------------------------------------------------------------------------
-    // read in the graph
+    // read in the graph and parse optional Katz parameters
     //--------------------------------------------------------------------------
 
+    // Usage:
+    //   katzCentrality_demo <matrix-market-file> <alpha>
+    //                       [beta] [max_iters] [tol] [normalize] [use_weights]
+    // where normalize and use_weights are 0/1.
+    if (argc != 1 && (argc < 3 || argc > 8))
+    {
+        printf("Usage: %s <matrix-market-file> <alpha> [beta] [max_iters] [tol] [normalize] [use_weights]\n", argv[0]);
+        return (GrB_INVALID_VALUE);
+    }
+
     char *matrix_name = (argc > 1) ? argv[1] : "stdin";
+
+    double alpha = 0.01;
+    double beta = 1.00;
+    int64_t iters = 0;
+    int64_t max_iter = 1000;
+    double tol = 1e-6;
+    bool normalize = false;
+    bool use_weights = false;
+
+    if (argc > 2) alpha = strtod(argv[2], NULL);
+    if (argc > 3) beta = strtod(argv[3], NULL);
+    if (argc > 4) max_iter = (int64_t) strtoll(argv[4], NULL, 10);
+    if (argc > 5) tol = strtod(argv[5], NULL);
+    if (argc > 6) normalize = (atoi(argv[6]) != 0);
+    if (argc > 7) use_weights = (atoi(argv[7]) != 0);
+
     LAGRAPH_TRY(readproblem(&G, NULL,
                             true, true, true, NULL, false, argc, argv));
 
@@ -77,16 +104,13 @@ int main(int argc, char **argv)
     // benchmark Katz centrality
     //--------------------------------------------------------------------------
 
-    double alpha = 0.01;
-    double beta = 1.00;
-    int max_iter = 1000;
-    double tol = 1e-6;
-    bool normalize = false;
+    printf("\nKatz params: alpha=%g beta=%g max_iter=%lld tol=%g normalize=%d use_weights=%d\n\n",
+        alpha, beta, (long long) max_iter, tol, (int) normalize, (int) use_weights);
 
     // warmup for more accurate timing
     double tt = LAGraph_WallClockTime();
-    LAGRAPH_TRY(LAGr_KatzCentrality(&c, G, alpha, beta,
-                                    max_iter, tol, normalize, msg));
+    LAGRAPH_TRY(LAGr_KatzCentrality(&c, &iters, G, alpha, beta,
+                                    max_iter, tol, normalize, use_weights, msg));
     tt = LAGraph_WallClockTime() - tt;
     GRB_TRY(GrB_free(&c));
     printf("warmup time %g sec\n", tt);
@@ -102,8 +126,8 @@ int main(int argc, char **argv)
         for (int trial = 0; trial < ntrials; trial++)
         {
             double t1 = LAGraph_WallClockTime();
-            LAGRAPH_TRY(LAGr_KatzCentrality(&c, G, alpha, beta,
-                                            max_iter, tol, normalize, msg));
+            LAGRAPH_TRY(LAGr_KatzCentrality(&c, &iters, G, alpha, beta,
+                                            max_iter, tol, normalize, use_weights, msg));
             GRB_TRY(GrB_free(&c));
             ttrial[trial] = LAGraph_WallClockTime() - t1;
             ttot += ttrial[trial];
