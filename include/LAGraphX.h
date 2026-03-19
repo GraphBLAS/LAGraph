@@ -1593,6 +1593,23 @@ int LAGraph_LouvainIS(
     LAGraph_Graph G,
     char *msg
 );
+
+//------------------------------------------------------------------------------
+// LAGraph_DIMACSMaxFlowRead: read a DIMACS13 MaxFlow problem
+//------------------------------------------------------------------------------
+
+int LAGraph_DIMACSMaxFlowRead
+(
+    // output:
+    GrB_Matrix* A,  // adjancency matrix, with int32 weights
+    GrB_Index* s,   // source node
+    GrB_Index* t,   // sink node
+    // input:
+    FILE* f,        // an open file containing the DIMAX MaxFlow problem
+    char* msg
+) ;
+
+
 #if defined ( __cplusplus )
 }
 #endif
