@@ -12,7 +12,7 @@
 // DM22-0790
 
 // Contributed by Yongzhe Zhang (zyz915@gmail.com)
-// Revised by Gabriel Gomez and Tim Davis
+// Revised by Gabriel A. Gomez and Tim Davis
 
 //------------------------------------------------------------------------------
 

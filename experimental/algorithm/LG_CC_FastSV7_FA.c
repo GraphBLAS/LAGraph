@@ -34,8 +34,8 @@
 // Changed to use GxB load/unload.  Converted to use the LAGraph_Graph object.
 // Exploiting iso status for the temporary matrices Parent and T.
 
-// Modified by Gabriel Gomez, Texas A&M University: moved Parent matrix trick 
-// out to LAGraph_FastAssign.
+// Modified by Gabriel A. Gomez, Texas A&M University: moved Parent matrix
+// trick out to LAGraph_FastAssign.
 
 // The input graph G must be undirected, or directed and with an adjacency
 // matrix that has a symmetric structure.  Self-edges (diagonal entries) are
