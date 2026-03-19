@@ -1,3 +1,21 @@
+//------------------------------------------------------------------------------
+// experimental/test/test_MinCut: tests for LAGraph_MinCut
+//------------------------------------------------------------------------------
+
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
+
+// Contributed by Darin Peries and Tim Davis, Texas A&M University
+
+//------------------------------------------------------------------------------
+
+
 #include <stdio.h>
 #include <acutest.h>
 #include <LAGraphX.h>
@@ -67,7 +85,7 @@ void test_MinCut() {
     printf("%s\n", msg);
     printf("flow is: %lf\n", flow);
 
-    OK(LAGraph_MinCut(&S, &S_bar, &cut_set, G, R, tests[test].s, tests[test].t, msg));
+    OK(LAGraph_MinCut(&S, &S_bar, &cut_set, R, G, tests[test].s, msg));
     printf("%s\n", msg);
 
     OK(GrB_reduce(&min_cut, NULL, GrB_PLUS_MONOID_FP64, cut_set, NULL));
@@ -75,7 +93,6 @@ void test_MinCut() {
     TEST_CHECK(flow == min_cut);
     printf("The min cut: %lf\n", min_cut);
 
-    GrB_free(&A);
     GrB_free(&R);
     GrB_free(&S);
     GrB_free(&S_bar);

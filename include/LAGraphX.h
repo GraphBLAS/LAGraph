@@ -1523,10 +1523,9 @@ int LAGraph_MinCut(
     GrB_Vector* S_bar,
     GrB_Matrix* cut_set,
     // inputs
-    LAGraph_Graph G_origin, //original graph with capacities
     GrB_Matrix R, //residual graph
-    GrB_Index s, //source node index
-    GrB_Index t, //sink node index
+    LAGraph_Graph G_origin, //original graph with capacities
+    GrB_Index src, //source node index from max flow
     char *msg
 );
 
