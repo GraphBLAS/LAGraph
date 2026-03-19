@@ -155,27 +155,34 @@ int LAGr_Modularity(
     GRB_TRY(GrB_reduce(vmask, NULL, NULL, GrB_LOR_MONOID_BOOL, C, NULL));
     GRB_TRY(GrB_apply(vmask, vmask, NULL, GrB_LNOT, vmask, NULL));
 
+// FIXME:
+#if 1
+
     // If any of the above vectors have fewer entries than nclusters, this means
     // that there are singleton clusters with one vertex/no out-degree/no
     // in-degree. So we need to add explicit zeros wherever values are missing
     // for further calculations.
     GrB_Index nclusters, nl, nk_out, nk_in;
     GRB_TRY(GrB_Vector_nvals(&nclusters, vmask));
+
     GRB_TRY(GrB_Vector_nvals(&nl, l));
-    GRB_TRY(GrB_Vector_nvals(&nk_out, l));
-    GRB_TRY(GrB_Vector_nvals(&nk_in, l));
+    GRB_TRY(GrB_Vector_nvals(&nk_out, k_out /* l */));
+    GRB_TRY(GrB_Vector_nvals(&nk_in, k_in /* l */));
 
     if (nclusters != nl)
     {
+        // printf ("l needs padding (%ld, %ld)\n", nclusters, nl) ;
         GRB_TRY(GrB_assign(l, l, NULL, vmask, GrB_ALL, nclusters, GrB_DESC_SC));
     }
     if (nclusters != nk_out)
     {
+        // printf ("k_out needs padding (%ld, %ld)\n", nclusters, nk_out) ;
         GRB_TRY(GrB_assign(k_out, k_out, NULL, vmask, GrB_ALL, nclusters,
                            GrB_DESC_SC));
     }
     if (nclusters != nk_in)
     {
+        // printf ("k_in needs padding (%ld, %ld)\n", nclusters, nk_in) ;
         GRB_TRY(GrB_assign(k_in, k_in, NULL, vmask, GrB_ALL, nclusters,
                            GrB_DESC_SC));
     }
@@ -192,11 +199,11 @@ int LAGr_Modularity(
     GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, (int64_t *) k_outX, &nclusters, k_out));
     GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, (int64_t *) k_inX, &nclusters, k_in));
 
-    GrB_Index m, out_degree_sum, in_degree_sum, L_c;
+    GrB_Index out_degree_sum ;
     GRB_TRY(GrB_reduce(&out_degree_sum, NULL, GrB_PLUS_MONOID_INT64, out_degree,
                        NULL));
 
-    m = out_degree_sum;
+    double m = out_degree_sum;
     double norm = 1.0 / (m * m);
 
     // compute modularity
@@ -207,6 +214,7 @@ int LAGr_Modularity(
         mod += (1.0 * lX[c] / nedges) -
                (resolution * ((k_outX[c] * k_inX[c]) * norm));
     }
+#endif
 
     // TODO: return a GrB_Scalar??
     (*mod_handle) = mod;

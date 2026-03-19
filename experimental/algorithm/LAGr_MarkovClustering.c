@@ -141,6 +141,7 @@ int LAGr_MarkovClustering(
             GRB_TRY(GrB_reduce(&mse, NULL, GrB_PLUS_MONOID_FP32, MSE, NULL));
             GRB_TRY(GrB_Matrix_nvals(&nvals, MSE));
             mse /= nvals;
+            // FIXME: if iter > max_iter, return LAGRAPH_CONVERGENCE_FAILURE
             if (iter > max_iter || mse < convergence_threshold)
                 break;
         }
