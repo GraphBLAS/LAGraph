@@ -224,8 +224,8 @@ static GrB_Info build_argmax_operator(
     }
 void extract_k_if_gain(void *out, const void *in)
 {
-    const argmax_tup *a = in;
-    int64_t *k_out = out;
+    const argmax_tup *a = (const argmax_tup *) in;
+    int64_t *k_out = (int64_t *) out;
     if (a->score > 0.0)
     {
         *k_out = a->comm;
@@ -237,8 +237,8 @@ void extract_k_if_gain(void *out, const void *in)
 }
 #define EXTRACT_K_IF_GAIN_SRC                                       \
     "void extract_k_if_gain(void *out, const void *in) {\n"         \
-    "    const argmax_tup *a = in;\n"                               \
-    "    int64_t *k_out = out;\n"                                   \
+    "    const argmax_tup *a = (const argmax_tup *) in;\n"          \
+    "    int64_t *k_out = (int64_t *) out;\n"                       \
     "    if (a->score > 0.0) {\n"                                   \
     "        *k_out = a->comm;\n"                                   \
     "    } else {\n"                                                \
