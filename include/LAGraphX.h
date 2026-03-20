@@ -1329,7 +1329,7 @@ int LAGr_HarmonicCentrality
     GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
                                    // (pass NULL, not yet implemented)
     // inputs:
-    const GrB_Matrix A,            // adjacency matrix
+    const LAGraph_Graph G,         // input graph
     const GrB_Vector node_weights, // participating nodes and their weights
     char *msg
 ) ;
@@ -1346,7 +1346,7 @@ int LAGr_HarmonicCentrality_exact
     GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
                                    // (pass NULL, not yet implemented)
     // inputs:
-    const GrB_Matrix A,            // adjacency matrix
+    const LAGraph_Graph G,         // input graph
     const GrB_Vector nodes,        // nodes to calculate centrality of
     const GrB_Vector node_weights, // participating nodes and their weights
     char *msg

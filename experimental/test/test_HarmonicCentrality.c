@@ -26,6 +26,7 @@
 
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL ;
+LAGraph_Graph G = NULL ;
 GrB_Vector scores_approx = NULL ;
 GrB_Vector scores_exact = NULL ;
 GrB_Vector node_weights = NULL ;
@@ -80,9 +81,9 @@ double max_relative_error
 // test_HarmonicCentrality: compare approximate vs exact on small graphs
 //------------------------------------------------------------------------------
 
+#if LG_SUITESPARSE_GRAPHBLAS_V10
 void test_HarmonicCentrality (void)
 {
-    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
 
     for (int k = 0 ; ; k++)
@@ -102,6 +103,10 @@ void test_HarmonicCentrality (void)
         GrB_Index n ;
         OK (GrB_Matrix_nrows (&n, A)) ;
 
+        // construct a graph
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
         // create boolean node_weights (all nodes, weight = true)
         OK (GrB_Vector_new (&node_weights, GrB_BOOL, n)) ;
         OK (GrB_Vector_assign_BOOL (
@@ -109,12 +114,11 @@ void test_HarmonicCentrality (void)
 
         // compute approximate harmonic centrality
         OK (LAGr_HarmonicCentrality (
-            &scores_approx, NULL, A, node_weights, msg)) ;
-        printf ("%s", msg);
+            &scores_approx, NULL, G, node_weights, msg)) ;
 
         // compute exact harmonic centrality
         OK (LAGr_HarmonicCentrality_exact (
-            &scores_exact, NULL, A, node_weights, node_weights, msg)) ;
+            &scores_exact, NULL, G, node_weights, node_weights, msg)) ;
 
         // print results for small graphs
         LAGraph_PrintLevel pr =
@@ -133,23 +137,24 @@ void test_HarmonicCentrality (void)
         TEST_MSG ("Relative error too large: %.2f%%", rel_err * 100) ;
 
         // cleanup for this iteration
-        OK (GrB_free (&A)) ;
+        OK (LAGraph_Delete (&G, msg)) ;
         OK (GrB_free (&scores_approx)) ;
         OK (GrB_free (&scores_exact)) ;
         OK (GrB_free (&node_weights)) ;
     }
 
     LAGraph_Finalize (msg) ;
-    #endif
 }
+#endif
+
 
 //------------------------------------------------------------------------------
 // test_HarmonicCentrality_empty: test with empty node set
 //------------------------------------------------------------------------------
 
+#if LG_SUITESPARSE_GRAPHBLAS_V10
 void test_HarmonicCentrality_empty (void)
 {
-    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
@@ -161,23 +166,28 @@ void test_HarmonicCentrality_empty (void)
     GrB_Index n ;
     OK (GrB_Matrix_nrows (&n, A)) ;
 
+    // construct a graph
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
     // empty node_weights — no participating nodes
     OK (GrB_Vector_new (&node_weights, GrB_BOOL, n)) ;
 
-    OK (LAGr_HarmonicCentrality (&scores_approx, NULL, A, node_weights, msg)) ;
+    OK (LAGr_HarmonicCentrality (&scores_approx, NULL, G, node_weights, msg)) ;
 
     // scores should exist but have no entries
     GrB_Index nvals ;
     OK (GrB_Vector_nvals (&nvals, scores_approx)) ;
     TEST_CHECK (nvals == 0) ;
 
-    OK (GrB_free (&A)) ;
+    OK (LAGraph_Delete (&G, msg)) ;
     OK (GrB_free (&scores_approx)) ;
     OK (GrB_free (&node_weights)) ;
 
     LAGraph_Finalize (msg) ;
-    #endif
 }
+#endif
+
 
 //------------------------------------------------------------------------------
 // test_errors: test error handling
@@ -185,7 +195,6 @@ void test_HarmonicCentrality_empty (void)
 
 void test_errors (void)
 {
-    #if LAGRAPH_SUITESPARSE
     LAGraph_Init (msg) ;
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
@@ -196,18 +205,24 @@ void test_errors (void)
 
     GrB_Index n ;
     OK (GrB_Matrix_nrows (&n, A)) ;
+
+    // construct a graph
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
     OK (GrB_Vector_new (&node_weights, GrB_BOOL, n)) ;
     OK (GrB_Vector_assign_BOOL (
         node_weights, NULL, NULL, true, GrB_ALL, n, NULL)) ;
 
     int result ;
 
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     // scores is NULL
-    result = LAGr_HarmonicCentrality (NULL, NULL, A, node_weights, msg) ;
+    result = LAGr_HarmonicCentrality (NULL, NULL, G, node_weights, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
-    // A is NULL
+    // G is NULL
     result = LAGr_HarmonicCentrality (
         &scores_approx, NULL, NULL, node_weights, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
@@ -215,22 +230,35 @@ void test_errors (void)
 
     // node_weights is NULL
     result = LAGr_HarmonicCentrality (
-        &scores_approx, NULL, A, NULL, msg) ;
+        &scores_approx, NULL, G, NULL, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
+    #else
+    // Below V10, functions should return GrB_NOT_IMPLEMENTED
+    result = LAGr_HarmonicCentrality (
+        &scores_approx, NULL, G, node_weights, msg) ;
+    printf ("\nresult: %d (expected GrB_NOT_IMPLEMENTED)\n", result) ;
+    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
 
-    OK (GrB_free (&A)) ;
+    result = LAGr_HarmonicCentrality_exact (
+        &scores_approx, NULL, G, node_weights, node_weights, msg) ;
+    printf ("\nresult: %d (expected GrB_NOT_IMPLEMENTED)\n", result) ;
+    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
+    #endif
+
+    OK (LAGraph_Delete (&G, msg)) ;
     OK (GrB_free (&node_weights)) ;
 
     LAGraph_Finalize (msg) ;
-    #endif
 }
 
 //****************************************************************************
 
 TEST_LIST = {
+    #if LG_SUITESPARSE_GRAPHBLAS_V10
     {"HarmonicCentrality", test_HarmonicCentrality},
     {"HarmonicCentrality_empty", test_HarmonicCentrality_empty},
+    #endif
     {"HarmonicCentrality_errors", test_errors},
     {NULL, NULL}
 } ;

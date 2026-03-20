@@ -40,6 +40,7 @@ int main (int argc, char **argv)
     char msg [LAGRAPH_MSG_LEN] ;
 
     GrB_Matrix A = NULL ;
+    LAGraph_Graph G = NULL ;
     GrB_Vector scores_approx = NULL ;
     GrB_Vector scores_exact = NULL ;
     GrB_Vector node_weights = NULL ;
@@ -80,6 +81,9 @@ int main (int argc, char **argv)
     printf ("Graph: %s (%" PRIu64 " nodes, %" PRIu64 " edges)\n",
         matrix_name, (uint64_t) n, (uint64_t) nvals) ;
 
+    // construct a graph
+    LAGRAPH_TRY (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+
     //--------------------------------------------------------------------------
     // create boolean node_weights (all nodes participate with weight = 1)
     //--------------------------------------------------------------------------
@@ -94,7 +98,7 @@ int main (int argc, char **argv)
 
     t = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGr_HarmonicCentrality (
-        &scores_approx, NULL, A, node_weights, msg)) ;
+        &scores_approx, NULL, G, node_weights, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGr_HarmonicCentrality (approx): %g sec\n", t) ;
 
@@ -111,7 +115,7 @@ int main (int argc, char **argv)
     {
         t = LAGraph_WallClockTime ( ) ;
         LAGRAPH_TRY (LAGr_HarmonicCentrality_exact (
-            &scores_exact, NULL, A, node_weights, node_weights, msg)) ;
+            &scores_exact, NULL, G, node_weights, node_weights, msg)) ;
         t = LAGraph_WallClockTime ( ) - t ;
         printf ("\nTime for LAGr_HarmonicCentrality_exact:  %g sec\n", t) ;
 
@@ -124,6 +128,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     LG_FREE_ALL ;
+    LAGraph_Delete (&G, msg) ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }
