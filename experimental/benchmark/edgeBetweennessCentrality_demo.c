@@ -29,7 +29,7 @@ double difference(GrB_Matrix bc, GrB_Matrix reference_bc)
     GrB_free(&diff) ;
 
     return err ;
-} ;
+}
 
 int main (int argc, char **argv)
 {

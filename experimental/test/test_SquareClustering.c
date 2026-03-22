@@ -100,7 +100,7 @@ void test_SquareClustering (void)
     OK (LAGraph_Delete (&G, msg)) ;
 
     LAGraph_Finalize (msg) ;
-};
+}
 
 TEST_LIST = {
     {"SquareClustering", test_SquareClustering},
