@@ -261,7 +261,7 @@ int LAGraph_Incidence_Matrix
 ) ;
 
 LAGRAPHX_PUBLIC
-int LAGraph_Hash_Vector
+GrB_Info LAGraph_Hash_Vector
 (
     uint64_t *hash,
     GrB_Vector v,
