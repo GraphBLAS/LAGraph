@@ -35,7 +35,7 @@ int LAGraph_Version
 (
     // output:
     int version_number [3],     // user-provided array of size 3
-    char version_date [LAGRAPH_MSG_LEN],    // user-provided array
+    char *version_date,         // user-provided array of size >= LAGRAPH_MSG_LEN
     char *msg
 )
 {
