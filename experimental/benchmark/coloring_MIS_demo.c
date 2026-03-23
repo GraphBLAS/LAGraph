@@ -36,7 +36,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     double t = LAGraph_WallClockTime ( ) ;
-    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
+    //char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     LG_TRY (readproblem (
         &G,         // the graph that is read from stdin or a file
         NULL,       // source nodes (none, if NULL)
@@ -58,6 +58,7 @@ int main (int argc, char **argv)
     
     t = LAGraph_WallClockTime ( ) ;
     int status = (LAGraph_coloring_MIS (&C, &num_colors, G, msg)) ;
+    LG_TRY(status);
     alg_time = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for MIS Coloring:        %g sec\n", alg_time) ;
 
@@ -65,7 +66,6 @@ int main (int argc, char **argv)
     // check the results
     //--------------------------------------------------------------------------
 
-    bool isequal ;
     t = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LG_check_coloring(G, C, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;

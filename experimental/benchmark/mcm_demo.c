@@ -143,7 +143,7 @@ int main(int argc, char **argv)
         fflush(stdout);
         return 0;
     }
-    char *matrix_name = (argc > 1) ? argv[1] : "stdin";
+    //char *matrix_name = (argc > 1) ? argv[1] : "stdin";
 
     bool make_symmetric = false, remove_self_edges = false, structural = true,
          ensure_positive = false;

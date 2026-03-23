@@ -51,7 +51,7 @@ int main (int argc, char **argv)
     // mtx2bin_demo).
 
     double t = LAGraph_WallClockTime ( ) ;
-    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
+    //char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     LG_TRY (readproblem (
         &G,         // the graph that is read from stdin or a file
         NULL,       // source nodes (none, if NULL)
@@ -85,14 +85,14 @@ int main (int argc, char **argv)
     printf ("GrB_mxm: C<A> = A*A', %d trials\n", NTRIALS) ;
 
     t = LAGraph_WallClockTime ( ) ;
-    double t1 = t ;
+    // double t1 = t ;
     for (int k = 0 ; k < NTRIALS ; k++)
     {
         // C<A,struct> = A*A'
         GRB_TRY (GrB_mxm (C, A, NULL, LAGraph_plus_one_uint32, A, A,
             GrB_DESC_RST1)) ;
-        double tt = LAGraph_WallClockTime ( ) - t1 ;
         #if 0
+        double tt = LAGraph_WallClockTime ( ) - t1 ;
         if (tt > 3)
         {
             printf ("%d ok, %g sec\n", k, LAGraph_WallClockTime ( ) - t) ;

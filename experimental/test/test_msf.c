@@ -206,7 +206,6 @@ void test_inf_msf (void)
 
     // load the matrix as A
     const char *aname = "bcsstk13.mtx" ;
-    bool symmetric = 1 ;
     printf ("\n================================== %s:\n", aname) ;
     TEST_CASE (aname) ;
     snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;

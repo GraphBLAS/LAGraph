@@ -43,7 +43,6 @@ int main (int argc, char **argv)
 
     GrB_Matrix A = NULL ;
     GrB_Matrix Fnet = NULL ;
-    GrB_Matrix Abool = NULL ;
     FILE *f = NULL ;
 
     // start GraphBLAS and LAGraph
@@ -115,7 +114,6 @@ int main (int argc, char **argv)
 
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
-            int64_t seed = trial * n + 1 ;
             double tt = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LAGraph_FastGraphletTransform (&Fnet, G, true, msg)) ;
             tt = LAGraph_WallClockTime ( ) - tt ;

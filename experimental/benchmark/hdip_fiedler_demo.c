@@ -257,7 +257,7 @@ int main(int argc, char **argv)
     // mtx2bin_demo).
 
     double t = LAGraph_WallClockTime();
-    char *matrix_name = (argc > 1) ? argv[1] : "stdin";
+    //char *matrix_name = (argc > 1) ? argv[1] : "stdin";
     
     LG_TRY(readproblem(
         &G,           // the graph that is read from stdin or a file
@@ -327,6 +327,7 @@ int main(int argc, char **argv)
 
     t = LAGraph_WallClockTime( );
     int result = LAGraph_mypcg2(&steper, &k, Y, u, alpha, indiag, x, .000001, 50, msg);
+    LG_TRY(result);
     t = LAGraph_WallClockTime( ) - t;
     printf("Time for LAGraph_mypcg2: %g sec\n", t);
 

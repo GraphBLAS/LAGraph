@@ -21,7 +21,6 @@ int main(int argc, char **argv)
 {
     char msg [LAGRAPH_MSG_LEN] ;
 
-    LAGraph_Graph G = NULL ;
     GrB_Matrix A = NULL ;
     GrB_Matrix Res = NULL ;
     GrB_Scalar s = NULL ;
@@ -44,7 +43,7 @@ int main(int argc, char **argv)
 
         GRB_TRY (GrB_Matrix_new (&Res, GrB_FP64, n, n)) ;
 
-        GrB_Index D_nvals, A_nvals ;
+        GrB_Index A_nvals ;
         GRB_TRY (GrB_Matrix_nvals (&A_nvals, A)) ;
         printf ("nvals: A: %" PRIu64 "\n", A_nvals) ;
 

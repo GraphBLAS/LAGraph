@@ -18,7 +18,6 @@ int main(int argc, char **argv)
 {
     char msg [LAGRAPH_MSG_LEN] ;
 
-    LAGraph_Graph G = NULL ;
     GrB_Matrix D = NULL ;
     GrB_Matrix B = NULL ;
     GrB_Matrix Res = NULL ;
@@ -26,10 +25,6 @@ int main(int argc, char **argv)
 
     bool burble = false ; 
     demo_init (burble) ;
-
-    GrB_Index n = (argc > 2 ? atoi (argv [2]) : DEFAULT_SIZE) ;
-    double density = (argc > 3 ? atof (argv [3]) : DEFAULT_DENSITY) ;
-    uint64_t seed = (argc > 4 ? atoll (argv [4]) : DEFAULT_SEED) ;
 
     int ntrials = 10 ;
 

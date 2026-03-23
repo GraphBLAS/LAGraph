@@ -39,7 +39,6 @@ int main (int argc, char **argv)
 
     char msg [LAGRAPH_MSG_LEN] ;        // for error messages from LAGraph
     LAGraph_Graph G = NULL ;
-    GrB_Matrix C = NULL, R = NULL ;
     GrB_Matrix *Cset = NULL ;
     int64_t *ntris = NULL, *nedges = NULL, *nsteps = NULL ;
 
@@ -56,7 +55,7 @@ int main (int argc, char **argv)
     // mtx2bin_demo).
 
     double t = LAGraph_WallClockTime ( ) ;
-    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
+    //char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     LG_TRY (readproblem (
         &G,         // the graph that is read from stdin or a file
         NULL,       // source nodes (none, if NULL)

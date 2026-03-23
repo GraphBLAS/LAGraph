@@ -50,10 +50,7 @@ int main (int argc, char **argv)
     GrB_Index *rand_a = NULL;
     GrB_Scalar bool1 = NULL;
     bool *set_a = NULL;
-    GrB_Index r_size = 0, ramp_size = 0, junk_size = 0;
-    bool iso = false;
 
-    bool *val_of_P = NULL;
     double t = LAGraph_WallClockTime ( ) ;
     GrB_Index size = (argc > 1) ? atoll(argv [1]) : 1000 ;
     int shift_e = 63 - (int) floor (log2 ((double) size)) ;

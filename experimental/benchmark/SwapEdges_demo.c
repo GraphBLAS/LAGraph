@@ -57,7 +57,7 @@ int main (int argc, char **argv)
 
     double t = LAGraph_WallClockTime ( ) ;
     GrB_Index swaps = (argc > 2) ? atoi(argv [2]): 100;
-    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
+    //char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     FILE *f = (argc > 3) ? fopen (argv[3], "w"): NULL;
     LG_TRY (readproblem (
         &G,         // the graph that is read from stdin or a file

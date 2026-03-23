@@ -35,7 +35,6 @@ GrB_Matrix A = NULL, B = NULL, C2 = NULL, Cin = NULL, C = NULL ;
 void test_mxm (void)
 {
 
-    GrB_Info info ;
     OK (LAGraph_Init (msg)) ;
     uint64_t n = 256 ;
     uint64_t seed = 0 ;

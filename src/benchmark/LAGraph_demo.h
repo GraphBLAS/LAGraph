@@ -1044,7 +1044,6 @@ static int readproblem          // returns 0 if successful, -1 if failure
             {
                 printf ("forcing G-> to be symmetric (via A = A+A')\n") ;
                 GrB_BinaryOp op = NULL ;
-                GrB_Type type ;
                 if      (atype == GrB_BOOL  ) op = GrB_LOR ;
                 else if (atype == GrB_INT8  ) op = GrB_PLUS_INT8 ;
                 else if (atype == GrB_INT16 ) op = GrB_PLUS_INT16 ;

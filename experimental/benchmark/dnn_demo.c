@@ -106,7 +106,6 @@ int LAGraph_tsvread
     // create the output matrix
     //--------------------------------------------------------------------------
 
-    GrB_Info info ;
     GrB_Matrix C = NULL ;
     (*Chandle) = NULL ;
     GRB_TRY (GrB_Matrix_new (&C, type, nrows, ncols)) ;
@@ -183,7 +182,6 @@ int main (int argc, char **argv)
     // start LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
-    GrB_Info info ;
     char msg [LAGRAPH_MSG_LEN] ;
     LG_TRY (LAGraph_Init (NULL)) ;
 

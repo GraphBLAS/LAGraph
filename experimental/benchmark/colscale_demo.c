@@ -18,7 +18,6 @@ int main(int argc, char **argv)
 {
     char msg [LAGRAPH_MSG_LEN] ;
 
-    LAGraph_Graph G = NULL ;
     GrB_Matrix D = NULL ;
     GrB_Matrix A = NULL ;
     GrB_Matrix Res = NULL ;

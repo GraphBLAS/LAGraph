@@ -130,8 +130,6 @@ void test_errors (void)
     OK (LAGraph_DeleteSelfEdges (G, msg)) ;
     OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
-    GrB_Vector c = NULL ;
-
     // c is NULL
     int result = LAGraph_cdlp (NULL, G, 100, msg) ;
     printf ("\nresult: %d\n", result) ;

@@ -41,7 +41,6 @@ int main (int argc, char **argv)
     LAGraph_Graph G = NULL;
     GrB_Matrix centrality = NULL, A = NULL;
     GrB_Vector sources = NULL;
-    GrB_Info info;
 
     // start GraphBLAS and LAGraph
     LAGRAPH_TRY (LAGraph_Init (msg));

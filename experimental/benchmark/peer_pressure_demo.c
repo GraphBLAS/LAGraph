@@ -64,7 +64,7 @@ int main(int argc, char **argv)
     // read in the graph
     //--------------------------------------------------------------------------
 
-    char *matrix_name = (argc > 1) ? argv[1] : "stdin";
+    //char *matrix_name = (argc > 1) ? argv[1] : "stdin";
     LAGRAPH_TRY(
         readproblem(&G, NULL, false, false, false, NULL, false, argc, argv));
 

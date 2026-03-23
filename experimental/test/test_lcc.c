@@ -141,8 +141,6 @@ void test_errors (void)
     OK (LAGraph_Cached_IsSymmetricStructure (G, msg));
     OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
 
-    GrB_Vector c = NULL ;
-
     // c is NULL
     int result = LAGraph_lcc (NULL, G, msg) ;
     printf ("\nresult: %d\n", result) ;

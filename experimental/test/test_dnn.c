@@ -56,7 +56,6 @@ void teardown (void)
 
 void test_dnn (void)
 {
-    GrB_Info info ;
     setup ( ) ;
 
     #define NLAYERS 30

@@ -723,7 +723,9 @@ int LAGr_MaxFlow
   GrB_Vector invariant = NULL ;
   GrB_BinaryOp CheckInvariant = NULL ;
   GrB_Scalar check = NULL ;
+  #ifdef DBG
   bool check_raw;
+  #endif
 
   // descriptor for matrix building
   GrB_Descriptor desc = NULL ;
