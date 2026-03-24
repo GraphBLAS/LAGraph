@@ -261,7 +261,7 @@ int main (int argc, char **argv)
                 // test C=A+B
                 //--------------------------------------------------------------
 
-                if (ngpus == 0)
+                if (ngpus == 0 && nrows == ncols)
                 {
                     printf ("\n\nADD (%d) ==========================:\n",k) ;
                     // GxB_print (A, 2) ;
