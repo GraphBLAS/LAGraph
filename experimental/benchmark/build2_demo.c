@@ -247,7 +247,6 @@ int main (int argc, char **argv)
                     double t2 = LAGraph_WallClockTime ( ) ;
                     GRB_TRY (GrB_transpose (C, NULL, NULL, B, NULL)) ;
                     t2 = LAGraph_WallClockTime ( ) - t2 ;
-                    GrB_Matrix_free (&B) ;
                     bool ok = false ;
                     LG_TRY (LAGraph_Matrix_IsEqual (&ok, A, C, msg)) ;
                     printf ("transpose OK: %d\n", ok) ;
@@ -265,11 +264,16 @@ int main (int argc, char **argv)
                 if (ngpus == 0)
                 {
                     printf ("\n\nADD (%d) ==========================:\n",k) ;
+                    // GxB_print (A, 2) ;
+                    // GxB_print (B, 2) ;
+
                     t1 = LAGraph_WallClockTime ( ) ;
                     GRB_TRY (GrB_eWiseAdd (C, NULL, NULL, GrB_PLUS_FP64,
                         A, B, NULL)) ;
                     t1 = LAGraph_WallClockTime ( ) - t1 ;
                     tadd = fmin (tadd, t1) ;
+
+                    // GxB_print (C, 2) ;
                     printf ("add time: %g\n", t) ;
                 }
 
