@@ -166,7 +166,8 @@ int main (int argc, char **argv)
         // build the matrix
         //----------------------------------------------------------------------
 
-        double tbest [8], ttran [8] ;
+        double tbest [8], ttran [8], tadd ;
+        tadd = INFINITY ;
         for (int32_t ngpus = 0 ; ngpus <= ngpus_max ; ngpus++)
         {
             printf ("\n======================== Benchmark with %d GPUs:\n",
@@ -256,6 +257,22 @@ int main (int argc, char **argv)
 
                 printf ("---- transpose times: %g and %g\n", t, t1) ;
                 ttran [ngpus] = fmin (ttran [ngpus], fmin (t, t1)) ;
+
+                //--------------------------------------------------------------
+                // test C=A+B
+                //--------------------------------------------------------------
+
+                if (ngpus == 0)
+                {
+                    printf ("\n\nADD (%d) ==========================:\n",k) ;
+                    t1 = LAGraph_WallClockTime ( ) ;
+                    GRB_TRY (GrB_eWiseAdd (C, NULL, NULL, GrB_PLUS_FP64,
+                        A, B, NULL)) ;
+                    t1 = LAGraph_WallClockTime ( ) - t1 ;
+                    tadd = fmin (tadd, t1) ;
+                    printf ("add time: %g\n", t) ;
+                }
+
                 GrB_Matrix_free (&A) ;
                 GrB_Matrix_free (&B) ;
                 GrB_Matrix_free (&C) ;
@@ -267,6 +284,7 @@ int main (int argc, char **argv)
             pass, tbest [0], tbest [1], tbest [0] / tbest [1]) ;
         printf ("PASS %d, Best trans times: CPU %g, GPU %g, speedup %g\n",
             pass, ttran [0], ttran [1], ttran [0] / ttran [1]) ;
+        printf ("add time on CPU: %g\n", tadd) ;
         printf ("---------------------------------------------------------\n") ;
 
         //----------------------------------------------------------------------
