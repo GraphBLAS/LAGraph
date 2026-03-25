@@ -1328,8 +1328,9 @@ int LAGr_ClosenessCentrality
     GrB_Vector *centrality,
     // input:
     LAGraph_Graph G,
-    GrB_Vector sources,         // target vertices to score; NULL/empty => all
-    const GrB_Matrix D,         // optional APSP matrix, D(i,j)=dist(i->j), or NULL
+    GrB_Vector sources,         // nodes to score; NULL or empty => all nodes
+    bool use_weights,           // if true, use edge weights in shortest paths
+    bool use_floyd_warshall,    // if true and sources==NULL, use FW APSP
     char *msg
 ) ;
 

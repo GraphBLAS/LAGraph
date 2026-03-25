@@ -12,7 +12,6 @@
 // DM22-0790
 
 // Contributed by Karan Bhalla and Timothy A. Davis, Texas A&M University;
-// Adapted and revised from GraphBLAS C API Spec, Appendix B.4.
 
 //------------------------------------------------------------------------------
 
