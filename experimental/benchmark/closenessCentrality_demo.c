@@ -15,19 +15,17 @@
 
 //------------------------------------------------------------------------------
 
+#include "../../src/benchmark/LAGraph_demo.h"
+#include "LAGraphX.h"
+#include <stdio.h>
+#include <stdlib.h>
+
 #define LG_FREE_ALL                         \
     {                                       \
         GrB_free (&centrality) ;            \
-        GrB_free (&A) ;                     \
         GrB_free (&sources) ;               \
         LAGraph_Delete (&G, msg) ;          \
     }
-
-#include "LAGraphX.h"
-#include "LG_internal.h"
-#include "LG_Xtest.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 int main (int argc, char **argv)
 {
@@ -37,10 +35,10 @@ int main (int argc, char **argv)
 
     char msg [LAGRAPH_MSG_LEN] ;
     LAGraph_Graph G = NULL ;
-    GrB_Matrix A = NULL ;
     GrB_Vector centrality = NULL, sources = NULL ;
 
-    LAGRAPH_TRY (LAGraph_Init (msg)) ;
+    bool burble = false ;
+    demo_init (burble) ;
 
     //--------------------------------------------------------------------------
     // parse command-line arguments
@@ -77,23 +75,14 @@ int main (int argc, char **argv)
     // read in the graph
     //--------------------------------------------------------------------------
 
-    FILE *f = fopen (argv [1], "r") ;
-    if (f == NULL)
-    {
-        printf ("Error: unable to open file %s\n", argv [1]) ;
-        LG_FREE_ALL ;
-        return (GrB_INVALID_VALUE) ;
-    }
-
+    // char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     double t = LAGraph_WallClockTime () ;
-    LAGRAPH_TRY (LAGraph_MMRead (&A, f, msg)) ;
-    fclose (f) ;
+    LAGRAPH_TRY(
+        readproblem(&G, NULL, false, false, false, NULL, false, argc, argv)) ;
 
-    uint64_t n ;
-    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GrB_Index n ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
 
-    LAGRAPH_TRY (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
-    LAGRAPH_TRY (LAGraph_DeleteSelfEdges (G, msg)) ;
     LAGRAPH_TRY (LAGraph_Cached_AT (G, msg)) ;
 
     if (use_weights)
@@ -104,7 +93,7 @@ int main (int argc, char **argv)
     t = LAGraph_WallClockTime () - t ;
     printf ("Time to read the graph:      %g sec\n", t) ;
 
-    printf ("\n==========================The input graph matrix G:\n") ;
+    printf ("\n==========================\nThe input graph matrix G:\n") ;
     LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
 
     //--------------------------------------------------------------------------

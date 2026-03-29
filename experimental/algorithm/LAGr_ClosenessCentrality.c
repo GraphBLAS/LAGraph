@@ -179,7 +179,7 @@ int LAGr_ClosenessCentrality(
     {
         LG_TRY(LAGraph_Malloc((void **)&source_indices,
                               source_count, sizeof(GrB_Index), msg));
-        GRB_TRY(GrB_Vector_extractTuples(source_indices, NULL,
+        GRB_TRY(GrB_Vector_extractTuples_UINT64(source_indices, NULL,
                                          &source_count, sources));
         for (GrB_Index k = 0; k < source_count; k++)
         {

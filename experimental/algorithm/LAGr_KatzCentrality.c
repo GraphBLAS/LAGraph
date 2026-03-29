@@ -72,6 +72,7 @@ int LAGr_KatzCentrality
     }
 
     // compute correct semiring based on whether edge weights are used
+    // TODO: add FP32 support
     GrB_Semiring semiring = use_weights ? GrB_PLUS_TIMES_SEMIRING_FP64 : GxB_PLUS_SECOND_FP64;
 
     if (use_weights)
@@ -112,7 +113,7 @@ int LAGr_KatzCentrality
     {
         // check for convergence failure
         LG_ASSERT_MSGF ((*iters) < max_iter, LAGRAPH_CONVERGENCE_FAILURE,
-            "katz centrality failed to converge in %d iterations", max_iter) ;
+            "katz centrality failed to converge in %" PRId64 " iterations", max_iter) ;
 
         // swap x and x_prev
         GrB_Vector temp = x_prev ; x_prev = x ; x = temp ;
