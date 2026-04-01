@@ -29,6 +29,7 @@ jobs:
     - name: Install tools for build
       run: |
         sudo apt install -y lcov
+        pip3 install pcpp
 
     - name: Build GraphBLAS
       run: |
@@ -82,6 +83,7 @@ jobs:
         brew tap-new libomp/cask
         brew extract --version=14.0.6 libomp libomp/cask
         brew install libomp@14.0.6
+        pip3 install --break-system-packages pcpp
 
     - name: Build GraphBLAS
       run: |
