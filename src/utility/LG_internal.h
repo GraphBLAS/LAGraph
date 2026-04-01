@@ -708,8 +708,8 @@ int LG_KindName
 
 // LG_JIT_KERNEL(name) marks a function or struct for JIT string extraction by
 // jit_generator.py.  During a CMake build (LG_JIT_BUILD is defined), it
-// expands to nothing — the real string constants come from the generated
-// _jit.h headers.  Without LG_JIT_BUILD (e.g. in an IDE without compile
+// expands to nothing - the real string constants come from the generated
+// _jit.h headers.  Without LG_JIT_BUILD (ie. in an IDE without compile
 // flags), it declares a NULL placeholder so the IDE recognises the symbols.
 #ifdef LG_JIT_BUILD
 #  define LG_JIT_KERNEL(name)

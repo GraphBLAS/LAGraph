@@ -19,7 +19,6 @@ class _Preprocessor(pcpp.Preprocessor):
 
 def _preprocess(input_file):
     pp = _Preprocessor()
-    pp.line_directive = None  # suppress #line markers in output
     pp.define("LG_JIT_KERNEL(name) __LG_JIT_KERNEL__(name)")
     pp.parse(open(input_file).read(), input_file)
     out = io.StringIO()
@@ -31,7 +30,7 @@ _MARKER_RE = re.compile(r"__LG_JIT_KERNEL__\((\w+)\)")
 
 
 def extract_jit_kernels(input_file):
-    # 1. Expand all macros, passing through any #include directives that can't be resolved
+    # Expand all macros, passing through any #include directives that can't be resolved
     expanded_code = _preprocess(input_file)
 
     lines = expanded_code.splitlines()
@@ -48,7 +47,7 @@ def extract_jit_kernels(input_file):
             while i < len(lines) and not lines[i].strip():
                 i += 1
 
-            # 2. Brace-count to find the end of the definition
+            # Brace-count to find the end of the definition
             content = []
             brace_count = 0
             started = False
@@ -80,6 +79,8 @@ def write_jit_header(input_file, output_file):
     """Generate a JIT header for input_file and write it to output_file."""
     kernels = extract_jit_kernels(input_file)
     with open(output_file, "w") as f:
+        f.write("// This is a generated file containing all of the JIT strings\n")
+        f.write("// for the kernels defined in " + input_file + "\n")
         f.write("#pragma once\n")
         for name, string_lit in kernels.items():
             f.write(f"static const char* {name}_JIT_STR = {string_lit};\n")
@@ -90,6 +91,8 @@ if __name__ == "__main__":
         description="Extract LG_JIT_KERNEL-marked definitions from a C file as string literals."
     )
     parser.add_argument("--input", required=True, help="Input C source file")
-    parser.add_argument("--output", required=True, help="Output header file to generate")
+    parser.add_argument(
+        "--output", required=True, help="Output header file to generate"
+    )
     args = parser.parse_args()
     write_jit_header(args.input, args.output)

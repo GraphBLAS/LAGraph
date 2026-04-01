@@ -30,9 +30,9 @@ foreach ( SRC IN LISTS LAGRAPHX_LIB_SOURCES )
     add_custom_command (
         OUTPUT  "${JIT_HEADER}"
         COMMAND Python3::Interpreter
-                "${PROJECT_SOURCE_DIR}/jit_generator.py"
+                "${PROJECT_SOURCE_DIR}/tools/jit_generator.py"
                 --input "${SRC}" --output "${JIT_HEADER}"
-        DEPENDS "${SRC}" "${PROJECT_SOURCE_DIR}/jit_generator.py"
+        DEPENDS "${SRC}" "${PROJECT_SOURCE_DIR}/tools/jit_generator.py"
         COMMENT "JIT: generating ${SRC_NAME}_jit.h"
     )
     list ( APPEND LAGRAPHX_JIT_HEADERS "${JIT_HEADER}" )
