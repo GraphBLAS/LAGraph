@@ -25,7 +25,6 @@
         GrB_free(&D_APSP);                            \
         GrB_free(&A_work);                            \
         GrB_free(&x);                                 \
-        GrB_free(&Delta);                             \
         LAGraph_Delete(&G_AT, NULL);                  \
         LAGraph_Free((void **)&source_indices, NULL); \
     }
@@ -36,30 +35,25 @@
         GrB_free(&centrality_vector); \
     }
 
-#include "LG_internal.h"
 #include <LAGraphX.h>
-
-typedef enum
-{
-    CC_BFS,           // unweighted BFS (unit edge weights)
-    CC_SSSP,          // delta-stepping SSSP (non-negative weights)
-    CC_BELLMAN_FORD,  // Bellman-Ford (general weights, negative-cycle check)
-    CC_FLOYD_WARSHALL // Floyd-Warshall (FW) APSP
-} cc_algo_t;
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // LAGr_ClosenessCentrality
 //------------------------------------------------------------------------------
 
-int LAGr_ClosenessCentrality(
+int LAGr_ClosenessCentrality
+(
     // output:
     GrB_Vector *centrality,
     // input:
     LAGraph_Graph G,
-    GrB_Vector sources,      // nodes to score; NULL or empty => all nodes
-    bool use_weights,        // if true, use edge weights in shortest paths
-    bool use_floyd_warshall, // if true and sources==NULL, use APSP via FW
-    char *msg)
+    GrB_Vector sources,     // nodes to score; NULL or empty => all nodes
+    bool use_weights,       // if true, use edge weights in shortest paths
+    cc_algo_t algorithm,    // shortest-path algorithm to use
+    GrB_Scalar Delta,       // delta for SSSP; if NULL, derived from G->emin
+    char *msg
+)
 {
 
     //--------------------------------------------------------------------------
@@ -78,7 +72,6 @@ int LAGr_ClosenessCentrality(
     GrB_Matrix A_work = NULL;           // AT copy for G_AT
     LAGraph_Graph G_AT = NULL;          // temporary graph wrapping AT (directed only)
     GrB_Vector x = NULL;                // FW: dense all-zeros vector for row counting
-    GrB_Scalar Delta = NULL;            // delta-stepping step size
     GrB_Index *source_indices = NULL;
     GrB_Index n = 0;
     GrB_Index source_count = 0;
@@ -96,60 +89,11 @@ int LAGr_ClosenessCentrality(
         use_all_nodes = (source_count == 0);
     }
 
-    //--------------------------------------------------------------------------
-    // select shortest-path algorithm
-    //--------------------------------------------------------------------------
-
-    cc_algo_t algo;
-    double emin = -1;
-
-    if (use_floyd_warshall)
-    {
-        LG_ASSERT_MSG(use_all_nodes, GrB_INVALID_VALUE,
-                      "use_floyd_warshall requires sources to be NULL or empty");
-
-        if (!use_weights)
-        {
-            // Silently downgrade to BFS for unweighted graphs
-            // TODO: revisit this? make it more explicit to user?
-            algo = CC_BFS;
-        }
-        else
-        {
-            // Reject graphs with known or possible negative edges.
-            if (G->emin != NULL)
-            {
-                double fw_emin = 0;
-                GRB_TRY(GrB_Scalar_extractElement_FP64(&fw_emin,
-                                                       G->emin));
-                LG_ASSERT_MSG(fw_emin >= 0, GrB_INVALID_VALUE,
-                              "Floyd-Warshall does not support negative edge"
-                              " weights");
-            }
-            algo = CC_FLOYD_WARSHALL;
-        }
-    }
-    else if (!use_weights)
-    {
-        // Unweighted: BFS is the most efficient choice.
-        algo = CC_BFS;
-    }
-    else
-    {
-        LG_ASSERT_MSG(G->emin != NULL &&
-                          (G->emin_state == LAGraph_VALUE ||
-                           G->emin_state == LAGraph_BOUND),
-                      LAGRAPH_NOT_CACHED, "G->emin is required");
-        GRB_TRY(GrB_Scalar_extractElement_FP64(&emin, G->emin));
-
-        // Use SSSP if no negative edges, Bellman-Ford otherwise
-        algo = (emin >= 0 && G->emin_state == LAGraph_VALUE)
-                   ? CC_SSSP
-                   : CC_BELLMAN_FORD;
-    }
+    cc_algo_t algo = algorithm;
 
     // set up G_AT: graph over the incoming adjacency. Running any shortest-path
-    // algorithm from v on G_AT traverses incoming edges, giving distances to v in G.
+    // algorithm from v on G_AT traverses incoming edges, giving distances to
+    // v in G.
 
     bool is_directed = (G->kind != LAGraph_ADJACENCY_UNDIRECTED &&
                         G->is_symmetric_structure != LAGraph_TRUE);
@@ -179,7 +123,7 @@ int LAGr_ClosenessCentrality(
     {
         LG_TRY(LAGraph_Malloc((void **)&source_indices,
                               source_count, sizeof(GrB_Index), msg));
-        GRB_TRY(GrB_Vector_extractTuples_UINT64(source_indices, NULL,
+        GRB_TRY(GrB_Vector_extractTuples_UINT64 (source_indices, NULL,
                                          &source_count, sources));
         for (GrB_Index k = 0; k < source_count; k++)
         {
@@ -222,18 +166,19 @@ int LAGr_ClosenessCentrality(
                            GrB_PLUS_MONOID_FP64, D_APSP, NULL));
 
         // reachable_counts[v] = number of non-zeros in row v of D_APSP.
-        // Multiply D_APSP by a dense all-zeros vector with LAGraph_plus_one_fp64:                                                                            
-        // TODO: revisit?                                                                            
-        GRB_TRY(GrB_Vector_new(&x, GrB_FP64, n));                              
-        GRB_TRY(GrB_assign(x, NULL, NULL, (double)0, GrB_ALL, n, NULL));                                                                                      
-        GRB_TRY(GrB_Vector_new(&reachable_counts, GrB_FP64, n));                                                                                              
+        // Multiply D_APSP by a dense all-zeros vector with
+        // LAGraph_plus_one_fp64:
+        // TODO: revisit
+        GRB_TRY(GrB_Vector_new(&x, GrB_FP64, n));
+        GRB_TRY(GrB_assign(x, NULL, NULL, (double)0, GrB_ALL, n, NULL));
+        GRB_TRY(GrB_Vector_new(&reachable_counts, GrB_FP64, n));
         GRB_TRY(GrB_mxv(reachable_counts, NULL, NULL, LAGraph_plus_one_fp64,
-                        D_APSP, x, NULL));                                                                                                                    
-        GRB_TRY(GrB_free(&D_APSP));                                                                                                                           
-                                                                                                                                                            
-        // centrality[v] = R(v) / dist_sums[v].                                                                                                               
+                D_APSP, x, NULL));
+        GRB_TRY(GrB_free(&D_APSP));
+
+        // centrality[v] = R(v) / dist_sums[v].
         GRB_TRY(GrB_eWiseMult(centrality_vector, NULL, NULL, GrB_DIV_FP64,
-                            reachable_counts, dist_sums, NULL));
+                      reachable_counts, dist_sums, NULL));
 
         (*centrality) = centrality_vector;
         LG_FREE_WORK;
@@ -242,8 +187,6 @@ int LAGr_ClosenessCentrality(
 
     if (algo == CC_SSSP)
     {
-        GRB_TRY(GrB_Scalar_new(&Delta, GrB_FP64));
-        GRB_TRY(GrB_Scalar_setElement_FP64(Delta, emin > 0 ? emin : 1.0)); // TODO: how to set delta properly?
         GRB_TRY(GrB_Scalar_new(&inf_scalar, GrB_FP64));
         GRB_TRY(GrB_Scalar_setElement_FP64(inf_scalar, (double)INFINITY));
     }
@@ -268,7 +211,7 @@ int LAGr_ClosenessCentrality(
         {
             // IMPORTANT: LAGr_BreadthFirstSearch sets *level = NULL without
             // freeing the prior handle.  We must free bfs_level before every
-            // call to avoid a memory leak. 
+            // call to avoid a memory leak.
             GRB_TRY(GrB_free(&bfs_level));
             LG_TRY(LAGr_BreadthFirstSearch(&bfs_level, NULL,
                                            G_trav, node_to_score, msg));
@@ -313,7 +256,7 @@ int LAGr_ClosenessCentrality(
         }
 
         //----------------------------------------------------------------------
-        // Bellman-Ford 
+        // Bellman-Ford
         //----------------------------------------------------------------------
 
         else // CC_BELLMAN_FORD
@@ -324,9 +267,10 @@ int LAGr_ClosenessCentrality(
                                     G_trav->A, node_to_score);
             if (info == GrB_NO_VALUE)
             {
+                // TODO: revisit
                 // Negative-weight cycle reachable from this node;
-                // TODO: how to deal with this?
-                // For now, set centrality to NaN to indicate an invalid score, and continue.
+                // For now, set centrality to NaN to indicate an invalid
+                // score, and continue.
                 GRB_TRY(GrB_Vector_setElement(centrality_vector,
                                               (double)NAN, node_to_score));
                 continue;

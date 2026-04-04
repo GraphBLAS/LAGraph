@@ -1321,6 +1321,15 @@ int LAGr_EdgeBetweennessCentrality
 // Closeness centrality
 //------------------------------------------------------------------------------
 
+typedef enum
+{
+    CC_BFS,           // unweighted BFS (unit edge weights)
+    CC_SSSP,          // delta-stepping SSSP (non-negative weights)
+    CC_BELLMAN_FORD,  // Bellman-Ford (general weights, negative-cycle check)
+    CC_FLOYD_WARSHALL // Floyd-Warshall (FW) APSP
+    // CC_DEFAULT,    select algorithm automatically
+} cc_algo_t ;
+
 LAGRAPHX_PUBLIC
 int LAGr_ClosenessCentrality
 (
@@ -1328,9 +1337,10 @@ int LAGr_ClosenessCentrality
     GrB_Vector *centrality,
     // input:
     LAGraph_Graph G,
-    GrB_Vector sources,         // nodes to score; NULL or empty => all nodes
-    bool use_weights,           // if true, use edge weights in shortest paths
-    bool use_floyd_warshall,    // if true and sources==NULL, use FW APSP
+    GrB_Vector sources,     // nodes to score; NULL or empty => all nodes
+    bool use_weights,       // if true, use edge weights in shortest paths
+    cc_algo_t algorithm,    // shortest-path algorithm to use
+    GrB_Scalar Delta,       // delta for SSSP; if NULL, derived from G->emin
     char *msg
 ) ;
 

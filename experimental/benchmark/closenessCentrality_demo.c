@@ -24,6 +24,7 @@
     {                                       \
         GrB_free (&centrality) ;            \
         GrB_free (&sources) ;               \
+        GrB_free (&Delta) ;                 \
         LAGraph_Delete (&G, msg) ;          \
     }
 
@@ -36,6 +37,7 @@ int main (int argc, char **argv)
     char msg [LAGRAPH_MSG_LEN] ;
     LAGraph_Graph G = NULL ;
     GrB_Vector centrality = NULL, sources = NULL ;
+    GrB_Scalar Delta = NULL ;
 
     bool burble = false ;
     demo_init (burble) ;
@@ -45,31 +47,39 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // Usage:
-    //   closenessCentrality_demo <matrix-market-file>
-    //                            [num_sources] [use_weights] [use_floyd_warshall]
+    //   closenessCentrality_demo <matrix-market-file> <algorithm>
+    //                            [num_sources] [use_weights] [delta]
     //
     // <matrix-market-file>  : required; path to .mtx file
+    // <algorithm>           : required int; shortest-path algorithm:
+    //                           0 = CC_BFS           (unweighted BFS)
+    //                           1 = CC_SSSP          (delta-stepping SSSP)
+    //                           2 = CC_BELLMAN_FORD  (Bellman-Ford)
+    //                           3 = CC_FLOYD_WARSHALL (all-pairs, no sources)
     // [num_sources]         : optional; number of random source nodes to score
     //                         (0 or omitted => score all nodes)
     // [use_weights]         : optional 0/1 (default 0); use edge weights
-    // [use_floyd_warshall]  : optional 0/1 (default 0); use Floyd-Warshall APSP
-    //                         (only valid when num_sources is 0/omitted)
+    // [delta]               : optional float; delta for CC_SSSP
+    //                         (ignored for other algorithms)
 
-    if (argc < 2 || argc > 5)
+    if (argc < 3 || argc > 6)
     {
-        printf ("Usage: %s <matrix-market-file>"
-                " [num_sources] [use_weights] [use_floyd_warshall]\n",
+        printf ("Usage: %s <matrix-market-file> <algorithm>"
+                " [num_sources] [use_weights] [delta]\n"
+                "  algorithm: 0=CC_BFS  1=CC_SSSP  2=CC_BELLMAN_FORD"
+                "  3=CC_FLOYD_WARSHALL\n",
                 argv [0]) ;
         return (GrB_INVALID_VALUE) ;
     }
 
-    bool use_weights        = false ;
-    bool use_floyd_warshall = false ;
-    int  num_sources        = 0 ;
+    cc_algo_t  algorithm   = (cc_algo_t) atoi (argv [2]) ;
+    bool       use_weights = false ;
+    double     delta_val   = -1 ;
+    int        num_sources = 0 ;
 
-    if (argc > 2) num_sources        = atoi (argv [2]) ;
-    if (argc > 3) use_weights        = (atoi (argv [3]) != 0) ;
-    if (argc > 4) use_floyd_warshall = (atoi (argv [4]) != 0) ;
+    if (argc > 3) num_sources = atoi (argv [3]) ;
+    if (argc > 4) use_weights = (atoi (argv [4]) != 0) ;
+    if (argc > 5) delta_val   = strtod (argv [5], NULL) ;
 
     //--------------------------------------------------------------------------
     // read in the graph
@@ -90,11 +100,16 @@ int main (int argc, char **argv)
         LAGRAPH_TRY (LAGraph_Cached_EMin (G, msg)) ;
     }
 
+    GrB_Index nvals ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+
     t = LAGraph_WallClockTime () - t ;
     printf ("Time to read the graph:      %g sec\n", t) ;
+    printf ("Nodes: %" PRIu64 "  Edges: %" PRIu64 "\n",
+            (uint64_t) n, (uint64_t) nvals) ;
 
     printf ("\n==========================\nThe input graph matrix G:\n") ;
-    LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
+    // LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // build optional source-node vector
@@ -102,13 +117,6 @@ int main (int argc, char **argv)
 
     if (num_sources > 0)
     {
-        if (use_floyd_warshall)
-        {
-            printf ("Warning: use_floyd_warshall ignored when num_sources > 0;"
-                    " falling back to per-node shortest paths.\n") ;
-            use_floyd_warshall = false ;
-        }
-
         if ((uint64_t) num_sources >= n)
         {
             printf ("Error: num_sources (%" PRId32 ") must be less than"
@@ -141,13 +149,19 @@ int main (int argc, char **argv)
     // compute closeness centrality
     //--------------------------------------------------------------------------
 
-    printf ("\nCloseness params: use_weights=%d use_floyd_warshall=%d"
+    printf ("\nCloseness params: use_weights=%d algorithm=%d"
             " num_sources=%d\n\n",
-            (int) use_weights, (int) use_floyd_warshall, num_sources) ;
+            (int) use_weights, (int) algorithm, num_sources) ;
+
+    if (algorithm == CC_SSSP && delta_val > 0)
+    {
+        GRB_TRY (GrB_Scalar_new (&Delta, GrB_FP64)) ;
+        GRB_TRY (GrB_Scalar_setElement_FP64 (Delta, delta_val)) ;
+    }
 
     t = LAGraph_WallClockTime () ;
     LAGRAPH_TRY (LAGr_ClosenessCentrality (&centrality, G, sources,
-                                           use_weights, use_floyd_warshall,
+                                           use_weights, algorithm, Delta,
                                            msg)) ;
     t = LAGraph_WallClockTime () - t ;
     printf ("Time for LAGr_ClosenessCentrality: %g sec\n", t) ;
@@ -156,27 +170,27 @@ int main (int argc, char **argv)
     // print results
     //--------------------------------------------------------------------------
 
-    GrB_Index nvals = 0 ;
-    GRB_TRY (GrB_Vector_nvals (&nvals, centrality)) ;
-    printf ("Number of scored nodes: %" PRIu64 "\n", (uint64_t) nvals) ;
+    GrB_Index scoredvals = 0 ;
+    GRB_TRY (GrB_Vector_nvals (&scoredvals, centrality)) ;
+    printf ("Number of scored nodes: %" PRIu64 "\n", (uint64_t) scoredvals) ;
 
     // print first few scores
-    GrB_Index print_limit = (n < 20) ? n : 20 ;
-    printf ("Closeness centrality (first %" PRIu64 " nodes):\n",
-            (uint64_t) print_limit) ;
-    for (GrB_Index i = 0 ; i < print_limit ; i++)
-    {
-        double score = 0 ;
-        GrB_Info info = GrB_Vector_extractElement_FP64 (&score, centrality, i) ;
-        if (info == GrB_SUCCESS)
-        {
-            printf ("  node %" PRIu64 ": %g\n", (uint64_t) i, score) ;
-        }
-        else
-        {
-            printf ("  node %" PRIu64 ": (unreachable)\n", (uint64_t) i) ;
-        }
-    }
+    // GrB_Index print_limit = (n < 20) ? n : 20 ;
+    // printf ("Closeness centrality (first %" PRIu64 " nodes):\n",
+    //         (uint64_t) print_limit) ;
+    // for (GrB_Index i = 0 ; i < print_limit ; i++)
+    // {
+    //     double score = 0 ;
+    //     GrB_Info info = GrB_Vector_extractElement_FP64 (&score, centrality, i) ;
+    //     if (info == GrB_SUCCESS)
+    //     {
+    //         printf ("  node %" PRIu64 ": %g\n", (uint64_t) i, score) ;
+    //     }
+    //     else
+    //     {
+    //         printf ("  node %" PRIu64 ": (unreachable)\n", (uint64_t) i) ;
+    //     }
+    // }
 
     //--------------------------------------------------------------------------
     // free everything and finish

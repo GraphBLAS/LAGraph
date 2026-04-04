@@ -111,7 +111,7 @@ void test_closeness_diamonds (void)
 
     double t = LAGraph_WallClockTime () ;
     OK (LAGr_ClosenessCentrality (&centrality, G, NULL,
-                                  false, false, msg)) ;
+                                  false, false, NULL, msg)) ;
     t = LAGraph_WallClockTime () - t ;
     printf ("  Time for LAGr_ClosenessCentrality: %g sec\n", t) ;
 
@@ -161,7 +161,7 @@ void test_closeness_karate (void)
 
     double t = LAGraph_WallClockTime () ;
     OK (LAGr_ClosenessCentrality (&centrality, G, NULL,
-                                  false, false, msg)) ;
+                                  false, false, NULL, msg)) ;
     t = LAGraph_WallClockTime () - t ;
     printf ("  Time for LAGr_ClosenessCentrality: %g sec\n", t) ;
 
