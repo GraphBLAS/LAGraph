@@ -20,27 +20,6 @@ include_directories (
 file ( GLOB LAGRAPHX_LIB_SOURCES "utility/*.c" "algorithm/*.c" )
 
 #-------------------------------------------------------------------------------
-# JIT kernel header generation (one _jit.h per source file)
-#-------------------------------------------------------------------------------
-
-set ( LAGRAPHX_JIT_HEADERS "" )
-foreach ( SRC IN LISTS LAGRAPHX_LIB_SOURCES )
-    get_filename_component ( SRC_NAME "${SRC}" NAME_WE )
-    set ( JIT_HEADER "${JIT_INCLUDE_DIR}/${SRC_NAME}_jit.h" )
-    add_custom_command (
-        OUTPUT  "${JIT_HEADER}"
-        COMMAND Python3::Interpreter
-                "${PROJECT_SOURCE_DIR}/tools/jit_generator.py"
-                --input "${SRC}" --output "${JIT_HEADER}"
-        DEPENDS "${SRC}" "${PROJECT_SOURCE_DIR}/tools/jit_generator.py"
-        COMMENT "JIT: generating ${SRC_NAME}_jit.h"
-    )
-    list ( APPEND LAGRAPHX_JIT_HEADERS "${JIT_HEADER}" )
-endforeach ()
-
-add_custom_target ( LAGraphXJITGenerate DEPENDS ${LAGRAPHX_JIT_HEADERS} )
-
-#-------------------------------------------------------------------------------
 # dynamic lagraphx library properties
 #-------------------------------------------------------------------------------
 
@@ -126,17 +105,6 @@ if ( NOT NO_LIBM )
     if ( BUILD_STATIC_LIBS )
         target_link_libraries ( LAGraphX_static PUBLIC m )
     endif ( )
-endif ( )
-
-#-------------------------------------------------------------------------------
-# JIT header dependency: ensure headers are generated before compilation
-#-------------------------------------------------------------------------------
-
-if ( BUILD_SHARED_LIBS )
-    add_dependencies ( LAGraphX LAGraphXJITGenerate )
-endif ( )
-if ( BUILD_STATIC_LIBS )
-    add_dependencies ( LAGraphX_static LAGraphXJITGenerate )
 endif ( )
 
 #-------------------------------------------------------------------------------

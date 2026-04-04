@@ -77,44 +77,43 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
-#include "LAGr_SwapEdges_jit.h"
 
-LG_JIT_KERNEL(LG_SE_shift_and)
+LG_JIT_KERNEL(
 void LG_SE_shift_and (uint16_t *z, const uint16_t *x)
 {
     (*z) = (*x) & ((*x) << 8);
     (*z) |= (*z) >> 8;
-}
+}, LG_SE_shift_and)
 
-LG_JIT_KERNEL(LG_SE_edge_type64)
+LG_JIT_KERNEL(
 typedef struct {
     uint64_t a;
     uint64_t b;
-} LG_SE_edge_type64;
+} LG_SE_edge_type64;, LG_SE_edge_type64)
 
-LG_JIT_KERNEL(LG_SE_swap_type64)
+LG_JIT_KERNEL(
 typedef struct {
-    uint64_t a; 
+    uint64_t a;
     uint64_t b;
-    uint64_t c; 
+    uint64_t c;
     uint64_t d;
-} LG_SE_swap_type64;
+} LG_SE_swap_type64;, LG_SE_swap_type64)
 
-LG_JIT_KERNEL(LG_SE_edge_type32)
+LG_JIT_KERNEL(
 typedef struct {
     uint32_t a;
     uint32_t b;
-} LG_SE_edge_type32;
+} LG_SE_edge_type32;, LG_SE_edge_type32)
 
-LG_JIT_KERNEL(LG_SE_swap_type32)
+LG_JIT_KERNEL(
 typedef struct {
     uint32_t a;
     uint32_t b;
     uint32_t c;
     uint32_t d;
-} LG_SE_swap_type32;
+} LG_SE_swap_type32;, LG_SE_swap_type32)
 
-LG_JIT_KERNEL(LG_SE_swap_bc64)
+LG_JIT_KERNEL(
 void LG_SE_swap_bc64 (
     LG_SE_swap_type64 *z, const LG_SE_swap_type64 *x,
     GrB_Index I, GrB_Index J, const bool *y
@@ -133,8 +132,9 @@ void LG_SE_swap_bc64 (
         z->c = z->b;
         z->b = temp;
     }
-}
-LG_JIT_KERNEL(LG_SE_swap_bc32)
+}, LG_SE_swap_bc64)
+
+LG_JIT_KERNEL(
 void LG_SE_swap_bc32(
     LG_SE_swap_type32 *z, const LG_SE_swap_type32 *x,
     GrB_Index I, GrB_Index J, const bool *y
@@ -153,11 +153,11 @@ void LG_SE_swap_bc32(
         z->c = z->b;
         z->b = temp;
     }
-}
+}, LG_SE_swap_bc32)
 
 // using xorshift, from https://en.wikipedia.org/wiki/Xorshift
 // with a state of uint64_t, or xorshift64star.
-LG_JIT_KERNEL(LG_SE_hash_edge64)
+LG_JIT_KERNEL(
 void LG_SE_hash_edge64
 (uint64_t *z, const LG_SE_edge_type64 *x, const uint64_t *mask)
 {
@@ -167,9 +167,9 @@ void LG_SE_hash_edge64
     (*z) ^= (x->a < x->b)? x->a: x->b;
 	(*z) ^= (*z) << 17;
     (*z) &= (*mask);
-}
+}, LG_SE_hash_edge64)
 
-LG_JIT_KERNEL(LG_SE_hash_edge32)
+LG_JIT_KERNEL(
 void LG_SE_hash_edge32
 (uint64_t *z, const LG_SE_edge_type32 *x, const uint64_t *mask)
 {
@@ -179,46 +179,46 @@ void LG_SE_hash_edge32
     (*z) ^= (uint64_t)((x->a < x->b)? x->a: x->b);
     (*z) ^= (*z) << 17;
     (*z) &= (*mask);
-}
+}, LG_SE_hash_edge32)
 
-LG_JIT_KERNEL(LG_SE_add_term)
+LG_JIT_KERNEL(
 void LG_SE_add_term
     (int8_t *z, const int8_t *x, const int8_t *y)
 {
     (*z) = (*x) | (*y) + ((int8_t)1 & (*x) & (*y)) ;
-}
+}, LG_SE_add_term)
 
-LG_JIT_KERNEL(LG_SE_edge2nd64_bool)
+LG_JIT_KERNEL(
 void LG_SE_edge2nd64_bool
     (LG_SE_edge_type64 *z, const bool *x, const LG_SE_edge_type64 *y)
 {
     z->a = y->a;
     z->b = y->b;
-}
+}, LG_SE_edge2nd64_bool)
 
-LG_JIT_KERNEL(LG_SE_edge2nd32_bool)
+LG_JIT_KERNEL(
 void LG_SE_edge2nd32_bool
     (LG_SE_edge_type32 *z, const bool *x, const LG_SE_edge_type32 *y)
 {
     z->a = y->a;
     z->b = y->b;
-}
+}, LG_SE_edge2nd32_bool)
 
-LG_JIT_KERNEL(LG_SE_edge2nd64_edge)
+LG_JIT_KERNEL(
 void LG_SE_edge2nd64_edge
     (LG_SE_edge_type64 *z, const LG_SE_edge_type64 *x, const LG_SE_edge_type64 *y)
 {
     z->a = y->a;
     z->b = y->b;
-}
+}, LG_SE_edge2nd64_edge)
 
-LG_JIT_KERNEL(LG_SE_edge2nd32_edge)
+LG_JIT_KERNEL(
 void LG_SE_edge2nd32_edge
     (LG_SE_edge_type32 *z, const LG_SE_edge_type32 *x, const LG_SE_edge_type32 *y)
 {
     z->a = y->a;
     z->b = y->b;
-}
+}, LG_SE_edge2nd32_edge)
 
 // FIXME: make loopTry, loopMin, totSwaps, seed inputs GrB_Scalar
 // FIXME: make pSwaps GrB_Scalar

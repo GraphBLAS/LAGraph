@@ -38,7 +38,6 @@
 #include "LG_internal.h"
 #include <LAGraph.h>
 #include <LAGraphX.h>
-#include "LAGraph_msf_jit.h"
 
 //------------------------------------------------------------------------------
 // tuple: a tuple containing (weight,index)
@@ -55,11 +54,9 @@ typedef struct                  \
     uint64_t idx;               \
 } LG_MSF_tuple_##ctype;
 
-LG_JIT_KERNEL(LG_MSF_tuple_double)
-LG_MSF_TUPLE(double)
+LG_JIT_KERNEL(LG_MSF_TUPLE(double), LG_MSF_tuple_double)
 
-LG_JIT_KERNEL(LG_MSF_tuple_int64_t)
-LG_MSF_TUPLE(int64_t)
+LG_JIT_KERNEL(LG_MSF_TUPLE(int64_t), LG_MSF_tuple_int64_t)
 
 //------------------------------------------------------------------------------
 // context_type: context for IndexUnaryOps (using the theta input)
@@ -76,12 +73,8 @@ typedef struct                                                                 \
     } *w_partner;          /* partner vertex in the spanning forest */         \
 } LG_MSF_context_##ctype;
 
-LG_JIT_KERNEL(LG_MSF_context_double)
-LG_MSF_CONTEXT(double)
-
-LG_JIT_KERNEL(LG_MSF_context_int64_t)
-LG_MSF_CONTEXT(int64_t)
-
+LG_JIT_KERNEL(LG_MSF_CONTEXT(double), LG_MSF_context_double)
+LG_JIT_KERNEL(LG_MSF_CONTEXT(int64_t), LG_MSF_context_int64_t)
 
 //------------------------------------------------------------------------------
 // selectEdge: index-unary operator to select edges of min weight
@@ -106,10 +99,8 @@ void LG_MSF_selectEdge_##ctype                                   \
         (theta->parent[j] == theta->w_partner[i].idx);           \
 }
 
-LG_JIT_KERNEL(LG_MSF_selectEdge_double)
-LG_MSF_SELECTEDGE(double)
-LG_JIT_KERNEL(LG_MSF_selectEdge_int64_t)
-LG_MSF_SELECTEDGE(int64_t)
+LG_JIT_KERNEL(LG_MSF_SELECTEDGE(double), LG_MSF_selectEdge_double)
+LG_JIT_KERNEL(LG_MSF_SELECTEDGE(int64_t), LG_MSF_selectEdge_int64_t)
 
 //------------------------------------------------------------------------------
 // removeEdge: remove edge (i,j) when i and j have the same parent
@@ -131,10 +122,8 @@ void LG_MSF_removeEdge_##ctype                        \
     (*z) = (theta->parent[i] != theta->parent[j]);    \
 }
 
-LG_JIT_KERNEL(LG_MSF_removeEdge_double)
-LG_MSF_REMOVEEDGE(double)
-LG_JIT_KERNEL(LG_MSF_removeEdge_int64_t)
-LG_MSF_REMOVEEDGE(int64_t)
+LG_JIT_KERNEL(LG_MSF_REMOVEEDGE(double), LG_MSF_removeEdge_double)
+LG_JIT_KERNEL(LG_MSF_REMOVEEDGE(int64_t), LG_MSF_removeEdge_int64_t)
 
 //------------------------------------------------------------------------------
 // combine: create a tuple from a weight and an index
@@ -152,10 +141,8 @@ void LG_MSF_combine_##ctype          \
     z->idx = *y;                     \
 }
 
-LG_JIT_KERNEL(LG_MSF_combine_double)
-LG_MSF_COMBINE(double)
-LG_JIT_KERNEL(LG_MSF_combine_int64_t)
-LG_MSF_COMBINE(int64_t)
+LG_JIT_KERNEL(LG_MSF_COMBINE(double), LG_MSF_combine_double)
+LG_JIT_KERNEL(LG_MSF_COMBINE(int64_t), LG_MSF_combine_int64_t)
 
 //------------------------------------------------------------------------------
 // get_first:  get first item in a tuple (the weight)
@@ -166,10 +153,8 @@ void LG_MSF_get_first_##ctype (ctype *y, const LG_MSF_tuple_##ctype *x)   \
 {                                                                         \
     *y = x->wInt;                                                         \
 }
-LG_JIT_KERNEL(LG_MSF_get_first_double)
-LG_MSF_GET_FIRST(double)
-LG_JIT_KERNEL(LG_MSF_get_first_int64_t)
-LG_MSF_GET_FIRST(int64_t)
+LG_JIT_KERNEL(LG_MSF_GET_FIRST(double), LG_MSF_get_first_double)
+LG_JIT_KERNEL(LG_MSF_GET_FIRST(int64_t), LG_MSF_get_first_int64_t)
 
 //------------------------------------------------------------------------------
 // get_second:  get second item in a tuple (the index)
@@ -180,10 +165,8 @@ void LG_MSF_get_second_##ctype (uint64_t *y, const LG_MSF_tuple_##ctype *x)\
 {                                                                          \
     *y = x->idx;                                                           \
 }
-LG_JIT_KERNEL(LG_MSF_get_second_double)
-LG_MSF_GET_SECOND(double)
-LG_JIT_KERNEL(LG_MSF_get_second_int64_t)
-LG_MSF_GET_SECOND(int64_t)
+LG_JIT_KERNEL(LG_MSF_GET_SECOND(double), LG_MSF_get_second_double)
+LG_JIT_KERNEL(LG_MSF_GET_SECOND(int64_t), LG_MSF_get_second_int64_t)
 
 //------------------------------------------------------------------------------
 // tupleMin: z = the min tuple of x and y
@@ -203,10 +186,8 @@ void LG_MSF_tupleMin_##ctype                            \
     z->idx = (xSmaller)? x->idx: y->idx;                \
 }
 
-LG_JIT_KERNEL(LG_MSF_tupleMin_double)
-LG_MSF_TUPLEMIN(double)
-LG_JIT_KERNEL(LG_MSF_tupleMin_int64_t)
-LG_MSF_TUPLEMIN(int64_t)
+LG_JIT_KERNEL(LG_MSF_TUPLEMIN(double), LG_MSF_tupleMin_double)
+LG_JIT_KERNEL(LG_MSF_TUPLEMIN(int64_t), LG_MSF_tupleMin_int64_t)
 
 //------------------------------------------------------------------------------
 // tuple2nd: z = y
@@ -224,10 +205,8 @@ void LG_MSF_tuple2nd_##ctype        \
     z->idx = y->idx;                \
 }
 
-LG_JIT_KERNEL(LG_MSF_tuple2nd_double)
-LG_MSF_TUPLE2ND(double)
-LG_JIT_KERNEL(LG_MSF_tuple2nd_int64_t)
-LG_MSF_TUPLE2ND(int64_t)
+LG_JIT_KERNEL(LG_MSF_TUPLE2ND(double), LG_MSF_tuple2nd_double)
+LG_JIT_KERNEL(LG_MSF_TUPLE2ND(int64_t), LG_MSF_tuple2nd_int64_t)
 
 //------------------------------------------------------------------------------
 // tupleEq: true if two tuples are equal
@@ -244,10 +223,8 @@ void LG_MSF_tupleEq_##ctype                           \
     *z = (x->wInt == y->wInt) && (x->idx == y->idx);  \
 }
 
-LG_JIT_KERNEL(LG_MSF_tupleEq_double)
-LG_MSF_TUPLEEQ(double)
-LG_JIT_KERNEL(LG_MSF_tupleEq_int64_t)
-LG_MSF_TUPLEEQ(int64_t)
+LG_JIT_KERNEL(LG_MSF_TUPLEEQ(double), LG_MSF_tupleEq_double)
+LG_JIT_KERNEL(LG_MSF_TUPLEEQ(int64_t), LG_MSF_tupleEq_int64_t)
 
 //------------------------------------------------------------------------------
 
@@ -454,7 +431,6 @@ int LAGraph_msf
         //----------------------------------------------------------------------
         // types and ops for INT64 weights
         //----------------------------------------------------------------------
-
         GRB_TRY (GxB_Type_new (&tuple, sizeof (LG_MSF_tuple_int64_t),
             "LG_MSF_tuple_int64_t", LG_MSF_tuple_int64_t_JIT_STR)) ;
 
