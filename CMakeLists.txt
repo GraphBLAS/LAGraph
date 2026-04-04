@@ -190,20 +190,6 @@ else ( )
 endif ( )
 message ( STATUS "LAGraph has OpenMP: ${LAGRAPH_HAS_OPENMP}" )
 
-#-------------------------------------------------------------------------------
-# find Python3 (for JIT kernel header generation)
-#-------------------------------------------------------------------------------
-
-find_package ( Python3 REQUIRED COMPONENTS Interpreter )
-set ( JIT_INCLUDE_DIR "${CMAKE_BINARY_DIR}/jit_include" )
-file ( MAKE_DIRECTORY "${JIT_INCLUDE_DIR}" )
-include_directories ( "${JIT_INCLUDE_DIR}" )
-
-# Predefine LG_JIT_KERNEL as a no-op for the compiler.
-# LG_internal.h defines a non-trivial fallback for IDEs that don't apply
-# compile flags, so that JIT string variables are still recognized there.
-add_compile_definitions ( "LG_JIT_BUILD" )
-
 # check for strict usage
 if ( SUITESPARSE_USE_STRICT AND LAGRAPH_USE_OPENMP AND NOT LAGRAPH_HAS_OPENMP )
     message ( FATAL_ERROR "OpenMP required for LAGraph but not found" )

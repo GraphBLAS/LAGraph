@@ -55,8 +55,6 @@ jobs:
             libtool
             git
             sudo
-            python3
-            py3-pip
 
       - name: disable QEMU emulation
         if: matrix.arch == 'armv7'
@@ -81,7 +79,6 @@ jobs:
 
       - name: build and test LAGraph
         run: |
-          pip3 install pcpp
           cd build
           cmake ..
           JOBS=2 make
