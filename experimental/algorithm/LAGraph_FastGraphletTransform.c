@@ -95,7 +95,10 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-void LG_FGT_sub_one_mult (int64_t *z, const int64_t *x) { (*z) = (*x) * ((*x)-1) ; }
+LG_JIT_STRING(
+void LG_FGT_sub_one_mult (int64_t *z, const int64_t *x) {
+(*z) = (*x) * ((*x)-1) ;
+}, LG_FGT_SUB_ONE_MULT_DEFN)
 
 int LAGraph_FastGraphletTransform
 (
@@ -208,7 +211,9 @@ int LAGraph_FastGraphletTransform
 
     GRB_TRY (GrB_Vector_new (&d_3, GrB_INT64, n)) ;
 
-    GRB_TRY (GrB_UnaryOp_new (&Sub_one_mult, F_UNARY (LG_FGT_sub_one_mult), GrB_INT64, GrB_INT64)) ;
+    GRB_TRY (GxB_UnaryOp_new (
+        &Sub_one_mult, F_UNARY (LG_FGT_sub_one_mult), GrB_INT64, GrB_INT64,
+        "LG_FGT_sub_one_mult", LG_FGT_SUB_ONE_MULT_DEFN)) ;
 
     GRB_TRY (GrB_apply (d_3, NULL, NULL, Sub_one_mult, d_1, NULL)) ;
     GRB_TRY (GrB_apply (d_3, NULL, NULL, GrB_DIV_INT64, d_3, (int64_t) 2, NULL)) ;

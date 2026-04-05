@@ -88,6 +88,7 @@
 
 // z = x * (x - 1), used by LAGraph_lcc.
 // This operator calculates the 2-permutation of d(v).
+LG_JIT_STRING(
 void LG_lcc_comb_dir_fp64
 (
     void *z,
@@ -97,22 +98,11 @@ void LG_lcc_comb_dir_fp64
     double xd = *(double *) x ;
     double *zd = (double *) z ;
     (*zd) = ((xd) * (xd - 1)) ;
-}
-
-#define LAGRAPH_COMB_DIR_FP64               \
-"void LG_lcc_comb_dir_fp64              \n" \
-"(                                      \n" \
-"    void *z,                           \n" \
-"    const void *x                      \n" \
-")                                      \n" \
-"{                                      \n" \
-"    double xd = *(double *) x ;        \n" \
-"    double *zd = (double *) z ;        \n" \
-"    (*zd) = ((xd) * (xd - 1));         \n" \
-"}"
+}, LAGRAPH_COMB_DIR_FP64)
 
 // z = x * (x - 1) / 2, used by LAGraph_lcc.
 // This operator calculates the 2-combination of d(v).
+LG_JIT_STRING(
 void LG_lcc_comb_undir_fp64
 (
     void *z,
@@ -122,19 +112,7 @@ void LG_lcc_comb_undir_fp64
     double xd = *(double *) x ;
     double *zd = (double *) z ;
     (*zd) = ((xd) * (xd - 1)) / 2;
-}
-
-#define LAGRAPH_COMB_UNDIR_FP64             \
-"void LG_lcc_comb_undir_fp64            \n" \
-"(                                      \n" \
-"    void *z,                           \n" \
-"    const void *x                      \n" \
-")                                      \n" \
-"{                                      \n" \
-"    double xd = *(double *) x ;        \n" \
-"    double *zd = (double *) z ;        \n" \
-"    (*zd) = ((xd) * (xd - 1)) / 2;     \n" \
-"}"
+}, LAGRAPH_COMB_UNDIR_FP64)
 
 //------------------------------------------------------------------------------
 
