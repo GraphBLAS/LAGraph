@@ -65,17 +65,17 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-LG_JIT_KERNEL(
+LG_JIT_STRING(
 void LG_RCC_iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)
 {
     (*z) = (int64_t)((*x < *y) + (*x <= *y)) ;
-}, LG_RCC_iseq_2islt)
+}, LG_RCC_ISEQ_2ISLT)
 
-LG_JIT_KERNEL(
+LG_JIT_STRING(
 void LG_RCC_rich_club_formula(double *z, const int64_t *x, const int64_t *y)
 {
     (*z) = ((double)(*x)) / (((double)(*y)) * (((double)(*y)) - 1.0));
-}, LG_RCC_rich_club_formula)
+}, LG_RCC_RICH_CLUB_FORMULA)
 
 int LAGraph_RichClubCoefficient
 (
@@ -182,11 +182,11 @@ int LAGraph_RichClubCoefficient
     GRB_TRY (GxB_BinaryOp_new(
         &iseq_2lt, (GxB_binary_function) (&LG_RCC_iseq_2islt),
         GrB_INT64, GrB_INT64, GrB_INT64, "LG_RCC_iseq_2islt",
-LG_RCC_iseq_2islt_JIT_STR)) ;
+LG_RCC_ISEQ_2ISLT)) ;
     GRB_TRY (GxB_BinaryOp_new(
         &rcCalculation, (GxB_binary_function) (&LG_RCC_rich_club_formula),
         GrB_FP64, GrB_INT64, GrB_INT64,
-        "LG_RCC_rich_club_formula", LG_RCC_rich_club_formula_JIT_STR)) ;
+        "LG_RCC_rich_club_formula", LG_RCC_RICH_CLUB_FORMULA)) ;
 #else
     GRB_TRY (GrB_BinaryOp_new(
         &iseq_2lt, (GxB_binary_function) (&LG_RCC_iseq_2islt),

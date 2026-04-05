@@ -52,7 +52,7 @@
 //------------------------------------------------------------------------------
 // JIT string generation
 //------------------------------------------------------------------------------
-#define LG_JIT_KERNEL(f, name) static const char* name##_JIT_STR = LG_XSTR(f); f
+#define LG_JIT_STRING(f, name) static const char* name = LG_XSTR(f); f
 
 //------------------------------------------------------------------------------
 // typedefs
