@@ -418,6 +418,11 @@ int LAGr_SwapEdges
             lg_edge, GrB_BOOL, lg_edge, "LG_SE_edge2nd32_bool",
             LG_SE_edge2nd32_bool_JIT_STR
         )) ;
+
+        LG_SE_edge_type32 iden_second = {0,0};
+        GRB_TRY (GrB_Monoid_new_UDT(
+            &second_edge_monoid, second_edge, (void *) &iden_second
+        )) ;
     }
     else //uint64 types
 {
@@ -426,7 +431,7 @@ int LAGr_SwapEdges
             LG_SE_edge_type64_JIT_STR)) ;
         GRB_TRY (GxB_Type_new(
             &lg_swap, sizeof(LG_SE_swap_type64), "LG_SE_swap_type64",
-            LG_SE_edge_type64_JIT_STR)) ;
+            LG_SE_swap_type64_JIT_STR)) ;
         GRB_TRY(GxB_BinaryOp_new(
             &hash_seed_e, (GxB_binary_function) (&LG_SE_hash_edge64),
             GrB_UINT64, lg_edge, GrB_UINT64, "LG_SE_hash_edge64",
@@ -447,6 +452,11 @@ int LAGr_SwapEdges
             lg_edge, GrB_BOOL, lg_edge, "LG_SE_edge2nd64_bool",
             LG_SE_edge2nd64_bool_JIT_STR
         )) ;
+
+        LG_SE_edge_type64 iden_second = {0,0};
+        GRB_TRY (GrB_Monoid_new_UDT(
+            &second_edge_monoid, second_edge, (void *) &iden_second
+        )) ;
     }
 
     GRB_TRY (GxB_UnaryOp_new (
@@ -460,11 +470,6 @@ int LAGr_SwapEdges
 
     GRB_TRY (GxB_Monoid_terminal_new_INT8(
         &add_term_monoid, add_term_biop, (int8_t) 0, (int8_t) 2
-    )) ;
-
-    LG_SE_edge_type64 iden_second = {0,0};
-    GRB_TRY (GrB_Monoid_new_UDT(
-        &second_edge_monoid, second_edge, (void *) &iden_second
     )) ;
 
     GRB_TRY(GrB_Semiring_new(
