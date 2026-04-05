@@ -47,6 +47,7 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
+// FIXME: this mod function definition is wrong.
 void LG_ED_mod32 (int32_t *z, const int32_t *x, const int32_t *y) ;
 void LG_ED_mod32 (int32_t *z, const int32_t *x, const int32_t *y)
 {
@@ -63,6 +64,7 @@ void LG_ED_mod32 (int32_t *z, const int32_t *x, const int32_t *y)
 "    (*z) = t % (*y) ;                                          \n" \
 "}"
 
+// FIXME: this mod function definition is wrong.
 void LG_ED_mod64 (int64_t *z, const int64_t *x, const int64_t *y) ;
 void LG_ED_mod64 (int64_t *z, const int64_t *x, const int64_t *y)
 {

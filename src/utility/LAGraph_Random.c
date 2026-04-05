@@ -86,6 +86,7 @@ uint64_t LG_Random64 (uint64_t *state)
 }
 
 // return a random uint64_t; as a unary operator
+LG_JIT_STRING(
 void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 {
     uint64_t state = (*x) ;
@@ -93,17 +94,7 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
     state ^= state >> 7 ;
     state ^= state << 17 ;
     (*z) = state ;
-}
-
-#define LG_RAND_NEXT_F2_DEFN                                \
-"void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)  \n" \
-"{                                                      \n" \
-"    uint64_t state = (*x) ;                            \n" \
-"    state ^= state << 13 ;                             \n" \
-"    state ^= state >> 7 ;                              \n" \
-"    state ^= state << 17 ;                             \n" \
-"    (*z) = state ;                                     \n" \
-"}"
+}, LG_RAND_NEXT_F2_DEFN)
 
 // From these references, the recommendation is to create the initial state of
 // a random number generator with an entirely different random number
@@ -146,6 +137,7 @@ void LG_rand_next_f2 (uint64_t *z, const uint64_t *x)
 
 // The init function computes z = splitmix64 (i + seed), but it does not
 // advance the seed value on return.
+LG_JIT_STRING(
 void LG_rand_init_func (uint64_t *z, const void *x,
     GrB_Index i, GrB_Index j, const uint64_t *seed)
 {
@@ -155,19 +147,7 @@ void LG_rand_init_func (uint64_t *z, const void *x,
     result = (result ^ (result >> 27)) * 0x94D049BB133111EBLL ;
     result = (result ^ (result >> 31)) ;
     (*z) = result ;
-}
-
-#define LG_RAND_INIT_F_DEFN                                         \
-"void LG_rand_init_func (uint64_t *z, const void *x,            \n" \
-"    GrB_Index i, GrB_Index j, const uint64_t *seed)            \n" \
-"{                                                              \n" \
-"   uint64_t state = i + (*seed) ;                              \n" \
-"   uint64_t result = (state += 0x9E3779B97F4A7C15LL) ;         \n" \
-"   result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9LL ; \n" \
-"   result = (result ^ (result >> 27)) * 0x94D049BB133111EBLL ; \n" \
-"   result = (result ^ (result >> 31)) ;                        \n" \
-"   (*z) = result ;                                             \n" \
-"}"
+}, LG_RAND_INIT_F_DEFN)
 
 //------------------------------------------------------------------------------
 // LG_Random_Init:  create the random state operator

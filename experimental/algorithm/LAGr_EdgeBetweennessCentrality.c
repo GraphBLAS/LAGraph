@@ -69,20 +69,13 @@
 // (1+x)/y function for double: z = (1 + x) / y
 //------------------------------------------------------------------------------
 
+LG_JIT_STRING(
 void LG_EBC_add_one_divide_function (double *z, const double *x, const double *y)
 {
     double a = (*(x)) ;
     double b = (*(y)) ;
     (*(z)) = (1 + a) / b ;
-}
-
-#define ADD_ONE_DIVIDE_FUNCTION_DEFN                                           \
-"void LG_EBC_add_one_divide_function (double *z, const double *x, const double *y)\n" \
-"{                                                                         \n" \
-"    double a = (*(x)) ;                                                   \n" \
-"    double b = (*(y)) ;                                                   \n" \
-"    (*(z)) = (1 + a) / b ;                                                \n" \
-"}"
+}, ADD_ONE_DIVIDE_FUNCTION_DEFN)
 
 //------------------------------------------------------------------------------
 // LAGr_EdgeBetweennessCentrality: edge betweenness-centrality
