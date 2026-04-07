@@ -65,17 +65,16 @@
     /* free any workspace used here */      \
     LG_FREE_WORK ;                          \
     /* free all the output variable(s) */   \
-    GrB_free (rccs) ;      \
+    GrB_free (rccs) ;                       \
 }
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-LG_JIT_STRING(
 void LG_RCC_iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)
 {
     (*z) = (int64_t)((*x < *y) + (*x <= *y)) ;
-}, LG_RCC_ISEQ_2ISLT)
+}
 
 LG_JIT_STRING(
 void LG_RCC_rich_club_formula(double *z, const int64_t *x, const int64_t *y)
@@ -105,6 +104,11 @@ void LG_RCC_compare_row_col (
     (*z) = (int64_t)((row_deg < col_deg) + (row_deg <= col_deg)) ;
 }
 , LG_RCC_COMPARE_ROW_COL)
+
+// define indexbiop for old or vanila GraphBLAS
+#if !LG_SUITESPARSE_GRAPHBLAS_V10
+typedef GrB_BinaryOp GxB_IndexBinaryOp;
+#endif
 
 int LAGraph_RichClubCoefficient
 (
@@ -216,6 +220,14 @@ int LAGraph_RichClubCoefficient
     GRB_TRY (GrB_Vector_new(&degrees, GrB_INT64, n)) ;
     GRB_TRY (GrB_Vector_new(&node_edges, GrB_INT64, n)) ;
 
+    // degrees = G->out_degree - 1
+    // Fill out degree vector, to target col_scale mxm on graphs 
+    // with singletons, scalar value irrelevant.
+    GRB_TRY (GrB_Vector_assign_INT64 (
+        degrees, NULL, NULL, (int64_t) -1, GrB_ALL, 0, NULL)) ;
+    GRB_TRY (GrB_Vector_assign (
+        degrees, NULL, GrB_PLUS_INT64, G->out_degree, GrB_ALL, 0, NULL)) ;
+
 #if LG_SUITESPARSE_GRAPHBLAS_V10
     GRB_TRY (GxB_Type_new (
         &ctx_type, sizeof(LG_RCC_context), "LG_RCC_context", LG_RCC_CONTEXT)) ;
@@ -227,36 +239,7 @@ int LAGraph_RichClubCoefficient
         &rcCalculation, (GxB_binary_function) (LG_RCC_rich_club_formula),
         GrB_FP64, GrB_INT64, GrB_INT64,
         "LG_RCC_rich_club_formula", LG_RCC_RICH_CLUB_FORMULA)) ;
-#else
-    GRB_TRY (GrB_BinaryOp_new(
-        &iseq_2lt, (GxB_binary_function) (LG_RCC_iseq_2islt),
-        GrB_INT64, GrB_INT64, GrB_INT64)) ;
-    GRB_TRY (GrB_BinaryOp_new(
-        &rcCalculation, (GxB_binary_function) (LG_RCC_rich_club_formula),
-        GrB_FP64, GrB_INT64, GrB_INT64 )) ;
-#endif
 
-
-    GRB_TRY (GrB_Vector_reduce_INT64(
-        &max_deg, NULL, GrB_MAX_MONOID_INT64, G->out_degree, NULL)) ;
-    GRB_TRY (GrB_Vector_new (&edges_per_deg, GrB_INT64, max_deg)) ;
-    GRB_TRY (GrB_Vector_new (&verts_per_deg, GrB_INT64, max_deg)) ;
-    GRB_TRY (GrB_Vector_new (rccs, GrB_FP64, max_deg)) ;
-
-    //--------------------------------------------------------------------------
-    // Calculations
-    //--------------------------------------------------------------------------
-
-    // degrees = G->out_degree - 1
-    // Fill out degree vector, to target col_scale mxm on graphs 
-    // with singletons, scalar value irrelevant.
-    GRB_TRY (GrB_Vector_assign_INT64 (
-        degrees, NULL, NULL, (int64_t) -1, GrB_ALL, 0, NULL)) ;
-    GRB_TRY (GrB_Vector_assign (
-        degrees, NULL, GrB_PLUS_INT64, G->out_degree, GrB_ALL, 0, NULL)) ;
-
-
-#if LAGRAPH_SUITESPARSE
     GrB_Type type;
     uint64_t deg_n;
     uint64_t deg_size;
@@ -268,7 +251,28 @@ int LAGraph_RichClubCoefficient
     GRB_TRY (GrB_Scalar_setElement_UDT (ctx_s, &ctx));
     GRB_TRY (GxB_BinaryOp_new_IndexOp (
         &node_compare, node_compare_idxop, ctx_s));
+#else
+    GRB_TRY (GrB_BinaryOp_new(
+        &node_compare, (GxB_binary_function) (LG_RCC_iseq_2islt),
+        GrB_INT64, GrB_INT64, GrB_INT64)) ;
+    GRB_TRY (GrB_BinaryOp_new(
+        &rcCalculation, (GxB_binary_function) (LG_RCC_rich_club_formula),
+        GrB_FP64, GrB_INT64, GrB_INT64 )) ;
+#endif
+
     GRB_TRY (GrB_Semiring_new(&plus_2le, GrB_PLUS_MONOID_INT64, node_compare)) ;
+
+    //--------------------------------------------------------------------------
+    // Calculations
+    //--------------------------------------------------------------------------
+    GRB_TRY (GrB_Vector_reduce_INT64(
+        &max_deg, NULL, GrB_MAX_MONOID_INT64, G->out_degree, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&edges_per_deg, GrB_INT64, max_deg)) ;
+    GRB_TRY (GrB_Vector_new (&verts_per_deg, GrB_INT64, max_deg)) ;
+    GRB_TRY (GrB_Vector_new (rccs, GrB_FP64, max_deg)) ;
+
+
+#if LG_SUITESPARSE_GRAPHBLAS_V10
     GRB_TRY (GrB_free (&degrees));
     GRB_TRY (GrB_Vector_new (&degrees, GrB_BOOL, deg_n));
     GRB_TRY (GrB_Vector_assign_INT64 (
@@ -286,24 +290,7 @@ int LAGraph_RichClubCoefficient
     GRB_TRY (GxB_Vector_load (
         degrees, (void **) &ctx.arr, type, deg_n, deg_size, handling, NULL
     )) ;
-#else
-    // Each edge in the graph gets the value of the degree of its row node
-    GRB_TRY (GrB_Matrix_diag (&D, degrees, 0)) ;
-    GRB_TRY (GrB_mxm (
-        A_deg, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, D, A, NULL)) ;
 
-    // Sum the number of edges each node is "responsible" for.
-    GRB_TRY (GrB_mxv (
-        node_edges, NULL, GrB_PLUS_INT64, plus_2le, A, degrees, NULL)) ;
-
-    // The rest of this is indexing the number of edges and number of nodes at 
-    // each degree and then doing a cummulative sum to know the amount of edges 
-    // and nodes at degree geq k.
-    GRB_TRY (GrB_Vector_nvals (&edge_vec_nvals, node_edges)) ;
-#endif
-
-
-#if LG_SUITESPARSE_GRAPHBLAS_V10
     if(n == edge_vec_nvals)
     {
         deg_x = degrees;
@@ -374,6 +361,20 @@ int LAGraph_RichClubCoefficient
         verts_per_deg, (void **) &vpd_arr, vpd_type,
         vpd_n, vpd_size, vpd_h, NULL)) ;
 #else
+    // Each edge in the graph gets the value of the degree of its row node
+    GRB_TRY (GrB_Matrix_diag (&D, degrees, 0)) ;
+    GRB_TRY (GrB_mxm (
+        A_deg, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, D, A, NULL)) ;
+
+    // Sum the number of edges each node is "responsible" for.
+    GRB_TRY (GrB_mxv (
+        node_edges, NULL, GrB_PLUS_INT64, plus_2le, A_deg, degrees, NULL)) ;
+
+    // The rest of this is indexing the number of edges and number of nodes at 
+    // each degree and then doing a cummulative sum to know the amount of edges 
+    // and nodes at degree geq k.
+    GRB_TRY (GrB_Vector_nvals (&edge_vec_nvals, node_edges)) ;
+
     LG_TRY (LAGraph_Malloc(
         &a_space, edge_vec_nvals * 3 + max_deg * 4, sizeof(int64_t), NULL
     )) ;
@@ -458,8 +459,7 @@ int LAGraph_RichClubCoefficient
 
     //Computes the RCC of a matrix
     GRB_TRY(GrB_eWiseMult(
-        *rccs, NULL, NULL, rcCalculation, 
-        edges_per_deg, verts_per_deg, NULL
+        *rccs, NULL, NULL, rcCalculation, edges_per_deg, verts_per_deg, NULL
     )) ;
 
     LG_FREE_WORK ;
