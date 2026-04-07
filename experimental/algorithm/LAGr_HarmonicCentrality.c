@@ -17,7 +17,7 @@
 // The LAGr_HarmonicCentrality algorithm calculates an estimate of the "harmonic
 // centrality" of all nodes in a graph. Harmonic Centrality is defined on a non-
 // weighted graph as follows:
-// HC(u) = \sum_{v\in neighbors(u)} d(u,v)
+// HC(u) = \sum_{v \ne u} 1/d(u,v)
 // where d(u,v) is the shortest path distance from u to v.
 //
 // HyperLogLog allows us to estimate the cardinality of the subsets which each
@@ -47,16 +47,10 @@
 #include "LG_internal.h"
 
 #define CENTRALITY_MAX_ITER 100
-
-// WARNING: these macros are not recognized by the JIT, so have to be changed
-// manually in the functions below
 #define HLL_P 10                   // Precision
 #define HLL_REGISTERS (1 << HLL_P) // number of registers
 
-// register a function (or type) and the jit string for its definition
-#define JIT_STR(f, var) static char *var = #f; f
-
-JIT_STR(
+LG_JIT_STRING(
 typedef struct {
     uint8_t registers[(1 << 10)];
 } HLL;
@@ -84,8 +78,9 @@ static __inline void _hll_add_hash(HLL *hll, uint32_t hash) {
     }
 }
 
-double _hll_count(const HLL *hll) {
-    uint32_t i;
+LG_JIT_STRING (
+void lg_hll_count(double *z, const HLL *x) {
+    const HLL *hll = x;
 
     double alpha_mm = 0.7213 / (1.0 + 1.079 / (double)HLL_REGISTERS);
 
@@ -101,7 +96,7 @@ double _hll_count(const HLL *hll) {
     if (estimate <= 5.0 / 2.0 * (double)HLL_REGISTERS) {
         int zeros = 0;
 
-        for (i = 0; i < HLL_REGISTERS; i++)
+        for (uint32_t i = 0; i < HLL_REGISTERS; i++)
             zeros += (hll->registers[i] == 0);
 
         if (zeros)
@@ -111,8 +106,8 @@ double _hll_count(const HLL *hll) {
         estimate = -4294967296.0 * log(1.0 - (estimate / 4294967296.0)) ;
     }
 
-    return estimate;
-}
+    *z = estimate;
+}, LG_HLL_COUNT)
 
 //------------------------------------------------------------------------------
 // GraphBLAS Ops
@@ -145,41 +140,41 @@ void lg_hll_init(HLL *z, const uint64_t *x, GrB_Index i, GrB_Index j,
     }
 }
 
-JIT_STR(
+LG_JIT_STRING(
 void lg_hll_merge(HLL *z, const HLL *x, const HLL *y) {
-    for (uint32_t i = 0; i < (1 << 10); i++) {
-        z->registers[i] = y->registers[i] > x->registers[i] ? y->registers[i]
-            : x->registers[i];
+    for (uint32_t i = 0; i < HLL_REGISTERS; i++) {
+        z->registers[i] = y->registers[i] > x->registers[i] ?
+                          y->registers[i] : x->registers[i];
     }
 },
 LG_HLL_MERGE_STR)
 
-JIT_STR(
+LG_JIT_STRING(
     void lg_hll_delta(double *z, const HLL *x, const HLL *y) {
     *z = 0;
-    bool diff = 0 != memcmp(x->registers, y->registers, (1 << 10)) ;
+    bool diff = 0 != memcmp(x->registers, y->registers, HLL_REGISTERS) ;
     if (diff) {
         uint32_t i;
 
         double alpha_mm = 0.7213 / (1.0 + 1.079 / (double)(1 << 10)) ;
 
-        alpha_mm *= ((double)(1 << 10) * (double)(1 << 10)) ;
+        alpha_mm *= ((double)(HLL_REGISTERS) * (double)(HLL_REGISTERS)) ;
 
         double sum = 0;
-        for (uint32_t i = 0; i < (1 << 10); i++) {
+        for (uint32_t i = 0; i < (HLL_REGISTERS); i++) {
             sum += 1.0 / (1 << x->registers[i]);
         }
 
         double estimate = alpha_mm / sum;
 
-        if (estimate <= 5.0 / 2.0 * (double)(1 << 10)) {
+        if (estimate <= 5.0 / 2.0 * (double)(HLL_REGISTERS)) {
             int zeros = 0;
 
-            for (i = 0; i < (1 << 10); i++)
+            for (i = 0; i < (HLL_REGISTERS); i++)
                 zeros += (x->registers[i] == 0);
 
             if (zeros)
-                estimate = (double)(1 << 10) * log((double)(1 << 10) / zeros);
+                estimate = (double)(HLL_REGISTERS) * log((double)(HLL_REGISTERS) / zeros);
 
         } else if (estimate > (1.0 / 30.0) * 4294967296.0) {
             estimate = -4294967296.0 * log(1.0 - (estimate / 4294967296.0)) ;
@@ -188,20 +183,20 @@ JIT_STR(
         *z = estimate;
 
         sum = 0;
-        for (uint32_t i = 0; i < (1 << 10); i++) {
+        for (uint32_t i = 0; i < (HLL_REGISTERS); i++) {
             sum += 1.0 / (1 << y->registers[i]);
         }
 
         estimate = alpha_mm / sum;
 
-        if (estimate <= 5.0 / 2.0 * (double)(1 << 10)) {
+        if (estimate <= 5.0 / 2.0 * (double)(HLL_REGISTERS)) {
             int zeros = 0;
 
-            for (i = 0; i < (1 << 10); i++)
+            for (i = 0; i < (HLL_REGISTERS); i++)
                 zeros += (y->registers[i] == 0);
 
             if (zeros)
-                estimate = (double)(1 << 10) * log((double)(1 << 10) / zeros);
+                estimate = (double)(HLL_REGISTERS) * log((double)(HLL_REGISTERS) / zeros);
 
         } else if (estimate > (1.0 / 30.0) * 4294967296.0) {
             estimate = -4294967296.0 * log(1.0 - (estimate / 4294967296.0)) ;
@@ -211,11 +206,9 @@ JIT_STR(
 },
 LG_HLL_DELTA_STR)
 
-JIT_STR(
-    void lg_hll_second(HLL *z,
-                        bool *x, // unused
-                        const HLL *y) {
-    memcpy(z->registers, y->registers, 1 << 10);
+LG_JIT_STRING(
+    void lg_hll_second(HLL *z, bool *x, const HLL *y) {
+    memcpy(z->registers, y->registers, sizeof(z->registers));
 },
 LG_HLL_SECOND_STR)
 
@@ -252,12 +245,14 @@ GrB_free(&shallow_second);   \
 GrB_free(&merge_hll_biop);   \
 GrB_free(&merge_hll);        \
 GrB_free(&merge_second);     \
-GrB_free(&delta_hll);
+GrB_free(&delta_hll);        \
+GrB_free(&count_hll);
 
 #undef LG_FREE_ALL
 #define LG_FREE_ALL          \
 LG_FREE_WORK ;               \
-GrB_free(scores) ;
+GrB_free(scores) ;           \
+GrB_free(reachable_nodes) ;
 
 // compute harmonic closeness centrality estimates using HLL BFS propagation
 //
@@ -291,14 +286,12 @@ int LAGr_HarmonicCentrality(
 
     GrB_Descriptor desc = NULL;
     GrB_IndexUnaryOp init_hlls = NULL;
+    GrB_UnaryOp count_hll = NULL;
     GrB_BinaryOp shallow_second = NULL;
     GrB_BinaryOp merge_hll_biop = NULL;
     GrB_Monoid merge_hll = NULL;
     GrB_Semiring merge_second = NULL;
     GrB_BinaryOp delta_hll = NULL;
-
-    // TODO:
-    LG_ASSERT(reachable_nodes == NULL, GrB_NOT_IMPLEMENTED);
 
     LG_ASSERT(G != NULL, GrB_NULL_POINTER);
     LG_ASSERT(G->A != NULL, GrB_NULL_POINTER);
@@ -327,6 +320,7 @@ int LAGr_HarmonicCentrality(
                                         node_weights, NULL)) ;
         LG_ASSERT_MSG(min_w > 0, GrB_INVALID_VALUE,
                       "Negative node weights not supported");
+
         // TODO: is this cap reasonable?
         LG_ASSERT_MSG(max_w < 1000000, GrB_NOT_IMPLEMENTED,
                       "Node weights over 1000000 not supported");
@@ -367,6 +361,9 @@ int LAGr_HarmonicCentrality(
     GRB_TRY (GxB_Vector_extractTuples_Vector (
         NULL, flat_weight, node_weights, NULL)) ;
 
+    // count op
+    GRB_TRY (GxB_UnaryOp_new (&count_hll, (GxB_unary_function) lg_hll_count,
+        GrB_FP64, hll_t, "lg_hll_count", LG_HLL_COUNT)) ;
 
     // init op: weight (INT64) at row index i → HLL seeded with 'weight' hashes
     GRB_TRY(GrB_IndexUnaryOp_new(
@@ -459,6 +456,17 @@ int LAGr_HarmonicCentrality(
     score_cont->iso = false;
     score_cont->x = flat_scores;
     flat_scores = NULL ;
+
+    if (reachable_nodes) {
+        // make reachable_nodes vector with same sparsity pattern as scores
+        GRB_TRY (GrB_Vector_new (reachable_nodes, GrB_FP64, nrows)) ;
+        GRB_TRY (GrB_apply (delta_vec, NULL, NULL, count_hll, new_sets, NULL)) ;
+        GrB_Vector I_vec = (score_cont->format == GxB_FULL) ?
+            NULL : score_cont->i;
+        GRB_TRY (GxB_Vector_assign_Vector (
+            *reachable_nodes, NULL, NULL, delta_vec, I_vec, NULL)) ;
+    }
+
     GRB_TRY (GxB_load_Vector_from_Container (*scores, score_cont, NULL)) ;
 
     //--------------------------------------------------------------------------
@@ -470,6 +478,7 @@ int LAGr_HarmonicCentrality(
     LG_FREE_WORK;
     return GrB_SUCCESS;
 }
+
 #else
 int LAGr_HarmonicCentrality(
     // outputs:
@@ -493,6 +502,7 @@ int LAGr_HarmonicCentrality(
     GrB_free(&it);                \
     GrB_free(&score);             \
     GrB_free(&desc);              \
+    GrB_free(&node_compact);      \
     LAGraph_Delete(&G_compact, NULL);
 
 #undef LG_FREE_ALL
@@ -519,6 +529,7 @@ int LAGr_HarmonicCentrality_exact(
 
     GrB_Vector level = NULL;
     GrB_Vector flat_weight = NULL;
+    GrB_Vector node_compact = NULL;
     GxB_Iterator it = NULL;
     GrB_Scalar score = NULL;
 
@@ -564,7 +575,6 @@ int LAGr_HarmonicCentrality_exact(
     GRB_TRY(GrB_Matrix_new(&_A, GrB_BOOL, nvals, nvals)) ;
     GRB_TRY(GxB_Matrix_extract_Vector(
         _A, NULL, NULL, G->A, node_weights, node_weights, desc)) ;
-    GRB_TRY(GrB_free(&desc)) ;
     LG_TRY (LAGraph_New (&G_compact, &_A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
     GRB_TRY(GrB_Vector_new(&flat_weight, GrB_INT64, nvals)) ;
@@ -575,8 +585,13 @@ int LAGr_HarmonicCentrality_exact(
     //--------------------------------------------------------------------------
 
     GRB_TRY (GxB_Scalar_new (&score, GrB_FP64)) ;
-    GRB_TRY(GxB_Iterator_new(&it)) ;
-    GRB_TRY(GxB_Vector_Iterator_attach(it, nodes, NULL)) ;
+    GRB_TRY (GxB_Iterator_new(&it)) ;
+    GRB_TRY (GrB_Vector_new (&node_compact, GrB_INT64, nvals));
+    GRB_TRY (GxB_Vector_extract_Vector(
+        node_compact, NULL, NULL, nodes, node_weights, desc)) ;
+    GRB_TRY(GrB_free(&desc)) ;
+
+    GRB_TRY(GxB_Vector_Iterator_attach(it, node_compact, NULL)) ;
     GrB_Info info = GxB_Vector_Iterator_seek(it, 0);
     while (info != GxB_EXHAUSTED) {
         GrB_Index nodeIdx = GxB_Vector_Iterator_getIndex(it);

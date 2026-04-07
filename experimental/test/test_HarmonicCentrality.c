@@ -18,6 +18,7 @@
 
 // NOTE: these tests require SuiteSparse:GraphBLAS
 
+#include "LG_internal.h"
 #include <stdio.h>
 #include <acutest.h>
 
@@ -30,6 +31,7 @@ LAGraph_Graph G = NULL ;
 GrB_Vector scores_approx = NULL ;
 GrB_Vector scores_exact = NULL ;
 GrB_Vector node_weights = NULL ;
+GrB_Vector reachable_approx = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -190,6 +192,83 @@ void test_HarmonicCentrality_empty (void)
 
 
 //------------------------------------------------------------------------------
+// test_HarmonicCentrality_reachable: compare reachable_nodes to BFS nvals
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE_GRAPHBLAS_V10
+void test_HarmonicCentrality_reachable (void)
+{
+    LAGraph_Init (msg) ;
+
+    for (int k = 0 ; ; k++)
+    {
+        const char *aname = files [k] ;
+        if (strlen (aname) == 0) break ;
+        printf ("\n================================== %s:\n", aname) ;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
+        OK (fclose (f)) ;
+
+        GrB_Index n ;
+        OK (GrB_Matrix_nrows (&n, A)) ;
+
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;
+
+        OK (GrB_Vector_new (&node_weights, GrB_BOOL, n)) ;
+        OK (GrB_Vector_assign_BOOL (
+            node_weights, NULL, NULL, true, GrB_ALL, n, NULL)) ;
+
+        // compute approximate harmonic centrality with reachable_nodes output
+        GrB_Info info = LAGr_HarmonicCentrality (
+            &scores_approx, &reachable_approx, G, node_weights, msg);
+        OK (info) ;
+
+        // for each node, run BFS and compare nvals(level) to reachable_approx
+        double max_err = 0 ;
+        for (GrB_Index i = 0 ; i < n ; i++)
+        {
+            double approx_count = 0 ;
+            GrB_Info info = GrB_Vector_extractElement_FP64 (
+                &approx_count, reachable_approx, i) ;
+            if (info != GrB_SUCCESS) continue ;
+
+            GrB_Vector level = NULL ;
+            OK (LAGr_BreadthFirstSearch (&level, NULL, G, i, msg)) ;
+
+            GrB_Index bfs_nvals = 0 ;
+            OK (GrB_Vector_nvals (&bfs_nvals, level)) ;
+            OK (GrB_free (&level)) ;
+
+            // bfs_nvals includes the source node (level 0)
+            if (bfs_nvals > 0)
+            {
+                double rel = fabs (approx_count - (double) bfs_nvals)
+                           / (double) bfs_nvals ;
+                if (rel > max_err) max_err = rel ;
+            }
+        }
+
+        printf ("max relative error (reachable): %.2f%%\n", max_err * 100) ;
+        TEST_CHECK (max_err < 0.5) ;
+        TEST_MSG ("Reachable node count error too large: %.2f%%",
+            max_err * 100) ;
+
+        OK (LAGraph_Delete (&G, msg)) ;
+        OK (GrB_free (&scores_approx)) ;
+        OK (GrB_free (&reachable_approx)) ;
+        OK (GrB_free (&node_weights)) ;
+    }
+
+    LAGraph_Finalize (msg) ;
+}
+#endif
+
+
+//------------------------------------------------------------------------------
 // test_errors: test error handling
 //------------------------------------------------------------------------------
 
@@ -258,6 +337,7 @@ TEST_LIST = {
     #if LG_SUITESPARSE_GRAPHBLAS_V10
     {"HarmonicCentrality", test_HarmonicCentrality},
     {"HarmonicCentrality_empty", test_HarmonicCentrality_empty},
+    {"HarmonicCentrality_reachable", test_HarmonicCentrality_reachable},
     #endif
     {"HarmonicCentrality_errors", test_errors},
     {NULL, NULL}
