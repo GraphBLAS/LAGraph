@@ -318,11 +318,11 @@ int LAGr_HarmonicCentrality(
                                         node_weights, NULL)) ;
         GRB_TRY(GrB_Vector_reduce_INT64(&min_w, NULL, GrB_MIN_MONOID_INT64,
                                         node_weights, NULL)) ;
-        LG_ASSERT_MSG(min_w > 0, GrB_INVALID_VALUE,
+        LG_ASSERT_MSG(min_w >= 0, GrB_INVALID_VALUE,
                       "Negative node weights not supported");
 
         // TODO: is this cap reasonable?
-        LG_ASSERT_MSG(max_w < 1000000, GrB_NOT_IMPLEMENTED,
+        LG_ASSERT_MSG(max_w <= 1000000, GrB_NOT_IMPLEMENTED,
                       "Node weights over 1000000 not supported");
     }
 
@@ -459,7 +459,7 @@ int LAGr_HarmonicCentrality(
 
     if (reachable_nodes) {
         // make reachable_nodes vector with same sparsity pattern as scores
-        GRB_TRY (GrB_Vector_new (reachable_nodes, GrB_FP64, nrows)) ;
+        GRB_TRY (GrB_Vector_new (reachable_nodes, GrB_UINT64, nrows)) ;
         GRB_TRY (GrB_apply (delta_vec, NULL, NULL, count_hll, new_sets, NULL)) ;
         GrB_Vector I_vec = (score_cont->format == GxB_FULL) ?
             NULL : score_cont->i;
