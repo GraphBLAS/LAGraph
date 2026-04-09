@@ -52,7 +52,7 @@
 
 LG_JIT_STRING(
 typedef struct {
-    uint8_t registers[(1 << 10)];
+    uint8_t registers[HLL_REGISTERS];
 } HLL;
 , HLL_jit)
 
@@ -156,7 +156,7 @@ LG_JIT_STRING(
     if (diff) {
         uint32_t i;
 
-        double alpha_mm = 0.7213 / (1.0 + 1.079 / (double)(1 << 10)) ;
+        double alpha_mm = 0.7213 / (1.0 + 1.079 / (double)(HLL_REGISTERS)) ;
 
         alpha_mm *= ((double)(HLL_REGISTERS) * (double)(HLL_REGISTERS)) ;
 
@@ -241,7 +241,7 @@ GrB_free(&flat_weight);      \
 GrB_free(&delta_vec);        \
 GrB_free(&desc);             \
 GrB_free(&init_hlls);        \
-GrB_free(&shallow_second);   \
+GrB_free(&hll_second);   \
 GrB_free(&merge_hll_biop);   \
 GrB_free(&merge_hll);        \
 GrB_free(&merge_second);     \
@@ -271,26 +271,51 @@ int LAGr_HarmonicCentrality(
     const GrB_Vector node_weights, // participating nodes and their weights
     char *msg
 ) {
+    // compact G->A: without the nodes with no specified weights
     GrB_Matrix _A = NULL;
-    GxB_Container score_cont = NULL;
+
     GrB_Index nrows = 0;
     GrB_Index nvals = 0;
 
+    // HC score of the nodes
+    GxB_Container score_cont = NULL;
+    GrB_Vector flat_scores = NULL;
+
+    // HyperLogLog GraphBLAS type
     GrB_Type hll_t = NULL;
+
+    // Vectors holding the hll sets. After step i, holds the ball of radius i
+    // around each node
     GrB_Vector new_sets = NULL;
     GrB_Vector old_sets = NULL;
     GxB_Container old_cont = NULL;
-    GrB_Vector flat_scores = NULL;
+
+    // compact wieghts
     GrB_Vector flat_weight = NULL;
+
+    // |new_sets| - |old_sets|
     GrB_Vector delta_vec = NULL;
 
     GrB_Descriptor desc = NULL;
+
+    // Operators
+    // Add the given node with (weight) hashes into its HLL set
     GrB_IndexUnaryOp init_hlls = NULL;
+
+    // Query set cardinality
     GrB_UnaryOp count_hll = NULL;
-    GrB_BinaryOp shallow_second = NULL;
+
+    // z = y
+    GrB_BinaryOp hll_second = NULL;
+
+    // z = x union y
     GrB_BinaryOp merge_hll_biop = NULL;
     GrB_Monoid merge_hll = NULL;
+
+    // [merge_hll.hll_second]
     GrB_Semiring merge_second = NULL;
+
+    // z = |y| - |x|
     GrB_BinaryOp delta_hll = NULL;
 
     LG_ASSERT(G != NULL, GrB_NULL_POINTER);
@@ -361,33 +386,26 @@ int LAGr_HarmonicCentrality(
     GRB_TRY (GxB_Vector_extractTuples_Vector (
         NULL, flat_weight, node_weights, NULL)) ;
 
-    // count op
     GRB_TRY (GxB_UnaryOp_new (&count_hll, (GxB_unary_function) lg_hll_count,
         GrB_FP64, hll_t, "lg_hll_count", LG_HLL_COUNT)) ;
 
-    // init op: weight (INT64) at row index i → HLL seeded with 'weight' hashes
-    GRB_TRY(GrB_IndexUnaryOp_new(
+    GRB_TRY (GrB_IndexUnaryOp_new (
         &init_hlls, (GxB_index_unary_function)lg_hll_init, hll_t,
         GrB_INT64, GrB_BOOL)) ;
 
-    // merge binary op (HLL, HLL) -> HLL  in-place: z == x required
     GRB_TRY(GxB_BinaryOp_new(
         &merge_hll_biop, (GxB_binary_function)lg_hll_merge,
         hll_t, hll_t, hll_t, "lg_hll_merge", LG_HLL_MERGE_STR)) ;
 
-    // second op
     GRB_TRY(GxB_BinaryOp_new(
-        &shallow_second, (GxB_binary_function)lg_hll_second,
+        &hll_second, (GxB_binary_function)lg_hll_second,
         hll_t, GrB_BOOL, hll_t, "lg_hll_second", LG_HLL_SECOND_STR)) ;
 
-    // merge monoid - identity is an empty (all-zero) HLL sketch
     HLL hll_zero = {0};
     GRB_TRY(GrB_Monoid_new_UDT(&merge_hll, merge_hll_biop, &hll_zero)) ;
 
-    // semiring: add = merge monoid, multiply = copy (pass-through second operand)
-    GRB_TRY(GrB_Semiring_new(&merge_second, merge_hll, shallow_second)) ;
+    GRB_TRY(GrB_Semiring_new(&merge_second, merge_hll, hll_second)) ;
 
-    // delta op: (HLL_old, HLL_new) → FP64 cardinality change
     GRB_TRY(GxB_BinaryOp_new(
         &delta_hll, (GxB_binary_function)lg_hll_delta,
         GrB_FP64, hll_t, hll_t, "lg_hll_delta", LG_HLL_DELTA_STR)) ;
@@ -503,16 +521,19 @@ int LAGr_HarmonicCentrality(
     GrB_free(&score);             \
     GrB_free(&desc);              \
     GrB_free(&node_compact);      \
+    GrB_free(&score_compact);     \
+    GrB_free(&reach_compact);     \
     LAGraph_Delete(&G_compact, NULL);
 
 #undef LG_FREE_ALL
 #define LG_FREE_ALL               \
     LG_FREE_WORK ;                \
-    GrB_free(scores) ;
+    GrB_free(scores) ;            \
+    GrB_free(reachable_nodes) ;
 
 // This is an exact (but much slower) calculation of harmonic centrality
 #if LG_SUITESPARSE_GRAPHBLAS_V10
-int LAGr_HarmonicCentrality_exact(
+int LAGr_HarmonicCentrality_exact (
     // outputs:
     GrB_Vector *scores,          // FP64 scores by original node ID
     GrB_Vector *reachable_nodes, // [optional] estimate the number of reach-
@@ -523,21 +544,29 @@ int LAGr_HarmonicCentrality_exact(
     const GrB_Vector node_weights, // participating nodes and their weights
     char *msg
 ) {
+    // compact G->A
     GrB_Matrix _A = NULL;
+
+    // Dimensions of node_weights vector
     GrB_Index nrows = 0;
     GrB_Index nvals = 0;
 
+    // BFS result
     GrB_Vector level = NULL;
+
+    // compacted vectors
     GrB_Vector flat_weight = NULL;
     GrB_Vector node_compact = NULL;
+    GrB_Vector score_compact = NULL;
+    GrB_Vector reach_compact = NULL;
+
     GxB_Iterator it = NULL;
     GrB_Scalar score = NULL;
+    GrB_Index n_reachable = 0;
 
     GrB_Descriptor desc = NULL;
     LAGraph_Graph G_compact = NULL;
 
-    // TODO:
-    LG_ASSERT(reachable_nodes == NULL, GrB_NOT_IMPLEMENTED);
     LG_ASSERT(G != NULL, GrB_NULL_POINTER);
     LG_ASSERT(G->A != NULL, GrB_NULL_POINTER);
     LG_ASSERT(scores != NULL, GrB_NULL_POINTER);
@@ -546,6 +575,10 @@ int LAGr_HarmonicCentrality_exact(
     GRB_TRY(GrB_Vector_size(&nrows, node_weights)) ;
     GRB_TRY(GrB_Vector_nvals(&nvals, node_weights)) ;
     GRB_TRY(GrB_Vector_new(scores, GrB_FP64, nrows)) ;
+    if (reachable_nodes != NULL)
+    {
+        GRB_TRY(GrB_Vector_new(reachable_nodes, GrB_INT64, nrows)) ;
+    }
 
     if (nvals == 0) {
         return GrB_SUCCESS;
@@ -587,6 +620,8 @@ int LAGr_HarmonicCentrality_exact(
     GRB_TRY (GxB_Scalar_new (&score, GrB_FP64)) ;
     GRB_TRY (GxB_Iterator_new(&it)) ;
     GRB_TRY (GrB_Vector_new (&node_compact, GrB_INT64, nvals));
+    GRB_TRY (GrB_Vector_new (&score_compact, GrB_FP64, nvals));
+    GRB_TRY (GrB_Vector_new (&reach_compact, GrB_INT64, nvals));
     GRB_TRY (GxB_Vector_extract_Vector(
         node_compact, NULL, NULL, nodes, node_weights, desc)) ;
     GRB_TRY(GrB_free(&desc)) ;
@@ -602,13 +637,23 @@ int LAGr_HarmonicCentrality_exact(
         GRB_TRY (GrB_Vector_removeElement (level, nodeIdx)) ;
 
         // dot product (plus div)
-        GRB_TRY(GrB_vxm((GrB_Vector) score, NULL, NULL, GxB_PLUS_DIV_FP64,
+        GRB_TRY (GrB_vxm ((GrB_Vector) score, NULL, NULL, GxB_PLUS_DIV_FP64,
             flat_weight, (GrB_Matrix) level, NULL)) ;
+        GRB_TRY (GrB_Vector_nvals (&n_reachable, level));
         GrB_free (&level);
 
-        GRB_TRY (GrB_Vector_setElement_Scalar(*scores, score, nodeIdx)) ;
+        GRB_TRY (GrB_Vector_setElement_INT64 (reach_compact, n_reachable, nodeIdx));
+        GRB_TRY (GrB_Vector_setElement_Scalar (score_compact, score, nodeIdx)) ;
 
         info = GxB_Vector_Iterator_next(it);
+    }
+
+    GRB_TRY (GxB_Vector_assign_Vector (
+        *scores, NULL, NULL, score_compact, node_weights, desc)) ;
+    if (reachable_nodes != NULL)
+    {
+        GRB_TRY (GxB_Vector_assign_Vector (
+            *reachable_nodes, NULL, NULL, reach_compact, node_weights, desc)) ;
     }
 
     //--------------------------------------------------------------------------
