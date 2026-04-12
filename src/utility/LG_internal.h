@@ -711,4 +711,11 @@ int LG_KindName
 
 #endif
 
+//------------------------------------------------------------------------------
+// init/finalized
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC void LG_set_LAGr_Init_has_been_called (bool setting) ;
+LAGRAPH_PUBLIC bool LG_get_LAGr_Init_has_been_called (void) ;
+
 #endif

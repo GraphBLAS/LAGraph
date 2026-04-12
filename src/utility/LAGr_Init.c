@@ -32,11 +32,7 @@
 static bool LG_LAGr_Init_has_been_called = false ;
 
 // LG_LAGr_Init_has_been_called is only modified or accessed by the following
-// two routines (even in this file).  The two functions are made accessible via
-// LAGRAPH_PUBLIC, only for testing purposes by src/test/test_Xinit.c.
-
-LAGRAPH_PUBLIC void LG_set_LAGr_Init_has_been_called (bool setting) ;
-LAGRAPH_PUBLIC bool LG_get_LAGr_Init_has_been_called (void) ;
+// two routines (even in this file).
 
 LAGRAPH_PUBLIC
 void LG_set_LAGr_Init_has_been_called (bool setting)
@@ -147,7 +143,8 @@ int LAGr_Init
 
     // ensure LAGr_Init has not already been called
     LG_ASSERT_MSG (!LG_get_LAGr_Init_has_been_called ( ), GrB_INVALID_VALUE,
-        "LAGr*_Init can only be called once") ;
+        "LAGraph is already initialized") ;
+    LG_set_LAGr_Init_has_been_called (true) ;
 
     //--------------------------------------------------------------------------
     // start GraphBLAS
@@ -347,6 +344,5 @@ int LAGr_Init
     GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_fp64,
         GrB_MIN_MONOID_FP64   , GrB_ONEB_FP64  )) ;
 
-    LG_set_LAGr_Init_has_been_called (true) ;
     return (GrB_SUCCESS) ;
 }

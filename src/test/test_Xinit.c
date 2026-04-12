@@ -19,10 +19,6 @@
 #include "LAGraphX.h"
 #include "LG_internal.h"
 
-// functions defined in LAGr_Init.c:
-LAGRAPH_PUBLIC void LG_set_LAGr_Init_has_been_called (bool setting) ;
-LAGRAPH_PUBLIC bool LG_get_LAGr_Init_has_been_called (void) ;
-
 //------------------------------------------------------------------------------
 // global variables
 //------------------------------------------------------------------------------
@@ -67,18 +63,19 @@ void test_Xinit (void)
     printf ("msg: [%s]\n", msg) ;
 
     OK (LAGraph_Finalize (msg)) ;
+    TEST_CHECK (LAGraph_Finalize (msg) == GrB_INVALID_VALUE) ;
+    printf ("msg: [%s]\n", msg) ;
 
     // the flag is still set after LAGraph_Finalize has been called,
     // per LAGraph policy
-    TEST_CHECK (LG_get_LAGr_Init_has_been_called ( ) == true) ;
+    TEST_CHECK (LG_get_LAGr_Init_has_been_called ( ) == false) ;
 
     // reset and try again
-    LG_set_LAGr_Init_has_been_called (false) ;
-    TEST_CHECK (LG_get_LAGr_Init_has_been_called ( ) == false) ;
     OK (LAGr_Init (GrB_NONBLOCKING, malloc, calloc, realloc, free, msg)) ;
     TEST_CHECK (LG_get_LAGr_Init_has_been_called ( ) == true) ;
-    OK (LAGraph_Finalize (msg)) ;
-    TEST_CHECK (LG_get_LAGr_Init_has_been_called ( ) == true) ;
+    status = LAGraph_Finalize (msg) ;
+    TEST_CHECK (status == GrB_SUCCESS) ;
+    TEST_CHECK (LG_get_LAGr_Init_has_been_called ( ) == false) ;
 }
 
 //------------------------------------------------------------------------------
@@ -118,6 +115,7 @@ void test_Xinit_brutal (void)
 
     OK (LAGraph_Finalize (msg)) ;
     TEST_CHECK (LG_nmalloc == 0) ;
+    TEST_CHECK (LG_get_LAGr_Init_has_been_called ( ) == false) ;
 
     // brutal tests: keep giving the method more malloc's until it succeeds
 
@@ -151,15 +149,9 @@ void test_Xinit_brutal (void)
         }
     }
 
-    TEST_CHECK (LG_get_LAGr_Init_has_been_called ( ) == true) ;
-
     for (int nbrutal = 0 ; nbrutal < 1000 ; nbrutal++)
     {
         LG_brutal = nbrutal ;
-        // reset both GraphBLAS and LAGraph
-        GB_Global_GrB_init_called_set (false) ;
-        LG_set_LAGr_Init_has_been_called (false) ;
-        TEST_CHECK (LG_get_LAGr_Init_has_been_called ( ) == false) ;
         // try to initialize GraphBLAS and LAGraph
         int result = LAGr_Init (GrB_NONBLOCKING,
             LG_brutal_malloc, LG_brutal_calloc,
@@ -174,7 +166,10 @@ void test_Xinit_brutal (void)
             break ;
         }
         // failure: free anything partially allocated
-        OK (LAGraph_Finalize (msg)) ;
+        result = LAGraph_Finalize (msg) ;
+        // printf ("LAGr_Finalize: finally: %d %g\n", nbrutal,
+        //         (double) LG_nmalloc) ;
+        TEST_CHECK (LG_nmalloc == 0) ;
     }
 }
 #endif

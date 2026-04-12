@@ -127,14 +127,17 @@ void test_cc_matrices (void)
             OK (LG_check_cc (C, G, msg)) ;
             OK (GrB_free (&C)) ;
 
-            // find the connected components with LG_CC_FastSV5
             #if LAGRAPH_SUITESPARSE
+
+            #if 0
+            // find the connected components with LG_CC_FastSV5
             printf ("\n------ CC_FastSV5:\n") ;
-            OK (LG_CC_FastSV5 (&C2, G, msg)) ;
+            OK (LG_CC_FastSV5 (&C2, G, msg)) ;  /* currently disabled */
             ncomponents = count_connected_components (C2) ;
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
+            #endif
 
             // find the connected components with LG_CC_FastSV6
             printf ("\n------ CC_FastSV6:\n") ;

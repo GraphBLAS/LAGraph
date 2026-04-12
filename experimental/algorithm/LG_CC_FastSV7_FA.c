@@ -580,10 +580,10 @@ int LG_CC_FastSV7_FA         // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         // unload the parent i vector into the Px array
         //----------------------------------------------------------------------
 
-        int handling = 0 ;
+        int Px_handling = 0 ;
         GrB_Type type = NULL ;
         GRB_TRY (GxB_Vector_unload (parent, &Px, &type, &n, &Px_size,
-            &handling, NULL)) ;
+            &Px_handling, NULL)) ;
         bool Px_is_32 = (type == GrB_UINT32 || type == GrB_INT32) ;
         uint32_t *Px32 = Px_is_32 ? Px : NULL ;
         uint64_t *Px64 = Px_is_32 ? NULL : Px ;
@@ -672,11 +672,11 @@ int LG_CC_FastSV7_FA         // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         GRB_TRY (GxB_unload_Matrix_into_Container (T, T_Container, NULL)) ;
 
         // unload Tp and Tj from the T_Container
-        int ignore ;
+        int Tp_handling, Tj_handling ;
         GRB_TRY (GxB_Vector_unload (T_Container->p, &Tp, &Tp_type, &Tp_len,
-            &Tp_size, &ignore, NULL)) ;
+            &Tp_size, &Tp_handling, NULL)) ;
         GRB_TRY (GxB_Vector_unload (T_Container->i, &Tj, &Tj_type, &Tj_len,
-            &Tj_size, &ignore, NULL)) ;
+            &Tj_size, &Tj_handling, NULL)) ;
 
         // these are likely to be unchanged since the last load of T
         Tp_is_32 = (Tp_type == GrB_UINT32 || Tp_type == GrB_INT32) ;
@@ -781,9 +781,9 @@ int LG_CC_FastSV7_FA         // SuiteSparse:GraphBLAS method, with GraphBLAS v10
 
         // load T_Container->p,i from the C arrays, Tp and Tj, for final phase
         GRB_TRY (GxB_Vector_load (T_Container->p, &Tp, Tp_type, Tp_len,
-            Tp_size, GrB_DEFAULT, NULL)) ;
+            Tp_size, Tp_handling, NULL)) ;
         GRB_TRY (GxB_Vector_load (T_Container->i, &Tj, Tj_type, Tj_len,
-            Tj_size, GrB_DEFAULT, NULL)) ;
+            Tj_size, Tj_handling, NULL)) ;
 
         T_Container->nrows_nonempty = -1 ;
         T_Container->ncols_nonempty = -1 ;
@@ -808,7 +808,7 @@ int LG_CC_FastSV7_FA         // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         //----------------------------------------------------------------------
 
         GRB_TRY (GxB_Vector_load (parent, &Px, type, n, Px_size,
-            GrB_DEFAULT, NULL)) ;
+            Px_handling, NULL)) ;
 
 // ].  The unload/load of A into Ap, Aj, Ax will not be needed, and G->A
 // will become truly a read-only matrix.
