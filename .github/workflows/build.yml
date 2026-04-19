@@ -24,7 +24,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v2.0.0
+      uses: actions/checkout@v6
 
     - name: Install tools for build
       run: |
@@ -47,7 +47,7 @@ jobs:
         make test_coverage
 
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@4.1.1
+      uses: JamesIves/github-pages-deploy-action@4
       if: matrix.config.deployit && github.event_name == 'push' && github.ref == 'refs/heads/stable'
       with:
         branch: gh-pages
@@ -55,7 +55,7 @@ jobs:
         single-commit: true
 
     - name: Save output
-      uses: actions/upload-artifact@v4.6.0
+      uses: actions/upload-artifact@v7
       if: matrix.config.deployit
       with:
         name: test_coverage
@@ -74,7 +74,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v2.0.0
+      uses: actions/checkout@v6
 
     - name: Install dependencies
       run: |
