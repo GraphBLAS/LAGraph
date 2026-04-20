@@ -111,7 +111,6 @@ void test_RichClubCoefficient (void)
     // start LAGraph
     //--------------------------------------------------------------------------
     OK (LAGraph_Init (msg)) ;
-    
 
     for (int k = 0 ; ; k++)
     {
@@ -170,8 +169,9 @@ void test_RichClubCoefficient (void)
 
         printf ("RCC computation begins:\n") ;
         GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
-        OK(LAGraph_RichClubCoefficient ( &rcc, G, msg));
+        GrB_Info res = LAGraph_RichClubCoefficient ( &rcc, G, msg);
         printf("%s\n", msg);
+        OK(res);
         GrB_set (GrB_GLOBAL, (int32_t) (false), GxB_BURBLE) ;
         printf ("RCC computation ends:\n") ;
 
@@ -200,6 +200,7 @@ void iseq(bool *z, const double *x, const double *y)
 {
     (*z) = (isnan(*x) && isnan(*y)) ||*x == *y ;
 }
+
 //------------------------------------------------------------------------------
 // test RichClubCoefficient vs C code
 //------------------------------------------------------------------------------
