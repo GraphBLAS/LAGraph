@@ -1318,6 +1318,41 @@ int LAGr_EdgeBetweennessCentrality
 ) ;
 
 //------------------------------------------------------------------------------
+// harmonic centrality (approximate via HLL sketches)
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_HarmonicCentrality
+(
+    // outputs:
+    GrB_Vector *scores,            // FP64 harmonic centrality scores
+    GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
+                                   // (pass NULL, not yet implemented)
+    // inputs:
+    const LAGraph_Graph G,         // input graph
+    const GrB_Vector node_weights, // participating nodes and their weights
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// harmonic centrality (exact via BFS)
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_HarmonicCentrality_exact
+(
+    // outputs:
+    GrB_Vector *scores,            // FP64 harmonic centrality scores
+    GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
+                                   // (pass NULL, not yet implemented)
+    // inputs:
+    const LAGraph_Graph G,         // input graph
+    const GrB_Vector nodes,        // nodes to calculate centrality of
+    const GrB_Vector node_weights, // participating nodes and their weights
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
 // graph clustering with quality metrics
 //------------------------------------------------------------------------------
 
