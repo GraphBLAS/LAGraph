@@ -25,9 +25,10 @@
 //
 //   Phase 1 (Local Move): Greedily assign each node to the neighboring
 //     community c that maximises the score:
-//       score(i->c) = T[c] - k[i] * k_comm[c] / m
+//       score(i->c) = T[c] - k[i] * k_comm[c] / (2m)
 //     where T[c] = sum_{j in c, j!=i} A[i,j], k_comm[c] = total degree of
 //     community c (excluding i), and m = total edge weight / 2 (constant).
+//     This is the standard Louvain/Leiden modularity-gain formula.
 //     Initial partition is induced by the Phase-1 communities of the previous
 //     level (singletons on the first level).
 //     Repeat until no node changes community.
@@ -36,8 +37,18 @@
 //     "parent" communities.  Restart each node in its own singleton
 //     sub-community.  In each local-move step a node may only join a
 //     sub-community whose parent equals its own Phase-1 parent.  This ensures
-//     every output community is an internally well-connected subgraph of the
-//     corresponding Phase-1 community.
+//     every output community is a connected subgraph of the corresponding
+//     Phase-1 community.
+//
+//     NOTE: Traag, Waltman & van Eck (2019) define refinement as a randomized
+//     procedure (sampling moves with probability ~ exp(dQ/theta) over moves
+//     with dQ >= 0).  This implementation uses the simpler greedy variant: a
+//     node is moved to the neighboring sub-community that maximises dQ.  This
+//     still satisfies Leiden's connectedness property in practice (every
+//     refined sub-community is induced by edges within a Phase-1 community)
+//     but does not provide the formal well-connectedness guarantee of the
+//     randomized version.  The `seed` parameter is reserved for a future
+//     randomized refinement step and is currently unused.
 //     Repeat until no node changes sub-community.
 //
 //   Phase 3 (Aggregation): Build the coarsened graph
@@ -57,6 +68,7 @@
     GrB_free (&k_vec) ;                                     \
     GrB_free (&v) ;                                         \
     GrB_free (&A_agg) ;                                     \
+    GrB_free (&A_new) ;                                     \
     GrB_free (&S_mat) ;                                     \
     GrB_free (&A_temp) ;                                    \
     LAGraph_Free ((void **) &k_arr,      NULL) ;            \
@@ -109,6 +121,7 @@ int LAGraph_Leiden
     GrB_Vector  k_vec      = NULL ;
     GrB_Vector  v          = NULL ;
     GrB_Matrix  A_agg      = NULL ;   // owned coarsened graph (Phase 3)
+    GrB_Matrix  A_new      = NULL ;   // next-level aggregate before ownership transfer
     GrB_Matrix  S_mat      = NULL ;   // temporary membership matrix (Phase 3)
     GrB_Matrix  A_temp     = NULL ;   // temporary for mxm (Phase 3)
     double     *k_arr      = NULL ;   // k_arr[i]      = degree of node i (current level)
@@ -131,6 +144,7 @@ int LAGraph_Leiden
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
+    (void) seed ;       // reserved for future randomized refinement
     LG_ASSERT (c_handle != NULL, GrB_NULL_POINTER) ;
     (*c_handle) = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
@@ -182,6 +196,7 @@ int LAGraph_Leiden
     GRB_TRY (GrB_Vector_reduce_FP64 (&m, NULL, GrB_PLUS_MONOID_FP64,
         k_vec, NULL)) ;
     m /= 2.0 ;
+    double two_m = 2.0 * m ;        // denominator of the modularity penalty
     GrB_free (&k_vec) ;
     k_vec = NULL ;
 
@@ -300,7 +315,7 @@ int LAGraph_Leiden
                 }
 
                 double  T_ci      = dirty[ci] ? T_local[ci] : 0.0 ;
-                double  score_ci  = T_ci - ki * k_comm[ci] / m ;
+                double  score_ci  = T_ci - ki * k_comm[ci] / two_m ;
                 double  best_score = score_ci ;
                 int64_t best_c     = ci ;
 
@@ -308,7 +323,7 @@ int LAGraph_Leiden
                 {
                     int64_t c_cand = (int64_t) dirty_list[d] ;
                     if (c_cand == ci) continue ;
-                    double score = T_local[c_cand] - ki * k_comm[c_cand] / m ;
+                    double score = T_local[c_cand] - ki * k_comm[c_cand] / two_m ;
                     if (score > best_score)
                     {
                         best_score = score ;
@@ -391,7 +406,7 @@ int LAGraph_Leiden
                 }
 
                 double  T_ci_ref    = dirty[ci_ref] ? T_local[ci_ref] : 0.0 ;
-                double  score_ci_ref = T_ci_ref - ki * k_ref_comm[ci_ref] / m ;
+                double  score_ci_ref = T_ci_ref - ki * k_ref_comm[ci_ref] / two_m ;
                 double  best_score  = score_ci_ref ;
                 int64_t best_c_ref  = ci_ref ;
 
@@ -399,7 +414,7 @@ int LAGraph_Leiden
                 {
                     int64_t c_cand = (int64_t) dirty_list[d] ;
                     if (c_cand == ci_ref) continue ;
-                    double score = T_local[c_cand] - ki * k_ref_comm[c_cand] / m ;
+                    double score = T_local[c_cand] - ki * k_ref_comm[c_cand] / two_m ;
                     if (score > best_score)
                     {
                         best_score = score ;
@@ -494,7 +509,6 @@ int LAGraph_Leiden
                 GrB_PLUS_TIMES_SEMIRING_FP64, A_cur, S_mat, NULL)) ;
 
             // A_new = S^T * A_temp  (K_ref × K_ref)
-            GrB_Matrix A_new = NULL ;
             GRB_TRY (GrB_Matrix_new (&A_new, GrB_FP64, K_ref, K_ref)) ;
             GRB_TRY (GrB_mxm (A_new, NULL, NULL,
                 GrB_PLUS_TIMES_SEMIRING_FP64, S_mat, A_temp, GrB_DESC_T0)) ;
@@ -503,6 +517,7 @@ int LAGraph_Leiden
             GrB_free (&A_temp) ; A_temp = NULL ;
             GrB_free (&A_agg) ;  // free previous level's aggregate graph
             A_agg  = A_new ;
+            A_new  = NULL ;     // ownership transferred to A_agg
             A_cur  = A_agg ;
             n_cur  = K_ref ;
         }
