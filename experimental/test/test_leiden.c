@@ -96,8 +96,10 @@ void test_Leiden (void)
 
         if (files[k].expect_communities)
         {
-            TEST_CHECK (Q > 0.0) ;
-            TEST_MSG ("Expected Q > 0 for %s, got Q = %f", aname, Q) ;
+            // Multi-level Leiden on karate.mtx should achieve Q >= 0.3
+            // (single-level yields ~0.24; multi-level typically ~0.34+).
+            TEST_CHECK (Q > 0.3) ;
+            TEST_MSG ("Expected Q > 0.3 for %s, got Q = %f", aname, Q) ;
         }
 #endif
 
