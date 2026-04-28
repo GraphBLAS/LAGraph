@@ -1406,6 +1406,17 @@ int LAGr_Modularity(
 ) ;
 
 LAGRAPHX_PUBLIC
+int LAGraph_Leiden
+(
+    // output:
+    GrB_Vector *c_handle,   // c[i] = community label (0..K-1) for node i
+    // input:
+    LAGraph_Graph G,        // input graph (must be symmetric, no self-loops)
+    uint64_t seed,          // random seed (reserved for future use)
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
 int LAGraph_argminmax
 (
     // output
