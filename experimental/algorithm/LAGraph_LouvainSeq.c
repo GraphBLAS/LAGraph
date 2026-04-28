@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_LouvainSeq.c: Runs the first phase of the Louvain Algorithm on a given graph
+// LAGraph_LouvainSeq.c: Runs the Louvain Algorithm on a given graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2024 by The LAGraph Contributors, All Rights Reserved.
