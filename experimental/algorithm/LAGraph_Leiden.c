@@ -66,7 +66,6 @@
 #define LG_FREE_WORK                                        \
 {                                                           \
     GrB_free (&k_vec) ;                                     \
-    GrB_free (&v) ;                                         \
     GrB_free (&A_agg) ;                                     \
     GrB_free (&A_new) ;                                     \
     GrB_free (&S_mat) ;                                     \
@@ -85,6 +84,14 @@
     LAGraph_Free ((void **) &remap,      NULL) ;            \
     LAGraph_Free ((void **) &o_comm,     NULL) ;            \
     LAGraph_Free ((void **) &init_comm,  NULL) ;            \
+    LAGraph_Free ((void **) &Ap,         NULL) ;            \
+    LAGraph_Free ((void **) &Aj,         NULL) ;            \
+    LAGraph_Free ((void **) &Ax,         NULL) ;            \
+    LAGraph_Free ((void **) &I_tup,      NULL) ;            \
+    LAGraph_Free ((void **) &J_tup,      NULL) ;            \
+    LAGraph_Free ((void **) &X_tup,      NULL) ;            \
+    LAGraph_Free ((void **) &cursor,     NULL) ;            \
+    LAGraph_Free ((void **) &iota,       NULL) ;            \
 }
 
 #undef  LG_FREE_ALL
@@ -119,7 +126,6 @@ int LAGraph_Leiden
     //--------------------------------------------------------------------------
 
     GrB_Vector  k_vec      = NULL ;
-    GrB_Vector  v          = NULL ;
     GrB_Matrix  A_agg      = NULL ;   // owned coarsened graph (Phase 3)
     GrB_Matrix  A_new      = NULL ;   // next-level aggregate before ownership transfer
     GrB_Matrix  S_mat      = NULL ;   // temporary membership matrix (Phase 3)
@@ -138,6 +144,20 @@ int LAGraph_Leiden
     GrB_Index  *remap      = NULL ;   // remap[old_label] -> new contiguous label
     GrB_Index  *o_comm     = NULL ;   // o_comm[i] = community of original node i
     GrB_Index  *init_comm  = NULL ;   // init_comm[r] = initial c_arr for aggregate node r
+
+    // CSR materialization of A_cur, rebuilt once per outer aggregation level.
+    // Walking Ap/Aj/Ax directly avoids one GrB_Col_extract+extractTuples per
+    // node per inner-loop iteration (which dominates runtime).
+    GrB_Index  *Ap         = NULL ;   // row pointers, size n_cur+1
+    GrB_Index  *Aj         = NULL ;   // column indices, size Anz
+    double     *Ax         = NULL ;   // values, size Anz
+    GrB_Index  *I_tup      = NULL ;   // raw row indices from extractTuples
+    GrB_Index  *J_tup      = NULL ;   // raw col indices from extractTuples
+    double     *X_tup      = NULL ;   // raw values from extractTuples
+    GrB_Index  *cursor     = NULL ;   // scatter cursor for CSR build
+    GrB_Index  *iota       = NULL ;   // [0,1,...,n-1] for vector/matrix build
+    GrB_Index   Ap_cap     = 0 ;      // current allocated capacity of Ap (entries)
+    GrB_Index   Anz_cap    = 0 ;      // current allocated capacity of Aj/Ax/tuples
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -184,6 +204,8 @@ int LAGraph_Leiden
     LG_TRY (LAGraph_Malloc ((void **) &remap,      n, sizeof (GrB_Index), msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &o_comm,     n, sizeof (GrB_Index), msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &init_comm,  n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &iota,       n, sizeof (GrB_Index), msg)) ;
+    for (GrB_Index i = 0 ; i < n ; i++) iota[i] = i ;
 
     //--------------------------------------------------------------------------
     // compute m = total edge weight / 2 from G->A (invariant under aggregation)
@@ -203,11 +225,11 @@ int LAGraph_Leiden
     // Empty graph: return a singleton partition.
     if (m == 0.0)
     {
+        // c[i] = i for all i, built in one call instead of n setElement calls.
+        for (GrB_Index i = 0 ; i < n ; i++) c_arr[i] = (int64_t) i ;
         GRB_TRY (GrB_Vector_new (c_handle, GrB_INT64, n)) ;
-        for (GrB_Index i = 0 ; i < n ; i++)
-        {
-            GRB_TRY (GrB_Vector_setElement_INT64 (*c_handle, (int64_t) i, i)) ;
-        }
+        GRB_TRY (GrB_Vector_build_INT64 (*c_handle, iota, c_arr, n,
+            GrB_FIRST_INT64)) ;
         LG_FREE_WORK ;
         return (GrB_SUCCESS) ;
     }
@@ -240,22 +262,78 @@ int LAGraph_Leiden
         outer_changed = false ;
 
         //----------------------------------------------------------------------
-        // create GraphBLAS vectors sized for the current level
+        // Materialize A_cur into CSR (Ap, Aj, Ax) once per outer level.
+        //
+        // This replaces the per-node GrB_Col_extract + extractTuples in the
+        // Phase 1 / Phase 2 inner loops (which dominated runtime) with a
+        // single O(nnz) extraction + counting-sort scatter.
         //----------------------------------------------------------------------
 
-        GRB_TRY (GrB_Vector_new (&k_vec, GrB_FP64, n_cur)) ;
-        GRB_TRY (GrB_Vector_new (&v,     GrB_FP64, n_cur)) ;
+        GrB_Index Anz ;
+        GRB_TRY (GrB_Matrix_nvals (&Anz, A_cur)) ;
+
+        // (re)allocate CSR + tuple buffers as needed.
+        if (Ap_cap < n_cur + 1)
+        {
+            LAGraph_Free ((void **) &Ap,     NULL) ;
+            LAGraph_Free ((void **) &cursor, NULL) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Ap,     n_cur + 1,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &cursor, n_cur,
+                sizeof (GrB_Index), msg)) ;
+            Ap_cap = n_cur + 1 ;
+        }
+        if (Anz_cap < Anz)
+        {
+            // Grow with some slack to avoid repeated reallocs; aggregate
+            // graphs typically shrink monotonically but we don't rely on it.
+            GrB_Index newcap = (Anz < 16) ? 16 : Anz ;
+            LAGraph_Free ((void **) &Aj,    NULL) ;
+            LAGraph_Free ((void **) &Ax,    NULL) ;
+            LAGraph_Free ((void **) &I_tup, NULL) ;
+            LAGraph_Free ((void **) &J_tup, NULL) ;
+            LAGraph_Free ((void **) &X_tup, NULL) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Aj,    newcap,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Ax,    newcap,
+                sizeof (double),    msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &I_tup, newcap,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &J_tup, newcap,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X_tup, newcap,
+                sizeof (double),    msg)) ;
+            Anz_cap = newcap ;
+        }
+
+        // Build CSR: count rows, prefix-sum, scatter.
+        memset (Ap, 0, (n_cur + 1) * sizeof (GrB_Index)) ;
+        if (Anz > 0)
+        {
+            GrB_Index nout = Anz ;
+            GRB_TRY (GrB_Matrix_extractTuples_FP64 (
+                I_tup, J_tup, X_tup, &nout, A_cur)) ;
+            for (GrB_Index t = 0 ; t < Anz ; t++) Ap[I_tup[t] + 1]++ ;
+            for (GrB_Index i = 0 ; i < n_cur ; i++) Ap[i + 1] += Ap[i] ;
+            memcpy (cursor, Ap, n_cur * sizeof (GrB_Index)) ;
+            for (GrB_Index t = 0 ; t < Anz ; t++)
+            {
+                GrB_Index r   = I_tup[t] ;
+                GrB_Index pos = cursor[r]++ ;
+                Aj[pos] = J_tup[t] ;
+                Ax[pos] = X_tup[t] ;
+            }
+        }
 
         //----------------------------------------------------------------------
-        // compute k_arr[0..n_cur-1] from A_cur (includes self-loops in A_agg)
+        // compute k_arr[i] = sum of row i (includes self-loops in A_agg).
         //----------------------------------------------------------------------
 
-        GRB_TRY (GrB_Matrix_reduce_Monoid (k_vec, NULL, NULL,
-            GrB_PLUS_MONOID_FP64, A_cur, NULL)) ;
         for (GrB_Index i = 0 ; i < n_cur ; i++)
         {
-            GrB_Info info = GrB_Vector_extractElement_FP64 (&k_arr[i], k_vec, i) ;
-            if (info == GrB_NO_VALUE) k_arr[i] = 0.0 ;
+            double s = 0.0 ;
+            for (GrB_Index p = Ap[i] ; p < Ap[i + 1] ; p++) s += Ax[p] ;
+            k_arr[i] = s ;
         }
 
         //----------------------------------------------------------------------
@@ -286,23 +364,17 @@ int LAGraph_Leiden
 
                 int64_t ci = c_arr[i] ;
 
-                GRB_TRY (GrB_Col_extract (v, NULL, NULL, A_cur,
-                    GrB_ALL, n_cur, i, GrB_DESC_T0)) ;
-
-                GrB_Index nvals ;
-                GRB_TRY (GrB_Vector_nvals (&nvals, v)) ;
-                if (nvals == 0) continue ;
-
-                GRB_TRY (GrB_Vector_extractTuples_FP64 (
-                    nbrs_j, nbrs_v, &nvals, v)) ;
+                GrB_Index row_begin = Ap[i] ;
+                GrB_Index row_end   = Ap[i + 1] ;
+                if (row_begin == row_end) continue ;
 
                 // Temporarily remove i from community ci.
                 k_comm[ci] -= ki ;
 
                 GrB_Index ndirty = 0 ;
-                for (GrB_Index t = 0 ; t < nvals ; t++)
+                for (GrB_Index t = row_begin ; t < row_end ; t++)
                 {
-                    GrB_Index j = nbrs_j[t] ;
+                    GrB_Index j = Aj[t] ;
                     if (j == i) continue ;          // skip self-loop (in A_agg)
                     int64_t cj = c_arr[j] ;
                     if (!dirty[cj])
@@ -311,7 +383,7 @@ int LAGraph_Leiden
                         dirty_list[ndirty++] = (GrB_Index) cj ;
                         T_local[cj]          = 0.0 ;
                     }
-                    T_local[cj] += nbrs_v[t] ;
+                    T_local[cj] += Ax[t] ;
                 }
 
                 double  T_ci      = dirty[ci] ? T_local[ci] : 0.0 ;
@@ -376,22 +448,16 @@ int LAGraph_Leiden
                 int64_t pi     = c_p1[i] ;
                 int64_t ci_ref = c_ref[i] ;
 
-                GRB_TRY (GrB_Col_extract (v, NULL, NULL, A_cur,
-                    GrB_ALL, n_cur, i, GrB_DESC_T0)) ;
-
-                GrB_Index nvals ;
-                GRB_TRY (GrB_Vector_nvals (&nvals, v)) ;
-                if (nvals == 0) continue ;
-
-                GRB_TRY (GrB_Vector_extractTuples_FP64 (
-                    nbrs_j, nbrs_v, &nvals, v)) ;
+                GrB_Index row_begin = Ap[i] ;
+                GrB_Index row_end   = Ap[i + 1] ;
+                if (row_begin == row_end) continue ;
 
                 k_ref_comm[ci_ref] -= ki ;
 
                 GrB_Index ndirty = 0 ;
-                for (GrB_Index t = 0 ; t < nvals ; t++)
+                for (GrB_Index t = row_begin ; t < row_end ; t++)
                 {
-                    GrB_Index j = nbrs_j[t] ;
+                    GrB_Index j = Aj[t] ;
                     if (j == i) continue ;              // skip self-loop
                     if (c_p1[j] != pi) continue ;       // cross-parent: skip
 
@@ -402,7 +468,7 @@ int LAGraph_Leiden
                         dirty_list[ndirty++] = (GrB_Index) cj_ref ;
                         T_local[cj_ref]      = 0.0 ;
                     }
-                    T_local[cj_ref] += nbrs_v[t] ;
+                    T_local[cj_ref] += Ax[t] ;
                 }
 
                 double  T_ci_ref    = dirty[ci_ref] ? T_local[ci_ref] : 0.0 ;
@@ -487,21 +553,29 @@ int LAGraph_Leiden
         // PHASE 3: Aggregation — build coarsened graph if communities merged
         //----------------------------------------------------------------------
 
-        GrB_free (&k_vec) ;  k_vec = NULL ;
-        GrB_free (&v) ;      v     = NULL ;
-
         if (K_ref < n_cur)
         {
             outer_changed = true ;
 
-            // S_mat: n_cur × K_ref indicator matrix; S[i, c_ref[i]] = 1
-            GRB_TRY (GrB_Matrix_new (&S_mat, GrB_FP64, n_cur, K_ref)) ;
+            // S_mat: n_cur × K_ref indicator matrix; S[i, c_ref[i]] = 1.
+            // Build in one shot (single-pass) instead of n_cur setElement
+            // calls + an implicit GrB_Matrix_wait.  Reuse scratch buffers:
+            //   nbrs_j  -> row indices [0..n_cur)
+            //   dirty_list -> column indices (c_ref cast to GrB_Index)
+            //   nbrs_v  -> values (1.0)
+            // (All sized n >= n_cur; build copies them, no aliasing concern.)
             for (GrB_Index i = 0 ; i < n_cur ; i++)
             {
-                GRB_TRY (GrB_Matrix_setElement_FP64 (
-                    S_mat, 1.0, i, (GrB_Index) c_ref[i])) ;
+                nbrs_j[i]     = i ;
+                dirty_list[i] = (GrB_Index) c_ref[i] ;
+                nbrs_v[i]     = 1.0 ;
             }
-            GRB_TRY (GrB_Matrix_wait (S_mat, GrB_MATERIALIZE)) ;
+            // Each (i, c_ref[i]) row index is unique, so duplicates are
+            // impossible and the dup operator is irrelevant; pass a valid
+            // monoid for portability.
+            GRB_TRY (GrB_Matrix_new (&S_mat, GrB_FP64, n_cur, K_ref)) ;
+            GRB_TRY (GrB_Matrix_build_FP64 (S_mat, nbrs_j, dirty_list,
+                nbrs_v, n_cur, GrB_PLUS_FP64)) ;
 
             // A_temp = A_cur * S  (n_cur × K_ref)
             GRB_TRY (GrB_Matrix_new (&A_temp, GrB_FP64, n_cur, K_ref)) ;
@@ -525,15 +599,14 @@ int LAGraph_Leiden
     }
 
     //--------------------------------------------------------------------------
-    // Build output GrB_Vector from o_comm
+    // Build output GrB_Vector from o_comm in one call (vs n setElement calls).
     // (o_comm values are already relabeled 0..K_final-1 from the last iteration)
     //--------------------------------------------------------------------------
 
+    for (GrB_Index i = 0 ; i < n ; i++) c_arr[i] = (int64_t) o_comm[i] ;
     GRB_TRY (GrB_Vector_new (c_handle, GrB_INT64, n)) ;
-    for (GrB_Index i = 0 ; i < n ; i++)
-    {
-        GRB_TRY (GrB_Vector_setElement_INT64 (*c_handle, (int64_t) o_comm[i], i)) ;
-    }
+    GRB_TRY (GrB_Vector_build_INT64 (*c_handle, iota, c_arr, n,
+        GrB_FIRST_INT64)) ;
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
