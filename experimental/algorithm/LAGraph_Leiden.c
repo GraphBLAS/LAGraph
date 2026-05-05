@@ -11,6 +11,27 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
+#include "LG_internal.h"
+#include <LAGraphX.h>
+#include <LAGraph.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define LEIDEN_MAX_ITER 100
+
+// The CSR fast path uses the SuiteSparse:GraphBLAS Container API
+// (GxB_Container, GxB_unload_Matrix_into_Container, GxB_Vector_load /
+// GxB_Vector_unload, GxB_load_Matrix_from_Container), introduced in
+// SuiteSparse:GraphBLAS v10.0.0.  On older versions we fall back to a
+// CSR materialization via GrB_Matrix_extractTuples + counting-sort scatter.
+#ifndef LAGR_LEIDEN_USE_CONTAINER
+#if defined(GxB_IMPLEMENTATION) && (GxB_IMPLEMENTATION >= GxB_VERSION(10,0,0))
+#define LAGR_LEIDEN_USE_CONTAINER 1
+#else
+#define LAGR_LEIDEN_USE_CONTAINER 0
+#endif
+#endif
+
 //------------------------------------------------------------------------------
 // The Leiden algorithm is a modularity-based community detection method that
 // guarantees well-connected communities by introducing a Refinement phase
@@ -71,7 +92,7 @@
     GrB_free (&S_mat) ;                                     \
     GrB_free (&A_temp) ;                                    \
     GrB_free (&one_scalar) ;                                \
-    GxB_Container_free (&cont) ;                            \
+    LAGR_LEIDEN_FREE_CONTAINER ;                            \
     LAGraph_Free ((void **) &k_arr,      NULL) ;            \
     LAGraph_Free ((void **) &c_arr,      NULL) ;            \
     LAGraph_Free ((void **) &k_comm,     NULL) ;            \
@@ -87,6 +108,10 @@
     LAGraph_Free ((void **) &Ap,         NULL) ;            \
     LAGraph_Free ((void **) &Aj,         NULL) ;            \
     LAGraph_Free ((void **) &Ax,         NULL) ;            \
+    LAGraph_Free ((void **) &I_tup,      NULL) ;            \
+    LAGraph_Free ((void **) &J_tup,      NULL) ;            \
+    LAGraph_Free ((void **) &X_tup,      NULL) ;            \
+    LAGraph_Free ((void **) &cursor,     NULL) ;            \
     LAGraph_Free ((void **) &iota,       NULL) ;            \
 }
 
@@ -97,13 +122,11 @@
     if (c_handle != NULL) GrB_free (c_handle) ;             \
 }
 
-#include "LG_internal.h"
-#include <LAGraphX.h>
-#include <LAGraph.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define LEIDEN_MAX_ITER 100
+#if LAGR_LEIDEN_USE_CONTAINER
+#define LAGR_LEIDEN_FREE_CONTAINER GxB_Container_free (&cont)
+#else
+#define LAGR_LEIDEN_FREE_CONTAINER ((void) 0)
+#endif
 
 int LAGraph_Leiden
 (
@@ -127,7 +150,9 @@ int LAGraph_Leiden
     GrB_Matrix    S_mat      = NULL ;   // temporary membership matrix (Phase 3)
     GrB_Matrix    A_temp     = NULL ;   // temporary for mxm (Phase 3)
     GrB_Scalar    one_scalar = NULL ;   // FP64 scalar with value 1.0 for build_Scalar
+#if LAGR_LEIDEN_USE_CONTAINER
     GxB_Container cont       = NULL ;   // for unloading A_cur into raw CSR arrays
+#endif
     double       *k_arr      = NULL ;   // k_arr[i]      = degree of node i (current level)
     int64_t      *c_arr      = NULL ;   // c_arr[i]      = Phase-1 community label
     double       *k_comm     = NULL ;   // k_comm[l]     = total degree of community l
@@ -141,16 +166,21 @@ int LAGraph_Leiden
     int64_t      *o_comm     = NULL ;   // o_comm[i] = community of original node i
     GrB_Index    *init_comm  = NULL ;   // init_comm[r] = initial c_arr for aggregate node r
 
-    // Raw CSR pointers obtained by unloading A_cur once per outer aggregation
-    // level via the SuiteSparse Container API.  Walking Ap/Aj/Ax directly
-    // avoids one GrB_Col_extract+extractTuples per node per inner-loop
-    // iteration (which dominated runtime).  These are owned by us only while
-    // unloaded; ownership returns to GraphBLAS on reload (when we then null
-    // them so LG_FREE_WORK doesn't double-free).
+    // Raw CSR pointers for inner-loop walks.  On v10+ they are obtained by
+    // unloading A_cur into the SuiteSparse Container (zero-copy); ownership
+    // returns to GraphBLAS on reload (we then null them so LG_FREE_WORK
+    // doesn't double-free).  On older versions they are allocated by us
+    // and (re)filled per level via GrB_Matrix_extractTuples + counting-sort.
     GrB_Index  *Ap         = NULL ;   // row pointers, size n_cur+1
     GrB_Index  *Aj         = NULL ;   // column indices, size Anz
-    double     *Ax         = NULL ;   // values, size Anz (only if !iso)
+    double     *Ax         = NULL ;   // values, size Anz (only if !iso on v10)
+    GrB_Index  *I_tup      = NULL ;   // raw row indices from extractTuples (v9 fallback)
+    GrB_Index  *J_tup      = NULL ;   // raw col indices from extractTuples (v9 fallback)
+    double     *X_tup      = NULL ;   // raw values from extractTuples (v9 fallback)
+    GrB_Index  *cursor     = NULL ;   // scatter cursor for CSR build (v9 fallback)
     GrB_Index  *iota       = NULL ;   // [0,1,...,n-1] for vector/matrix build
+    GrB_Index   Ap_cap     = 0 ;      // current allocated capacity of Ap (v9 fallback)
+    GrB_Index   Anz_cap    = 0 ;      // current allocated capacity of Aj/Ax/tuples (v9 fallback)
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -202,8 +232,11 @@ int LAGraph_Leiden
     GRB_TRY (GrB_Scalar_new (&one_scalar, GrB_FP64)) ;
     GRB_TRY (GrB_Scalar_setElement_FP64 (one_scalar, 1.0)) ;
 
-    // Reusable container for unloading A_cur into raw CSR arrays per level.
+    // Reusable container for unloading A_cur into raw CSR arrays per level
+    // (only available with the SuiteSparse v10+ Container API).
+#if LAGR_LEIDEN_USE_CONTAINER
     GRB_TRY (GxB_Container_new (&cont)) ;
+#endif
 
     //--------------------------------------------------------------------------
     // compute m = total edge weight / 2 from G->A (invariant under aggregation)
@@ -288,6 +321,7 @@ int LAGraph_Leiden
         GRB_TRY (GrB_Matrix_reduce_Monoid (k_vec, NULL, GrB_PLUS_FP64,
             GrB_PLUS_MONOID_FP64, A_cur, NULL)) ;
 
+#if LAGR_LEIDEN_USE_CONTAINER
         // Unload k_vec into k_arr (dense FP64 array of length n_cur).
         // The previous k_arr workspace allocation is replaced by a pointer
         // owned by GraphBLAS until LAGraph_Free reclaims it.
@@ -351,6 +385,75 @@ int LAGraph_Leiden
         Ap = (GrB_Index *) pv ;
         Aj = (GrB_Index *) iv ;
         Ax = (double    *) xv ;
+#else
+        // Fallback for SuiteSparse:GraphBLAS < v10.0.0 (no Container API):
+        // copy degrees out of k_vec, then materialize CSR via extractTuples
+        // + counting-sort scatter.  k_vec contains entries only for non-zero
+        // rows, so zero-fill k_arr first then scatter.
+        for (GrB_Index i = 0 ; i < n_cur ; i++) k_arr[i] = 0.0 ;
+        {
+            GrB_Index nvk = n_cur ;
+            GrB_Index *Ik = NULL ;
+            double    *Xk = NULL ;
+            LG_TRY (LAGraph_Malloc ((void **) &Ik, n_cur, sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Xk, n_cur, sizeof (double),    msg)) ;
+            GRB_TRY (GrB_Vector_extractTuples_FP64 (Ik, Xk, &nvk, k_vec)) ;
+            for (GrB_Index t = 0 ; t < nvk ; t++) k_arr[Ik[t]] = Xk[t] ;
+            LAGraph_Free ((void **) &Ik, NULL) ;
+            LAGraph_Free ((void **) &Xk, NULL) ;
+        }
+
+        GrB_Index Anz ;
+        GRB_TRY (GrB_Matrix_nvals (&Anz, A_cur)) ;
+        if (Ap_cap < n_cur + 1)
+        {
+            LAGraph_Free ((void **) &Ap,     NULL) ;
+            LAGraph_Free ((void **) &cursor, NULL) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Ap,     n_cur + 1,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &cursor, n_cur,
+                sizeof (GrB_Index), msg)) ;
+            Ap_cap = n_cur + 1 ;
+        }
+        if (Anz_cap < Anz)
+        {
+            GrB_Index newcap = (Anz < 16) ? 16 : Anz ;
+            LAGraph_Free ((void **) &Aj,    NULL) ;
+            LAGraph_Free ((void **) &Ax,    NULL) ;
+            LAGraph_Free ((void **) &I_tup, NULL) ;
+            LAGraph_Free ((void **) &J_tup, NULL) ;
+            LAGraph_Free ((void **) &X_tup, NULL) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Aj,    newcap,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Ax,    newcap,
+                sizeof (double),    msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &I_tup, newcap,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &J_tup, newcap,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X_tup, newcap,
+                sizeof (double),    msg)) ;
+            Anz_cap = newcap ;
+        }
+
+        memset (Ap, 0, (n_cur + 1) * sizeof (GrB_Index)) ;
+        if (Anz > 0)
+        {
+            GrB_Index nout = Anz ;
+            GRB_TRY (GrB_Matrix_extractTuples_FP64 (I_tup, J_tup, X_tup,
+                &nout, A_cur)) ;
+            for (GrB_Index t = 0 ; t < Anz ; t++) Ap[I_tup[t] + 1]++ ;
+            for (GrB_Index r = 0 ; r < n_cur ; r++) Ap[r + 1] += Ap[r] ;
+            memcpy (cursor, Ap, n_cur * sizeof (GrB_Index)) ;
+            for (GrB_Index t = 0 ; t < Anz ; t++)
+            {
+                GrB_Index r = I_tup[t] ;
+                GrB_Index dst = cursor[r]++ ;
+                Aj[dst] = J_tup[t] ;
+                Ax[dst] = X_tup[t] ;
+            }
+        }
+#endif
 
         //----------------------------------------------------------------------
         // PHASE 1: Local Move Phase
@@ -569,8 +672,10 @@ int LAGraph_Leiden
         // Reload A_cur from the container before any further GraphBLAS use
         // (Phase 3 mxm or next-level unload).  Ownership of Ap/Aj/Ax returns
         // to GraphBLAS; we null our pointers so LG_FREE_WORK won't double-free.
+        // No-op on the v9 fallback (A_cur was never unloaded).
         //----------------------------------------------------------------------
 
+#if LAGR_LEIDEN_USE_CONTAINER
         GRB_TRY (GxB_Vector_load (cont->p, (void **) &Ap, pty,
             pn, psz, ph, NULL)) ;
         Ap = NULL ;
@@ -581,6 +686,7 @@ int LAGraph_Leiden
             xn, xsz, xh, NULL)) ;
         Ax = NULL ;
         GRB_TRY (GxB_load_Matrix_from_Container (A_cur, cont, NULL)) ;
+#endif
 
         //----------------------------------------------------------------------
         // PHASE 3: Aggregation — build coarsened graph if communities merged
@@ -632,10 +738,15 @@ int LAGraph_Leiden
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_Vector_new (c_handle, GrB_INT64, n)) ;
+#if LAGR_LEIDEN_USE_CONTAINER
     GRB_TRY (GrB_set (*c_handle, GxB_FULL, GxB_SPARSITY_CONTROL)) ;
     GRB_TRY (GxB_Vector_load (*c_handle, (void **) &o_comm, GrB_INT64,
         n, n * sizeof (int64_t), GrB_DEFAULT, NULL)) ;
     o_comm = NULL ;     // ownership transferred to *c_handle
+#else
+    GRB_TRY (GrB_Vector_build_INT64 (*c_handle, iota, o_comm, n,
+        GrB_FIRST_INT64)) ;
+#endif
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
