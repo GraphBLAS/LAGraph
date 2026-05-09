@@ -19,19 +19,6 @@
 
 #define LEIDEN_MAX_ITER 100
 
-// The CSR fast path uses the SuiteSparse:GraphBLAS Container API
-// (GxB_Container, GxB_unload_Matrix_into_Container, GxB_Vector_load /
-// GxB_Vector_unload, GxB_load_Matrix_from_Container), introduced in
-// SuiteSparse:GraphBLAS v10.0.0.  On older versions we fall back to a
-// CSR materialization via GrB_Matrix_extractTuples + counting-sort scatter.
-#ifndef LAGR_LEIDEN_USE_CONTAINER
-#if defined(GxB_IMPLEMENTATION) && (GxB_IMPLEMENTATION >= GxB_VERSION(10,0,0))
-#define LAGR_LEIDEN_USE_CONTAINER 1
-#else
-#define LAGR_LEIDEN_USE_CONTAINER 0
-#endif
-#endif
-
 //------------------------------------------------------------------------------
 // The Leiden algorithm is a modularity-based community detection method that
 // guarantees well-connected communities by introducing a Refinement phase
@@ -122,7 +109,7 @@
     if (c_handle != NULL) GrB_free (c_handle) ;             \
 }
 
-#if LAGR_LEIDEN_USE_CONTAINER
+#if LG_SUITESPARSE_GRAPHBLAS_V10
 #define LAGR_LEIDEN_FREE_CONTAINER GxB_Container_free (&cont)
 #else
 #define LAGR_LEIDEN_FREE_CONTAINER ((void) 0)
@@ -150,7 +137,7 @@ int LAGraph_Leiden
     GrB_Matrix    S_mat      = NULL ;   // temporary membership matrix (Phase 3)
     GrB_Matrix    A_temp     = NULL ;   // temporary for mxm (Phase 3)
     GrB_Scalar    one_scalar = NULL ;   // FP64 scalar with value 1.0 for build_Scalar
-#if LAGR_LEIDEN_USE_CONTAINER
+#if LG_SUITESPARSE_GRAPHBLAS_V10
     GxB_Container cont       = NULL ;   // for unloading A_cur into raw CSR arrays
 #endif
     double       *k_arr      = NULL ;   // k_arr[i]      = degree of node i (current level)
@@ -234,7 +221,7 @@ int LAGraph_Leiden
 
     // Reusable container for unloading A_cur into raw CSR arrays per level
     // (only available with the SuiteSparse v10+ Container API).
-#if LAGR_LEIDEN_USE_CONTAINER
+#if LG_SUITESPARSE_GRAPHBLAS_V10
     GRB_TRY (GxB_Container_new (&cont)) ;
 #endif
 
@@ -242,24 +229,18 @@ int LAGraph_Leiden
     // compute m = total edge weight / 2 from G->A (invariant under aggregation)
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GrB_Vector_new (&k_vec, GrB_FP64, n)) ;
-    GRB_TRY (GrB_Matrix_reduce_Monoid (k_vec, NULL, NULL,
-        GrB_PLUS_MONOID_FP64, A, NULL)) ;
     double m = 0.0 ;
-    GRB_TRY (GrB_Vector_reduce_FP64 (&m, NULL, GrB_PLUS_MONOID_FP64,
-        k_vec, NULL)) ;
+    GRB_TRY (GrB_Matrix_reduce_FP64 (&m, NULL, GrB_PLUS_MONOID_FP64,
+        A, NULL)) ;
     m /= 2.0 ;
     double two_m = 2.0 * m ;        // denominator of the modularity penalty
-    GrB_free (&k_vec) ;
-    k_vec = NULL ;
 
     // Empty graph: return a singleton partition.
     if (m == 0.0)
     {
         // c[i] = i for all i, built in one call instead of n setElement calls.
-        for (GrB_Index i = 0 ; i < n ; i++) c_arr[i] = (int64_t) i ;
         GRB_TRY (GrB_Vector_new (c_handle, GrB_INT64, n)) ;
-        GRB_TRY (GrB_Vector_build_INT64 (*c_handle, iota, c_arr, n,
+        GRB_TRY (GrB_Vector_build_INT64 (*c_handle, iota, iota, n,
             GrB_FIRST_INT64)) ;
         LG_FREE_WORK ;
         return (GrB_SUCCESS) ;
@@ -314,19 +295,18 @@ int LAGraph_Leiden
         // 1) Compute degrees with GraphBLAS reduce *before* unloading the
         //    matrix.  Zero-fill k_vec first so isolated rows produce 0.0
         //    (otherwise reduce leaves them as missing entries).
-        GrB_free (&k_vec) ;
         GRB_TRY (GrB_Vector_new (&k_vec, GrB_FP64, n_cur)) ;
         GRB_TRY (GrB_assign (k_vec, NULL, NULL, (double) 0.0,
             GrB_ALL, n_cur, NULL)) ;
         GRB_TRY (GrB_Matrix_reduce_Monoid (k_vec, NULL, GrB_PLUS_FP64,
             GrB_PLUS_MONOID_FP64, A_cur, NULL)) ;
 
-#if LAGR_LEIDEN_USE_CONTAINER
+#if LG_SUITESPARSE_GRAPHBLAS_V10
         // Unload k_vec into k_arr (dense FP64 array of length n_cur).
         // The previous k_arr workspace allocation is replaced by a pointer
         // owned by GraphBLAS until LAGraph_Free reclaims it.
         LAGraph_Free ((void **) &k_arr, NULL) ;
-        {
+        do {
             GrB_Type k_type = NULL ;
             uint64_t k_n = 0, k_size = 0 ;
             int      k_handling = GrB_DEFAULT ;
@@ -337,14 +317,15 @@ int LAGraph_Leiden
                 GrB_INVALID_VALUE,
                 "k_vec unload: unexpected type or length") ;
             k_arr = (double *) k_void ;
-        }
+        } while (0);
 
         // 2) Force A_cur into the format we want, then unload into container.
         //    Hints: sparse, row-major, non-iso, 64-bit row pointers/indices.
         //    GxB_unload_Matrix_into_Container materializes pending work.
-        GRB_TRY (GrB_set (A_cur, GxB_SPARSE, GxB_SPARSITY_CONTROL)) ;
-        GRB_TRY (GrB_set (A_cur, (int32_t) GrB_ROWMAJOR,
-            GrB_STORAGE_ORIENTATION_HINT)) ;
+        GRB_TRY (GrB_Matrix_set_INT32 (
+            A_cur, GxB_SPARSE, GxB_SPARSITY_CONTROL)) ;
+        GRB_TRY (GrB_Matrix_set_INT32 (
+            A_cur, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
         GRB_TRY (GrB_Matrix_set_INT32 (A_cur, false, GxB_ISO)) ;
         GRB_TRY (GrB_Matrix_set_INT32 (A_cur, 64, GxB_OFFSET_INTEGER_HINT)) ;
         GRB_TRY (GrB_Matrix_set_INT32 (A_cur, 64, GxB_ROWINDEX_INTEGER_HINT)) ;
@@ -548,11 +529,11 @@ int LAGraph_Leiden
         //----------------------------------------------------------------------
 
         memcpy (c_p1, c_arr, n_cur * sizeof (int64_t)) ;
+        memcpy (k_ref_comm, k_arr, n_cur * sizeof (double)) ;
 
         for (GrB_Index i = 0 ; i < n_cur ; i++)
         {
             c_ref[i]      = (int64_t) i ;
-            k_ref_comm[i] = k_arr[i] ;
         }
 
         changed = true ;
@@ -675,7 +656,7 @@ int LAGraph_Leiden
         // No-op on the v9 fallback (A_cur was never unloaded).
         //----------------------------------------------------------------------
 
-#if LAGR_LEIDEN_USE_CONTAINER
+#if LG_SUITESPARSE_GRAPHBLAS_V10
         GRB_TRY (GxB_Vector_load (cont->p, (void **) &Ap, pty,
             pn, psz, ph, NULL)) ;
         Ap = NULL ;
@@ -738,7 +719,7 @@ int LAGraph_Leiden
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_Vector_new (c_handle, GrB_INT64, n)) ;
-#if LAGR_LEIDEN_USE_CONTAINER
+#if LG_SUITESPARSE_GRAPHBLAS_V10
     GRB_TRY (GrB_set (*c_handle, GxB_FULL, GxB_SPARSITY_CONTROL)) ;
     GRB_TRY (GxB_Vector_load (*c_handle, (void **) &o_comm, GrB_INT64,
         n, n * sizeof (int64_t), GrB_DEFAULT, NULL)) ;
