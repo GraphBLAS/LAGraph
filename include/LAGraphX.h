@@ -1515,6 +1515,14 @@ int LAGr_MaxFlow(
     char* msg
 );
 
+LAGRAPHX_PUBLIC
+int LAGraph_NumberOfWalks
+(
+    GrB_Matrix *C,
+    GrB_Matrix  A,
+    GrB_Vector  src,
+    int64_t     k
+) ;
 
 #if defined ( __cplusplus )
 }
