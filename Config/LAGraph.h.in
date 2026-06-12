@@ -1574,6 +1574,47 @@ int LAGraph_Matrix_Structure
 ) ;
 
 //------------------------------------------------------------------------------
+// LAGraph_Matrix_Sum: sum an array of matrices with a binary operator
+//------------------------------------------------------------------------------
+
+/** LAGraph_Matrix_Sum: combines an array of matrices into a single matrix C.
+ * The tuples of all input matrices are concatenated into a single buffer and
+ * passed to GrB_Matrix_build, using the binary operator dup to combine any
+ * duplicate (i,j) entries.  With dup = GrB_PLUS_FP64 (for example) this
+ * computes the element-wise sum of all the matrices.
+ *
+ * All input matrices must have identical dimensions and identical built-in
+ * type; C is created with that same type and dimensions.
+ *
+ * @param[out] C          the resulting matrix.
+ * @param[in]  Matrices   array of nmatrices input matrices.
+ * @param[in]  nmatrices  number of matrices in Matrices (must be >= 1).
+ * @param[in]  dup        binary operator to combine duplicate (i,j) entries;
+ *                        if NULL, duplicates are handled per GrB_Matrix_build.
+ * @param[in,out] msg     any error messages.
+ *
+ * @retval GrB_SUCCESS if successful.
+ * @retval GrB_NULL_POINTER if C, Matrices, or any Matrices[k] is NULL.
+ * @retval GrB_INVALID_VALUE if nmatrices is zero.
+ * @retval GrB_DIMENSION_MISMATCH if the inputs do not all share dimensions.
+ * @retval GrB_DOMAIN_MISMATCH if the inputs do not all share a type.
+ * @retval GrB_NOT_IMPLEMENTED if the matrix type is user-defined.
+ * @returns any GraphBLAS errors that may have been encountered.
+ */
+
+LAGRAPH_PUBLIC
+int LAGraph_Matrix_Sum
+(
+    // output:
+    GrB_Matrix *C,          // result = combination of all input matrices
+    // input:
+    GrB_Matrix *Matrices,   // array of nmatrices input matrices
+    GrB_Index nmatrices,    // number of matrices in the array (must be >= 1)
+    GrB_BinaryOp dup,       // operator to combine duplicate (i,j) entries
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
 // LAGraph_Vector_Structure: return the structure of a vector
 //------------------------------------------------------------------------------
 
