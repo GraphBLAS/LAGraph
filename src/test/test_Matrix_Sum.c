@@ -194,6 +194,64 @@ void test_Matrix_Sum_brutal (void)
 #endif
 
 //------------------------------------------------------------------------------
+// test_Matrix_Sum_parallel: exercise the parallel extraction path
+//------------------------------------------------------------------------------
+
+// Sum many matrices with multiple outer threads and confirm the result matches
+// an independently accumulated expected.  This stresses the disjoint-offset
+// extraction under real outer parallelism.
+
+void test_Matrix_Sum_parallel (void)
+{
+    setup ( ) ;
+
+    // request 4 outer threads (saving and restoring the prior settings)
+    int save_outer, save_inner ;
+    OK (LAGraph_GetNumThreads (&save_outer, &save_inner, msg)) ;
+    OK (LAGraph_SetNumThreads (4, save_inner, msg)) ;
+
+    #define NMAT 16
+    GrB_Matrix Mats [NMAT] ;
+    OK (GrB_Matrix_new (&Expected, GrB_FP64, 10, 10)) ;
+
+    for (int k = 0 ; k < NMAT ; k++)
+    {
+        // each matrix has 3 distinct (i,j) entries; the (7,7) entry is shared
+        // by every matrix and others overlap across matrices, so duplicates
+        // must be summed when the matrices are combined
+        GrB_Index Mi [ ] = { (GrB_Index) (k % 10), 2, 7 } ;
+        GrB_Index Mj [ ] = { 3, (GrB_Index) (k % 10), 7 } ;
+        double    Mx [ ] = { (double) (k + 1), 1, 2 } ;
+        Mats [k] = NULL ;
+        OK (GrB_Matrix_new (&Mats [k], GrB_FP64, 10, 10)) ;
+        OK (GrB_Matrix_build_FP64 (Mats [k], Mi, Mj, Mx, 3, NULL)) ;
+        // accumulate into Expected independently
+        OK (GrB_eWiseAdd (Expected, NULL, NULL, GrB_PLUS_FP64, Expected,
+            Mats [k], NULL)) ;
+    }
+
+    OK (LAGraph_Matrix_Sum (&C, Mats, NMAT, GrB_PLUS_FP64, msg)) ;
+
+    bool ok ;
+    OK (LAGraph_Matrix_IsEqual (&ok, C, Expected, msg)) ;
+    TEST_CHECK (ok) ;
+    TEST_MSG ("parallel sum of %d matrices did not match expected", NMAT) ;
+
+    for (int k = 0 ; k < NMAT ; k++)
+    {
+        OK (GrB_free (&Mats [k])) ;
+    }
+    OK (GrB_free (&C)) ;
+    OK (GrB_free (&Expected)) ;
+    #undef NMAT
+
+    // restore the original thread settings
+    OK (LAGraph_SetNumThreads (save_outer, save_inner, msg)) ;
+
+    teardown ( ) ;
+}
+
+//------------------------------------------------------------------------------
 // test_Matrix_Sum_failures: test error handling
 //------------------------------------------------------------------------------
 
@@ -266,6 +324,7 @@ TEST_LIST =
 {
     { "Matrix_Sum", test_Matrix_Sum },
     { "Matrix_Sum_types", test_Matrix_Sum_types },
+    { "Matrix_Sum_parallel", test_Matrix_Sum_parallel },
     { "Matrix_Sum_failures", test_Matrix_Sum_failures },
     #if LG_BRUTAL_TESTS
     { "Matrix_Sum_brutal", test_Matrix_Sum_brutal },

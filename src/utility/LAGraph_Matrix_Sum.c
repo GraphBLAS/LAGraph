@@ -16,10 +16,14 @@
 //------------------------------------------------------------------------------
 
 // LAGraph_Matrix_Sum combines an array of matrices into a single matrix C.  It
-// computes the total number of entries across all inputs, allocates a single
-// tuple buffer (I, J, X) large enough to hold every entry, extracts the tuples
-// of each input matrix into that buffer, and then calls GrB_Matrix_build with
-// the binary operator dup to combine any duplicate (i,j) entries.  With dup =
+// computes the total number of entries across all inputs and the offset at
+// which each matrix's tuples begin in a single shared tuple buffer (I, J, X)
+// large enough to hold every entry.  Because each matrix writes to a disjoint
+// region of that buffer, the per-matrix extraction is parallelized across
+// LG_nthreads_outer threads with OpenMP; SuiteSparse:GraphBLAS parallelizes
+// each GrB_Matrix_extractTuples internally with LG_nthreads_inner threads.  The
+// concatenated tuples are then passed to GrB_Matrix_build, using the binary
+// operator dup to combine any duplicate (i,j) entries.  With dup =
 // GrB_PLUS_FP64 (for example) this computes the element-wise sum of all input
 // matrices.
 
@@ -31,6 +35,7 @@
     LAGraph_Free ((void **) &I, NULL) ;         \
     LAGraph_Free ((void **) &J, NULL) ;         \
     LAGraph_Free ((void **) &X, NULL) ;         \
+    LAGraph_Free ((void **) &Offsets, NULL) ;   \
 }
 
 #define LG_FREE_ALL                             \
@@ -58,7 +63,7 @@ int LAGraph_Matrix_Sum
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    GrB_Index *I = NULL, *J = NULL ;
+    GrB_Index *I = NULL, *J = NULL, *Offsets = NULL ;
     void *X = NULL ;
     LG_ASSERT_MSG (C != NULL, GrB_NULL_POINTER, "&C != NULL") ;
     LG_ASSERT (Matrices != NULL, GrB_NULL_POINTER) ;
@@ -78,10 +83,17 @@ int LAGraph_Matrix_Sum
     GRB_TRY (GrB_get (Matrices [0], &typecode, GrB_EL_TYPE_CODE)) ;
 
     //--------------------------------------------------------------------------
-    // validate every matrix and accumulate the total number of entries
+    // validate every matrix and compute where its tuples begin in the buffer
     //--------------------------------------------------------------------------
 
-    GrB_Index total = 0 ;
+    // Offsets [k] is the position in (I, J, X) at which the tuples of matrix k
+    // begin; Offsets [k+1] - Offsets [k] is its number of entries.  This prefix
+    // sum gives each matrix a disjoint buffer region so the extraction below
+    // can run in parallel without any data races.
+
+    LG_TRY (LAGraph_Malloc ((void **) &Offsets, nmatrices + 1,
+        sizeof (GrB_Index), msg)) ;
+    Offsets [0] = 0 ;
     for (GrB_Index k = 0 ; k < nmatrices ; k++)
     {
         GrB_Matrix Ak = Matrices [k] ;
@@ -96,8 +108,9 @@ int LAGraph_Matrix_Sum
         LG_ASSERT_MSG (code == typecode, GrB_DOMAIN_MISMATCH,
             "all input matrices must have the same type") ;
         GRB_TRY (GrB_Matrix_nvals (&n, Ak)) ;
-        total += n ;
+        Offsets [k+1] = Offsets [k] + n ;
     }
+    GrB_Index total = Offsets [nmatrices] ;
 
     //--------------------------------------------------------------------------
     // allocate the shared row/column index buffers (guard against size 0)
@@ -108,13 +121,24 @@ int LAGraph_Matrix_Sum
     LG_TRY (LAGraph_Malloc ((void **) &J, alloc, sizeof (GrB_Index), msg)) ;
 
     //--------------------------------------------------------------------------
+    // determine the number of threads for the outer extraction loop
+    //--------------------------------------------------------------------------
+
+    int nthreads = LG_nthreads_outer ;
+    nthreads = LAGRAPH_MIN (nthreads, (int) nmatrices) ;
+    nthreads = LAGRAPH_MAX (nthreads, 1) ;
+
+    //--------------------------------------------------------------------------
     // extract tuples from every matrix, then build the result
     //--------------------------------------------------------------------------
 
     // For each built-in type: allocate the value buffer X with the correct
-    // element size, extract the tuples of every input matrix into the shared
-    // buffer at the running offset, create C, and build it with the dup
-    // operator to combine duplicate (i,j) entries.
+    // element size, extract the tuples of every input matrix into its disjoint
+    // region of the shared buffer (in parallel, since the regions never
+    // overlap), create C, and build it with the dup operator to combine
+    // duplicate (i,j) entries.  GRB_TRY cannot be used inside an OpenMP region
+    // (it returns from the function), so the first error is captured into
+    // sum_status under a critical section and checked after the region.
 
     #define LG_SUM_CASE(code, ctype, gtype, suffix)                          \
         case code :                                                          \
@@ -123,18 +147,23 @@ int LAGraph_Matrix_Sum
             LG_TRY (LAGraph_Malloc ((void **) &Xt, alloc, sizeof (ctype),    \
                 msg)) ;                                                      \
             X = (void *) Xt ;                                                \
-            GrB_Index offset = 0 ;                                           \
-            for (GrB_Index k = 0 ; k < nmatrices ; k++)                      \
+            int sum_status = GrB_SUCCESS ;                                   \
+            int64_t k ;                                                      \
+            _Pragma ("omp parallel for num_threads(nthreads) schedule(dynamic,1)") \
+            for (k = 0 ; k < (int64_t) nmatrices ; k++)                      \
             {                                                                \
-                GrB_Index n, got ;                                           \
-                GRB_TRY (GrB_Matrix_nvals (&n, Matrices [k])) ;              \
-                if (n == 0) continue ;                                       \
-                got = n ;                                                    \
-                GRB_TRY (GrB_Matrix_extractTuples_ ## suffix (               \
-                    I + offset, J + offset, Xt + offset, &got,               \
-                    Matrices [k])) ;                                         \
-                offset += n ;                                                \
+                GrB_Index off = Offsets [k] ;                                \
+                GrB_Index got = Offsets [k+1] - off ;                        \
+                if (got == 0) continue ;                                     \
+                GrB_Info info = GrB_Matrix_extractTuples_ ## suffix (        \
+                    I + off, J + off, Xt + off, &got, Matrices [k]) ;        \
+                if (info < GrB_SUCCESS)                                      \
+                {                                                            \
+                    _Pragma ("omp critical")                                 \
+                    { if (sum_status >= GrB_SUCCESS) sum_status = info ; }   \
+                }                                                            \
             }                                                                \
+            GRB_TRY (sum_status) ;                                           \
             GRB_TRY (GrB_Matrix_new (C, gtype, nrows, ncols)) ;              \
             GRB_TRY (GrB_Matrix_build_ ## suffix (*C, I, J, Xt, total,       \
                 dup)) ;                                                      \
