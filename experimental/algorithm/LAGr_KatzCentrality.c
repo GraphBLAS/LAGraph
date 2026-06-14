@@ -34,17 +34,17 @@
 int LAGr_KatzCentrality
 (
     // output:
-    GrB_Vector *centrality,  
-    int64_t *iters,   
+    GrB_Vector *centrality,
+    int64_t *iters,
     // input:
-    LAGraph_Graph G,            
-    double alpha,           
-    double beta,            
-    int64_t max_iter,           
+    LAGraph_Graph G,
+    double alpha,
+    double beta,
+    int64_t max_iter,
     double tol,
     bool normalize,
-    bool use_weights,               // uses edge weights if true, otherwise treats all edges as weight 1
-    char* msg              
+    bool use_weights,  // uses weights if true, else treats all weights as 1
+    char *msg
 )
 {
     //--------------------------------------------------------------------------
@@ -57,7 +57,7 @@ int LAGr_KatzCentrality
 
     LG_ASSERT (centrality != NULL && iters != NULL, GrB_NULL_POINTER) ;
     (*centrality) = NULL;
-    LG_TRY(LAGraph_CheckGraph(G, msg));
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     GrB_Matrix AT;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
@@ -73,15 +73,17 @@ int LAGr_KatzCentrality
 
     // compute correct semiring based on whether edge weights are used
     // TODO: add FP32 support
-    GrB_Semiring semiring = use_weights ? GrB_PLUS_TIMES_SEMIRING_FP64 : GxB_PLUS_SECOND_FP64;
+    GrB_Semiring semiring = use_weights ? GrB_PLUS_TIMES_SEMIRING_FP64
+                                        : GxB_PLUS_SECOND_FP64 ;
 
     if (use_weights)
     {
         // ensure min edge weight is available and nonnegative
         LG_TRY (LAGraph_Cached_EMin (G, msg)) ;
-        LG_ASSERT_MSG (G->emin != NULL &&
-            (G->emin_state == LAGraph_VALUE ||
-             G->emin_state == LAGraph_BOUND),
+        LG_ASSERT_MSG (
+            G->emin != NULL &&
+                (G->emin_state == LAGraph_VALUE ||
+                 G->emin_state == LAGraph_BOUND),
             LAGRAPH_NOT_CACHED, "G->emin is required") ;
 
         double emin = 0 ;
@@ -93,22 +95,22 @@ int LAGr_KatzCentrality
     //--------------------------------------------------------------------------
     // initializations
     //--------------------------------------------------------------------------
-    
+
     GRB_TRY (GrB_Matrix_nrows (&n, AT)) ;
 
-    GRB_TRY(GrB_Vector_new(&x, GrB_FP64, n));
-    GRB_TRY(GrB_Vector_new(&x_prev, GrB_FP64, n));
-    GRB_TRY(GrB_Vector_new(&b, GrB_FP64, n));
-    GRB_TRY(GrB_Vector_new(&t, GrB_FP64, n));
+    GRB_TRY (GrB_Vector_new (&x, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (&x_prev, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (&b, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (&t, GrB_FP64, n)) ;
 
-    GRB_TRY(GrB_assign(x, NULL, NULL, 0.0, GrB_ALL, n, NULL));
-    GRB_TRY(GrB_assign(x_prev, NULL, NULL, 0.0, GrB_ALL, n, NULL));
-    GRB_TRY(GrB_assign(b, NULL, NULL, beta, GrB_ALL, n, NULL));
+    GRB_TRY (GrB_assign (x, NULL, NULL, 0.0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_assign (x_prev, NULL, NULL, 0.0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_assign (b, NULL, NULL, beta, GrB_ALL, n, NULL)) ;
 
     // first iteration is always done
-    double rdiff = 1 ;   
+    double rdiff = 1 ;
 
-    // TODO: determine best way to stop 
+    // TODO: determine best way to stop
     for ((*iters) = 0 ; ; (*iters)++)
     {
         // check for convergence failure
@@ -116,7 +118,9 @@ int LAGr_KatzCentrality
             "katz centrality failed to converge in %" PRId64 " iterations", max_iter) ;
 
         // swap x and x_prev
-        GrB_Vector temp = x_prev ; x_prev = x ; x = temp ;
+        GrB_Vector temp = x_prev ;
+        x_prev = x ;
+        x = temp ;
 
         // x = A' * x_prev
         GRB_TRY (GrB_mxv (x, NULL, NULL, semiring, AT, x_prev, NULL)) ;
@@ -126,13 +130,14 @@ int LAGr_KatzCentrality
         GRB_TRY (GrB_eWiseAdd (x, NULL, NULL, GrB_PLUS_FP64, x, b, NULL)) ;
 
         // t = x - x_prev
-        GRB_TRY (GrB_eWiseAdd (t, NULL, NULL, GrB_MINUS_FP64, x, x_prev, NULL)) ;
+        GRB_TRY (GrB_eWiseAdd (t, NULL, NULL, GrB_MINUS_FP64, x, x_prev,
+            NULL)) ;
         // t = abs (t)
         GRB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP64, t, NULL)) ;
         // rdiff = sum (t)
         GRB_TRY (GrB_reduce (&rdiff, NULL, GrB_PLUS_MONOID_FP64, t, NULL)) ;
 
-        if (rdiff < tol) break ;        // TODO: revisit
+        if (rdiff < tol) break ;    // TODO: revisit
     }
 
     // normalize using the L2 norm if flag is set
@@ -146,7 +151,8 @@ int LAGr_KatzCentrality
 
         if (sumsq > 0)
         {
-            GRB_TRY (GrB_apply (x, NULL, NULL, GrB_DIV_FP64, x, sqrt(sumsq), NULL)) ;
+            GRB_TRY (GrB_apply (x, NULL, NULL, GrB_DIV_FP64, x, sqrt (sumsq),
+                NULL)) ;
         }
     }
 

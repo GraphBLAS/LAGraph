@@ -46,6 +46,18 @@ double diamonds_katz [8] = {
     1.1352000000, 1.1352000000, 1.2270400000
 } ;
 
+double ldbc_directed_example_katz [10] = {
+    1.1016778324, 1.0000000000, 1.1563813542, 1.2611415319, 1.1347459707,
+    1.0000000000, 1.0000000000, 1.0356314652, 1.0000000000, 1.0721318253
+} ;
+
+double rand_katz [20] = {
+    0.1835353701, 0.2018889071, 0.2018889071, 0.2018889071, 0.2018889071,
+    0.2239131515, 0.2239131515, 0.2239131515, 0.2283180003, 0.2283180003,
+    0.2283180003, 0.2291989701, 0.2291989701, 0.2291989701, 0.2293751641,
+    0.2293751641, 0.2293751641, 0.2294104029, 0.2294104029, 0.2752924834
+} ;
+
 //------------------------------------------------------------------------------
 // difference: compare Katz vector result with reference values
 //------------------------------------------------------------------------------
@@ -86,7 +98,7 @@ void test_katz_diamonds (void)
 	GrB_Vector centrality = NULL ;
     int64_t niters = 0 ;
 
-    // Create diamonds graph
+    // Create diamonds graph (directed)
     snprintf (filename, LEN, LG_DATA_DIR "%s", "diamonds.mtx") ;
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
@@ -141,7 +153,7 @@ void test_katz_karate (void)
 	GrB_Vector centrality = NULL ;
     int64_t niters = 0 ;
 
-    // Create karate graph
+    // Create karate graph (undirected), treated as unweighted
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
@@ -188,6 +200,116 @@ void test_katz_karate (void)
 #endif
 }
 
+void test_katz_ldbc_directed_example (void)
+{
+#if LAGRAPH_SUITESPARSE
+	LAGraph_Graph G = NULL ;
+	OK (LAGraph_Init (msg)) ;
+    GrB_Matrix A = NULL ;
+	GrB_Vector centrality = NULL ;
+    int64_t niters = 0 ;
+
+    // Create ldbc-directed-example graph (weighted and directed)
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "ldbc-directed-example.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;
+
+    // Check that AT is cached
+    int result = LAGraph_Cached_AT (G, msg) ;
+	TEST_CHECK (result == GrB_SUCCESS || result == LAGRAPH_CACHE_NOT_NEEDED) ;
+
+    // Print graph stats
+    uint64_t n, nedges ;
+    OK (GrB_Matrix_nrows(&n, G->A)) ;
+    OK (GrB_Matrix_nvals(&nedges, G->A)) ;
+    printf ("\n\nldbc directed example graph (%" PRIu64 " nodes, %" PRIu64 " edges):\n", n, nedges) ;
+
+    double alpha = 0.1 ;
+
+    // Compute katz centrality with edge weights considered
+    double t = LAGraph_WallClockTime() ;
+    OK (LAGr_KatzCentrality (&centrality, &niters, G, alpha, 1.0, 1000, 1e-6, false, true, msg)) ;
+    t = LAGraph_WallClockTime() - t ;
+    printf ("  Time for LAGr_KatzCentrality: %g sec\n", t) ;
+    printf ("  Iterations for LAGr_KatzCentrality: %" PRId64 "\n", niters) ;
+
+	// Compare with reference values.
+	GrB_Index cn = 0, cnvals = 0 ;
+	OK (GrB_Vector_size (&cn, centrality)) ;
+	OK (GrB_Vector_nvals (&cnvals, centrality)) ;
+	TEST_CHECK (cn == n) ;
+	TEST_CHECK (cnvals == n) ;
+
+	double err = difference (centrality, ldbc_directed_example_katz, 10) ;
+	printf ("  ldbc-directed-example: err: %e\n", err) ;
+	TEST_CHECK (err < 1e-4) ;
+
+    OK (GrB_free (&centrality)) ;
+    OK (LAGraph_Delete (&G, msg)) ;
+	OK (LAGraph_Finalize (msg)) ;
+
+#endif
+}
+
+void test_katz_rand (void)
+{
+#if LAGRAPH_SUITESPARSE
+	LAGraph_Graph G = NULL ;
+	OK (LAGraph_Init (msg)) ;
+    GrB_Matrix A = NULL ;
+	GrB_Vector centrality = NULL ;
+    int64_t niters = 0 ;
+
+    // Create rand graph (directed), treated as unweighted
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "rand.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;
+
+    // Check that AT is cached
+    int result = LAGraph_Cached_AT (G, msg) ;
+	TEST_CHECK (result == GrB_SUCCESS || result == LAGRAPH_CACHE_NOT_NEEDED) ;
+
+    // Print graph stats
+    uint64_t n, nedges ;
+    OK (GrB_Matrix_nrows(&n, G->A)) ;
+    OK (GrB_Matrix_nvals(&nedges, G->A)) ;
+    printf ("\n\nrand graph (%" PRIu64 " nodes, %" PRIu64 " edges):\n", n, nedges) ;
+
+    double alpha = 0.1 ;
+
+    // normalize results
+    double t = LAGraph_WallClockTime() ;
+    OK (LAGr_KatzCentrality (&centrality, &niters, G, alpha, 1.0, 1000, 1e-6, true, false, msg)) ;
+    t = LAGraph_WallClockTime() - t ;
+    printf ("  Time for LAGr_KatzCentrality: %g sec\n", t) ;
+    printf ("  Iterations for LAGr_KatzCentrality: %" PRId64 "\n", niters) ;
+
+	// Compare with reference values.
+	GrB_Index cn = 0, cnvals = 0 ;
+	OK (GrB_Vector_size (&cn, centrality)) ;
+	OK (GrB_Vector_nvals (&cnvals, centrality)) ;
+	TEST_CHECK (cn == n) ;
+	TEST_CHECK (cnvals == n) ;
+
+	double err = difference (centrality, rand_katz, 20) ;
+	printf ("  rand: err: %e\n", err) ;
+	TEST_CHECK (err < 1e-4) ;
+
+    OK (GrB_free (&centrality)) ;
+    OK (LAGraph_Delete (&G, msg)) ;
+	OK (LAGraph_Finalize (msg)) ;
+
+#endif
+}
+
 
 //------------------------------------------------------------------------------
 // list of tests
@@ -196,5 +318,7 @@ void test_katz_karate (void)
 TEST_LIST = {
     {"test_katz_diamonds", test_katz_diamonds},
 	{"test_katz_karate", test_katz_karate},
+    {"test_katz_ldbc_directed_example", test_katz_ldbc_directed_example},
+    {"test_katz_rand", test_katz_rand},
 	{NULL, NULL}
 } ;
