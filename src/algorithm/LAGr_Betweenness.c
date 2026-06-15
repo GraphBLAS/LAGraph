@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------------
 
 // LAGr_Betweenness: Batch algorithm for computing
-// betweeness centrality, using push-pull optimization.
+// betweenness centrality, using push-pull optimization.
 
 // This is an Advanced algorithm (G->AT is required).
 
@@ -82,10 +82,12 @@
 // LAGr_Betweenness: vertex betweenness-centrality
 //------------------------------------------------------------------------------
 
+// FIXME: make (sources,ns) a GrB_Vector (with descriptor: indices/values)
+
 int LAGr_Betweenness
 (
     // output:
-    GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
+    GrB_Vector *centrality,     // centrality(i): betweenness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
     const GrB_Index *sources,   // source vertices to compute shortest paths
@@ -257,7 +259,7 @@ int LAGr_Betweenness
             GrB_DESC_RS)) ;
 
         //----------------------------------------------------------------------
-        // W<S[i−1]> = W * A'
+        // W<S[i-1]> = W * A'
         //----------------------------------------------------------------------
 
         // pull if W is more than 10% dense and nnz(W)/nnz(S[i-1]) > 1
@@ -272,14 +274,14 @@ int LAGr_Betweenness
 
         if (do_pull)
         {
-            // W<S[i−1]> = W * A'
+            // W<S[i-1]> = W * A'
             GRB_TRY (LG_SET_FORMAT_HINT (W, LG_BITMAP)) ;
             GRB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, A,
                 GrB_DESC_RST1)) ;
         }
         else // push
         {
-            // W<S[i−1]> = W * AT
+            // W<S[i-1]> = W * AT
             GRB_TRY (LG_SET_FORMAT_HINT (W, LG_SPARSE)) ;
             GRB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, AT,
                 GrB_DESC_RS)) ;

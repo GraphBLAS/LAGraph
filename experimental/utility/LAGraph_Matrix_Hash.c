@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: ready for src?  but need vanilla method
+
 #include "LG_internal.h"
 #include <LAGraph.h>
 #include <LAGraphX.h>
@@ -52,6 +54,8 @@ void LG_HM_hash_edge (uint64_t *z, const uint64_t *x,
 "    (*z) = result ;\n"                                                        \
 "}\n"
 
+// FIXME: Make hash output a GrB_Scalar
+
 GrB_Info LAGraph_Hash_Matrix(
     uint64_t *hash,      // [output] hash
     const GrB_Matrix A,  // matrix to hash
@@ -72,6 +76,7 @@ GrB_Info LAGraph_Hash_Matrix(
     // Compute without extra memory if possible.
     GRB_TRY (GrB_Matrix_apply_IndexOp_UINT64(
         C, NULL, NULL, lg_hash_edge, A, (uint64_t) 0, NULL));
+    // FIXME: could make the monoid instead of using GxB:
     GRB_TRY (GrB_Matrix_reduce_UINT64(
         hash, GrB_BXOR_UINT64, GxB_BXOR_UINT64_MONOID, C, NULL)) ;
     LG_FREE_ALL;

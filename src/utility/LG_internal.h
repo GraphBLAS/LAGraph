@@ -50,6 +50,11 @@
 #define MATCHNAME(s1,s2) MATCH (s1, s2, LAGRAPH_MAX_NAME_LEN)
 
 //------------------------------------------------------------------------------
+// JIT string generation
+//------------------------------------------------------------------------------
+#define LG_JIT_STRING(f, name) static const char* name = LG_XSTR(f); f
+
+//------------------------------------------------------------------------------
 // typedefs
 //------------------------------------------------------------------------------
 
@@ -89,6 +94,7 @@ typedef unsigned char LG_void ;
     if (msg != NULL && msg [0] == '\0')                             \
     {                                                               \
         snprintf (msg, LAGRAPH_MSG_LEN, __VA_ARGS__) ;              \
+        msg [LAGRAPH_MSG_LEN-1] = '\0' ;                            \
     }                                                               \
 }
 
@@ -272,15 +278,25 @@ typedef unsigned char LG_void ;
 
 #endif
 
-// GraphBLAS version 10 flag
+// SuiteSparse:GraphBLAS version 10 and v10.2 flags
 #if LAGRAPH_SUITESPARSE 
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (10,2,0)
+        // GraphBLAS v10.2.0 or later
         #define LG_SUITESPARSE_GRAPHBLAS_V10 1
+        #define LG_SUITESPARSE_GRAPHBLAS_V10_2 1
+    #elif GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
+        // GraphBLAS v10.0.0 to v10.1.x
+        #define LG_SUITESPARSE_GRAPHBLAS_V10 1
+        #define LG_SUITESPARSE_GRAPHBLAS_V10_2 0
     #else
+        // GraphBLAS v9.x
         #define LG_SUITESPARSE_GRAPHBLAS_V10 0
+        #define LG_SUITESPARSE_GRAPHBLAS_V10_2 0
     #endif
 #else
+    // not SuiteSparse:GraphBLAS
     #define LG_SUITESPARSE_GRAPHBLAS_V10 0
+    #define LG_SUITESPARSE_GRAPHBLAS_V10_2 0
 #endif
 
 //------------------------------------------------------------------------------
@@ -694,5 +710,12 @@ int LG_KindName
     #define LG_BRUTAL_TESTS 0
 
 #endif
+
+//------------------------------------------------------------------------------
+// init/finalized
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC void LG_set_LAGr_Init_has_been_called (bool setting) ;
+LAGRAPH_PUBLIC bool LG_get_LAGr_Init_has_been_called (void) ;
 
 #endif

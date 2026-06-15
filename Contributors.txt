@@ -15,7 +15,7 @@ Contributors (in alphabetical order):
     Florentin Dorre     Technische Univeritat Dresden, Neo4j
     Marton Elekes       Budapest University of Technology and Economics, Hungary
     Alexandra Goff      Texas A&M University
-    Gabriel Gomez       Texas A&M University
+    Gabriel A. Gomez    Texas A&M University, FalkorDB
     Semyon Grigoriev    St. Petersburg State University
     Balint Hegyi        Budapest University of Technology and Economics, Hungary
     Tanner Hoke         Texas A&M University

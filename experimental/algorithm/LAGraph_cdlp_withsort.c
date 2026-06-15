@@ -16,6 +16,8 @@
 // and B\'{a}lint Hegyi, using LaTeX syntax).
 // https://inf.mit.bme.hu/en/members/szarnyasg .
 
+// TODO: ready for src?  Except it is slow.
+
 //------------------------------------------------------------------------------
 
 // ## Background
@@ -138,6 +140,9 @@
 #include "LG_internal.h"
 
 //****************************************************************************
+
+// FIXME: make itermax a GrB_Scalar?
+
 int LAGraph_cdlp_withsort
 (
     GrB_Vector *CDLP_handle, // output vector

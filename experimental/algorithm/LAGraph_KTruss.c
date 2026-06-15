@@ -42,6 +42,8 @@
 // LAGraph_KTruss: find the k-truss subgraph of a graph
 //------------------------------------------------------------------------------
 
+// FIXME: make k input GrB_Scalar
+
 int LAGraph_KTruss              // compute the k-truss of a graph
 (
     // outputs:
@@ -74,11 +76,13 @@ int LAGraph_KTruss              // compute the k-truss of a graph
     else
     {
         // A is not known to be symmetric
-        LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
+            "G->A must be symmetric") ;
     }
 
     // no self edges can be present
-    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED,
+        "G->nself_edges must be zero") ;
 
     //--------------------------------------------------------------------------
     // initializations

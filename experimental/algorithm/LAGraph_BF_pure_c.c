@@ -51,6 +51,8 @@
 // d and the shortest path tree pi. Otherwise return NULL pointer for d
 // and pi.
 
+// FIXME: move into experimental/test; this should not be user-callable
+
 GrB_Info LAGraph_BF_pure_c
 (
     int32_t **pd,     // pointer to distance vector d, d(k) = shorstest distance

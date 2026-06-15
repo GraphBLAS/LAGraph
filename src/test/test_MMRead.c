@@ -556,6 +556,22 @@ void test_MMWrite (void)
 
 typedef int mytype ;
 
+#if LG_SUITESPARSE_GRAPHBLAS_V10_2
+int64_t mytype_print
+(
+    // output:
+    char *string,           // value is printed to the string
+    // input:
+    size_t string_size,     // size of the string array
+    const void *value,      // value to print
+    int verbose             // if >0, print verbosely; else tersely
+)
+{
+    int *x = (int *) value ;
+    return ((int64_t) snprintf (string, string_size, "(my type: %d)", (*x))) ;
+}
+#endif
+
 void test_MMWrite_failures (void)
 {
     setup ( ) ;
@@ -566,14 +582,29 @@ void test_MMWrite_failures (void)
     TEST_CHECK (LAGraph_MMWrite (NULL, NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
 
-    // attempt to print a matrix with a user-defined type, which should fail
+    // attempt to print a matrix with a user-defined type, which requires
+    // SuiteSparse:GraphBLAS v10.2.0 or later
     FILE *f = tmpfile ( ) ;
     TEST_CHECK (f != NULL) ;
     OK (GrB_Type_new (&atype, sizeof (mytype))) ;
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
+    OK (GrB_Type_set_VOID (atype, &mytype_print, GxB_PRINT_FUNCTION,
+        sizeof (&mytype_print))) ;
+    #endif
     OK (GrB_Matrix_new (&A, atype, 4, 4)) ;
+    for (int k = 0 ; k < 4 ; k++)
+    {
+        OK (GrB_Matrix_setElement_UDT (A, (void *) (&k), k, k)) ;
+    }
     int status = LAGraph_Matrix_Print (A, LAGraph_COMPLETE, stdout, msg) ;
     printf ("msg: [%s]\n", msg) ;
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
+    TEST_CHECK (status == GrB_SUCCESS) ;
+    #else
     TEST_CHECK (status == GrB_NOT_IMPLEMENTED) ;
+    #endif
+
+    // MMWrite is not supported for user-defined types, even in v10.2.0
     status = LAGraph_MMWrite (A, f, NULL, msg) ;
     printf ("msg: %d [%s]\n", status, msg) ;
     TEST_CHECK (status == GrB_NOT_IMPLEMENTED) ;

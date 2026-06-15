@@ -19,6 +19,8 @@
 
 #include "LG_internal.h"
 
+#if !LG_SUITESPARSE_GRAPHBLAS_V10_2
+
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK                    \
 {                                       \
@@ -94,10 +96,9 @@ LG_VECTOR_PRINT (UINT32, uint32_t, GrB_UINT32, "%" PRIu32, "%" PRIu32  )
 LG_VECTOR_PRINT (UINT64, uint64_t, GrB_UINT64, "%" PRIu64, "%" PRIu64  )
 LG_VECTOR_PRINT (FP32  , float   , GrB_FP32  , "%g"  , "%0.7g" )
 LG_VECTOR_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g")
-#if 0
-// would need to pass in an iscomplex flag to print creal(x) and cimag(x)
-LG_VECTOR_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...)
-LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...)
+// LG_VECTOR_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...)
+// LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...)
+
 #endif
 
 #undef  LG_FREE_WORK
@@ -108,6 +109,8 @@ LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...)
 //------------------------------------------------------------------------------
 // LAGraph_Vector_Print: automatically determine the type
 //------------------------------------------------------------------------------
+
+// FIXME: note input scalar pr (an enum)
 
 int LAGraph_Vector_Print
 (
@@ -139,6 +142,13 @@ int LAGraph_Vector_Print
     // print the vector
     //--------------------------------------------------------------------------
 
+    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
+
+    // GraphBLAS v10.2.0 or later, with support for user-defined types
+    return (GxB_Vector_fprint (v, "", (int) pr, f)) ;
+
+    #else
+
     switch (typecode)
     {
         case GrB_BOOL_CODE   : return (LG_Vector_Print_BOOL (v, pr, f, msg)) ;
@@ -159,5 +169,6 @@ int LAGraph_Vector_Print
                 GrB_NOT_IMPLEMENTED, "user-defined types not supported") ;
             return (GrB_NOT_IMPLEMENTED) ;
     }
+    #endif
 }
 

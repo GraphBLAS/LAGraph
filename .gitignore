@@ -43,8 +43,6 @@ CMakeFiles*
 *~
 data/comments*.txt
 data/comments*.mtx
-
-*/build/*
 **/.venv/*
 
 # Do not ignore this file

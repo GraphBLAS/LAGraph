@@ -51,6 +51,8 @@
 
 // TODO: not ready for src; need a vanilla method with no GxB
 
+#undef LAGRAPH_SUITESPARSE  /* LG_CC_FastSV5 currently disabled */
+
 #if LAGRAPH_SUITESPARSE
 
 //------------------------------------------------------------------------------

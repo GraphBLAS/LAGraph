@@ -17,6 +17,8 @@
 
 #include "LG_internal.h"
 
+// FIXME: note input scalars: nthreads_inner, _outer
+
 int LAGraph_SetNumThreads
 (
     // input:

@@ -37,10 +37,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions are derived from LAGraph/CMakeLists.txt.
 
-#define LAGRAPH_DATE "Sept 8, 2025"
+#define LAGRAPH_DATE "FIXME, 2025"
 #define LAGRAPH_VERSION_MAJOR  1
-#define LAGRAPH_VERSION_MINOR  2
-#define LAGRAPH_VERSION_UPDATE 1
+#define LAGRAPH_VERSION_MINOR  3
+#define LAGRAPH_VERSION_UPDATE 0
 
 //==============================================================================
 // include files and helper macros
@@ -2410,11 +2410,11 @@ int LAGr_SingleSourceShortestPath
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGr_Betweenness: betweeness centrality metric
+// LAGr_Betweenness: betweenness centrality metric
 //------------------------------------------------------------------------------
 
-/** LAGr_Betweenness: betweeness centrality metric.  This methods computes an
- * approximation of the betweeness-centrality metric of all nodes in the graph.
+/** LAGr_Betweenness: betweenness centrality metric.  This methods computes an
+ * approximation of the betweenness-centrality metric of all nodes in the graph.
  * Only a few given source nodes are used for the approximation.  This is an
  * Advanced algorithm (G->AT is required).
  *
@@ -2442,7 +2442,7 @@ LAGRAPH_PUBLIC
 int LAGr_Betweenness
 (
     // output:
-    GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
+    GrB_Vector *centrality,     // centrality(i): betweenness centrality of i
     // input:
     const LAGraph_Graph G,      // input graph
     const GrB_Index *sources,   // source vertices to compute shortest paths

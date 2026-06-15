@@ -25,6 +25,8 @@
 
 #include "LG_alg_internal.h"
 
+// FIXME: should src input be a GrB_Scalar?
+
 int LAGr_BreadthFirstSearch
 (
     // output:

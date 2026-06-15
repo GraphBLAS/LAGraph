@@ -76,6 +76,8 @@ static GrB_Info Reduce_assign (GrB_Vector w,
     GrB_free (&nsgp);       \
 }
 
+// FIXME: remove sanitize parameter, add LAGraph_Graph parameter
+
 int LAGraph_cc_lacc
 (
     GrB_Vector *result,     // output: array of component identifiers

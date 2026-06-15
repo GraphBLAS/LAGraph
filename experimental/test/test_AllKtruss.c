@@ -235,7 +235,7 @@ void test_allktruss_errors (void)
     G->nself_edges = LAGRAPH_UNKNOWN ;
     result = LAGraph_AllKTruss (Cset, &kmax, ntris, nedges, nsteps, G, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
-    TEST_CHECK (result == -1004) ;
+    TEST_CHECK (result == LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
 
     // G is undirected
     G->nself_edges = 0 ;
@@ -243,7 +243,7 @@ void test_allktruss_errors (void)
     G->is_symmetric_structure = LAGraph_FALSE ;
     result = LAGraph_AllKTruss (Cset, &kmax, ntris, nedges, nsteps, G, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
-    TEST_CHECK (result == -1005) ;
+    TEST_CHECK (result == LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED) ;
 
     LAGraph_Free ((void **) &Cset, NULL) ;
     LAGraph_Free ((void **) &ntris, NULL) ;

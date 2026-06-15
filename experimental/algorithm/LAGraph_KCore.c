@@ -19,6 +19,8 @@
 // adjacency matrix.  Edge weights are ignored.  On output, decomp(i) = k if
 // node i is in the k-core, or empty otherwise.
 
+// TODO: add references
+
 #define LG_FREE_WORK                \
 {                                   \
     GrB_free (&deg) ;               \
@@ -37,7 +39,8 @@
 
 // TODO: revise and add to src
 // TODO: need both basic and expert methods; this is mixed
-// vanilla OK: no GxB used here
+
+// FIXME: make k input GrB_Scalar
 
 int LAGraph_KCore  // TODO: LAGr_KCore (expert), cache is_symmetric_structure
                    // TODO: cache nself_edges
@@ -72,16 +75,19 @@ int LAGraph_KCore  // TODO: LAGr_KCore (expert), cache is_symmetric_structure
     else
     {
         // A is not known to be symmetric
-        LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
+            "G->A must be symmetric") ;
     }
 
     // no self edges can be present
-    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED,
+        "G->nself_edges must be zero") ;
 
     //create work scalars
     GrB_Index n, qnvals, degnvals, maxDeg;
     GRB_TRY (GrB_Matrix_nrows(&n, A)) ;
 
+    // TODO: don't do this here; do it in the basic method
     //create deg vector using rowdegree property
     LG_TRY (LAGraph_Cached_OutDegree(G, msg)) ;
     GRB_TRY (GrB_Vector_dup(&deg, G->out_degree)) ; //original deg vector is technically 1-core since 0 is omitted

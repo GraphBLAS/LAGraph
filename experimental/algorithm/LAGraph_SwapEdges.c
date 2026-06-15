@@ -11,9 +11,11 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
-// Contributed by Gabriel Gomez, Texas A&M University
+// Contributed by Gabriel A. Gomez, Texas A&M University
 
 //------------------------------------------------------------------------------
+
+// TODO: ready for src
 
 // References:
 
@@ -21,6 +23,10 @@
 // uniform generation of random graphs with prescribed degree sequences,” 2004.
 #include "LG_internal.h"
 #include "LAGraphX.h"
+
+// FIXME: make pQ output GrB_Scalar
+// FIXME: make Q input GrB_Scalar
+
 int LAGraph_SwapEdges
 (
     // output

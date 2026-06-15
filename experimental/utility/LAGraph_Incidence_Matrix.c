@@ -58,6 +58,8 @@ Note that complex types are NOT supported.
 }                                                             
 
 
+// FIXME: need incidence kind enum in LAGraph_Graph object
+
 int LAGraph_Incidence_Matrix
 (
     GrB_Matrix *result, // incidence

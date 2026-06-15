@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: not ready for src; uses global variables
+// TODO: almost ready for src; but vanilla method would be hard.
 
 /**
  * Code is based on the Min-Label algorithm described in the following paper:
@@ -35,18 +35,12 @@
 
 //****************************************************************************
 //arrays used in SelectOp
-typedef struct 
-{
-    uint64_t *F, *B;
+LG_JIT_STRING(
+typedef struct {
+    uint64_t *F;
+    uint64_t *B;
     bool *M;
-} LG_SCC_Context;
-#define SCCCONTEXT \
-"typedef struct \n"             \
-"{\n"                           \
-"    uint64_t *F, *B;\n"    \
-"    bool *M;\n"                \
-"} LG_SCC_Context;\n"               
-
+} LG_SCC_Context;, SCCCONTEXT)
 
 // LG_SCC_edge_removal:
 //  - remove the edges connected to newly identified SCCs (vertices u with M[u]==1)
@@ -61,21 +55,18 @@ typedef struct
 // an edge (u, v) if either F[u]!=F[v] or B[u]!=B[v] holds, which can accelerate
 // the SCC computation in the future rounds.
 
-void LG_SCC_edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk) ;
-void LG_SCC_edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk)
-{
-    (*z) = (!thunk->M[i] && !thunk->M[j] 
-        && thunk->F[i] == thunk->F[j] 
+LG_JIT_STRING(
+void LG_SCC_edge_removal (
+	bool *z,
+	const void *x,
+	GrB_Index i,
+	GrB_Index j,
+	const LG_SCC_Context *thunk
+) {
+    (*z) = (!thunk->M[i] && !thunk->M[j]
+        && thunk->F[i] == thunk->F[j]
         && thunk->B[i] == thunk->B[j]) ;
-}
-#define EDGE_REMOVAL \
-"void LG_SCC_edge_removal \n"                                                          \
-"(bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk)\n" \
-"{\n"                                                                           \
-"    (*z) = (!thunk->M[i] && !thunk->M[j] \n"                                   \
-"        && thunk->F[i] == thunk->F[j] \n"                                      \
-"        && thunk->B[i] == thunk->B[j]) ;\n"                                    \
-"}\n"                                                                           
+}, EDGE_REMOVAL)
 
 //****************************************************************************
 // LG_SCC_trim_one: remove the edges connected to trivial SCCs
@@ -83,17 +74,16 @@ void LG_SCC_edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, cons
 //  - M[i] = i   | if vertex i is a trivial SCC
 //    M[i] = n   | otherwise
 
-void LG_SCC_trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk) ;
-void LG_SCC_trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk)
-{
+LG_JIT_STRING(
+void LG_SCC_trim_one (
+	bool *z,
+	const void *x,
+	GrB_Index i,
+	GrB_Index j,
+	const LG_SCC_Context *thunk
+) {
     (*z) = (thunk->F[i] == thunk->F[j]) ;
-}
-#define TRIM_ONE \
-"void LG_SCC_trim_one\n"                                                               \
-"(bool *z, const void *x, GrB_Index i, GrB_Index j, const LG_SCC_Context *thunk)\n" \
-"{\n"                                                                           \
-"    (*z) = (thunk->F[i] == thunk->F[j]) ;\n"                                   \
-"}\n"
+}, TRIM_ONE)
 
 //****************************************************************************
 // label propagation
@@ -119,7 +109,6 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     GRB_TRY (GrB_Vector_new (&s, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
     GRB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
-    // GxB_fprint(s, GxB_SHORT, stdout);
     GRB_TRY (GrB_assign (t, 0, 0, label, GrB_ALL, 0, 0));
     GRB_TRY (GrB_wait(A, GrB_MATERIALIZE));
 
@@ -198,7 +187,7 @@ int LAGraph_scc
     GRB_TRY (GrB_Matrix_nrows (&n, A));
     GRB_TRY (GrB_Matrix_ncols (&ncols, A));
     LG_ASSERT(n == ncols, GrB_DIMENSION_MISMATCH);
-    
+
     #if !LG_SUITESPARSE_GRAPHBLAS_V10
     LG_TRY (LAGraph_Malloc ((void **) &contx.F, n, sizeof (uint64_t), msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &contx.B, n, sizeof (uint64_t), msg)) ;

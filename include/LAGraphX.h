@@ -1310,7 +1310,7 @@ LAGRAPHX_PUBLIC
 int LAGr_EdgeBetweennessCentrality
 (
     // output:
-    GrB_Matrix *centrality,     // centrality(i): betweeness centrality of i
+    GrB_Matrix *centrality,     // centrality(i): betweenness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
     GrB_Vector sources,         // source vertices to compute shortest paths (if NULL or empty, use all vertices)
@@ -1341,6 +1341,19 @@ int LAGr_ClosenessCentrality
     bool use_weights,       // if true, use edge weights in shortest paths
     cc_algo_t algorithm,    // shortest-path algorithm to use
     GrB_Scalar Delta,       // delta for SSSP; if NULL, derived from G->emin
+// harmonic centrality (approximate via HLL sketches)
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_HarmonicCentrality
+(
+    // outputs:
+    GrB_Vector *scores,            // FP64 harmonic centrality scores
+    GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
+                                   // (pass NULL, not yet implemented)
+    // inputs:
+    const LAGraph_Graph G,         // input graph
+    const GrB_Vector node_weights, // participating nodes and their weights
     char *msg
 ) ;
 
@@ -1362,6 +1375,20 @@ int LAGr_KatzCentrality
     double tol,
     bool normalize,
     bool use_weights,
+// harmonic centrality (exact via BFS)
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_HarmonicCentrality_exact
+(
+    // outputs:
+    GrB_Vector *scores,            // FP64 harmonic centrality scores
+    GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
+                                   // (pass NULL, not yet implemented)
+    // inputs:
+    const LAGraph_Graph G,         // input graph
+    const GrB_Vector nodes,        // nodes to calculate centrality of
+    const GrB_Vector node_weights, // participating nodes and their weights
     char *msg
 ) ;
 
@@ -1415,6 +1442,17 @@ int LAGr_Modularity(
     double gamma,       // Resolution parameter
     GrB_Vector c,       // Cluster vector where c[i] = j means vertex i is in cluster j
     LAGraph_Graph G,    // original graph
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
+int LAGraph_Leiden
+(
+    // output:
+    GrB_Vector *c_handle,   // c[i] = community label (0..K-1) for node i
+    // input:
+    LAGraph_Graph G,        // input graph (must be symmetric, no self-loops)
+    uint64_t seed,          // random seed (reserved for future use)
     char *msg
 ) ;
 
@@ -1555,13 +1593,107 @@ int LAGr_MaxFlow(
     //outputs
     double* f,
     GrB_Matrix* flow_mtx,
+    GrB_Matrix* res_mtx,
     //inputs
     LAGraph_Graph G,
     GrB_Index src, //source node index
     GrB_Index sink, // sink node index
     //inout
     char* msg
+);   
+
+LAGRAPHX_PUBLIC
+int LAGraph_MinCut(
+    //outputs
+    GrB_Vector* S,
+    GrB_Vector* S_bar,
+    GrB_Matrix* cut_set,
+    // inputs
+    GrB_Matrix R, //residual graph
+    LAGraph_Graph G_origin, //original graph with capacities
+    GrB_Index src, //source node index from max flow
+    char *msg
 );
+
+//------------------------------------------------------------------------------
+// Louvain sub-algorithms
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_AdjModularity(
+    //output
+    double *Q,
+    //input
+    double gamma,
+    GrB_Matrix A,
+    GrB_Matrix S,
+    char* msg
+);
+LAGRAPHX_PUBLIC
+int LAGr_Jaccard(
+    //  output
+    GrB_Matrix *coefficients,
+    //  input
+    LAGraph_Graph G,
+    bool all_pairs, 
+    char *msg
+); 
+
+LAGRAPHX_PUBLIC
+int LAGraph_IsolateSet(
+    //output
+    GrB_Vector *isolate_set,
+    //input
+    GrB_Matrix A,
+    GrB_Vector ignore_node,
+    uint64_t seed,
+    char* msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_IsolateSets(
+    GrB_Matrix *IsolateSets, 
+    // LAGraph_Graph G,         
+    GrB_Matrix A,
+    // GrB_Vector ignore_nodes,
+    uint64_t seed, 
+    char *msg      
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_LouvainSeq(
+    // output
+    GrB_Matrix *S_result, 
+    // input
+    LAGraph_Graph G,
+    uint64_t seed,
+    char *msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_LouvainIS(
+    // output
+    GrB_Matrix *S_result,
+    uint64_t seed,
+    // input
+    LAGraph_Graph G,
+    char *msg
+);
+
+//------------------------------------------------------------------------------
+// LAGraph_DIMACSMaxFlowRead: read a DIMACS13 MaxFlow problem
+//------------------------------------------------------------------------------
+
+int LAGraph_DIMACSMaxFlowRead
+(
+    // output:
+    GrB_Matrix* A,  // adjancency matrix, with int32 weights
+    GrB_Index* s,   // source node
+    GrB_Index* t,   // sink node
+    // input:
+    FILE* f,        // an open file containing the DIMAX MaxFlow problem
+    char* msg
+) ;
 
 
 #if defined ( __cplusplus )

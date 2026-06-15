@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 
 // TODO: ready for src? need a vanilla non-GxB, and incidence graphs.
+// TODO: need to replace pack/unpack with Container load/unload.
 
 /*
 This method is used to coarsen an undirected graph. The coarsening is based on a maximal matching,
@@ -88,12 +89,19 @@ This method requires O(n + e) space for an undirected graph with e edges and n n
 
 #if LAGRAPH_SUITESPARSE
 
-void LG_CM_valueeq_index_func (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const void *y) {
+LG_JIT_STRING(
+void LG_CM_valueeq_index_func (
+    bool *z,
+    const uint64_t *x,
+    GrB_Index i,
+    GrB_Index j,
+    const void *y
+) {
     (*z) = ((*x) == i) ;
-}
+}, LG_CM_VALUEEQ_INDEX_FUNC_DEFN)
 
 static int LAGraph_Parent_to_S
-(   
+(
     // input/outputs:
     GrB_Matrix *result,             // resulting S matrix
     GrB_Vector *newlabels,          // The contents of some newlabels_result[i], where newlabels_result is as described at the top of the file.
@@ -161,28 +169,31 @@ static int LAGraph_Parent_to_S
             - GrB_extract into parent_cpy from parent_cpy with row indices as values from original parent
                 - This fills in the new parents for discarded nodes
         */
-        
-        GRB_TRY (GrB_IndexUnaryOp_new (&VALUEEQ_ROWINDEX_UINT64, F_INDEX_UNARY(LG_CM_valueeq_index_func), GrB_BOOL, GrB_UINT64, GrB_UINT64)) ;
+
+        GRB_TRY (GxB_IndexUnaryOp_new (
+            &VALUEEQ_ROWINDEX_UINT64, F_INDEX_UNARY(LG_CM_valueeq_index_func),
+            GrB_BOOL, GrB_UINT64, GrB_UINT64, "LG_CM_valueeq_index_func",
+            LG_CM_VALUEEQ_INDEX_FUNC_DEFN)) ;
 
         // identify preserved nodes
         GRB_TRY (GrB_select (parent_cpy, NULL, NULL, VALUEEQ_ROWINDEX_UINT64, parent, 0, NULL)) ;
         GRB_TRY (GrB_free (&VALUEEQ_ROWINDEX_UINT64)) ;
-        
+
         // get indices of preserved nodes
         GRB_TRY (GxB_Vector_unpack_CSC (
-            parent_cpy, 
-            &preserved_indices, 
-            (void**) &preserved_values, 
-            &preserved_indices_size, 
-            &preserved_values_size, 
-            NULL, 
+            parent_cpy,
+            &preserved_indices,
+            (void**) &preserved_values,
+            &preserved_indices_size,
+            &preserved_values_size,
+            NULL,
             &num_preserved,
             &is_jumbled,
             NULL
         )) ;
 
         LG_TRY (LAGraph_Free ((void**)(&preserved_values), msg)) ;
-        
+
         // build ramp vector
         LG_TRY (LAGraph_Malloc ((void**) &ramp, num_preserved, sizeof(uint64_t), msg)) ;
 
@@ -271,9 +282,9 @@ static int LAGraph_Parent_to_S
     LG_FREE_WORK ;                                  \
 }
 
-#ifdef burble                                      
-    #define CHKPT(msg){ printf("*** [CHKPT] *** %s\n", msg) ; }                                                            
-#else                                                   
+#ifdef burble
+    #define CHKPT(msg){ printf("*** [CHKPT] *** %s\n", msg) ; }
+#else
     #define CHKPT(msg){}
 #endif
 

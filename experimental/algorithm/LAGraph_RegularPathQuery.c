@@ -10,6 +10,9 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: ready for src; but do we want GrB_Vector inputs for QS and QF?
+// TODO: consider the API
+
 // For an edge-labelled directed graph the algorithm computes the set of nodes
 // for which these conditions are held:
 // * The node is reachable by a path from one of the source nodes.
@@ -95,6 +98,8 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
+
+// FIXME: make (QS,nqs), (QF,nqf), (S,ns) GrB_Vector inputs
 
 int LAGraph_RegularPathQuery
 (

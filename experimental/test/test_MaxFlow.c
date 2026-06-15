@@ -27,7 +27,11 @@ char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 GrB_Matrix A = NULL;
 #define LEN 512
-#define NTESTS 7
+#ifdef GRAPHBLAS_HAS_CUDA
+#define NTESTS 4
+#else
+#define NTESTS 8
+#endif
 char filename[LEN + 1];
 
 typedef struct{
@@ -43,9 +47,14 @@ test_info tests[] = {
   {"matrix_random_flow.mtx", 0,9, 22, LAGraph_ADJACENCY_DIRECTED},
   {"rand.mtx", 0, 19, 37, LAGraph_ADJACENCY_DIRECTED},
   {"mcl.mtx", 0, 9, 0, LAGraph_ADJACENCY_DIRECTED},
+  {"test_zero_cap.mtx", 0, 4, 0.5, LAGraph_ADJACENCY_DIRECTED},
+#ifndef GRAPHBLAS_HAS_CUDA
+// FIXME: the CUDA cases are currently very slow for these matrices,
+// when the GPU is hacked to always be used regardless of problem size:
   {"cycle_flow.mtx", 0, 89, 1, LAGraph_ADJACENCY_DIRECTED},
   {"random_weighted_general2.mtx", 0, 299, 11098623877, LAGraph_ADJACENCY_UNDIRECTED},
   {"random_weighted_general1.mtx", 0, 499, 6264009335, LAGraph_ADJACENCY_UNDIRECTED}
+#endif
 };
 
 //399 11098623877 alt sink and src for test 6
@@ -53,7 +62,7 @@ test_info tests[] = {
 void test_MaxFlow(void) {
 #if LG_SUITESPARSE_GRAPHBLAS_V10
   LAGraph_Init(msg);
-  //OK(LG_SET_BURBLE(1));
+//OK(LG_SET_BURBLE(1));
   OK(LG_SET_BURBLE(0));
   for(uint8_t test = 0; test < NTESTS; test++){
     GrB_Matrix A=NULL;
@@ -76,14 +85,14 @@ void test_MaxFlow(void) {
     // test with JIT
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
     double flow = 0;
-    OK(LAGr_MaxFlow(&flow, NULL, G, tests[test].S, tests[test].T, msg));
+    OK(LAGr_MaxFlow(&flow, NULL, NULL, G, tests[test].S, tests[test].T, msg));
     printf("%s\n", msg);
     printf("flow is: %lf\n", flow);
     TEST_CHECK(flow == tests[test].F);
 
     // test without JIT
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_OFF));
-    OK(LAGr_MaxFlow(&flow, NULL, G, tests[test].S, tests[test].T, msg));
+    OK(LAGr_MaxFlow(&flow, NULL, NULL, G, tests[test].S, tests[test].T, msg));
     TEST_CHECK(flow == tests[test].F);
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
 
@@ -99,7 +108,7 @@ void test_MaxFlow(void) {
             {
               printf("src: %d, dest: %d\n", (int) src, (int) dest);
                 if (src == dest) continue ;
-                OK(LAGr_MaxFlow(&flow, NULL, G, src, dest, msg));
+                OK(LAGr_MaxFlow(&flow, NULL, NULL, G, src, dest, msg));
             }
         }
     }
@@ -144,7 +153,7 @@ void test_MaxFlowMtx(void) {
     // test with JIT
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_ON));
     double flow = 0;
-    OK(LAGr_MaxFlow(&flow, &flow_mtx, G, tests[test].S, tests[test].T, msg));
+    OK(LAGr_MaxFlow(&flow, &flow_mtx, NULL, G, tests[test].S, tests[test].T, msg));
     TEST_CHECK (flow_mtx != NULL) ;
     GxB_print (flow_mtx, 2) ;
     int status = LG_check_flow(flow_mtx, msg);
@@ -157,7 +166,7 @@ void test_MaxFlowMtx(void) {
 
     // test without JIT
     OK(GxB_Global_Option_set(GxB_JIT_C_CONTROL, GxB_JIT_OFF));
-    OK(LAGr_MaxFlow(&flow, &flow_mtx, G, tests[test].S, tests[test].T, msg));
+    OK(LAGr_MaxFlow(&flow, &flow_mtx, NULL, G, tests[test].S, tests[test].T, msg));
     TEST_CHECK (flow_mtx != NULL) ;
     status = LG_check_flow(flow_mtx, msg);
     TEST_CHECK (status == GrB_SUCCESS) ;

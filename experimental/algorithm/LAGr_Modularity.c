@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: ready to consider for src
+// TODO: ready to consider for src, but need vanilla
 
 // The modularity (Q) of a graph clustering C is defined as (directed case):
 //
@@ -59,6 +59,9 @@
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
+
+// FIXME: output modularity a GrB_Scalar
+// FIXME: input resolution a GrB_Scalar
 
 int LAGr_Modularity(
     // Outputs
@@ -150,7 +153,10 @@ int LAGr_Modularity(
 
     // vmask (i) = 0 if cluster i is non-empty (has any vertices)
     GRB_TRY(GrB_reduce(vmask, NULL, NULL, GrB_LOR_MONOID_BOOL, C, NULL));
-    GRB_TRY(GrB_apply(vmask, vmask, NULL, GxB_LNOT_BOOL, vmask, NULL));
+    GRB_TRY(GrB_apply(vmask, vmask, NULL, GrB_LNOT, vmask, NULL));
+
+// FIXME:
+#if 1
 
     // If any of the above vectors have fewer entries than nclusters, this means
     // that there are singleton clusters with one vertex/no out-degree/no
@@ -158,26 +164,31 @@ int LAGr_Modularity(
     // for further calculations.
     GrB_Index nclusters, nl, nk_out, nk_in;
     GRB_TRY(GrB_Vector_nvals(&nclusters, vmask));
+
     GRB_TRY(GrB_Vector_nvals(&nl, l));
-    GRB_TRY(GrB_Vector_nvals(&nk_out, l));
-    GRB_TRY(GrB_Vector_nvals(&nk_in, l));
+    GRB_TRY(GrB_Vector_nvals(&nk_out, k_out /* l */));
+    GRB_TRY(GrB_Vector_nvals(&nk_in, k_in /* l */));
 
     if (nclusters != nl)
     {
+        // printf ("l needs padding (%ld, %ld)\n", nclusters, nl) ;
         GRB_TRY(GrB_assign(l, l, NULL, vmask, GrB_ALL, nclusters, GrB_DESC_SC));
     }
     if (nclusters != nk_out)
     {
+        // printf ("k_out needs padding (%ld, %ld)\n", nclusters, nk_out) ;
         GRB_TRY(GrB_assign(k_out, k_out, NULL, vmask, GrB_ALL, nclusters,
                            GrB_DESC_SC));
     }
     if (nclusters != nk_in)
     {
+        // printf ("k_in needs padding (%ld, %ld)\n", nclusters, nk_in) ;
         GRB_TRY(GrB_assign(k_in, k_in, NULL, vmask, GrB_ALL, nclusters,
                            GrB_DESC_SC));
     }
 
     // Extract actual values of l, k_out, and k_in for modularity calculations
+    // TODO: use GraphBLAS, not extractTuples and a for loop:
     LAGRAPH_TRY(
         LAGraph_Malloc((void **)&lX, nclusters, sizeof(GrB_Index), msg));
     LAGRAPH_TRY(
@@ -188,21 +199,24 @@ int LAGr_Modularity(
     GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, (int64_t *) k_outX, &nclusters, k_out));
     GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, (int64_t *) k_inX, &nclusters, k_in));
 
-    GrB_Index m, out_degree_sum, in_degree_sum, L_c;
+    GrB_Index out_degree_sum ;
     GRB_TRY(GrB_reduce(&out_degree_sum, NULL, GrB_PLUS_MONOID_INT64, out_degree,
                        NULL));
 
-    m = out_degree_sum;
+    double m = out_degree_sum;
     double norm = 1.0 / (m * m);
 
     // compute modularity
+    // TODO: use GraphBLAS:  apply and reduce, not a for-loop:
     double mod = 0.0;
     for (int c = 0; c < nclusters; c++)
     {
         mod += (1.0 * lX[c] / nedges) -
                (resolution * ((k_outX[c] * k_inX[c]) * norm));
     }
+#endif
 
+    // TODO: return a GrB_Scalar??
     (*mod_handle) = mod;
     LG_FREE_WORK;
     return (GrB_SUCCESS);
