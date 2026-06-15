@@ -19,6 +19,7 @@
 #include <acutest.h>
 #include <stdio.h>
 
+#include "LAGraph.h"
 #include "LG_Xtest.h"
 #include <LAGraphX.h>
 #include <LAGraph_test.h>
@@ -94,7 +95,7 @@ void test_quality_metrics(void)
 
         // compute is_symmetric_structure
         OK(LAGraph_Cached_IsSymmetricStructure(G, msg));
-        TEST_CHECK(G->is_symmetric_structure != LAGRAPH_UNKNOWN);
+        OK(LAGraph_Cached_NSelfEdges(G, msg));
 
         // compute quality metrics (coverage and performance)
         double cov, perf, mod;

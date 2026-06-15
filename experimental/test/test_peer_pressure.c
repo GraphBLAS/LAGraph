@@ -18,6 +18,7 @@
 #include <acutest.h>
 #include <stdio.h>
 
+#include "LAGraph.h"
 #include "LG_Xtest.h"
 #include <LAGraphX.h>
 #include <LAGraph_test.h>
@@ -85,6 +86,7 @@ void test_peer_pressure(void)
         OK(LAGraph_Cached_AT(G, msg));
         // Needed to compute quality metrics
         OK(LAGraph_Cached_IsSymmetricStructure(G, msg));
+        OK(LAGraph_Cached_NSelfEdges(G, msg));
 
         GrB_Vector c = NULL;
 

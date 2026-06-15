@@ -36,6 +36,7 @@
         GrB_free(&k);                                                          \
         GrB_free(&C);                                                          \
         GrB_free(&CA);                                                         \
+        GrB_free(&_A);                                                         \
         GrB_free(&ONE_INT64);                                                  \
     }
 
@@ -63,6 +64,7 @@ int LAGr_PartitionQuality(
     GrB_Vector k = NULL;
     GrB_Matrix C = NULL;
     GrB_Matrix CA = NULL;
+    GrB_Matrix _A = NULL;
 
     GrB_Scalar ONE_INT64 = NULL;
 
@@ -85,10 +87,21 @@ int LAGr_PartitionQuality(
             LAGRAPH_NOT_CACHED,
             "G->is_symmetric_structure is required") ;
 
-    GrB_Matrix A = G->A;
+    LG_ASSERT_MSG (G->nself_edges != LAGRAPH_UNKNOWN,
+            LAGRAPH_NOT_CACHED,
+            "G->nself_edges is required") ;
 
-    // Delete self-edges, not relevant to these clustering metrics
-    GRB_TRY(GrB_select(A, NULL, NULL, GrB_OFFDIAG, A, 0, NULL));
+    GrB_Matrix A = G->A;
+    GRB_TRY(GrB_Matrix_nrows(&n, A));
+
+    if (G->nself_edges > 0)
+    {
+        // Delete self-edges, not relevant to these clustering metrics
+        // BOOL type is fine because _A is only used against the pair biop
+        GRB_TRY(GrB_Matrix_new(&_A, GrB_BOOL, n, n));
+        GRB_TRY(GrB_select(_A, NULL, NULL, GrB_OFFDIAG, A, 0, NULL));
+        A = _A;
+    }
 
 #if 0
     FILE *f = fopen("./data/pp_sanitized_data.mtx", "w");
@@ -96,7 +109,6 @@ int LAGr_PartitionQuality(
     fclose(f);
 #endif
 
-    GRB_TRY(GrB_Matrix_nrows(&n, A));
     GRB_TRY(GrB_Matrix_nvals(&nedges, A));
 
     GRB_TRY(GrB_Matrix_new(&C, GrB_INT64, n, n));
