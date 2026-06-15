@@ -92,16 +92,7 @@ int LAGr_PartitionQuality(
             "G->nself_edges is required") ;
 
     GrB_Matrix A = G->A;
-    GRB_TRY(GrB_Matrix_nrows(&n, A));
 
-    if (G->nself_edges > 0)
-    {
-        // Delete self-edges, not relevant to these clustering metrics
-        // BOOL type is fine because _A is only used against the pair biop
-        GRB_TRY(GrB_Matrix_new(&_A, GrB_BOOL, n, n));
-        GRB_TRY(GrB_select(_A, NULL, NULL, GrB_OFFDIAG, A, 0, NULL));
-        A = _A;
-    }
 
 #if 0
     FILE *f = fopen("./data/pp_sanitized_data.mtx", "w");
@@ -109,6 +100,7 @@ int LAGr_PartitionQuality(
     fclose(f);
 #endif
 
+    GRB_TRY(GrB_Matrix_nrows(&n, A));
     GRB_TRY(GrB_Matrix_nvals(&nedges, A));
 
     GRB_TRY(GrB_Matrix_new(&C, GrB_INT64, n, n));
@@ -149,6 +141,12 @@ int LAGr_PartitionQuality(
 
     GRB_TRY(
         GrB_reduce(&n_intraEdges, NULL, GrB_PLUS_MONOID_INT64, trace, NULL));
+
+    if (G->nself_edges > 0)
+    {
+        n_intraEdges -= G->nself_edges;
+        nedges -= G->nself_edges;
+    }
 
     if (perf)
     {
