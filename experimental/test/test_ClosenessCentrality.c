@@ -32,12 +32,10 @@ char filename [LEN+1] ;
 // note: WF_improved is set to FALSE for all tests 
 //------------------------------------------------------------------------------
 
-// closeness_centrality(G) from NetworkX for diamonds.mtx (directed)
 double diamonds_closeness[8] = {
     0.0, 1.0, 1.0, 1.0, 0.8, 0.5, 0.5, 0.4117647058823529
 } ;
 
-// closeness_centrality(G) from NetworkX for karate.mtx (undirected)
 double karate_closeness[34] = {
     0.5689655172413793, 0.4852941176470588, 0.559322033898305, 0.4647887323943662,
     0.3793103448275862, 0.38372093023255816, 0.38372093023255816, 0.44,
@@ -48,6 +46,12 @@ double karate_closeness[34] = {
     0.375, 0.375, 0.3626373626373626, 0.4583333333333333,
     0.4520547945205479, 0.38372093023255816, 0.4583333333333333, 0.5409836065573771,
     0.515625, 0.55
+} ;
+
+double ldbc_directed_example_closeness[10] = {
+    1.6891891892, 0.0000000000, 1.5151515152, 1.3937282230,
+    1.8115942029, 0.0000000000, 0.0000000000, 3.2258064516,
+    0.0000000000, 1.1928429423
 } ;
 
 //------------------------------------------------------------------------------
@@ -81,10 +85,9 @@ double difference (GrB_Vector c, double *reference_c, GrB_Index n)
 }
 
 //------------------------------------------------------------------------------
-// test_closeness_diamonds: directed graph, unweighted (BFS), all sources
+// directed and unweighted graph, BFS, all sources
 //------------------------------------------------------------------------------
-
-void test_closeness_diamonds (void)
+void test_closeness_diamonds_bfs (void)
 {
 #if LAGRAPH_SUITESPARSE
     LAGraph_Graph G = NULL ;
@@ -111,7 +114,7 @@ void test_closeness_diamonds (void)
 
     double t = LAGraph_WallClockTime () ;
     OK (LAGr_ClosenessCentrality (&centrality, G, NULL,
-                                  false, false, NULL, msg)) ;
+                                  false, CC_BFS, NULL, msg)) ;
     t = LAGraph_WallClockTime () - t ;
     printf ("  Time for LAGr_ClosenessCentrality: %g sec\n", t) ;
 
@@ -131,10 +134,9 @@ void test_closeness_diamonds (void)
 }
 
 //------------------------------------------------------------------------------
-// test_closeness_karate: undirected graph, unweighted (BFS), all sources
+// undirected and unweighted graph, BFS, all sources
 //------------------------------------------------------------------------------
-
-void test_closeness_karate (void)
+void test_closeness_karate_bfs (void)
 {
 #if LAGRAPH_SUITESPARSE
     LAGraph_Graph G = NULL ;
@@ -161,7 +163,7 @@ void test_closeness_karate (void)
 
     double t = LAGraph_WallClockTime () ;
     OK (LAGr_ClosenessCentrality (&centrality, G, NULL,
-                                  false, false, NULL, msg)) ;
+                                  false, CC_BFS, NULL, msg)) ;
     t = LAGraph_WallClockTime () - t ;
     printf ("  Time for LAGr_ClosenessCentrality: %g sec\n", t) ;
 
@@ -181,11 +183,216 @@ void test_closeness_karate (void)
 }
 
 //------------------------------------------------------------------------------
-// list of tests
+// undirected and unweighted graph, Floyd-Warshall, all sources
+//------------------------------------------------------------------------------
+void test_closeness_karate_fw (void)
+{
+#if LAGRAPH_SUITESPARSE
+    LAGraph_Graph G = NULL ;
+    OK (LAGraph_Init (msg)) ;
+    GrB_Matrix A = NULL ;
+    GrB_Vector centrality = NULL ;
+
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;
+
+    int result = LAGraph_Cached_AT (G, msg) ;
+    TEST_CHECK (result == GrB_SUCCESS || result == LAGRAPH_CACHE_NOT_NEEDED) ;
+
+    uint64_t n, nedges ;
+    OK (GrB_Matrix_nrows (&n, G->A)) ;
+    OK (GrB_Matrix_nvals (&nedges, G->A)) ;
+    printf ("\n\nKarate graph (%" PRIu64 " nodes, %" PRIu64 " edges):\n",
+            n, nedges) ;
+
+    double t = LAGraph_WallClockTime () ;
+    OK (LAGr_ClosenessCentrality (&centrality, G, NULL,
+                                  false, CC_FLOYD_WARSHALL, NULL, msg)) ;
+    t = LAGraph_WallClockTime () - t ;
+    printf ("  Time for LAGr_ClosenessCentrality: %g sec\n", t) ;
+    
+    GrB_Index cn = 0, cnvals = 0 ;
+    OK (GrB_Vector_size (&cn, centrality)) ;
+    OK (GrB_Vector_nvals (&cnvals, centrality)) ;
+    TEST_CHECK (cn == n) ;
+
+    double err = difference (centrality, karate_closeness, 34) ;
+    printf ("  karate: err: %e\n", err) ;
+    TEST_CHECK (err < 1e-4) ;  
+
+    OK (GrB_free (&centrality)) ;
+    OK (LAGraph_Delete (&G, msg)) ;
+    OK (LAGraph_Finalize (msg)) ;
+#endif
+}
+
+//------------------------------------------------------------------------------
+// directed and weighted graph, Floyd-Warshall, all sources
+//------------------------------------------------------------------------------
+void test_closeness_ldbc_directed_example_fw (void)
+{
+#if LAGRAPH_SUITESPARSE
+    LAGraph_Graph G = NULL ;
+    OK (LAGraph_Init (msg)) ;
+    GrB_Matrix A = NULL ;
+    GrB_Vector centrality = NULL ;
+
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "ldbc-directed-example.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;
+
+    int result = LAGraph_Cached_AT (G, msg) ;
+    TEST_CHECK (result == GrB_SUCCESS || result == LAGRAPH_CACHE_NOT_NEEDED) ;
+
+    uint64_t n, nedges ;
+    OK (GrB_Matrix_nrows (&n, G->A)) ;
+    OK (GrB_Matrix_nvals (&nedges, G->A)) ;
+    printf ("\n\nldbc directed example graph (%" PRIu64 " nodes, %" PRIu64 " edges):\n",
+            n, nedges) ;
+
+    double t = LAGraph_WallClockTime () ;
+    OK (LAGr_ClosenessCentrality (&centrality, G, NULL,
+                                  true, CC_FLOYD_WARSHALL, NULL, msg)) ;
+    t = LAGraph_WallClockTime () - t ;
+    printf ("  Time for LAGr_ClosenessCentrality: %g sec\n", t) ;
+    
+    GrB_Index cn = 0, cnvals = 0 ;
+    OK (GrB_Vector_size (&cn, centrality)) ;
+    OK (GrB_Vector_nvals (&cnvals, centrality)) ;
+    TEST_CHECK (cn == n) ;
+
+    double err = difference (centrality, ldbc_directed_example_closeness, 10) ;
+    printf ("  ldbc directed example: err: %e\n", err) ;
+    TEST_CHECK (err < 1e-4) ;  
+
+    OK (GrB_free (&centrality)) ;
+    OK (LAGraph_Delete (&G, msg)) ;
+    OK (LAGraph_Finalize (msg)) ;
+#endif
+}
+
+//------------------------------------------------------------------------------
+// directed and weighted graph, Bellman-Ford, all sources
+//------------------------------------------------------------------------------
+void test_closeness_ldbc_directed_example_bf (void)
+{
+#if LAGRAPH_SUITESPARSE
+    LAGraph_Graph G = NULL ;
+    OK (LAGraph_Init (msg)) ;
+    GrB_Matrix A = NULL ;
+    GrB_Vector centrality = NULL ;
+
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "ldbc-directed-example.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;
+
+    int result = LAGraph_Cached_AT (G, msg) ;
+    TEST_CHECK (result == GrB_SUCCESS || result == LAGRAPH_CACHE_NOT_NEEDED) ;
+
+    uint64_t n, nedges ;
+    OK (GrB_Matrix_nrows (&n, G->A)) ;
+    OK (GrB_Matrix_nvals (&nedges, G->A)) ;
+    printf ("\n\nldbc directed example graph (%" PRIu64 " nodes, %" PRIu64 " edges):\n",
+            n, nedges) ;
+
+    double t = LAGraph_WallClockTime () ;
+    OK (LAGr_ClosenessCentrality (&centrality, G, NULL,
+                                  true, CC_BELLMAN_FORD, NULL, msg)) ;
+    t = LAGraph_WallClockTime () - t ;
+    printf ("  Time for LAGr_ClosenessCentrality: %g sec\n", t) ;
+    
+    GrB_Index cn = 0, cnvals = 0 ;
+    OK (GrB_Vector_size (&cn, centrality)) ;
+    OK (GrB_Vector_nvals (&cnvals, centrality)) ;
+    TEST_CHECK (cn == n) ;
+
+    double err = difference (centrality, ldbc_directed_example_closeness, 10) ;
+    printf ("  ldbc directed example: err: %e\n", err) ;
+    TEST_CHECK (err < 1e-4) ;  
+
+    OK (GrB_free (&centrality)) ;
+    OK (LAGraph_Delete (&G, msg)) ;
+    OK (LAGraph_Finalize (msg)) ;
+#endif
+}
+
+//------------------------------------------------------------------------------
+// directed and weighted graph, SSSP, all sources
+//------------------------------------------------------------------------------
+void test_closeness_ldbc_directed_example_sssp (void)
+{
+#if LAGRAPH_SUITESPARSE
+    LAGraph_Graph G = NULL ;
+    OK (LAGraph_Init (msg)) ;
+    GrB_Matrix A = NULL ;
+    GrB_Vector centrality = NULL ;
+
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "ldbc-directed-example.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;
+
+    int result = LAGraph_Cached_AT (G, msg) ;
+    TEST_CHECK (result == GrB_SUCCESS || result == LAGRAPH_CACHE_NOT_NEEDED) ;
+
+    uint64_t n, nedges ;
+    OK (GrB_Matrix_nrows (&n, G->A)) ;
+    OK (GrB_Matrix_nvals (&nedges, G->A)) ;
+    printf ("\n\nldbc directed example graph (%" PRIu64 " nodes, %" PRIu64 " edges):\n",
+            n, nedges) ;
+
+    GrB_Scalar Delta = NULL ;
+    OK (GrB_Scalar_new (&Delta, GrB_FP64)) ;
+    OK (GrB_Scalar_setElement_FP64 (Delta, 1.6)) ;
+
+    double t = LAGraph_WallClockTime () ;
+    OK (LAGr_ClosenessCentrality (&centrality, G, NULL,
+                                  true, CC_SSSP, Delta, msg)) ;
+    t = LAGraph_WallClockTime () - t ;
+    printf ("  Time for LAGr_ClosenessCentrality: %g sec\n", t) ;
+    
+    GrB_Index cn = 0, cnvals = 0 ;
+    OK (GrB_Vector_size (&cn, centrality)) ;
+    OK (GrB_Vector_nvals (&cnvals, centrality)) ;
+    TEST_CHECK (cn == n) ;
+
+    double err = difference (centrality, ldbc_directed_example_closeness, 10) ;
+    printf ("  ldbc directed example: err: %e\n", err) ;
+    TEST_CHECK (err < 1e-4) ;  
+
+    OK (GrB_free (&Delta)) ;
+    OK (GrB_free (&centrality)) ;
+    OK (LAGraph_Delete (&G, msg)) ;
+    OK (LAGraph_Finalize (msg)) ;
+#endif
+}
+
+//------------------------------------------------------------------------------
+// list of tests    
 //------------------------------------------------------------------------------
 
 TEST_LIST = {
-    {"test_closeness_diamonds", test_closeness_diamonds},
-    {"test_closeness_karate",   test_closeness_karate},
+    {"test_closeness_diamonds_bfs", test_closeness_diamonds_bfs},
+    {"test_closeness_karate_bfs",   test_closeness_karate_bfs},
+    {"test_closeness_karate_fw",    test_closeness_karate_fw},
+    {"test_closeness_ldbc_directed_example_fw", test_closeness_ldbc_directed_example_fw},
+    {"test_closeness_ldbc_directed_example_bf", test_closeness_ldbc_directed_example_bf},
+    {"test_closeness_ldbc_directed_example_sssp", test_closeness_ldbc_directed_example_sssp},
     {NULL, NULL}
 } ;

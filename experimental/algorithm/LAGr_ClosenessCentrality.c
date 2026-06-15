@@ -42,18 +42,16 @@
 // LAGr_ClosenessCentrality
 //------------------------------------------------------------------------------
 
-int LAGr_ClosenessCentrality
-(
+int LAGr_ClosenessCentrality(
     // output:
     GrB_Vector *centrality,
     // input:
     LAGraph_Graph G,
-    GrB_Vector sources,     // nodes to score; NULL or empty => all nodes
-    bool use_weights,       // if true, use edge weights in shortest paths
-    cc_algo_t algorithm,    // shortest-path algorithm to use
-    GrB_Scalar Delta,       // delta for SSSP; if NULL, derived from G->emin
-    char *msg
-)
+    GrB_Vector sources,  // nodes to score; NULL or empty => all nodes
+    bool use_weights,    // if true, use edge weights in shortest paths
+    cc_algo_t algorithm, // shortest-path algorithm to use
+    GrB_Scalar Delta,    // delta for SSSP; if NULL, derived from G->emin
+    char *msg)
 {
 
     //--------------------------------------------------------------------------
@@ -123,8 +121,8 @@ int LAGr_ClosenessCentrality
     {
         LG_TRY(LAGraph_Malloc((void **)&source_indices,
                               source_count, sizeof(GrB_Index), msg));
-        GRB_TRY(GrB_Vector_extractTuples_UINT64 (source_indices, NULL,
-                                         &source_count, sources));
+        GRB_TRY(GrB_Vector_extractTuples_UINT64(source_indices, NULL,
+                                                &source_count, sources));
         for (GrB_Index k = 0; k < source_count; k++)
         {
             LG_ASSERT(source_indices[k] < n, GrB_INVALID_INDEX);
@@ -135,17 +133,7 @@ int LAGr_ClosenessCentrality
         source_count = n;
     }
 
-    //--------------------------------------------------------------------------
-    // allocate output vector
-    //--------------------------------------------------------------------------
-
     GRB_TRY(GrB_Vector_new(&centrality_vector, GrB_FP64, n));
-    if (use_all_nodes)
-    {
-        // Dense output: isolated nodes keep score 0.
-        GRB_TRY(GrB_assign(centrality_vector, NULL, NULL,
-                           0.0, GrB_ALL, n, NULL));
-    }
 
     //==========================================================================
     // Floyd-Warshall path
@@ -165,24 +153,30 @@ int LAGr_ClosenessCentrality
         GRB_TRY(GrB_reduce(dist_sums, NULL, NULL,
                            GrB_PLUS_MONOID_FP64, D_APSP, NULL));
 
-        // reachable_counts[v] = number of non-zeros in row v of D_APSP.
-        // Multiply D_APSP by a dense all-zeros vector with
-        // LAGraph_plus_one_fp64:
-        // TODO: revisit
+        // reachable_counts[v] = number of reachable nodes from v (excluding self).
+        // Uses plus-one semiring to count structural non-zeros per row.
         GRB_TRY(GrB_Vector_new(&x, GrB_FP64, n));
         GRB_TRY(GrB_assign(x, NULL, NULL, (double)0, GrB_ALL, n, NULL));
         GRB_TRY(GrB_Vector_new(&reachable_counts, GrB_FP64, n));
         GRB_TRY(GrB_mxv(reachable_counts, NULL, NULL, LAGraph_plus_one_fp64,
-                D_APSP, x, NULL));
+                        D_APSP, x, NULL));
         GRB_TRY(GrB_free(&D_APSP));
 
         // centrality[v] = R(v) / dist_sums[v].
         GRB_TRY(GrB_eWiseMult(centrality_vector, NULL, NULL, GrB_DIV_FP64,
-                      reachable_counts, dist_sums, NULL));
+                              reachable_counts, dist_sums, NULL));
 
         (*centrality) = centrality_vector;
         LG_FREE_WORK;
         return GrB_SUCCESS;
+    }
+
+    // allocate output vector 
+    if (use_all_nodes)
+    {
+        // Dense output: isolated nodes keep score 0.
+        GRB_TRY(GrB_assign(centrality_vector, NULL, NULL,
+                           0.0, GrB_ALL, n, NULL));
     }
 
     if (algo == CC_SSSP)
@@ -269,8 +263,7 @@ int LAGr_ClosenessCentrality
             {
                 // TODO: revisit
                 // Negative-weight cycle reachable from this node;
-                // For now, set centrality to NaN to indicate an invalid
-                // score, and continue.
+                // Set centrality to NaN to indicate an invalid score, and continue.
                 GRB_TRY(GrB_Vector_setElement(centrality_vector,
                                               (double)NAN, node_to_score));
                 continue;
