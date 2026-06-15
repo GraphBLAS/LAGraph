@@ -1341,21 +1341,8 @@ int LAGr_ClosenessCentrality
     bool use_weights,       // if true, use edge weights in shortest paths
     cc_algo_t algorithm,    // shortest-path algorithm to use
     GrB_Scalar Delta,       // delta for SSSP; if NULL, derived from G->emin
-// harmonic centrality (approximate via HLL sketches)
-//------------------------------------------------------------------------------
-
-LAGRAPHX_PUBLIC
-int LAGr_HarmonicCentrality
-(
-    // outputs:
-    GrB_Vector *scores,            // FP64 harmonic centrality scores
-    GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
-                                   // (pass NULL, not yet implemented)
-    // inputs:
-    const LAGraph_Graph G,         // input graph
-    const GrB_Vector node_weights, // participating nodes and their weights
     char *msg
-) ;
+) ; 
 
 //------------------------------------------------------------------------------
 // Katz centrality
@@ -1375,6 +1362,27 @@ int LAGr_KatzCentrality
     double tol,
     bool normalize,
     bool use_weights,
+    char *msg
+) ; 
+
+//------------------------------------------------------------------------------
+// harmonic centrality (approximate via HLL sketches)
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_HarmonicCentrality
+(
+    // outputs:
+    GrB_Vector *scores,            // FP64 harmonic centrality scores
+    GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
+                                   // (pass NULL, not yet implemented)
+    // inputs:
+    const LAGraph_Graph G,         // input graph
+    const GrB_Vector node_weights, // participating nodes and their weights
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
 // harmonic centrality (exact via BFS)
 //------------------------------------------------------------------------------
 
