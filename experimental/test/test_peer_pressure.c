@@ -18,7 +18,6 @@
 #include <acutest.h>
 #include <stdio.h>
 
-#include "LAGraph.h"
 #include "LG_Xtest.h"
 #include <LAGraphX.h>
 #include <LAGraph_test.h>

@@ -30,7 +30,6 @@
 
 // https://arxiv.org/abs/0906.0612 pp. 15
 
-#include "GraphBLAS.h"
 #define LG_FREE_WORK                                                           \
     {                                                                          \
         GrB_free(&k);                                                          \
