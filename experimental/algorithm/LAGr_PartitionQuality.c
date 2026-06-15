@@ -30,13 +30,12 @@
 
 // https://arxiv.org/abs/0906.0612 pp. 15
 
+#include "GraphBLAS.h"
 #define LG_FREE_WORK                                                           \
     {                                                                          \
-        GrB_free(&trace);                                                      \
         GrB_free(&k);                                                          \
+        GrB_free(&x);                                                          \
         GrB_free(&C);                                                          \
-        GrB_free(&CA);                                                         \
-        GrB_free(&_A);                                                         \
         GrB_free(&ONE_INT64);                                                  \
     }
 
@@ -60,11 +59,9 @@ int LAGr_PartitionQuality(
     char *msg)
 {
 #if LAGRAPH_SUITESPARSE
-    GrB_Vector trace = NULL;
     GrB_Vector k = NULL;
+    GrB_Vector x = NULL;
     GrB_Matrix C = NULL;
-    GrB_Matrix CA = NULL;
-    GrB_Matrix _A = NULL;
 
     GrB_Scalar ONE_INT64 = NULL;
 
@@ -100,47 +97,47 @@ int LAGr_PartitionQuality(
     fclose(f);
 #endif
 
-    GRB_TRY(GrB_Matrix_nrows(&n, A));
-    GRB_TRY(GrB_Matrix_nvals(&nedges, A));
+    GRB_TRY (GrB_Matrix_nrows (&n, A));
+    GRB_TRY (GrB_Matrix_nvals (&nedges, A));
 
-    GRB_TRY(GrB_Matrix_new(&C, GrB_INT64, n, n));
-    GRB_TRY(GrB_Matrix_new(&CA, GrB_INT64, n, n));
-    GRB_TRY(GrB_Vector_new(&trace, GrB_INT64, n));
-    GRB_TRY(GrB_Vector_new(&k, GrB_INT64, n));
-    GRB_TRY(GrB_Scalar_new(&ONE_INT64, GrB_INT64));
+    GRB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n));
+    GRB_TRY (GrB_Vector_new (&k, GrB_INT64, n));
+    GRB_TRY (GrB_Vector_new (&x, GrB_BOOL, n));
+    GRB_TRY (GrB_Scalar_new (&ONE_INT64, GrB_INT64));
 
-    GRB_TRY(GrB_Scalar_setElement_BOOL(ONE_INT64, (uint64_t)1));
+    GRB_TRY (GrB_assign(x, NULL, NULL, (bool) true, GrB_ALL, 0, NULL)) ;
+    GRB_TRY (GrB_Scalar_setElement_BOOL(ONE_INT64, (int64_t)1));
 
     // convert the cluster vector to a boolean matrix C where
     // C(i, j) = 1 if and only if vertex j is in cluster i
     GrB_Index *cI, *cX;
-    LAGRAPH_TRY(LAGraph_Malloc((void **)&cI, n, sizeof(GrB_Index), msg));
-    LAGRAPH_TRY(LAGraph_Malloc((void **)&cX, n, sizeof(GrB_Index), msg));
-    GRB_TRY(GrB_Vector_extractTuples_INT64(cI, (int64_t *) cX, &n, c));
-    GRB_TRY(GxB_Matrix_build_Scalar(C, cX, cI, ONE_INT64, n));
-    GrB_Matrix_wait(C, GrB_MATERIALIZE);
+    LAGRAPH_TRY (LAGraph_Malloc ((void **)&cI, n, sizeof(GrB_Index), msg));
+    LAGRAPH_TRY (LAGraph_Malloc ((void **)&cX, n, sizeof(GrB_Index), msg));
+    GRB_TRY (GrB_Vector_extractTuples_INT64 (cI, (int64_t *) cX, &n, c));
+    GRB_TRY (GxB_Matrix_build_Scalar (C, cX, cI, ONE_INT64, n));
     LAGraph_Free((void **)&cI, NULL);
     LAGraph_Free((void **)&cX, NULL);
 
     bool is_undirected = (G->is_symmetric_structure == LAGraph_TRUE);
 
     // k = sum(C) .^ 2
-    GRB_TRY(GrB_reduce(k, NULL, NULL, GrB_PLUS_MONOID_INT64, C, NULL));
-    GRB_TRY(GrB_Vector_apply_BinaryOp2nd_INT64(k, NULL, NULL, GxB_POW_INT64, k,
-                                               2, NULL));
+    GRB_TRY (GrB_mxv (k, NULL, NULL, GxB_PLUS_PAIR_INT64, C, x, NULL));
+    GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(
+        k, NULL, NULL, GxB_POW_INT64, k, 2, NULL));
     // sum_k2 = total number of possible intra-cluster edges
-    GRB_TRY(GrB_reduce(&sum_k2, NULL, GrB_PLUS_MONOID_INT64, k, NULL));
+    GRB_TRY (GrB_reduce (&sum_k2, NULL, GrB_PLUS_MONOID_INT64, k, NULL));
 
     // Calculate actual number of intra-cluster edges, if A is weighted
     // then we ignore the weights and just count the number of edges as
     // performance and coverage are inherently counting problems
-    GRB_TRY(GrB_mxm(CA, NULL, NULL, LAGraph_plus_one_int64, C, A, NULL));
-    GRB_TRY(GrB_mxm(CA, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, CA, C,
-                    GrB_DESC_T1));
-    GRB_TRY(GxB_Vector_diag(trace, CA, 0, NULL));
 
-    GRB_TRY(
-        GrB_reduce(&n_intraEdges, NULL, GrB_PLUS_MONOID_INT64, trace, NULL));
+    // Count the number of edges per node in the cluster originating at a node
+    // in the cluster
+    GRB_TRY (GrB_mxm (C, C, NULL, GxB_PLUS_PAIR_INT64, C, A, GrB_DESC_S));
+
+    // sum the intra-cluster edges per node for all nodes
+    GRB_TRY (
+        GrB_reduce (&n_intraEdges, NULL, GrB_PLUS_MONOID_INT64, C, NULL)) ;
 
     if (G->nself_edges > 0)
     {
