@@ -1389,8 +1389,8 @@ int LAGr_PartitionQuality(
     double *cov,     // Coverage
     double *perf,    // Performance
     // Inputs
-    GrB_Vector c,    // Cluster vector where c[i] = j means vertex i is in cluster j
-    LAGraph_Graph G, // original graph
+    const GrB_Vector c,    // Cluster vector where c[i] = j means vertex i is in cluster j
+    const LAGraph_Graph G, // original graph
     char *msg
 );
 

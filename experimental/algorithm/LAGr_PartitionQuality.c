@@ -35,6 +35,9 @@
         GrB_free(&k);                                                          \
         GrB_free(&x);                                                          \
         GrB_free(&C);                                                          \
+        GrB_free(&desc);                                                       \
+        LAGraph_Free((void **)&cI, NULL);                                      \
+        LAGraph_Free((void **)&cX, NULL);                                      \
         GrB_free(&ONE_INT64);                                                  \
     }
 
@@ -53,14 +56,16 @@ int LAGr_PartitionQuality(
     double *cov,  // coverage output, can be NULL
     double *perf, // performance output, can be NULL
     // Inputs
-    GrB_Vector c,    // input cluster vector
-    LAGraph_Graph G, // original graph from which the clustering was obtained
+    const GrB_Vector c,    // input cluster vector
+    const LAGraph_Graph G, // original graph from which the clustering was obtained
     char *msg)
 {
 #if LAGRAPH_SUITESPARSE
     GrB_Vector k = NULL;
     GrB_Vector x = NULL;
     GrB_Matrix C = NULL;
+    GrB_Index *cI = NULL, *cX = NULL;
+    GrB_Descriptor desc = NULL;
 
     GrB_Scalar ONE_INT64 = NULL;
 
@@ -104,18 +109,25 @@ int LAGr_PartitionQuality(
     GRB_TRY (GrB_Vector_new (&x, GrB_BOOL, n));
     GRB_TRY (GrB_Scalar_new (&ONE_INT64, GrB_INT64));
 
-    GRB_TRY (GrB_assign(x, NULL, NULL, (bool) true, GrB_ALL, 0, NULL)) ;
-    GRB_TRY (GrB_Scalar_setElement_BOOL(ONE_INT64, (int64_t)1));
+    GRB_TRY (GrB_assign (x, NULL, NULL, (bool) true, GrB_ALL, 0, NULL)) ;
+    GRB_TRY (GrB_Scalar_setElement_BOOL (ONE_INT64, (int64_t) 1));
 
     // convert the cluster vector to a boolean matrix C where
     // C(i, j) = 1 if and only if vertex j is in cluster i
-    GrB_Index *cI, *cX;
+
+#if LG_SUITESPARSE_GRAPHBLAS_V10
+    GRB_TRY (GrB_Descriptor_new (&desc)) ;
+    GRB_TRY (GrB_set (desc, GxB_USE_INDICES, GxB_COLINDEX_LIST)) ;
+    GRB_TRY (GxB_Matrix_build_Scalar_Vector (C, c, c, ONE_INT64, desc));
+    GRB_TRY (GrB_free (&desc)) ;
+#else
     LAGRAPH_TRY (LAGraph_Malloc ((void **)&cI, n, sizeof(GrB_Index), msg));
     LAGRAPH_TRY (LAGraph_Malloc ((void **)&cX, n, sizeof(GrB_Index), msg));
     GRB_TRY (GrB_Vector_extractTuples_INT64 (cI, (int64_t *) cX, &n, c));
     GRB_TRY (GxB_Matrix_build_Scalar (C, cX, cI, ONE_INT64, n));
     LAGraph_Free((void **)&cI, NULL);
     LAGraph_Free((void **)&cX, NULL);
+#endif
 
     bool is_undirected = (G->is_symmetric_structure == LAGraph_TRUE);
 
