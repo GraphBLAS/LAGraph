@@ -31,36 +31,50 @@
 // The independent pair-sums within a level are issued concurrently across
 // LG_nthreads_outer threads with OpenMP; each such outer thread calls into
 // GraphBLAS, which parallelizes each GrB_eWiseAdd internally with
-// LG_nthreads_inner threads (the documented two-level model).  Working on the
-// smaller intermediate matrices of the tree, rather than concatenating every
-// tuple at once, keeps the active data in faster memory: adding two matrices
-// each with N entries yields a matrix with fewer than 2N entries, so the
-// relative work shrinks as the matrices grow.
+// LG_nthreads_inner threads (the documented two-level model).
+
+// Memory: a level's intermediate results are only needed as inputs to the next
+// level, so each pair's two inputs are freed as soon as their sum is built.
+// Only the active merge frontier (the current level plus the partially-built
+// next level) is ever resident, rather than every intermediate result at once.
+// This is what makes the tree a memory win: adding two matrices each with N
+// entries yields a matrix with fewer than 2N entries, and the smaller
+// intermediates stay in faster memory.  The original input matrices (level 0)
+// are never freed.
+
+// Ownership is tracked per working-array slot: ownedW[k] is true iff W[k] is a
+// matrix this function created (and so must free), and false for an original
+// input.  This makes LG_FREE_WORK a simple sweep that frees exactly the
+// matrices we still own, and is correct at any point -- including partial
+// failure inside a level, since GrB_free of an already-freed (NULL) handle is a
+// no-op.  Freeing a consumed input sets its handle to NULL, so the same slot is
+// never freed twice.
 
 // All input matrices must have identical dimensions and identical built-in
 // type; C is created with that same type and dimensions.  Unlike
 // LAGraph_Matrix_Sum, the dup operator must be non-NULL, since GrB_eWiseAdd
 // requires a binary operator.
 
-// Every intermediate matrix created by the reduction is held in a single Pool
-// array (a binary reduction of n leaves has exactly n-1 internal sums), so the
-// free-path is a simple sweep over Pool that is correct at any point, including
-// partial failure inside a level (GrB_free of a NULL handle is a no-op).  The W
-// and Wnext arrays hold only pointers (to original inputs or to Pool entries)
-// and are therefore never themselves freed as matrices.
-
 #define LG_FREE_WORK                                        \
 {                                                           \
-    if (Pool != NULL)                                       \
+    if (W != NULL && ownedW != NULL)                        \
     {                                                       \
-        for (GrB_Index k = 0 ; k < npool ; k++)             \
+        for (GrB_Index k = 0 ; k < nmatrices ; k++)         \
         {                                                   \
-            GrB_free (&Pool [k]) ;                          \
+            if (ownedW [k]) GrB_free (& W [k]) ;            \
         }                                                   \
     }                                                       \
-    LAGraph_Free ((void **) &Pool, NULL) ;                  \
+    if (Wnext != NULL && ownedN != NULL)                    \
+    {                                                       \
+        for (GrB_Index k = 0 ; k < nmatrices ; k++)         \
+        {                                                   \
+            if (ownedN [k]) GrB_free (& Wnext [k]) ;        \
+        }                                                   \
+    }                                                       \
     LAGraph_Free ((void **) &W, NULL) ;                     \
+    LAGraph_Free ((void **) &ownedW, NULL) ;                \
     LAGraph_Free ((void **) &Wnext, NULL) ;                 \
+    LAGraph_Free ((void **) &ownedN, NULL) ;                \
 }
 
 #define LG_FREE_ALL                                         \
@@ -88,8 +102,8 @@ int LAGraph_Matrix_Binary_Sum
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    GrB_Matrix *W = NULL, *Wnext = NULL, *Pool = NULL ;
-    GrB_Index npool = 0 ;
+    GrB_Matrix *W = NULL, *Wnext = NULL ;
+    bool *ownedW = NULL, *ownedN = NULL ;
     LG_ASSERT_MSG (C != NULL, GrB_NULL_POINTER, "&C != NULL") ;
     LG_ASSERT (Matrices != NULL, GrB_NULL_POINTER) ;
     (*C) = NULL ;
@@ -160,32 +174,31 @@ int LAGraph_Matrix_Binary_Sum
     }
 
     //--------------------------------------------------------------------------
-    // allocate the working pointer arrays and the pool of intermediate matrices
+    // allocate the double-buffered working arrays and their ownership flags
     //--------------------------------------------------------------------------
 
-    // A binary reduction of nmatrices leaves creates exactly nmatrices-1 sums.
-    // Pool holds every one of them and is pre-filled with NULL, so LG_FREE_WORK
-    // can sweep it at any time (including on partial failure within a level).
-    // Each pair at a level writes a deterministic Pool slot (base + p), so no
-    // shared counter is touched by the parallel loop.
+    // W / ownedW hold the current level; Wnext / ownedN hold the level being
+    // built.  ownedW is initialized (to all-false, level 0 being the original
+    // inputs) before Wnext is allocated, so that if a later allocation fails the
+    // LG_FREE_WORK sweep never reads an uninitialized flag array.
 
-    npool = nmatrices - 1 ;
-    GrB_Index pool_alloc = (npool == 0) ? 1 : npool ;
-    LG_TRY (LAGraph_Malloc ((void **) &Pool, pool_alloc, sizeof (GrB_Matrix),
-        msg)) ;
-    for (GrB_Index k = 0 ; k < pool_alloc ; k++)
-    {
-        Pool [k] = NULL ;
-    }
     LG_TRY (LAGraph_Malloc ((void **) &W, nmatrices, sizeof (GrB_Matrix),
         msg)) ;
-    LG_TRY (LAGraph_Malloc ((void **) &Wnext, nmatrices, sizeof (GrB_Matrix),
+    LG_TRY (LAGraph_Malloc ((void **) &ownedW, nmatrices, sizeof (bool),
         msg)) ;
-
-    // level 0 references the original input matrices (which we never free)
     for (GrB_Index k = 0 ; k < nmatrices ; k++)
     {
-        W [k] = Matrices [k] ;
+        W [k] = Matrices [k] ;      // level 0 references the original inputs
+        ownedW [k] = false ;        // which we never free
+    }
+    LG_TRY (LAGraph_Malloc ((void **) &Wnext, nmatrices, sizeof (GrB_Matrix),
+        msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &ownedN, nmatrices, sizeof (bool),
+        msg)) ;
+    for (GrB_Index k = 0 ; k < nmatrices ; k++)
+    {
+        Wnext [k] = NULL ;
+        ownedN [k] = false ;
     }
 
     //--------------------------------------------------------------------------
@@ -193,12 +206,18 @@ int LAGraph_Matrix_Binary_Sum
     //--------------------------------------------------------------------------
 
     GrB_Index count = nmatrices ;   // number of matrices at the current level
-    GrB_Index base = 0 ;            // first Pool slot used by the current level
 
     while (count > 1)
     {
         GrB_Index npairs = count / 2 ;          // number of pair-sums
         int64_t p ;
+
+        // reset the next-level buffers for this level
+        for (GrB_Index k = 0 ; k < nmatrices ; k++)
+        {
+            Wnext [k] = NULL ;
+            ownedN [k] = false ;
+        }
 
         // outer threads for the independent pair-sums at this level; each calls
         // GraphBLAS, which nests inner threads underneath (two-level model)
@@ -221,9 +240,18 @@ int LAGraph_Matrix_Binary_Sum
                 info = GrB_eWiseAdd (R, NULL, NULL, dup,
                     W [2*p], W [2*p+1], NULL) ;
             }
-            // each p writes a distinct Pool slot and a distinct Wnext slot
-            Pool [base + p] = R ;
+            // each p writes a distinct Wnext slot from a distinct input pair
             Wnext [p] = R ;
+            ownedN [p] = (R != NULL) ;
+
+            // the two inputs are now consumed: free them immediately if we own
+            // them, so only the merge frontier stays resident.  Original inputs
+            // (ownedW == false) are never freed.  The unpaired trailing matrix
+            // (index count-1 when count is odd) is not a pair member, so it is
+            // never freed here and is carried up below.
+            if (ownedW [2*p]  ) GrB_free (& W [2*p]  ) ;
+            if (ownedW [2*p+1]) GrB_free (& W [2*p+1]) ;
+
             if (info < GrB_SUCCESS)
             {
                 #pragma omp critical
@@ -234,15 +262,19 @@ int LAGraph_Matrix_Binary_Sum
         }
         GRB_TRY (sum_status) ;
 
-        // carry an unpaired (odd) trailing matrix up to the next level
+        // carry an unpaired (odd) trailing matrix up to the next level,
+        // transferring its ownership so it is referenced (and later freed)
+        // exactly once
         if (count % 2 == 1)
         {
             Wnext [npairs] = W [count-1] ;
+            ownedN [npairs] = ownedW [count-1] ;
+            ownedW [count-1] = false ;
         }
 
-        // advance to the next level: swap W and Wnext, update count and base
-        GrB_Matrix *tmp = W ; W = Wnext ; Wnext = tmp ;
-        base += npairs ;
+        // advance to the next level: swap the level buffers and their flags
+        GrB_Matrix *tmpW = W ; W = Wnext ; Wnext = tmpW ;
+        bool *tmpO = ownedW ; ownedW = ownedN ; ownedN = tmpO ;
         count = (count + 1) / 2 ;
     }
 
@@ -250,18 +282,11 @@ int LAGraph_Matrix_Binary_Sum
     // hand the root of the tree to the caller
     //--------------------------------------------------------------------------
 
-    // With nmatrices >= 2 the final root is always a genuine sum (a Pool entry):
+    // With nmatrices >= 2 the final root is always a genuine sum (owned by us):
     // count==1 is only ever reached from a count==2 level, which has no carry.
-    // Transfer ownership by clearing its Pool slot so LG_FREE_WORK won't free it.
+    // Transfer ownership by clearing its flag so LG_FREE_WORK won't free it.
     (*C) = W [0] ;
-    for (GrB_Index k = 0 ; k < npool ; k++)
-    {
-        if (Pool [k] == (*C))
-        {
-            Pool [k] = NULL ;
-            break ;
-        }
-    }
+    ownedW [0] = false ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result
