@@ -68,8 +68,8 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 9.0.0}
-         - {grb_version: 10.2.0}
+         # - {grb_version: 9.0.0}
+         - {grb_version: 10.3.0}
 
     steps:
 
