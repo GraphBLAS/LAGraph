@@ -474,6 +474,8 @@ int LG_CC_FastSV7           // SuiteSparse:GraphBLAS method, with GraphBLAS v10
         bool A_jumbled, A_iso ;
         int Ap_handling, Aj_handling ;
 
+        // FIXME: make a copy of and unload that instead.
+
         // unload A in sparse CSR format into the A_Container
 //      GRB_TRY (GrB_set (A, GxB_SPARSE, GxB_SPARSITY_CONTROL)) ;
         GRB_TRY (LG_SET_FORMAT_HINT (A, LG_SPARSE)) ;

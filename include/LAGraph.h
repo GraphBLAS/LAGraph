@@ -104,8 +104,8 @@
 
 #if ( !LAGRAPH_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
     // use SuiteSparse, and its GxB* extensions
-    #if GxB_IMPLEMENTATION < GxB_VERSION (9,0,0)
-    #error "If using SuiteSparse::GraphBLAS, version 9.0.0 or later is required"
+    #if GxB_IMPLEMENTATION < GxB_VERSION (10,0,0)
+    #error "SuiteSparse::GraphBLAS v10.0.0 or later is required"
     #endif
     #define LAGRAPH_SUITESPARSE 1
 #else
