@@ -18,8 +18,8 @@ jobs:
         config:
         # if there are multiple items in this list, only use should
         # deployit=true for just one of them.
-         - {grb_version: 9.0.0, deployit: false}
-         - {grb_version: 10.2.0, deployit: true}
+        #- {grb_version: 9.0.0, deployit: false}
+         - {grb_version: 10.3.0, deployit: true}
 
     steps:
 
