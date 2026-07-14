@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/experimental/benchmark/kt_demo.c: test KTruss many times
+// LAGraph/experimental/benchmark/kt_demo.c: test AllKTruss many times
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
@@ -23,7 +23,10 @@
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL                             \
 {                                               \
-    GrB_Matrix_free (&C) ;                      \
+    LAGraph_Free ((void **) &Cset, NULL) ;      \
+    LAGraph_Free ((void **) &ntris, NULL) ;     \
+    LAGraph_Free ((void **) &nedges, NULL) ;    \
+    LAGraph_Free ((void **) &nsteps, NULL) ;    \
     LAGraph_Delete (&G, msg) ;                  \
 }
 
@@ -73,33 +76,47 @@ int main (int argc, char **argv)
     // compute each k-truss
     //--------------------------------------------------------------------------
 
-    LAGraph_KTruss (&C, G, 3, msg) ;
-    int64_t ntriangles = 0 ;
-    GrB_Matrix_reduce_INT64 (&ntriangles, NULL, GrB_PLUS_MONOID_INT64, C, NULL) ;
-    ntriangles = ntriangles / 6 ;
-    printf ("# triangles: %ld\n", ntriangles) ;
+    GrB_Index n ;
+    int64_t kmax ;
+    GrB_Matrix_nrows (&n, G->A) ;
+    LAGraph_Calloc ((void **) &Cset  , n, sizeof (GrB_Matrix), msg) ;
+    LAGraph_Malloc ((void **) &ntris , n, sizeof (int64_t), msg) ;
+    LAGraph_Malloc ((void **) &nedges, n, sizeof (int64_t), msg) ;
+    LAGraph_Malloc ((void **) &nsteps, n, sizeof (int64_t), msg) ;
 
-    GrB_Matrix_free (&C) ;
+    LAGraph_AllKTruss (Cset, &kmax, ntris, nedges, nsteps, G, msg) ;
+    int64_t kmax_ok = kmax ;
 
     //--------------------------------------------------------------------------
-    // call KTruss many times
+    // call AllKTruss many times
     //--------------------------------------------------------------------------
 
-    #define NTRIALS 1
-    printf ("KTruss: %d trials\n", NTRIALS) ;
+    #define NTRIALS 3
+    printf ("AllKTruss: %d trials\n", NTRIALS) ;
 
     t = LAGraph_WallClockTime ( ) ;
+    double t1 = t ;
     for (int k = 0 ; k < NTRIALS ; k++)
     {
-        GrB_Matrix_free (&C) ;
-        LAGraph_KTruss (&C, G, 3, msg) ;
+        LAGraph_AllKTruss (Cset, &kmax, ntris, nedges, nsteps, G, msg) ;
+        printf ("trial %d : all k-truss: kmax %g\n", k, (double) kmax) ;
+        double tt = LAGraph_WallClockTime ( ) - t1 ;
+        if (tt > 3)
+        {
+            printf ("%" PRId64 " : %d ok, %g sec\n", kmax, k,
+                LAGraph_WallClockTime ( ) - t) ;
+            fflush (stdout) ;
+            t1 = LAGraph_WallClockTime ( ) ;
+        }
+        if (kmax != kmax_ok)
+        {
+            printf ("Abort! %" PRId64 " %" PRId64 "\n", kmax, kmax_ok) ;
+            fflush (stdout) ;
+            abort ( ) ;
+        }
     }
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for %d trials:          %g sec\n", NTRIALS, t) ;
-
-    uint64_t nvals ;
-    GrB_Matrix_nvals (&nvals, C) ;
-    printf ("Avg time: %g sec, 3-truss nvals: %lu\n", t / NTRIALS, nvals) ;
 
     //--------------------------------------------------------------------------
     // free everyting and finish
