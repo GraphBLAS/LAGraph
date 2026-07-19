@@ -1318,6 +1318,54 @@ int LAGr_EdgeBetweennessCentrality
 ) ;
 
 //------------------------------------------------------------------------------
+// Closeness centrality
+//------------------------------------------------------------------------------
+
+typedef enum
+{
+    CC_BFS,           // unweighted BFS (unit edge weights)
+    CC_SSSP,          // delta-stepping SSSP (non-negative weights)
+    CC_BELLMAN_FORD,  // Bellman-Ford (general weights, negative-cycle check)
+    CC_FLOYD_WARSHALL // Floyd-Warshall (FW) APSP
+    // CC_DEFAULT,    select algorithm automatically
+} cc_algo_t ;
+
+LAGRAPHX_PUBLIC
+int LAGr_ClosenessCentrality
+(
+    // output:
+    GrB_Vector *centrality,
+    // input:
+    LAGraph_Graph G,
+    GrB_Vector sources,     // nodes to score; NULL or empty => all nodes
+    bool use_weights,       // if true, use edge weights in shortest paths
+    cc_algo_t algorithm,    // shortest-path algorithm to use
+    GrB_Scalar Delta,       // delta for SSSP; if NULL, derived from G->emin
+    char *msg
+) ; 
+
+//------------------------------------------------------------------------------
+// Katz centrality
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_KatzCentrality
+(
+    // output:
+    GrB_Vector *centrality,
+    int64_t *iters,
+    // input:
+    LAGraph_Graph G,
+    double alpha,
+    double beta,
+    int64_t max_iter,
+    double tol,
+    bool normalize,
+    bool use_weights,
+    char *msg
+) ; 
+
+//------------------------------------------------------------------------------
 // harmonic centrality (approximate via HLL sketches)
 //------------------------------------------------------------------------------
 
