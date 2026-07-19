@@ -41,6 +41,7 @@
 #define LAGRAPH_VERSION_MAJOR  @LAGraph_VERSION_MAJOR@
 #define LAGRAPH_VERSION_MINOR  @LAGraph_VERSION_MINOR@
 #define LAGRAPH_VERSION_UPDATE @LAGraph_VERSION_SUB@
+#define LAGRAPH_HAS_STDALIGN_H @LAGraph_HAS_STDALIGN_H@
 
 //==============================================================================
 // include files and helper macros
