@@ -456,8 +456,8 @@ static int LG_RCC_compute_vanilla
     ones = T ;              T += edge_vec_nvals ;
     epd_arr = T ;           T += max_deg ;
     vpd_arr = T ;           T += max_deg ;
-    epd_index = T ;         T += max_deg ;
-    vpd_index = T ;         T += max_deg ;
+    epd_index = (GrB_Index *) T ;         T += max_deg ;
+    vpd_index = (GrB_Index *) T ;         T += max_deg ;
 
     #pragma omp parallel for schedule(static)
     for(uint64_t i = 0; i < edge_vec_nvals; ++i)
@@ -476,10 +476,10 @@ static int LG_RCC_compute_vanilla
 
     // Build with degrees as indecies and handle duplicates via adition
     GRB_TRY (GrB_Vector_build_INT64 (
-        edges_per_deg, deg_arr, node_edges_arr, edge_vec_nvals,
+        edges_per_deg, (GrB_Index *) deg_arr, node_edges_arr, edge_vec_nvals,
         GrB_PLUS_INT64)) ;
     GRB_TRY (GrB_Vector_build_INT64 (
-        verts_per_deg, deg_arr, ones, edge_vec_nvals, GrB_PLUS_INT64)) ;
+        verts_per_deg, (GrB_Index *) deg_arr, ones, edge_vec_nvals, GrB_PLUS_INT64)) ;
     GRB_TRY (GrB_Vector_assign_INT64(
         edges_per_deg, edges_per_deg, NULL, (int64_t) 0,
         GrB_ALL, 0, GrB_DESC_SC)) ;
@@ -489,10 +489,10 @@ static int LG_RCC_compute_vanilla
 
     // Extract into arrays
     GRB_TRY (GrB_Vector_extractTuples_INT64(
-        epd_index, epd_arr, &max_deg, edges_per_deg
+        epd_index, epd_arr, (GrB_Index *) &max_deg, edges_per_deg
     )) ;
     GRB_TRY (GrB_Vector_extractTuples_INT64(
-        vpd_index, vpd_arr, &max_deg, verts_per_deg
+        vpd_index, vpd_arr, (GrB_Index *) &max_deg, verts_per_deg
     )) ;
     // TODO: should be a GraphBLAS cumulative-sum primitive
     // run a cummulative sum (backwards) on vpd_arr
@@ -510,7 +510,10 @@ static int LG_RCC_compute_vanilla
         verts_per_deg, vpd_index, vpd_arr, max_deg, NULL
     )) ;
     T = deg_arr = node_edges_arr = ones = NULL ;
-    epd_index = vpd_index = epd_arr = vpd_arr = NULL ;
+    epd_index = NULL ;
+    vpd_index = NULL ;
+    epd_arr = NULL ;
+    vpd_arr = NULL ;
 
     // Computes the RCC of a matrix
     GRB_TRY(GrB_eWiseMult(
