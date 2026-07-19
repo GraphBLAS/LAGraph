@@ -24,7 +24,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v2.0.0
+      uses: actions/checkout@v7
 
     - name: Install tools for build
       run: |
@@ -74,7 +74,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v2.0.0
+      uses: actions/checkout@v7
 
     - name: Install dependencies
       run: |
