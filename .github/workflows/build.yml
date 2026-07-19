@@ -81,6 +81,7 @@ jobs:
         brew uninstall cmake
         brew tap-new libomp/cask
         brew extract --version=14.0.6 libomp libomp/cask
+        brew trust libomp/cask
         brew install libomp@14.0.6
 
     - name: Build GraphBLAS
