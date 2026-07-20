@@ -47,7 +47,7 @@ jobs:
         make test_coverage
 
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@4
+      uses: JamesIves/github-pages-deploy-action@4.1.1
       if: matrix.config.deployit && github.event_name == 'push' && github.ref == 'refs/heads/stable'
       with:
         branch: gh-pages
