@@ -11,6 +11,14 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
+#include "LG_internal.h"
+#include <LAGraphX.h>
+#include <LAGraph.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define LEIDEN_MAX_ITER 100
+
 //------------------------------------------------------------------------------
 // The Leiden algorithm is a modularity-based community detection method that
 // guarantees well-connected communities by introducing a Refinement phase
@@ -66,11 +74,12 @@
 #define LG_FREE_WORK                                        \
 {                                                           \
     GrB_free (&k_vec) ;                                     \
-    GrB_free (&v) ;                                         \
     GrB_free (&A_agg) ;                                     \
     GrB_free (&A_new) ;                                     \
     GrB_free (&S_mat) ;                                     \
     GrB_free (&A_temp) ;                                    \
+    GrB_free (&one_scalar) ;                                \
+    LAGR_LEIDEN_FREE_CONTAINER ;                            \
     LAGraph_Free ((void **) &k_arr,      NULL) ;            \
     LAGraph_Free ((void **) &c_arr,      NULL) ;            \
     LAGraph_Free ((void **) &k_comm,     NULL) ;            \
@@ -80,11 +89,17 @@
     LAGraph_Free ((void **) &T_local,    NULL) ;            \
     LAGraph_Free ((void **) &dirty,      NULL) ;            \
     LAGraph_Free ((void **) &dirty_list, NULL) ;            \
-    LAGraph_Free ((void **) &nbrs_j,     NULL) ;            \
-    LAGraph_Free ((void **) &nbrs_v,     NULL) ;            \
     LAGraph_Free ((void **) &remap,      NULL) ;            \
     LAGraph_Free ((void **) &o_comm,     NULL) ;            \
     LAGraph_Free ((void **) &init_comm,  NULL) ;            \
+    LAGraph_Free ((void **) &Ap,         NULL) ;            \
+    LAGraph_Free ((void **) &Aj,         NULL) ;            \
+    LAGraph_Free ((void **) &Ax,         NULL) ;            \
+    LAGraph_Free ((void **) &I_tup,      NULL) ;            \
+    LAGraph_Free ((void **) &J_tup,      NULL) ;            \
+    LAGraph_Free ((void **) &X_tup,      NULL) ;            \
+    LAGraph_Free ((void **) &cursor,     NULL) ;            \
+    LAGraph_Free ((void **) &iota,       NULL) ;            \
 }
 
 #undef  LG_FREE_ALL
@@ -94,13 +109,11 @@
     if (c_handle != NULL) GrB_free (c_handle) ;             \
 }
 
-#include "LG_internal.h"
-#include <LAGraphX.h>
-#include <LAGraph.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define LEIDEN_MAX_ITER 100
+#if LG_SUITESPARSE_GRAPHBLAS_V10
+#define LAGR_LEIDEN_FREE_CONTAINER GxB_Container_free (&cont)
+#else
+#define LAGR_LEIDEN_FREE_CONTAINER ((void) 0)
+#endif
 
 int LAGraph_Leiden
 (
@@ -118,26 +131,43 @@ int LAGraph_Leiden
     // LG_FREE_ALL can safely free them even on early exit)
     //--------------------------------------------------------------------------
 
-    GrB_Vector  k_vec      = NULL ;
-    GrB_Vector  v          = NULL ;
-    GrB_Matrix  A_agg      = NULL ;   // owned coarsened graph (Phase 3)
-    GrB_Matrix  A_new      = NULL ;   // next-level aggregate before ownership transfer
-    GrB_Matrix  S_mat      = NULL ;   // temporary membership matrix (Phase 3)
-    GrB_Matrix  A_temp     = NULL ;   // temporary for mxm (Phase 3)
-    double     *k_arr      = NULL ;   // k_arr[i]      = degree of node i (current level)
-    int64_t    *c_arr      = NULL ;   // c_arr[i]      = Phase-1 community label
-    double     *k_comm     = NULL ;   // k_comm[l]     = total degree of community l
-    int64_t    *c_p1       = NULL ;   // c_p1[i]       = Phase-1 parent community
-    int64_t    *c_ref      = NULL ;   // c_ref[i]      = refined sub-community label
-    double     *k_ref_comm = NULL ;   // k_ref_comm[l] = total degree of sub-community l
-    double     *T_local    = NULL ;   // scratch: edge sums from node i to each community
-    int8_t     *dirty      = NULL ;   // dirty[l] = 1 if T_local[l] was written
-    GrB_Index  *dirty_list = NULL ;   // list of community labels touched this node
-    GrB_Index  *nbrs_j     = NULL ;   // scratch: extracted neighbor indices
-    double     *nbrs_v     = NULL ;   // scratch: extracted neighbor weights
-    GrB_Index  *remap      = NULL ;   // remap[old_label] -> new contiguous label
-    GrB_Index  *o_comm     = NULL ;   // o_comm[i] = community of original node i
-    GrB_Index  *init_comm  = NULL ;   // init_comm[r] = initial c_arr for aggregate node r
+    GrB_Vector    k_vec      = NULL ;
+    GrB_Matrix    A_agg      = NULL ;   // owned coarsened graph (Phase 3)
+    GrB_Matrix    A_new      = NULL ;   // next-level aggregate before ownership transfer
+    GrB_Matrix    S_mat      = NULL ;   // temporary membership matrix (Phase 3)
+    GrB_Matrix    A_temp     = NULL ;   // temporary for mxm (Phase 3)
+    GrB_Scalar    one_scalar = NULL ;   // FP64 scalar with value 1.0 for build_Scalar
+#if LG_SUITESPARSE_GRAPHBLAS_V10
+    GxB_Container cont       = NULL ;   // for unloading A_cur into raw CSR arrays
+#endif
+    double       *k_arr      = NULL ;   // k_arr[i]      = degree of node i (current level)
+    int64_t      *c_arr      = NULL ;   // c_arr[i]      = Phase-1 community label
+    double       *k_comm     = NULL ;   // k_comm[l]     = total degree of community l
+    int64_t      *c_p1       = NULL ;   // c_p1[i]       = Phase-1 parent community
+    int64_t      *c_ref      = NULL ;   // c_ref[i]      = refined sub-community label
+    double       *k_ref_comm = NULL ;   // k_ref_comm[l] = total degree of sub-community l
+    double       *T_local    = NULL ;   // scratch: edge sums from node i to each community
+    int8_t       *dirty      = NULL ;   // dirty[l] = 1 if T_local[l] was written
+    GrB_Index    *dirty_list = NULL ;   // list of community labels touched this node
+    GrB_Index    *remap      = NULL ;   // remap[old_label] -> new contiguous label
+    int64_t      *o_comm     = NULL ;   // o_comm[i] = community of original node i
+    GrB_Index    *init_comm  = NULL ;   // init_comm[r] = initial c_arr for aggregate node r
+
+    // Raw CSR pointers for inner-loop walks.  On v10+ they are obtained by
+    // unloading A_cur into the SuiteSparse Container (zero-copy); ownership
+    // returns to GraphBLAS on reload (we then null them so LG_FREE_WORK
+    // doesn't double-free).  On older versions they are allocated by us
+    // and (re)filled per level via GrB_Matrix_extractTuples + counting-sort.
+    GrB_Index  *Ap         = NULL ;   // row pointers, size n_cur+1
+    GrB_Index  *Aj         = NULL ;   // column indices, size Anz
+    double     *Ax         = NULL ;   // values, size Anz (only if !iso on v10)
+    GrB_Index  *I_tup      = NULL ;   // raw row indices from extractTuples (v9 fallback)
+    GrB_Index  *J_tup      = NULL ;   // raw col indices from extractTuples (v9 fallback)
+    double     *X_tup      = NULL ;   // raw values from extractTuples (v9 fallback)
+    GrB_Index  *cursor     = NULL ;   // scatter cursor for CSR build (v9 fallback)
+    GrB_Index  *iota       = NULL ;   // [0,1,...,n-1] for vector/matrix build
+    GrB_Index   Ap_cap     = 0 ;      // current allocated capacity of Ap (v9 fallback)
+    GrB_Index   Anz_cap    = 0 ;      // current allocated capacity of Aj/Ax/tuples (v9 fallback)
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -179,35 +209,39 @@ int LAGraph_Leiden
     LG_TRY (LAGraph_Malloc ((void **) &T_local,    n, sizeof (double),    msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &dirty,      n, sizeof (int8_t),    msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &dirty_list, n, sizeof (GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void **) &nbrs_j,     n, sizeof (GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void **) &nbrs_v,     n, sizeof (double),    msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &remap,      n, sizeof (GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void **) &o_comm,     n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &o_comm,     n, sizeof (int64_t),   msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &init_comm,  n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &iota,       n, sizeof (GrB_Index), msg)) ;
+    for (GrB_Index i = 0 ; i < n ; i++) iota[i] = i ;
+
+    // Reusable FP64 scalar with value 1.0 for GxB_Matrix_build_Scalar.
+    GRB_TRY (GrB_Scalar_new (&one_scalar, GrB_FP64)) ;
+    GRB_TRY (GrB_Scalar_setElement_FP64 (one_scalar, 1.0)) ;
+
+    // Reusable container for unloading A_cur into raw CSR arrays per level
+    // (only available with the SuiteSparse v10+ Container API).
+#if LG_SUITESPARSE_GRAPHBLAS_V10
+    GRB_TRY (GxB_Container_new (&cont)) ;
+#endif
 
     //--------------------------------------------------------------------------
     // compute m = total edge weight / 2 from G->A (invariant under aggregation)
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GrB_Vector_new (&k_vec, GrB_FP64, n)) ;
-    GRB_TRY (GrB_Matrix_reduce_Monoid (k_vec, NULL, NULL,
-        GrB_PLUS_MONOID_FP64, A, NULL)) ;
     double m = 0.0 ;
-    GRB_TRY (GrB_Vector_reduce_FP64 (&m, NULL, GrB_PLUS_MONOID_FP64,
-        k_vec, NULL)) ;
+    GRB_TRY (GrB_Matrix_reduce_FP64 (&m, NULL, GrB_PLUS_MONOID_FP64,
+        A, NULL)) ;
     m /= 2.0 ;
     double two_m = 2.0 * m ;        // denominator of the modularity penalty
-    GrB_free (&k_vec) ;
-    k_vec = NULL ;
 
     // Empty graph: return a singleton partition.
     if (m == 0.0)
     {
+        // c[i] = i for all i, built in one call instead of n setElement calls.
         GRB_TRY (GrB_Vector_new (c_handle, GrB_INT64, n)) ;
-        for (GrB_Index i = 0 ; i < n ; i++)
-        {
-            GRB_TRY (GrB_Vector_setElement_INT64 (*c_handle, (int64_t) i, i)) ;
-        }
+        GRB_TRY (GrB_Vector_build_INT64 (*c_handle, iota, iota, n,
+            GrB_FIRST_INT64)) ;
         LG_FREE_WORK ;
         return (GrB_SUCCESS) ;
     }
@@ -223,11 +257,19 @@ int LAGraph_Leiden
 
     for (GrB_Index i = 0 ; i < n ; i++)
     {
-        o_comm[i]    = i ;
+        o_comm[i]    = (int64_t) i ;
         init_comm[i] = i ;
     }
 
-    GrB_Matrix A_cur = A ;   // current-level graph (not owned: either G->A or A_agg)
+    // Duplicate G->A as FP64 so we own A_cur and may unload it via the
+    // container API expecting FP64 values.  Done after the m == 0 early
+    // return to avoid an unused copy for empty-edge graphs.  G->A may be
+    // any numeric type (BOOL on pattern-only matrices, INT*, FP32, ...);
+    // we typecast once here so the inner-loop CSR walks always read double.
+    GRB_TRY (GrB_Matrix_new (&A_agg, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_Matrix_assign (A_agg, NULL, NULL, A,
+        GrB_ALL, n, GrB_ALL, n, NULL)) ;
+    GrB_Matrix A_cur = A_agg ;
     GrB_Index  n_cur = n ;
 
     //==========================================================================
@@ -240,23 +282,159 @@ int LAGraph_Leiden
         outer_changed = false ;
 
         //----------------------------------------------------------------------
-        // create GraphBLAS vectors sized for the current level
+        // Compute degrees k_arr[i] = sum of row i (includes self-loops in
+        // A_agg) and unload A_cur into raw CSR arrays Ap/Aj/Ax via the
+        // SuiteSparse Container API.  This replaces O(n_cur) GrB_Col_extract
+        // + extractTuples calls per inner iteration with direct pointer walks.
+        //
+        // Force A_cur into a deterministic state before unloading: dense
+        // reduce target for k, sparse + row-major + non-iso + 64-bit indices
+        // for A.  Container fields are then asserted to match expectations.
         //----------------------------------------------------------------------
 
+        // 1) Compute degrees with GraphBLAS reduce *before* unloading the
+        //    matrix.  Zero-fill k_vec first so isolated rows produce 0.0
+        //    (otherwise reduce leaves them as missing entries).
         GRB_TRY (GrB_Vector_new (&k_vec, GrB_FP64, n_cur)) ;
-        GRB_TRY (GrB_Vector_new (&v,     GrB_FP64, n_cur)) ;
-
-        //----------------------------------------------------------------------
-        // compute k_arr[0..n_cur-1] from A_cur (includes self-loops in A_agg)
-        //----------------------------------------------------------------------
-
-        GRB_TRY (GrB_Matrix_reduce_Monoid (k_vec, NULL, NULL,
+        GRB_TRY (GrB_assign (k_vec, NULL, NULL, (double) 0.0,
+            GrB_ALL, n_cur, NULL)) ;
+        GRB_TRY (GrB_Matrix_reduce_Monoid (k_vec, NULL, GrB_PLUS_FP64,
             GrB_PLUS_MONOID_FP64, A_cur, NULL)) ;
-        for (GrB_Index i = 0 ; i < n_cur ; i++)
+
+#if LG_SUITESPARSE_GRAPHBLAS_V10
+        // Unload k_vec into k_arr (dense FP64 array of length n_cur).
+        // The previous k_arr workspace allocation is replaced by a pointer
+        // owned by GraphBLAS until LAGraph_Free reclaims it.
+        LAGraph_Free ((void **) &k_arr, NULL) ;
+        do {
+            GrB_Type k_type = NULL ;
+            uint64_t k_n = 0, k_size = 0 ;
+            int      k_handling = GrB_DEFAULT ;
+            void    *k_void = NULL ;
+            GRB_TRY (GxB_Vector_unload (k_vec, &k_void, &k_type, &k_n,
+                &k_size, &k_handling, NULL)) ;
+            LG_ASSERT_MSG (k_type == GrB_FP64 && k_n == n_cur,
+                GrB_INVALID_VALUE,
+                "k_vec unload: unexpected type or length") ;
+            k_arr = (double *) k_void ;
+        } while (0);
+
+        // 2) Force A_cur into the format we want, then unload into container.
+        //    Hints: sparse, row-major, non-iso, 64-bit row pointers/indices.
+        //    GxB_unload_Matrix_into_Container materializes pending work.
+        GRB_TRY (GrB_Matrix_set_INT32 (
+            A_cur, GxB_SPARSE, GxB_SPARSITY_CONTROL)) ;
+        GRB_TRY (GrB_Matrix_set_INT32 (
+            A_cur, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
+        GRB_TRY (GrB_Matrix_set_INT32 (A_cur, false, GxB_ISO)) ;
+        GRB_TRY (GrB_Matrix_set_INT32 (A_cur, 64, GxB_OFFSET_INTEGER_HINT)) ;
+        GRB_TRY (GrB_Matrix_set_INT32 (A_cur, 64, GxB_ROWINDEX_INTEGER_HINT)) ;
+        GRB_TRY (GrB_Matrix_set_INT32 (A_cur, 64, GxB_COLINDEX_INTEGER_HINT)) ;
+        GRB_TRY (GrB_wait (A_cur, GrB_MATERIALIZE)) ;
+
+        GRB_TRY (GxB_unload_Matrix_into_Container (A_cur, cont, NULL)) ;
+        LG_ASSERT_MSG (cont->format == GxB_SPARSE,
+            GrB_INVALID_VALUE, "A_cur container is not sparse CSR") ;
+        LG_ASSERT_MSG (cont->orientation == GrB_ROWMAJOR,
+            GrB_INVALID_VALUE, "A_cur container is not row-major") ;
+        LG_ASSERT_MSG (!cont->iso,
+            GrB_INVALID_VALUE, "A_cur container unexpectedly iso") ;
+
+        // Unload row pointers, column indices, and values from the container's
+        // internal vectors into raw arrays for the inner-loop CSR walks.
+        // We hold these arrays as our own until reload below.
+        GrB_Type   pty = NULL,  ity = NULL,  xty = NULL ;
+        uint64_t   pn  = 0,     in_  = 0,    xn  = 0 ;
+        uint64_t   psz = 0,     isz = 0,     xsz = 0 ;
+        int        ph  = GrB_DEFAULT, ih = GrB_DEFAULT, xh = GrB_DEFAULT ;
+        void      *pv  = NULL,  *iv  = NULL, *xv  = NULL ;
+
+        GRB_TRY (GxB_Vector_unload (cont->p, &pv, &pty, &pn, &psz, &ph, NULL));
+        GRB_TRY (GxB_Vector_unload (cont->i, &iv, &ity, &in_, &isz, &ih, NULL));
+        GRB_TRY (GxB_Vector_unload (cont->x, &xv, &xty, &xn, &xsz, &xh, NULL));
+        // Offsets must be 64-bit unsigned (we forced via INTEGER_HINT).
+        // Column indices may come back as either UINT64 or INT64 depending
+        // on SuiteSparse's internal choice; both have identical bit width
+        // and represent non-negative indices, so reinterpret cast is safe.
+        // Values must be FP64 since A_agg was constructed as FP64.
+        LG_ASSERT_MSG (pty == GrB_UINT64,
+            GrB_INVALID_VALUE, "container offsets are not 64-bit unsigned") ;
+        LG_ASSERT_MSG (ity == GrB_UINT64 || ity == GrB_INT64,
+            GrB_INVALID_VALUE, "container indices are not 64-bit") ;
+        LG_ASSERT_MSG (xty == GrB_FP64,
+            GrB_INVALID_VALUE, "container values are not FP64") ;
+        Ap = (GrB_Index *) pv ;
+        Aj = (GrB_Index *) iv ;
+        Ax = (double    *) xv ;
+#else
+        // Fallback for SuiteSparse:GraphBLAS < v10.0.0 (no Container API):
+        // copy degrees out of k_vec, then materialize CSR via extractTuples
+        // + counting-sort scatter.  k_vec contains entries only for non-zero
+        // rows, so zero-fill k_arr first then scatter.
+        for (GrB_Index i = 0 ; i < n_cur ; i++) k_arr[i] = 0.0 ;
         {
-            GrB_Info info = GrB_Vector_extractElement_FP64 (&k_arr[i], k_vec, i) ;
-            if (info == GrB_NO_VALUE) k_arr[i] = 0.0 ;
+            GrB_Index nvk = n_cur ;
+            GrB_Index *Ik = NULL ;
+            double    *Xk = NULL ;
+            LG_TRY (LAGraph_Malloc ((void **) &Ik, n_cur, sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Xk, n_cur, sizeof (double),    msg)) ;
+            GRB_TRY (GrB_Vector_extractTuples_FP64 (Ik, Xk, &nvk, k_vec)) ;
+            for (GrB_Index t = 0 ; t < nvk ; t++) k_arr[Ik[t]] = Xk[t] ;
+            LAGraph_Free ((void **) &Ik, NULL) ;
+            LAGraph_Free ((void **) &Xk, NULL) ;
         }
+
+        GrB_Index Anz ;
+        GRB_TRY (GrB_Matrix_nvals (&Anz, A_cur)) ;
+        if (Ap_cap < n_cur + 1)
+        {
+            LAGraph_Free ((void **) &Ap,     NULL) ;
+            LAGraph_Free ((void **) &cursor, NULL) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Ap,     n_cur + 1,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &cursor, n_cur,
+                sizeof (GrB_Index), msg)) ;
+            Ap_cap = n_cur + 1 ;
+        }
+        if (Anz_cap < Anz)
+        {
+            GrB_Index newcap = (Anz < 16) ? 16 : Anz ;
+            LAGraph_Free ((void **) &Aj,    NULL) ;
+            LAGraph_Free ((void **) &Ax,    NULL) ;
+            LAGraph_Free ((void **) &I_tup, NULL) ;
+            LAGraph_Free ((void **) &J_tup, NULL) ;
+            LAGraph_Free ((void **) &X_tup, NULL) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Aj,    newcap,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &Ax,    newcap,
+                sizeof (double),    msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &I_tup, newcap,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &J_tup, newcap,
+                sizeof (GrB_Index), msg)) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X_tup, newcap,
+                sizeof (double),    msg)) ;
+            Anz_cap = newcap ;
+        }
+
+        memset (Ap, 0, (n_cur + 1) * sizeof (GrB_Index)) ;
+        if (Anz > 0)
+        {
+            GrB_Index nout = Anz ;
+            GRB_TRY (GrB_Matrix_extractTuples_FP64 (I_tup, J_tup, X_tup,
+                &nout, A_cur)) ;
+            for (GrB_Index t = 0 ; t < Anz ; t++) Ap[I_tup[t] + 1]++ ;
+            for (GrB_Index r = 0 ; r < n_cur ; r++) Ap[r + 1] += Ap[r] ;
+            memcpy (cursor, Ap, n_cur * sizeof (GrB_Index)) ;
+            for (GrB_Index t = 0 ; t < Anz ; t++)
+            {
+                GrB_Index r = I_tup[t] ;
+                GrB_Index dst = cursor[r]++ ;
+                Aj[dst] = J_tup[t] ;
+                Ax[dst] = X_tup[t] ;
+            }
+        }
+#endif
 
         //----------------------------------------------------------------------
         // PHASE 1: Local Move Phase
@@ -286,23 +464,17 @@ int LAGraph_Leiden
 
                 int64_t ci = c_arr[i] ;
 
-                GRB_TRY (GrB_Col_extract (v, NULL, NULL, A_cur,
-                    GrB_ALL, n_cur, i, GrB_DESC_T0)) ;
-
-                GrB_Index nvals ;
-                GRB_TRY (GrB_Vector_nvals (&nvals, v)) ;
-                if (nvals == 0) continue ;
-
-                GRB_TRY (GrB_Vector_extractTuples_FP64 (
-                    nbrs_j, nbrs_v, &nvals, v)) ;
+                GrB_Index row_begin = Ap[i] ;
+                GrB_Index row_end   = Ap[i + 1] ;
+                if (row_begin == row_end) continue ;
 
                 // Temporarily remove i from community ci.
                 k_comm[ci] -= ki ;
 
                 GrB_Index ndirty = 0 ;
-                for (GrB_Index t = 0 ; t < nvals ; t++)
+                for (GrB_Index t = row_begin ; t < row_end ; t++)
                 {
-                    GrB_Index j = nbrs_j[t] ;
+                    GrB_Index j = Aj[t] ;
                     if (j == i) continue ;          // skip self-loop (in A_agg)
                     int64_t cj = c_arr[j] ;
                     if (!dirty[cj])
@@ -311,7 +483,7 @@ int LAGraph_Leiden
                         dirty_list[ndirty++] = (GrB_Index) cj ;
                         T_local[cj]          = 0.0 ;
                     }
-                    T_local[cj] += nbrs_v[t] ;
+                    T_local[cj] += Ax[t] ;
                 }
 
                 double  T_ci      = dirty[ci] ? T_local[ci] : 0.0 ;
@@ -357,11 +529,11 @@ int LAGraph_Leiden
         //----------------------------------------------------------------------
 
         memcpy (c_p1, c_arr, n_cur * sizeof (int64_t)) ;
+        memcpy (k_ref_comm, k_arr, n_cur * sizeof (double)) ;
 
         for (GrB_Index i = 0 ; i < n_cur ; i++)
         {
             c_ref[i]      = (int64_t) i ;
-            k_ref_comm[i] = k_arr[i] ;
         }
 
         changed = true ;
@@ -376,22 +548,16 @@ int LAGraph_Leiden
                 int64_t pi     = c_p1[i] ;
                 int64_t ci_ref = c_ref[i] ;
 
-                GRB_TRY (GrB_Col_extract (v, NULL, NULL, A_cur,
-                    GrB_ALL, n_cur, i, GrB_DESC_T0)) ;
-
-                GrB_Index nvals ;
-                GRB_TRY (GrB_Vector_nvals (&nvals, v)) ;
-                if (nvals == 0) continue ;
-
-                GRB_TRY (GrB_Vector_extractTuples_FP64 (
-                    nbrs_j, nbrs_v, &nvals, v)) ;
+                GrB_Index row_begin = Ap[i] ;
+                GrB_Index row_end   = Ap[i + 1] ;
+                if (row_begin == row_end) continue ;
 
                 k_ref_comm[ci_ref] -= ki ;
 
                 GrB_Index ndirty = 0 ;
-                for (GrB_Index t = 0 ; t < nvals ; t++)
+                for (GrB_Index t = row_begin ; t < row_end ; t++)
                 {
-                    GrB_Index j = nbrs_j[t] ;
+                    GrB_Index j = Aj[t] ;
                     if (j == i) continue ;              // skip self-loop
                     if (c_p1[j] != pi) continue ;       // cross-parent: skip
 
@@ -402,7 +568,7 @@ int LAGraph_Leiden
                         dirty_list[ndirty++] = (GrB_Index) cj_ref ;
                         T_local[cj_ref]      = 0.0 ;
                     }
-                    T_local[cj_ref] += nbrs_v[t] ;
+                    T_local[cj_ref] += Ax[t] ;
                 }
 
                 double  T_ci_ref    = dirty[ci_ref] ? T_local[ci_ref] : 0.0 ;
@@ -480,28 +646,48 @@ int LAGraph_Leiden
 
         for (GrB_Index i = 0 ; i < n ; i++)
         {
-            o_comm[i] = (GrB_Index) c_ref[o_comm[i]] ;
+            o_comm[i] = c_ref[o_comm[i]] ;
         }
+
+        //----------------------------------------------------------------------
+        // Reload A_cur from the container before any further GraphBLAS use
+        // (Phase 3 mxm or next-level unload).  Ownership of Ap/Aj/Ax returns
+        // to GraphBLAS; we null our pointers so LG_FREE_WORK won't double-free.
+        // No-op on the v9 fallback (A_cur was never unloaded).
+        //----------------------------------------------------------------------
+
+#if LG_SUITESPARSE_GRAPHBLAS_V10
+        GRB_TRY (GxB_Vector_load (cont->p, (void **) &Ap, pty,
+            pn, psz, ph, NULL)) ;
+        Ap = NULL ;
+        GRB_TRY (GxB_Vector_load (cont->i, (void **) &Aj, ity,
+            in_, isz, ih, NULL)) ;
+        Aj = NULL ;
+        GRB_TRY (GxB_Vector_load (cont->x, (void **) &Ax, xty,
+            xn, xsz, xh, NULL)) ;
+        Ax = NULL ;
+        GRB_TRY (GxB_load_Matrix_from_Container (A_cur, cont, NULL)) ;
+#endif
 
         //----------------------------------------------------------------------
         // PHASE 3: Aggregation — build coarsened graph if communities merged
         //----------------------------------------------------------------------
 
-        GrB_free (&k_vec) ;  k_vec = NULL ;
-        GrB_free (&v) ;      v     = NULL ;
-
         if (K_ref < n_cur)
         {
             outer_changed = true ;
 
-            // S_mat: n_cur × K_ref indicator matrix; S[i, c_ref[i]] = 1
+            // S_mat: n_cur × K_ref indicator matrix; S[i, c_ref[i]] = 1 for
+            // every i.  All values are 1.0, so use GxB_Matrix_build_Scalar
+            // and a shared scalar instead of materializing a 1.0-array.
+            //   rows: iota (precomputed [0..n-1], reused)
+            //   cols: c_ref reinterpret-cast to GrB_Index*.  c_ref values
+            //         are non-negative community labels in [0, K_ref); on
+            //         all targeted platforms int64_t and uint64_t share the
+            //         same width and representation for non-negative values.
             GRB_TRY (GrB_Matrix_new (&S_mat, GrB_FP64, n_cur, K_ref)) ;
-            for (GrB_Index i = 0 ; i < n_cur ; i++)
-            {
-                GRB_TRY (GrB_Matrix_setElement_FP64 (
-                    S_mat, 1.0, i, (GrB_Index) c_ref[i])) ;
-            }
-            GRB_TRY (GrB_Matrix_wait (S_mat, GrB_MATERIALIZE)) ;
+            GRB_TRY (GxB_Matrix_build_Scalar (S_mat, iota,
+                (GrB_Index *) c_ref, one_scalar, n_cur)) ;
 
             // A_temp = A_cur * S  (n_cur × K_ref)
             GRB_TRY (GrB_Matrix_new (&A_temp, GrB_FP64, n_cur, K_ref)) ;
@@ -525,15 +711,23 @@ int LAGraph_Leiden
     }
 
     //--------------------------------------------------------------------------
-    // Build output GrB_Vector from o_comm
-    // (o_comm values are already relabeled 0..K_final-1 from the last iteration)
+    // Build output GrB_Vector from o_comm with move semantics: hand the
+    // o_comm buffer directly to GraphBLAS (no copy) and null our pointer so
+    // LG_FREE_WORK doesn't double-free.  o_comm values are already relabeled
+    // 0..K_final-1 from the last iteration; the loaded vector is "full"
+    // (every index has a value), so set sparsity hint accordingly.
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_Vector_new (c_handle, GrB_INT64, n)) ;
-    for (GrB_Index i = 0 ; i < n ; i++)
-    {
-        GRB_TRY (GrB_Vector_setElement_INT64 (*c_handle, (int64_t) o_comm[i], i)) ;
-    }
+#if LG_SUITESPARSE_GRAPHBLAS_V10
+    GRB_TRY (GrB_set (*c_handle, GxB_FULL, GxB_SPARSITY_CONTROL)) ;
+    GRB_TRY (GxB_Vector_load (*c_handle, (void **) &o_comm, GrB_INT64,
+        n, n * sizeof (int64_t), GrB_DEFAULT, NULL)) ;
+    o_comm = NULL ;     // ownership transferred to *c_handle
+#else
+    GRB_TRY (GrB_Vector_build_INT64 (*c_handle, iota, o_comm, n,
+        GrB_FIRST_INT64)) ;
+#endif
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
