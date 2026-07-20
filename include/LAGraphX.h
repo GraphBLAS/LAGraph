@@ -1318,6 +1318,89 @@ int LAGr_EdgeBetweennessCentrality
 ) ;
 
 //------------------------------------------------------------------------------
+// Closeness centrality
+//------------------------------------------------------------------------------
+
+typedef enum
+{
+//  CC_DEFAULT = 0,       // select algorithm automatically (FUTURE)
+    CC_BFS = 1,           // unweighted BFS (unit edge weights)
+    CC_SSSP = 2,          // delta-stepping SSSP (non-negative weights)
+    CC_BELLMAN_FORD = 3,  // Bellman-Ford (general weights, negative-cycle check)
+    CC_FLOYD_WARSHALL = 4 // Floyd-Warshall (FW) APSP
+} LAGraph_cc_algo_t ;
+
+LAGRAPHX_PUBLIC
+int LAGr_ClosenessCentrality
+(
+    // output:
+    GrB_Vector *centrality,
+    // input:
+    LAGraph_Graph G,
+    GrB_Vector sources,     // nodes to score; NULL or empty => all nodes
+    bool use_weights,       // if true, use edge weights in shortest paths
+    LAGraph_cc_algo_t algorithm,    // shortest-path algorithm to use
+    GrB_Scalar Delta,       // delta for SSSP; if NULL, derived from G->emin
+    char *msg
+) ; 
+
+//------------------------------------------------------------------------------
+// Katz centrality
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_KatzCentrality
+(
+    // output:
+    GrB_Vector *centrality,
+    int64_t *iters,
+    // input:
+    LAGraph_Graph G,
+    double alpha,
+    double beta,
+    int64_t max_iter,
+    double tol,
+    bool normalize,
+    bool use_weights,
+    char *msg
+) ; 
+
+//------------------------------------------------------------------------------
+// harmonic centrality (approximate via HLL sketches)
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_HarmonicCentrality
+(
+    // outputs:
+    GrB_Vector *scores,            // FP64 harmonic centrality scores
+    GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
+                                   // (pass NULL, not yet implemented)
+    // inputs:
+    const LAGraph_Graph G,         // input graph
+    const GrB_Vector node_weights, // participating nodes and their weights
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// harmonic centrality (exact via BFS)
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_HarmonicCentrality_exact
+(
+    // outputs:
+    GrB_Vector *scores,            // FP64 harmonic centrality scores
+    GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
+                                   // (pass NULL, not yet implemented)
+    // inputs:
+    const LAGraph_Graph G,         // input graph
+    const GrB_Vector nodes,        // nodes to calculate centrality of
+    const GrB_Vector node_weights, // participating nodes and their weights
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
 // graph clustering with quality metrics
 //------------------------------------------------------------------------------
 
@@ -1354,8 +1437,8 @@ int LAGr_PartitionQuality(
     double *cov,     // Coverage
     double *perf,    // Performance
     // Inputs
-    GrB_Vector c,    // Cluster vector where c[i] = j means vertex i is in cluster j
-    LAGraph_Graph G, // original graph
+    const GrB_Vector c,    // Cluster vector where c[i] = j means vertex i is in cluster j
+    const LAGraph_Graph G, // original graph
     char *msg
 );
 
@@ -1367,6 +1450,17 @@ int LAGr_Modularity(
     double gamma,       // Resolution parameter
     GrB_Vector c,       // Cluster vector where c[i] = j means vertex i is in cluster j
     LAGraph_Graph G,    // original graph
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
+int LAGraph_Leiden
+(
+    // output:
+    GrB_Vector *c_handle,   // c[i] = community label (0..K-1) for node i
+    // input:
+    LAGraph_Graph G,        // input graph (must be symmetric, no self-loops)
+    uint64_t seed,          // random seed (reserved for future use)
     char *msg
 ) ;
 

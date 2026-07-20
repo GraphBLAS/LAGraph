@@ -13,7 +13,7 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
-// Contributed by Gabriel Gomez, Texas A&M University
+// Contributed by Gabriel A. Gomez, Texas A&M University
 
 //------------------------------------------------------------------------------
 
