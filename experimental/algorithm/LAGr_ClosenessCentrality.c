@@ -49,7 +49,7 @@ int LAGr_ClosenessCentrality(
     LAGraph_Graph G,
     GrB_Vector sources,  // nodes to score; NULL or empty => all nodes
     bool use_weights,    // if true, use edge weights in shortest paths
-    cc_algo_t algorithm, // shortest-path algorithm to use
+    LAGraph_cc_algo_t algorithm, // shortest-path algorithm to use
     GrB_Scalar Delta,    // delta for SSSP; if NULL, derived from G->emin
     char *msg)
 {
@@ -87,7 +87,7 @@ int LAGr_ClosenessCentrality(
         use_all_nodes = (source_count == 0);
     }
 
-    cc_algo_t algo = algorithm;
+    LAGraph_cc_algo_t algo = algorithm;
 
     // set up G_AT: graph over the incoming adjacency. Running any shortest-path
     // algorithm from v on G_AT traverses incoming edges, giving distances to

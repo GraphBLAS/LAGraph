@@ -72,7 +72,7 @@ int main (int argc, char **argv)
         return (GrB_INVALID_VALUE) ;
     }
 
-    cc_algo_t  algorithm   = (cc_algo_t) atoi (argv [2]) ;
+    LAGraph_cc_algo_t  algorithm   = (LAGraph_cc_algo_t) atoi (argv [2]) ;
     bool       use_weights = false ;
     double     delta_val   = -1 ;
     int        num_sources = 0 ;
