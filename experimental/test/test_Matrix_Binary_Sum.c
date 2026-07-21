@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Matrix_Binary_Sum.c:  test LAGraph_Matrix_Binary_Sum
+// LAGraph/experimental/test/test_Matrix_Binary_Sum.c:  test LAGraph_Matrix_Binary_Sum
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
@@ -17,6 +17,7 @@
 
 #include "LAGraph_test.h"
 #include "LG_internal.h"
+#include "LAGraphX.h"
 
 //------------------------------------------------------------------------------
 // global variables

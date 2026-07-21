@@ -73,6 +73,57 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
+// LAGraph_Matrix_Sum: sum an array of matrices with a binary operator
+//------------------------------------------------------------------------------
+
+// LAGraph_Matrix_Sum combines an array of matrices into a single matrix C.  The
+// tuples of all input matrices are concatenated into a single buffer and passed
+// to GrB_Matrix_build, using the binary operator dup to combine any duplicate
+// (i,j) entries.  With dup = GrB_PLUS_FP64 (for example) this computes the
+// element-wise sum of all the matrices.  All input matrices must have identical
+// dimensions and identical built-in type; C is created with that same type and
+// dimensions.  If dup is NULL, duplicates are handled per GrB_Matrix_build.
+
+LAGRAPHX_PUBLIC
+int LAGraph_Matrix_Sum
+(
+    // output:
+    GrB_Matrix *C,          // result = combination of all input matrices
+    // input:
+    GrB_Matrix *Matrices,   // array of nmatrices input matrices
+    GrB_Index nmatrices,    // number of matrices in the array (must be >= 1)
+    GrB_BinaryOp dup,       // operator to combine duplicate (i,j) entries
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_Matrix_Binary_Sum: sum an array of matrices by binary reduction
+//------------------------------------------------------------------------------
+
+// LAGraph_Matrix_Binary_Sum combines an array of matrices into a single matrix
+// C, computing the same result as LAGraph_Matrix_Sum but with a different
+// technique: a pairwise binary reduction tree built from GrB_eWiseAdd (as in
+// the GraphChallenge "Anonymized Network Sensing" paper, "Binary Summation of
+// Traffic Matrices").  At each level the matrices are summed in disjoint
+// adjacent pairs using dup; an unpaired (odd) trailing matrix is carried up to
+// the next level unchanged, until a single matrix remains.  The independent
+// pair-sums within a level are parallelized across LG_nthreads_outer threads.
+// Unlike LAGraph_Matrix_Sum, dup must be non-NULL, since GrB_eWiseAdd requires
+// a binary operator.
+
+LAGRAPHX_PUBLIC
+int LAGraph_Matrix_Binary_Sum
+(
+    // output:
+    GrB_Matrix *C,          // result = combination of all input matrices
+    // input:
+    GrB_Matrix *Matrices,   // array of nmatrices input matrices
+    GrB_Index nmatrices,    // number of matrices in the array (must be >= 1)
+    GrB_BinaryOp dup,       // operator to combine (i,j) entries (must be != NULL)
+    char *msg
+) ;
+
 //****************************************************************************
 // binary file I/O
 //****************************************************************************
