@@ -1,0 +1,479 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - LAGraph code coverage report. Commit id: 7543de1. Current time (UTC): 2026-07-21T18:04:51Z - experimental/algorithm/LAGraph_RichClubCoefficient.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">experimental/algorithm</a> - LAGraph_RichClubCoefficient.c<span style="font-size: 80%;"> (source / <a href="LAGraph_RichClubCoefficient.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">LAGraph code coverage report. Commit id: 7543de1. Current time (UTC): 2026-07-21T18:04:51Z</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">81</td>
+            <td class="headerCovTableEntry">81</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2026-07-21 18:11:56</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //------------------------------------------------------------------------------</a>
+<a name="2"><span class="lineNum">       2 </span>            : // LAGraph_RichClubCoefficient: rich club coefficient of a graph</a>
+<a name="3"><span class="lineNum">       3 </span>            : //------------------------------------------------------------------------------</a>
+<a name="4"><span class="lineNum">       4 </span>            : </a>
+<a name="5"><span class="lineNum">       5 </span>            : // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.</a>
+<a name="6"><span class="lineNum">       6 </span>            : // SPDX-License-Identifier: BSD-2-Clause</a>
+<a name="7"><span class="lineNum">       7 </span>            : //</a>
+<a name="8"><span class="lineNum">       8 </span>            : // For additional details (including references to third party source code and</a>
+<a name="9"><span class="lineNum">       9 </span>            : // other files) see the LICENSE file or contact permission@sei.cmu.edu. See</a>
+<a name="10"><span class="lineNum">      10 </span>            : // Contributors.txt for a full list of contributors. Created, in part, with</a>
+<a name="11"><span class="lineNum">      11 </span>            : // funding and support from the U.S. Government (see Acknowledgments.txt file).</a>
+<a name="12"><span class="lineNum">      12 </span>            : // DM22-0790</a>
+<a name="13"><span class="lineNum">      13 </span>            : </a>
+<a name="14"><span class="lineNum">      14 </span>            : // Contributed by Gabriel Gomez, Texas A&amp;M University</a>
+<a name="15"><span class="lineNum">      15 </span>            : </a>
+<a name="16"><span class="lineNum">      16 </span>            : //------------------------------------------------------------------------------</a>
+<a name="17"><span class="lineNum">      17 </span>            : </a>
+<a name="18"><span class="lineNum">      18 </span>            : // Get the rich club coefficient of a graph.</a>
+<a name="19"><span class="lineNum">      19 </span>            : </a>
+<a name="20"><span class="lineNum">      20 </span>            : // Given a Symetric Graph with no self edges, LAGraph_RichClubCoefficient will</a>
+<a name="21"><span class="lineNum">      21 </span>            : // calculate the rich club coefficients of the graph. </a>
+<a name="22"><span class="lineNum">      22 </span>            : </a>
+<a name="23"><span class="lineNum">      23 </span>            : // The values will be output as a sparse GrB_Vector, the rich club coefficient </a>
+<a name="24"><span class="lineNum">      24 </span>            : // of k will be found at the closest entry at or above k.</a>
+<a name="25"><span class="lineNum">      25 </span>            : </a>
+<a name="26"><span class="lineNum">      26 </span>            : // The G-&gt;out_degree cached property must be defined for this method.</a>
+<a name="27"><span class="lineNum">      27 </span>            : </a>
+<a name="28"><span class="lineNum">      28 </span>            : // References:</a>
+<a name="29"><span class="lineNum">      29 </span>            : </a>
+<a name="30"><span class="lineNum">      30 </span>            : // Julian J. McAuley, Luciano da Fontoura Costa, and Tibério S. Caetano, “The </a>
+<a name="31"><span class="lineNum">      31 </span>            : // rich-club phenomenon across complex network hierarchies”, Applied Physics </a>
+<a name="32"><span class="lineNum">      32 </span>            : // Letters Vol 91 Issue 8, August 2007. https://arxiv.org/abs/physics/0701290</a>
+<a name="33"><span class="lineNum">      33 </span>            : </a>
+<a name="34"><span class="lineNum">      34 </span>            : #define LG_FREE_WORK                                    \</a>
+<a name="35"><span class="lineNum">      35 </span>            : {                                                       \</a>
+<a name="36"><span class="lineNum">      36 </span>            :     /* free any workspace used here */                  \</a>
+<a name="37"><span class="lineNum">      37 </span>            :     GrB_free(&amp;D) ;                                      \</a>
+<a name="38"><span class="lineNum">      38 </span>            :     GrB_free(&amp;P) ;                                      \</a>
+<a name="39"><span class="lineNum">      39 </span>            :     GrB_free(&amp;A_deg) ;                                  \</a>
+<a name="40"><span class="lineNum">      40 </span>            :     GrB_free(&amp;degrees) ;                                \</a>
+<a name="41"><span class="lineNum">      41 </span>            :     GrB_free(&amp;deg_x) ;                                  \</a>
+<a name="42"><span class="lineNum">      42 </span>            :     GrB_free(&amp;node_edges) ;                             \</a>
+<a name="43"><span class="lineNum">      43 </span>            :     GrB_free(&amp;node_edges_x) ;                           \</a>
+<a name="44"><span class="lineNum">      44 </span>            :     GrB_free(&amp;ones_v) ;                                 \</a>
+<a name="45"><span class="lineNum">      45 </span>            :     GrB_free(&amp;edges_per_deg) ;                          \</a>
+<a name="46"><span class="lineNum">      46 </span>            :     GrB_free(&amp;verts_per_deg) ;                          \</a>
+<a name="47"><span class="lineNum">      47 </span>            :     GrB_free(&amp;iseq_2lt) ;                               \</a>
+<a name="48"><span class="lineNum">      48 </span>            :     GrB_free(&amp;plus_2le) ;                               \</a>
+<a name="49"><span class="lineNum">      49 </span>            :     GrB_free(&amp;rcCalculation) ;                          \</a>
+<a name="50"><span class="lineNum">      50 </span>            :     GrB_free(&amp;ramp_v) ;                                 \</a>
+<a name="51"><span class="lineNum">      51 </span>            :     LAGraph_Free(&amp;a_space, NULL) ;                      \</a>
+<a name="52"><span class="lineNum">      52 </span>            : }</a>
+<a name="53"><span class="lineNum">      53 </span>            : </a>
+<a name="54"><span class="lineNum">      54 </span>            : </a>
+<a name="55"><span class="lineNum">      55 </span>            : #define LG_FREE_ALL                         \</a>
+<a name="56"><span class="lineNum">      56 </span>            : {                                           \</a>
+<a name="57"><span class="lineNum">      57 </span>            :     /* free any workspace used here */      \</a>
+<a name="58"><span class="lineNum">      58 </span>            :     LG_FREE_WORK ;                          \</a>
+<a name="59"><span class="lineNum">      59 </span>            :     /* free all the output variable(s) */   \</a>
+<a name="60"><span class="lineNum">      60 </span>            :     GrB_free (rccs) ;      \</a>
+<a name="61"><span class="lineNum">      61 </span>            : }</a>
+<a name="62"><span class="lineNum">      62 </span>            : </a>
+<a name="63"><span class="lineNum">      63 </span>            : #include &quot;LG_internal.h&quot;</a>
+<a name="64"><span class="lineNum">      64 </span>            : #include &quot;LAGraphX.h&quot;</a>
+<a name="65"><span class="lineNum">      65 </span>            : </a>
+<a name="66"><span class="lineNum">      66 </span>            : typedef void (*LAGraph_binary_function) (void *, const void *, const void *) ;</a>
+<a name="67"><span class="lineNum">      67 </span>            : </a>
+<a name="68"><span class="lineNum">      68 </span>            : #define ISEQ_2ISLT                                                          \</a>
+<a name="69"><span class="lineNum">      69 </span>            :     &quot;void LG_RCC_iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y) \n&quot;\</a>
+<a name="70"><span class="lineNum">      70 </span>            :     &quot;{                                                                      \n&quot;\</a>
+<a name="71"><span class="lineNum">      71 </span>            :         &quot;(*z) = (int64_t)((*x &lt; *y) + (*x &lt;= *y)) ;                         \n&quot;\</a>
+<a name="72"><span class="lineNum">      72 </span>            :     &quot;}&quot;</a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">    5816980 : void LG_RCC_iseq_2islt(int64_t *z, const int64_t *x, const int64_t *y)</span></a>
+<a name="74"><span class="lineNum">      74 </span>            : {</a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">    5816980 :     (*z) = (int64_t)((*x &lt; *y) + (*x &lt;= *y)) ;</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">    5816980 : }</span></a>
+<a name="77"><span class="lineNum">      77 </span>            : </a>
+<a name="78"><span class="lineNum">      78 </span>            : #define RICH_CLUB_FORMULA                                                      \</a>
+<a name="79"><span class="lineNum">      79 </span>            :     &quot;void LG_RCC_rich_club_formula(double *z, const int64_t *x, const int64_t *y) \n&quot;\</a>
+<a name="80"><span class="lineNum">      80 </span>            :     &quot;{                                                                      \n&quot;\</a>
+<a name="81"><span class="lineNum">      81 </span>            :     &quot;   (*z) = ((double)(*x)) / (((double)(*y)) * (((double)(*y)) - 1.0)) ; \n&quot;\</a>
+<a name="82"><span class="lineNum">      82 </span>            :     &quot;}&quot;</a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">        126 : void LG_RCC_rich_club_formula(double *z, const int64_t *x, const int64_t *y)</span></a>
+<a name="84"><span class="lineNum">      84 </span>            : {</a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">        126 :     (*z) = ((double)(*x)) / (((double)(*y)) * (((double)(*y)) - 1.0));</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">        126 : } </span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">        402 : int LAGraph_RichClubCoefficient</span></a>
+<a name="88"><span class="lineNum">      88 </span>            : (</a>
+<a name="89"><span class="lineNum">      89 </span>            :     // output:</a>
+<a name="90"><span class="lineNum">      90 </span>            :     //rccs(i): rich club coefficent of i</a>
+<a name="91"><span class="lineNum">      91 </span>            :     GrB_Vector *rccs,    </a>
+<a name="92"><span class="lineNum">      92 </span>            : </a>
+<a name="93"><span class="lineNum">      93 </span>            :     // input: </a>
+<a name="94"><span class="lineNum">      94 </span>            :     LAGraph_Graph G, //input graph</a>
+<a name="95"><span class="lineNum">      95 </span>            :     char *msg</a>
+<a name="96"><span class="lineNum">      96 </span>            : )</a>
+<a name="97"><span class="lineNum">      97 </span>            : {</a>
+<a name="98"><span class="lineNum">      98 </span>            :     //--------------------------------------------------------------------------</a>
+<a name="99"><span class="lineNum">      99 </span>            :     // Declorations</a>
+<a name="100"><span class="lineNum">     100 </span>            :     //--------------------------------------------------------------------------</a>
+<a name="101"><span class="lineNum">     101 </span><span class="lineCov">        402 :     LG_CLEAR_MSG ;</span></a>
+<a name="102"><span class="lineNum">     102 </span>            : </a>
+<a name="103"><span class="lineNum">     103 </span>            :     // n x n Adjacency Matrix</a>
+<a name="104"><span class="lineNum">     104 </span>            :     // With values cooresponding to the degree of its column</a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">        402 :     GrB_Matrix A_deg = NULL;</span></a>
+<a name="106"><span class="lineNum">     106 </span>            : </a>
+<a name="107"><span class="lineNum">     107 </span>            :     // n x n Diagonal Matrix</a>
+<a name="108"><span class="lineNum">     108 </span>            :     // entries corresponding to degrees.</a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">        402 :     GrB_Matrix D = NULL;</span></a>
+<a name="110"><span class="lineNum">     110 </span>            : </a>
+<a name="111"><span class="lineNum">     111 </span>            :     // n degrees vector</a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">        402 :     GrB_Vector degrees = NULL, deg_x = NULL;</span></a>
+<a name="113"><span class="lineNum">     113 </span>            : </a>
+<a name="114"><span class="lineNum">     114 </span>            :     // n x 1</a>
+<a name="115"><span class="lineNum">     115 </span>            :     // contains the number of edges for which the ith node is</a>
+<a name="116"><span class="lineNum">     116 </span>            :     // the smallest degree node * 2 + # edges w/ same degree as the other node</a>
+<a name="117"><span class="lineNum">     117 </span>            :     // to account for double counting of edges w/ same degree as the other node.</a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">        402 :     GrB_Vector node_edges = NULL, node_edges_x = NULL;</span></a>
+<a name="119"><span class="lineNum">     119 </span>            : </a>
+<a name="120"><span class="lineNum">     120 </span>            :     // max_degree x 1</a>
+<a name="121"><span class="lineNum">     121 </span>            :     // the ith entry contains the number of edges whose lowest degree is i.</a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        402 :     GrB_Vector edges_per_deg = NULL;</span></a>
+<a name="123"><span class="lineNum">     123 </span>            : </a>
+<a name="124"><span class="lineNum">     124 </span>            :     // max_degree x 1</a>
+<a name="125"><span class="lineNum">     125 </span>            :     // the ith entry contains the number of verticies whose degree is i.</a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">        402 :     GrB_Vector verts_per_deg = NULL;</span></a>
+<a name="127"><span class="lineNum">     127 </span>            : </a>
+<a name="128"><span class="lineNum">     128 </span>            :     // edge_vec_nvals x 1</a>
+<a name="129"><span class="lineNum">     129 </span>            :     // Vector of ones</a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">        402 :     GrB_Vector ones_v = NULL;</span></a>
+<a name="131"><span class="lineNum">     131 </span>            : </a>
+<a name="132"><span class="lineNum">     132 </span>            :     // Ramp vector</a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">        402 :     GrB_Vector ramp_v = NULL;</span></a>
+<a name="134"><span class="lineNum">     134 </span>            : </a>
+<a name="135"><span class="lineNum">     135 </span>            :     // 2 * (x &lt; y) + (x == y)</a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">        402 :     GrB_BinaryOp iseq_2lt = NULL;</span></a>
+<a name="137"><span class="lineNum">     137 </span>            : </a>
+<a name="138"><span class="lineNum">     138 </span>            :     // [+].[iseq_2lt]</a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">        402 :     GrB_Semiring plus_2le = NULL;</span></a>
+<a name="140"><span class="lineNum">     140 </span>            : </a>
+<a name="141"><span class="lineNum">     141 </span>            :     // 2E_K / (N_k (N_k -1))</a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">        402 :     GrB_BinaryOp rcCalculation = NULL;</span></a>
+<a name="143"><span class="lineNum">     143 </span>            : </a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        402 :     GrB_Matrix A = NULL; // G-&gt;A, the adjacency matrix</span></a>
+<a name="145"><span class="lineNum">     145 </span>            : </a>
+<a name="146"><span class="lineNum">     146 </span>            :     // Matrix used for row reduction</a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">        402 :     GrB_Matrix P = NULL;</span></a>
+<a name="148"><span class="lineNum">     148 </span>            : </a>
+<a name="149"><span class="lineNum">     149 </span>            :     GrB_Index n ;</a>
+<a name="150"><span class="lineNum">     150 </span>            :     </a>
+<a name="151"><span class="lineNum">     151 </span>            :     GrB_Index edge_vec_nvals;</a>
+<a name="152"><span class="lineNum">     152 </span>            :     int64_t max_deg;</a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">        402 :     bool iso = false;</span></a>
+<a name="154"><span class="lineNum">     154 </span>            : </a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">        402 :     void *a_space = NULL;</span></a>
+<a name="156"><span class="lineNum">     156 </span>            :     </a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">        402 :     int64_t *node_edges_arr = NULL, *deg_arr = NULL, </span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">        402 :         *epd_arr = NULL, *ones = NULL, </span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">        402 :         *vpd_arr = NULL;</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">        402 :     GrB_Type epd_type = NULL, vpd_type = NULL;</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">        402 :     uint64_t epd_n = 0, vpd_n = 0, epd_size = 0, vpd_size = 0;</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">        402 :     int epd_h = 0, vpd_h = 0;</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">        402 :     GrB_Index *epd_index = NULL,  *vpd_index = NULL;</span></a>
+<a name="164"><span class="lineNum">     164 </span>            : </a>
+<a name="165"><span class="lineNum">     165 </span>            :     //--------------------------------------------------------------------------</a>
+<a name="166"><span class="lineNum">     166 </span>            :     // Check inputs</a>
+<a name="167"><span class="lineNum">     167 </span>            :     //--------------------------------------------------------------------------</a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">        402 :     LG_TRY (LAGraph_CheckGraph (G, msg)) ;</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">        402 :     LG_ASSERT (rccs != NULL, GrB_NULL_POINTER);</span></a>
+<a name="170"><span class="lineNum">     170 </span>            : </a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">        402 :     LG_ASSERT_MSG(</span></a>
+<a name="172"><span class="lineNum">     172 </span>            :         G-&gt;kind == LAGraph_ADJACENCY_UNDIRECTED, GrB_INVALID_VALUE, </a>
+<a name="173"><span class="lineNum">     173 </span>            :         &quot;G-&gt;A must be symmetric&quot;) ;</a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        402 :     LG_ASSERT_MSG (G-&gt;out_degree != NULL, GrB_EMPTY_OBJECT,</span></a>
+<a name="175"><span class="lineNum">     175 </span>            :         &quot;G-&gt;out_degree must be defined&quot;) ;</a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        402 :     LG_ASSERT_MSG (G-&gt;nself_edges == 0, GrB_INVALID_VALUE, </span></a>
+<a name="177"><span class="lineNum">     177 </span>            :         &quot;G-&gt;nself_edges must be zero&quot;) ; </a>
+<a name="178"><span class="lineNum">     178 </span>            : </a>
+<a name="179"><span class="lineNum">     179 </span>            :     //--------------------------------------------------------------------------</a>
+<a name="180"><span class="lineNum">     180 </span>            :     // Initializations</a>
+<a name="181"><span class="lineNum">     181 </span>            :     //--------------------------------------------------------------------------</a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">        402 :     A = G-&gt;A ;</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">        402 :     GRB_TRY (GrB_Matrix_nrows (&amp;n, A)) ;</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">        402 :     GRB_TRY (GrB_Matrix_new(&amp;A_deg, GrB_INT64,n,n)) ;</span></a>
+<a name="185"><span class="lineNum">     185 </span>            : </a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">        390 :     GRB_TRY (GrB_Vector_new(&amp;degrees, GrB_INT64, n)) ;</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">        382 :     GRB_TRY (GrB_Vector_new(&amp;node_edges, GrB_INT64, n)) ;</span></a>
+<a name="188"><span class="lineNum">     188 </span>            :     #if LAGRAPH_SUITESPARSE</a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">        374 :     GRB_TRY (GxB_BinaryOp_new(</span></a>
+<a name="190"><span class="lineNum">     190 </span>            :         &amp;iseq_2lt, (LAGraph_binary_function) (&amp;LG_RCC_iseq_2islt), </a>
+<a name="191"><span class="lineNum">     191 </span>            :         GrB_INT64, GrB_INT64, GrB_INT64, &quot;LG_RCC_iseq_2islt&quot;, ISEQ_2ISLT)) ;</a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">        366 :     GRB_TRY (GxB_BinaryOp_new(</span></a>
+<a name="193"><span class="lineNum">     193 </span>            :         &amp;rcCalculation, (LAGraph_binary_function) (&amp;LG_RCC_rich_club_formula), </a>
+<a name="194"><span class="lineNum">     194 </span>            :         GrB_FP64, GrB_INT64, GrB_INT64, </a>
+<a name="195"><span class="lineNum">     195 </span>            :         &quot;LG_RCC_rich_club_formula&quot;, RICH_CLUB_FORMULA)) ;</a>
+<a name="196"><span class="lineNum">     196 </span>            :     #else</a>
+<a name="197"><span class="lineNum">     197 </span>            :     GRB_TRY (GrB_BinaryOp_new(</a>
+<a name="198"><span class="lineNum">     198 </span>            :         &amp;iseq_2lt, (LAGraph_binary_function) (&amp;LG_RCC_iseq_2islt), </a>
+<a name="199"><span class="lineNum">     199 </span>            :         GrB_INT64, GrB_INT64, GrB_INT64)) ;</a>
+<a name="200"><span class="lineNum">     200 </span>            :     GRB_TRY (GrB_BinaryOp_new(</a>
+<a name="201"><span class="lineNum">     201 </span>            :         &amp;rcCalculation, (LAGraph_binary_function) (&amp;LG_RCC_rich_club_formula), </a>
+<a name="202"><span class="lineNum">     202 </span>            :         GrB_FP64, GrB_INT64, GrB_INT64 )) ;</a>
+<a name="203"><span class="lineNum">     203 </span>            :     #endif</a>
+<a name="204"><span class="lineNum">     204 </span>            : </a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">        358 :     GRB_TRY (GrB_Semiring_new(&amp;plus_2le, GrB_PLUS_MONOID_INT64, iseq_2lt)) ;</span></a>
+<a name="206"><span class="lineNum">     206 </span>            :     </a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">        350 :     GRB_TRY (GrB_Vector_reduce_INT64(</span></a>
+<a name="208"><span class="lineNum">     208 </span>            :         &amp;max_deg, NULL, GrB_MAX_MONOID_INT64, G-&gt;out_degree, NULL)) ;</a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">        350 :     GRB_TRY (GrB_Vector_new(&amp;edges_per_deg, GrB_INT64, max_deg)) ;</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">        342 :     GRB_TRY (GrB_Vector_new(&amp;verts_per_deg, GrB_INT64, max_deg)) ;</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">        334 :     GRB_TRY (GrB_Vector_new(rccs, GrB_FP64, max_deg)) ;</span></a>
+<a name="212"><span class="lineNum">     212 </span>            : </a>
+<a name="213"><span class="lineNum">     213 </span>            :     //--------------------------------------------------------------------------</a>
+<a name="214"><span class="lineNum">     214 </span>            :     // Calculations</a>
+<a name="215"><span class="lineNum">     215 </span>            :     //--------------------------------------------------------------------------</a>
+<a name="216"><span class="lineNum">     216 </span>            : </a>
+<a name="217"><span class="lineNum">     217 </span>            :     // degrees = G-&gt;out_degree - 1</a>
+<a name="218"><span class="lineNum">     218 </span>            :     // Fill out degree vector, to target col_scale mxm on graphs </a>
+<a name="219"><span class="lineNum">     219 </span>            :     // with singletons, scalar value irrelevant.</a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">        326 :     GRB_TRY (GrB_Vector_assign_INT64(</span></a>
+<a name="221"><span class="lineNum">     221 </span>            :         degrees, NULL, NULL, (int64_t) -1, GrB_ALL, 0, NULL)) ;</a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">        322 :     GRB_TRY (GrB_Vector_assign(</span></a>
+<a name="223"><span class="lineNum">     223 </span>            :         degrees, NULL, GrB_PLUS_INT64, G-&gt;out_degree, GrB_ALL, 0, NULL)) ;</a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">        318 :     GRB_TRY (GrB_Matrix_diag(&amp;D, degrees, 0)) ;</span></a>
+<a name="225"><span class="lineNum">     225 </span>            : </a>
+<a name="226"><span class="lineNum">     226 </span>            :     // Each edge in the graph gets the value of the degree of its row node</a>
+<a name="227"><span class="lineNum">     227 </span>            :     #if LAGRAPH_SUITESPARSE</a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">        294 :     GRB_TRY (GrB_mxm(</span></a>
+<a name="229"><span class="lineNum">     229 </span>            :         A_deg, NULL, NULL, GxB_ANY_FIRST_INT64, D, A, NULL)) ;</a>
+<a name="230"><span class="lineNum">     230 </span>            :     #else</a>
+<a name="231"><span class="lineNum">     231 </span>            :     GRB_TRY (GrB_mxm(</a>
+<a name="232"><span class="lineNum">     232 </span>            :         A_deg, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, D, A, NULL)) ;</a>
+<a name="233"><span class="lineNum">     233 </span>            :     #endif</a>
+<a name="234"><span class="lineNum">     234 </span>            :     // Sum the number of edges each node is &quot;responsible&quot; for.</a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">        282 :     GRB_TRY (GrB_mxv(</span></a>
+<a name="236"><span class="lineNum">     236 </span>            :         node_edges, NULL, GrB_PLUS_INT64, plus_2le, A_deg, degrees, NULL)) ;</a>
+<a name="237"><span class="lineNum">     237 </span>            : </a>
+<a name="238"><span class="lineNum">     238 </span>            :     // The rest of this is indexing the number of edges and number of nodes at </a>
+<a name="239"><span class="lineNum">     239 </span>            :     // each degree and then doing a cummulative sum to know the amount of edges </a>
+<a name="240"><span class="lineNum">     240 </span>            :     // and nodes at degree geq k.</a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">        276 :     GRB_TRY (GrB_Vector_nvals (&amp;edge_vec_nvals, node_edges)) ;</span></a>
+<a name="242"><span class="lineNum">     242 </span>            :     #if LG_SUITESPARSE_GRAPHBLAS_V10</a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">        276 :         if(n == edge_vec_nvals)</span></a>
+<a name="244"><span class="lineNum">     244 </span>            :         {</a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">        199 :             deg_x = degrees;</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">        199 :             degrees = NULL;</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        199 :             node_edges_x = node_edges;</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">        199 :             node_edges = NULL;</span></a>
+<a name="249"><span class="lineNum">     249 </span>            :         }</a>
+<a name="250"><span class="lineNum">     250 </span>            :         else</a>
+<a name="251"><span class="lineNum">     251 </span>            :         {</a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">         77 :             GRB_TRY (GrB_Vector_assign(</span></a>
+<a name="253"><span class="lineNum">     253 </span>            :                 degrees, G-&gt;out_degree, NULL, degrees, GrB_ALL, 0, GrB_DESC_RS</a>
+<a name="254"><span class="lineNum">     254 </span>            :             )) ;</a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">         75 :             GRB_TRY (GrB_Vector_new(&amp;deg_x, GrB_BOOL, 0)) ;  </span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">         73 :             GRB_TRY (GrB_Vector_new(&amp;node_edges_x, GrB_BOOL, 0)) ;  </span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">         71 :             GRB_TRY (GxB_Vector_extractTuples_Vector(</span></a>
+<a name="258"><span class="lineNum">     258 </span>            :                 NULL, deg_x, degrees, NULL</a>
+<a name="259"><span class="lineNum">     259 </span>            :             )) ;</a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">         69 :             GRB_TRY (GxB_Vector_extractTuples_Vector(</span></a>
+<a name="261"><span class="lineNum">     261 </span>            :                 NULL, node_edges_x, node_edges, NULL</a>
+<a name="262"><span class="lineNum">     262 </span>            :             )) ;</a>
+<a name="263"><span class="lineNum">     263 </span>            :         }</a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineCov">        266 :         GRB_TRY (GrB_Vector_nvals(&amp;edge_vec_nvals, node_edges_x))</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">        266 :         GRB_TRY (GrB_Vector_new(&amp;ones_v, GrB_INT64, edge_vec_nvals)) ;</span></a>
+<a name="266"><span class="lineNum">     266 </span>            : </a>
+<a name="267"><span class="lineNum">     267 </span>            :         </a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineCov">        259 :         GRB_TRY (GrB_Vector_assign_INT64(</span></a>
+<a name="269"><span class="lineNum">     269 </span>            :             edges_per_deg, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;</a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineCov">        255 :         GRB_TRY (GrB_Vector_assign_INT64(</span></a>
+<a name="271"><span class="lineNum">     271 </span>            :             verts_per_deg, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;</a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">        251 :         GRB_TRY (GrB_Vector_assign_INT64(</span></a>
+<a name="273"><span class="lineNum">     273 </span>            :             ones_v, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;</a>
+<a name="274"><span class="lineNum">     274 </span>            :             </a>
+<a name="275"><span class="lineNum">     275 </span>            :         #ifndef COVERAGE</a>
+<a name="276"><span class="lineNum">     276 </span>            :         GRB_TRY (GrB_Vector_new(&amp;ramp_v, GrB_INT64, edge_vec_nvals + 1)) ;  </a>
+<a name="277"><span class="lineNum">     277 </span>            :         GRB_TRY (GrB_Vector_assign_INT64(</a>
+<a name="278"><span class="lineNum">     278 </span>            :             ramp_v, NULL, NULL, (int64_t) 0, GrB_ALL, 0, NULL)) ;</a>
+<a name="279"><span class="lineNum">     279 </span>            :         GRB_TRY (GrB_apply (</a>
+<a name="280"><span class="lineNum">     280 </span>            :             ramp_v, NULL, NULL, GrB_ROWINDEX_INT64, ramp_v, 0, NULL)) ;</a>
+<a name="281"><span class="lineNum">     281 </span>            :         #endif</a>
+<a name="282"><span class="lineNum">     282 </span>            : </a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineCov">        247 :         LG_TRY (LAGraph_FastAssign_Semiring (</span></a>
+<a name="284"><span class="lineNum">     284 </span>            :             edges_per_deg, NULL, GrB_PLUS_INT64, deg_x, node_edges_x, ramp_v,</a>
+<a name="285"><span class="lineNum">     285 </span>            :             GxB_PLUS_SECOND_INT64, NULL, msg</a>
+<a name="286"><span class="lineNum">     286 </span>            :         )) ;</a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">        135 :         LG_TRY (LAGraph_FastAssign_Semiring (</span></a>
+<a name="288"><span class="lineNum">     288 </span>            :             verts_per_deg, NULL, GrB_PLUS_INT64, deg_x, ones_v, ramp_v,</a>
+<a name="289"><span class="lineNum">     289 </span>            :             GxB_PLUS_PAIR_INT64, NULL, msg</a>
+<a name="290"><span class="lineNum">     290 </span>            :         )) ;</a>
+<a name="291"><span class="lineNum">     291 </span>            : </a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineCov">         23 :         GRB_TRY (GxB_Vector_unload(</span></a>
+<a name="293"><span class="lineNum">     293 </span>            :             edges_per_deg, (void **) &amp;epd_arr, &amp;epd_type,</a>
+<a name="294"><span class="lineNum">     294 </span>            :             &amp;epd_n, &amp;epd_size, &amp;epd_h, NULL)) ;</a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineCov">         23 :         GRB_TRY (GxB_Vector_unload(</span></a>
+<a name="296"><span class="lineNum">     296 </span>            :             verts_per_deg, (void **) &amp;vpd_arr, &amp;vpd_type,</a>
+<a name="297"><span class="lineNum">     297 </span>            :             &amp;vpd_n, &amp;vpd_size, &amp;vpd_h, NULL)) ;</a>
+<a name="298"><span class="lineNum">     298 </span>            :         </a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineCov">         23 :         LG_ASSERT (max_deg == vpd_n &amp;&amp; max_deg == epd_n, GrB_INVALID_VALUE) ;</span></a>
+<a name="300"><span class="lineNum">     300 </span>            :         //run a cummulative sum (backwards) on vpd_arr</a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">       2501 :         for(int64_t i = max_deg - 1; i &gt; 0; --i)</span></a>
+<a name="302"><span class="lineNum">     302 </span>            :         {</a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineCov">       2478 :             vpd_arr[i-1] += vpd_arr[i] ;</span></a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineCov">       2478 :             epd_arr[i-1] += epd_arr[i] ;</span></a>
+<a name="305"><span class="lineNum">     305 </span>            :         }</a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineCov">         23 :         GRB_TRY(GxB_Vector_load(</span></a>
+<a name="307"><span class="lineNum">     307 </span>            :             edges_per_deg, (void **) &amp;epd_arr, epd_type,</a>
+<a name="308"><span class="lineNum">     308 </span>            :             epd_n, epd_size, epd_h, NULL)) ;</a>
+<a name="309"><span class="lineNum">     309 </span><span class="lineCov">         23 :         GRB_TRY(GxB_Vector_load(</span></a>
+<a name="310"><span class="lineNum">     310 </span>            :             verts_per_deg, (void **) &amp;vpd_arr, vpd_type,</a>
+<a name="311"><span class="lineNum">     311 </span>            :             vpd_n, vpd_size, vpd_h, NULL)) ;</a>
+<a name="312"><span class="lineNum">     312 </span>            :     #else</a>
+<a name="313"><span class="lineNum">     313 </span>            :         LG_TRY (LAGraph_Malloc(</a>
+<a name="314"><span class="lineNum">     314 </span>            :             &amp;a_space, edge_vec_nvals * 3 + max_deg * 4, sizeof(int64_t), NULL</a>
+<a name="315"><span class="lineNum">     315 </span>            :         )) ;</a>
+<a name="316"><span class="lineNum">     316 </span>            :         int64_t *T = a_space;</a>
+<a name="317"><span class="lineNum">     317 </span>            :         deg_arr = T;            T += edge_vec_nvals;</a>
+<a name="318"><span class="lineNum">     318 </span>            :         node_edges_arr = T;     T += edge_vec_nvals;</a>
+<a name="319"><span class="lineNum">     319 </span>            :         ones = T;               T += edge_vec_nvals;</a>
+<a name="320"><span class="lineNum">     320 </span>            :         epd_arr = T;            T += max_deg;</a>
+<a name="321"><span class="lineNum">     321 </span>            :         vpd_arr = T;            T += max_deg;</a>
+<a name="322"><span class="lineNum">     322 </span>            :         epd_index = T;          T += max_deg;</a>
+<a name="323"><span class="lineNum">     323 </span>            :         vpd_index = T;          T += max_deg;</a>
+<a name="324"><span class="lineNum">     324 </span>            : </a>
+<a name="325"><span class="lineNum">     325 </span>            :         #pragma omp parallel for schedule(static)</a>
+<a name="326"><span class="lineNum">     326 </span>            :         for(uint64_t i = 0; i &lt; edge_vec_nvals; ++i)</a>
+<a name="327"><span class="lineNum">     327 </span>            :         {</a>
+<a name="328"><span class="lineNum">     328 </span>            :             ones[i] = 1ll;</a>
+<a name="329"><span class="lineNum">     329 </span>            :         }</a>
+<a name="330"><span class="lineNum">     330 </span>            :         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64(</a>
+<a name="331"><span class="lineNum">     331 </span>            :             degrees, NULL, NULL, GrB_MINUS_INT64, G-&gt;out_degree, 1, NULL)) ;</a>
+<a name="332"><span class="lineNum">     332 </span>            :         //TODO: remove NULL for Vanilla GB</a>
+<a name="333"><span class="lineNum">     333 </span>            :         GRB_TRY (GrB_Vector_extractTuples_INT64(</a>
+<a name="334"><span class="lineNum">     334 </span>            :             NULL, deg_arr, &amp;edge_vec_nvals, degrees</a>
+<a name="335"><span class="lineNum">     335 </span>            :         )) ;</a>
+<a name="336"><span class="lineNum">     336 </span>            :         GRB_TRY (GrB_Vector_extractTuples_INT64(</a>
+<a name="337"><span class="lineNum">     337 </span>            :             NULL, node_edges_arr, &amp;edge_vec_nvals, node_edges</a>
+<a name="338"><span class="lineNum">     338 </span>            :         )) ;</a>
+<a name="339"><span class="lineNum">     339 </span>            : </a>
+<a name="340"><span class="lineNum">     340 </span>            :         // Build with degrees as indecies and handle duplicates via adition</a>
+<a name="341"><span class="lineNum">     341 </span>            :         GRB_TRY (GrB_Vector_build_INT64 (</a>
+<a name="342"><span class="lineNum">     342 </span>            :             edges_per_deg, deg_arr, node_edges_arr, edge_vec_nvals, </a>
+<a name="343"><span class="lineNum">     343 </span>            :             GrB_PLUS_INT64)) ;</a>
+<a name="344"><span class="lineNum">     344 </span>            :         GRB_TRY (GrB_Vector_build_INT64 (</a>
+<a name="345"><span class="lineNum">     345 </span>            :             verts_per_deg, deg_arr, ones, edge_vec_nvals, GrB_PLUS_INT64)) ;</a>
+<a name="346"><span class="lineNum">     346 </span>            :         GRB_TRY (GrB_Vector_assign_INT64(</a>
+<a name="347"><span class="lineNum">     347 </span>            :             edges_per_deg, edges_per_deg, NULL, (int64_t) 0, </a>
+<a name="348"><span class="lineNum">     348 </span>            :             GrB_ALL, 0, GrB_DESC_SC)) ;</a>
+<a name="349"><span class="lineNum">     349 </span>            :         GRB_TRY (GrB_Vector_assign_INT64(</a>
+<a name="350"><span class="lineNum">     350 </span>            :             verts_per_deg, verts_per_deg, NULL, (int64_t) 0, </a>
+<a name="351"><span class="lineNum">     351 </span>            :             GrB_ALL, 0, GrB_DESC_SC)) ;</a>
+<a name="352"><span class="lineNum">     352 </span>            :         </a>
+<a name="353"><span class="lineNum">     353 </span>            :         // Extract into arrays</a>
+<a name="354"><span class="lineNum">     354 </span>            :         GRB_TRY (GrB_Vector_extractTuples_INT64(</a>
+<a name="355"><span class="lineNum">     355 </span>            :             epd_index, epd_arr, &amp;max_deg, edges_per_deg</a>
+<a name="356"><span class="lineNum">     356 </span>            :         )) ;</a>
+<a name="357"><span class="lineNum">     357 </span>            :         GRB_TRY (GrB_Vector_extractTuples_INT64(</a>
+<a name="358"><span class="lineNum">     358 </span>            :             vpd_index, vpd_arr, &amp;max_deg, verts_per_deg</a>
+<a name="359"><span class="lineNum">     359 </span>            :         )) ;</a>
+<a name="360"><span class="lineNum">     360 </span>            :         //run a cummulative sum (backwards) on vpd_arr</a>
+<a name="361"><span class="lineNum">     361 </span>            :         for(int64_t i = max_deg - 1; i &gt; 0; --i)</a>
+<a name="362"><span class="lineNum">     362 </span>            :         {</a>
+<a name="363"><span class="lineNum">     363 </span>            :             vpd_arr[i-1] += vpd_arr[i] ;</a>
+<a name="364"><span class="lineNum">     364 </span>            :             epd_arr[i-1] += epd_arr[i] ;</a>
+<a name="365"><span class="lineNum">     365 </span>            :         }</a>
+<a name="366"><span class="lineNum">     366 </span>            :         GRB_TRY (GrB_Vector_clear(edges_per_deg)) ;</a>
+<a name="367"><span class="lineNum">     367 </span>            :         GRB_TRY (GrB_Vector_clear(verts_per_deg)) ;</a>
+<a name="368"><span class="lineNum">     368 </span>            :         GRB_TRY (GrB_Vector_build_INT64(</a>
+<a name="369"><span class="lineNum">     369 </span>            :             edges_per_deg, epd_index, epd_arr, max_deg, NULL</a>
+<a name="370"><span class="lineNum">     370 </span>            :         )) ;</a>
+<a name="371"><span class="lineNum">     371 </span>            :         GRB_TRY (GrB_Vector_build_INT64(</a>
+<a name="372"><span class="lineNum">     372 </span>            :             verts_per_deg, vpd_index, vpd_arr, max_deg, NULL</a>
+<a name="373"><span class="lineNum">     373 </span>            :         )) ;</a>
+<a name="374"><span class="lineNum">     374 </span>            :         T = deg_arr = node_edges_arr = ones = NULL ;</a>
+<a name="375"><span class="lineNum">     375 </span>            :         epd_index = vpd_index = epd_arr = vpd_arr = NULL ;</a>
+<a name="376"><span class="lineNum">     376 </span>            :     #endif</a>
+<a name="377"><span class="lineNum">     377 </span>            : </a>
+<a name="378"><span class="lineNum">     378 </span>            :     /**</a>
+<a name="379"><span class="lineNum">     379 </span>            :      * Cumulative sum (TODO: should be a GBLAS method!)</a>
+<a name="380"><span class="lineNum">     380 </span>            :      * </a>
+<a name="381"><span class="lineNum">     381 </span>            :      * GrB_cumsum(GrB_Matrix C, const GrB_Matrix mask, const GrB_BinaryOp accum,</a>
+<a name="382"><span class="lineNum">     382 </span>            :      *      const GrB_BinaryOp plus, GrB_Matrix A, const GrB_Descriptor desc)</a>
+<a name="383"><span class="lineNum">     383 </span>            :      * </a>
+<a name="384"><span class="lineNum">     384 </span>            :      * By default sums rows. Returns a nearly full matrix:</a>
+<a name="385"><span class="lineNum">     385 </span>            :      * [., ., 1, 1, 1, 1, ., ., 1] --&gt; [., ., 1, 2, 3, 4, 4, 4, 5]</a>
+<a name="386"><span class="lineNum">     386 </span>            :      * Mask can be A, then returns a matrix with the same pattern.</a>
+<a name="387"><span class="lineNum">     387 </span>            :      * [., ., 1, 1, 1, 1, ., ., 1] --&gt; [., ., 1, 2, 3, 4, ., ., 5]</a>
+<a name="388"><span class="lineNum">     388 </span>            :      * </a>
+<a name="389"><span class="lineNum">     389 </span>            :      * Should we be able to sum in the opposite direction? </a>
+<a name="390"><span class="lineNum">     390 </span>            :      *  Yes since not all monoids have inverse operations. </a>
+<a name="391"><span class="lineNum">     391 </span>            :      * </a>
+<a name="392"><span class="lineNum">     392 </span>            :      * If plus biop is not a monoid, this method should still work?</a>
+<a name="393"><span class="lineNum">     393 </span>            :      */</a>
+<a name="394"><span class="lineNum">     394 </span>            :     </a>
+<a name="395"><span class="lineNum">     395 </span>            :     //Computes the RCC of a matrix</a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineCov">         23 :     GRB_TRY(GrB_eWiseMult(</span></a>
+<a name="397"><span class="lineNum">     397 </span>            :         *rccs, NULL, NULL, rcCalculation, </a>
+<a name="398"><span class="lineNum">     398 </span>            :         edges_per_deg, verts_per_deg, NULL</a>
+<a name="399"><span class="lineNum">     399 </span>            :     )) ;</a>
+<a name="400"><span class="lineNum">     400 </span>            : </a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineCov">         15 :     LG_FREE_WORK ;</span></a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineCov">         15 :     return (GrB_SUCCESS) ;</span></a>
+<a name="403"><span class="lineNum">     403 </span>            : }</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
