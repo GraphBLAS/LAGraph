@@ -1719,6 +1719,21 @@ int LAGraph_IsolateSets(
     char *msg      
 );
 
+//------------------------------------------------------------------------------
+// NumberOfWalks: compute walks of length k
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+GrB_Info LAGraph_NumberOfWalks
+(
+    // output:
+    GrB_Matrix *C,      // A^k (n×n) for all-pairs, or 1×n for single-source
+    // input:
+    GrB_Matrix  A,      // adjacency matrix
+    GrB_Vector  src,    // source indicator vector (NULL = all pairs)
+    int64_t     k       // walk length
+);
+  
 LAGRAPHX_PUBLIC
 int LAGraph_LouvainSeq(
     // output
