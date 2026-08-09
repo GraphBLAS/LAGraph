@@ -28,6 +28,8 @@
 // LAGraph_Vector_IsEqualOp:  compare two vectors using a given operator
 //------------------------------------------------------------------------------
 
+// FIXME: make output result a GrB_Scalar?
+
 int LAGraph_Vector_IsEqualOp
 (
     // output:

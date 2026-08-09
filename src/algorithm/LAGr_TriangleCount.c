@@ -114,6 +114,9 @@ static int tricount_prep
     LAGraph_Free ((void **) &P, NULL) ;     \
 }
 
+// FIXME: make ntriangles output a GrB_Scalar?
+// FIXME: make method and presort input/output a GrB_Scalar?
+
 int LAGr_TriangleCount
 (
     // output:

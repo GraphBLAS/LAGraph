@@ -90,6 +90,11 @@
 // LAGraph_VertexCentrality_Triangle: vertex triangle-centrality
 //------------------------------------------------------------------------------
 
+// FIXME: final method will not have "method" parameter; methods 0,1, and 2
+// will be moved to experimental/test
+
+// FIXME: make ntriangles output GrB_Scalar
+
 int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 (
     // outputs:
@@ -124,11 +129,13 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     else
     {
         // A is not known to be symmetric
-        LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
+            "G->A must be symmetric") ;
     }
 
     // no self edges can be present
-    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED,
+        "G->nself_edges must be zero") ;
 
     //--------------------------------------------------------------------------
     // create the T matrix

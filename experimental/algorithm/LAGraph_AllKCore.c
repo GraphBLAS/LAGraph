@@ -35,9 +35,10 @@
 
 #include "LG_internal.h"
 
+// FIXME: make kmax output a GrB_Scalar
+
 // TODO: need both basic and expert methods; this is mixed
 // TODO: match filename to function name (this name is OK)
-// vanilla OK: no GxB used here
 
 int LAGraph_KCore_All
 (
@@ -72,12 +73,14 @@ int LAGraph_KCore_All
     else
     {
         // A is not known to be symmetric
-        LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
+            "G->A must be symmetric") ;
     }
 
     // TODO: in basic: compute it, this is Advanced:
     // no self edges can be present
-    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED,
+        "G->nself_edges must be zero") ;
 
     //create work scalars
     uint64_t level = 0; //don't set at 1 in case of empty graph getting returned as kmax = 1
@@ -131,25 +134,28 @@ int LAGraph_KCore_All
         //Assign values of deg into decomp (output)
         GRB_TRY (GrB_assign (*decomp, deg, NULL, level, GrB_ALL, n, GrB_NULL)) ;
 
-        int round = 0;
+        // int round = 0;
+
         // while q not empty
-        while(nvals > 0){
+        while (nvals > 0)
+        {
             // Decrease todo by number of nvals
             todo = todo - nvals ;
             //add anything in q as true into the done list
-            GRB_TRY (GrB_assign (done, q, NULL, (bool) true, GrB_ALL, n, GrB_DESC_S)) ; //structure to take care of 0-node cases
+            //structure to take care of 0-node cases
+            GRB_TRY (GrB_assign (done, q, NULL, (bool) true, GrB_ALL, n, GrB_DESC_S)) ;
 
             // Create delta (the nodes who lost friends, and how many they lost)
             GRB_TRY (GrB_vxm (delta, GrB_NULL, GrB_NULL, semiring, q, A, GrB_NULL));
 
             // Create new deg vector (keep anything not in done vector w/ replace command)
-            GRB_TRY (GrB_eWiseAdd(deg, done, GrB_NULL, minus_op, deg, delta, GrB_DESC_RSC /* try GrB_DESC_RSC */)) ;
+            GRB_TRY (GrB_eWiseAdd(deg, done, GrB_NULL, minus_op, deg, delta, GrB_DESC_RSC)) ;
 
             // Update q, set new nvals
             GRB_TRY (GrB_select (q, GrB_NULL, GrB_NULL, valueLE, deg, level, GrB_NULL)) ;
 
             GRB_TRY (GrB_Vector_nvals(&nvals, q)) ;
-            round++;
+            // round++;
         }
     }
     //set kmax

@@ -73,6 +73,57 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
+// LAGraph_Matrix_Sum: sum an array of matrices with a binary operator
+//------------------------------------------------------------------------------
+
+// LAGraph_Matrix_Sum combines an array of matrices into a single matrix C.  The
+// tuples of all input matrices are concatenated into a single buffer and passed
+// to GrB_Matrix_build, using the binary operator dup to combine any duplicate
+// (i,j) entries.  With dup = GrB_PLUS_FP64 (for example) this computes the
+// element-wise sum of all the matrices.  All input matrices must have identical
+// dimensions and identical built-in type; C is created with that same type and
+// dimensions.  If dup is NULL, duplicates are handled per GrB_Matrix_build.
+
+LAGRAPHX_PUBLIC
+int LAGraph_Matrix_Sum
+(
+    // output:
+    GrB_Matrix *C,          // result = combination of all input matrices
+    // input:
+    GrB_Matrix *Matrices,   // array of nmatrices input matrices
+    GrB_Index nmatrices,    // number of matrices in the array (must be >= 1)
+    GrB_BinaryOp dup,       // operator to combine duplicate (i,j) entries
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_Matrix_Binary_Sum: sum an array of matrices by binary reduction
+//------------------------------------------------------------------------------
+
+// LAGraph_Matrix_Binary_Sum combines an array of matrices into a single matrix
+// C, computing the same result as LAGraph_Matrix_Sum but with a different
+// technique: a pairwise binary reduction tree built from GrB_eWiseAdd (as in
+// the GraphChallenge "Anonymized Network Sensing" paper, "Binary Summation of
+// Traffic Matrices").  At each level the matrices are summed in disjoint
+// adjacent pairs using dup; an unpaired (odd) trailing matrix is carried up to
+// the next level unchanged, until a single matrix remains.  The independent
+// pair-sums within a level are parallelized across LG_nthreads_outer threads.
+// Unlike LAGraph_Matrix_Sum, dup must be non-NULL, since GrB_eWiseAdd requires
+// a binary operator.
+
+LAGRAPHX_PUBLIC
+int LAGraph_Matrix_Binary_Sum
+(
+    // output:
+    GrB_Matrix *C,          // result = combination of all input matrices
+    // input:
+    GrB_Matrix *Matrices,   // array of nmatrices input matrices
+    GrB_Index nmatrices,    // number of matrices in the array (must be >= 1)
+    GrB_BinaryOp dup,       // operator to combine (i,j) entries (must be != NULL)
+    char *msg
+) ;
+
 //****************************************************************************
 // binary file I/O
 //****************************************************************************
@@ -1310,10 +1361,93 @@ LAGRAPHX_PUBLIC
 int LAGr_EdgeBetweennessCentrality
 (
     // output:
-    GrB_Matrix *centrality,     // centrality(i): betweeness centrality of i
+    GrB_Matrix *centrality,     // centrality(i): betweenness centrality of i
     // input:
     LAGraph_Graph G,            // input graph
     GrB_Vector sources,         // source vertices to compute shortest paths (if NULL or empty, use all vertices)
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// Closeness centrality
+//------------------------------------------------------------------------------
+
+typedef enum
+{
+//  CC_DEFAULT = 0,       // select algorithm automatically (FUTURE)
+    CC_BFS = 1,           // unweighted BFS (unit edge weights)
+    CC_SSSP = 2,          // delta-stepping SSSP (non-negative weights)
+    CC_BELLMAN_FORD = 3,  // Bellman-Ford (general weights, negative-cycle check)
+    CC_FLOYD_WARSHALL = 4 // Floyd-Warshall (FW) APSP
+} LAGraph_cc_algo_t ;
+
+LAGRAPHX_PUBLIC
+int LAGr_ClosenessCentrality
+(
+    // output:
+    GrB_Vector *centrality,
+    // input:
+    LAGraph_Graph G,
+    GrB_Vector sources,     // nodes to score; NULL or empty => all nodes
+    bool use_weights,       // if true, use edge weights in shortest paths
+    LAGraph_cc_algo_t algorithm,    // shortest-path algorithm to use
+    GrB_Scalar Delta,       // delta for SSSP; if NULL, derived from G->emin
+    char *msg
+) ; 
+
+//------------------------------------------------------------------------------
+// Katz centrality
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_KatzCentrality
+(
+    // output:
+    GrB_Vector *centrality,
+    int64_t *iters,
+    // input:
+    LAGraph_Graph G,
+    double alpha,
+    double beta,
+    int64_t max_iter,
+    double tol,
+    bool normalize,
+    bool use_weights,
+    char *msg
+) ; 
+
+//------------------------------------------------------------------------------
+// harmonic centrality (approximate via HLL sketches)
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_HarmonicCentrality
+(
+    // outputs:
+    GrB_Vector *scores,            // FP64 harmonic centrality scores
+    GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
+                                   // (pass NULL, not yet implemented)
+    // inputs:
+    const LAGraph_Graph G,         // input graph
+    const GrB_Vector node_weights, // participating nodes and their weights
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// harmonic centrality (exact via BFS)
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_HarmonicCentrality_exact
+(
+    // outputs:
+    GrB_Vector *scores,            // FP64 harmonic centrality scores
+    GrB_Vector *reachable_nodes,   // [optional] estimated reachable node count
+                                   // (pass NULL, not yet implemented)
+    // inputs:
+    const LAGraph_Graph G,         // input graph
+    const GrB_Vector nodes,        // nodes to calculate centrality of
+    const GrB_Vector node_weights, // participating nodes and their weights
     char *msg
 ) ;
 
@@ -1354,8 +1488,8 @@ int LAGr_PartitionQuality(
     double *cov,     // Coverage
     double *perf,    // Performance
     // Inputs
-    GrB_Vector c,    // Cluster vector where c[i] = j means vertex i is in cluster j
-    LAGraph_Graph G, // original graph
+    const GrB_Vector c,    // Cluster vector where c[i] = j means vertex i is in cluster j
+    const LAGraph_Graph G, // original graph
     char *msg
 );
 
@@ -1367,6 +1501,17 @@ int LAGr_Modularity(
     double gamma,       // Resolution parameter
     GrB_Vector c,       // Cluster vector where c[i] = j means vertex i is in cluster j
     LAGraph_Graph G,    // original graph
+    char *msg
+) ;
+
+LAGRAPHX_PUBLIC
+int LAGraph_Leiden
+(
+    // output:
+    GrB_Vector *c_handle,   // c[i] = community label (0..K-1) for node i
+    // input:
+    LAGraph_Graph G,        // input graph (must be symmetric, no self-loops)
+    uint64_t seed,          // random seed (reserved for future use)
     char *msg
 ) ;
 
@@ -1507,12 +1652,71 @@ int LAGr_MaxFlow(
     //outputs
     double* f,
     GrB_Matrix* flow_mtx,
+    GrB_Matrix* res_mtx,
     //inputs
     LAGraph_Graph G,
     GrB_Index src, //source node index
     GrB_Index sink, // sink node index
     //inout
     char* msg
+);   
+
+LAGRAPHX_PUBLIC
+int LAGraph_MinCut(
+    //outputs
+    GrB_Vector* S,
+    GrB_Vector* S_bar,
+    GrB_Matrix* cut_set,
+    // inputs
+    GrB_Matrix R, //residual graph
+    LAGraph_Graph G_origin, //original graph with capacities
+    GrB_Index src, //source node index from max flow
+    char *msg
+);
+
+//------------------------------------------------------------------------------
+// Louvain sub-algorithms
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_AdjModularity(
+    //output
+    double *Q,
+    //input
+    double gamma,
+    GrB_Matrix A,
+    GrB_Matrix S,
+    char* msg
+);
+LAGRAPHX_PUBLIC
+int LAGr_Jaccard(
+    //  output
+    GrB_Matrix *coefficients,
+    //  input
+    LAGraph_Graph G,
+    bool all_pairs, 
+    char *msg
+); 
+
+LAGRAPHX_PUBLIC
+int LAGraph_IsolateSet(
+    //output
+    GrB_Vector *isolate_set,
+    //input
+    GrB_Matrix A,
+    GrB_Vector ignore_node,
+    uint64_t seed,
+    char* msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_IsolateSets(
+    GrB_Matrix *IsolateSets, 
+    // LAGraph_Graph G,         
+    GrB_Matrix A,
+    // GrB_Vector ignore_nodes,
+    uint64_t seed, 
+    char *msg      
 );
 
 //------------------------------------------------------------------------------
@@ -1528,7 +1732,43 @@ GrB_Info LAGraph_NumberOfWalks
     GrB_Matrix  A,      // adjacency matrix
     GrB_Vector  src,    // source indicator vector (NULL = all pairs)
     int64_t     k       // walk length
+);
+  
+LAGRAPHX_PUBLIC
+int LAGraph_LouvainSeq(
+    // output
+    GrB_Matrix *S_result, 
+    // input
+    LAGraph_Graph G,
+    uint64_t seed,
+    char *msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGraph_LouvainIS(
+    // output
+    GrB_Matrix *S_result,
+    uint64_t seed,
+    // input
+    LAGraph_Graph G,
+    char *msg
+);
+
+//------------------------------------------------------------------------------
+// LAGraph_DIMACSMaxFlowRead: read a DIMACS13 MaxFlow problem
+//------------------------------------------------------------------------------
+
+int LAGraph_DIMACSMaxFlowRead
+(
+    // output:
+    GrB_Matrix* A,  // adjancency matrix, with int32 weights
+    GrB_Index* s,   // source node
+    GrB_Index* t,   // sink node
+    // input:
+    FILE* f,        // an open file containing the DIMAX MaxFlow problem
+    char* msg
 ) ;
+
 
 #if defined ( __cplusplus )
 }

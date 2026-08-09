@@ -146,6 +146,8 @@ int main (int argc, char **argv)
     // sample the degree
     //--------------------------------------------------------------------------
 
+#if 0
+    // just for testing
     for (int nsamples = 1000 ; nsamples <= 100000 ; nsamples += 1000)
     {
         double ts = LAGraph_WallClockTime ( ) ;
@@ -158,6 +160,7 @@ int main (int argc, char **argv)
             nsamples, mean, median, mean > 3 * median, ts) ;
         fflush (stdout) ;
     }
+#endif
 
     //--------------------------------------------------------------------------
     // triangle counting

@@ -48,6 +48,9 @@
 
 #include "LG_internal.h"
 
+// FIXME: should damping, tol, and itermaxs inputs be GrB_Scalar?
+// FIXME: should output iters be a GrB_Scalar?
+
 int LAGr_PageRank
 (
     // output:

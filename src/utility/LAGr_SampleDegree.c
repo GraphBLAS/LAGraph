@@ -22,6 +22,9 @@
 
 #include "LG_internal.h"
 
+// FIXME: make output scalars (sample_mean, _median) GrB_Scalar?
+// FIXME: make input scalars (byout, nsamples, seed) GrB_Scalar?
+
 int LAGr_SampleDegree
 (
     // output:

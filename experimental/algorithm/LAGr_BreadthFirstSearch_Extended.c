@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGr_BreadthFirstSearch:  breadth-first search dispatch
+// LAGr_BreadthFirstSearch_Extended:  breadth-first search dispatch
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: ready for src
+
 // Breadth-first-search via push/pull method if using SuiteSparse:GraphBLAS
 // and its GxB extensions, or a push-only method otherwise.  The former is
 // much faster.
@@ -24,6 +26,8 @@
 // undirected.  The vanilla method is always push-only.
 
 #include "LG_alg_internal.h"
+
+// FIXME: make src, max_level, dest, many_expected inputs GrB_Scalar
 
 int LAGr_BreadthFirstSearch_Extended
 (

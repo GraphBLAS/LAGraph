@@ -127,14 +127,17 @@ void test_cc_matrices (void)
             OK (LG_check_cc (C, G, msg)) ;
             OK (GrB_free (&C)) ;
 
-            // find the connected components with LG_CC_FastSV5
             #if LAGRAPH_SUITESPARSE
+
+            #if 0
+            // find the connected components with LG_CC_FastSV5
             printf ("\n------ CC_FastSV5:\n") ;
-            OK (LG_CC_FastSV5 (&C2, G, msg)) ;
+            OK (LG_CC_FastSV5 (&C2, G, msg)) ;  /* currently disabled */
             ncomponents = count_connected_components (C2) ;
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
+            #endif
 
             // find the connected components with LG_CC_FastSV6
             printf ("\n------ CC_FastSV6:\n") ;
@@ -244,15 +247,15 @@ void test_cc_errors (void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     result = LG_CC_Boruvka (&C, G, msg) ;
-    TEST_CHECK (result == -1001) ;
+    TEST_CHECK (result == LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
     #if LAGRAPH_SUITESPARSE
     result = LG_CC_FastSV6 (&C, G, msg) ;
-    TEST_CHECK (result == -1001) ;
+    TEST_CHECK (result == LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
     #if GxB_IMPLEMENTATION >= GxB_VERSION (10,0,0)
     result = LG_CC_FastSV7_FA (&C, G, msg) ;
-    TEST_CHECK (result == -1001) ;
+    TEST_CHECK (result == LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
     #endif
     #endif

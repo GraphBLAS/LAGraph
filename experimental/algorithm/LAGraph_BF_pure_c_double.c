@@ -54,6 +54,9 @@
 // cycle reachable from s, returns GrB_SUCCESS and the shortest distance
 // d and the shortest path tree pi. Otherwise return NULL pointer for d
 // and pi.
+
+// FIXME: move into experimental/test; this should not be user-callable
+
 GrB_Info LAGraph_BF_pure_c_double
 (
     double **pd,     // pointer to distance vector d, d(k) = shorstest distance

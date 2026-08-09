@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: almost ready for src; need a vanilla method
+// TODO: almost ready for src; need a vanilla method?
 
 // Takes in a vector of source nodes and finds level and/or parent vectors for each,
 // stored together in a matrix
@@ -30,6 +30,8 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
+
+// FIXME: make src input GrB_Scalar
 
 int LAGraph_MultiSourceBFS
 (

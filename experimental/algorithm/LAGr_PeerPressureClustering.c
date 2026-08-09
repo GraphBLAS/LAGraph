@@ -49,6 +49,8 @@
 #include "LG_internal.h"
 #include <LAGraphX.h>
 
+// FIXME: make normalize, make_undirected, thesh, max_iter inputs GrB_Scalar
+
 int LAGr_PeerPressureClustering(
     // output:
     GrB_Vector *c_f, // output cluster vector
@@ -177,7 +179,7 @@ int LAGr_PeerPressureClustering(
     {
         // Voting phase (T = A (plus,second) C)
         // T (i, j) = k <==> k votes for vertex j to be in cluster i
-        GRB_TRY(GrB_mxm(T, NULL, NULL, GxB_PLUS_SECOND_FP64, C, A, NULL));
+        GRB_TRY(GrB_mxm(T, NULL, NULL, LAGraph_plus_second_fp64, C, A, NULL));
 
         // m = max (T (:, j))
         GRB_TRY(GrB_vxm(m, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, ones, T,

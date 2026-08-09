@@ -23,6 +23,9 @@
 // the Rapids Memory Manager methods when using CUDA, and those
 // methods are not yet thread-safe).
 
+// TODO: not ready for src.  Need container load/unload not pack/unpack.
+// TODO: Need a different calloc/free (not done in parallel)
+
 //------------------------------------------------------------------------------
 
 // ## Background
@@ -73,7 +76,13 @@
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
-#include <stdalign.h>
+#if LAGRAPH_HAS_STDALIGN_H
+    #include <stdalign.h>
+    #define ALIGNAS_64 alignas(64)
+#else
+    // the alignas keyword/macro is not available
+    #define ALIGNAS_64
+#endif
 #include "LG_internal.h"
 
 // A Go-style slice / Lisp-style property list
@@ -141,7 +150,7 @@ void counts_reducer(GrB_Index* e1, GrB_Index* c1, GrB_Index e2, GrB_Index c2) {
 #define bucket_shift (64llu - bucket_bits)
 
 typedef struct {
-    alignas(64) plist buckets[nof_buckets];
+    ALIGNAS_64 plist buckets[nof_buckets];
 } ptable;
 
 void ptable_free(ptable* table) {
@@ -187,6 +196,9 @@ void ptable_reduce(ptable* table, GrB_Index* entry, GrB_Index* count, plist_redu
 }
 
 //****************************************************************************
+
+// FIXME: make itermax a GrB_Scalar?
+
 int LAGraph_cdlp
         (
                 GrB_Vector *CDLP_handle,    // output vector
@@ -248,6 +260,8 @@ int LAGraph_cdlp
         LAGRAPH_TRY (LAGraph_Free ((void *)&Tx, NULL)) ;
         GRB_TRY (GrB_free (&T)) ;
     }
+
+    // FIXME: this is not "else" part of the above if.  Why indent it??
 
     {
         void * Sx = NULL ;

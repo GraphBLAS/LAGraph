@@ -27,6 +27,8 @@
 // Pick the default method with auto presort.  Compute G->nself_edges, and
 // G->out_degree if needed.  Determine if G->A is symmetric, if not known.
 
+// FIXME: should #triangles be a GrB_Scalar output?
+
 int LAGraph_TriangleCount
 (
     // output:

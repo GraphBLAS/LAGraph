@@ -16,6 +16,9 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: replace pack/upack with load/unload
+// TODO: need a bipartite LAGraph_Graph
+
 // This implmentation is based on the algorithm described in the following
 // paper: "Distributed-Memory Algorithms for Maximum Cardinality Matching in
 // Bipartite Graphs" by A. Azad and A. Buluç.
@@ -472,6 +475,9 @@ invert_2(GrB_Vector out,  // input/output
         LG_FREE_WORK;                                                          \
         GrB_free(&mateC);                                                      \
     }
+
+// FIXME: make col_init a GrB_Scalar?
+// FIXME need a bipartite LAGraph_Graph
 
 int LAGr_MaximumMatching(
     // outputs:

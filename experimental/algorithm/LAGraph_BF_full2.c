@@ -151,6 +151,9 @@ void BF2_EQ
 // A has weights on corresponding entries of edges
 // s is given index for source vertex
 
+// FIXME: add msg and LAGraph_Graph arguments; pick a single BF method
+// FIXME: make s input scalar a GrB_Scalar
+
 GrB_Info LAGraph_BF_full2
 (
     GrB_Vector *pd_output,      //the pointer to the vector of distance

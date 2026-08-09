@@ -58,7 +58,7 @@ int main (int argc, char ** argv){
 
   // LG_SET_BURBLE(1);
   double time = LAGraph_WallClockTime();
-  LAGRAPH_TRY(LAGr_MaxFlow(&flow, NULL, G, S, T, msg));
+  LAGRAPH_TRY(LAGr_MaxFlow(&flow, NULL, NULL, G, S, T, msg));
   time = LAGraph_WallClockTime() - time;
   printf("Time for LAGraph_MaxFlow: %g sec\n", time);
   printf("Max Flow is: %lf\n", flow);
@@ -66,7 +66,7 @@ int main (int argc, char ** argv){
   printf("Starting max flow from %" PRIu64 " to %" PRIu64
     ", with flow_matrix returned\n", S, T);
   time = LAGraph_WallClockTime();
-  LAGRAPH_TRY(LAGr_MaxFlow(&flow, &flow_matrix, G, S, T, msg));
+  LAGRAPH_TRY(LAGr_MaxFlow(&flow, &flow_matrix, NULL, G, S, T, msg));
   time = LAGraph_WallClockTime() - time;
   printf("Time for LAGraph_MaxFlow with flow matrix: %g sec\n", time);
   printf("Max Flow is: %lf\n", flow);

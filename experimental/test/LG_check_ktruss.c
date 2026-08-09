@@ -72,7 +72,8 @@ int LG_check_ktruss
     else
     {
         // A is not known to be symmetric
-        LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
+            "G->A must be symmetric") ;
     }
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;

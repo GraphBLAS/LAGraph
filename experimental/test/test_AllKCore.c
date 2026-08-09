@@ -165,7 +165,7 @@ void test_errors (void)
     G->nself_edges = LAGRAPH_UNKNOWN ;
     result = LAGraph_KCore_All (&c, &kmax, G, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
-    TEST_CHECK (result == -1004) ;
+    TEST_CHECK (result == LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
     TEST_CHECK (c == NULL) ;
 
     // G is undirected
@@ -174,7 +174,7 @@ void test_errors (void)
     G->is_symmetric_structure = LAGraph_FALSE ;
     result = LAGraph_KCore_All (&c, &kmax, G, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
-    TEST_CHECK (result == -1005) ;
+    TEST_CHECK (result == LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED) ;
     TEST_CHECK (c == NULL) ;
 
     OK (LAGraph_Delete (&G, msg)) ;

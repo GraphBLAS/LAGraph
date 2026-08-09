@@ -95,7 +95,8 @@ int main (int argc, char **argv)
     LAGraph_Graph G = NULL ;
 
     // start GraphBLAS and LAGraph
-    bool burble = false ;
+//  bool burble = false ;
+    bool burble = true ;
     demo_init (burble) ;
 
     int ntrials = 5 ;
@@ -133,7 +134,7 @@ int main (int argc, char **argv)
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     LAGRAPH_TRY (readproblem (&G, NULL,
         true, true, true, NULL, false, argc, argv)) ;
-    LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
+//  LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
 
     // determine the cached out degree property
     LAGRAPH_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
@@ -185,7 +186,7 @@ int main (int argc, char **argv)
 
     //LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_ULT ;
     LAGRAPH_TRY (LAGr_TriangleCount_GPU (&ntriangles_gpu, G, &method, &presort, msg)) ;
-    LG_SET_BURBLE (false) ;
+    // LG_SET_BURBLE (false) ;
     ttot = LAGraph_WallClockTime ( ) - ttot ;
 
     printf ("# of triangles: %" PRIu64 " (GPU)\n", ntriangles_gpu) ;

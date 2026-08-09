@@ -486,9 +486,10 @@ void test_TriangleCount_brutal (void)
 }
 #endif
 
+//------------------------------------------------------------------------------
+// Triangle count test
+//------------------------------------------------------------------------------
 
-//****************************************************************************
-//****************************************************************************
 TEST_LIST = {
     {"TriangleCount_Methods1", test_TriangleCount_Methods1},
     {"TriangleCount_Methods2", test_TriangleCount_Methods2},
@@ -503,4 +504,5 @@ TEST_LIST = {
     {"TriangleCount_brutal"  , test_TriangleCount_brutal},
     #endif
     {NULL, NULL}
-};
+} ;
+

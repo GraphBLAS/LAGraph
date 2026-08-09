@@ -34,20 +34,17 @@ void test_Init_errors (void)
     OK (status) ;
     int ver [3] ;
 
-    // LAGraph_Init cannot be called twice
+    // LAGraph_Init cannot be called twice in a row
     status = LAGraph_Init (msg) ;
     printf ("\nstatus: %d msg: %s\n", status, msg) ;
     TEST_CHECK (status != GrB_SUCCESS) ;
 
     OK (LAGraph_Finalize (msg)) ;
 
-    // calling LAGraph_Finalize twice leads to undefined behavior;
-    // for SuiteSparse, it returns GrB_SUCCESS
+    // LAGraph_Finalize cannot be called twice in a row
     status = LAGraph_Finalize (msg) ;
-    printf ("status %d\n", status) ;
-    #if LAGRAPH_SUITESPARSE
-    TEST_CHECK (status == GrB_SUCCESS) ;
-    #endif
+    printf ("status %d msg: %s\n", status, msg) ;
+    TEST_CHECK (status == GrB_INVALID_VALUE) ;
 }
 
 //-----------------------------------------------------------------------------

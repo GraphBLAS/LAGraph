@@ -26,6 +26,10 @@ int LAGraph_Finalize (char *msg)
 
     LG_CLEAR_MSG ;
 
+    // ensure LAGraph_Finalized has not already been called
+    LG_ASSERT_MSG (LG_get_LAGr_Init_has_been_called ( ), GrB_INVALID_VALUE,
+        "LAGraph is already finalized") ;
+
     //--------------------------------------------------------------------------
     // free global objects
     //--------------------------------------------------------------------------
@@ -82,6 +86,7 @@ int LAGraph_Finalize (char *msg)
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_finalize ( )) ;
+    LG_set_LAGr_Init_has_been_called (false) ;
     return (GrB_SUCCESS) ;
 }
 

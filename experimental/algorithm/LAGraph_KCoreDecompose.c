@@ -36,6 +36,9 @@
 
 // TODO: need both basic and expert; this is advanced
 // TODO: this should return D as an LAGraph_Graph, not as a GrB_Matrix
+// TODO: has GxB; need a vanilla version
+
+// FIXME: make k input GrB_Scalar
 
 int LAGraph_KCore_Decompose
 (
@@ -71,12 +74,14 @@ int LAGraph_KCore_Decompose
     else
     {
         // A is not known to be symmetric
-        LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
+            "G->A must be symmetric") ;
     }
 
     // no self edges can be present
     // todo: what would happen if there are self edges?
-    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED,
+        "G->nself_edges must be zero") ;
 
     //create work scalars
     GrB_Index nrows, n;

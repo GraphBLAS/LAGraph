@@ -124,14 +124,12 @@ int main (int argc, char **argv)
     // compute edge betweenness centrality
     //--------------------------------------------------------------------------
 
-    // LG_SET_BURBLE (true);
-
+//  LG_SET_BURBLE (true);
     t = LAGraph_WallClockTime ();
     LAGRAPH_TRY (LAGr_EdgeBetweennessCentrality (&centrality, G, sources, msg));
     t = LAGraph_WallClockTime () - t;
     printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t);
-
-    // LG_SET_BURBLE (false);
+//  LG_SET_BURBLE (false);
 
     //--------------------------------------------------------------------------
     // check the results using LG_check_edgeBetweennessCentrality

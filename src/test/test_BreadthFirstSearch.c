@@ -192,7 +192,7 @@ bool check_karate_levels30(GrB_Vector levels)
 void setup(void)
 {
     LAGraph_Init(msg);
-//  OK (LG_SET_BURBLE (true)) ;
+    OK (LG_SET_BURBLE (true)) ; // FIXME
     int retval;
     GrB_Matrix A = NULL;
 
@@ -564,7 +564,7 @@ void test_BreadthFirstSearch_Extended(void)
 void test_BreadthFirstSearch_many(void)
 {
     LAGraph_Init(msg);
-//  OK (LG_SET_BURBLE (true)) ;
+    OK (LG_SET_BURBLE (true)) ; // FIXME
     GrB_Matrix A = NULL ;
 
     for (int k = 0 ; ; k++)

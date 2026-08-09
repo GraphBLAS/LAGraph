@@ -25,6 +25,8 @@
 
 #include "LG_internal.h"
 
+// FIXME: make output result a GrB_Scalar?
+
 int LAGraph_Matrix_IsEqual
 (
     // output:

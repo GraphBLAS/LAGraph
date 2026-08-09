@@ -10,7 +10,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: ready for src? need a vanilla non-GxB, and incidence graphs.
+// TODO: ready for src? need incidence graphs however; see E and E_t inputs
 
 /*
 Uses a modified version of Luby's MIS algorithm
@@ -76,6 +76,8 @@ This method requires O(e) space for an undirected graph with e edges
 }                                           \
 
 #define MAX_FAILURES 50
+
+// FIXME: make matching_type, seed input GrB_Scalar
 
 int LAGraph_MaximalMatching
 (

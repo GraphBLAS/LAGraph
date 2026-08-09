@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: ready to consider for src
+// TODO: ready to consider for src; need vanilla
 
 #define LG_FREE_WORK                                                           \
     {                                                                          \
@@ -39,6 +39,9 @@
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
+
+// FIXME: make inputs e, i, pruning_threshold, convergence_threshold GrB_Scalar
+// and rename these parameters
 
 int LAGr_MarkovClustering(
     // output:
@@ -138,6 +141,7 @@ int LAGr_MarkovClustering(
             GRB_TRY(GrB_reduce(&mse, NULL, GrB_PLUS_MONOID_FP32, MSE, NULL));
             GRB_TRY(GrB_Matrix_nvals(&nvals, MSE));
             mse /= nvals;
+            // FIXME: if iter > max_iter, return LAGRAPH_CONVERGENCE_FAILURE
             if (iter > max_iter || mse < convergence_threshold)
                 break;
         }

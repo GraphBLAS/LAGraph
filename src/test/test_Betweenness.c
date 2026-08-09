@@ -277,7 +277,7 @@ void test_bc (void)
 }
 
 //------------------------------------------------------------------------------
-// test_bc_brutal: test BetweenessCentraliy with brutal malloc debugging
+// test_bc_brutal: test BetweennessCentrality with brutal malloc debugging
 //------------------------------------------------------------------------------
 
 #if LG_BRUTAL_TESTS

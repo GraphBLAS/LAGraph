@@ -463,7 +463,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
 {                                       \
     if (fread (p, s, n, f) != n)        \
     {                                   \
-        CATCH (-1001) ; /* file I/O error */ \
+        CATCH (LAGRAPH_IO_ERROR) ;      \
     }                                   \
 }
 
@@ -811,7 +811,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 printf ("Binary file not found: [%s]\n", filename) ;
                 exit (1) ;
             }
-            if (binread (&A, f) < 0) CATCH (-1001) ;    // file I/O error
+            if (binread (&A, f) < 0) CATCH (LAGRAPH_IO_ERROR) ;
             fclose (f) ;
             f = NULL ;
         }

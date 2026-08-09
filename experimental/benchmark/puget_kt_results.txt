@@ -1,0 +1,66 @@
+
+puget $ ./do_gap_ktruss  grb
+
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: KTruss
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+library: SuiteSparse:GraphBLAS v10.4.0 [FIXME, 2026]
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+A converted to 32-bit
+read time: 0.708268
+Time to read the graph:      0.709209 sec
+# triangles: 438804
+KTruss: 3 trials
+Time for 3 trials:          0.450115 sec
+Avg time: 0.150038 sec, 3-truss nvals: 2589630
+library: SuiteSparse:GraphBLAS v10.4.0 [FIXME, 2026]
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+A converted to 32-bit
+forcing G-> to be symmetric (via A = A+A')
+read time: 16.8579
+Time to read the graph:      16.8579 sec
+# triangles: 84907041475
+KTruss: 3 trials
+Time for 3 trials:          498.525 sec
+Avg time: 166.175 sec, 3-truss nvals: 3545628210
+library: SuiteSparse:GraphBLAS v10.4.0 [FIXME, 2026]
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+A converted to 32-bit
+read time: 21.9651
+Time to read the graph:      21.9651 sec
+# triangles: 5378
+KTruss: 3 trials
+Time for 3 trials:          258.74 sec
+Avg time: 86.2465 sec, 3-truss nvals: 32268
+library: SuiteSparse:GraphBLAS v10.4.0 [FIXME, 2026]
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+A converted to 32-bit
+forcing G-> to be symmetric (via A = A+A')
+read time: 26.9351
+Time to read the graph:      26.9351 sec
+# triangles: 34824916864
+KTruss: 3 trials
+Time for 3 trials:          11581.3 sec
+Avg time: 3860.45 sec, 3-truss nvals: 1687583684
+library: SuiteSparse:GraphBLAS v10.4.0 [FIXME, 2026]
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+A converted to 32-bit
+read time: 21.5663
+Time to read the graph:      21.5664 sec
+# triangles: 106873365648
+KTruss: 3 trials
+Time for 3 trials:          27682.8 sec
+Avg time: 9227.6 sec, 3-truss nvals: 3260642096
+
