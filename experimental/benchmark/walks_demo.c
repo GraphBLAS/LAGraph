@@ -201,7 +201,7 @@ int main (int argc, char **argv)
         src-- ;
 
         twarm = LAGraph_WallClockTime () ;
-        LAGRAPH_TRY (LAGr_BreadthFirstSearch (NULL, &parent, G,
+        LAGRAPH_TRY (LAGr_BreadthFirstSearch (NULL, (GrB_Vector *) &parent, G,
             (GrB_Index) src, msg)) ;
         twarm = LAGraph_WallClockTime () - twarm ;
         GRB_TRY (GrB_free (&parent)) ;
@@ -283,8 +283,8 @@ int main (int argc, char **argv)
 
             // SS BFS
             double tb = LAGraph_WallClockTime () ;
-            LAGRAPH_TRY (LAGr_BreadthFirstSearch (NULL, &parent, G,
-                (GrB_Index) src, msg)) ;
+            LAGRAPH_TRY (LAGr_BreadthFirstSearch (NULL, (GrB_Vector *) &parent,
+                G, (GrB_Index) src, msg)) ;
             tb = LAGraph_WallClockTime () - tb ;
             GRB_TRY (GrB_free (&parent)) ;
             total_bfs += tb ;
