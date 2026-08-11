@@ -64,6 +64,7 @@ void test_Leiden (void)
 
         // Ensure symmetry cache is populated (required by some checks).
         OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
         uint64_t seed = 0 ; //unused
         GrB_Vector c = NULL ;
