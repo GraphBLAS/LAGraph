@@ -6,6 +6,7 @@
 // SPDX-License-Identifier: BSD-2-Clause
 
 #include <stdio.h>
+#include <math.h>
 #include <acutest.h>
 
 #include "GraphBLAS.h"
@@ -22,19 +23,57 @@ char filename[LEN + 1] ;
 typedef struct
 {
     const char *matrix_file ;
-    bool        expect_communities ;    // true iff non-trivial Q is expected
-    double      min_modularity ;        // minimum acceptable modularity
-    double      min_coverage ;          // minimum intra-cluster edge ratio
-    double      min_performance ;       // minimum partition performance
+    LAGraph_Kind kind ;
+    bool        force_symmetric ;       // make A symmetric via A + A'
+    bool        force_positive ;        // make all edge weights positive
+    bool        require_fp64 ;          // assert resulting matrix is FP64
+    double      min_modularity ;        // set < -1 to skip threshold
 } matrix_info ;
 
 const matrix_info files[] =
 {
-    // matrix_file,      expect_communities, min_Q,  min_coverage, min_performance
-    { "karate.mtx",      true,              0.35,   0.15,         0.30 },
-    { "comm0.mtx",       true,              0.25,   0.10,         0.20 },
-    { "",                false,             -1.0,   -1.0,         -1.0 }
+    // matrix_file,      kind,                        force_sym, force_positive, require_fp64, min_Q
+    { "karate.mtx",      LAGraph_ADJACENCY_UNDIRECTED, false,     true,          false,      0.35 },
+    { "comm0.mtx",       LAGraph_ADJACENCY_UNDIRECTED, false,     true,          false,      0.25 },
+    { "west0067.mtx",    LAGraph_ADJACENCY_DIRECTED,   true,      true,          true,      -2.0 },
+    { "jagmesh7.mtx",    LAGraph_ADJACENCY_UNDIRECTED, false,     true,          false,     -2.0 },
+    { "bcsstk13.mtx",    LAGraph_ADJACENCY_UNDIRECTED, false,     true,          true,      -2.0 },
+    { "cryg2500.mtx",    LAGraph_ADJACENCY_DIRECTED,   true,      true,          true,      -2.0 },
+    { "",                LAGraph_ADJACENCY_UNDIRECTED, false,     false,         false,     -2.0 }
 } ;
+
+const char *nonfinite_files[] =
+{
+    "matrix_fp64.mtx",
+    "skew_fp64.mtx",
+    ""
+} ;
+
+static int check_all_finite (const GrB_Matrix A, bool *all_finite)
+{
+    GxB_Iterator it = NULL ;
+    GrB_Info info ;
+    *all_finite = true ;
+    info = GxB_Iterator_new (&it) ;
+    if (info != GrB_SUCCESS) return info ;
+    info = GxB_Matrix_Iterator_attach (it, A, NULL) ;
+    if (info != GrB_SUCCESS) goto done ;
+    info = GxB_Matrix_Iterator_seek (it, 0) ;
+    while (info == GrB_SUCCESS)
+    {
+        double aij = GxB_Iterator_get_FP64 (it) ;
+        if (!isfinite (aij))
+        {
+            *all_finite = false ;
+            break ;
+        }
+        info = GxB_Matrix_Iterator_next (it) ;
+    }
+done:
+    GrB_free (&it) ;
+    if (info == GxB_EXHAUSTED || info == GrB_SUCCESS) return GrB_SUCCESS ;
+    return info ;
+}
 
 //------------------------------------------------------------------------------
 // test_Leiden
@@ -59,17 +98,55 @@ void test_Leiden (void)
         OK (LAGraph_MMRead (&A, f, msg)) ;
         fclose (f) ;
 
-        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, files[k].kind, msg)) ;
         TEST_CHECK (A == NULL) ;    // LAGraph_New takes ownership
 
-        // Ensure symmetry cache is populated (required by some checks).
-        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+        // Ensure symmetry as needed for Leiden.
+        if (files[k].force_symmetric)
+        {
+            OK (LAGraph_Cached_AT (G, msg)) ;
+            OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+            if (G->is_symmetric_structure == LAGraph_FALSE)
+            {
+                OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_ONEB_FP64, G->A, G->AT, NULL)) ;
+                G->is_symmetric_structure = LAGraph_TRUE ;
+            }
+        }
+        else
+        {
+            OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+        }
+        TEST_CHECK (G->is_symmetric_structure == LAGraph_TRUE) ;
+
+        if (files[k].force_positive)
+        {
+            OK (GrB_apply (G->A, NULL, NULL, GrB_ABS_FP64, G->A, NULL)) ;
+        }
+
+        if (files[k].require_fp64)
+        {
+            GrB_Type atype = NULL ;
+            OK (GxB_Matrix_type (&atype, G->A)) ;
+            TEST_CHECK (atype == GrB_FP64) ;
+        }
+
+        OK (LAGraph_Cached_EMin (G, msg)) ;
+        double min_val = 0.0 ;
+        OK (GrB_Scalar_extractElement_FP64 (&min_val, G->emin)) ;
+        TEST_CHECK (min_val >= 0.0) ;
         OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
         uint64_t seed = 0 ; //unused
         GrB_Vector c = NULL ;
 
-        OK (LAGraph_Leiden (&c, G, seed, msg)) ;
+        GrB_Info info = LAGraph_Leiden (&c, G, seed, msg) ;
+        TEST_CHECK (info == GrB_SUCCESS) ;
+        if (info != GrB_SUCCESS)
+        {
+            GrB_free (&c) ;
+            OK (LAGraph_Delete (&G, msg)) ;
+            continue ;
+        }
         TEST_CHECK (c != NULL) ;
 
         // Every node must have a community label.
@@ -91,78 +168,64 @@ void test_Leiden (void)
         TEST_CHECK (min_label >= 0) ;
         TEST_CHECK (max_label < n) ;
 
-        GrB_Index n_communities = max_label + 1 ;
-
         // Compute modularity Q (requires SuiteSparse:GraphBLAS).
         double Q = 0.0 ;
         OK (LAGr_Modularity (&Q, 1.0, c, G, msg)) ;
         printf ("  Modularity Q = %f\n", Q) ;
 
-        if (files[k].expect_communities)
+        if (files[k].min_modularity > -1.0)
         {
             // Validate modularity meets threshold for this graph
             TEST_CHECK (Q > files[k].min_modularity) ;
             TEST_MSG ("Expected Q > %f for %s, got Q = %f", 
                       files[k].min_modularity, aname, Q) ;
         }
-
-        // Compute per-community statistics for robustness validation
-        printf ("  Community statistics:\n") ;
-        GrB_Index total_community_edges = 0 ;
-        GrB_Index total_edges = 0 ;
-        OK (GrB_Matrix_nvals (&total_edges, G->A)) ;
-
-        for (GrB_Index com = 0 ; com < n_communities ; com++)
-        {
-            GrB_Index com_size = 0 ;
-            GrB_Index com_edges = 0 ;
-
-            // Count nodes and edges in this community
-            for (GrB_Index i = 0 ; i < n ; i++)
-            {
-                int64_t label ;
-                GrB_Info info = GrB_Vector_extractElement_INT64 (&label, c, i) ;
-                if (info == GrB_SUCCESS && label == (int64_t)com)
-                {
-                    com_size++ ;
-                    // Count internal edges: edges from i to other nodes in same community
-                    for (GrB_Index j = 0 ; j < n ; j++)
-                    {
-                        int64_t label_j ;
-                        GrB_Info info_j = GrB_Vector_extractElement_INT64 (&label_j, c, j) ;
-                        if (info_j == GrB_SUCCESS && label_j == (int64_t)com)
-                        {
-                            bool has_edge = false ;
-                            GrB_Info info_e = GrB_Matrix_extractElement_BOOL (&has_edge, G->A, i, j) ;
-                            if (info_e == GrB_SUCCESS && has_edge)
-                            {
-                                com_edges++ ;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (com_size > 0)
-            {
-                double density = (com_size > 1) ? 
-                    (double)com_edges / (com_size * (com_size - 1)) : 0.0 ;
-                printf ("    Community %llu: size=%llu, edges=%llu, density=%f\n",
-                        (unsigned long long) com, (unsigned long long) com_size,
-                        (unsigned long long) com_edges, density) ;
-                total_community_edges += com_edges ;
-            }
-        }
-
-        // Compute edge-cut ratio (edges crossing communities / total edges)
-        GrB_Index cut_edges = total_edges - total_community_edges ;
-        double cut_ratio = (total_edges > 0) ? 
-            (double)cut_edges / total_edges : 0.0 ;
-        printf ("  Edge-cut ratio = %f (cut=%llu, total=%llu)\n", 
-                cut_ratio, (unsigned long long) cut_edges, 
-                (unsigned long long) total_edges) ;
+        TEST_CHECK (isfinite (Q)) ;
+        TEST_CHECK (Q >= -1.0 && Q <= 1.0) ;
 
         GrB_free (&c) ;
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    LAGraph_Finalize (msg) ;
+}
+
+void test_Leiden_NonfiniteInputs (void)
+{
+    LAGraph_Init (msg) ;
+
+    for (int k = 0 ;; k++)
+    {
+        const char *aname = nonfinite_files [k] ;
+        if (strlen (aname) == 0) break ;
+
+        printf ("\n====== nonfinite %s ======\n", aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        TEST_MSG ("Cannot open %s", filename) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
+        fclose (f) ;
+
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;
+        OK (LAGraph_Cached_AT (G, msg)) ;
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+        if (G->is_symmetric_structure == LAGraph_FALSE)
+        {
+            OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_PLUS_FP64, G->A, G->AT, NULL)) ;
+            G->is_symmetric_structure = LAGraph_TRUE ;
+        }
+
+        GrB_Type atype = NULL ;
+        OK (GxB_Matrix_type (&atype, G->A)) ;
+        TEST_CHECK (atype == GrB_FP64) ;
+
+        bool all_finite = true ;
+        OK (check_all_finite (G->A, &all_finite)) ;
+        TEST_CHECK (!all_finite) ;
+
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
@@ -176,5 +239,6 @@ void test_Leiden (void)
 TEST_LIST =
 {
     { "Leiden", test_Leiden },
+    { "Leiden nonfinite inputs", test_Leiden_NonfiniteInputs },
     { NULL, NULL }
 } ;

@@ -99,9 +99,9 @@ int LAGr_AdjModularity(
     double inv_m = -gamma / (2.0 * m);
 
     // sum degrees per community
-    GRB_TRY (GrB_vxm (k, NULL, NULL, GxB_PLUS_FIRST_INT64, k, S, NULL)) ;
+    GRB_TRY (GrB_vxm (k, NULL, NULL, GxB_PLUS_FIRST_FP64, k, S, NULL)) ;
     // square
-    GRB_TRY (GrB_assign (k, NULL, GrB_TIMES_INT64, k, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_assign (k, NULL, GrB_TIMES_FP64, k, GrB_ALL, n, NULL)) ;
 
     // sum all of the products
     // this computed \sum_{i,j} (k_{i}k_{j}\delta(\sigma_i\sigma_j))

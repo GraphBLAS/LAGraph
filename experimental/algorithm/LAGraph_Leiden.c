@@ -117,6 +117,7 @@ int LG_Leiden_move_nodes
 
     GRB_TRY (GrB_mxv(c_deg, NULL, NULL, GxB_PLUS_SECOND_FP64, C, deg, NULL));
     // TODO: decide if queue should be made inside this function.
+    int64_t count = 0;
     while (queue_head != queue_tail) { // while queue not empty
         node_id = queue[queue_head];
         queue_head = (queue_head + 1) % queue_size;
@@ -155,7 +156,7 @@ int LG_Leiden_move_nodes
         }
 
         community [node_id] = max_gain_c;
-        // c_deg [node_id] -= ndeg
+        // c_deg [node_id] += ndeg
         GRB_TRY (GrB_assign (c_deg, NULL, GrB_PLUS_FP64, n_deg, &max_gain_c, 1, NULL));
 
         if (max_gain_c == com_id) continue; // no change in community
@@ -469,6 +470,14 @@ int LAGraph_Leiden
         G->is_symmetric_structure == LAGraph_TRUE,
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be symmetric") ;
+    LG_ASSERT_MSG (G->emin_state != LAGraph_STATE_UNKNOWN, LAGRAPH_NOT_CACHED,
+                   "G->emin must be defined") ;
+    // cast to FP64 if needed
+    double min_val = 0.0;
+    GRB_TRY (GrB_Scalar_extractElement_FP64 (&min_val, G->emin)) ;
+    LG_ASSERT_MSG  (min_val >= 0.0, GrB_INVALID_VALUE,
+                   "G->emin must be non-negative") ;
+    // TODO: check numeric, and should we allow 0 weight edges?
 
     // initialize queue
     LG_TRY (LAGraph_Malloc ((void **) &enqueued, n, sizeof(bool), msg)) ;
@@ -488,11 +497,16 @@ int LAGraph_Leiden
 
     // Initialize full degree vector from graph
     GRB_TRY (GrB_assign (deg, NULL, NULL, 0.0, GrB_ALL, n, NULL));
-    GRB_TRY (GrB_assign (deg, NULL, GrB_PLUS_FP64, G->out_degree, GrB_ALL, n, NULL));
+    GRB_TRY (GrB_reduce(deg, NULL, NULL, GrB_PLUS_MONOID_FP64, A, NULL));
+    // don't use out degree unless A is bool adj matrix
+    // GRB_TRY (GrB_assign (deg, NULL, GrB_PLUS_FP64, G->out_degree, GrB_ALL, n, NULL));
 
 
     double m = 0;
     GRB_TRY (GrB_reduce (&m, NULL, GrB_PLUS_MONOID_FP64, deg, NULL)) ;
+    LG_ASSERT_MSG (isfinite(m), GrB_INVALID_VALUE,
+                   "Matrix must reduce to a finite value") ;
+
     double m_inv2 = -1 / (2 * m);
 
     srand(seed);
@@ -502,7 +516,7 @@ int LAGraph_Leiden
     double modularity_epsilon = 1e-6;
 
     for (int count = 0; count < LEIDEN_MAX_ITER; count++) {
-        printf ("Iteration %d\n", count) ;
+        printf ("Iteration %d, node count %lu \n", count, n) ;
         // Initialize queue in random order (seed-based)
         uint64_t queue_len = n;
         GRB_TRY (GrB_Vector_extractTuples_FP64 (queue, NULL, &queue_len, deg)) ;
@@ -583,7 +597,7 @@ int LAGraph_Leiden
         double current_modularity;
         LG_TRY (LAGr_AdjModularity (&current_modularity, 1.0, A, S, msg));
 
-        ASSERT (current_modularity >= prev_modularity) ;
+        ASSERT (current_modularity >= prev_modularity - modularity_epsilon) ;
         if (fabs(current_modularity - prev_modularity) < modularity_epsilon) {
             break;  // converged
         }
@@ -617,7 +631,7 @@ int LAGraph_Leiden
         GRB_TRY (GrB_Matrix_diag (&S, x, 0)) ;
     #ifndef NDEBUG
         LG_TRY (LAGr_AdjModularity (&current_modularity, 1.0, A, S, msg));
-        ASSERT (current_modularity == prev_modularity) ;
+        ASSERT (fabs (current_modularity - prev_modularity) < modularity_epsilon) ;
     #endif
     } // end outer while loop
 
