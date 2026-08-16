@@ -17,6 +17,8 @@
 char msg[LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
 GrB_Matrix A = NULL ;
+GrB_Matrix C = NULL ;
+GrB_Scalar zero_bool = NULL ;
 #define LEN 512
 char filename[LEN + 1] ;
 
@@ -168,9 +170,16 @@ void test_Leiden (void)
         TEST_CHECK (min_label >= 0) ;
         TEST_CHECK (max_label < n) ;
 
-        // Compute modularity Q (requires SuiteSparse:GraphBLAS).
+        // Compute modularity Q
         double Q = 0.0 ;
-        OK (LAGr_Modularity (&Q, 1.0, c, G, msg)) ;
+        GrB_Descriptor desc = NULL;
+        OK (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
+        OK (GrB_Scalar_new (&zero_bool, GrB_BOOL)) ;
+        OK (GrB_Scalar_setElement_BOOL (zero_bool, false)) ;
+        OK (GrB_Descriptor_new (&desc)) ;
+        OK (GrB_set (desc, GxB_USE_INDICES, GxB_ROWINDEX_LIST)) ;
+        OK (GxB_Matrix_build_Scalar_Vector(C, c, c, zero_bool, desc)) ;
+        OK (LAGr_AdjModularity (&Q, 1.0, G->A, C, msg)) ;
         printf ("  Modularity Q = %f\n", Q) ;
 
         if (files[k].min_modularity > -1.0)

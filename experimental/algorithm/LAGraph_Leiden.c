@@ -23,6 +23,24 @@
 
 #define LEIDEN_MAX_ITER 20
 
+#ifndef LG_LEIDEN_TIMING
+#define LG_LEIDEN_TIMING 0
+#endif
+
+#if LG_LEIDEN_TIMING
+#define LG_LEIDEN_TIC(t) double t = LAGraph_WallClockTime ( )
+#define LG_LEIDEN_ELAPSED(t) (LAGraph_WallClockTime ( ) - (t))
+#define LG_LEIDEN_PRINTF(...) printf (__VA_ARGS__)
+#define LG_LEIDEN_BURBLE_ON  GRB_TRY (LG_SET_BURBLE (true))
+#define LG_LEIDEN_BURBLE_OFF GRB_TRY (LG_SET_BURBLE (false))
+#else
+#define LG_LEIDEN_TIC(t)
+#define LG_LEIDEN_ELAPSED(t) (0.0)
+#define LG_LEIDEN_PRINTF(...)
+#define LG_LEIDEN_BURBLE_ON
+#define LG_LEIDEN_BURBLE_OFF
+#endif
+
 //------------------------------------------------------------------------------
 // The Leiden algorithm is a modularity-based community detection method that
 // guarantees well-connected communities by introducing a Refinement phase
@@ -80,7 +98,6 @@
     GrB_free (&it);                                         \
     GrB_free (&c_deg);                                      \
     GrB_free (&x);                                          \
-    GrB_free (&gain);                                       \
 }
 
 #undef  LG_FREE_ALL
@@ -95,6 +112,9 @@ int LG_Leiden_move_nodes
     // output:
     GrB_Matrix C,         // community matrix
     uint64_t *community,  // community array (inside of commmunity matrix)
+    uint64_t *nodes_popped_handle,   // queue pops in this phase
+    uint64_t *nodes_evaluated_handle, // non-singleton nodes evaluated
+    uint64_t *nodes_moved_handle,    // nodes moved to a new community
     // input:
     const GrB_Matrix A,    // adjacency matrix
     const GrB_Vector deg,  // degree vector
@@ -104,21 +124,26 @@ int LG_Leiden_move_nodes
     char* msg
 ) {
     uint64_t node_id, com_id, n_deg, n;
-    GrB_Vector x = NULL, gain = NULL;
+    GrB_Vector x = NULL;
     GrB_Vector c_deg = NULL ;
-    GxB_Iterator it = NULL;
+    GxB_Iterator it = NULL, neighbor_it = NULL;
     GrB_Matrix_nrows (&n, A) ;
     uint64_t queue_head = 0, queue_tail = n, queue_size = n + 1;
 
     GRB_TRY (GxB_Iterator_new (&it)) ;
     GRB_TRY (GrB_Vector_new (&c_deg, GrB_FP64, n)) ;
     GRB_TRY (GrB_Vector_new (&x, GrB_FP64, n)) ;
-    GRB_TRY (GrB_Vector_new (&gain, GrB_FP64, n)) ;
+    GRB_TRY (GxB_Iterator_new (&neighbor_it)) ;
+    // FIXME: could modify A
+    GrB_set (A, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT) ;
+    GRB_TRY (GxB_rowIterator_attach (neighbor_it, A, NULL));
 
-    GRB_TRY (GrB_mxv(c_deg, NULL, NULL, GxB_PLUS_SECOND_FP64, C, deg, NULL));
+    GRB_TRY (GrB_assign (c_deg, NULL, NULL, 0.0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_vxm(c_deg, NULL, NULL, GxB_PLUS_FIRST_FP64, deg, C, NULL));
     // TODO: decide if queue should be made inside this function.
-    int64_t count = 0;
+    uint64_t nodes_popped = 0, nodes_evaluated = 0, nodes_moved = 0;
     while (queue_head != queue_tail) { // while queue not empty
+        nodes_popped++;
         node_id = queue[queue_head];
         queue_head = (queue_head + 1) % queue_size;
         enqueued [node_id] = false;
@@ -126,12 +151,17 @@ int LG_Leiden_move_nodes
         uint64_t n_neighbors;
         com_id = community [node_id] ;
         GRB_TRY (GrB_Vector_clear (x));
-        GRB_TRY (GrB_Vector_setElement_FP64 (x, 0.0, node_id));
-        GRB_TRY (GrB_vxm (x, NULL, GrB_PLUS_FP64, GxB_PLUS_SECOND_FP64, x, A, NULL)) ;
+        // GRB_TRY (GrB_Vector_setElement_FP64 (x, 0.0, node_id)) ;
+        // GRB_TRY (GrB_vxm (x, NULL, GrB_PLUS_FP64, GxB_PLUS_SECOND_FP64, x, A, NULL)) ;
+        // TODO: deg and c_deg as C_arrays?
+        GRB_TRY (GrB_Vector_setElement_FP64 (x, 0.0, node_id)) ;
+        GRB_TRY (GrB_Col_extract (x, NULL, GrB_PLUS_FP64, A, GrB_ALL, n, node_id, GrB_DESC_T0)) ;
+
         GRB_TRY (GrB_Vector_nvals (&n_neighbors, x)) ;
         if (n_neighbors == 1) continue; // skip singletons
+        nodes_evaluated++;
         // give gain the number of edges connecting x to community i
-        GRB_TRY (GrB_vxm (gain, NULL, NULL, GxB_PLUS_FIRST_FP64, x, C, NULL)) ;
+        GRB_TRY (GrB_vxm (x, NULL, NULL, GxB_PLUS_FIRST_FP64, x, C, NULL)) ;
 
         // momentarily remove node degree from the community total
         GRB_TRY (GrB_Vector_extractElement_FP64 (&n_deg, deg, node_id));
@@ -140,16 +170,19 @@ int LG_Leiden_move_nodes
         GRB_TRY (GrB_assign (c_deg, NULL, GrB_MINUS_FP64, n_deg, &com_id, 1, NULL));
 
         // Calculate gain in each neighboring community
-        GRB_TRY (GrB_apply (gain, gain, GrB_PLUS_FP64, GrB_TIMES_FP64, c_deg, m_inv2 * n_deg, GrB_DESC_S));
         uint64_t max_gain_c;
         double max_gain_val = -1e100;
-        GRB_TRY (GxB_Vector_Iterator_attach (it, gain, NULL));
+        double y = m_inv2 * n_deg;
+        GRB_TRY (GxB_Vector_Iterator_attach (it, x, NULL));
         GrB_Info info = GxB_Vector_Iterator_seek (it, 0);
         while (info == GrB_SUCCESS) {
             uint64_t c = GxB_Vector_Iterator_getIndex (it);
-            double g = GxB_Iterator_get_FP64 (it);
-            if (g > max_gain_val) {
-                max_gain_val = g;
+            double gain = GxB_Iterator_get_FP64 (it);
+            double com_deg;
+            GRB_TRY (GrB_Vector_extractElement_FP64 (&com_deg, c_deg, c)) ;
+            gain += y * com_deg ;
+            if (gain > max_gain_val) {
+                max_gain_val = gain;
                 max_gain_c = c;
             }
             info = GxB_Vector_Iterator_next (it);
@@ -160,23 +193,27 @@ int LG_Leiden_move_nodes
         GRB_TRY (GrB_assign (c_deg, NULL, GrB_PLUS_FP64, n_deg, &max_gain_c, 1, NULL));
 
         if (max_gain_c == com_id) continue; // no change in community
+        nodes_moved++;
 
         // push every neighbor in a different community that is not already in
         // the queue to the back of the queue
-        GRB_TRY (GxB_Vector_Iterator_attach (it, x, NULL));
-        info = GxB_Vector_Iterator_seek (it, 0);
+        info = GxB_rowIterator_seekRow (neighbor_it, node_id);
         while (info == GrB_SUCCESS) {
-            uint64_t neighbor_id = GxB_Vector_Iterator_getIndex (it);
+            uint64_t neighbor_id = GxB_rowIterator_getColIndex (neighbor_it);
             if (max_gain_c != community [neighbor_id]
                 && !enqueued [neighbor_id]) {
+                // TODO: make a macro for enque deque
                 queue[queue_tail] = neighbor_id;
                 queue_tail = (queue_tail + 1) % queue_size;
                 enqueued[neighbor_id] = true;
             }
 
-            info = GxB_Vector_Iterator_next (it);
+            info = GxB_rowIterator_nextCol (neighbor_it);
         }
     }
+    if (nodes_popped_handle != NULL) (*nodes_popped_handle) = nodes_popped;
+    if (nodes_evaluated_handle != NULL) (*nodes_evaluated_handle) = nodes_evaluated;
+    if (nodes_moved_handle != NULL) (*nodes_moved_handle) = nodes_moved;
     LG_FREE_WORK ;
     return GrB_SUCCESS ;
 }
@@ -184,12 +221,12 @@ int LG_Leiden_move_nodes
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK                                        \
 {                                                           \
-    GrB_free (&s_deg);                                      \
     GrB_free (&x_count);                                    \
     GrB_free (&k);                                          \
     GrB_free (&X);                                          \
     GrB_free (&C_t);                                        \
     GrB_free (&it);                                         \
+    LAGraph_Free ((void **) &s_deg, NULL) ;                 \
 }
 
 #undef  LG_FREE_ALL
@@ -198,12 +235,28 @@ int LG_Leiden_move_nodes
     LG_FREE_WORK ;                                          \
 }
 
+typedef struct {
+    double *s_deg;
+    double km_inv;
+} leiden_ctx ;
+
+void LG_Leiden_gain
+(
+    double *z,
+    const double *x,
+    GrB_Index i,
+    GrB_Index j,
+    const leiden_ctx *thunk
+) {
+    *z = *x + thunk->km_inv * thunk->s_deg [j];
+}
 // helper function: phase 2 of leiden. Output already allocated
 int LG_Leiden_refinement
 (
     // output:
     GrB_Matrix S,         // sub-community matrix
     uint64_t *sub_com,    // sub-community array (inside of S matrix)
+    uint64_t *nodes_evaluated_handle, // non-singleton nodes evaluated
     // input:
     const GrB_Matrix C,         // community matrix
     const uint64_t *community,  // community array (inside of C matrix)
@@ -216,14 +269,20 @@ int LG_Leiden_refinement
 ) {
     uint64_t node_id, com_id, n_deg, n;
     GrB_Matrix X = NULL;
-    GrB_Vector s_deg = NULL;
+    double *s_deg = NULL;
     GrB_Vector k = NULL;
     GrB_Matrix C_t = NULL ; // transpose of C
     GrB_Vector x_count = NULL;
     GxB_Iterator it = NULL ;
+    GrB_IndexUnaryOp gain_op = NULL;
+    GrB_Type leiden_ctx_t = NULL;
+    GrB_Scalar ctx_s = NULL;
 
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     uint64_t queue_head = 0, queue_tail = n, queue_size = n + 1;
+
+    // TODO: make C_t compact, use an different queue per each community.
+    // This makes it easier to do the per-comunity masking.
 
     // TODO: decide if queue should be made inside this function.
     GRB_TRY (GrB_Matrix_new (&C_t, GrB_FP64, n, n)) ;
@@ -233,29 +292,35 @@ int LG_Leiden_refinement
     GRB_TRY (GrB_mxm (C_t, C_t, GrB_PLUS_FP64, GxB_PLUS_SECOND_FP64, C_t, A, GrB_DESC_ST1)) ;
 
     // Identify nodes with in-cluster connections (more than 0)
-    // TODO: use a smarter selection using c_deg
     GRB_TRY (GrB_Vector_new (&x_count, GrB_FP64, n));
     GRB_TRY (GrB_assign (x_count, NULL, NULL, 0.0, GrB_ALL, n, NULL)) ;
     GRB_TRY (GrB_reduce (x_count, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, C_t, GrB_DESC_T0)) ;
 
     uint64_t n_communities;
 
+    LG_TRY (LAGraph_Malloc ((void **) &s_deg, n, sizeof (uint64_t), msg)) ;
+    GRB_TRY (GrB_Vector_extractTuples_FP64 (NULL, s_deg, &n, deg)) ;
+    GRB_TRY (GrB_Type_new (&leiden_ctx_t, sizeof(leiden_ctx))) ;
     GRB_TRY (GrB_Vector_new (&k, GrB_FP64, n)) ;
-    GRB_TRY (GrB_Vector_new (&s_deg, GrB_FP64, n)) ;
     GRB_TRY (GrB_Matrix_new (&X, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_Scalar_new (&ctx_s, leiden_ctx_t)) ;
+    GRB_TRY (GrB_IndexUnaryOp_new (
+        &gain_op, (GxB_index_unary_function) LG_Leiden_gain,
+        GrB_FP64, GrB_FP64, leiden_ctx_t)) ;
     GRB_TRY (GxB_Iterator_new(&it)) ;
 
     GRB_TRY (GrB_select (C_t, NULL, NULL, GrB_VALUEGT_FP64, C_t, 0.0, NULL)) ;
+    leiden_ctx ctx = {.s_deg = s_deg, .km_inv = 0.0} ;
 
-    // NOTE: I am wiring this so that it will be relatively easy to parallelize
-    // this phase in the FUTURE
 
+    uint64_t nodes_evaluated = 0;
     while (queue_head != queue_tail) { // while queue not empty
         double count;
         node_id = queue[queue_head];
         queue_head = (queue_head + 1) % queue_size;
         GRB_TRY (GrB_Vector_extractElement_FP64 (&count, x_count, node_id));
         if (count <= 0.0) continue; // skip singletons
+        nodes_evaluated++;
 
         double com_deg, n_deg;
         com_id = community [node_id] ;
@@ -272,13 +337,15 @@ int LG_Leiden_refinement
         // momentarily remove node degree from the community total
         GRB_TRY (GrB_Vector_extractElement_FP64 (&n_deg, deg, node_id));
 
-        // s_deg [sub_com_id] -= ndeg
-        GRB_TRY (GrB_assign (s_deg, NULL, GrB_MINUS_FP64, n_deg, &sub_com_id, 1, NULL)) ;
+        s_deg [sub_com_id] -= n_deg;
 
-        GRB_TRY (GrB_Vector_setElement_FP64(k, m_inv2 * n_deg, sub_com_id)) ;
+        ctx.km_inv = m_inv2 * n_deg;
+        GRB_TRY (GrB_Scalar_setElement_UDT (ctx_s, &leiden_ctx_t)) ;
         // Calculate gain in each neighboring community
-        GRB_TRY (GrB_mxm (X, X, GrB_PLUS_FP64, GrB_PLUS_TIMES_SEMIRING_FP64,
-            (GrB_Matrix) s_deg, (GrB_Matrix) k, GrB_DESC_ST1)) ;
+        // FIXME: killing preformance, this isn't using the mask.
+        GRB_TRY (GrB_apply (X, NULL, NULL, gain_op, X, ctx_s, NULL)) ;
+        // GRB_TRY (GrB_mxm (X, X, GrB_PLUS_FP64, GrB_PLUS_TIMES_SEMIRING_FP64,
+        //     (GrB_Matrix) k, (GrB_Matrix) s_deg, GrB_DESC_ST1)) ;
 
         uint64_t new_c = com_id, row = 0;
 
@@ -287,6 +354,7 @@ int LG_Leiden_refinement
 
         // Select from X (those with gain >= current and choose randomly)
         double current_gain, total_gain;
+        // FIXME: just do this inside the loop below.
         GRB_TRY (GrB_Matrix_extractElement_FP64 (&current_gain, X, com_id, node_id)) ;
         GRB_TRY (GrB_apply (X, NULL, NULL, GrB_MINUS_FP64, X, current_gain, NULL)) ;
         GRB_TRY (GrB_select (X, NULL, NULL, GrB_VALUEGE_FP64, X, 0.0, NULL)) ;
@@ -309,9 +377,9 @@ int LG_Leiden_refinement
         }
 
         sub_com [node_id] = new_c;
-        // s_deg [new_c] += ndeg
-        GRB_TRY (GrB_assign (s_deg, NULL, GrB_PLUS_FP64, n_deg, &new_c, 1, NULL));
+        s_deg [new_c] += n_deg;
     }
+    if (nodes_evaluated_handle != NULL) (*nodes_evaluated_handle) = nodes_evaluated;
     LG_FREE_WORK ;
     return GrB_SUCCESS ;
 }
@@ -348,6 +416,7 @@ int LG_Leiden_aggregate
 ) {
     uint64_t node_id, com_id, n_deg, queue_head = 0, queue_tail = 0;
     GrB_Vector s_list = NULL, x = NULL;
+    // TODO:rename S_new, maybe make it pure output instead of i/o
     GrB_Matrix S_squished = NULL, S_new = NULL ;
     GrB_Matrix C_squished = NULL, C_new = NULL ;
     GrB_Matrix A_squished = NULL, A_new = NULL ;
@@ -407,10 +476,8 @@ int LG_Leiden_aggregate
     GrB_free (&C);                                          \
     GrB_free (&S);                                          \
     if (free_A) GrB_free (&A) ;                             \
-    GrB_free (&mask);                                       \
     GrB_free (&deg);                                        \
     GrB_free (&c_deg);                                      \
-    GrB_free (&gain);                                       \
     GrB_free (&x);                                          \
     LAGraph_Free ((void **) &queue, NULL);                  \
     LAGraph_Free ((void **) &enqueued, NULL);               \
@@ -429,17 +496,17 @@ int LAGraph_Leiden
     // output:
     GrB_Vector *c_handle,   // c[i] = community label (0..K-1) for node i
     // input:
-    LAGraph_Graph G,        // input graph (must be symmetric, no self-loops)
-    uint64_t seed,          // random seed (reserved; not yet used)
+    const LAGraph_Graph G,  // input graph (must be symmetric, no self-loops,
+                            // have positive numerical weights)
+    uint64_t seed,          // random seed
     char *msg
 )
 {
-#ifdef LG_SUITESPARSE_GRAPHBLAS_V10
+#if LG_SUITESPARSE_GRAPHBLAS_V10
     uint64_t *queue = NULL; // circular buffer with next nodes to look up
     bool *enqueued = NULL; // true if node is in the queue
     uint64_t *community = NULL ; // array: i in community c[i]
     GrB_Matrix C = NULL ; // contains readonly pointer to community array
-    GrB_Matrix mask = NULL ; // mask each community
     GxB_Container cont = NULL;
 
     uint64_t *sub_com = NULL ; // array: i in sub-community sub_com[i]
@@ -449,7 +516,6 @@ int LAGraph_Leiden
     GrB_Vector c_deg = NULL ; // degree of each community
 
     GrB_Matrix A = NULL ; // G->A
-    GrB_Vector gain = NULL ; // gain from moving into a community
     GrB_Vector x = NULL; // full boolean vector
     GrB_Matrix node_map = NULL ; // maps aggregate node to nodes it contains
     GrB_Matrix new_node_map = NULL ; // maps aggregate node to nodes it contains
@@ -464,9 +530,7 @@ int LAGraph_Leiden
     original_n = n;  // Store original number of nodes
 
     // Input checking
-    LG_ASSERT_MSG (G->out_degree != NULL, LAGRAPH_NOT_CACHED,
-                   "G->out_degree must be defined") ;
-    LG_ASSERT_MSG(
+    LG_ASSERT_MSG (
         G->is_symmetric_structure == LAGraph_TRUE,
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be symmetric") ;
@@ -486,9 +550,7 @@ int LAGraph_Leiden
     // Initialize GraphBLAS data structures
     GRB_TRY (GxB_Iterator_new(&neighbor_it));
     GRB_TRY (GxB_Container_new (&cont)) ;
-    GRB_TRY (GrB_Vector_new(&x, GrB_FP64, n));
     GRB_TRY (GrB_Vector_new(&deg, GrB_FP64, n));
-    GRB_TRY (GrB_Vector_new(&gain, GrB_FP64, n));
 
     GRB_TRY (GrB_Vector_new(&x, GrB_BOOL, n));
     GRB_TRY (GrB_assign (x, NULL, NULL, (bool) 0, GrB_ALL, n, NULL));
@@ -497,7 +559,7 @@ int LAGraph_Leiden
 
     // Initialize full degree vector from graph
     GRB_TRY (GrB_assign (deg, NULL, NULL, 0.0, GrB_ALL, n, NULL));
-    GRB_TRY (GrB_reduce(deg, NULL, NULL, GrB_PLUS_MONOID_FP64, A, NULL));
+    GRB_TRY (GrB_reduce (deg, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, A, NULL));
     // don't use out degree unless A is bool adj matrix
     // GRB_TRY (GrB_assign (deg, NULL, GrB_PLUS_FP64, G->out_degree, GrB_ALL, n, NULL));
 
@@ -506,19 +568,27 @@ int LAGraph_Leiden
     GRB_TRY (GrB_reduce (&m, NULL, GrB_PLUS_MONOID_FP64, deg, NULL)) ;
     LG_ASSERT_MSG (isfinite(m), GrB_INVALID_VALUE,
                    "Matrix must reduce to a finite value") ;
-
-    double m_inv2 = -1 / (2 * m);
+    double m_inv2 = -1.0 / (m);
 
     srand(seed);
 
     // Outer loop: repeat phases until convergence
-    double prev_modularity = 0;
+    double prev_modularity = -1;
     double modularity_epsilon = 1e-6;
 
+    double total_move_time = 0, total_refine_time = 0, total_agg_time = 0;
+    double total_modularity_time = 0, total_unpack_time = 0, total_queue_time = 0;
+    uint64_t total_move_evaluated = 0, total_move_popped = 0, total_move_moved = 0;
+    uint64_t total_refine_evaluated = 0;
+
     for (int count = 0; count < LEIDEN_MAX_ITER; count++) {
-        printf ("Iteration %d, node count %lu \n", count, n) ;
+        double current_modularity;
+        LG_LEIDEN_PRINTF ("[Leiden timing] iteration %d, coarse nodes=%llu\n",
+            count, (unsigned long long) n) ;
         // Initialize queue in random order (seed-based)
+        LG_LEIDEN_TIC (t_queue_phase1);
         uint64_t queue_len = n;
+        // TODO: store values and memcopy in a different array
         GRB_TRY (GrB_Vector_extractTuples_FP64 (queue, NULL, &queue_len, deg)) ;
 
         // TODO: shuffle with LAGraph Random instead.
@@ -531,10 +601,14 @@ int LAGraph_Leiden
             }
         }
         memset (enqueued, true, n) ;
+        double queue_phase1_time = LG_LEIDEN_ELAPSED (t_queue_phase1);
+        total_queue_time += queue_phase1_time;
 
         // get i vector from C and S to use as community and sub_com arrays
         // keep inside C and S as read-only
-        do {
+        LG_LEIDEN_TIC (t_unpack);
+
+        {
             GrB_Type type;
             uint64_t n_community, X_memsize;
             int handling;
@@ -553,23 +627,50 @@ int LAGraph_Leiden
             GRB_TRY (GrB_set (S, GxB_SPARSE, GxB_SPARSITY_CONTROL)) ;
             GRB_TRY (GrB_set (S, GrB_ROWMAJOR, GrB_STORAGE_ORIENTATION_HINT)) ;
             GRB_TRY (GrB_set (S, 64, GxB_COLINDEX_INTEGER_HINT)) ;
+            GrB_wait (S, GrB_MATERIALIZE) ;
             GRB_TRY (GxB_unload_Matrix_into_Container (S, cont, NULL)) ;
             GRB_TRY (GxB_Vector_unload (cont->i, (void **) &sub_com, &type, &n_community,
                 &X_memsize, &handling, NULL)) ;
             GRB_TRY (GxB_Vector_load (cont->i, (void **) &sub_com, type, n_community,
                 X_memsize, GxB_IS_READONLY, NULL)) ;
             GRB_TRY (GxB_load_Matrix_from_Container(S, cont, NULL)) ;
-        } while (0) ;
+        }
+
+        double unpack_time = LG_LEIDEN_ELAPSED (t_unpack);
+        total_unpack_time += unpack_time;
 
         //----------------------------------------------------------------------
         // Phase 1: move nodes
         //----------------------------------------------------------------------
-        LG_TRY (LG_Leiden_move_nodes (C, community, A, deg, queue, enqueued, m_inv2, msg)) ;
+        uint64_t move_popped = 0, move_evaluated = 0, move_moved = 0;
+        LG_LEIDEN_TIC (t_move);
+        // LG_LEIDEN_BURBLE_ON;
+        LG_TRY (LG_Leiden_move_nodes (C, community, &move_popped, &move_evaluated,
+            &move_moved, A, deg, queue, enqueued, m_inv2, msg)) ;
+        LG_LEIDEN_BURBLE_OFF;
+        double move_time = LG_LEIDEN_ELAPSED (t_move);
+        total_move_time += move_time;
+        total_move_popped += move_popped;
+        total_move_evaluated += move_evaluated;
+        total_move_moved += move_moved;
+        LG_LEIDEN_PRINTF (
+            "  move_nodes: t=%.6fs, queue_pops=%llu, evaluated=%llu, moved=%llu, amortized=%.3fus/evaluated\n",
+            move_time,
+            (unsigned long long) move_popped,
+            (unsigned long long) move_evaluated,
+            (unsigned long long) move_moved,
+            (move_evaluated == 0) ? 0.0 : (1e6 * move_time / (double) move_evaluated)) ;
+
+    #ifndef NDEBUG
+        LG_TRY (LAGr_AdjModularity (&current_modularity, 1.0, A, C, msg));
+        ASSERT (current_modularity >= prev_modularity - modularity_epsilon) ;
+    #endif
 
         //----------------------------------------------------------------------
         // Prep phase 2
         //----------------------------------------------------------------------
         // Initialize queue
+        LG_LEIDEN_TIC (t_queue_phase2);
         queue_len = n;
         GRB_TRY (GrB_Vector_extractTuples_FP64 (queue, NULL, &queue_len, deg)) ;
 
@@ -582,20 +683,41 @@ int LAGraph_Leiden
                 queue[j] = temp;
             }
         }
+        double queue_phase2_time = LG_LEIDEN_ELAPSED (t_queue_phase2);
+        total_queue_time += queue_phase2_time;
 
         //----------------------------------------------------------------------
         // Phase 2: refine
         //----------------------------------------------------------------------
         // Save Phase 1 communities as parent communities
-        LG_TRY (LG_Leiden_refinement (S, sub_com, C, community, c_deg, A, deg, queue, m_inv2, msg)) ;
+        uint64_t refine_evaluated = 0;
+        LG_LEIDEN_TIC (t_refine);
+        LG_LEIDEN_BURBLE_ON;
+        LG_TRY (LG_Leiden_refinement (S, sub_com, &refine_evaluated, C, community,
+            c_deg, A, deg, queue, m_inv2, msg)) ;
+        LG_LEIDEN_BURBLE_OFF;
+        double refine_time = LG_LEIDEN_ELAPSED (t_refine);
+        total_refine_time += refine_time;
+        total_refine_evaluated += refine_evaluated;
+        LG_LEIDEN_PRINTF (
+            "  refinement: t=%.6fs, evaluated=%llu, amortized=%.3fus/evaluated\n",
+            refine_time,
+            (unsigned long long) refine_evaluated,
+            (refine_evaluated == 0) ? 0.0 : (1e6 * refine_time / (double) refine_evaluated)) ;
 
         //----------------------------------------------------------------------
         // Phase 3: aggregate
         //----------------------------------------------------------------------
 
         // Compute modularity to check convergence
-        double current_modularity;
+        LG_LEIDEN_TIC (t_modularity);
+        // LG_LEIDEN_BURBLE_ON;
         LG_TRY (LAGr_AdjModularity (&current_modularity, 1.0, A, S, msg));
+        LG_LEIDEN_BURBLE_OFF;
+        double modularity_time = LG_LEIDEN_ELAPSED (t_modularity);
+        total_modularity_time += modularity_time;
+        LG_LEIDEN_PRINTF ("  modularity: Q=%.12g, t=%.6fs\n",
+            current_modularity, modularity_time) ;
 
         ASSERT (current_modularity >= prev_modularity - modularity_epsilon) ;
         if (fabs(current_modularity - prev_modularity) < modularity_epsilon) {
@@ -603,7 +725,13 @@ int LAGraph_Leiden
         }
         prev_modularity = current_modularity;
 
+        LG_LEIDEN_TIC (t_agg);
+        // LG_LEIDEN_BURBLE_ON;
         LG_TRY (LG_Leiden_aggregate (&S, &C, &A, free_A, msg)) ;
+        LG_LEIDEN_BURBLE_OFF;
+        double agg_time = LG_LEIDEN_ELAPSED (t_agg);
+        total_agg_time += agg_time;
+        LG_LEIDEN_PRINTF ("  aggregate: t=%.6fs\n", agg_time) ;
         // free internal pointers that were not freed
         LG_TRY (LAGraph_Free ((void **) &community, msg)) ;
         LG_TRY (LAGraph_Free ((void **) &sub_com, msg)) ;
@@ -635,6 +763,23 @@ int LAGraph_Leiden
     #endif
     } // end outer while loop
 
+    LG_LEIDEN_PRINTF (
+        "[Leiden timing] totals: queue=%.6fs, unpack=%.6fs, move=%.6fs, refine=%.6fs, modularity=%.6fs, aggregate=%.6fs\n",
+        total_queue_time, total_unpack_time, total_move_time, total_refine_time,
+        total_modularity_time, total_agg_time) ;
+    LG_LEIDEN_PRINTF (
+        "[Leiden timing] move totals: queue_pops=%llu, evaluated=%llu, moved=%llu, amortized=%.3fus/evaluated\n",
+        (unsigned long long) total_move_popped,
+        (unsigned long long) total_move_evaluated,
+        (unsigned long long) total_move_moved,
+        (total_move_evaluated == 0) ? 0.0 :
+            (1e6 * total_move_time / (double) total_move_evaluated)) ;
+    LG_LEIDEN_PRINTF (
+        "[Leiden timing] refinement totals: evaluated=%llu, amortized=%.3fus/evaluated\n",
+        (unsigned long long) total_refine_evaluated,
+        (total_refine_evaluated == 0) ? 0.0 :
+            (1e6 * total_refine_time / (double) total_refine_evaluated)) ;
+
 
     // Map refined communities back to original nodes
     GRB_TRY (GrB_Vector_new(c_handle, GrB_INT64, original_n));
@@ -644,14 +789,11 @@ int LAGraph_Leiden
         GRB_TRY (GxB_Vector_load (*c_handle, (void **) &community, GrB_INT64, n,
             sizeof (int64_t) * n, GrB_DEFAULT, NULL));
     } else {
-        GRB_TRY (GxB_Matrix_Iterator_attach (neighbor_it, node_map, NULL)) ;
-        GrB_Info info = GxB_Matrix_Iterator_seek (neighbor_it, 0) ;
-        while (info == GrB_SUCCESS) {
-            uint64_t coarse_id, orig_id;
-            GxB_Matrix_Iterator_getIndex (neighbor_it, &coarse_id, &orig_id) ;
-            GRB_TRY (GrB_Vector_setElement_INT64 (*c_handle, community[coarse_id], orig_id)) ;
-            info = GxB_Matrix_Iterator_next (neighbor_it) ;
-        }
+        GRB_TRY (GrB_Vector_resize (x, n)) ;
+        GRB_TRY (GrB_assign (
+            *c_handle, NULL, NULL, (int64_t) 0, GrB_ALL, original_n, NULL)) ;
+        GRB_TRY (GrB_vxm (*c_handle, NULL, GrB_PLUS_INT64,
+            GxB_PLUS_FIRSTJ_INT64, x, node_map, NULL)) ;
     }
 
     LG_FREE_WORK;
@@ -660,4 +802,3 @@ int LAGraph_Leiden
     return GrB_NOT_IMPLEMENTED;
 #endif
 }
-

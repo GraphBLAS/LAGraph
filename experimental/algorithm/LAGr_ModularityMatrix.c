@@ -36,6 +36,7 @@
     {                    \
         GrB_free(&k);    \
         GrB_free(&B);    \
+        GrB_free(&S_t);  \
     }
 #undef LG_FREE_ALL
 #define LG_FREE_ALL  \
@@ -62,25 +63,28 @@
 #endif
 
 int LAGr_AdjModularity(
-    double *Q,
+    double *Q, // TODO: scalar
     double gamma,
-    GrB_Matrix A,
-    GrB_Matrix S,
+    const GrB_Matrix A,
+    const GrB_Matrix S,
     char *msg)
 {
 #if LG_SUITESPARSE_GRAPHBLAS_V10_2
     LG_CLEAR_MSG;
     char MATRIX_TYPE[LAGRAPH_MSG_LEN];
 
-    // GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
+    //TODO: add checks
+    GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
 
     GrB_Index n;
     GrB_Vector k = NULL;
     GrB_Matrix B = NULL;
+    GrB_Matrix S_t = NULL;
 
     GRB_TRY(GrB_Matrix_nrows(&n, A));
 
     GRB_TRY(GrB_Matrix_new(&B, GrB_FP64, n, n));
+    GRB_TRY(GrB_Matrix_new(&S_t, GrB_BOOL, n, n));
     GRB_TRY(GrB_Vector_new(&k, GrB_FP64, n));
 
     double m = 0.0;
@@ -93,32 +97,35 @@ int LAGr_AdjModularity(
     if (m == 0.0)
     {
         *Q = 0.0;
-        LG_FREE_ALL;
+        LG_FREE_WORK;
         return GrB_SUCCESS;
     }
     double inv_m = -gamma / (2.0 * m);
-
     // sum degrees per community
-    GRB_TRY (GrB_vxm (k, NULL, NULL, GxB_PLUS_FIRST_FP64, k, S, NULL)) ;
+    GRB_TRY (GrB_transpose (S_t, NULL, NULL, S, NULL)) ;
+    // GRB_TRY (GrB_vxm (k, NULL, NULL, GxB_PLUS_FIRST_FP64, k, S, NULL)) ;
+    GRB_TRY (GrB_mxv (k, NULL, NULL, GxB_PLUS_SECOND_FP64, S_t, k, NULL)) ;
     // square
-    GRB_TRY (GrB_assign (k, NULL, GrB_TIMES_FP64, k, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_apply (k, NULL, NULL, GxB_POW_FP64, k, 2.0, NULL)) ;
 
     // sum all of the products
     // this computed \sum_{i,j} (k_{i}k_{j}\delta(\sigma_i\sigma_j))
     GRB_TRY (GrB_reduce (&Q_, NULL, GrB_PLUS_MONOID_FP64, k, NULL)) ;
     Q_ *= inv_m;
+    GRB_TRY (GrB_free (&k)) ;
 
     // Count the number of edges per node in the cluster originating at a node
     // in the cluster
-    GRB_TRY (GrB_mxm (B, S, NULL, GxB_PLUS_FIRST_FP64, A, S, GrB_DESC_S));
+    GRB_TRY (GrB_mxm (B, S, NULL, GxB_PLUS_FIRST_FP64, A, S_t, GrB_DESC_ST1));
 
     // sum the intra-cluster edges per node for all nodes
     GRB_TRY (GrB_reduce (&Q_, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, B, NULL)) ;
+    GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
 
     Q_ *= -inv_m;
     *Q = Q_;
 
-    LG_FREE_ALL;
+    LG_FREE_WORK;
     return (GrB_SUCCESS);
 #else
     return (GrB_NOT_IMPLEMENTED);
