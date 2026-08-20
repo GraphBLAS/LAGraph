@@ -217,7 +217,7 @@ int LAGr_Init
     // create global objects
     //--------------------------------------------------------------------------
 
-    LG_Random_Init (msg) ;
+    LG_TRY (LG_Random_Init (msg)) ;
 
     // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
     // GrB_FIRST_T multiplicative operator.  These semirings compute C=A*B
