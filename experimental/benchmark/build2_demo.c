@@ -80,7 +80,7 @@ int main (int argc, char **argv)
     GrB_Scalar Zero = NULL ;
 
     // start GraphBLAS and LAGraph
-    bool burble = true ;
+    bool burble = false ;       // BURBLE
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------

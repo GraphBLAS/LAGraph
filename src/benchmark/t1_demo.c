@@ -153,7 +153,7 @@ int main (int argc, char **argv)
     // triangle counting
     //--------------------------------------------------------------------------
 
-    LG_SET_BURBLE (true) ;
+    LG_SET_BURBLE (false) ;
     GrB_Index ntriangles, ntsimple = 0 ;
 
 #if 0
@@ -166,7 +166,6 @@ int main (int argc, char **argv)
 #endif
 
     // warmup for more accurate timing, and also print # of triangles
-    double ttot = LAGraph_WallClockTime ( ) ;
     printf ("\nwarmup method: ") ;
 //  int presort = LAGr_TriangleCount_AutoSort ; // = 0 (auto selection)
     int presort = LAGr_TriangleCount_NoSort ; // HACK
@@ -177,30 +176,35 @@ int main (int argc, char **argv)
     GB_Global_hack_set (2, 2) ; // never use the GPU
     LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_ULT ;
 #if 1
-    LAGRAPH_TRY (LAGr_TriangleCount_GPU (&ntriangles, G, &method, &presort, msg)) ;
-    printf ("# of triangles: %" PRIu64 "\n", ntriangles) ;
-    print_method (stdout, 6, presort) ;
-    ttot = LAGraph_WallClockTime ( ) - ttot ;
-    printf ("nthreads: %3d time: %12.6f rate: %6.2f (Sandia_ULT, one trial)\n",
-            nthreads_max, ttot, 1e-6 * nvals / ttot) ;
+    for (int trial = 1 ; trial <= 3 ; trial++)
+    {
+        double ttot = LAGraph_WallClockTime ( ) ;
+        LAGRAPH_TRY (LAGr_TriangleCount_GPU (&ntriangles, G, &method, &presort, msg)) ;
+        printf ("ON CPU (trial %d): # of triangles: %" PRIu64 "\n", trial, ntriangles) ;
+        print_method (stdout, 6, presort) ;
+        ttot = LAGraph_WallClockTime ( ) - ttot ;
+        printf ("nthreads: %3d time: %12.6f rate: %6.2f (Sandia_ULT, one trial)\n",
+                nthreads_max, ttot, 1e-6 * nvals / ttot) ;
+    }
 #endif
 
     // warmup method WITH GPU:
     // LAGr_TriangleCount_Sandia_ULT: sum (sum ((U * L') .* U))
-    ttot = LAGraph_WallClockTime ( ) ;
 
     GrB_Index ntriangles_gpu ;
     GB_Global_hack_set (2, 1) ; // always use the GPU
 
-    //LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_ULT ;
-    LAGRAPH_TRY (LAGr_TriangleCount_GPU (&ntriangles_gpu, G, &method, &presort, msg)) ;
-    LG_SET_BURBLE (false) ;
-    ttot = LAGraph_WallClockTime ( ) - ttot ;
-
-    printf ("# of triangles: %" PRIu64 " (GPU)\n", ntriangles_gpu) ;
-    print_method (stdout, 6, presort) ;
-    printf ("nthreads: %3d time: %12.6f rate: %6.2f (Sandia_ULT, one trial)\n",
-            nthreads_max, ttot, 1e-6 * nvals / ttot) ;
+    for (int trial = 1 ; trial <= 3 ; trial++)
+    {
+        //LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_ULT ;
+        double ttot = LAGraph_WallClockTime ( ) ;
+        LAGRAPH_TRY (LAGr_TriangleCount_GPU (&ntriangles_gpu, G, &method, &presort, msg)) ;
+        ttot = LAGraph_WallClockTime ( ) - ttot ;
+        printf ("ON GPU (trial %d): # of triangles: %" PRIu64 " (GPU)\n", trial, ntriangles_gpu) ;
+        print_method (stdout, 6, presort) ;
+        printf ("nthreads: %3d time: %12.6f rate: %6.2f (Sandia_ULT, one trial)\n",
+                nthreads_max, ttot, 1e-6 * nvals / ttot) ;
+    }
 
 #if 0
     if (ntriangles_gpu != ntriangles)
