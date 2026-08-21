@@ -328,9 +328,9 @@ if ( BUILD_SHARED_LIBS )
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
 
-    #-------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     # LAGraph shared targets and package configuration
-    #-------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
 
     # create (temporary) export target file during build
     export ( EXPORT LAGraphTargets
@@ -349,9 +349,9 @@ if ( BUILD_STATIC_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
 
-    #-------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     # LAGraph static targets and package configuration
-    #-------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
 
     # create (temporary) export target file during build
     export ( EXPORT LAGraphTargets_static
