@@ -1138,13 +1138,7 @@ static inline int demo_init (bool burble)
     fflush (stderr) ;
     #endif
 
-#if defined ( EXPERIMENTAL_GPU )
-    // use the GPU
-    LAGRAPH_TRY (LAGr_Init (GxB_NONBLOCKING_GPU, NULL, NULL, NULL, NULL, NULL));
-#else
-    // just use the CPU
     LAGRAPH_TRY (LAGraph_Init (NULL)) ;
-#endif
 
     char library [256], date [256] ;
     GRB_TRY (GrB_get (GrB_GLOBAL, library, GrB_NAME)) ;

@@ -56,8 +56,6 @@
 * LAGr_PartitionQuality
 * LAGr_PeerPressureClustering
 
-* LAGr_TriangleCount_GPU
-
 * LAGraph_argminmax: argmin/argmax of a matrix
 * LAGraph_CFL_reachability: Context-Free Language Reachability
 * LAGraph_RegularPathQuery: regular path query
