@@ -1,152 +1,170 @@
+//----------------------------------------------------------------------------
+// LAGraph/experimental/test/test_louvain.c: test cases for LAGraph_louvain
+//----------------------------------------------------------------------------
+
+// LAGraph, (c) 2019-2026 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
+
+// Contributed by Roi Lipman and Gabriel Gomez, FalkorDB
+
+//-----------------------------------------------------------------------------
+
+// Smoke test for the Louvain community-detection method: run the algorithm on
+// a few small graphs and confirm the result is a well-formed community vector.
+
 #include <stdio.h>
 #include <acutest.h>
 
 #include <LAGraphX.h>
 #include <LAGraph_test.h>
-#include "LG_Xtest.h"
 
-#define dbg(x) GxB_print(x, 5)
-#define err(x, info)                                    \
-    if (!(info == GrB_SUCCESS || info == GrB_NO_VALUE)) \
-    {                                                   \
-        char **err;                                     \
-        GrB_error(err, x);                              \
-        printf("\ninfo: %d error: %s\n", info, err);    \
-    }
-char msg[LAGRAPH_MSG_LEN];
-LAGraph_Graph G = NULL;
-GrB_Matrix A = NULL;
+char msg [LAGRAPH_MSG_LEN] ;
+GrB_Matrix    A   = NULL ;
+LAGraph_Graph G   = NULL ;
+GrB_Vector    com = NULL ;
+
 #define LEN 512
-char filename[LEN + 1];
+char filename [LEN+1] ;
+
+// Louvain parameters used throughout the smoke test.
+#define ITERMAX  6      // max modularity-improvement sweeps per level
+#define LEVELMAX 2      // max improve-and-condense levels
+#define EPSILON  1e-5f  // min modularity change considered an improvement
+
 typedef struct
 {
-    const char *matrix_file; // Adjeancy matrix or graph
-    const double mod;
-} matrix_info;
-
-const matrix_info files[] = {
-    {"comm0.mtx", 0.357142857142857},
-    {"karate.mtx", .42},
-    {"", -1}
-};
-
-
-void test_LouvainSeq(void)
-{
-    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
-    LAGraph_Init(msg);
-    // LG_SET_BURBLE (false) ;
-
-    for (int k = 0;; k++)
-    {
-        uint64_t seed = 1224;
-
-        const char *aname = files[k].matrix_file;
-        if (strlen(aname) == 0)
-            break;
-        printf("\n================================== %s:\n", aname);
-        snprintf(filename, LEN, LG_DATA_DIR "%s", files[k].matrix_file);
-        FILE *f = fopen(filename, "r");
-        TEST_CHECK(f != NULL);
-        OK(LAGraph_MMRead(&A, f, msg));
-        fclose(f);
-
-        OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
-        TEST_CHECK(A == NULL);
-
-
-        OK(LAGraph_Cached_AT(G, msg));
-        // check if the pattern is symmetric - if it isn't make it.
-        OK(LAGraph_Cached_IsSymmetricStructure(G, msg));
-        GrB_Matrix S = NULL;
-        printf("Sequntial Louvain");
-        for (int jit = 0 ; jit <= 1 ; jit++)
-        {
-            OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
-
-            double tsimple = LAGraph_WallClockTime();
-            OK(LAGraph_LouvainSeq(&S, G,seed, msg));
-
-            // OK(LAGraph_Louvain_res(&S,G,.3,msg));
-            tsimple = LAGraph_WallClockTime() - tsimple;
-            double Q = 0.0;
-            OK(LAGr_AdjModularity(&Q, 1.0, G->A, S, msg));
-            printf("Q:%f\n", Q);
-            // printf("Number of Communities: %d",comms);
-            printf(" time: %f\n", tsimple);
-        }
-
-        OK(LAGraph_Delete(&G, msg));
-    }
-    LAGraph_Finalize(msg);
-    #endif
+    const char *name ;
 }
-void test_LouvainIS(void)
+matrix_info ;
+
+// pattern / boolean symmetric matrices: LAGraph_louvain requires G->A to be a
+// square boolean adjacency matrix, which is exactly what these files load as.
+const matrix_info files [ ] =
 {
-    #if LG_SUITESPARSE_GRAPHBLAS_V10_2
-    LAGraph_Init(msg);
-    // LG_SET_BURBLE (true) ;
+    { "A.mtx" },        // tiny 7x7 graph
+    { "karate.mtx" },   // Zachary's karate club, the classic clustering example
+    { "" },
+} ;
 
-    for (int k = 0;; k++)
+//****************************************************************************
+void test_louvain (void)
+{
+    OK (LAGraph_Init (msg)) ;
+
+    for (int k = 0 ; ; k++)
     {
-        uint64_t seed = 1249141465;
-        const char *aname = files[k].matrix_file;
-        if (strlen(aname) == 0)
-            break;
-        printf("\n================================== %s:\n", aname);
-        snprintf(filename, LEN, LG_DATA_DIR "%s", files[k].matrix_file);
-        FILE *f = fopen(filename, "r");
-        TEST_CHECK(f != NULL);
-        OK(LAGraph_MMRead(&A, f, msg));
-        fclose(f);
+        // load the matrix as A
+        const char *aname = files [k].name ;
+        if (strlen (aname) == 0)
+		{
+			break ;
+		}
 
-        OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
-        TEST_CHECK(A == NULL);
+        printf ("\n================================== %s:\n", aname) ;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
+        OK (fclose (f)) ;
 
+        // construct an undirected graph G with adjacency matrix A
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
-        OK(LAGraph_Cached_AT(G, msg));
-        // check if the pattern is symmetric - if it isn't make it.
-        OK(LAGraph_Cached_IsSymmetricStructure(G, msg));
-        GrB_Matrix S = NULL;
-        printf("Isolate Sets Louvain\n");
-        for (int jit = 0 ; jit <= 1 ; jit++)
-        {
-            OK (LG_SET_JIT (jit ? GxB_JIT_ON : GxB_JIT_OFF)) ;
+        // Louvain operates on a simple graph
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
 
-            double tsimple = LAGraph_WallClockTime();
-            OK(LAGraph_LouvainIS(&S,seed, G, msg));
-            // GrB_Info info = (LAGraph_LouvainIS(&S,seed, G, msg));
-            // printf ("info %d\nmsg: %s\n", info, msg) ;
-            // OK (info) ;
+        GrB_Index n ;
+        OK (GrB_Matrix_nrows (&n, G->A)) ;
 
-            // OK(LAGraph_Louvain_res(&S,G,.3,msg));
-            tsimple = LAGraph_WallClockTime() - tsimple;
-            double Q = 0.0; 
-            double tsimple2 = LAGraph_WallClockTime();
-            OK(LAGr_AdjModularity(&Q, 1.0, G->A, S, msg));
-            tsimple2 = LAGraph_WallClockTime() - tsimple2;
+        // compute the communities with LAGraph_louvain
+        int result = LAGraph_louvain (&com, G, ITERMAX, LEVELMAX, EPSILON, msg) ;
+        TEST_CHECK (result == GrB_SUCCESS) ;
 
-            printf("Q:%f time to calc Q: %f\n", Q,tsimple2);
-            // printf("Number of Communities: %d",comms);
-            printf(" time: %f\n", tsimple);
-            GrB_free(&S);
-        }
+        //----------------------------------------------------------------------
+        // check the result is a well-formed community vector
+        //----------------------------------------------------------------------
 
-        OK(LAGraph_Delete(&G, msg));
+        // one community id per node
+        TEST_CHECK (com != NULL) ;
+        GrB_Index com_size ;
+        OK (GrB_Vector_size (&com_size, com)) ;
+        TEST_CHECK (com_size == n) ;
+        TEST_MSG ("community vector size %g, expected %g",
+            (double) com_size, (double) n) ;
 
+        // the result must be a full vector: one community id per node
+        GrB_Index nvals ;
+        OK (GrB_Vector_nvals (&nvals, com)) ;
+        TEST_CHECK (nvals == n) ;
+        TEST_MSG ("community vector has %g entries, expected %g",
+            (double) nvals, (double) n) ;
+
+        // print the result
+        LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
+        printf ("\nlouvain (computed communities):\n") ;
+        OK (LAGraph_Vector_Print (com, pr, stdout, msg)) ;
+
+        // community ids are node indices, so the largest id must be < n;
+        // ids are unsigned, so this bounds every id to the valid range [0, n)
+        uint64_t max_id = 0 ;
+        OK (GrB_reduce (&max_id, NULL, GrB_MAX_MONOID_UINT64, com, NULL)) ;
+        TEST_CHECK (max_id < n) ;
+        TEST_MSG ("largest community id %g, must be < %g",
+            (double) max_id, (double) n) ;
+
+        OK (GrB_free (&com)) ;
+        OK (LAGraph_Delete (&G, msg)) ;
     }
 
-    LAGraph_Finalize(msg);
-    #endif
+    OK (LAGraph_Finalize (msg)) ;
 }
+
+//------------------------------------------------------------------------------
+// test_errors
+//------------------------------------------------------------------------------
+
+void test_louvain_errors (void)
+{
+    OK (LAGraph_Init (msg)) ;
+
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    TEST_MSG ("Loading of adjacency matrix failed") ;
+    OK (fclose (f)) ;
+
+    // construct an undirected graph G with adjacency matrix A
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;
+    OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+
+    // com is NULL
+    int result = LAGraph_louvain (NULL, G, ITERMAX, LEVELMAX, EPSILON, msg) ;
+    printf ("\nresult: %d\n", result) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    // G is NULL
+    result = LAGraph_louvain (&com, NULL, ITERMAX, LEVELMAX, EPSILON, msg) ;
+    printf ("result: %d\n", result) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    OK (LAGraph_Delete (&G, msg)) ;
+    OK (LAGraph_Finalize (msg)) ;
+}
+
+//****************************************************************************
 
 TEST_LIST = {
-
-    {"LouvainSeq", test_LouvainSeq},
-    {"LouvainIS", test_LouvainIS},
-
-    {NULL, NULL}};
-
-
-
-    
+    {"louvain", test_louvain},
+    {"louvain_errors", test_louvain_errors},
+    {NULL, NULL}
+} ;
