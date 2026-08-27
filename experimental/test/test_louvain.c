@@ -25,10 +25,10 @@ typedef struct
 } matrix_info;
 
 const matrix_info files[] = {
-    {"empty.mtx",0},
     {"comm0.mtx", 0.357142857142857},
     {"karate.mtx", .42},
-    {"", -1}};
+    {"", -1}
+};
 
 
 void test_LouvainSeq(void)

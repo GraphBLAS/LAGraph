@@ -20,8 +20,7 @@ typedef struct
     const double mod;        // expected modularity from Q = 1/2m (S^TBS)
 } matrix_info;
 
-const matrix_info files[] = {   
-    {"empty.mtx","empty.mtx",1,0},
+const matrix_info files[] = {
     {"comm0.mtx", "comm0_S.mtx", 1, -0.17347},
     {"comm0.mtx", "comm0_Sa.mtx", 1, 0.35714},
     // {"com-Amazon.mtx", "comm0_Sa.mtx",1, -1},

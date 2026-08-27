@@ -17,8 +17,6 @@
 char msg[LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
 GrB_Matrix A = NULL ;
-GrB_Matrix C = NULL ;
-GrB_Scalar zero_bool = NULL ;
 #define LEN 512
 char filename[LEN + 1] ;
 
@@ -172,13 +170,15 @@ void test_Leiden (void)
 
         // Compute modularity Q
         double Q = 0.0 ;
-        GrB_Descriptor desc = NULL;
+        GrB_Matrix C = NULL ;
+        GrB_Scalar zero_bool = NULL ;
+        GrB_Descriptor desc = NULL ;
         OK (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
         OK (GrB_Scalar_new (&zero_bool, GrB_BOOL)) ;
         OK (GrB_Scalar_setElement_BOOL (zero_bool, false)) ;
         OK (GrB_Descriptor_new (&desc)) ;
         OK (GrB_set (desc, GxB_USE_INDICES, GxB_ROWINDEX_LIST)) ;
-        OK (GxB_Matrix_build_Scalar_Vector(C, c, c, zero_bool, desc)) ;
+        OK (GxB_Matrix_build_Scalar_Vector (C, c, c, zero_bool, desc)) ;
         OK (LAGr_AdjModularity (&Q, 1.0, G->A, C, msg)) ;
         printf ("  Modularity Q = %f\n", Q) ;
 
@@ -192,6 +192,9 @@ void test_Leiden (void)
         TEST_CHECK (isfinite (Q)) ;
         TEST_CHECK (Q >= -1.0 && Q <= 1.0) ;
 
+        GrB_free (&desc) ;
+        GrB_free (&zero_bool) ;
+        GrB_free (&C) ;
         GrB_free (&c) ;
         OK (LAGraph_Delete (&G, msg)) ;
     }
@@ -241,6 +244,46 @@ void test_Leiden_NonfiniteInputs (void)
     LAGraph_Finalize (msg) ;
 }
 
+#if LG_BRUTAL_TESTS
+void test_Leiden_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+    OK (GxB_Global_Option_set (GxB_JIT_C_CONTROL, GxB_JIT_OFF)) ;
+
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "comm0.mtx") ;
+    uint64_t seed = 0 ;
+    GrB_Vector c = NULL ;
+    LAGraph_Graph H = NULL ;
+    GrB_Matrix B = NULL ;
+
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    TEST_MSG ("Cannot open %s", filename) ;
+    OK (LAGraph_MMRead (&B, f, msg)) ;
+    fclose (f) ;
+    OK (LAGraph_New (&H, &B, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_Cached_IsSymmetricStructure (H, msg)) ;
+    TEST_CHECK (H->is_symmetric_structure == LAGraph_TRUE) ;
+    OK (GrB_apply (H->A, NULL, NULL, GrB_ABS_FP64, H->A, NULL)) ;
+    OK (LAGraph_Cached_EMin (H, msg)) ;
+
+    LG_brutal = INT64_MAX ;
+    OK (LAGraph_Leiden (&c, H, seed, msg)) ;
+    LG_brutal = -1 ;
+
+    GrB_Index n, nvals ;
+    OK (GrB_Matrix_nrows (&n, H->A)) ;
+    OK (GrB_Vector_nvals (&nvals, c)) ;
+    TEST_CHECK (nvals == n) ;
+
+    GrB_free (&c) ;
+    OK (LAGraph_Delete (&H, msg)) ;
+    GrB_free (&B) ;
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
 //------------------------------------------------------------------------------
 // test list
 //------------------------------------------------------------------------------
@@ -249,5 +292,8 @@ TEST_LIST =
 {
     { "Leiden", test_Leiden },
     { "Leiden nonfinite inputs", test_Leiden_NonfiniteInputs },
+    #if LG_BRUTAL_TESTS
+    { "Leiden brutal", test_Leiden_brutal },
+    #endif
     { NULL, NULL }
 } ;

@@ -30,40 +30,22 @@
 #include "GraphBLAS.h"
 #include "LG_internal.h"
 #include <LAGraphX.h>
-#include <stdio.h>
 
-#define LG_FREE_MOD      \
-    {                    \
-        GrB_free(&k);    \
-        GrB_free(&B);    \
-        GrB_free(&S_t);  \
+#undef LG_FREE_WORK
+#define LG_FREE_WORK      \
+    {                     \
+        GrB_free (&k);    \
+        GrB_free (&B);    \
+        GrB_free (&S_t);  \
     }
 #undef LG_FREE_ALL
 #define LG_FREE_ALL  \
     {                \
-        LG_FREE_MOD; \
+        LG_FREE_WORK; \
     }
-#define DEBUG 0
-#if DEBUG
-#define check() printf("here")
-#define dbg(x) \
-    if (DEBUG) \
-    GxB_print(x, 5)
-#define err(x, info)                                    \
-    if (!(info == GrB_SUCCESS || info == GrB_NO_VALUE)) \
-    {                                                   \
-        char **err;                                     \
-        GrB_error(err, x);                              \
-        printf("\ninfo: %d error: %s\n", info, err);    \
-    }
-#else
-#define check()
-#define dbg(x)
-#define err(x, info)
-#endif
 
-int LAGr_AdjModularity(
-    double *Q, // TODO: scalar
+int LAGr_AdjModularity (
+    double *Q,
     double gamma,
     const GrB_Matrix A,
     const GrB_Matrix S,
@@ -71,21 +53,28 @@ int LAGr_AdjModularity(
 {
 #if LG_SUITESPARSE_GRAPHBLAS_V10_2
     LG_CLEAR_MSG;
-    char MATRIX_TYPE[LAGRAPH_MSG_LEN];
 
-    //TODO: add checks
-    GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
-
-    GrB_Index n;
-    GrB_Vector k = NULL;
+    GrB_Index nrows, ncols, nrows_s, ncols_s;
+    GrB_Vector k = NULL, com_deg = NULL;
     GrB_Matrix B = NULL;
     GrB_Matrix S_t = NULL;
 
-    GRB_TRY(GrB_Matrix_nrows(&n, A));
+    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (S != NULL, GrB_NULL_POINTER) ;
 
-    GRB_TRY(GrB_Matrix_new(&B, GrB_FP64, n, n));
-    GRB_TRY(GrB_Matrix_new(&S_t, GrB_BOOL, n, n));
-    GRB_TRY(GrB_Vector_new(&k, GrB_FP64, n));
+    GxB_print(A, 2);
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A));
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A));
+    GRB_TRY (GrB_Matrix_nrows (&nrows_s, S));
+    GRB_TRY (GrB_Matrix_ncols (&ncols_s, S));
+
+    LG_ASSERT (nrows == ncols,   GrB_DIMENSION_MISMATCH) ;
+    LG_ASSERT (ncols == nrows_s, GrB_DIMENSION_MISMATCH) ;
+
+    GRB_TRY (GrB_Matrix_new (&B, GrB_FP64, nrows, ncols));
+    GRB_TRY (GrB_Matrix_new (&S_t, GrB_BOOL, ncols_s, nrows_s));
+    GRB_TRY (GrB_Vector_new (&k, GrB_FP64, ncols));
+    GRB_TRY (GrB_Vector_new (&com_deg, GrB_FP64, ncols_s));
 
     double m = 0.0;
     double Q_ = 0.0;
@@ -103,16 +92,15 @@ int LAGr_AdjModularity(
     double inv_m = -gamma / (2.0 * m);
     // sum degrees per community
     GRB_TRY (GrB_transpose (S_t, NULL, NULL, S, NULL)) ;
-    // GRB_TRY (GrB_vxm (k, NULL, NULL, GxB_PLUS_FIRST_FP64, k, S, NULL)) ;
-    GRB_TRY (GrB_mxv (k, NULL, NULL, GxB_PLUS_SECOND_FP64, S_t, k, NULL)) ;
+    GRB_TRY (GrB_mxv (com_deg, NULL, NULL, GxB_PLUS_SECOND_FP64, S_t, k, NULL)) ;
     // square
-    GRB_TRY (GrB_apply (k, NULL, NULL, GxB_POW_FP64, k, 2.0, NULL)) ;
+    GRB_TRY (GrB_apply (com_deg, NULL, NULL, GxB_POW_FP64, com_deg, 2.0, NULL)) ;
 
     // sum all of the products
     // this computed \sum_{i,j} (k_{i}k_{j}\delta(\sigma_i\sigma_j))
-    GRB_TRY (GrB_reduce (&Q_, NULL, GrB_PLUS_MONOID_FP64, k, NULL)) ;
+    GRB_TRY (GrB_reduce (&Q_, NULL, GrB_PLUS_MONOID_FP64, com_deg, NULL)) ;
     Q_ *= inv_m;
-    GRB_TRY (GrB_free (&k)) ;
+    GRB_TRY (GrB_free (&com_deg)) ;
 
     // Count the number of edges per node in the cluster originating at a node
     // in the cluster
@@ -120,7 +108,6 @@ int LAGr_AdjModularity(
 
     // sum the intra-cluster edges per node for all nodes
     GRB_TRY (GrB_reduce (&Q_, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, B, NULL)) ;
-    GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
 
     Q_ *= -inv_m;
     *Q = Q_;
