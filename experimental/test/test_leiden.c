@@ -20,6 +20,21 @@ GrB_Matrix A = NULL ;
 #define LEN 512
 char filename[LEN + 1] ;
 
+int LG_Leiden_move_nodes
+(
+    GrB_Matrix C,
+    uint64_t *community,
+    uint64_t *nodes_popped_handle,
+    uint64_t *nodes_evaluated_handle,
+    uint64_t *nodes_moved_handle,
+    const GrB_Matrix A,
+    const GrB_Vector deg,
+    uint64_t *queue,
+    bool *enqueued,
+    double m_inv2,
+    char *msg
+) ;
+
 typedef struct
 {
     const char *matrix_file ;
@@ -141,6 +156,7 @@ void test_Leiden (void)
 
         GrB_Info info = LAGraph_Leiden (&c, G, seed, msg) ;
         TEST_CHECK (info == GrB_SUCCESS) ;
+
         if (info != GrB_SUCCESS)
         {
             GrB_free (&c) ;
@@ -244,6 +260,49 @@ void test_Leiden_NonfiniteInputs (void)
     LAGraph_Finalize (msg) ;
 }
 
+void test_Leiden_Phase1SingletonSplit (void)
+{
+    LAGraph_Init (msg) ;
+
+    const GrB_Index n = 4 ;
+    GrB_Matrix B = NULL, C = NULL ;
+    GrB_Vector deg = NULL ;
+    OK (GrB_Matrix_new (&B, GrB_FP64, n, n)) ;
+    OK (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
+    OK (GrB_Vector_new (&deg, GrB_FP64, n)) ;
+
+    GrB_Index Ai [4] = { 0, 2, 0, 3 } ;
+    GrB_Index Aj [4] = { 2, 0, 3, 0 } ;
+    double Ax [4] = { 1.0, 1.0, 1.0, 1.0 } ;
+    OK (GrB_Matrix_build_FP64 (B, Ai, Aj, Ax, 4, GrB_PLUS_FP64)) ;
+
+    uint64_t community [4] = { 0, 0, 2, 3 } ;
+    for (GrB_Index i = 0 ; i < n ; i++)
+    {
+        OK (GrB_Matrix_setElement_BOOL (C, true, i, community [i])) ;
+    }
+
+    // Deliberately chosen to force negative neighbor gains for node 0.
+    OK (GrB_Vector_setElement_FP64 (deg, 100.0, 0)) ;
+    OK (GrB_Vector_setElement_FP64 (deg, 100.0, 1)) ;
+    OK (GrB_Vector_setElement_FP64 (deg, 100.0, 2)) ;
+    OK (GrB_Vector_setElement_FP64 (deg, 100.0, 3)) ;
+
+    uint64_t queue [5] = { 0, 1, 2, 3, 0 } ;
+    bool enqueued [4] = { true, true, true, true } ;
+    uint64_t popped = 0, evaluated = 0, moved = 0 ;
+    OK (LG_Leiden_move_nodes (C, community, &popped, &evaluated, &moved,
+        B, deg, queue, enqueued, -1.0 / 400.0, msg)) ;
+
+    // Community 1 starts empty; node 0 should split into it.
+    TEST_CHECK (community [0] == 1) ;
+
+    OK (GrB_free (&deg)) ;
+    OK (GrB_free (&C)) ;
+    OK (GrB_free (&B)) ;
+    LAGraph_Finalize (msg) ;
+}
+
 #if LG_BRUTAL_TESTS
 void test_Leiden_brutal (void)
 {
@@ -292,6 +351,7 @@ TEST_LIST =
 {
     { "Leiden", test_Leiden },
     { "Leiden nonfinite inputs", test_Leiden_NonfiniteInputs },
+    { "Leiden phase1 singleton split", test_Leiden_Phase1SingletonSplit },
     #if LG_BRUTAL_TESTS
     { "Leiden brutal", test_Leiden_brutal },
     #endif

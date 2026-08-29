@@ -107,10 +107,15 @@
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK                                        \
 {                                                           \
+    GrB_free (&c_deg_vec);                                  \
+    GrB_free (&c_size_vec);                                 \
     GrB_free (&neighbor_it);                                \
     GrB_free (&it);                                         \
-    GrB_free (&c_deg);                                      \
     GrB_free (&x);                                          \
+    LAGraph_Free ((void **) &c_deg, NULL) ;                 \
+    LAGraph_Free ((void **) &node_deg, NULL) ;              \
+    LAGraph_Free ((void **) &community_size, NULL) ;        \
+    LAGraph_Free ((void **) &empty_stack, NULL) ;           \
 }
 
 #undef  LG_FREE_ALL
@@ -136,30 +141,62 @@ int LG_Leiden_move_nodes
     double m_inv2,       // -1 / (2 * m)
     char* msg
 ) {
-    uint64_t node_id, com_id, n_deg, n;
-    GrB_Vector x = NULL;
-    GrB_Vector c_deg = NULL ;
-    GxB_Iterator it = NULL, neighbor_it = NULL;
+    uint64_t node_id, com_id, n ;
+    GrB_Vector x = NULL ;
+    GrB_Vector c_deg_vec  = NULL ;
+    GrB_Vector c_size_vec = NULL ;
+    double *c_deg = NULL ;
+    double *node_deg = NULL ;
+    uint64_t *community_size = NULL ;
+    uint64_t *empty_stack = NULL ;
+    uint64_t empty_top = 0 ;
+    GxB_Iterator it = NULL, neighbor_it = NULL ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     uint64_t queue_head = 0, queue_tail = n, queue_size = n + 1;
 
     GRB_TRY (GxB_Iterator_new (&it)) ;
-    GRB_TRY (GrB_Vector_new (&c_deg, GrB_FP64, n)) ;
     GRB_TRY (GrB_Vector_new (&x, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (&c_deg_vec, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (&c_size_vec, GrB_UINT64, n)) ;
     GRB_TRY (GxB_Iterator_new (&neighbor_it)) ;
-    GRB_TRY (GxB_rowIterator_attach (neighbor_it, A, NULL));
+    GRB_TRY (GxB_rowIterator_attach (neighbor_it, A, NULL)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &empty_stack, n, sizeof (uint64_t), msg)) ;
 
-    GRB_TRY (GrB_assign (c_deg, NULL, NULL, 0.0, GrB_ALL, n, NULL)) ;
-    GRB_TRY (GrB_vxm(c_deg, NULL, NULL, GxB_PLUS_FIRST_FP64, deg, C, NULL));
+    // initialize degree and community degree vectors, then unpack to C arrays
+    GRB_TRY (GrB_assign (c_deg_vec, NULL, NULL, 0.0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_assign (c_size_vec, NULL, NULL, (uint64_t) 0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_vxm (c_deg_vec, NULL, GrB_PLUS_FP64, GxB_PLUS_FIRST_FP64, deg, C, NULL)) ;
+    GRB_TRY (GrB_vxm (c_size_vec, NULL, GrB_PLUS_UINT64, GxB_PLUS_PAIR_UINT64, deg, C, NULL)) ;
+
+    GrB_Type node_type = NULL, cdeg_type = NULL, csize_type = NULL ;
+    uint64_t node_nheld = 0, cdeg_nheld = 0, csize_nheld = 0 ;
+    uint64_t node_size = 0, cdeg_size = 0, csize_size = 0 ;
+    int node_handling = 0, cdeg_handling = 0, csize_handling = 0 ;
+    GRB_TRY (GxB_Vector_unload (deg, (void **) &node_deg, &node_type,
+        &node_nheld, &node_size, &node_handling, NULL)) ;
+    GRB_TRY (GxB_Vector_unload (c_deg_vec, (void **) &c_deg, &cdeg_type,
+        &cdeg_nheld, &cdeg_size, &cdeg_handling, NULL)) ;
+    GRB_TRY (GxB_Vector_unload (c_size_vec, (void **) &community_size, &csize_type,
+        &csize_nheld, &csize_size, &csize_handling, NULL)) ;
+
+    for (uint64_t c = 0 ; c < n ; c++)
+    {
+        if (community_size [c] == 0)
+        {
+            empty_stack [empty_top++] = c ;
+        }
+    }
+
     // TODO: decide if queue should be made inside this function.
     uint64_t nodes_popped = 0, nodes_evaluated = 0, nodes_moved = 0;
     while (queue_head != queue_tail) { // while queue not empty
         nodes_popped++;
         LG_QUEUE_DEQUEUE (queue, queue_head, queue_size, node_id) ;
-        enqueued [node_id] = false;
-        double com_deg, n_deg;
+        enqueued [node_id] = false ;
         uint64_t n_neighbors;
         com_id = community [node_id] ;
+        const uint64_t old_size = community_size [com_id] ;
+        const double degree_i = node_deg [node_id] ;
         GRB_TRY (GrB_Vector_clear (x));
         // GRB_TRY (GrB_Vector_setElement_FP64 (x, 0.0, node_id)) ;
         // GRB_TRY (GrB_vxm (x, NULL, GrB_PLUS_FP64, GxB_PLUS_SECOND_FP64, x, A, NULL)) ;
@@ -174,51 +211,65 @@ int LG_Leiden_move_nodes
         GRB_TRY (GrB_vxm (x, NULL, NULL, GxB_PLUS_FIRST_FP64, x, C, NULL)) ;
 
         // momentarily remove node degree from the community total
-        GRB_TRY (GrB_Vector_extractElement_FP64 (&n_deg, deg, node_id));
-
-        // c_deg [com_id] -= ndeg
-        GRB_TRY (GrB_assign (c_deg, NULL, GrB_MINUS_FP64, n_deg, &com_id, 1, NULL));
+        c_deg [com_id] -= degree_i ;
+        community_size [com_id]-- ;
 
         // Calculate gain in each neighboring community
-        uint64_t max_gain_c;
-        double max_gain_val = -1e100;
-        double y = m_inv2 * n_deg;
-        GRB_TRY (GxB_Vector_Iterator_attach (it, x, NULL));
-        GrB_Info info = GxB_Vector_Iterator_seek (it, 0);
+        uint64_t max_gain_c = com_id ;
+        double max_gain_val = -1.0 ;
+        double y = m_inv2 * degree_i ;
+        GRB_TRY (GxB_Vector_Iterator_attach (it, x, NULL)) ;
+        GrB_Info info = GxB_Vector_Iterator_seek (it, 0) ;
         while (info == GrB_SUCCESS) {
-            uint64_t c = GxB_Vector_Iterator_getIndex (it);
-            double gain = GxB_Iterator_get_FP64 (it);
-            double com_deg;
-            GRB_TRY (GrB_Vector_extractElement_FP64 (&com_deg, c_deg, c)) ;
-            gain += y * com_deg ;
+            uint64_t c = GxB_Vector_Iterator_getIndex (it) ;
+            double gain = GxB_Iterator_get_FP64 (it) ;
+            gain += y * c_deg [c] ;
             if (gain > max_gain_val) {
-                max_gain_val = gain;
-                max_gain_c = c;
+                max_gain_val = gain ;
+                max_gain_c = c ;
             }
-            info = GxB_Vector_Iterator_next (it);
+            info = GxB_Vector_Iterator_next (it) ;
         }
 
-        community [node_id] = max_gain_c;
-        // c_deg [node_id] += ndeg
-        GRB_TRY (GrB_assign (c_deg, NULL, GrB_PLUS_FP64, n_deg, &max_gain_c, 1, NULL));
+        uint64_t new_com_id = com_id ;
+        if (max_gain_val >= 0.0)
+        {
+            new_com_id = max_gain_c ;
+        }
+        else if (old_size > 1 && empty_top > 0)
+        {
+            new_com_id = empty_stack [--empty_top] ;
+        }
 
-        if (max_gain_c == com_id) continue; // no change in community
-        nodes_moved++;
+        community [node_id] = new_com_id ;
+        c_deg [new_com_id] += degree_i ;
+        community_size [new_com_id]++ ;
+
+        if (new_com_id == com_id) continue; // no change in community
+        nodes_moved++ ;
+        if (community_size [com_id] == 0)
+        {
+            empty_stack [empty_top++] = com_id ;
+        }
 
         // push every neighbor in a different community that is not already in
         // the queue to the back of the queue
-        info = GxB_rowIterator_seekRow (neighbor_it, node_id);
+        info = GxB_rowIterator_seekRow (neighbor_it, node_id) ;
         while (info == GrB_SUCCESS) {
-            uint64_t neighbor_id = GxB_rowIterator_getColIndex (neighbor_it);
-            if (max_gain_c != community [neighbor_id]
+            uint64_t neighbor_id = GxB_rowIterator_getColIndex (neighbor_it) ;
+            if (new_com_id != community [neighbor_id]
                 && !enqueued [neighbor_id]) {
                 LG_QUEUE_ENQUEUE (queue, queue_tail, queue_size, neighbor_id) ;
-                enqueued[neighbor_id] = true;
+                enqueued[neighbor_id] = true ;
             }
 
-            info = GxB_rowIterator_nextCol (neighbor_it);
+            info = GxB_rowIterator_nextCol (neighbor_it) ;
         }
     }
+
+    GRB_TRY (GxB_Vector_load (deg, (void **) &node_deg, node_type,
+        node_nheld, node_size, node_handling, NULL)) ;
+
     if (nodes_popped_handle != NULL) (*nodes_popped_handle) = nodes_popped;
     if (nodes_evaluated_handle != NULL) (*nodes_evaluated_handle) = nodes_evaluated;
     if (nodes_moved_handle != NULL) (*nodes_moved_handle) = nodes_moved;
@@ -270,7 +321,6 @@ int LG_Leiden_refinement
     // input:
     const GrB_Matrix C,         // community matrix
     const uint64_t *community,  // community array (inside of C matrix)
-    const GrB_Vector c_deg,     // degree vector
     const GrB_Matrix A,         // adjacency matrix
     const GrB_Vector deg,       // degree vector
     uint64_t *queue,            // queue to use (contains all nodes)
@@ -551,7 +601,6 @@ int LG_Leiden_aggregate
     GrB_free (&S);                                          \
     if (free_A) GrB_free (&A) ;                             \
     GrB_free (&deg);                                        \
-    GrB_free (&c_deg);                                      \
     GrB_free (&x);                                          \
     GrB_free (&node_map);                                   \
     GrB_free (&new_node_map);                               \
@@ -589,8 +638,6 @@ int LAGraph_Leiden
     GrB_Matrix S = NULL ; // contains readonly pointer to sub-community array
 
     GrB_Vector deg = NULL ; // degree of each node
-    GrB_Vector c_deg = NULL ; // degree of each community
-
     GrB_Matrix A = NULL ; // G->A
     GrB_Vector x = NULL; // full boolean vector
     GrB_Matrix node_map = NULL ; // maps aggregate node to nodes it contains
@@ -779,7 +826,7 @@ int LAGraph_Leiden
         LG_LEIDEN_BURBLE_ON;
         // memcpy (sub_com, community, n * sizeof (uint64_t)) ;
         LG_TRY (LG_Leiden_refinement (S, sub_com, &refine_evaluated, C, community,
-             c_deg, A, deg, queue, m_inv2, msg)) ;
+             A, deg, queue, m_inv2, msg)) ;
         LG_TRY (LG_Leiden_refinement_stats (
             &refine_split_total, &refine_split_avg, &refine_within_parent,
             C, S, msg)) ;
