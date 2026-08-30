@@ -355,6 +355,14 @@ int LG_Leiden_refinement
     GRB_TRY (GrB_Vector_extractTuples_FP64 (NULL, s_deg, &n, deg)) ;
     GRB_TRY (GrB_Type_new (&leiden_ctx_t, sizeof(leiden_ctx))) ;
     GRB_TRY (GrB_Matrix_new (&X, GrB_FP64, n, n)) ;
+    // Work around SuiteSparse:GraphBLAS bug (67) present in v10.3.0 and
+    // fixed in v10.3.1: incorrect JIT kernel for R=masker(C,M,Z) when R is
+    // hypersparse. Apply only to affected versions by disabling hypersparsity
+    // for X on this path.
+    #if LAGRAPH_SUITESPARSE && (GxB_IMPLEMENTATION < GxB_VERSION (10,3,1))
+    GRB_TRY (GxB_Matrix_Option_set_FP64 (X, GxB_HYPER_SWITCH, 0.0)) ;
+    #endif
+    GRB_TRY (GrB_set (X, GxB_SPARSE, GxB_SPARSITY_CONTROL)) ;
     GRB_TRY (GrB_Scalar_new (&ctx_s, leiden_ctx_t)) ;
     GRB_TRY (GrB_IndexUnaryOp_new (
         &gain_op, (GxB_index_unary_function) LG_Leiden_gain,
