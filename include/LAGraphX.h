@@ -1494,6 +1494,17 @@ int LAGr_PartitionQuality(
 );
 
 LAGRAPHX_PUBLIC
+GrB_Info LAGraph_louvain
+(
+	GrB_Vector *com,  // output communities
+	LAGraph_Graph G,  // graph adjacency matrix
+	int itermax,      // max number of modularity improvements sweeps per level
+	int levelmax,     // max number of modularity improve and cluster condense
+	float e,          // min change in modularity considered an improvement
+	char *msg         // error message
+) ;
+
+LAGRAPHX_PUBLIC
 int LAGr_Modularity(
     // Outputs
     double *mod_handle, // Modularity

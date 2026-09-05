@@ -135,13 +135,14 @@ int LG_Leiden_move_nodes
     uint64_t *nodes_moved_handle,    // nodes moved to a new community
     // input:
     const GrB_Matrix A,    // adjacency matrix
-    const GrB_Vector deg,  // degree vector
+    const GrB_Vector deg,  // weighteed degree vector
     uint64_t *queue,       // queue to use (contains all nodes)
     bool *enqueued,        // nodes in queue (all at the start)
-    double m_inv2,       // -1 / (2 * m)
+    double m_inv2,         // -1 / (2 * m)
     char* msg
 ) {
     uint64_t node_id, com_id, n ;
+    // TODO: comment
     GrB_Vector x = NULL ;
     GrB_Vector c_deg_vec  = NULL ;
     GrB_Vector c_size_vec = NULL ;
@@ -192,6 +193,7 @@ int LG_Leiden_move_nodes
     while (queue_head != queue_tail) { // while queue not empty
         nodes_popped++;
         LG_QUEUE_DEQUEUE (queue, queue_head, queue_size, node_id) ;
+        // TODO: put in macro
         enqueued [node_id] = false ;
         uint64_t n_neighbors;
         com_id = community [node_id] ;
@@ -200,7 +202,7 @@ int LG_Leiden_move_nodes
         GRB_TRY (GrB_Vector_clear (x));
         // GRB_TRY (GrB_Vector_setElement_FP64 (x, 0.0, node_id)) ;
         // GRB_TRY (GrB_vxm (x, NULL, GrB_PLUS_FP64, GxB_PLUS_SECOND_FP64, x, A, NULL)) ;
-        // TODO: deg and c_deg as C_arrays?
+        // TODO: is this set needed?
         GRB_TRY (GrB_Vector_setElement_FP64 (x, 0.0, node_id)) ;
         GRB_TRY (GrB_Col_extract (x, NULL, GrB_PLUS_FP64, A, GrB_ALL, n, node_id, GrB_DESC_T0)) ;
 
