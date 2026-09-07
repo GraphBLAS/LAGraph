@@ -224,13 +224,9 @@ static GrB_Info LG_Louvain_aggregate
     GrB_free (&C_to_orig) ;                          \
     GrB_free (&active_comms) ;                       \
     GrB_free (&x_active) ;                           \
+    GrB_free (&x_com) ;                              \
     LAGraph_Free ((void**) &degree, NULL) ;          \
     LAGraph_Free ((void**) &community_degree, NULL); \
-    LAGraph_Free ((void**) &tuple_i, NULL) ;         \
-    LAGraph_Free ((void**) &tuple_j, NULL) ;         \
-    LAGraph_Free ((void**) &tuple_x, NULL) ;         \
-    LAGraph_Free ((void**) &com_i, NULL) ;           \
-    LAGraph_Free ((void**) &com_x, NULL) ;           \
     LAGraph_Free ((void**) &d_i, NULL) ;             \
     LAGraph_Free ((void**) &d_x, NULL) ;             \
 }
@@ -272,13 +268,10 @@ GrB_Info LAGraph_louvain
     GrB_Matrix C_to_orig = NULL ;
     GrB_Vector active_comms = NULL ;
     GrB_Vector x_active = NULL ;
+    GrB_Vector x_com = NULL ;        // dummy dense vector for C_to_orig -> com
 
     uint64_t *degree = NULL ;           // node degree for current level
     uint64_t *community_degree = NULL ; // sigma_tot per community id
-    bool *tuple_x = NULL ;              // values for C_to_orig extraction
-    GrB_Index *tuple_i = NULL, *tuple_j = NULL ;
-    GrB_Index *com_i = NULL ;
-    uint64_t *com_x = NULL ;
     GrB_Index *d_i = NULL ;
     uint64_t *d_x = NULL ;
 
@@ -289,6 +282,12 @@ GrB_Info LAGraph_louvain
 
     GrB_Matrix A = G->A ;     // current adjacency over levels
     bool free_A = false ;     // true once A becomes internally allocated
+
+    // variables for unloading vector D
+    GrB_Type unload_type = NULL ;
+    uint64_t unload_n = 0 ;
+    uint64_t unload_size = 0 ;
+    int unload_handling = 0 ;
 
     // find out if graph is symmetric, compute cached values, and check loops
     LG_TRY (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
@@ -328,20 +327,13 @@ GrB_Info LAGraph_louvain
         GRB_TRY (GrB_reduce (D, NULL, GrB_PLUS_UINT64, GrB_PLUS_MONOID_UINT64,
             A, NULL)) ;
 
-        LG_TRY (LAGraph_Malloc ((void**) &degree, nrows, sizeof (uint64_t), msg)) ;
-        memset (degree, 0, nrows * sizeof (uint64_t)) ;
+        // Calculate M2 using GrB_reduce before unloading D
+        uint64_t M2_uint64 = 0 ;
+        GRB_TRY (GrB_reduce (&M2_uint64, NULL, GrB_PLUS_MONOID_UINT64, D, NULL)) ;
 
-        GrB_Index d_nvals = 0 ;
-        GRB_TRY (GrB_Vector_nvals (&d_nvals, D)) ;
-        LG_TRY (LAGraph_Malloc ((void**) &d_i, d_nvals, sizeof (GrB_Index), msg)) ;
-        LG_TRY (LAGraph_Malloc ((void**) &d_x, d_nvals, sizeof (uint64_t), msg)) ;
-        GRB_TRY (GrB_Vector_extractTuples_UINT64 (d_i, d_x, &d_nvals, D)) ;
-        for (GrB_Index k = 0 ; k < d_nvals ; k++)
-        {
-            degree [d_i [k]] = d_x [k] ;
-        }
-        LG_TRY (LAGraph_Free ((void**) &d_i, msg)) ;
-        LG_TRY (LAGraph_Free ((void**) &d_x, msg)) ;
+        // Unload vector D into the degree array
+        GRB_TRY (GxB_Vector_unload (D, (void **) &degree, &unload_type,
+            &unload_n, &unload_size, &unload_handling, NULL)) ;
         GRB_TRY (GrB_free (&D)) ;
 
         LG_TRY (LAGraph_Malloc ((void**) &community_degree, nrows,
@@ -368,11 +360,8 @@ GrB_Info LAGraph_louvain
         double modularity_gain = 0 ;
         improved = true ;
 
-        double M2 = 0.0 ;
-        for (GrB_Index i = 0 ; i < nrows ; i++)
-        {
-            M2 += (double) degree [i] ;
-        }
+        // M2 is the sum of all degrees (computed via GrB_reduce above)
+        double M2 = (double) M2_uint64 ;
         LG_ASSERT_MSG (M2 > 0.0, GrB_INVALID_VALUE,
             "sum of degrees must be positive") ;
 
@@ -527,25 +516,16 @@ GrB_Info LAGraph_louvain
         GRB_TRY (GrB_mxm (C_to_orig, NULL, NULL, GxB_ANY_PAIR_BOOL,
             C, node_map, GrB_DESC_T0)) ;
 
-        GrB_Index cnvals = 0 ;
-        GRB_TRY (GrB_Matrix_nvals (&cnvals, C_to_orig)) ;
-        LG_TRY (LAGraph_Malloc ((void**) &tuple_i, cnvals, sizeof (GrB_Index), msg)) ;
-        LG_TRY (LAGraph_Malloc ((void**) &tuple_j, cnvals, sizeof (GrB_Index), msg)) ;
-        LG_TRY (LAGraph_Malloc ((void**) &tuple_x, cnvals, sizeof (bool), msg)) ;
-        LG_TRY (LAGraph_Malloc ((void**) &com_i, cnvals, sizeof (GrB_Index), msg)) ;
-        LG_TRY (LAGraph_Malloc ((void**) &com_x, cnvals, sizeof (uint64_t), msg)) ;
-
-        GRB_TRY (GrB_Matrix_extractTuples_BOOL (
-            tuple_i, tuple_j, tuple_x, &cnvals, C_to_orig)) ;
-
-        for (GrB_Index k = 0 ; k < cnvals ; k++)
-        {
-            com_i [k] = tuple_j [k] ;
-            com_x [k] = (uint64_t) tuple_i [k] ;
-        }
-
-        GRB_TRY (GrB_Vector_build_UINT64 (
-            *com, com_i, com_x, cnvals, GrB_SECOND_UINT64)) ;
+        // Each column of C_to_orig has exactly one nonzero, at the row index
+        // of the final community for that original node.  Use a positional
+        // semiring to pull out that row index without ever leaving GrB.
+        GRB_TRY (GrB_Vector_new (&x_com, GrB_BOOL, final_nrows)) ;
+        GRB_TRY (GrB_assign (x_com, NULL, NULL, (bool) 0, GrB_ALL, final_nrows,
+            NULL)) ;
+        GRB_TRY (GrB_assign (*com, NULL, NULL, (uint64_t) 0, GrB_ALL,
+            original_n, NULL)) ;
+        GRB_TRY (GrB_vxm (*com, NULL, NULL, GxB_PLUS_FIRSTJ_INT64,
+            x_com, C_to_orig, NULL)) ;
     }
 
     LG_FREE_ALL ;
