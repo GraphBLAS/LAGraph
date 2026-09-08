@@ -1701,6 +1701,8 @@ main(int argc, char** argv)
         }
     }
 
+acutest_no_exec_ = 1;   // HACK by Tim Davis: no exec (breaks CUDA)
+
     if(acutest_tap_) {
         /* TAP requires we know test result ("ok", "not ok") before we output
          * anything about the test, and this gets problematic for larger verbose
