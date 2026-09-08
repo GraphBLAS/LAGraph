@@ -110,8 +110,6 @@ LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_fp64   = NULL ;
 // LAGr_Init
 //------------------------------------------------------------------------------
 
-// FIXME: note input scalar: mode
-
 LAGRAPH_PUBLIC
 int LAGr_Init
 (
@@ -130,16 +128,10 @@ int LAGr_Init
     //--------------------------------------------------------------------------
 
     // malloc and free are required; calloc and realloc are optional
-    LG_CLEAR_MSG ;
-
-    #if LAGRAPH_SUITESPARSE
-    if (!(mode == GxB_NONBLOCKING_GPU || mode == GxB_BLOCKING_GPU))
-    #endif
-    {
-        LG_ASSERT (user_malloc_function != NULL, GrB_NULL_POINTER) ;
-        LG_ASSERT (user_free_function   != NULL, GrB_NULL_POINTER) ;
-    }
     GrB_Info info ;
+    LG_CLEAR_MSG ;
+    LG_ASSERT (user_malloc_function != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (user_free_function   != NULL, GrB_NULL_POINTER) ;
 
     // ensure LAGr_Init has not already been called
     LG_ASSERT_MSG (!LG_get_LAGr_Init_has_been_called ( ), GrB_INVALID_VALUE,

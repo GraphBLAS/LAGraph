@@ -15,7 +15,16 @@
 
 //------------------------------------------------------------------------------
 
+void setup (void) ;
+void teardown (void) ;
+void test_JustInit (void) ;
+void test_New (void) ;
+void test_New_failures (void) ;
+void test_New_brutal (void) ;
+
 #include "LAGraph_test.h"
+#include "LAGraphX.h"
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // global variables
@@ -33,7 +42,10 @@ char filename [LEN+1] ;
 
 void setup (void)
 {
+    // printf ("\nsetup calling LAGraph_Init: %p\n", malloc) ;
     OK (LAGraph_Init (msg)) ;
+    // OK (LAGr_Init (GrB_NONBLOCKING, malloc, calloc, realloc, free, msg)) ;
+    // printf ("did call LAGraph_Init:\n") ;
 }
 
 //------------------------------------------------------------------------------
@@ -43,6 +55,16 @@ void setup (void)
 void teardown (void)
 {
     OK (LAGraph_Finalize (msg)) ;
+}
+
+//------------------------------------------------------------------------------
+// test_JustInit
+//------------------------------------------------------------------------------
+
+void test_JustInit (void)
+{
+    setup ( ) ;
+    teardown ( ) ;
 }
 
 //------------------------------------------------------------------------------
@@ -66,7 +88,8 @@ const matrix_info files [ ] =
 
 void test_New (void)
 {
-    setup ( ) ;
+    // setup ( ) ;
+    OK (LAGr_Init (GrB_NONBLOCKING, malloc, calloc, realloc, free, msg)) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -180,6 +203,7 @@ void test_New_failures (void)
 
 TEST_LIST =
 {
+    { "JustInit", test_JustInit },
     { "New", test_New },
     { "New_failures", test_New_failures },
     #if LG_BRUTAL_TESTS
@@ -187,3 +211,4 @@ TEST_LIST =
     #endif
     { NULL, NULL }
 } ;
+

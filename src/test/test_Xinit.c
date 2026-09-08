@@ -26,6 +26,40 @@
 char msg [LAGRAPH_MSG_LEN] ;
 
 //------------------------------------------------------------------------------
+// setup: start a test
+//------------------------------------------------------------------------------
+
+void setup1 (void) ;
+void setup1 (void)
+{
+    printf ("\nsetup calling LAGraph_Init: %p\n", malloc) ;
+    // OK (LAGraph_Init (msg)) ;
+    OK (LAGr_Init (GrB_NONBLOCKING, malloc, calloc, realloc, free, msg)) ;
+    printf ("did call LAGraph_Init:\n") ;
+}
+
+//------------------------------------------------------------------------------
+// teardown1: finalize a test
+//------------------------------------------------------------------------------
+
+void teardown1 (void) ;
+void teardown1 (void)
+{
+    OK (LAGraph_Finalize (msg)) ;
+}
+
+//------------------------------------------------------------------------------
+// test_JustInit1
+//------------------------------------------------------------------------------
+
+void test_JustInit1 (void) ;
+void test_JustInit1 (void)
+{
+    // setup1 ( ) ;
+    // teardown1 ( ) ;
+}
+
+//------------------------------------------------------------------------------
 // test_Xinit:  test LAGr_Init
 //------------------------------------------------------------------------------
 
@@ -52,6 +86,7 @@ void test_Xinit (void)
         == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
 
+    printf ("\nThis should work:\n") ;
     OK (LAGr_Init (GrB_NONBLOCKING, malloc, calloc, realloc, free, msg)) ;
     printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (LG_get_LAGr_Init_has_been_called ( ) == true) ;
@@ -184,5 +219,7 @@ TEST_LIST =
     #if LG_BRUTAL_TESTS
     { "Xinit_brutal", test_Xinit_brutal },
     #endif
+// if this test is added, the first test does not find any GPUs:
+{ "JustInit1", test_JustInit1 },
     { NULL, NULL }
 } ;
