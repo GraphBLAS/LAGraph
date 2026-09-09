@@ -190,6 +190,7 @@ void test_Xinit_brutal (void)
         if (ok)
         {
             OK (GrB_finalize ( )) ;
+            GB_Global_GrB_init_called_set (false) ;
             printf ("\nGxB_init, finally: %d %g\n", nbrutal,
                 (double) LG_nmalloc) ;
             TEST_CHECK (LG_nmalloc == 0) ;

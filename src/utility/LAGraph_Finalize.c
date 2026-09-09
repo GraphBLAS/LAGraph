@@ -17,6 +17,12 @@
 
 #include "LG_internal.h"
 
+#if LAGRAPH_SUITESPARSE
+#if GxB_IMPLEMENTATION <= GxB_VERSION (10,4,0)
+void GB_Global_GrB_init_called_set (bool GrB_init_called) ;
+#endif
+#endif
+
 int LAGraph_Finalize (char *msg)
 {
 
@@ -86,6 +92,11 @@ int LAGraph_Finalize (char *msg)
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_finalize ( )) ;
+    #if LAGRAPH_SUITESPARSE
+    #if GxB_IMPLEMENTATION <= GxB_VERSION (10,4,0)
+    GB_Global_GrB_init_called_set (false) ;
+    #endif
+    #endif
     LG_set_LAGr_Init_has_been_called (false) ;
     return (GrB_SUCCESS) ;
 }
