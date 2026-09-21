@@ -202,12 +202,14 @@ int LG_Leiden_move_nodes
         GRB_TRY (GrB_Vector_clear (x));
         // GRB_TRY (GrB_Vector_setElement_FP64 (x, 0.0, node_id)) ;
         // GRB_TRY (GrB_vxm (x, NULL, GrB_PLUS_FP64, GxB_PLUS_SECOND_FP64, x, A, NULL)) ;
-        // TODO: is this set needed?
-        GRB_TRY (GrB_Vector_setElement_FP64 (x, 0.0, node_id)) ;
         GRB_TRY (GrB_Col_extract (x, NULL, GrB_PLUS_FP64, A, GrB_ALL, n, node_id, GrB_DESC_T0)) ;
 
+        // remove node's own self-loop contribution
+        // done this way to avoid changing the structure of X
+        GRB_TRY (GrB_Vector_assign_FP64 (
+            x, x, NULL, 0.0, &node_id, 1, GrB_DESC_S)) ;
+
         GRB_TRY (GrB_Vector_nvals (&n_neighbors, x)) ;
-        if (n_neighbors == 1) continue; // skip singletons
         nodes_evaluated++;
         // give gain the number of edges connecting x to community i
         GRB_TRY (GrB_vxm (x, NULL, NULL, GxB_PLUS_FIRST_FP64, x, C, NULL)) ;
@@ -363,8 +365,8 @@ int LG_Leiden_refinement
     // for X on this path.
     #if LAGRAPH_SUITESPARSE && (GxB_IMPLEMENTATION < GxB_VERSION (10,3,1))
     GRB_TRY (GxB_Matrix_Option_set_FP64 (X, GxB_HYPER_SWITCH, 0.0)) ;
-    #endif
     GRB_TRY (GrB_set (X, GxB_SPARSE, GxB_SPARSITY_CONTROL)) ;
+    #endif
     GRB_TRY (GrB_Scalar_new (&ctx_s, leiden_ctx_t)) ;
     GRB_TRY (GrB_IndexUnaryOp_new (
         &gain_op, (GxB_index_unary_function) LG_Leiden_gain,
@@ -391,6 +393,11 @@ int LG_Leiden_refinement
         GRB_TRY (GrB_Matrix_clear (X));
         GRB_TRY (GrB_Matrix_setElement_FP64 (X, 0.0, com_id, node_id));
         GRB_TRY (GrB_mxm (X, C_t, NULL, GxB_PLUS_SECOND_FP64, X, A, GrB_DESC_S)) ;
+        // remove node's own self-loop contribution
+        // done this way to avoid changing the structure of X
+        GRB_TRY (GrB_Matrix_assign_FP64 (
+            X, X, NULL, 0.0, &com_id, 1, &node_id, 1, GrB_DESC_S)) ;
+
         // give X the number of edges connecting x to community i
         GRB_TRY (GrB_mxm (X, NULL, NULL, GxB_PLUS_FIRST_FP64, X, S, NULL)) ;
 
@@ -905,7 +912,8 @@ int LAGraph_Leiden
         GRB_TRY (GrB_free (&deg)) ;
         GRB_TRY (GrB_Vector_new (&deg, GrB_FP64, n)) ;
         GRB_TRY (GrB_assign(deg, NULL, NULL, 0.0, GrB_ALL, n, NULL));
-        GRB_TRY (GrB_reduce(deg, NULL, NULL, GrB_PLUS_MONOID_FP64, A, NULL));
+        GRB_TRY (GrB_reduce (
+            deg, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, A, NULL));
         GRB_TRY (GrB_Vector_resize (x, n)) ;
         GRB_TRY (GrB_Matrix_diag (&S, x, 0)) ;
     #ifndef NDEBUG
