@@ -5,6 +5,9 @@
 // Uses LAGraph_plus_one_int64 (structural semiring) only for A*A (k==2),
 // where both operands are still the original 0/1 adjacency matrix
 // All other squarings use PLUS_TIMES because T = A^(k/2) has walk counts
+
+// by Maira Athar and T. Davis, Texas A&M University
+
 static GrB_Info NumberOfWalks_inner(GrB_Matrix *C, GrB_Matrix A, int64_t k)
 {
     if (C == NULL || A == NULL || k < 0) return GrB_INVALID_VALUE ;
