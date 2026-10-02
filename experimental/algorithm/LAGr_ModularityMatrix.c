@@ -27,101 +27,92 @@
 
 // Current Test File: experimental/test/test_modularity.c
 
+#include "GraphBLAS.h"
 #include "LG_internal.h"
 #include <LAGraphX.h>
-#include <stdio.h>
 
-#define LG_FREE_MOD      \
-    {                    \
-        GrB_free(&k);    \
-        GrB_free(&kk_);  \
-        GrB_free(&B);    \
-        GrB_free(&BS);   \
-        GrB_free(&S_BS); \
-        GrB_free(&Diag); \
+#undef LG_FREE_WORK
+#define LG_FREE_WORK      \
+    {                     \
+        GrB_free (&k);    \
+        GrB_free (&B);    \
+        GrB_free (&S_t);  \
     }
 #undef LG_FREE_ALL
 #define LG_FREE_ALL  \
     {                \
-        LG_FREE_MOD; \
+        LG_FREE_WORK; \
     }
-#define DEBUG 0
-#if DEBUG
-#define check() printf("here")
-#define dbg(x) \
-    if (DEBUG) \
-    GxB_print(x, 5)
-#define err(x, info)                                    \
-    if (!(info == GrB_SUCCESS || info == GrB_NO_VALUE)) \
-    {                                                   \
-        char **err;                                     \
-        GrB_error(err, x);                              \
-        printf("\ninfo: %d error: %s\n", info, err);    \
-    }
-#else
-#define check()
-#define dbg(x)
-#define err(x, info)
-#endif
 
-int LAGr_AdjModularity(
+int LAGr_AdjModularity (
     double *Q,
     double gamma,
-    GrB_Matrix A,
-    GrB_Matrix S,
+    const GrB_Matrix A,
+    const GrB_Matrix S,
     char *msg)
 {
 #if LG_SUITESPARSE_GRAPHBLAS_V10_2
     LG_CLEAR_MSG;
-    char MATRIX_TYPE[LAGRAPH_MSG_LEN];
 
-    // GrB_set(GrB_GLOBAL, false, GxB_BURBLE);
-
-    GrB_Index n;
-    GrB_Matrix k = NULL;
-    GrB_Matrix kk_ = NULL;
+    GrB_Index nrows, ncols, nrows_s, ncols_s;
+    GrB_Vector k = NULL, com_deg = NULL;
     GrB_Matrix B = NULL;
-    GrB_Matrix BS = NULL;
-    GrB_Matrix S_BS = NULL;
-    GrB_Matrix Diag = NULL;
-    GrB_Matrix mask = NULL;
+    GrB_Matrix S_t = NULL;
 
-    GRB_TRY(GrB_Matrix_nrows(&n, A));
+    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (S != NULL, GrB_NULL_POINTER) ;
 
-    GRB_TRY(GrB_Matrix_new(&B, GrB_FP64, n, n));
-    GRB_TRY(GrB_Matrix_new(&k, GrB_FP64, n, 1));
-    GRB_TRY(GrB_Matrix_new(&kk_, GrB_FP64, n, n));
-    GRB_TRY(GrB_Matrix_new(&BS, GrB_FP64, n, n));
-    GRB_TRY(GrB_Matrix_new(&S_BS, GrB_FP64, n, n));
-    GRB_TRY(GrB_Matrix_new(&Diag, GrB_FP64, n, n));
+    GxB_print(A, 2);
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A));
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A));
+    GRB_TRY (GrB_Matrix_nrows (&nrows_s, S));
+    GRB_TRY (GrB_Matrix_ncols (&ncols_s, S));
+
+    LG_ASSERT (nrows == ncols,   GrB_DIMENSION_MISMATCH) ;
+    LG_ASSERT (ncols == nrows_s, GrB_DIMENSION_MISMATCH) ;
+
+    GRB_TRY (GrB_Matrix_new (&B, GrB_FP64, nrows, ncols));
+    GRB_TRY (GrB_Matrix_new (&S_t, GrB_BOOL, ncols_s, nrows_s));
+    GRB_TRY (GrB_Vector_new (&k, GrB_FP64, ncols));
+    GRB_TRY (GrB_Vector_new (&com_deg, GrB_FP64, ncols_s));
 
     double m = 0.0;
     double Q_ = 0.0;
 
-    GRB_TRY(GrB_Matrix_reduce_Monoid((GrB_Vector)k, NULL, NULL, GrB_PLUS_MONOID_FP64, A, NULL));
+    GRB_TRY (GrB_reduce (k, NULL, NULL, GrB_PLUS_MONOID_FP64, A, NULL));
+    GRB_TRY (GrB_reduce (&m, NULL, GrB_PLUS_MONOID_FP64, k, NULL));
 
-    GRB_TRY(GrB_Matrix_reduce_FP64(&m, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, A, NULL));
     m /= 2.0;
     if (m == 0.0)
     {
         *Q = 0.0;
-        LG_FREE_ALL;
+        LG_FREE_WORK;
         return GrB_SUCCESS;
     }
-    GRB_TRY(GrB_mxm(kk_, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, k, k, GrB_DESC_T1));
     double inv_m = -gamma / (2.0 * m);
-    GRB_TRY(GrB_Matrix_apply_BinaryOp2nd_FP64(kk_, NULL, NULL, GrB_TIMES_FP64, kk_, inv_m, GrB_DESC_R));
-    GRB_TRY(GrB_eWiseAdd(B, NULL, NULL, GrB_PLUS_FP64, A, kk_, NULL));
-    GRB_TRY(GrB_mxm(BS, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, B, S, NULL));
-    GRB_TRY(GrB_mxm(S_BS, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, S, BS, GrB_DESC_T0));
+    // sum degrees per community
+    GRB_TRY (GrB_transpose (S_t, NULL, NULL, S, NULL)) ;
+    GRB_TRY (GrB_mxv (com_deg, NULL, NULL, GxB_PLUS_SECOND_FP64, S_t, k, NULL)) ;
+    // square
+    GRB_TRY (GrB_apply (com_deg, NULL, NULL, GxB_POW_FP64, com_deg, 2.0, NULL)) ;
 
-    GRB_TRY(GrB_select(Diag, NULL, NULL, GrB_DIAG, S_BS, 0, NULL));
+    // sum all of the products
+    // this computed \sum_{i,j} (k_{i}k_{j}\delta(\sigma_i\sigma_j))
+    GRB_TRY (GrB_reduce (&Q_, NULL, GrB_PLUS_MONOID_FP64, com_deg, NULL)) ;
+    Q_ *= inv_m;
+    GRB_TRY (GrB_free (&com_deg)) ;
 
-    GRB_TRY(GrB_Matrix_reduce_FP64(&Q_, NULL, GrB_PLUS_MONOID_FP64, Diag, NULL));
+    // Count the number of edges per node in the cluster originating at a node
+    // in the cluster
+    GRB_TRY (GrB_mxm (B, S, NULL, GxB_PLUS_FIRST_FP64, A, S_t, GrB_DESC_ST1));
+
+    // sum the intra-cluster edges per node for all nodes
+    GRB_TRY (GrB_reduce (&Q_, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, B, NULL)) ;
+
     Q_ *= -inv_m;
     *Q = Q_;
 
-    LG_FREE_ALL;
+    LG_FREE_WORK;
     return (GrB_SUCCESS);
 #else
     return (GrB_NOT_IMPLEMENTED);
